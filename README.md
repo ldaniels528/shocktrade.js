@@ -46,7 +46,8 @@ ShockTrade provides the capability of:
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [Play-JSON-Compat"] (https://github.com/ldaniels528/play-json-compat)
+* [Commons Helpers] (https://github.com/ldaniels528/commons-helpers)
+* [Play-JSON Compat] (https://github.com/ldaniels528/play-json-compat)
 * [ShockTrade Services] (https://github.com/ldaniels528/shocktrade-services)
 
 <a name="building-the-code"></a>
