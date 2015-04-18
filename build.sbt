@@ -1,6 +1,6 @@
 name := "shocktrade-js"
 
-organization := "shocktrade"
+organization := "com.ldaniels528"
 
 version := "1.1"
 
@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
 
 // Shocktrade dependencies
 libraryDependencies ++= Seq(
-	"com.ldaniels528" %% "shocktrade-dao-mongodb" % "0.1.1",
+	"com.ldaniels528" %% "play-json-compat" % "0.1.0",
 	"com.ldaniels528" %% "shocktrade-services" % "0.2.9"
 )
 
