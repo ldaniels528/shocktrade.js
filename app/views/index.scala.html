@@ -1,0 +1,211 @@
+@()
+<!DOCTYPE html>
+<html ng-app="shocktrade">
+<head>
+<title>ShockTrade: Invest like the Pros</title>
+<meta charset='utf-8'>
+<meta name="keywords" content="stock game, investment game, research, investing, trading, stock, stocks, bonds, fixed income, mutual funds, etf, options, futures, IRAs, roll over 401k, retirement, Roth IRA, online trading, stock quotes, mobile trading, active trader, etrade pro, managed investments, etrade" />
+<link href='@routes.Assets.at("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/key_statistics.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/news.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/quotes.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/search.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/sector_industry.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/discover/trading_history.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/drill_down.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/awards.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/lounge.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/perks.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/play.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/portfolio.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/rankings.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/play/statistics.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/main.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
+<link href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))' type="text/css" rel="stylesheet" media=screen>
+<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media=screen>
+<style type="text/css">
+ .panel-body { padding: 0px }
+</style>
+</head>
+
+<body style="min-width: 1024px; margin-right: 25px; margin-left: 25px">
+	<div id="ShockTradeMain" ng-controller="MainCtrl" ng-init="appInit()" ng-cloak>
+		<!-- title bar -->
+		<h1 class="titleline">
+			<span class="title">ShockTrade<span class="trademark">&#0153;</span></span>
+			<span style="float:right; margin-right: 15px; color: #ffd000; font-size: 12pt">
+				<avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
+				<a ng-hide="MySession.authenticated" href="" ng-click="login($event)" style="color: #ffd000">{{ MySession.nonMember ? 'Sign Up' : 'Sign In' }}</a>
+				<a ng-show="MySession.authenticated" href="" ng-click="logout($event)" style="color: #ffd000">Sign Out</a> 
+				<span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" style="color: white">- {{ MySession.fbProfile.name }}</span>
+			</span>
+		</h1>
+	
+		<!-- alerts -->
+		<div ng-hide="MySession.authenticated" class="spectator_bar">
+			<img style="vertical-align: middle" src="/assets/images/status/alert.gif">
+			You are currently in spectator mode. Please <a class="links" href="" ng-click="login($event)">sign-in</a> to access all features
+			(sample profile shown).
+		</div>
+		
+		<!-- errors -->
+		<div ng-if="Errors.hasErrors()" class="error_bar">
+			<div ng-repeat="msg in Errors.getMessages()">
+				<img src="/assets/images/status/redlight.png"> {{ msg }}
+			</div>
+		</div>
+		
+		<!-- tabs -->
+		<div style="border: 1px solid #aaaaaa">
+			<tabset>
+				<tab ng-repeat="tab in tabs" active="tab.active" select="changeTab($index, $event)">
+					<tab-heading><img class="links" ng-src="{{ tab.imageURL }}"> {{ tab.name }}</tab-heading>
+				</tab>
+			</tabset>
+		</div>
+		
+		<!-- market status -->
+		<div style="width: 100%; height: 24px; border: 1px solid #bbbbbb; border-radius: 4px 4px 4px 4px; background-color: #dddddd; color: black">
+			<span style="float: left; padding-left: 10px"><b>Local Time:</b> {{marketClock}}</span>
+			<img ng-show="loading" style="float: right; margin-right: 15px" src="/assets/images/status/loading24.gif">
+			<span ng-hide="loading" style="float: right; margin-right: 15px; width: 24px">&nbsp;</span>
+			<span ng-class="usMarketsOpen === null ? 'mks_loading' : (usMarketsOpen ? 'mks_open' : 'mks_closed')">
+				<img ng-show="usMarketsOpen === null" src="/assets/images/status/loading.gif"> 
+				{{ usMarketsOpen === null ? 'Checking Market Status...' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
+			</span>
+		</div>
+		
+		<div ng-controller="PlayCtrl">		
+			<!-- application module -->
+			<div ng-view ng-cloak></div>
+			<div style="display: none" id="fb-root"></div>
+		</div>
+	</div>
+	
+	<!-- WebJar JS libraries --> 
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("amcharts.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-cookies.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-route.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-ui-router.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-sanitize.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
+	
+	<!-- local JS libraries -->
+	<script src='@routes.Assets.at("javascripts/app.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/app-filters.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/directives.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/errors.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/facebook.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/my_session.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/main.min.js")' type="text/javascript"></script>
+	
+	<!-- Controllers and Services -->
+	<script src='@routes.Assets.at("javascripts/admin/admin_controller.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/admin/admin_services.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/admin/admin_tools.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/auth/signup.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/blog/blog_controller.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/blog/blog_services.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/connect/connect.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/connect/connect_services.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/connect/messaging.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/developers/developer.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/discover.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/favorite_symbols.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/held_securities.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/market_status.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/quote_services.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/discover/recent_symbols.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/explore/drill_down_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/news/news_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/news/news_quote_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/news/news_services.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/news/news_symbols.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/awards_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/contest_svc.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/invite_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/order_form_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/perks_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/rewards_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/preferences.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/profile/profile_svc.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/search/condition_dialog_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/search/search_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/utils.min.js")' type="text/javascript"></script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  ga('create', 'UA-49227328-1', 'shocktrade.biz');
+	  ga('send', 'pageview');
+	</script>	
+	
+	<script type="text/ng-template" id="symbol_lookup.htm">
+		<img ng-src="/assets/images/asset_types/stock.png">
+		<span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+	</script>	
+	
+	<script type="text/ng-template" id="sign_up.htm">
+		<div class="modal-header">
+	   		<h4>Sign Up</h4>
+	    </div>	
+		<div class="modal-body">	
+			<div style="margin: 20px 20px 20px 20px">
+				<div style="display: block; font-size: 14pt">It's simple and free!</div>
+				<table style="width: auto">
+					<tr>
+						<td><input class="rounded" ng-model="form.first" type="text" placeholder="First" size="20"></td>
+						<td><input class="rounded" ng-model="form.last" type="text" placeholder="Last" size="20"></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input class="rounded" ng-model="form.userName" type="text" placeholder="Screen Name" size="43">
+						</td>
+					</tr>			
+					<tr>
+						<td colspan="2">
+							<input class="rounded" ng-model="form.email" type="text" placeholder="Email Address" size="43">
+						</td>
+					</tr>
+					<tr><th colspan="2">Gender</th></tr>		
+					<tr>
+						<td colspan="2">
+							<select ng-model="form.gender">
+								<option value="">I am ...</option>
+								<option value="MALE">Male</option>
+								<option value="FEMALE">Female</option>
+							</select>
+						</td>
+					</tr>
+					<tr><th colspan="2">Country</th></tr>		
+					<tr>
+						<td colspan="2">
+							<select ng-model="form.country">
+								<option value="">I live in ...</option>
+								<option value="us">United States</option>
+								<option value="uk">United Kingdom</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<button id="signUpButton" style="margin-top: 10px" ng-click="ok()">Create Account</button>
+							<button id="cancelButton" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
+						</td>
+					</tr>
+				</table>	
+			</div>
+		</div>
+	</script>
+</body>
+</html>
