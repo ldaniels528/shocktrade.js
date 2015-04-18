@@ -1,0 +1,64 @@
+.sector_industry {
+	display: block; 
+	border: 1px solid #ccddee;
+	border-radius: 5px 5px 5px 5px;
+	background: #ddeeff;
+	 
+	width: 100%; 	
+	height: auto;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-top: 0px;  	
+	margin-bottom: 5px;  	
+	text-align: left;
+	vertical-align: bottom
+}
+
+span.sector_H {
+ 	color: #00a0d0;	
+ 	font-weight: bold;
+}
+ 
+span.industry_H {
+ 	color: #20b090;
+ 	font-weight: bold;
+}
+
+span.sub_industry_H {
+ 	color: #8080aa;
+ 	font-weight: bold;
+}
+ 
+span.exchange_H {
+	color: #0000d0;
+	font-weight: bold;
+}
+
+span.company_H {
+	color: black;
+	font-weight: bold;
+}
+
+span.sector {
+	color: #008080;
+}
+
+span.industry {
+	color: #800000;
+}
+
+span.companyName {
+	color: black;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+span.NasdaqGS {
+	font-weight: normal;
+	color: #0044ff;
+}
+ 
+a.sectorLink:link    { cursor: pointer; text-decoration: none; }
+a.sectorLink:visited { cursor: pointer; text-decoration: none; }
+a.sectorLink:hover   { cursor: pointer; text-decoration: none; }
+a.sectorLink:active  { cursor: pointer; text-decoration: none; }

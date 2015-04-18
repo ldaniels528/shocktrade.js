@@ -1,0 +1,6 @@
+div.sessionModuleContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 550px;
+}

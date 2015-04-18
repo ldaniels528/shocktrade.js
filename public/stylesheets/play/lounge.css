@@ -1,0 +1,41 @@
+.chat_messages {
+	display: block;
+	width: 100%; 
+	height: 295px; 
+	border: 1px solid #888888; 
+	border-radius: 8px 8px 8px 8px;
+	clear: both; 
+	overflow: scroll
+}
+
+.chat_message {
+	display: block; 
+	width: 95%; 
+	vertical-align: middle; 
+	margin-top: 2px; 
+	margin-left: 5px; 
+	margin-right: 5px
+}
+
+.emoticons {
+	width: 100%;
+}
+
+.emoticon {
+	border: 1px solid #888888;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #cccccc;
+	padding: 4px;
+}
+
+.emoticon:hover {
+	background-color: #90a0ff !important;
+}
+
+.lounge_players {
+	width: 100%;
+	background-color: #eeeeee;
+	border: 1px solid #cccccc;
+	border-radius: 8px 8px 8px 8px;
+	padding: 2px 2px 2px 2px;
+}

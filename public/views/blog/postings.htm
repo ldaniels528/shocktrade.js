@@ -1,0 +1,8 @@
+<div ng-controller="BlogCtrl" ng-init="getBlogPosts(20)" style="width: 100%; margin-top: 5px">
+	<div ng-repeat="post in posts">
+		<div style="color: #6060ff; margin-top: 10px">{{ post.creationTime.$date | date:'EEE, MMM d, yyyy' }}</div>
+		<div style="background-color: #dddddd; font-weight: bold">{{ post.title }}</div>
+		<div ng-bind-html="post.body">{{ post.body }}</div>
+		<div>Posted by <span style="color: #e08000">{{ post.author }}</span> at <span style="color: #e08000">{{ post.creationTime.$date | date:'hh:mma' }}</span></div>
+	</div>
+</div>

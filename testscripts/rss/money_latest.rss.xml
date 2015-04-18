@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://rss.cnn.com/~d/styles/itemcontent.css"?>
+<rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0"
+	version="2.0">
+	<channel>
+		<title>Latest financial news - CNNMoney.com</title>
+		<link>http://money.cnn.com/?section=money_latest</link>
+		<description>From CNN and Money magazine, CNNMoney.com combines
+			business news and in-depth market analysis with practical advice and
+			answers to personal finance questions.</description>
+		<language>en-us</language>
+		<copyright>© 2014 Cable News Network LP, LLLP.</copyright>
+		<pubDate>Wed, 12 Mar 2014 21:57:51 EDT</pubDate>
+		<ttl>10</ttl>
+		<image>
+			<title>Latest financial news - CNNMoney.com</title>
+			<link>http://money.cnn.com/?section=money_latest</link>
+			<url>http://i.cnn.net/money/images/cnnmoney_logo_144x30.gif</url>
+			<width>144</width>
+			<height>30</height>
+			<description>From CNN and Money magazine, CNNMoney.com combines
+				business news and in-depth market analysis with practical advice and
+				answers to personal finance questions.</description>
+		</image>
+		<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom"
+			rel="self" type="application/rss+xml" href="http://rss.cnn.com/rss/money_latest" />
+		<feedburner:info uri="rss/money_latest" />
+		<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom"
+			rel="hub" href="http://pubsubhubbub.appspot.com/" />
+		<item>
+			<title>GM ignition switch issue surfaced in 2001</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/3guzZaJ8qxg/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/autos/general-motors-ignition-switch-recall/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312214407-general-motors-saturn-ion-2003-120x90.jpg"
+				height="90" width="120" />
+			<description>General Motors knew of an issue with its ignition switch
+				several years before it has previously acknowledged.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/3guzZaJ8qxg"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 21:56:56 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/autos/general-motors-ignition-switch-recall/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Neil Young's music startup raises $1 million</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/s8JAo0MexZA/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/technology/innovation/neil-young-pono/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312095540-neil-young-sxsw-120x90.jpg"
+				height="90" width="120" />
+			<description>Neil Young is mining for a sound of gold, and it might
+				pay off.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/s8JAo0MexZA"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 12:50:40 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/technology/innovation/neil-young-pono/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Soros: Ukraine needs EU Marshall Plan</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/wSl8ysUYSLg/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/news/economy/ukraine-europe-soros/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312121128-george-soros-120x90.jpg"
+				height="90" width="120" />
+			<description>Ukraine needs financial aid on the scale of the Marshall
+				Plan that set Europe on the road to recovery and prosperity after
+				World War II, investor and philanthropist George Soros said
+				Wednesday.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/wSl8ysUYSLg"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 12:39:18 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/news/economy/ukraine-europe-soros/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Repairs for recalled GM cars to start in April</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/kcOet7WlAQs/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/autos/gm-recall-information/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311174056-gm-recall-chevrolet-hhr-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/kcOet7WlAQs"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 16:13:57 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/autos/gm-recall-information/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Disabled Americans fighting for the right to save more money</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/UdgNXTx6X5g/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/pf/disabled-benefits/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140310035646-disabled-savings--120x90.jpg"
+				height="90" width="120" />
+			<description>Americans with disabilities are fighting for the right
+				to save money without getting their government benefits cut
+				off.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/UdgNXTx6X5g"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 11:54:00 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/pf/disabled-benefits/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>4 reasons Russia will keep gas flowing</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/TvPEbRttwlo/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/news/economy/russia-gas-threat/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312121141-russian-gas-exports-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/TvPEbRttwlo"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 12:27:52 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/news/economy/russia-gas-threat/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Big Wall Street bonuses are back</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/-9P42xjE-Kw/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/investing/banking-bonuses/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312094720-wall-street-new-york-stock-exchange-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/-9P42xjE-Kw"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 12:08:26 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/investing/banking-bonuses/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Starbucks' app to allow barista tips</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/GYRKTFDGqDM/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/news/companies/starbucks-app-tips/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312092325-starbucks-tip-app-120x90.jpg"
+				height="90" width="120" />
+			<description>Starbucks' baristas are about to get a digital bump in
+				their paychecks -- the coffee chain's updated iPhone app will allow
+				customers to make a tip when paying with their phones.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/GYRKTFDGqDM"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 10:36:42 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/news/companies/starbucks-app-tips/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Good news for the corporate gender gap</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/tybdyVJwv88/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/smallbusiness/women-entrepreneurs/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311125430-women-gender-gaps-120x90.jpg"
+				height="90" width="120" />
+			<description>As a CEO and someone who teaches young people how to be
+				leaders and entrepreneurs, the relationship between women and
+				business is frequently on my mind -- especially this month.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/tybdyVJwv88"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 10:24:53 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/smallbusiness/women-entrepreneurs/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Wall Street shrugs as global markets sink </title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/T-Tjr2to9XI/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/investing/stocks-markets/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311172047-nyse-premarkets-031114-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/T-Tjr2to9XI"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 16:14:07 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/investing/stocks-markets/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Obama wants to expand overtime pay</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/Tb3KZ59dWPo/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/news/economy/obama-overtime/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312073942-obama-overtime-pay-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/Tb3KZ59dWPo"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 09:48:24 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/news/economy/obama-overtime/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>States, federal government cracking down on for-profit
+				colleges </title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/1DOUMhAvbOU/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/pf/college/for-profit-colleges/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140310152116-for-profit-colleges-120x90.jpg"
+				height="90" width="120" />
+			<description>When Hannah Benbow ran into problems with her for-profit
+				college, she turned to the federal government for help -- but
+				nothing happened.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/1DOUMhAvbOU"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 07:16:08 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/pf/college/for-profit-colleges/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>'Veronica Mars': Will it score at box office like it did on
+				Kickstarter?</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/E2if1SjyoJs/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/smallbusiness/veronica-mars-kickstarter/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311131148-veronica-mars-movie-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/E2if1SjyoJs"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 11:30:29 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/smallbusiness/veronica-mars-kickstarter/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Mt.Gox CEO's U.S. assets frozen </title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/Lwn4u6k3Szc/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/technology/mt-gox-asset-freeze/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140312074440-mark-karpeles-mt-gox-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/Lwn4u6k3Szc"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 10:38:03 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/technology/mt-gox-asset-freeze/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Stocks: China concerns hitting sentiment</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/5qUv4WIJS5I/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/investing/premarkets/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311172047-nyse-premarkets-031114-120x90.jpg"
+				height="90" width="120" />
+			<description>Concerns about the Chinese economy hit global stocks
+				Wednesday and could make for a weak start on U.S. markets.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/5qUv4WIJS5I"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 08:08:26 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/investing/premarkets/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Inside the underground sex economy </title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/dWQkQAwBsgo/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/12/news/economy/underground-sex-economy/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311115332-pimps-payday-handcuffs-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/dWQkQAwBsgo"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 10:27:33 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/12/news/economy/underground-sex-economy/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>U.S. Attorney investigating General Motors recall</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/VXzFgb5Dfho/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/11/autos/general-motors-criminal-investigation/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311202705-general-motors-chevrolet-cobalt-120x90.jpg"
+				height="90" width="120" />
+			<description>A federal prosecutor has launched a criminal
+				investigation into General Motors' handling of a vehicle fault that
+				resulted in at least 13 deaths, according to a source familiar with
+				the matter.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/VXzFgb5Dfho"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 10:40:08 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/11/autos/general-motors-criminal-investigation/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>NJ agrees to ban Tesla's direct sales</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/s500Yx0TBfs/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/11/autos/tesla-new-jersey-ban/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311193150-tesla-dealership-120x90.jpg"
+				height="90" width="120" />
+			<description>Read full story for latest details.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/s500Yx0TBfs"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Wed, 12 Mar 2014 15:17:19 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/11/autos/tesla-new-jersey-ban/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>Fannie Mae, Freddie Mac stocks fall sharply</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/3SgU9qN8TMI/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/11/investing/fannie-mae-freddie-mac/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311154539-fannie-mae-stocks-down-120x90.png"
+				height="90" width="120" />
+			<description>Mortgage lenders Fannie Mae and Freddie Mac tumbled
+				Tuesday on news of a deal to close them down.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/3SgU9qN8TMI"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Tue, 11 Mar 2014 18:55:59 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/11/investing/fannie-mae-freddie-mac/index.html
+			</feedburner:origLink>
+		</item>
+		<item>
+			<title>4.2 million have signed up for Obamacare</title>
+			<link>http://rss.cnn.com/~r/rss/money_latest/~3/EIeG8HTacdw/index.html</link>
+			<guid isPermaLink="false">http://money.cnn.com/2014/03/11/news/economy/obamacare-enrollment/index.html</guid>
+			<media:thumbnail
+				url="http://i2.cdn.turner.com/money/dam/assets/140311152415-obamacare-enrollment-120x90.jpg"
+				height="90" width="120" />
+			<description>More than 4.2 million have signed up for insurance on
+				the Obamacare exchanges through February, leaving the administration
+				with one more month to hit its enrollment targets.&lt;img
+				src="http://feeds.feedburner.com/~r/rss/money_latest/~4/EIeG8HTacdw"
+				height="1" width="1"/&gt;</description>
+			<pubDate>Tue, 11 Mar 2014 21:17:09 EDT</pubDate>
+			<feedburner:origLink>http://money.cnn.com/2014/03/11/news/economy/obamacare-enrollment/index.html
+			</feedburner:origLink>
+		</item>
+	</channel>
+</rss>

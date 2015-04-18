@@ -1,0 +1,117 @@
+<div ng-init="sortDesc = false; sortField = 'label'; refreshTree()" style="width: 100%">
+	<div style="width: 100%; margin-top: 10px">
+		<div style="display: block">
+			<div class="drill_down_title">
+				<img src="/assets/images/objects/overview.png"> 
+				Assets by Sector
+				<img ng-click="sortDesc = !sortDesc" 
+					class="clickable"
+					ng-src="/assets/images/buttons/{{ sortDesc ? 'arrow_down' : 'arrow_up' }}.gif">
+				
+				<!-- ordering: label/total -->
+				<span style="float: right; padding-right: 5px" class="clickable" ng-click="sortField = (sortField === 'label') ? 'total' : 'label'">
+					Sort By: <span style="font-weight: bold; color: #ff9940">{{ sortField === 'label' ? 'Sectors' : 'Assets' }}</span>
+				</span>
+			</div>
+
+			<div style="display: block; padding-left: 10px" ng-repeat="sector in sectors | orderBy:((sortDesc ? '-' : '') + sortField)">
+				<img class="clickable" 
+					ng-click="expandOrCollapseSector(sector)"
+					ng-src="/assets/images/{{ sector.loading ? 'status/loading.gif' : (sector.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+				<span class="sector_H">{{ sector.label }}</span> 
+				<span class="null center">(<span style="color: blue">{{ sector.total }}</span>)</span>
+			
+				<div style="display: block; padding-left: 20px"
+					ng-if="sector.expanded && sector.industries"  
+					ng-repeat="industry in sector.industries | orderBy:'label'">
+					<img class="clickable" 
+						ng-click="expandOrCollapseIndustry(sector, industry)"
+						ng-src="/assets/images/{{ industry.loading ? 'status/loading.gif' : (industry.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+					<span class="industry_H">{{ industry.label }}</span> 				
+					<span class="null center">(<span style="color: blue">{{ industry.total }}</span>)</span>
+				
+					<div style="display: block; padding-left: 20px" 
+						ng-if="industry.expanded && industry.subIndustries.length > 0"
+						ng-repeat="subIndustry in industry.subIndustries | orderBy:'label'">
+						<img class="clickable" 
+							ng-click="expandOrCollapseSubIndustry(sector, industry, subIndustry)"
+							ng-src="/assets/images/{{ subIndustry.loading ? 'status/loading.gif' : (subIndustry.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+						<span class="sub_industry_H">{{ subIndustry.label }}</span> 
+						<span class="null center">(<span style="color: blue">{{ subIndustry.total }}</span>)</span>
+					
+						<div style="display: block; padding-left: 20px" 
+							ng-if="subIndustry.expanded && subIndustry.quotes.length > 0">
+							<!--  heading -->
+							<div class="sector_industry bottom">
+								<img ng-src="/assets/images/objects/market.png">
+								<span class="sector_H">{{ sector.label }}</span> 
+								<img src="/assets/images/buttons/arrow-next.png" class="middle"> 
+								<span class="industry_H">{{ industry.label }}</span>
+								<img src="/assets/images/buttons/arrow-next.png" class="middle"> 
+								<span class="sub_industry_H">{{ subIndustry.label }}</span>
+							</div>
+							
+							<table class="results">
+								<tr>
+									<th class="results">Symbol</th>
+									<th class="results_num">Last</th>
+									<th class="results_num">Open</th>
+									<th class="results_num">Close</th>
+									<th class="results_num">Chg %</th>
+									<th class="results_num">Low</th>
+									<th class="results_num">High</th>
+									<th class="results_num">Spread %</th>
+									<th class="results_bignum">Volume</th>
+								</tr>					
+								<tr ng-repeat="quote in subIndustry.quotes | orderBy:'symbol'" ng-class="quote.symbol === selectedSymbol() ? 'selected' : ($index % 2 ? 'odd' : 'even')">
+									<td class="results">
+										<a class="links" ng-href="#/discover/{{ quote.symbol }}">
+											<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(row) }}">
+											<span ng-class="quote.exchange"
+												popover="{{ quote.name }}" 
+												popover-placement="right"
+												popover-trigger="mouseenter">{{ quote.symbol }}</span>
+										</a>
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
+										<span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
+									</td>					
+									<td class="results_num">
+										<span ng-show="quote.open != null">{{ quote.open | quoteNumber }}</span>
+										<span ng-show="quote.open == null" class="null center">&#8212;</span>
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.close != null">{{ quote.close | quoteNumber }}</span>
+										<span ng-show="quote.close == null" class="null center">&#8212;</span>														
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | number:1 }}</span>
+										<span ng-show="quote.changePct == null" class="null center">&#8212;</span>		
+										<changeArrow ng-show="quote.changePct != null" value="{{ quote.changePct }}">								
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>
+										<span ng-show="quote.low == null" class="null center">&#8212;</span>															
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.high != null">{{ quote.high | quoteNumber }}</span>
+										<span ng-show="quote.high == null" class="null center">&#8212;</span>														
+									</td>
+									<td class="results_num">
+										<span ng-show="quote.spread != null" ng-class="quote.spread > 50 ? 'positive' : ''">{{ quote.spread | number:2 }}</span>
+										<span ng-show="quote.spread == null" class="null center">&#8212;</span>														
+									</td>
+									<td class="results_bignum">
+										<span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
+										<span ng-show="quote.volume == null" class="null center">&#8212;</span>													
+									</td>					
+								</tr>
+							</table>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

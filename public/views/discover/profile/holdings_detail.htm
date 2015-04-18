@@ -1,0 +1,37 @@
+<table style="width: 100%">
+	<tr>
+		<th style="width: 22%; text-align: left">Symbol</th>
+		<th style="width: 25%; text-align: right">% Net Asset</th>
+		<th style="width: 24%; text-align: right">Change (%)</th>
+		<th style="width: 29%; text-align: right">Volume</th>
+	</tr>
+</table>
+
+<div class="filterContainer">
+	<table style="width: 100%">
+		<thead></thead>
+		<tbody ng-repeat="quote in q.products" >
+			<tr ng-class-odd="'odd'" ng-class-even="'even'">
+				<td class="qm" style="width: 22%; text-align: left">
+					<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(quote) }}">
+					<a ng-href="#/discover/{{ quote.symbol }}">
+						<span ng-class="quote.exchange"
+							popover="{{ quote.name }}" 
+							popover-trigger="mouseenter">{{ quote.symbol || '(N/A)' }}</span>
+					</a>
+				</td>
+				<td class="qm" style="width: 25%; text-align: right">
+					{{ quote.netAssetsPct | number:2 }}%
+				</td>
+				<td ng-class="quote.changePct < 0 ? 'qm negative' : 'qm'" style="width: 24%; text-align: right">
+					{{ quote.changePct | number:2 }}
+					<changearrow value="{{ quote.changePct }}" />
+				</td>
+				<td class="qm" style="width: 29%; text-align: right">
+					{{quote.volume | number}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+

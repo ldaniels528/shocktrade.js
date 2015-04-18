@@ -1,0 +1,109 @@
+<div class="sector_industry bottom">
+	<div style="display: inline; float: left">
+		<!-- Market Image -->
+		<img ng-if="q.active" ng-src="/assets/images/objects/market.png">
+		<span ng-if="!q.active"
+			popover="Asset is inactive" 
+			popover-trigger="mouseenter"
+			popover-placement="right">
+			<img src="/assets/images/status/red_alert.png">
+		</span>
+		
+		<!-- Sector -->
+		<span ng-show="q.sector && (q.sector != 'N/A')">
+			<span class="sector_H">{{ q.sector }}</span>	
+			<img ng-show="q.sector" src="/assets/images/buttons/arrow-next.png" class="middle">
+		</span>
+		
+		<!-- Industry -->
+		<span ng-show="q.industry && (q.industry != 'N/A')">
+			<span class="industry_H">{{ q.industry }}</span> 
+			<img ng-show="q.industry" src="/assets/images/buttons/arrow-next.png" class="middle">
+		</span>
+		
+		<!-- Sub-Industry -->
+		<span ng-show="q.subIndustry && (q.subIndustry != 'N/A')">
+			<span class="sub_industry_H">{{ q.subIndustry }}</span> 
+			<img ng-show="q.subIndustry" src="/assets/images/buttons/arrow-next.png" class="middle">
+		</span>		
+		
+		<!-- Exchange -->
+		<span ng-class="q.exchange + ' bold'">{{ q.exchange }}</span>
+		
+		<!-- Company Name -->
+		<span ng-show="q.name">
+			<img ng-show="q.exchange" src="/assets/images/buttons/arrow-next.png" class="middle">
+			<span class="company_H">{{ q.name }}</span>
+		</span>
+		
+		<!--  Symbol -->
+		<span ng-show="q.symbol">
+			(<span ng-class="q.exchange + ' bold'">{{ q.symbol }}</span>)
+		</span>
+		
+		<!-- Favorite -->
+		<span ng-hide="q.active && isFavorite(q.symbol)">
+			<a href="" ng-click="addFavoriteSymbol(q.symbol)">
+				<img
+					class="clickable"
+					popover="Add to Favorites" 
+					popover-trigger="mouseenter"  
+					src="/assets/images/objects/favorite-add.png">
+			</a>
+		</span>
+				
+		<!-- Trade button -->
+		<img ng-show="q.active && MySession.isAuthorized()" 
+			src="/assets/images/buttons/cart-add16.png" 
+			class="clickable middle"
+			popover="Buy or Sell this security" 
+			popover-trigger="mouseenter">
+			
+		<!-- Admin Tools -->
+		<span ng-show="MySession.isAdmin()"
+			popover="Launch Administration Tools" 
+			popover-trigger="mouseenter">
+			<img class="clickable" ng-click="adminToolsPopup()" src="/assets/images/links/system_header.png">
+		</span>			
+	</div>
+	<br style="clear: both">
+</div>
+
+<script type="text/ng-template" id="processingTools.htm">
+	<div class="modal-header">
+	  	<h4>Processing Tools</h4>
+	</div>	
+	<div id="admin_tools" class="modal-body" ng-init="init()">
+		<div>
+			<table style="width: 100%">
+				<tr>
+					<td><h4>Symbol</h4></td> 
+					<td><input type="text" class="input-small form-control" ng-model="params.symbol"></td>
+				</tr>
+				<tr>
+					<td><h4>Tool</h4></td>
+					<td>
+						<select 
+							ng-model="params.tool" 
+							ng-options="tool.id as tool.name for tool in tools"
+							class="form-control">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><h4>Status</h4></td> 
+					<td><input type="text" class="form-control" ng-model="status" readonly=true></td>
+				</tr>
+				<tr>
+					<td><h4>Progress</h4></td>
+					<td><progressbar value="50" class="bottom"></progressbar></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+	    <button class="btn btn-primary" ng-click="ok()">Execute</button>
+	    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	</div>
+</script>
+	

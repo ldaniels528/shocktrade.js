@@ -1,0 +1,33 @@
+<div ng-if="MySession.userProfile._id && contest._id" style="width: 100%; text-align: center">
+	<div class="gameline">Please choose a game to use this feature</div>
+	<div>
+		<fieldset>
+			<table style="width: 100%">
+				<tr ng-repeat="c in searchResults" ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
+					<td style="width: 55%">
+						<span ng-show="c.status == 'ACTIVE'">
+							<img ng-show="c.playerCount < c.maxParticipants" src="/assets/images/status/greenlight.png">
+							<img ng-hide="c.playerCount < c.maxParticipants" src="/assets/images/status/yellowlight.gif">
+						</span>
+						<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
+						<img ng-src="http://graph.facebook.com/{{ c.participants[0].facebookID }}/picture" class="avatar">
+						<a href="" ng-click="loadContest(c._id.$oid)">{{ c.name }}</a>
+					</td>
+					<td style="width: 15%"><span style="float: right">$ {{ c.startingBalance | number }}</span></td>
+					<td style="width: 15%; text-align: right">
+						{{ c.participants.length || 0 }} <img src="/assets/images/objects/friend_header.gif"> / {{ c.maxParticipants }}
+					</td>
+					<td style="width: 15%">					
+						<span style="float: right">
+							<img ng-show="c.ranked" src="/assets/images/objects/reward.png">
+							<img ng-show="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
+							<img ng-show="false" src="/assets/images/objects/sharing_header.png">
+							<img ng-show="c.levelCap" src="/assets/images/objects/friend_delete.png">
+							<img ng-show="c.perksAllowed" src="/assets/images/objects/gift.png">
+						</span>
+					</td>				
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+</div>

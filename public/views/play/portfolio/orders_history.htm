@@ -1,0 +1,47 @@
+<table style="width: 100%">
+	<tr style="background-color: #dddddd">
+		<th style="width: 19%">Date</th>
+		<th style="width: 10%">Symbol</th>
+		<th style="width: 11%; text-align: right">Price</th>
+		<th style="width: 17%; text-align: right">Quantity</th>
+		<th style="width: 10%; text-align: center">Type</th>				
+		<th style="width: 33%; text-align: left">Status</th>
+	</tr>
+</table>
+
+<div class="ordersContainer">
+	<div style="display: block; width: 100%">
+		<table style="width: 100%">
+			<tr ng-show="participant.orderHistory.length == 0">
+				<td colspan="7">
+					<div style="display: block; width: 100%; margin-top: 5px; text-align: center">
+						<img src="/assets/images/status/alert.gif">  No orders found
+					</div>
+				</td>
+			</tr>
+		
+			<tr ng-repeat="order in participant.orderHistory | orderBy:'creationTime'" ng-class-even="'even'" ng-class-odd="'odd'">
+				<td style="width: 19%">
+					<!-- status -->
+					<img ng-show="order.message == 'Expired'" src="/assets/images/status/yellowlight.gif">				
+					<img ng-show="order.message == 'Canceled'" src="/assets/images/status/offlight.png">			
+					<img ng-show="order.status == 'PROCESSED'" src="/assets/images/status/greenlight.png">
+					<img ng-show="order.status == 'FAILED' && (order.message != 'Expired' && order.message != 'Canceled')" src="/assets/images/status/redlight.gif">				
+				
+					<!-- processed date -->
+					{{ order.orderTime.$date | date:'MM/dd hh:mma' }}
+				</td>
+				<td style="width: 10%">
+					<a href="" ng-click="loadQuote(order.symbol)"><span ng-class="order.exchange">{{ order.symbol }}</span></a>
+				</td>
+				<td style="width: 11%; text-align: right">
+					<span ng-show="order.price == null" class="positive">MARKET</span>
+					<span ng-show="order.price != null">{{ order.price | number:2 }}</span>
+				</td>		
+				<td style="width: 17%; text-align: right">{{ order.quantity | number }}</td>
+				<td style="width: 10%; text-align: center">{{ order.orderType }}</td>
+				<td style="width: 33%">{{ order.message != null ? order.message : 'Processed' }}</td>
+			</tr>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,59 @@
+<table style="width: 100%; border-collapse: separate">
+	<tr>
+		<th class="qm_header">Forward Div Rate <span class="small">(Annual)</span></th>
+		<td class="qm_detail">
+			<span ng-show="q.forwardAnnualDividendRate == null" class="null">&#8212;</span>
+			<span ng-show="q.forwardAnnualDividendRate != null">{{ q.forwardAnnualDividendRate | number:2 }}</span>
+		</td>			
+		
+		<th class="qm_header">Dividend Yield <span class="small">(5-Year Avg)</span></th>
+		<td class="qm_detail">
+			<span ng-show="q.divYield5YearAvg == null" class="null">&#8212;</span>
+			<span ng-show="q.divYield5YearAvg != null">{{ q.divYield5YearAvg | number:2 }}</span>
+		</td>		
+		
+		<th class="qm_header">Payout Ratio</th>
+		<td class="qm_detail">
+			<span ng-show="q.payoutRatio == null" class="null">&#8212;</span>
+			<span ng-show="q.payoutRatio != null">{{ q.payoutRatio | number:2 }}</span>
+		</td>						
+	</tr>
+	<tr>
+		<th class="qm_header">Forward Div Yield <span class="small">(Annual)</span></th>
+		<td class="qm_detail">
+			<span ng-show="q.forwardAnnualDividendYield == null" class="null">&#8212;</span>
+			<span ng-show="q.forwardAnnualDividendYield != null">{{ q.forwardAnnualDividendYield | number:1 }}</span>
+		</td>		
+		
+		<th class="qm_header">Ex-Dividend Date</th>
+		<td class="qm_detail">
+			<span ng-show="q.exDividendDate == null" class="null">&#8212;</span>
+			<span ng-show="q.exDividendDate != null">{{ q.exDividendDate.$date | date:'MM/dd/yy' }}</span>
+		</td>
+
+		<th class="qm_header">Last Split Factor</th>
+		<td class="qm_detail">
+			<span ng-show="q.lastSplitFactor == null || q.lastSplitFactor == '&#8212;'" class="null">&#8212;</span>
+			<span ng-show="q.lastSplitFactor != null">{{ q.lastSplitFactor }}</span>
+		</td>							
+	</tr>
+	<tr>
+		<th class="qm_header">Trailing Div Yield <span class="small">(Annual)</span></th>
+		<td class="qm_detail">
+			<span ng-show="q.trailingAnnualDividendYield == null" class="null">&#8212;</span>
+			<span ng-show="q.trailingAnnualDividendYield != null">{{ q.trailingAnnualDividendYield | number:1 }}</span>
+		</td>
+		
+		<th class="qm_header">Dividend Date</th>
+		<td class="qm_detail">
+			<span ng-show="q.dividendDate == null" class="null">&#8212;</span>
+			<span ng-show="q.dividendDate != null">{{ q.dividendDate.$date | date:'MM/dd/yy' }}</span>
+		</td>		
+		
+		<th class="qm_header">Last Split Date</th>
+		<td class="qm_detail">
+			<span ng-show="q.lastSplitDate == null" class="null">&#8212;</span>
+			<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate.$date | date:'MM/dd/yy' }}</span>
+		</td>													
+	</tr>		
+</table>

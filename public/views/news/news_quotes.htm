@@ -1,0 +1,53 @@
+<div style="display: block">
+	<div style="display: block; width: 100%">
+		<table style="width: 100%">					
+			<tr><td>								
+				<!--  header section -->
+				<table style="width: 100%">
+					<tr style="background-color: #dddddd">
+						<th style="width: 22%; text-align: left">Symbol</th>
+						<th style="width: 25%; text-align: right">Price</th>
+						<th style="width: 24%; text-align: center">Change (%)</th>
+						<th style="width: 29%; text-align: right">Volume</th>
+					</tr>
+				</table>
+			</td></tr>
+			
+			<tr><td>
+				<div class="news_quotes_container">
+					<div ng-if="NewsSymbols.isEmpty()" class="notice">
+						<img src="/assets/images/status/alert.gif"> No records found
+					</div>
+					<table style="width: 100%">
+						<thead></thead>
+						<tbody ng-repeat="quote in NewsSymbols.getQuotes()" >
+							<tr ng-class-odd="'odd'" ng-class-even="'even'">
+								<td class="qm" style="width: 22%; text-align: left">
+									<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(quote) }}">
+									<a ng-href="#/discover/{{ quote.symbol }}">
+										<span ng-class="quote.exchange" 
+											popover="{{ quote.name }}" 
+											popover-trigger="mouseenter">{{ quote.symbol }}</span>
+									</a>
+								</td>
+								<td class="qm" style="width: 25%; text-align: right">
+									{{ quote.lastTrade | quoteNumber }}
+								</td>
+								<td ng-class="quote.changePct < 0 ? 'qm negative' : 'qm'" style="width: 24%; text-align: right">
+									{{ quote.changePct | number:2 }}
+									<img ng-show="quote.changePct < 0.0" src="/assets/images/status/stock_down.gif">
+									<img ng-show="quote.changePct > 0.0" src="/assets/images/status/stock_up.gif">
+									<img ng-show="quote.changePct == 0.0" src="/assets/images/status/transparent.png">
+									<img ng-show="quote.changePct == null" src="/assets/images/status/transparent.png">
+								</td>
+								<td class="qm" style="width: 29%; text-align: right">
+									{{ quote.volume | number }}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</td></tr>
+		</table>
+	</div>
+</div>

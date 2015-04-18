@@ -1,0 +1,13 @@
+<div style="width: 100%">
+	<div style="display: inline; float: left; width: 65%; vertical-align: top; padding-right: 5px">
+		<div ng-include src="newsPath"></div>
+	</div>
+	<div style="display: inline; float: right; width: 35%; vertical-align: top">		
+		<accordion> 
+			<accordion-group is-open="true">
+				<accordion-heading><img src="/assets/images/objects/headlines.png"> In the News</accordion-heading>
+				<div ng-include src="'/assets/views/news/news_quotes.htm'"></div>
+			</accordion-group>
+		</accordion>
+	</div>
+</div>

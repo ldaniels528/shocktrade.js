@@ -1,0 +1,137 @@
+<div style="width: 100%">
+	<div id="NewsBlock" style="display: block; width: 100%" ng-repeat="channel in channels">
+		<div class="news_provider">
+			<div style="display: inline; float: left">
+				<span style="color: white">{{ channel.items.length || 0 }} stories</span>
+			</div>
+			<div style="display: inline; float: right">
+				<select 
+					ng-model="selection.feed" 
+					ng-options="source._id.$oid as source.name for source in newsSources"
+					ng-change="getNewsFeed(selection.feed)">
+				</select>
+				<a href="" ng-click="view = 'list'">
+					<img ng-class="view != 'list' ? 'clickable' : ''" 
+						src="/assets/images/discover/news/list-24.png" 
+						popover="List view" popover-trigger="mouseenter">
+				</a>				
+				<a href="" ng-click="view = 'grid'">
+					<img ng-class="view != 'grid' ? 'clickable' : ''" 
+						src="/assets/images/discover/news/grid-24.png" 
+						popover="Grid view" popover-trigger="mouseenter">
+				</a>
+			</div>
+			<br style="clear: both">
+		</div>
+		<div style="display: block; background-color: #eeeeee; border: 1px solid #cccccc; border-radius: 4px 4px 4px 4px; margin-bottom: 4px">
+			<img src="/assets/images/objects/headlines.png">
+			<a href="{{channel.link}}" target="newWindow">
+				<span style="color: #000080" class="news_title">{{ channel.title }}</span>
+			</a>
+		</div>
+		
+		<div class="newsContainer">	 
+			 <div ng-show="view == 'list'" style="display: block; width: 100%">
+		 		<div ng-include src="'/assets/views/news/news_list.htm'"
+		 			ng-repeat="item in channel.items | orderBy:'-pubDate'" 
+		 			ng-class-even="'news_list_even'" ng-class-odd="'news_list_odd'"></div>
+			 </div>
+			 
+			 <div ng-show="view == 'grid'" style="display: block; width: 100%">
+			 	<div ng-repeat="item in channel.items | orderBy:'-pubDate'" ng-class-even="'news_grid_even'" ng-class-odd="'news_grid_odd'">
+			 		<div ng-include src="'/assets/views/news/news_grid.htm'"></div>
+			 	</div>
+			 	<br style="clear: both">
+			 </div>
+		 </div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="news_quote.htm">
+	<div class="modal-header">
+   		<h3>Quote</h3>
+    </div>
+    <div id="order_dialog" class="modal-body" ng-init="init()">
+		<table style="width: 100%">	
+			<tr>
+				<td colspan="4">
+					<span style="font-weight: bold">{{ quote.name }}</span>
+					<span ng-show="quote.exchange">(<span ng-class="quote.exchange">{{ quote.exchange }}</span>)</span>
+					<span ng-hide="quote.name">&nbsp;</span>
+					
+					<span ng-show="quote.changePct > 0">&#8212;</span>
+					<span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>
+					<changearrow value="{{ quote.changePct }}" style="vertical-align: bottom" />
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<th class="info">Prev Close</th>
+				<th class="info">Open</th>
+				<th class="info">Day's High</th>
+				<th class="info">Day's Low</th>
+			</tr>
+			<tr>
+				<td class="info">
+					<span ng-show="quote.prevClose == null" class="null">N/A</span>
+					<span ng-show="quote.prevClose != null">{{ quote.prevClose | number:2 }}</span>							
+				</td>
+				<td class="info">
+					<span ng-show="quote.open == null" class="null">N/A</span>
+					<span ng-show="quote.open != null">{{ quote.open | number:2 }}</span>						
+				</td>
+				<td class="info">
+					<span ng-show="quote.high == null" class="null">N/A</span>
+					<span ng-show="quote.high != null">{{ quote.high | number:2 }}</span>						
+				</td>							
+				<td class="info">
+					<span ng-show="quote.low == null" class="null">N/A</span>
+					<span ng-show="quote.low != null">{{ quote.low | number:2 }}</span>										
+				</td>
+			</tr>
+			<tr>
+				<th class="info">Volume</th>
+				<th class="info">Spread %</th>
+				<th class="info">52-Wk High</th>
+				<th class="info">52-Wk Low</th>
+			</tr>
+			<tr>
+				<td>
+					<span ng-show="quote.volume == null" class="null">N/A</span>
+					<span ng-show="quote.volume != null">{{ quote.volume | number }}</span>						
+				</td>
+				<td>	
+					<span ng-show="quote.spread == null" class="null">N/A</span>
+					<span ng-show="quote.spread != null">{{ quote.spread | number:2 }}%</span>				
+				</td>
+				<td>
+					<span ng-show="quote.high52Week == null" class="null">N/A</span>
+					<span ng-show="quote.high52Week != null">{{ quote.high52Week | number:2 }}</span>									
+				</td>
+				<td>
+					<span ng-show="quote.low52Week == null" class="null">N/A</span>
+					<span ng-show="quote.low52Week != null">{{ quote.low52Week | number:2 }}</span>					
+				</td>
+			</tr>
+			<tr>
+				<th class="info" colspan="2">Total Cost</th>
+			</tr>		
+			<tr>
+				<td colspan="2">
+					<div style="width: 100%; color: #00a050">
+						$ {{ getTotal(order) | number:2 }}
+					</div>
+				</td>
+				<td colspan="2">
+					<span style="float: left">
+						<label><input ng-model="order.emailNotify" type="checkbox"> Notify by Email</label>
+					</span>
+				</td>
+			</tr>		
+		</table>						
+    </div>
+	<div class="modal-footer">	
+    	<button class="btn btn-primary" ng-click="ok()">Ok</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

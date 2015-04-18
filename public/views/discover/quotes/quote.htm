@@ -1,0 +1,30 @@
+<div class="advisory" ng-show="q.advisory">
+	<img ng-src="/assets/images/status/{{ q.advisoryType == 'INFO' ? 'info' : 'alert' }}.gif"> {{ q.advisory }}
+</div>
+
+<div ng-include src="'/assets/views/discover/quotes/stock_quote.htm'"></div>
+
+<div ng-if="q.assetType === 'Common Stock'" style="display: block; width: 100%; margin-top: 5px">
+	<div ng-repeat="module in expanders">
+		<div class="quote_title" ng-if="!module.visible || module.visible(q)">
+			<img ng-click="expandSection(module)" 
+				ng-src="/assets/images/buttons/{{ module.expanded ? 'collapse.png' : 'expand.png' }}"
+				class="clickable">
+			<img ng-src="{{ module.icon(q) }}">
+			{{ module.title }}
+			<img ng-show="module.loading" src="/assets/images/status/loading.gif">
+		</div>
+		<div ng-if="module.expanded" ng-include="module.url"></div>
+		<div style="margin-bottom: 5px"></div>
+	</div>
+</div>
+
+<div ng-include src="'/assets/views/discover/profile/fund_summary.htm'"></div>
+
+<div ng-include src="'/assets/views/discover/profile/security_class.htm'"></div>
+
+<div ng-if="q.products.length > 0">
+	<div class="quote_sub_title" style="color: #000080; font-weight: bold; text-align: center; padding: 5px">ETF Holdings Detail</div>
+	<div ng-include src="'/assets/views/discover/profile/holdings_detail.htm'"></div>
+	<hr>
+</div>

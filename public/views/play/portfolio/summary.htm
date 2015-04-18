@@ -1,0 +1,47 @@
+<fieldset>
+	<legend>Portfolio Summary</legend>
+	<div style="display: block; width: 100%">
+		<div style="display: inline; float: left; width: 65%">
+			<table style="width: 100%">
+				<tr>
+					<td class="alabel">Cash Available:</td> 
+					<td class="afunds">
+						<span class="fundsAvailable">{{ getCashAvailable(participant) | number:2 }}</span>
+					</td>
+					<td><span style="font-size: 9pt">&nbsp; (as of {{ asOfDate(participant) | date:'MM/dd hh:mma' }})</span></td>
+				</tr>
+				<tr>
+					<td class="alabel">Investments:</td> 
+					<td class="afunds">
+						<span class="totalInvestment">{{ getTotalInvestment(participant) | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="alabel">Total Equity:</td> 
+					<td class="afunds">
+						<span class="fundsAvailable">{{ getTotalEquity(participant) | number:2 }}</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="display: inline; float: right; width: 35%">
+			<table style="width: 100%">
+				<tr>
+					<td class="alabel">Pending Orders:</td>
+					<td class="afunds"><span class="fundsAvailable">{{ getTotalOrders(participant) | number:2 }}</span></td>
+				</tr>
+				<tr>
+					<!-- Pending Orders (BUY) -->	
+					<td class="alabel">&nbsp; BUY Orders:</td> 
+					<td class="afunds"><span ng-class="ordersBUY > participant.fundsAvailable ? 'profitable' : 'unprofitable'">{{ getTotalBuyOrders(participant) | number:2 }}</span></td>			
+				</tr>
+				<tr>
+					<!-- Pending Orders (SELL) -->
+					<td class="alabel">&nbsp; SELL Orders:</td> 
+					<td class="afunds"><span class="fundsAvailable">{{ getTotalSellOrders(participant) | number:2 }}</span></td>	
+				</tr>
+			</table>
+		</div>	
+		<br style="clear: both">
+	</div>
+</fieldset>

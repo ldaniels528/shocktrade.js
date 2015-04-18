@@ -1,0 +1,64 @@
+<table style="width: 100%">
+	<tr style="background-color: #dddddd">
+		<th style="width: 19%">Date</th>
+		<th style="width: 10%">Symbol</th>
+		<th style="width: 11%; text-align: right">Price</th>
+		<th style="width: 11%; text-align: right">Market</th>
+		<th style="width: 17%; text-align: right">Quantity</th>
+		<th style="width: 10%; text-align: center">Type</th>				
+		<th style="width: 22%">Terms / Status</th>
+	</tr>
+</table>
+
+<div class="ordersContainer">
+	<div style="display: block; width: 100%">
+		<table style="width: 100%">
+			<tr ng-show="participant.orders.length == 0">
+				<td colspan="7">
+					<div style="display: block; width: 100%; margin-top: 5px; text-align: center">
+						<img src="/assets/images/status/alert.gif">  No orders found
+					</div>
+				</td>
+			</tr>
+		
+			<tr ng-repeat="order in participant.orders" ng-class-even="'even'" ng-class-odd="'odd'">
+				<td style="width: 19%; text-align: left">
+					<!-- cancel order button -->
+					<img src="/assets/images/buttons/delete.png" ng-click="cancelOrder(contestId, participant.name, order.id.$oid)" style="cursor: pointer; vertical-align: top">
+	
+					<!-- order date -->
+					<span ng-show="order.creationTime.$date >= tradingStart()">{{ order.creationTime.$date | date:'hh:mma' }}</span>
+					<span ng-show="order.creationTime.$date < tradingStart()">{{ order.creationTime.$date | date:'MM/dd/yyyy' }}</span>
+				</td>
+				<td style="width: 10%">
+					<a href="" ng-click="loadQuote(order.symbol)">
+						<span ng-class="{{ order.exchange }}">{{ order.symbol }}</span>
+					</a>
+				</td>
+				<td style="width: 11%; text-align: right">
+					<span ng-show="isMarketOrder(order)" class="positive">MARKET</span>
+					<span ng-hide="isMarketOrder(order)">{{ order.limitPrice | number:2 }}</span>
+				</td>
+				<td style="width: 11%; text-align: right">
+					<span ng-show="order.lastTrade != null">{{ order.lastTrade | number:2 }}</span>
+					<span ng-show="order.lastTrade == null" class="null">N/A</span>
+				</td>			
+				<td style="width: 17%; text-align: right">{{ order.quantity | number }}</td>
+				<td style="width: 10%; text-align: center">{{ order.orderType }}</td>
+				<td style="width: 22%">
+					<span ng-show="order.status == 'OPEN'">
+						{{ order.priceType }} -
+						<span ng-switch on="order.term">
+							<span ng-switch when="GOOD_FOR_DAY">1 Day</span>
+							<span ng-switch when="GOOD_FOR_7_DAYS">7 Day</span>
+							<span ng-switch when="GOOD_FOR_30_DAYS">30 Day</span>
+							<span ng-switch when="GOOD_FOR_60_DAYS">60 Days</span>
+							<span ng-switch when="GOOD_UNTIL_CANCELED">Unlimited</span>
+						</span>
+					</span>
+					<span ng-show="order.status != 'OPEN'">{{ order.message }}</span>
+				</td>
+			</tr>
+		</table>	
+	</div>
+</div>	

@@ -1,0 +1,19 @@
+.stats_row_left {
+	display: inline; 
+	float: left; 
+	width: 49%;
+}
+
+.stats_row_right {
+	display: inline; 
+	float: right; 
+	width: 49%;
+}
+
+.stats_row_left fieldset {
+	margin-bottom: 4px;
+}
+
+.stats_row_right fieldset {
+	margin-bottom: 4px;
+}

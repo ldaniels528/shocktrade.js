@@ -1,0 +1,7 @@
+curl -X POST -H "Content-Type: application/json" -d \
+'{ "userName":"ldaniels", "facebookID":"1796471892", "first":"Lawrence", "last":"Daniels", "email":"lawrence.daniels@gmail.com, "gender":"Male", "country":"us" }' \
+http://localhost:9000/api/profile/create
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{"emailNotify":true,"symbol":"AMD","limitPrice":4.01,"quantity":"1000","orderType":"BUY","priceType":"LIMIT","orderTerm":"GOOD_FOR_7_DAYS","contestId":"532d248e4cb15ab024a83417","playerId":"51a308ac50c70a97d375a6b2"}' \
+http://localhost:9000/api/orders/create

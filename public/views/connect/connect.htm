@@ -1,0 +1,134 @@
+<div ng-controller="ConnectCtrl" style="display: block; width: 100%; height: 550px">
+	<!-- Contacts -->
+	<div style="display: inline; float: left; width: 24%; height: 100%; margin-top: 5px">
+		<div style="display: block; margin-left: 5px">
+			<input type="text" style="width: 220px" ng-model="searchName" ng-change="contact = {}" placeholder="Search my friends...">
+		</div>
+		<div ng-show="contact.id" style="width: 100%">
+			<!-- if ShockTrade user -->
+			<div ng-show="contact.profile" ng-include src="'/assets/views/connect/contact_card.htm'"></div>
+			
+			<!-- Non-ShockTrade user -->
+			<div ng-hide="contact.profile" style="background-color: #ffffee; width: 100%; height: 150px; border: 1px solid #aaaaaa; border-radius: 4px 4px 4px 4px">
+				<div style="width: 100%; background-color: #aaaaaa; color: white; font-weight: bold; text-align: center">{{ contact.name }}</div>
+				<div>
+					<div style="display: inline; float: left; width: 80px">
+						<avatar id="{{ contact.id }}" style="width: 75px; height: 75px; margin: 5px" />
+					</div>
+					<div style="display: inline; float: right; width: 200px">
+						<div class="error" style=" text-align: left">Non-member</div>
+						<div style=" text-align: left">Related via <span class="facebook">facebook</span></div>
+					</div>
+					<br style="clear: both">
+				</div>
+				<button style="float: right; margin-right: 20px">Invite to <span style="color: #0000ff">ShockTrade</span></button>
+			</div>
+		</div>		
+		<div class="contactsContainer">
+			<span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
+				<img src="/assets/images/status/alert.gif"> You have no friends 
+				<img src="/assets/images/smilies/icon_cry.gif">
+			</span>
+			<table>	
+				<tr ng-repeat="friend in getContactList(searchName)">
+					<td>
+						<img ng-show="friend.active" src="/assets/images/status/greenlight.png">
+						<img ng-show="friend.idle" src="/assets/images/status/yellowlight.gif">
+						<img ng-show="!friend.active && !friend.idle" src="/assets/images/status/offlight.png">
+					</td>
+					<td><avatar id="{{ friend.id }}" style="width: 16px; height: 16px"></td>
+					<td><a href="" ng-click="chooseContact(friend)" style="padding-left: 5px">{{friend.name}}</a></td>
+				</tr>
+			</table>
+		</div>		
+	</div>
+
+	<!-- Notifications -->
+	<div style="display: inline; float: right; width: 75%; height: 100%">
+		<input type="text" class="input-xxlarge" ng-model="messageSearch" placeholder="Search my messages ..." style="margin-top: 5px; margin-bottom: 5px; width: 500px">
+		<div id = "alert_placeholder"></div>
+		<div style="display: block; width: 100%; height: 24px; border: 1px solid #cccccc; background-color: #dddddd; border-radius: 4px;">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<input type="checkbox" ng-model="myState" ng-click="selectAll(!myState)" style="vertical-align: top"> All
+					</td>
+					<td>
+						<span>
+						<img ng-click="composeMessage()" src="/assets/images/buttons/new-mail24.png" title="Create new message" style="cursor: pointer"> &nbsp;
+						<img ng-click="deleteMessages(MySession.userProfile.name)" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
+						<img ng-click="deleteMessages(MySession.userProfile.name)" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
+						<img ng-click="loadMyUpdates(MySession.userProfile.name)" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
+						</span>
+					</td>
+					<td>
+						<span style="float: right; margin-right: 36px">{{ myUpdates.length }} message(s)</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="updatesContainer">
+			<span ng-init="loadMyUpdates(MySession.userProfile.name)" ng-show="myUpdates.length == 0" class="notice">
+				<img src="/assets/images/status/alert.gif"> You have no messages 
+			</span>
+			<table style="width: 100%">
+				<tr ng-repeat="u in myUpdates" ng-class="myUpdate == u ? 'notif_highlight' : ($index % 2 == 0 ? 'even' : 'odd')">
+					<td style="width: 30%">
+						<input type="checkbox" ng-model="u.selected">
+						<avatar id="{{ u.sender.facebookID }}" style="width: 16px; height: 16px" />
+						<span ng-show="u.sender">{{ u.sender.name }}</span>
+						<span ng-hide="u.sender" style="color: #ff00ff">ShockTrade</span>
+					</td>
+					<td style="width: 55%">
+						<img ng-show="u.eventType == 'ALERT'" src="/assets/images/objects/alert.png">
+						<img ng-show="u.eventType == 'MAIL'" src="/assets/images/objects/mail.png">
+						<img ng-show="u.eventType == 'CHAT'" src="/assets/images/objects/chat.png">
+						<img ng-show="u.eventType == 'INVITE'" src="/assets/images/objects/sharing_header.png">				
+						<a href="" ng-click="selectUpdate(u)">{{ u.eventType == 'MAIL' ? u.title : u.description }}</a>
+					</td>
+					<td style="width: 15%">{{ u.creationTime.$date | date:'MM/dd hh:mma' }}</td>					
+				</tr>
+			</table>
+		</div>
+		
+		<div ng-show="myUpdate.description" class="previewPane" style="margin-top: 15px">
+			<div class="updateTitle">
+				<avatar id="{{ myUpdate.sender.facebookID }}" style="width: 24px; height: 24px" />
+				{{ myUpdate.title }} 
+				<button style="float: right; margin-right: 20px">Reply</button>
+			</div>
+			<div>
+				<span style="font-weight: bold">From:</span> 
+				<span ng-show="myUpdate.sender.name" style="color: #0000ff">{{ myUpdate.sender.name }}</span>
+				<span ng-hide="myUpdate.sender.name" style="color: #ff00ff">ShockTrade</span>
+				on {{ myUpdate.creationTime.$date | date:"EEE MMM dd, yyyy 'at' hh:mma" }}</div>
+			<div class="previewContainer" style="margin-top: 10px">
+				{{ myUpdate.description }}
+			</div>
+		</div>
+	</div>
+	
+	<br style="clear: both">
+</div>
+
+<script type="text/ng-template" id="new_mail.htm">
+	<div class="modal-header">
+   		<h3>New Message</h3>
+    </div>
+    <div class="modal-body">
+		<div>
+			<textarea ng-model="newMessage.recipient" placeholder="Recipient(s)" rows="1" style="width: 512px"></textarea>
+		</div>
+		<div>
+			<textarea ng-model="newMessage.subject" placeholder="Subject" rows="1" style="width: 512px"></textarea>
+		</div>
+		<div>
+			<textarea ng-model="newMessage.body" style="width: 512px; height: 250px" spellcheck="true"></textarea>
+		</div>
+    </div>
+	<div class="modal-footer">
+    	<button class="btn btn-primary" ng-click="ok()">Send</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

@@ -1,0 +1,77 @@
+<div style="display: block; width: 100%" ng-controller="SearchCtrl" ng-init="filterSetup()">
+	<div style="display: inline; float: left; width: 70%; vertical-align: top; padding-right: 5px">
+		<div id="search_main" ng-include src="'/assets/views/search/research.htm'"></div>
+	</div>
+	<div style="display: inline; float: right; width: 30%; vertical-align: top">		
+		<div ng-include src="'/assets/views/search/config.htm'"></div>
+		<div ng-include src="'/assets/views/search/filters.htm'"></div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="condition_dialog.htm">
+	<div class="modal-header">
+   		<h3>Condition Manager</h3>
+    </div>
+	<div ng-init="myFilter = getSelectedFilter()" style="margin: 20px 20px 20px 20px">
+		<div style="display: inline; width: 29%; float: left">
+			<div ng-repeat="filter in getFilters()" ng-class="filter.name == myFilter.name ? 'highlight' : ''">
+				{{ filter.name }}
+			</div>
+		</div>
+		<div style="display: inline; width: 70%; float: right">
+			<div>
+				<table style="border-collapse: separate; border-spacing: 8px">
+					<tr>
+						<th>Field</th>
+						<th>Operator</th>
+						<th>Value</th>
+					</tr>
+					<tr>
+						<td>
+							<select 
+								ng-model="selection.field"
+								ng-options="field.id as field.name for field in queryFields">
+					
+							</select>
+						</td>
+						<td>
+							<select 
+								ng-model="selection.operator"
+								ng-options="operator for operator in operators">
+							</select>
+						</td>
+						<td>
+							<textarea ng-model="selection.value" rows="1" cols="25" style="resize: none"></textarea>
+						</td>
+						<td>
+							<button ng-click="addCondition(myFilter)">Add</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="background-color: #f1f1f1; border: 1px solid #888888; height: 120px; border-radius: 6px 6px 6px 6px">
+				<div class="condition_item" ng-repeat="cond in myFilter.conditions">
+					<a  class="links" href="" ng-click="removeCondition(filter.id, cond.id)">
+						<img src="/assets/images/buttons/delete.png">
+					</a>
+					<span style="color: #0000ff">{{ cond.field }}</span>
+					<span style="color: #008800">{{ cond.operator }}</span>
+					<span style="color: #ff00ff">{{ cond.value | number }}</span>
+				</div>
+			</div>
+		</div>
+		<br style="clear: both">
+	</div>
+	<div class="modal-footer">	
+    	<button class="btn btn-primary" ng-click="ok()">Accept</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter_dialog.htm">
+	<div ng-init="myFilter = getSelectedFilter()" style="margin: 20px 20px 20px 20px">
+		<div ng-repeat="f in getFilters()" ng-class="f.name == myFilter.name ? 'highlight' : ''">
+			{{ f.name }}
+		</div>
+	</div>
+</script>

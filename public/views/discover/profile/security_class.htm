@@ -1,0 +1,75 @@
+<div class="quote_sub_title">
+	<table style="width: 100%">	
+		<!-- Non-ETF Start -->
+		
+		<tr ng-hide="q.assetType == 'ETF'">
+			<th style="width: 25%">Asset Type</th>
+			<td style="width: 25%">{{q.assetType}}</td>
+			
+			<th style="width: 25%">Asset Class</th>
+			<td style="width: 25%">{{q.assetClass}}</td>
+		</tr>
+		
+		<tr ng-hide="q.assetType == 'ETF'">
+			<th style="width: 25%">SEC CIK #</th>
+			<td style="width: 25%">{{q.cikNumber}}</td>
+			
+			<th style="width: 25%">Full-time Employees</th>
+			<td style="width: 25%">{{q.fullTimeEmployees | number}}</td>		
+		</tr>
+		
+		<tr ng-hide="q.assetType == 'ETF'">
+			<th style="width: 25%">IPO Year</th>
+			<td style="width: 25%">{{q.ipoYear}}</td>
+	
+			<th style="width: 25%">Fiscal Year End Date</th>
+			<td style="width: 25%">{{q.fiscalYearEndDate.$date | date:'MM/dd'}}</td>		
+		</tr>					
+			
+		<tr ng-hide="q.assetType == 'ETF' || !q.sicNumber">
+			<th>SIC Code</th>
+			<td colspan="3">
+				<span ng-show="q.sicNumber">
+					<span class="industry">{{q.sicNumber}}</span> &#8212;
+				</span>
+				<span class="industry">{{q.sicDescription}}</span>
+			</td>
+		</tr>		
+			
+		<tr ng-hide="q.assetType == 'ETF' || !q.naicsNumber">			
+			<th>NAICS Code</th>
+			<td colspan="3">
+				<span ng-show="q.naicsNumber">
+					<span class="sector">{{q.naicsNumber}}</span> &#8212;
+				</span>
+				<span class="sector">{{q.naicsDescription}}</span>
+			</td>
+		</tr>		
+		
+		<!-- ETF Start -->
+
+		<tr ng-show="q.assetType == 'ETF'">
+			<th style="width: 25%">Inception Date</th>
+			<td style="width: 25%">{{q.inceptionDate.$date | date:'MM/dd/yyyy' }}</td>
+	
+			<th style="width: 25%">Number Of Holdings</th>
+			<td style="width: 25%">{{q.numberOfHoldings | number}}</td>			
+		</tr>	
+		
+		<tr ng-show="q.assetType == 'ETF'">
+			<th style="width: 25%">30-Day Yield</th>
+			<td style="width: 25%">{{q.yield30DaySEC | number:3}}%</td>
+						
+			<th style="width: 25%">Weighted-Avg Coupon</th>
+			<td style="width: 25%">{{q.weightedAverageCoupon | number:3}}%</td>			
+		</tr>
+		
+		<tr ng-show="q.assetType == 'ETF'">
+			<th style="width: 25%">12-Month Yield</th>
+			<td style="width: 25%">{{q.yield12Month | number:3}}%</td>
+						
+			<th style="width: 25%">Total Net Assets</th>
+			<td style="width: 25%">{{q.totalNetAssets | number}}</td>		
+		</tr>									
+	</table>
+</div>

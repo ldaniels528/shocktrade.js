@@ -1,0 +1,484 @@
+<!-- Row #1 -->
+<table style="width: 100%">
+	<tr>
+		<!-- Stock Price History -->
+		<td>
+		<fieldset class="ks">
+			<legend class="ks">Stock Price History</legend>
+			<table class="ks">
+				<tr>
+					<th class="ks">52-Week High</th>
+					<td class="ks">
+						<span ng-show="q.high52Week == null" class="null">N/A</span>
+						<span ng-show="q.high52Week != null">{{ q.high52Week | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">52-Week Low</th>
+					<td class="ks">
+						<span ng-show="q.low52Week == null" class="null">N/A</span>
+						<span ng-show="q.low52Week != null">{{ q.low52Week | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">52-Week Change</th>
+					<td class="ks">
+						<changeArrow value="{{ q.change52Week }}" />
+						<span ng-show="q.change52Week == null" class="null">N/A</span>
+						<span ng-show="q.change52Week != null">{{ q.change52Week | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">52-Week Change (<span class="small">S&amp;P-500</span>)</th>
+					<td class="ks">
+						<changeArrow value="{{ q.change52WeekSNP500 }}" />
+						<span ng-show="q.change52WeekSNP500 == null" class="null">N/A</span>
+						<span ng-show="q.change52WeekSNP500 != null">{{ q.change52WeekSNP500 | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">50-Day Moving Avg</th>
+					<td class="ks">
+						<span ng-show="q.movingAverage50Day == null" class="null">N/A</span>
+						<span ng-show="q.movingAverage50Day != null">{{ q.movingAverage50Day | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">200-Day Moving Avg</th>
+					<td class="ks">
+						<span ng-show="q.movingAverage200Day == null" class="null">N/A</span>
+						<span ng-show="q.movingAverage200Day != null">{{ q.movingAverage200Day | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="ks">&nbsp;</td>
+					<td class="ks">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="ks">&nbsp;</td>
+					<td class="ks">&nbsp;</td>
+				</tr>
+			</table>
+		</fieldset>
+		</td>
+		<td>
+		<!-- Income Statement -->
+		<fieldset class="ks">
+			<legend class="ks">Income Statement</legend>
+			<table class="ks">					
+				<tr>
+					<th class="ks">Revenue</th>
+					<td class="ks">
+						<span ng-show="q.revenue == null" class="null">N/A</span>
+						<span ng-show="q.revenue != null">{{ q.revenue | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Revenue/Share</th>
+					<td class="ks">
+						<span ng-show="q.revenuePerShare == null" class="null">N/A</span>
+						<span ng-show="q.revenuePerShare != null">{{ q.revenuePerShare | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Revenue Growth % (<span class="small">Qtr</span>)</th>
+					<td class="ks">
+						<span ng-show="q.revenueGrowthQuarterly == null" class="null">N/A</span>
+						<span ng-show="q.revenueGrowthQuarterly != null">{{ q.revenueGrowthQuarterly | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Gross Profit</th>
+					<td class="ks">
+						<span ng-show="q.grossProfit == null" class="null">N/A</span>
+						<span ng-show="q.grossProfit != null">{{ q.grossProfit | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">EBITDA</th>
+					<td class="ks">
+						<span ng-show="q.EBITDA == null" class="null">N/A</span>
+						<span ng-show="q.EBITDA != null">{{ q.EBITDA | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Net Income</th>
+					<td class="ks">
+						<span ng-show="q.netIncomeAvailToCommon == null" class="null">N/A</span>
+						<span ng-show="q.netIncomeAvailToCommon != null">{{ q.netIncomeAvailToCommon | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Earnings/Share (<span class="small">diluted</span>)</th>
+					<td class="ks">
+						<span ng-show="q.dilutedEPS == null" class="null">N/A</span>
+						<span ng-show="q.dilutedEPS != null">{{ q.dilutedEPS | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Earnings Growth (<span class="small">Qtr</span>)</th>
+					<td class="ks">
+						<span ng-show="q.earningsGrowthQuarterly == null" class="null">N/A</span>
+						<span ng-show="q.earningsGrowthQuarterly != null">{{ q.earningsGrowthQuarterly | number:2 }}</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		</td>
+	</tr>
+	
+	<!-- Row #2 -->
+	<tr>	
+		<td>
+		<!-- Balance Sheet -->
+		<fieldset class="ks">
+			<legend class="ks">Balance Sheet</legend>
+			<table class="ks">				
+				<tr>
+					<th class="ks">Total Cash</th>
+					<td class="ks">
+						<span ng-show="q.totalCash == null" class="null">N/A</span>
+						<span ng-show="q.totalCash != null">{{ q.totalCash | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Total Cash/Share</th>
+					<td class="ks">
+						<span ng-show="q.totalCashPerShare == null" class="null">N/A</span>
+						<span ng-show="q.totalCashPerShare != null">{{ q.totalCashPerShare | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Total Debt</th>
+					<td class="ks">
+						<span ng-show="q.totalDebt == null" class="null">N/A</span>
+						<span ng-show="q.totalDebt != null">{{ q.totalDebt | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Total Debt/Equity</th>
+					<td class="ks">
+						<span ng-show="q.totalDebtOverEquity == null" class="null">N/A</span>
+						<span ng-show="q.totalDebtOverEquity != null">{{ q.totalDebtOverEquity | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Current Ratio</th>
+					<td class="ks">
+						<span ng-show="q.currentRatio == null" class="null">N/A</span>
+						<span ng-show="q.currentRatio != null" ng-class="q.currentRatio >= 1.5 ? 'positive' : ''">{{ q.currentRatio | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Book Value/Share</th>
+					<td class="ks">
+						<span ng-show="q.bookValuePerShare == null" class="null">N/A</span>
+						<span ng-show="q.bookValuePerShare != null">{{ q.bookValuePerShare | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Fiscal Year End</th>
+					<td class="ks">
+						<span ng-show="q.fiscalYearEndDate == null" class="null">N/A</span>
+						<span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate.$date | date:'MM/yy' }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Most Recent Qtr</th>
+					<td class="ks">
+						<span ng-show="q.mostRecentQuarterDate == null" class="null">N/A</span>
+						<span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate.$date | date:'MM/dd/yyyy' }}</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</td>
+
+	<td>
+		<!-- Valuation Measures -->
+		<fieldset class="ks">
+			<legend class="ks">Valuation Measures</legend>
+			<table class="ks">
+				<tr>
+					<th class="ks">Enterprise Value</th>
+					<td class="ks">
+						<span ng-show="q.enterpriseValue == null" class="null">N/A</span>
+						<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Trailing P/E</th>
+					<td class="ks">
+						<span ng-show="q.trailingPE == null" class="null">N/A</span>
+						<span ng-show="q.trailingPE != null">{{ q.trailingPE | number:2 }}</span>	
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Forward P/E</th>
+					<td class="ks">
+						<span ng-show="q.forwardPE == null" class="null">N/A</span>
+						<span ng-show="q.forwardPE != null">{{ q.forwardPE | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">PEG Ratio</th>
+					<td class="ks">
+						<span ng-show="q.pegRatio == null" class="null">N/A</span>
+						<span ng-show="q.pegRatio != null">{{ q.pegRatio | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Price/Sales</th>
+					<td class="ks">
+						<span ng-show="q.priceOverSales == null" class="null">N/A</span>
+						<span ng-show="q.priceOverSales != null">{{ q.priceOverSales | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Price/Book Value</th>
+					<td class="ks">
+						<span ng-show="q.priceOverBookValue == null" class="null">N/A</span>
+						<span ng-show="q.priceOverBookValue != null">{{ q.priceOverBookValue | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Enterprise Value/Revenue</th>
+					<td class="ks">
+						<span ng-show="q.enterpriseValueOverRevenue == null" class="null">N/A</span>
+						<span ng-show="q.enterpriseValueOverRevenue != null">{{ q.enterpriseValueOverRevenue | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Enterprise Value/EBITDA</th>
+					<td class="ks">
+						<span ng-show="q.enterpriseValueOverEBITDA == null" class="null">N/A</span>
+						<span ng-show="q.enterpriseValueOverEBITDA != null" ng-class="q.enterpriseValueOverEBITDA < 0 ? 'negative' : ''">{{ q.enterpriseValueOverEBITDA | number:2 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Operating Cash Flow</th>
+					<td class="ks">
+						<span ng-show="q.operatingCashFlow == null" class="null">N/A</span>
+						<span ng-show="q.operatingCashFlow != null">{{ q.operatingCashFlow | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Levered Free Cash Flow</th>
+					<td class="ks">
+						<span ng-show="q.leveredFreeCashFlow == null" class="null">N/A</span>
+						<span ng-show="q.leveredFreeCashFlow != null">{{ q.leveredFreeCashFlow | number | bigNumber }}</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		</td>
+	</tr>
+	
+	<!-- Row #3 -->
+	<tr>	
+		<td>
+		<!-- Share Statistics -->
+		<fieldset class="ks">
+			<legend class="ks">Share Statistics</legend>
+			<table class="ks">
+				<tr>
+					<th class="ks">Avg Volume (<span class="small">3 mos</span>)</th>
+					<td class="ks">
+						<span ng-show="q.avgVolume3Month == null" class="null">N/A</span>
+						<span ng-show="q.avgVolume3Month != null">{{ q.avgVolume3Month | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Avg Volume (<span class="small">10 days</span>)</th>
+					<td class="ks">
+						<span ng-show="q.avgVolume10Day == null" class="null">N/A</span>
+						<span ng-show="q.avgVolume10Day != null">{{ q.avgVolume10Day | number }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Shares Outstanding</th>
+					<td class="ks">
+						<span ng-show="q.sharesOutstanding == null" class="null">N/A</span>
+						<span ng-show="q.sharesOutstanding != null">{{ q.sharesOutstanding | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Shares Float</th>
+					<td class="ks">
+						<span ng-show="q.sharesFloat == null" class="null">N/A</span>
+						<span ng-show="q.sharesFloat != null">{{ q.sharesFloat | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">% Held by Insiders</th>
+					<td class="ks">
+						<span ng-show="q.pctHeldByInsiders == null" class="null">N/A</span>
+						<span ng-show="q.pctHeldByInsiders != null">{{ q.pctHeldByInsiders | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">% Held by Institutions</th>
+					<td class="ks">
+						<span ng-show="q.pctHeldByInstitutions == null" class="null">N/A</span>
+						<span ng-show="q.pctHeldByInstitutions != null">{{ q.pctHeldByInstitutions | number:1  }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Shares Short</th>
+					<td class="ks">
+						<span ng-show="q.sharesShort == null" class="null">N/A</span>
+						<span ng-show="q.sharesShort != null">{{ q.sharesShort | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Short Ratio</th>
+					<td class="ks">
+						<span ng-show="q.shortRatio == null" class="null">N/A</span>
+						<span ng-show="q.shortRatio != null">{{ q.shortRatio | number:1 }}</span>	
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Shares % of Float</th>
+					<td class="ks">
+						<span ng-show="q.shortPctOfFloat == null" class="null">N/A</span>
+						<span ng-show="q.shortPctOfFloat != null">{{ q.shortPctOfFloat | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Shares Short (<span class="small">prior month</span>)</th>
+					<td class="ks">
+						<span ng-show="q.sharesShortPriorMonth == null" class="null">N/A</span>
+						<span ng-show="q.sharesShortPriorMonth != null">{{ q.sharesShortPriorMonth | number | bigNumber }}</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		</td>		
+		
+		<td>
+		<!-- Dividends & Splits -->
+		<fieldset class="ks">
+			<legend class="ks">Dividends &amp; Splits</legend>
+			<table class="ks">				
+				<tr>
+					<th class="ks">Forward Div Rate (<span class="small">Annual</span>)</th>
+					<td class="ks">
+						<span ng-show="q.forwardAnnualDividendRate == null" class="null">N/A</span>
+						<span ng-show="q.forwardAnnualDividendRate != null">{{ q.forwardAnnualDividendRate | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Forward Div Yield (<span class="small">Annual</span>)</th>
+					<td class="ks">
+						<span ng-show="q.forwardAnnualDividendYield == null" class="null">N/A</span>
+						<span ng-show="q.forwardAnnualDividendYield != null">{{ q.forwardAnnualDividendYield | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Trailing Div Yield (<span class="small">Annual</span>)</th>
+					<td class="ks">
+						<span ng-show="q.trailingAnnualDividendYield == null" class="null">N/A</span>
+						<span ng-show="q.trailingAnnualDividendYield != null">{{ q.trailingAnnualDividendYield | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Dividend Yield (<span class="small">5-Year Avg</span>)</th>
+					<td class="ks">
+						<span ng-show="q.divYield5YearAvg == null" class="null">N/A</span>
+						<span ng-show="q.divYield5YearAvg != null">{{ q.divYield5YearAvg | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Payout Ratio</th>
+					<td class="ks">
+						<span ng-show="q.payoutRatio == null" class="null">N/A</span>
+						<span ng-show="q.payoutRatio != null">{{ q.payoutRatio | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Dividend Date</th>
+					<td class="ks">
+						<span ng-show="q.dividendDate == null" class="null">N/A</span>
+						<span ng-show="q.dividendDate != null">{{ q.dividendDate.$date | date:'MM/dd/yy' }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Ex-Dividend Date</th>
+					<td class="ks">
+						<span ng-show="q.exDividendDate == null" class="null">N/A</span>
+						<span ng-show="q.exDividendDate != null">{{ q.exDividendDate.$date | date:'MM/dd/yy' }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Last Split Factor</th>
+					<td class="ks">
+						<span ng-show="q.lastSplitFactor == null || q.lastSplitFactor == 'N/A'" class="null">N/A</span>
+						<span ng-show="q.lastSplitFactor != null">{{ q.lastSplitFactor }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Last Split Date</th>
+					<td class="ks">
+						<span ng-show="q.lastSplitDate == null" class="null">N/A</span>
+						<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate.$date | date:'MM/dd/yy' }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>						
+			</table>
+		</fieldset>
+		</td>
+	</tr>
+	
+	<!-- Row #3 -->
+	<tr>
+		<td>
+		<!-- Management Effectiveness -->
+		<fieldset class="ks">
+			<legend class="ks">Management Effectiveness</legend>
+			<table class="ks">
+				<tr>
+					<th class="ks">Return On Assets</th>
+					<td class="ks">
+						<span ng-show="q.returnOnAssets == null" class="null">N/A</span>
+						<span ng-show="q.returnOnAssets != null" ng-class="q.returnOnAssets < 0 ? 'negative' : ''">{{ q.returnOnAssets | number:1 }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Return On Equity</th>
+					<td class="ks">
+						<span ng-show="q.returnOnEquity == null" class="null">N/A</span>
+						<span ng-show="q.returnOnEquity != null" ng-class="q.returnOnEquity < 0 ? 'negative' : ''">{{ q.returnOnEquity | number:1 }}</span>
+					</td>
+				</tr>
+			</table>			
+		</fieldset>
+	</td>
+	
+	<td>
+		<!-- Profitability -->
+		<fieldset class="ks">
+			<legend class="ks">Profitability</legend>
+			<table class="ks">
+				<tr>
+					<th class="ks">Profit Margin</th>
+					<td class="ks">
+						<span ng-show="q.profitMargin == null" class="null">N/A</span>
+						<span ng-show="q.profitMargin != null" ng-class="q.profitMargin < 0 ? 'negative' : ''">{{  q.profitMargin | number | bigNumber }}</span>
+					</td>
+				</tr>
+				<tr>
+					<th class="ks">Operating Margin</th>
+					<td class="ks">
+						<span ng-show="q.operatingMargin == null" class="null">N/A</span>
+						<span ng-show="q.operatingMargin != null">{{ q.operatingMargin | number | bigNumber }}</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+		</td>
+	</tr>
+</table>
+	

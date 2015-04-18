@@ -1,0 +1,90 @@
+.news_title {
+
+}
+
+.news_desc {
+
+}
+
+.news_pubdate {
+	padding: 0px 0px 0px 5px;
+}
+
+.news_provider {
+	display: block;
+	border: 1px solid #357ebd;
+	background-color: #428bca;
+	border-radius: 5px 5px 5px 5px;
+	font-weight: bold;
+	font-size: 12pt;
+ 	width: auto; 
+ 	padding: 5px 5px 5px 5px; 
+}
+
+div.news_quotes_container {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 550px;
+}
+
+.news_age {
+	border-radius: 8px 8px 8px 8px;
+	background-color: #ff8000;
+	color: white;
+	padding: 2px;
+}
+
+.news_img {
+	border-radius: 12px 12px 12px 12px;
+	vertical-align: top;
+	padding: 4px;
+}
+
+.news_tile0 {
+	background-color: white;
+}
+
+.news_tile1 {
+	background-color: #efefef;
+}
+
+.news_grid_even {
+	display: inline;
+	width: 50%;
+	float: right;
+	padding-left: 5px;
+}
+
+.news_grid_odd {
+	display: inline;
+	width: 50%;
+	float: left;
+	padding-left: 5px;
+}
+
+.news_list_even {
+	display: block;	
+	width: 100%;
+	padding-left: 5px;
+	background-color: #efefef;
+}
+
+.news_list_odd {
+	display: block;		
+	width: 100%;	
+	padding-left: 5px;
+	background-color: white;
+}
+
+.newsContainer {
+	width: auto;
+	height: 550px;
+	clear: both;
+	overflow: auto;	
+}
+
+a.news:link    { color: #000080; text-decoration: none; cursor: pointer }
+a.news:visited { color: #000080; text-decoration: none; cursor: pointer }
+a.news:hover   { color: #aa0000; text-decoration: none; cursor: pointer }
+a.news:active  { color: #000080; text-decoration: none; cursor: pointer }

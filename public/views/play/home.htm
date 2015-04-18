@@ -1,0 +1,106 @@
+<div ng-controller="PlayCtrl" style="display: block; height: 535px; background-color: #ffffff; border: 1px solid #888888; padding: 10px">
+	<div style="display: block">
+		<!--  Perks -->
+		<div style="display: inline; float: right; width: 49%">
+			<fieldset>
+				<legend>My Perks</legend>
+				<div style="height: 155px; border: 1px solid #ddddcc; border-radius: 6px 6px 6px 6px; background-color: #ffffee; padding: 10px">
+					<div ng-init="setupPerks()" style="width: 100%" ng-repeat="perk in perks">
+						<div ng-show="perk.owned">
+							<img  src="/assets/images/contests/gift-open-icon.png" style="vertical-align: middle"> 
+							<span style="font-weight: bold">{{perk.name}}</span>	
+							<span style="float: right">3 days ago</span>		
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		
+		<!-- Awards -->
+		<div style="display: inline; float: left; width: 49%">
+			<fieldset>
+				<legend>My Awards</legend>
+				<div style="height: 155px; border: 1px solid #ddddcc; border-radius: 6px 6px 6px 6px; background-color: #ffffee; padding: 10px">
+					<div ng-init="setupAwards()" style="width: 100%; padding-bottom: 1px" ng-repeat="award in awards">
+						<div ng-show="award.owned" style="vertical-align: middle">
+							<img ng-src="{{ award.icon }}"> 
+							<span style="font-weight: bold">{{award.name}}</span>
+							<span style="float: right">{{ $index + 1}} {{  $index + 1 == 1 ? 'day' : 'days' }} ago</span>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<br style="clear: both">
+	</div>
+	
+	<div style="display: block">
+		<div style="display: inline; float: left; width: 49%">
+			<fieldset>
+				<legend>My Games</legend>
+				<div ng-controller="PlayCtrl" ng-init="loadMyContests(userProfile.name)" style="border: 1px solid #ddddcc; height: 100px; border-radius: 6px 6px 6px 6px; background-color: #ffffee; padding-left: 10px">
+					<table style="width: 100%">
+						<tr ng-repeat="c in myContests" ng-class="c._id.$oid == myContestId ? 'highlight' : ''">
+							<td>
+								<span ng-show="c.status == 'ACTIVE'">
+									<img ng-show="c.playerCount < 14" src="/assets/images/status/greenlight.png">
+									<img ng-hide="c.playerCount < 14" src="/assets/images/status/yellowlight.gif">
+								</span>
+								<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">											
+								<img class="avatar" ng-src="/api/avatar/{{ c.creator }}/16">
+								<a href="" ng-click="changeContest(c)">{{ c.name }}</a>
+								<span class="positive">({{ c.playerCount + '/14' }})</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>		
+		</div>
+		<div ng-controller="PlayCtrl" ng-init="getRankings(myContestId)" style="display: inline; float: right; width: 49%">
+			<fieldset>
+				<legend>Rankings</legend>
+				<div style="border: 1px solid #ccddee; height: 100px; border-radius: 6px 6px 6px 6px; background-color: #e0f0ff; padding-left: 10px">
+					<table style="width: 100%">
+						<tr ng-repeat="participant in myRankings">
+							<td>
+								<img ng-show="participant.rank == '1st'" src="/assets/images/contests/gold.png">
+								<img ng-show="participant.rank == '2nd'" src="/assets/images/contests/silver.png">
+								<img ng-show="participant.rank == '3rd'" src="/assets/images/contests/bronze.png">	
+								<img ng-show="!isMedalist(participant.rank)" src="/assets/images/status/transparent.png">	
+								<img  class="avatar" ng-src="/api/avatar/{{ participant.name }}/16">{{ participant.name }}
+								<span ng-class="participant.gainLoss >= 0 ? 'positive' : 'negative'" style="float: right">
+									<span ng-show="participant.gainLoss > 0">+</span>{{ participant.gainLoss | number:2 }}%
+									<img ng-show="participant.gainLoss >= 0" style="vertical-align: bottom" src="/assets/images/status/stock_up.gif">
+									<img ng-show="participant.gainLoss < 0" style="vertical-align: bottom" src="/assets/images/status/stock_down.gif">
+								</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</fieldset>
+		</div>
+		<br style="clear: both">
+	</div>
+
+	
+	<fieldset>
+		<legend>Notifications</legend>
+		<div ng-init="loadMyUpdates(userProfile.name)">
+			<table style="width: 100%">
+				<tr ng-repeat="u in myUpdates" ng-class-even="'even'" ng-class-odd="'odd'">
+					<td>
+						<img ng-click="deleteUpdate(u._id.$oid)" src="/assets/images/buttons/delete.png" style="cursor: pointer">
+						<img ng-show="u.eventType == 'ALERT'" src="/assets/images/status/alert.gif">
+						<img ng-show="u.eventType == 'MAIL'" src="/assets/images/objects/mail.png">
+						<img ng-show="u.eventType == 'CHAT'" src="/assets/images/objects/chat.png">
+						<img ng-show="u.eventType == 'INVITE'" src="/assets/images/objects/sharing_header.png">
+						<span ng-show="u.sender">{{ u.sender }}</span>
+						<span ng-hide="u.sender" class="null">[system]</span>
+					</td>
+					<td>{{ u.description }}</td>
+					<td>{{ u.creationTime.$date | date:'MM/dd hh:mma' }}</td>					
+				</tr>
+			</table>
+		</div>
+	</fieldset>
+</div>

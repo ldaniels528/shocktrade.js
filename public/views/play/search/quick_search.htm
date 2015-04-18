@@ -1,0 +1,53 @@
+<div class="gamesQuickSearchContainer">
+	<table style="width: 100%">
+		<tr>
+			<td class="gs_left"><input type="checkbox" ng-model="searchOptions.activeOnly"> Active</td>
+			<td class="gs_icon"><img src="/assets/images/status/transparent.png"></td>
+			<td class="gs_right"><input type="checkbox" ng-model="searchOptions.available"> Available</td>
+			<td class="gs_icon"><img src="/assets/images/status/transparent.png"></td>
+		</tr>
+		<tr>
+			<td class="gs_left"><input type="checkbox" ng-model="searchOptions.friendsOnly"> My Friends</td>
+			<td class="gs_icon"><img src="/assets/images/objects/friend_header.gif"></td>
+			<td class="gs_right"><input type="checkbox" ng-model="searchOptions.acquaintances"> Recently Met</td>
+			<td class="gs_icon"><img src="/assets/images/objects/sharing_header.png"></td>					
+		</tr>
+		<tr>
+			<td class="gs_left"><input type="checkbox" ng-model="searchOptions.levelCapAllowed"> Level Cap</td>
+			<td class="gs_icon"><img src="/assets/images/objects/friend_delete.png"></td>
+			<td class="gs_right"><input type="checkbox" ng-model="searchOptions.perksAllowed"> Perks Allowed</td>
+			<td class="gs_icon"><img src="/assets/images/objects/gift.png"></td>
+		</tr>	
+		<tr>
+			<td colspan="4" ng-show="searchOptions.levelCapAllowed">
+				Level:
+				<select ng-controller="RewardsCtrl" ng-model="searchOptions.levelCap">
+					<option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
+				</select>
+			</td>
+		</tr>					
+	</table>
+	<hr style="color: #888888; margin: 5px 0px 5px 0px">
+	<div>
+		<table style="width: 100%">
+			<tr ng-repeat="c in searchResults" ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? '' : 'odd' )">
+				<td style="width: 100%">
+					<span ng-show="c.status == 'ACTIVE'">
+						<img ng-show="c.playerCount < 14" src="/assets/images/status/greenlight.png">
+						<img ng-hide="c.playerCount < 14" src="/assets/images/status/yellowlight.gif">
+					</span>
+					<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
+					<a href="" ng-click="loadContest(c._id.$oid)">{{ c.name }}</a>
+					
+					<span style="float: right">
+						<img ng-show="MySession.userProfile.authenticated" ng-src="/assets/images/objects/friend_header.gif">
+						<img ng-show="false" ng-src="/assets/images/objects/sharing_header.png">
+						<img ng-show="c.levelCap" ng-src="/assets/images/objects/friend_delete.png">
+						<img ng-show="c.perksAllowed" ng-src="/assets/images/objects/gift.png">
+					</span>
+				</td>				
+			</tr>
+		</table>
+	</div>
+</div>
+<span style="float: right">{{ searchResults.length }} result(s) found</span>

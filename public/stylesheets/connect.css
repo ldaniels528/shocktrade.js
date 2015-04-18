@@ -1,0 +1,39 @@
+div.contactsContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 525px;
+}
+
+div.updatesContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 145px;
+}
+
+div.previewContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 300px;
+}
+
+div.previewPane {
+	border: 1px solid #ccccc0;
+	border-radius: 8px 8px 8px 8px;
+	background-color: #fffff0;  
+	padding: 5px;
+}
+
+.updateTitle {
+	width: 100%;
+	border: 1px solid #c0c0c0;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #e0e0e0;
+	color: black
+}
+
+.notif_highlight {
+	background-color: yellow;
+}

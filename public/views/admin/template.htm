@@ -1,0 +1,26 @@
+<div style="display: block; width: 100%; background-color: #eeeeee">
+	<div class="contest_left_side">
+		<div ng-include src="'/assets/views/play/gamer_card.htm'"></div>
+	</div>
+	<div class="contest_right_side">			
+		<div class="navbar" style="margin-bottom: 0px">
+			<div class="navbar-inner">
+				<div class="container">
+					<ul class="nav">
+						<li ng-class="tab.active ? 'active' : ''" ng-repeat="tab in tabs">
+							<a href="#" ng-click="changeTab($index, tab, $event)"><img class="links" ng-src="{{ tab.imageURL }}"> 
+								{{ tab.name }}
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>	
+		
+		<div ng-include src="adminURL"></div>
+	</div>
+	<br style="clear: both"/>
+	
+	
+	<div class="contest_status_bar">{{ statusBar }}</div>
+</div>

@@ -1,0 +1,35 @@
+.perkMessage {
+	width: 100%; 
+	border: 1px solid #ccddcc;
+	background-color: #eeffee; 
+	color: #00aa00; 
+	font-weight: bold; 
+	padding-left: 5px; 
+	margin-bottom: 5px
+}
+
+.cost {
+	color: #408840	
+}
+
+.perkName {
+	color: #4040ff; 
+}
+
+.checkoutButton {	
+    background-color: #50bb50;
+	font-weight: normal;
+	text-align: left;
+	color: #000000;	
+	cursor: pointer;
+
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #309930;
+    
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+}

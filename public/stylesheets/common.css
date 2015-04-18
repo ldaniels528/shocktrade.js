@@ -1,0 +1,177 @@
+/*********************************************************************************
+ * 							Container											 *
+ *********************************************************************************/
+ 
+ #container {
+ 	display: block;	
+ }
+ 
+/*********************************************************************************
+ * 							Global Styles										 *
+ *********************************************************************************/ 
+ 
+* {
+ 	/* font-family: "Times New Roman", Times, serif; */ 
+ 	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.clickable {
+	cursor: pointer;	
+}
+ 
+a { cursor: pointer; }
+a:link    { cursor: pointer; text-decoration: none; }
+a:visited { cursor: pointer; text-decoration: none; }
+a:hover   { cursor: pointer; text-decoration: none; }
+a:active  { cursor: pointer; text-decoration: none; }
+
+.narrow {
+	margin: 0px 0px 0px 0px; 
+	padding: 0px 0px 0px 0px
+}
+
+body {
+	background-color: white
+}
+
+img {
+	vertical-align: middle;
+	border: 0;
+	border-color: #ffffff	
+}
+
+table {
+	border-collapse: collapse
+}
+
+table td, table th
+{
+    padding: 0; /* 'cellpadding' equivalent */
+}
+
+.highlight {
+	background-color: #aaeeff
+}
+
+.selected {
+	background-color: #ffff00;
+}
+
+.even {
+	background-color: #dfefff
+}
+
+.odd {
+	background-color: #ffffff
+}
+
+th {
+	vertical-align: top;
+	text-align: left;
+	color: #0000aa
+}
+
+td {
+	vertical-align: top;
+	text-align: left
+}
+
+/*********************************************************************************
+ * 							Global Text Definitions								 *
+ *********************************************************************************/
+
+.error {
+	color: #ff0000;
+	font-weight: bold
+}
+
+.error_bar {	
+	border: 1px solid #888888;
+	background-color: #ffcc44;	
+ 	color: #cc2222; 
+	vertical-align: middle;
+	font-weight: bold;
+	width: auto;
+	height: auto	
+}
+
+.notice {
+	color: #cc8822; 
+	font-weight: bold	
+}
+
+.negative {
+	color: red
+}
+
+.null {
+	color: #bbbbbb
+}
+
+.positive {
+	color: green
+}
+
+.restricted {
+	color: #ff6600; 
+	font-weight: bold
+}
+
+span.small {
+ 	color: #8080ff;
+ 	font-size: 8pt
+}
+
+td.app {
+	vertical-align: top;
+	text-align: left
+}
+
+.bold {
+	font-weight: bold
+}
+
+.plain {
+	font-weight: normal;
+	color: black
+}
+
+/*********************************************************************************
+ * 							Alignment Classes									 *
+ *********************************************************************************/
+ 
+.center {
+ 	text-align: center
+}
+ 
+.inline {
+ 	display: inline
+}
+ 
+.pull-left {
+ 	float: left
+}
+ 
+.pull-right {
+ 	float: right
+}
+  
+.left {
+	text-align: left
+}
+ 
+.right {
+	text-align: right
+}
+ 
+.top {
+	vertical-align: top
+}
+
+.middle {
+	vertical-align: middle
+}
+ 
+.bottom {
+	vertical-align: bottom
+}

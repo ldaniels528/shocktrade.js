@@ -1,0 +1,23 @@
+ fieldset.ks {
+ 	text-align: left; 
+ 	padding: 5px 5px 5px 5px;
+ }
+ 
+ legend.ks {
+
+ }
+ 
+ table.ks {
+	width: 100%;	
+	vertical-align: top;
+ }
+ 
+ th.ks {
+ 	font-size: 11pt;	
+ 	text-align: left;
+ }
+ 
+ td.ks {
+ 	font-size: 12pt;	
+ 	text-align: right;
+ }

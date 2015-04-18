@@ -1,0 +1,160 @@
+.advisory {
+	border: 1px solid #ccccbb;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #fffaee;
+	color: #20538D;
+	font-weight: bold;
+	padding: 2px 2px 2px 2px;
+}
+
+img.chart {
+	vertical-align: top;
+	max-width: 100%;
+}
+
+.quote_control_panel {
+	border: 1px solid #cccccc;
+	border-radius: 5px 5px 5px 5px;
+	background-color: #eeeeee;
+	color: #000080;
+	font-weight: bold;
+}
+
+.quote_title {
+	background-color: #eeeeee; 
+	border: 1px solid #cccccc;
+	border-radius: 5px 5px 5px 5px;
+	padding: 2px 2px 2px 2px;
+	color: #000080;
+	font-weight: bold
+}
+
+.quote_sub_title {
+	width: 100%; 
+	border: 1px solid #cccccc; 
+	background-color: #eeeeee; 
+	border-radius: 6px 6px 6px 6px; 
+	padding: 10px
+}
+
+.run_button {
+    background-color: #00ee00;
+    border: solid 1px #00aa00;
+	font-weight: bold;
+	text-align: right;
+	color: white;	
+	cursor: pointer;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.quote_button {
+    background:url('/assets/images/buttons/search.png') no-repeat;
+    background-color: #ff8000;
+    border: solid 1px #cc6000;
+	font-weight: bold;
+	text-align: right;
+	color: white;	
+	cursor: pointer;
+	text-indent: +16px;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+ 
+.trade_button {
+    background:url('/assets/images/objects/order.png') no-repeat;
+    background-color: #ff8000;
+    border: solid 1px #cc6000;
+	font-weight: bold;
+	text-align: right;
+	color: white;	
+	cursor: pointer;
+	text-indent: +16px;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+} 
+ 
+div.filterContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 220px;
+}
+
+.qm {
+	text-size: 8pt;
+}
+ 
+.holdingsContainer {
+	clear: both;
+	width: auto;
+	height: 300px;
+	overflow: auto;	
+}
+
+.volatile_green {
+ 	color: #008000;
+}
+ 
+.volatile_yellow {
+ 	color: #eeaa00;
+}
+ 
+.volatile_red {
+ 	color: red;
+}
+  
+.risk_low {
+	color: #00a000;
+	cursor: pointer
+}
+
+.risk_medium {
+	color: #eeaa00;
+	cursor: pointer
+}
+
+.risk_high {
+	color: #ff0000;
+	cursor: pointer
+}
+
+.risk_unknown {
+	color: #888888;
+	cursor: pointer
+}
+
+.qm_header {
+	width: 23%;
+	padding-left: 15px
+}
+
+.qm_detail {
+	width: 10%;
+	text-align: right
+}
+
+.qm_label {
+	padding-left: 15px;
+	font-weight: bold;
+	color: #0000a0
+}
+
+.qm_value {
+	float: right
+}

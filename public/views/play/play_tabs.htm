@@ -1,0 +1,8 @@
+<tabset vertical="true" type="'pills'">
+	<tab ng-repeat="tab in tabs" active="tab.active" disabled="tab.disabled" select="changePlayTab($index, $event)">
+		<tab-heading>
+			<img class="links" ng-src="{{ tab.imageURL }}"> {{ tab.name }}
+			<img ng-show="tab.lockable && !MySession.authenticated" src="/assets/images/notice/locked_12.png">
+		</tab-heading>
+	</tab>
+</tabset>

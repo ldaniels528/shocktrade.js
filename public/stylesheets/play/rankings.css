@@ -1,0 +1,83 @@
+div.rank_cell_player {
+	background-color: #ffffee;
+}
+
+div.rank_cell_spectator {
+	background-color: #eeeeee;
+}
+
+div.rank_cell_even {
+	display: inline;
+	float: left;
+	border: 1px solid #ddddcc;
+	border-radius: 5px 5px 5px 5px;
+	margin-bottom: 5px;
+	width: 48%; 
+}
+
+div.rank_cell_odd {
+	display: inline;
+	float: right;
+	border: 1px solid #ddddcc;
+	border-radius: 5px 5px 5px 5px;
+	margin-bottom: 5px;
+	width: 48%; 
+}
+
+.rank_1st, .rank_2nd, .rank_3rd {
+	font-weight: bold;
+	color: #00c000;
+}
+
+.trophy_1st {
+	content:icon;
+	icon:url('/assets/images/contests/gold.png');
+}
+
+.trophy_2nd {
+	content:icon;
+	icon:url('/assets/images/contests/silver.png');
+}
+
+.trophy_3rd {
+	content:icon;
+	icon:url('/assets/images/contests/bronze.png');
+}
+
+.rank_4th {
+	font-weight: bold;
+	color: #ff7f00;
+}
+
+.rank_5th, .rank_6th, .rank_7th, .rank_8th, .rank_9th, .rank_10th, .rank_11th, .rank_12th, .rank_13th, .rank_14th {
+	font-weight: bold;
+	color: #cf0000;
+}
+
+.rank_label {
+
+}
+
+button img {
+	vertical-align: bottom;
+}
+
+button.invite {
+    background:url('/assets/images/objects/friend.png') no-repeat;
+    background-color: #3080e0;
+	font-weight: bold;
+	text-align: right;
+	color: white;	
+	cursor: pointer;
+
+	text-indent: +16px;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #208D53;
+    
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+}

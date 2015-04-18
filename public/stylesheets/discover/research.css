@@ -1,0 +1,146 @@
+/*********************************************************************************
+ * 							General												 *
+ *********************************************************************************/
+
+fieldset.rs {
+	text-align: left;
+	font-size: 12pt;
+}
+ 
+legend.rs {
+	/*font-weight: bold;*/
+	font-size: 12pt;
+}
+
+legend {
+	/*font-weight: bold;*/
+}
+
+/*********************************************************************************
+ * 							Content Panel										 *
+ *********************************************************************************/
+
+#data_layout {	
+	display: block;
+	width: 100%;
+	height: auto;    
+}
+
+/*********************************************************************************
+ * 							Currency Quotes										 *
+ *********************************************************************************/
+
+div.currencyContainer {
+	clear: both;
+	border: 1px solid black; 
+	width: 100%;
+	height: 605px;
+	overflow: auto;	
+}
+
+/*********************************************************************************
+ * 							Market Trends										 *
+ *********************************************************************************/
+
+fieldset.trends {
+	border: 1px solid #888888; 
+	text-align: left; 
+	margin-bottom: 2px;		
+}
+ 
+legend.trends {
+	font-weight: bold;
+}
+
+div.trendsContainer {
+	clear: both;
+	width: auto;
+	height: 150px;
+	overflow: auto;
+}
+
+div.trendsContainerGL {
+	clear: both;
+	width: auto;
+	height: 175px;
+	overflow: auto;
+}
+
+
+/*********************************************************************************
+ * 							Research Tabs										 *
+ *********************************************************************************/
+ 
+ #research_tabs {
+ 	float: left;
+	border: 1px solid #888888;
+	text-align: center;
+	width: 32px;
+ 	height: 630px;
+ }
+ 
+ div.rs_tab {
+ 	display: inline;
+ 	margin-right: 10px;
+ }
+ 
+ #search_tab {
+ 	
+ }
+ 
+ #discover_tab {
+ 	
+ }
+ 
+ #currencies_tab {
+ 	
+ }
+ 
+ #trends_tab {
+ 	
+ }
+ 
+a.rs_tab:link    { font-weight: bold; color: #000080; text-decoration: none; cursor: pointer }
+a.rs_tab:visited { font-weight: bold; color: #000080; text-decoration: none; cursor: pointer }
+a.rs_tab:hover   { font-weight: bold; color: #aa0000; text-decoration: none; cursor: pointer }
+a.rs_tab:active  { font-weight: bold; color: #000080; text-decoration: none; cursor: pointer }
+ 
+/*********************************************************************************
+ * 							Research :: Discover								 *
+ *********************************************************************************/
+
+#gainLossContainer {
+	clear: both; 
+	overflow: auto;
+	
+	width: auto; 
+	height: 464px;
+}
+
+#gainContainer {
+	clear: both; 
+	overflow: auto;
+	
+	width: auto; 
+	height: 500px;
+}
+
+#dividends {
+	display: inline;
+	float: right;
+	width: 30%;
+}
+
+#trends {
+	display: inline;
+	float: left;
+	width: 70%;
+}
+
+div.filterContainer {
+	clear: both;
+	overflow: auto;	
+	width: auto;
+	height: 250px;
+}
+

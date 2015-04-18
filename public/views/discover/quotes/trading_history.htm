@@ -1,0 +1,69 @@
+<table style="width: 100%">					
+	<tr><td>								
+		<!--  header section -->
+		<table style="width: 100%">
+			<tr>
+				<th class="hist" style="width: 11%">Date</th>
+				<th class="hist" style="width: 12%">Open</th>
+				<th class="hist" style="width: 12%">Close</th>
+				<th class="hist" style="width: 12%">High</th>
+				<th class="hist" style="width: 12%">Low</th>
+				<th class="hist" style="width: 17%; text-align: center">Change / %</th>
+				<th class="hist" style="width: 11%; text-align: right">Spread %</th>				
+				<th class="hist" style="width: 13%; text-align: right">Volume</th>
+			</tr>
+		</table>
+	</td></tr>
+	
+	<tr><td>
+		<div class="histContainer">
+			<div ng-if="tradingHistory.length == 0" class="notice odd">
+				<img src="/assets/images/status/alert.gif"> No trading history records available
+			</div>
+			<table style="width: 100%">
+				<tr ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="t in tradingHistory">
+					<td class="hist" style="width: 11%">
+						<span ng-show="t.tradeDate == null" class="null">N/A</span>
+						<span ng-show="t.tradeDate != null">{{ t.tradeDate | date:'MM/dd/yy' }}</span>
+					</td>
+					<td class="hist" style="width: 12%">
+						<span ng-show="t.open == null" class="null">N/A</span>
+						<span ng-show="t.open != null">{{ t.open | quoteNumber }}</span>
+					</td>
+					<td class="hist" style="width: 12%">
+						<span ng-show="t.close == null"  class="null">N/A</span>
+						<span ng-show="t.close != null">{{ t.close | quoteNumber }}</span>
+					</td>
+					<td class="hist" style="width: 12%">
+						<span ng-show="t.high == null" class="null">N/A</span>
+						<span ng-show="t.high != null">{{ t.high | quoteNumber }}</span>
+					</td>
+					<td class="hist" style="width: 12%">
+						<span ng-show="t.low == null" class="null">N/A</span>
+						<span ng-show="t.low != null">{{ t.low | quoteNumber }}</span>
+					</td>
+					<td class="hist" style="width: 17%; text-align: right">
+						<span ng-hide="t.change" class="null">N/A</span>
+						<span ng-show="t.change">
+							<span ng-class="t.changePct < 0 ? 'negative' : 'positive'">
+								{{ t.change | quoteNumber }}
+							</span>
+							<changearrow value="{{ t.changePct }}" /> 
+							<span ng-class="t.changePct < 0 ? 'negative' : 'positive'">
+								{{ abs(t.changePct) | quoteChange }}%
+							</span>
+						</span>
+					</td>						
+					<td class="hist" style="width: 11%; text-align: right">
+						<span ng-show="t.spread == null" class="null">N/A</span>
+						<span ng-show="t.spread != null">{{ t.spread | number:2 }}</span>
+					</td>					
+					<td class="hist" style="width: 13%; text-align: right">
+						<span ng-show="t.volume == null" class="null">N/A</span>
+						<span ng-show="t.volume != null">{{ t.volume | number }}</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</td></tr>
+</table>

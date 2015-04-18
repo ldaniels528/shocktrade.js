@@ -1,0 +1,39 @@
+<div ng-hide="MySession.userProfile._id" class="spectator_message" style="display: block; width: 100%">
+	<div ng-include src="'/assets/views/signin_notice.htm'"></div>
+</div>
+<div ng-if="MySession.userProfile._id && !contest._id" class="spectator_message" style="display: block; width: 100%">
+	<div ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
+</div>
+<div ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%">	
+	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
+	<accordion close-others="true">
+		<accordion-group is-open="true">
+			<accordion-heading>
+				<img src="/assets/images/objects/financials.gif"> Positions
+			</accordion-heading>
+			<div ng-include src="'/assets/views/play/portfolio/positions.htm'"></div>
+		</accordion-group>	
+		<accordion-group>
+			 <accordion-heading>
+			 	<img src="/assets/images/objects/order.png"> Orders
+			 	<img style="float: right; vertical-align: top" 
+			 		ng-show="contest.status == 'ACTIVE'" 
+			 		ng-click="orderFormPopup()"
+			 		src="/assets/images/play/cart-24.png">
+			 </accordion-heading>
+			<div ng-include src="'/assets/views/play/portfolio/orders.htm'"></div>
+		</accordion-group>
+		<accordion-group>
+			<accordion-heading>
+				<img src="/assets/images/objects/sector.png"> Exposure
+			</accordion-heading>
+			<div ng-include src="'/assets/views/play/portfolio/exposure.htm'"></div>
+		</accordion-group>
+		<accordion-group>
+			<accordion-heading>
+				<img src="/assets/images/objects/marketGain.png"> Performance
+			</accordion-heading>
+			<div ng-include src="'/assets/views/play/portfolio/performance.htm'"></div>
+		</accordion-group>
+	</accordion>
+</div>

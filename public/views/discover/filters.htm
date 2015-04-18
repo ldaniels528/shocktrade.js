@@ -1,0 +1,62 @@
+<div style="display: block; width: 100%; margin-right: 5px">
+	<span style="float: right">
+		<input id="stockTicker" type="text" ng-model="ticker" placeholder="Enter Symbol or Company name" 
+				typeahead="quote as quote.symbol + ' - ' + quote.name for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}" 
+				typeahead-template-url="symbol_lookup.htm" 
+				typeahead-loading="loadingLocations"
+				typeahead-on-select="loadQuote(ticker)"
+				popover="Enter a Symbol or Business here"  
+				popover-trigger="focus"
+				style="width: 350px; background-color: #ffff44; border-radius: 5px 5px 5px 5px">
+		<button class="quote_button" ng-click="loadTickerQuote(ticker)" style="vertical-align: top">Search</button>
+	</span>
+	<br style="clear: both">
+</div>
+	
+<div ng-include src="'/assets/views/discover/quotes/stock_chart.htm'"></div>
+	
+<accordion> 
+	<accordion-group is-open="true">
+		<accordion-heading><img src="/assets/images/objects/clock16.png"> Recently Viewed</accordion-heading>
+		<div ng-include src="'/assets/views/discover/recently_viewed.htm'"></div>
+	</accordion-group>
+	<accordion-group>
+		<accordion-heading><img src="/assets/images/objects/favorite.png"> Favorites</accordion-heading>
+		<div ng-include src="'/assets/views/discover/favorites.htm'"></div>
+	</accordion-group>		
+	<accordion-group ng-if="HeldSecurities.symbols.length > 0">
+		<accordion-heading><img src="/assets/images/objects/star16.gif"> Held Securities</accordion-heading>
+		<div ng-include src="'/assets/views/discover/held_securities.htm'"></div>
+	</accordion-group>	
+	<accordion-group ng-repeat="filter in filterQuotes">
+		<accordion-heading>
+			<img src="/assets/images/objects/filter.gif">
+            <span ng-click="loadFilterQuotes(filter, $index)">{{ filter.name }}</span>
+            <img ng-if="filter.loading" src="/assets/images/status/loading.gif">
+        </accordion-heading>
+		<div class="filterContainer">
+			<table style="width: 100%; padding: 1px 3px 1px 3px; background-color: #eeeeee">
+				<tr style="background-color: #dddddd">				
+					<th style="text-align: {{ header === 'Symbol' ? 'left' : 'right' }}" ng-repeat="header in filter.headers">{{header}}</th>
+				</tr>
+				<tr ng-repeat="row in filter.rows" ng-class-even="'even'" ng-class-odd="'odd'">
+					<td style="text-align: {{ columnAlign(column) }}" ng-repeat="column in filter.columns">	
+						<a ng-if="column === 'symbol'" href="#/discover/{{ row[column] }}">
+							<span ng-class="rowClass(column, row)" popover="{{ row['name'] }}" popover-trigger="mouseenter">
+								<img ng-src="/assets/images/status/{{ getPreferenceIcon(row) }}">
+								{{ row[column] }}
+							</span>
+						</a>
+						<span ng-if="column === 'volume'">{{ row[column] | number | bigNumber }}</span>
+						<span ng-if="column !== 'symbol' && column != 'volume'" ng-class="row[column] < 0 ? 'negative' : ''">{{ row[column] | quoteNumber }}</span>
+						
+						<img ng-if="column === 'changePct' && row['changePct'] < 0" src="/assets/images/status/stock_down.gif">
+						<img ng-if="column === 'changePct' && row['changePct'] > 0" src="/assets/images/status/stock_up.gif">
+						<img ng-if="column === 'changePct' && (!row['changePct'] || row['changePct'] == 0)" src="/assets/images/status/transparent.png">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</accordion-group> 		
+</accordion>
+

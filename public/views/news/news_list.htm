@@ -1,0 +1,16 @@
+<div style="display: block; width: 100%;  margin-top: 4px; margin-left: 4px">
+	<div style="display: inline">
+		<img ng-show="item.thumbNail.url" 
+			ng-src="{{ item.thumbNail.url }}" 
+			class="news_img"
+			style="float: right; width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
+	</div>
+	<div style="display: inline">
+		<age class="news_age" value="{{ item.pubDate }}"/>
+		<a ng-bind-html="item.title" class="news" href="{{ item.link }}" target="newwindow">
+			<span class="news_title">{{ item.title }}</span>
+		</a>
+		<div compile="item.description" class="news_desc">{{ item.description }}</div>
+	</div>
+	<br style="clear: both">
+</div>

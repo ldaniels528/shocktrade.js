@@ -1,0 +1,6 @@
+.statsContainer {
+	width: auto;
+	height: 425px;
+	clear: both;
+	overflow: auto;	
+}

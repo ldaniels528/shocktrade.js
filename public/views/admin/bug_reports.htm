@@ -1,0 +1,60 @@
+<form name="bugReportForm" ng-submit="createBugReport()">
+	<div ng-init="loadBugReports()" style="display: block; height: 100%; background-color: #ffffff; border: 1px solid #888888; padding: 10px">
+		<div style="width: 100%">
+			Title: <input class="input-xxlarge" type="text" ng-model="bugReport.title" size="90" placeholder="Enter the title here">
+			<img ng-show="loading" src="/assets/images/status/loading.gif">
+		</div>
+		<div style="width: 100%">
+			<textarea ng-model="bugReport.description" style="width: 100%; height: 225px" placeholder="Enter the description here"></textarea>
+			<div style="display: block; width: 100%">
+				Priority: 
+				<select ng-model="bugReport.priority">
+					<option value="LOW">Low</option>
+					<option value="MEDIUM">Normal</option>
+					<option value="HIGH">High</option>
+				</select>
+				<input style="float: right" type="submit" value="Save">
+			</div>
+		</div>
+		
+		<!--  error message -->
+		<span ng-hide="message == ''" class="error"><img src="/assets/images/status/alert.gif"> {{message}}</span>
+		
+		<div style="display: block; width: 100%">
+			<fieldset>
+				<legend>Issue Reports</legend>
+				<div style="width: 100%; height: 250px">
+					<table style="width: 100%">					
+						<tr><td>								
+							<!--  header section -->
+							<table style="width: 100%">
+								<tr>
+									<th class="hist" style="width: 58%; text-align: left">Title</th>	
+									<th class="hist" style="width: 18%; text-align: left">Submitted By</th>		
+									<th class="hist" style="width: 9%; text-align: left">Priority</th>
+									<th class="hist" style="width: 15%; text-align: center">Reported</th>
+								</tr>
+							</table>
+						</td></tr>
+					
+						<tr><td>		
+							<div class="filterContainer">
+								<table style="width: 100%">
+									<tr ng-repeat="report in bugReports" ng-class-even="'even'" ng-class-odd="'odd'">	
+										<td class="qm" style="width: 58%">
+											<a href="" ng-click="removeBugReport(report._id.$oid)"><img src="/assets/images/buttons/delete.png"></a>
+											<a href="" ng-click="getBugReport(report._id.$oid)">{{ report.title }}</a>
+										</td>
+										<td class="qm" style="width: 18%">{{ report.submittedBy }}</td>
+										<td class="qm" style="width: 9%">{{ report.priority }}</td>
+										<td class="qm" style="width: 15%; text-align: center">{{ report.creationTime.$date | date:'MM/dd/yyyy' }}</td> 						
+									</tr>
+								</table>
+							</div>
+						</td></tr>
+					</table>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+</form>

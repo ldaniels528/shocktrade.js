@@ -1,0 +1,42 @@
+<table style="width: 100%">
+	<tr style="background-color: #dddddd">
+		<th style="width: 14%">Purchased</th>
+		<th style="width: 10%">Symbol</th>
+		<th style="width: 11%; text-align: right">Paid</th>
+		<th style="width: 11%; text-align: right">Market</th>
+		<th style="width: 14%; text-align: right">Quantity</th>
+		<th style="width: 15%; text-align: right">Est Value</th>
+		<th style="width: 20%; text-align: center">Gain/Loss</th>
+	</tr>
+</table>
+
+<div class="positionsContainer">
+	<table style="width: 100%">
+		<tr ng-show="participant.positions.length == 0">
+			<td colspan="8">
+				<div style="display: block; width: 100%; margin-top: 5px; text-align: center">
+					<img src="/assets/images/status/alert.gif"> No positions found
+				</div>
+			</td>
+		</tr>
+	
+		<tr ng-repeat="p in participant.positions" ng-class-even="'even'" ng-class-odd="'odd'">		
+			<td style="width: 14%">{{ p.processedTime.$date | date:'MM/dd hh:mma' }}</td>
+			<td style="width: 10%">
+				<a href="" ng-click="loadQuote(p.symbol, true)">
+					<span ng-class="p.exchange">{{ p.symbol }}</span>
+				</a>
+			</td>
+			<td style="width: 11%; text-align: right">$ {{ p.price | number:2 }}</td>
+			<td style="width: 11%; text-align: right">{{ p.lastTrade | number:2 }}</td>				
+			<td style="width: 14%; text-align: right">{{ p.quantity | number }}</td>
+			<td style="width: 14%; text-align: right">{{ p.netValue | number:2 }}</td>
+			<td style="width: 20%; text-align: right">
+				<span ng-show="p.gainLoss == null" class="null">&#8212;</span>	
+				<span ng-show="p.gainLoss != null" ng-class="p.gainLoss < 0 ? 'negative' : ''">{{ p.gainLoss | number:1 }}%</span>	
+				<changearrow value="{{ p.gainLoss }}"/>
+				<button class="sell_button" ng-click="sellPosition(p.symbol, p.price, p.quantity)">Sell</button>
+			</td>
+		</tr>
+	</table>
+</div>
