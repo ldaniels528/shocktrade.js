@@ -4,15 +4,16 @@ import akka.actor.Props
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.WebSocketRelay
 import com.shocktrade.actors.WebSocketRelay.BroadcastQuote
 import com.shocktrade.actors.quote.QuoteMessages._
 import com.shocktrade.actors.quote.{DBaseQuoteActor, RealTimeQuoteActor}
+import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
 
-import scala.collection.concurrent.TrieMap
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -21,8 +22,8 @@ import scala.concurrent.{ExecutionContext, Future}
  * @author lawrence.daniels@gmail.com
  */
 object StockQuotes {
-  private val realTimeCache = TrieMap[String, JsObject]()
-  private val diskCache = TrieMap[String, JsObject]()
+  private val realTimeCache = ConcurrentCache[String, JsObject](1.minute)
+  private val diskCache = ConcurrentCache[String, JsObject](4.hours)
   private val system = Akka.system
   private val quoteActor = system.actorOf(Props[RealTimeQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
   private val mongoReader = system.actorOf(Props[DBaseQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
@@ -35,18 +36,28 @@ object StockQuotes {
    * @return a promise of an option of a [[JsObject quote]]
    */
   def findRealTimeQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
-    realTimeCache.get(symbol) match {
-      case quote@Some(q) => Future.successful(quote)
-      case None =>
-        implicit val timeout: Timeout = 20.seconds
-        val rtQuoteFuture = (quoteActor ? GetQuote(symbol)).mapTo[Option[JsObject]]
-        rtQuoteFuture.foreach(_ foreach { quote =>
-          realTimeCache(symbol) = quote
-          WebSocketRelay ! BroadcastQuote(quote)
-          mongoWriter ! SaveQuote(symbol, quote)
-        })
-        rtQuoteFuture
+
+    def relayQuote(task: Future[Option[JsObject]]) = {
+      task.foreach(_ foreach { quote =>
+        realTimeCache.put(symbol, quote, if (DateUtil.isTradingActive) 1.minute else 4.hours)
+        WebSocketRelay ! BroadcastQuote(quote)
+        mongoWriter ! SaveQuote(symbol, quote)
+      })
+      task
     }
+
+    if (DateUtil.isTradingActive) relayQuote(findRealTimeQuoteFromService(symbol))
+    else
+      realTimeCache.get(symbol) match {
+        case quote@Some(_) => Future.successful(quote)
+        case None =>
+          relayQuote(findRealTimeQuoteFromService(symbol))
+      }
+  }
+
+  def findRealTimeQuoteFromService(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
+    implicit val timeout: Timeout = 20.seconds
+    (quoteActor ? GetQuote(symbol)).mapTo[Option[JsObject]]
   }
 
   /**
@@ -57,12 +68,12 @@ object StockQuotes {
    */
   def findDBaseQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     diskCache.get(symbol) match {
-      case quote@Some(q) => Future.successful(quote)
+      case quote@Some(_) => Future.successful(quote)
       case None =>
         implicit val timeout: Timeout = 20.seconds
-        val dbQuoteFuture = (mongoReader ? GetQuote(symbol)).mapTo[Option[JsObject]]
-        dbQuoteFuture.foreach(_ foreach (diskCache(symbol) = _))
-        dbQuoteFuture
+        val quote = (mongoReader ? GetQuote(symbol)).mapTo[Option[JsObject]]
+        quote.foreach(_ foreach (diskCache.put(symbol, _)))
+        quote
     }
   }
 
@@ -81,9 +92,9 @@ object StockQuotes {
       // query any remaining quotes from disk
       implicit val timeout: Timeout = 20.seconds
       val task = (mongoReader ? GetQuotes(remainingSymbols)).mapTo[JsArray]
-      task.foreach { case JsArray(objects: Seq[JsObject]) =>
-        objects foreach { jo =>
-          (jo \ "symbol").asOpt[String].foreach(symbol => diskCache(symbol) = jo)
+      task.foreach { case JsArray(values) =>
+        values foreach { js =>
+          (js \ "symbol").asOpt[String].foreach(diskCache.put(_, js.asInstanceOf[JsObject]))
         }
       }
       task
@@ -99,12 +110,10 @@ object StockQuotes {
   def findFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     val rtQuoteFuture = findRealTimeQuote(symbol)
     val dbQuoteFuture = findDBaseQuote(symbol)
-    val tupleFuture = for {rtQuote <- rtQuoteFuture; dbQuote <- dbQuoteFuture} yield (rtQuote, dbQuote)
-
-    // return the combined quote
-    tupleFuture map { case (rtQuote, dbQuote) =>
-      if (rtQuote.isDefined) rtQuote.map(q => dbQuote.getOrElse(JS()) ++ q) else dbQuote
-    }
+    for {
+      rtQuote <- rtQuoteFuture
+      dbQuote <- dbQuoteFuture
+    } yield rtQuote.map(q => dbQuote.getOrElse(JS()) ++ q) ?? dbQuote
   }
 
 }
