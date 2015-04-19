@@ -224,7 +224,6 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
             .options(QueryOpts(batchSizeN = f.maxResults))
             .cursor[JsObject]
             .collect[Seq](f.maxResults)
-
         } yield quotes
 
         quotes map { js => Ok(JsArray(js)) }
@@ -340,17 +339,17 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
   def getQuotes = Action.async { implicit request =>
     // attempt to retrieve the symbols from the request
-    request.body.asJson match {
-      case Some(js) =>
-        val symbols = js.asOpt[Array[String]]
-        if (symbols.nonEmpty) {
-          mcQ.find(JS("symbol" -> JS("$in" -> symbols)), limitFields)
-            .cursor[JsObject]
-            .collect[Seq]() map { quotes => Ok(JsArray(quotes)) }
-        } else Future.successful(Ok(JsArray()))
-      case _ =>
-        Future.successful(Ok(JsArray()))
-    }
+    val result = for {
+      js <- request.body.asJson
+      symbols <- js.asOpt[Array[String]] if symbols.nonEmpty
+      quotes = StockQuotes.findDBaseQuotes(symbols)
+    } yield quotes
+
+    // return the promise of the quotes
+    (result match {
+      case None => Future.successful(JsArray())
+      case Some(futureQuotes) => futureQuotes
+    }) map( r => Ok(r))
   }
 
   def getRealtimeQuote(symbol: String) = Action.async {

@@ -4,8 +4,8 @@
 
 # Home page
 GET     /                           					com.shocktrade.controllers.Application.index
-GET 	/connect  										com.shocktrade.controllers.Application.connect(userName)
-GET     /assets/javascripts/facebook.min.js				com.shocktrade.controllers.Application.facebook()
+GET 	/websocket  									com.shocktrade.controllers.Application.webSocket
+GET     /assets/javascripts/facebook.min.js				com.shocktrade.controllers.Application.facebook
 
 # Administrative (Bug Reports, Processing & Sessions)
 GET		/api/admin/bugreport/list						com.shocktrade.controllers.BugReportResources.getBugReports

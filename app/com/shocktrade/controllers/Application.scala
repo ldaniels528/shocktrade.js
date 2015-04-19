@@ -1,10 +1,9 @@
 package com.shocktrade.controllers
 
-import akka.actor.{Actor, ActorRef, Props}
+import com.shocktrade.actors.WebSocketHandler
 import play.api.Play.current
+import play.api.libs.json.JsValue
 import play.api.mvc._
-
-import scala.concurrent.Future
 
 /**
  * Application Resources
@@ -26,7 +25,7 @@ object Application extends Controller {
    * .biz '616941558381179'
    * DEV '522523074535098'
    */
-  def facebook() = Action { request =>
+  def facebook = Action { request =>
     // determine the appropriate Facebook ID
     val appId = request.host.toLowerCase match {
       case s if s.contains("localhost") => "522523074535098" // local dev
@@ -39,24 +38,10 @@ object Application extends Controller {
   }
 
   /**
-   * Handles the chat web socket
+   * Handles web socket connections
    */
-  def connect(userName: String) = WebSocket.tryAcceptWithActor[String, String] { request =>
-    Future.successful(request.session.get("user") match {
-      case None => Left(Forbidden)
-      case Some(_) => Right(MyWebSocketActor.props)
-    })
-  }
-
-  object MyWebSocketActor {
-    def props(out: ActorRef) = Props(new MyWebSocketActor(out))
-  }
-
-  class MyWebSocketActor(out: ActorRef) extends Actor {
-    def receive = {
-      case msg: String =>
-        out ! ("I received your message: " + msg)
-    }
+  def webSocket = WebSocket.acceptWithActor[JsValue, JsValue] { request => out =>
+    WebSocketHandler.props(out)
   }
 
 }

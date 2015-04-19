@@ -2,8 +2,7 @@ package com.shocktrade.actors.quote
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.actors.quote.QuoteMessages._
-import com.shocktrade.controllers.QuoteResources
-import QuoteResources._
+import com.shocktrade.controllers.QuoteResources._
 import play.api.libs.json.Json.{obj => JS, _}
 import play.api.libs.json.{JsArray, JsObject}
 import play.modules.reactivemongo.json.collection.JSONCollection
@@ -25,6 +24,10 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
       val mySender = sender()
       loadQuote(symbol) foreach (mySender ! _)
 
+    case GetQuotes(symbols) =>
+      val mySender = sender()
+      loadQuotes(symbols) foreach (mySender ! _)
+
     case SaveQuote(symbol, quote) =>
       saveQuote(symbol, quote)
 
@@ -41,6 +44,10 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     // db.Stocks.find({$or:[{symbol:"GFOOE"}, {"changes.symbol":{$in:["GFOOE"]}}]})
     mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol))))))).cursor[JsObject].collect[Seq](1) map (_.headOption)
+  }
+
+  private def loadQuotes(symbols: Seq[String])(implicit ec: ExecutionContext): Future[JsArray] = {
+    mcQ.find(JS("symbol" -> JS("$in" -> symbols)), limitFields).cursor[JsObject].collect[Seq]() map JsArray
   }
 
   /**
