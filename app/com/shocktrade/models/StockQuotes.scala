@@ -9,7 +9,9 @@ import com.shocktrade.actors.WebSocketRelay
 import com.shocktrade.actors.WebSocketRelay.BroadcastQuote
 import com.shocktrade.actors.quote.QuoteMessages._
 import com.shocktrade.actors.quote.{DBaseQuoteActor, RealTimeQuoteActor}
+import com.shocktrade.controllers.QuoteResources._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
+import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
@@ -28,6 +30,22 @@ object StockQuotes {
   private val quoteActor = system.actorOf(Props[RealTimeQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
   private val mongoReader = system.actorOf(Props[DBaseQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
   private val mongoWriter = system.actorOf(Props[DBaseQuoteActor])
+  implicit val timeout: Timeout = 45.seconds
+
+  import system.dispatcher
+
+  def init(fields: JsObject): Unit = {
+    mcQ.find(JS("active" -> true), fields).cursor[JsObject].collect[Seq]() foreach { objects =>
+      Logger.info(s"Pre-loaded ${objects.length} quote(s)")
+      objects foreach { jo =>
+        for {
+          symbol <- (jo \ "symbol").asOpt[String]
+        } {
+          diskCache.put(symbol, jo)
+        }
+      }
+    }
+  }
 
   /**
    * Retrieves a real-time quote for the given symbol
@@ -56,7 +74,6 @@ object StockQuotes {
   }
 
   def findRealTimeQuoteFromService(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
-    implicit val timeout: Timeout = 20.seconds
     (quoteActor ? GetQuote(symbol)).mapTo[Option[JsObject]]
   }
 
@@ -70,11 +87,14 @@ object StockQuotes {
     diskCache.get(symbol) match {
       case quote@Some(_) => Future.successful(quote)
       case None =>
-        implicit val timeout: Timeout = 20.seconds
         val quote = (mongoReader ? GetQuote(symbol)).mapTo[Option[JsObject]]
         quote.foreach(_ foreach (diskCache.put(symbol, _)))
         quote
     }
+  }
+
+  def findDBaseFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
+    (mongoReader ? GetFullQuote(symbol)).mapTo[Option[JsObject]]
   }
 
   /**
@@ -90,7 +110,6 @@ object StockQuotes {
     if (remainingSymbols.isEmpty) Future.successful(JsArray(cachedQuotes))
     else {
       // query any remaining quotes from disk
-      implicit val timeout: Timeout = 20.seconds
       val task = (mongoReader ? GetQuotes(remainingSymbols)).mapTo[JsArray]
       task.foreach { case JsArray(values) =>
         values foreach { js =>
@@ -109,7 +128,7 @@ object StockQuotes {
    */
   def findFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     val rtQuoteFuture = findRealTimeQuote(symbol)
-    val dbQuoteFuture = findDBaseQuote(symbol)
+    val dbQuoteFuture = findDBaseFullQuote(symbol)
     for {
       rtQuote <- rtQuoteFuture
       dbQuote <- dbQuoteFuture

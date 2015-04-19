@@ -10,6 +10,8 @@ object QuoteMessages {
 
   case class GetQuote(symbol: String)
 
+  case class GetFullQuote(symbol: String)
+
   case class GetQuotes(symbols: Seq[String])
 
   case class SaveQuote(symbol: String, quote: JsObject)

@@ -24,6 +24,10 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
       val mySender = sender()
       loadQuote(symbol) foreach (mySender ! _)
 
+    case GetFullQuote(symbol) =>
+      val mySender = sender()
+      loadFullQuote(symbol) foreach (mySender ! _)
+
     case GetQuotes(symbols) =>
       val mySender = sender()
       loadQuotes(symbols) foreach (mySender ! _)
@@ -43,7 +47,22 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
    */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     // db.Stocks.find({$or:[{symbol:"GFOOE"}, {"changes.symbol":{$in:["GFOOE"]}}]})
-    mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol))))))).cursor[JsObject].collect[Seq](1) map (_.headOption)
+    mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))), limitFields)
+      .cursor[JsObject]
+      .collect[Seq](1) map (_.headOption)
+  }
+
+  /**
+   * Loads a quote from disk for the given symbol
+   * @param symbol the given symbol
+   * @param ec the given [[ExecutionContext]]
+   * @return the promise of an option of a quote loaded from disk
+   */
+  private def loadFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
+    // db.Stocks.find({$or:[{symbol:"GFOOE"}, {"changes.symbol":{$in:["GFOOE"]}}]})
+    mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))))
+      .cursor[JsObject]
+      .collect[Seq](1) map (_.headOption)
   }
 
   private def loadQuotes(symbols: Seq[String])(implicit ec: ExecutionContext): Future[JsArray] = {

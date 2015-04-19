@@ -31,7 +31,6 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcS = db.collection[JSONCollection]("SIC")
 
-
   val limitFields = JS(
     "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1,
     "change" -> 1, "changePct" -> 1, "spread" -> 1, "volume" -> 1)
@@ -39,6 +38,9 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   val searchFields = JS(
     "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "change" -> 1, "changePct" -> 1,
     "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1, "tradeDate" -> 1, "spread" -> 1, "volume" -> 1)
+
+  // preload the quotes
+  StockQuotes.init(searchFields)
 
   /**
    * Auto-completes symbols and company names
@@ -184,51 +186,27 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     }
   }
 
-  def filterMiniQuotes(userID: String) = Action.async { implicit request =>
+  def filterMiniQuotes(userID: String) = showQuotesByFilter(userID, limitFields)
+
+  def filterFullQuotes(userID: String) = showQuotesByFilter(userID, searchFields)
+
+  def showQuotesByFilter(userID: String, fields: JsObject) = Action.async { implicit request =>
     // attempt to retrieve the filter properties from the request
     request.body.asJson map (_.as[Filter]) match {
-      case Some(f) =>
-        //  show the query
-        //Logger.info(s"userID = $userID, query = ${createQueryJs(f)}, sort = ${sortJs(f)}, maxResults = ${f.maxResults}")
-
-        val quotes = for {
-        // attempt to extract the exchanges
-          exchanges <- findStockExchanges(Option(userID))
-
-          // retrieve the quotes
-          quotes <- mcQ.find(createQueryJs(f, exchanges), limitFields)
-            .sort(sortJs(f))
-            .options(QueryOpts(batchSizeN = f.maxResults))
-            .cursor[JsObject]
-            .collect[Seq](f.maxResults)
-        } yield quotes
-
-        quotes map { quotes => Ok(JsArray(quotes)) }
-      case None =>
-        Future.successful(Ok(JsArray()))
-    }
-  }
-
-  def filterFullQuotes(userID: String) = Action.async { implicit request =>
-    // attempt to retrieve the filter properties from the request
-    request.body.asJson map (_.as[Filter]) match {
-      case Some(f) =>
-        //  show the query
-        //Logger.info(s"query = ${createQueryJs(f)}, sort = ${sortJs(f)}, maxResults = ${f.maxResults}")
-
+      case Some(filter) =>
         val quotes = for {
         // attempt to retrieve the player's exchanges
           exchanges <- findStockExchanges(Option(userID))
 
           // retrieve the quotes
-          quotes <- mcQ.find(createQueryJs(f, exchanges), searchFields)
-            .sort(sortJs(f))
-            .options(QueryOpts(batchSizeN = f.maxResults))
+          quotes <- mcQ.find(createQueryJs(filter, exchanges), fields)
+            .sort(sortJs(filter))
+            .options(QueryOpts(batchSizeN = filter.maxResults))
             .cursor[JsObject]
-            .collect[Seq](f.maxResults)
+            .collect[Seq](filter.maxResults)
         } yield quotes
 
-        quotes map { js => Ok(JsArray(js)) }
+        quotes map (js => Ok(JsArray(js)))
       case None =>
         Future.successful(Ok(JsArray()))
     }
