@@ -25,10 +25,12 @@ import scala.util.{Failure, Success, Try}
 object QuoteResources extends Controller with MongoController with ProfileFiltering with QuoteFiltering {
   private lazy val naicsCodes = loadNaicsMappings()
   private lazy val sicCodes = loadSicsMappings()
+  private val Stocks = "Stocks"
   lazy val mcQ = db.collection[JSONCollection]("Stocks")
   lazy val mcN = db.collection[JSONCollection]("NAICS")
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcS = db.collection[JSONCollection]("SIC")
+
 
   val limitFields = JS(
     "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1,
@@ -59,7 +61,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
-      quotes <- db.command(new Aggregate("Stocks", Seq(
+      quotes <- db.command(new Aggregate(Stocks, Seq(
         Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> B("$ne" -> BSONNull))),
         GroupField("sector")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
@@ -73,7 +75,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
-      quotes <- db.command(new Aggregate("Stocks", Seq(
+      quotes <- db.command(new Aggregate(Stocks, Seq(
         Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> B("$ne" -> BSONNull))),
         GroupField("industry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
@@ -87,7 +89,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
-      quotes <- db.command(new Aggregate("Stocks", Seq(
+      quotes <- db.command(new Aggregate(Stocks, Seq(
         Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> B("$ne" -> BSONNull))),
         GroupField("subIndustry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
@@ -112,7 +114,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     (for {
     // get the NAICS codes
       codes <- naicsCodes
-      results <- db.command(new Aggregate("Stocks", Seq(
+      results <- db.command(new Aggregate(Stocks, Seq(
         Match(B("active" -> true, "naicsNumber" -> B("$ne" -> BSONNull))),
         GroupField("naicsNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
         Json.toJson(bs) match {
@@ -131,7 +133,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     (for {
     // get the SIC codes
       codes <- sicCodes
-      results <- db.command(new Aggregate("Stocks", Seq(
+      results <- db.command(new Aggregate(Stocks, Seq(
         Match(B("active" -> true, "sicNumber" -> B("$ne" -> BSONNull))),
         GroupField("sicNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
         Json.toJson(bs) match {
@@ -147,7 +149,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   def getExchangeCounts = Action.async {
     import reactivemongo.core.commands._
 
-    db.command(new Aggregate("Stocks", Seq(
+    db.command(new Aggregate(Stocks, Seq(
       Match(B("active" -> true, "exchange" -> B("$ne" -> BSONNull), "assetType" -> B("$in" -> BSONArray("Common Stock", "ETF")))),
       GroupField("exchange")("total" -> SumValue(1))))) map { results =>
       results.toSeq map (Json.toJson(_))
@@ -156,7 +158,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
   def getCachedQuote(symbol: String) = Action.async {
     StockQuotes.findRealTimeQuote(symbol) map {
-      case Some(js: JsObject) => Ok(js)
+      case Some(js) => Ok(js)
       case None =>
         NotFound(s"No quote found for ticker $symbol")
     }
@@ -244,19 +246,21 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
    * POST http://localhost:9000/api/quotes/pricing <JsArray>
    */
   def getPricing = Action.async { request =>
-    request.body.asJson match {
-      case Some(js) =>
-        val symbols = js.asOpt[Array[String]]
-        for {
-          quotes <- mcQ.find(JS("symbol" -> JS("$in" -> symbols)), JS("symbol" -> 1, "lastTrade" -> 1)).cursor[JsObject].collect[Seq]()
-          mapJs = quotes.foldLeft[JsObject](JS()) { (res, js) =>
-            val jso = (for {
-              symbol <- (js \ "symbol").asOpt[String]
-              lastTrade <- (js \ "lastTrade").asOpt[Double]
-            } yield JS(symbol -> JS("lastTrade" -> lastTrade))) getOrElse JS()
-            res ++ jso
-          }
-        } yield Ok(mapJs)
+    val results = for {
+      js <- request.body.asJson
+      symbols <- js.asOpt[Array[String]]
+    } yield StockQuotes.findDBaseQuotes(symbols)
+
+    def toPriceQuote(js: JsValue) = (for {
+      symbol <- (js \ "symbol").asOpt[String]
+      lastTrade <- (js \ "lastTrade").asOpt[Double]
+    } yield JS(symbol -> JS("lastTrade" -> lastTrade))) getOrElse JS()
+
+    results match {
+      case Some(futureQuotes) =>
+        futureQuotes map { case JsArray(quotes) =>
+          Ok(JsArray(quotes map toPriceQuote))
+        }
       case None =>
         Future.successful(BadRequest("JSON request expected"))
     }
@@ -301,7 +305,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
   private def getEnrichedProducts(baseQuote: JsObject): Future[Seq[JsObject]] = {
     baseQuote \ "products" match {
-      case JsArray(products: Seq[JsValue]) =>
+      case JsArray(products) =>
         // get the product mapping
         val pm = products flatMap { p =>
           for {
@@ -310,7 +314,8 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
         }
 
         // if products exist, load the quotes for each product's symbol
-        if (pm.nonEmpty) {
+        if (pm.isEmpty) Future.successful(Nil)
+        else {
           val symbols = pm.map(_._1)
           for {
           // retrieve the product quotes
@@ -329,11 +334,10 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
             }
 
           } yield enrichedProducts
-
-        } else Future.successful(Seq.empty)
+        }
 
       case _ =>
-        Future.successful(Seq.empty)
+        Future.successful(Nil)
     }
   }
 
@@ -342,14 +346,13 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     val result = for {
       js <- request.body.asJson
       symbols <- js.asOpt[Array[String]] if symbols.nonEmpty
-      quotes = StockQuotes.findDBaseQuotes(symbols)
-    } yield quotes
+    } yield StockQuotes.findDBaseQuotes(symbols)
 
     // return the promise of the quotes
     (result match {
-      case None => Future.successful(JsArray())
       case Some(futureQuotes) => futureQuotes
-    }) map( r => Ok(r))
+      case None => Future.successful(JsArray())
+    }) map (r => Ok(r))
   }
 
   def getRealtimeQuote(symbol: String) = Action.async {
