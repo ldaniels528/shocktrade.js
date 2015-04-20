@@ -1,9 +1,10 @@
-package com.shocktrade.models
+package com.shocktrade.controllers
+
+import play.api.data.validation.ValidationError
+import play.api.libs.json._
+import reactivemongo.bson.BSONObjectID
 
 import scala.util.Try
-import reactivemongo.bson.BSONObjectID
-import play.api.libs.json._
-import play.api.data.validation.ValidationError
 
 /**
  * BSON Object Handling
