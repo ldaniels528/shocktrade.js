@@ -6,8 +6,8 @@
 		<div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
 	</div>
 	
-	<div ng-init="changePlayTab(0)" style="display: inline; float: right; width: 85%">
-		<div ng-include src="tabs[tab].path"></div>
+	<div ng-init="setPlayTab(0)" style="display: inline; float: right; width: 85%">
+		<div ng-include src="playTabs[tab].path"></div>
 	</div>
 	
 	<br style="clear: both"/>
