@@ -96,7 +96,8 @@
 		<fieldset>
 			<legend>Search Results (<span class="positive">{{ searchResults.length || 0 }}</span>)</legend>
 			<table style="width: 100%">
-				<tr ng-repeat="c in searchResults" ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
+				<tr ng-repeat="c in searchResults" class="clickable" ng-click="loadContest(c._id.$oid)"
+					ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
 					<td style="width: 30%">
 						<span ng-if="c.status == 'ACTIVE'">
 							<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
@@ -105,7 +106,7 @@
 						</span>
 						<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
 						<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-						<a href="" ng-click="loadContest(c._id.$oid)">{{ c.name }}</a>
+						<a href="">{{ c.name }}</a>
 					</td>
 					<td style="width: 20%">
 						<span ng-show="c.leader">
