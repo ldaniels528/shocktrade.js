@@ -1,0 +1,74 @@
+<script type="text/ng-template" id="new_game.htm">
+    <div class="modal-header">
+        <h4>Create New Game</h4>
+    </div>
+    <div class="modal-body">
+        <fieldset>
+            <legend>Game Filtering Options</legend>
+            <table style="width: 100%">
+                <tr>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.activeOnly">
+                        <img src="/assets/images/status/online.png"> Open/Available
+                    </td>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.protected">
+                        <img src="/assets/images/objects/protected.png"> Invitation Only
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.perksAllowed">
+                        <img src="/assets/images/objects/gift.png"> Perks Allowed
+                    </td>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.acquaintances">
+                        <img src="/assets/images/objects/home.gif"> My Neighbors
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.ranked">
+                        <img src="/assets/images/objects/reward.png"> Ranked
+                    </td>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.currencies">
+                        <img src="/assets/images/objects/gold-coin-stack.png"> Currencies
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.levelCapAllowed">
+                        <img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)
+                    </td>
+                    <td class="gs_left">
+                        <input type="checkbox" ng-model="searchOptions.friendsOnly">
+                        <img src="/assets/images/objects/friend_header.gif"> My Friends
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select ng-disable="!searchOptions.levelCapAllowed" ng-controller="RewardsCtrl" ng-model="searchOptions.levelCap" style="margin-top: 3px; font-size: 10pt">
+                            <option ng-repeat="level in levels"
+                                    style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
+                                    value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select ng-disable="!searchOptions.friendsOnly" ng-model="searchOptions.friend" style="margin-top: 3px; font-size: 10pt">
+                            <option ng-repeat="friend in getRegisteredFriends()"
+                                    style="background-image:url(http://graph.facebook.com/{{friend.id }}/picture); background-repeat: no-repeat; background-size:16px 16px; text-indent: 16px"
+                                    value="{{ friend.id }}">{{ friend.name }}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="createButton" style="margin-top: 10px" ng-click="ok()">Create Game</button>
+                        <button id="cancelButton" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</script>
