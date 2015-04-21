@@ -29,6 +29,8 @@ GET		/api/charts/stock/:symbol/:size/:range			com.shocktrade.controllers.ChartRe
 GET		/api/charts/ratings/:symbol						com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
 
 # Contests
+PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createNewContest
+
 GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContest(id)
 PUT		/api/contest/:id/chat/:sender					com.shocktrade.controllers.ContestResources.sendChatMessage(id, sender)
 PUT		/api/contest/order								com.shocktrade.controllers.ContestResources.createOrder

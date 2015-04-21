@@ -1,4 +1,4 @@
-package com.shocktrade.actors.connect
+package com.shocktrade.actors
 
 import akka.actor.{Actor, Props}
 import akka.pattern.ask

@@ -1,4 +1,4 @@
-package com.shocktrade.actors.cqm
+package com.shocktrade.actors
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.controllers.QuoteResources._

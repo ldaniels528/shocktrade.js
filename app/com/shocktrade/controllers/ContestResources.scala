@@ -1,6 +1,11 @@
 package com.shocktrade.controllers
 
+import java.util.Date
+
+import com.shocktrade.actors.Contests
+import com.shocktrade.actors.Contests.CreateContest
 import com.shocktrade.controllers.QuoteResources.Quote
+import com.shocktrade.models.contest.{Contest, Participant}
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
@@ -46,6 +51,39 @@ object ContestResources extends Controller with MongoController with MongoExtras
       (JsPath \ "acquaintances").read[Boolean] and
       (JsPath \ "levelCap").read[String] and
       (JsPath \ "levelCapAllowed").read[Boolean])(SearchOptions.apply _)
+
+  /**
+   * Creates a new contest
+   */
+  def createNewContest = Action { implicit request =>
+    val results = for {
+      json <- request.body.asJson
+      title <- (json \ "name").asOpt[String] map(_.trim)
+      playerName <- (json \ "player" \ "name").asOpt[String]
+      facebookId <- (json \ "player" \ "facebookId").asOpt[String]
+      invitationOnly = (json \ "invitationOnly").asOpt[Boolean].getOrElse(false)
+      ranked = (json \ "ranked").asOpt[Boolean].getOrElse(false)
+      perksAllowed = (json \ "perksAllowed").asOpt[Boolean].getOrElse(false)
+      acquaintances = (json \ "acquaintances").asOpt[Boolean].getOrElse(false)
+    } yield (title, playerName, facebookId, invitationOnly, ranked, perksAllowed, acquaintances)
+
+    results match {
+      case Some((title, name, facebookId, invitationOnly, ranked, perksAllowed, acquaintances)) =>
+        val contest = Contest(
+          name = title,
+          creationTime = new Date(),
+          startingBalance = BigDecimal(25000d),
+          modifiers = Contest.Modifiers(acquaintances = acquaintances, invitationOnly = invitationOnly, ranked = ranked, perksAllowed = perksAllowed)
+        )
+        val creator = Participant(name, facebookId, fundsAvailable = contest.startingBalance)
+        Logger.info(s"contest = ${contest.copy(participants = List(creator))}")
+        Contests ! CreateContest(contest.copy(participants = List(creator)))
+
+        Ok(JS("name" -> contest.name, "status" -> contest.status.name))
+      case None =>
+        BadRequest("One or more required property is missing")
+    }
+  }
 
   def getContest(id: String) = Action.async {
     val results =

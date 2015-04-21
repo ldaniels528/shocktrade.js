@@ -156,58 +156,6 @@
 		<img ng-src="/assets/images/asset_types/stock.png">
 		<span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
 	</script>
-	
-	<script type="text/ng-template" id="sign_up.htm">
-		<div class="modal-header">
-	   		<h4>Sign Up</h4>
-	    </div>	
-		<div class="modal-body">	
-			<div style="margin: 20px 20px 20px 20px">
-				<div style="display: block; font-size: 14pt">It's simple and free!</div>
-				<table style="width: auto">
-					<tr>
-						<td><input class="rounded" ng-model="form.first" type="text" placeholder="First" size="20"></td>
-						<td><input class="rounded" ng-model="form.last" type="text" placeholder="Last" size="20"></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<input class="rounded" ng-model="form.userName" type="text" placeholder="Screen Name" size="43">
-						</td>
-					</tr>			
-					<tr>
-						<td colspan="2">
-							<input class="rounded" ng-model="form.email" type="text" placeholder="Email Address" size="43">
-						</td>
-					</tr>
-					<tr><th colspan="2">Gender</th></tr>		
-					<tr>
-						<td colspan="2">
-							<select ng-model="form.gender">
-								<option value="">I am ...</option>
-								<option value="MALE">Male</option>
-								<option value="FEMALE">Female</option>
-							</select>
-						</td>
-					</tr>
-					<tr><th colspan="2">Country</th></tr>		
-					<tr>
-						<td colspan="2">
-							<select ng-model="form.country">
-								<option value="">I live in ...</option>
-								<option value="us">United States</option>
-								<option value="uk">United Kingdom</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<button id="signUpButton" style="margin-top: 10px" ng-click="ok()">Create Account</button>
-							<button id="cancelButton" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
-						</td>
-					</tr>
-				</table>	
-			</div>
-		</div>
-	</script>
+
 </body>
 </html>
