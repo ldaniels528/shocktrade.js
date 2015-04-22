@@ -1,4 +1,4 @@
-package com.shocktrade.models
+package com.shocktrade.models.quote
 
 import akka.actor.Props
 import akka.pattern.ask
@@ -10,10 +10,11 @@ import com.shocktrade.actors.WebSocketRelay.QuoteUpdated
 import com.shocktrade.actors.quote.QuoteMessages._
 import com.shocktrade.actors.quote.{DBaseQuoteActor, RealTimeQuoteActor}
 import com.shocktrade.controllers.QuoteResources._
+import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.{JsArray, JsObject}
+import play.api.libs.json.{JsArray, JsObject, JsValue}
 import play.libs.Akka
 
 import scala.concurrent.duration._
@@ -133,6 +134,10 @@ object StockQuotes {
       rtQuote <- rtQuoteFuture
       dbQuote <- dbQuoteFuture
     } yield rtQuote.map(q => dbQuote.getOrElse(JS()) ++ q) ?? dbQuote
+  }
+
+  def findQuotes(symbols: Seq[String])(fields: String*)(implicit ec: ExecutionContext): Future[Seq[JsValue]] = {
+    mcQ.find(JS("symbol" -> JS("$in" -> symbols)), fields.toJsonFields).cursor[JsObject].collect[Seq]()
   }
 
 }

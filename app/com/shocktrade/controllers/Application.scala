@@ -4,18 +4,19 @@ import com.shocktrade.actors.WebSocketHandler
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._
+import play.modules.reactivemongo.MongoController
 
 /**
  * Application Resources
  * @author lawrence.daniels@gmail.com
  */
-object Application extends Controller {
+object Application extends Controller with MongoController {
 
   /**
    * Renders the index page
    */
   def index = Action {
-    Ok(views.html.index())
+    Ok(assets.views.html.index())
   }
 
   /**
@@ -34,7 +35,7 @@ object Application extends Controller {
       case s if s.contains("shocktrade.net") => "616569495084446" // shocktrade.net
       case _ => "522523074535098" // unknown, so local dev
     }
-    Ok(views.js.facebook(appId))
+    Ok(assets.views.js.facebook(appId))
   }
 
   /**

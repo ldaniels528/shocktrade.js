@@ -1,6 +1,6 @@
 package com.shocktrade.controllers
 
-import com.shocktrade.models.StockQuotes
+import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.GoogleFinanceTradingHistoryService.GFHistoricalQuote
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

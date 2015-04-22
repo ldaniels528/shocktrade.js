@@ -52,7 +52,7 @@ object WebSocketRelay {
 
       case QuoteUpdated(quote) =>
         actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "quote", "data" -> quote)
+          actor ! JS("action" -> "quoteUpdate", "data" -> quote)
         }
 
       case message =>
