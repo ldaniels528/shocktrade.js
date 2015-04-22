@@ -31,7 +31,7 @@ GET		/api/charts/ratings/:symbol						com.shocktrade.controllers.ChartResources.
 # Contests
 PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createNewContest
 
-GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContest(id)
+GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContestByID(id)
 PUT		/api/contest/:id/chat/:sender					com.shocktrade.controllers.ContestResources.sendChatMessage(id, sender)
 PUT		/api/contest/order								com.shocktrade.controllers.ContestResources.createOrder
 DELETE	/api/contest/:id/order/:player/:orderId			com.shocktrade.controllers.ContestResources.cancelOrder(id, player, orderId)

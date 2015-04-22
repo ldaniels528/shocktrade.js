@@ -15,55 +15,57 @@
 		<!-- Search Results -->
 		<div>
 			<fieldset>
-				<legend>Games Found: <span class="positive">{{ searchResults.length || 0 }}</span>
+				<legend>Available Games (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
 					<button class="new_game" style="float: right" ng-click="popupNewGameDialog()">New Game</button>
 				</legend>
-				<table style="width: 100%">
-					<tr ng-repeat="c in searchResults" class="clickable" ng-click="loadContest(c._id.$oid)"
-						ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
-						<td style="width: 30%">
-						<span ng-if="c.status == 'ACTIVE'">
-							<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
-							<img ng-if="c.playerCount + 1 == c.maxParticipants" src="/assets/images/status/yellowlight.gif">
-							<img ng-if="c.playerCount == c.maxParticipants" src="/assets/images/status/redlight.png">
-						</span>
-							<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
-							<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-							<a href="">{{ c.name }}</a>
-						</td>
-						<td style="width: 20%">
-						<span ng-show="c.leader">
-							<img ng-if="c.status == 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
-							<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
-							<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
-							<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
-							<span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-							<changearrow value="{{ c.leader.gainLoss }}" />
-							{{ c.leader.gainLoss | number:2 }}%</span>
-						</span>
-						</td>
-						<td style="width: 15%">
-							<span ng-class="c.status == 'ACTIVE' ? '' : 'null'" style="float: right">$ {{ c.startingBalance | number }}</span>
-						</td>
-						<td style="width: 5%">&nbsp;</td>
-						<td style="width: 15%; text-align: left">
-							<span ng-class="c.status == 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
-							<img src="/assets/images/objects/friend_header.gif">
-						<span ng-if="c.status == 'ACTIVE'">
-							/ {{ c.maxParticipants < 10 ? '0' + c.maxParticipants : c.maxParticipants }}
-						</span>
-						</td>
-						<td style="width: 15%">
-						<span style="float: right">
-							<img ng-if="c.ranked" src="/assets/images/objects/reward.png">
-							<img ng-if="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
-							<img ng-if="false" src="/assets/images/objects/sharing_header.png">
-							<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
-							<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
-						</span>
-						</td>
-					</tr>
-				</table>
+				<div class="availGamesContainer">
+					<table style="width: 100%">
+						<tr ng-repeat="c in searchResults" class="clickable" ng-click="loadContest(c._id.$oid)"
+							ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
+							<td style="width: 30%">
+							<span ng-if="c.status == 'ACTIVE'">
+								<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
+								<img ng-if="c.playerCount + 1 == c.maxParticipants" src="/assets/images/status/yellowlight.gif">
+								<img ng-if="c.playerCount >= c.maxParticipants" src="/assets/images/status/redlight.png">
+							</span>
+								<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
+								<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
+								<a href="">{{ c.name }}</a>
+							</td>
+							<td style="width: 20%">
+							<span ng-show="c.leader">
+								<img ng-if="c.status == 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
+								<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
+								<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
+								<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
+								<span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+								<changearrow value="{{ c.leader.gainLoss }}" />
+								{{ c.leader.gainLoss | number:2 }}%</span>
+							</span>
+							</td>
+							<td style="width: 15%">
+								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'" style="float: right">$ {{ c.startingBalance | number }}</span>
+							</td>
+							<td style="width: 5%">&nbsp;</td>
+							<td style="width: 15%; text-align: left">
+								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
+								<img src="/assets/images/objects/friend_header.gif">
+							<span ng-if="c.status == 'ACTIVE'">
+								/ {{ c.maxParticipants < 10 ? '0' + c.maxParticipants : c.maxParticipants }}
+							</span>
+							</td>
+							<td style="width: 15%">
+							<span style="float: right">
+								<img ng-if="c.ranked" src="/assets/images/objects/reward.png">
+								<img ng-if="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
+								<img ng-if="false" src="/assets/images/objects/sharing_header.png">
+								<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
+								<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
+							</span>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</fieldset>
 		</div>
 		<hr style="color: #888888; margin: 5px 0px 5px 0px">

@@ -45,7 +45,12 @@ object WebSocketRelay {
    */
   class WebSocketRelayActor() extends Actor with ActorLogging {
     override def receive = {
-      case BroadcastQuote(quote) =>
+      case ContestUpdated(contest) =>
+        actors.foreach { case (uid, actor) =>
+          actor ! JS("action" -> "contestUpdate", "data" -> contest)
+        }
+
+      case QuoteUpdated(quote) =>
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "quote", "data" -> quote)
         }
@@ -56,6 +61,8 @@ object WebSocketRelay {
     }
   }
 
-  case class BroadcastQuote(quote: JsValue)
+  case class ContestUpdated(contest: JsValue)
+
+  case class QuoteUpdated(quote: JsValue)
 
 }

@@ -6,7 +6,7 @@ import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.WebSocketRelay
-import com.shocktrade.actors.WebSocketRelay.BroadcastQuote
+import com.shocktrade.actors.WebSocketRelay.QuoteUpdated
 import com.shocktrade.actors.quote.QuoteMessages._
 import com.shocktrade.actors.quote.{DBaseQuoteActor, RealTimeQuoteActor}
 import com.shocktrade.controllers.QuoteResources._
@@ -58,7 +58,7 @@ object StockQuotes {
     def relayQuote(task: Future[Option[JsObject]]) = {
       task.foreach(_ foreach { quote =>
         realTimeCache.put(symbol, quote, if (DateUtil.isTradingActive) 1.minute else 4.hours)
-        WebSocketRelay ! BroadcastQuote(quote)
+        WebSocketRelay ! QuoteUpdated(quote)
         mongoWriter ! SaveQuote(symbol, quote)
       })
       task

@@ -5,5 +5,5 @@ package com.shocktrade.models.contest;
  * @author lawrence.daniels@gmail.com
  */
 public enum ContestStatus {
-    OPEN, ACTIVE, CLOSED
+    ACTIVE, CLOSED
 }

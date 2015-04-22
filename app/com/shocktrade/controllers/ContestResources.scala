@@ -2,10 +2,13 @@ package com.shocktrade.controllers
 
 import java.util.Date
 
+import akka.util.Timeout
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.Contests
-import com.shocktrade.actors.Contests.CreateContest
+import com.shocktrade.actors.Contests._
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.{Contest, Participant}
+import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
@@ -14,25 +17,21 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.BSONFormats
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.bson.{BSONDateTime, BSONDocument, BSONObjectID}
-import reactivemongo.core.commands.{FindAndModify, Update}
 
 import scala.concurrent.Future
-import scala.util.Try
+import scala.concurrent.duration._
 
 /**
  * Contest Resources
  * @author lawrence.daniels@gmail.com
  */
 object ContestResources extends Controller with MongoController with MongoExtras {
-
-  val DISPLAY_COLUMNS =
-    JS("name" -> 1, "creator" -> 1, "startTime" -> 1, "expirationTime" -> 1, "startingBalance" -> 1, "status" -> 1,
-      "ranked" -> 1, "playerCount" -> 1, "levelCap" -> 1, "perksAllowed" -> 1, "maxParticipants" -> 1,
-      "participants.name" -> 1, "participants.facebookID" -> 1)
+  val mcQ = db.collection[JSONCollection]("Stocks")
+  val mcC = db.collection[JSONCollection]("Contests")
+  implicit val timeout: Timeout = 15.seconds
 
   implicit val orderReads: Reads[Order] = (
     (JsPath \ "symbol").read[String] and
@@ -58,7 +57,7 @@ object ContestResources extends Controller with MongoController with MongoExtras
   def createNewContest = Action { implicit request =>
     val results = for {
       json <- request.body.asJson
-      title <- (json \ "name").asOpt[String] map(_.trim)
+      title <- (json \ "name").asOpt[String] map (_.trim)
       playerName <- (json \ "player" \ "name").asOpt[String]
       facebookId <- (json \ "player" \ "facebookId").asOpt[String]
       invitationOnly = (json \ "invitationOnly").asOpt[Boolean].getOrElse(false)
@@ -85,30 +84,168 @@ object ContestResources extends Controller with MongoController with MongoExtras
     }
   }
 
-  def getContest(id: String) = Action.async {
-    val results =
-      mcC.find(JS("_id" -> BSONObjectID(id)))
-        .cursor[JsObject]
-        .collect[Seq](1)
-
-    results map { contests => Ok(JsArray(contests)) }
+  def getContestByID(id: String) = Action.async {
+    findContestByID(id) map {
+      case Some(contest) => Ok(contest)
+      case None => BadRequest(s"Contest $id not found")
+    }
   }
 
   def getContestRankings(id: String) = Action.async {
-    val results = for {
-    // query the contest
-      contests <- mcC.find(JS("_id" -> BSONObjectID(id))).cursor[JsObject].collect[Seq](1)
-
-      // ensure the contest exists
-      contest = contests.headOption
-        .getOrElse(throw new IllegalArgumentException(s"Contest #$id not found"))
-
-      // generate the rankings
+    (for {
+      contest <- findContestByID(id) map (_ orDie s"Contest $id not found")
       rankings <- produceRankings(contest)
+    } yield rankings) map (Ok(_))
+  }
 
-    } yield rankings
+  def getContentParticipant(id: String, playerName: String) = Action.async {
+    (for {
+      contest <- findContestByID(id) map (_ orDie s"Contest $id not found")
+      player = extractParticipantByName(playerName, contest \ "participants") orDie s"Player $playerName not found"
+      enrichedPlayer <- enrichParticipant(player)
+    } yield JsArray(Seq(enrichedPlayer))).map(Ok(_))
+  }
 
-    results map (Ok(_))
+  def contestSearch = Action.async { implicit request =>
+    request.body.asJson map (_.as[SearchOptions]) match {
+      case Some(searchOptions) =>
+        (Contests ? FindContests(searchOptions)).mapTo[JsArray].map(Ok(_))
+      case None =>
+        Future.successful(BadRequest("Search options expected"))
+    }
+  }
+
+  def cancelOrder(contestId: String, playerName: String, orderId: String) = Action.async {
+    Logger.info(s"cancelOrder - contest Id: $contestId, playerName: $playerName, orderId: $orderId")
+    val promisedContest = (Contests ? FindOrderByID(contestId.asBSID, orderId.asBSID,
+      Seq("participants.name", "participants.orders"))).mapTo[Option[JsObject]]
+
+    (for {
+    // retrieve the contest skeleton with orders only
+    // db.Contests.find({ "participants.orders" : { $elemMatch : { _id : ObjectId("532fb6a4bca7c0f8efc20e49") } } })
+      contestWithOrders <- promisedContest.map(_.orDie(s"Contest $contestId not found"))
+
+      // find the player by name
+      player = extractParticipantByName(playerName, contestWithOrders \ "participants")
+        .orDie(s"Player '$playerName' not found")
+
+      // find the order to cancel
+      order = extractOrderByID(orderId, player \ "orders").map(_.asInstanceOf[JsObject])
+        .orDie(s"Order ID $orderId not found") ++ JS("message" -> "Canceled")
+
+      // pull the order, add it to orderHistory, and return the participant
+      updatedContest <- (Contests ? CloseOrder(contestId.asBSID, playerName, orderId.asBSID, order,
+        Seq("participants.name", "participants.orders", "participants.orderHistory"))).mapTo[Option[JsObject]]
+        .map(_.getOrElse(die(s"Order #$orderId not be canceled")))
+
+    // extract just the updated participant
+    } yield extractParticipantByName(playerName, updatedContest \ "participants").getOrElse(JsNull)) map (Ok(_))
+  }
+
+  private def extractParticipantByName(playerName: String, participants: JsValue): Option[JsValue] = {
+    participants match {
+      case JsArray(players) => players.find(p => (p \ "name").asOpt[String] == Some(playerName))
+      case _ => None
+    }
+  }
+
+  private def extractOrderByID(orderId: String, orders: JsValue): Option[JsValue] = {
+    orders match {
+      case JsArray(myOrders) => myOrders.find(o => (o \ "id").asOpt[BSONObjectID] == Some(orderId.asBSID))
+      case _ => None
+    }
+  }
+
+  def createOrder = Action.async { implicit request =>
+    try {
+      val result = for {
+        js <- request.body.asJson
+        contestId = (js \ "contestId").asOpt[String] getOrElse missing("contestId")
+        playerName = (js \ "playerName").asOpt[String] getOrElse missing("playerName")
+        order = JS(
+          "id" -> BSONObjectID.generate,
+          "creationTime" -> new BSONDateTime(System.currentTimeMillis()),
+          "orderTime" -> new BSONDateTime(System.currentTimeMillis()),
+          "symbol" -> (js \ "symbol").asOpt[String].getOrElse(missing("symbol")),
+          "exchange" -> (js \ "exchange").asOpt[String].getOrElse(missing("exchange")),
+          "limitPrice" -> asDecimal(js \ "limitPrice").getOrElse(missing("limitPrice")),
+          "quantity" -> asDecimal(js \ "quantity").map(_.toInt).getOrElse(missing("quantity")),
+          "orderType" -> (js \ "orderType").asOpt[String].getOrElse(missing("orderType")),
+          "priceType" -> (js \ "priceType").asOpt[String].getOrElse(missing("priceType")),
+          "commision1" -> 9.99,
+          "volumeAtOrderTime" -> asDecimal(js \ "volumeAtOrderTime").map(_.toLong).getOrElse(missing("volume")),
+          "orderTerm" -> (js \ "orderTerm").asOpt[String].getOrElse(missing("orderTerm")),
+          "emailNotify" -> (js \ "emailNotify").asOpt[Boolean].getOrElse(missing("emailNotify")))
+      } yield {
+          (Contests ? CreateOrder(contestId.asBSID, playerName, order,
+            Seq("participants.name", "participants.orders", "participants.orderHistory"))).mapTo[Option[JsValue]] map {
+            case Some(contestJs) =>
+              extractParticipantByName(playerName, contestJs \ "participants") match {
+                case Some(player) => Ok(player)
+                case None => BadRequest("No player found")
+              }
+            case None => BadRequest(s"Contest $contestId not found")
+          }
+        }
+
+      result.orDie("Invalid order")
+    } catch {
+      case e: Exception => Future.successful(BadRequest(e.getMessage))
+    }
+  }
+
+  private def asDecimal(js: JsValue): Option[Double] = {
+    js.asOpt[Double] match {
+      case Some(v) => Some(v)
+      case None => js.asOpt[String] map (_.toDouble)
+    }
+  }
+
+  def getHeldSecurities(playerId: String) = Action.async {
+    val outcome = for {
+    // lookup the contests
+      contests <- mcC.find(
+        JS("participants._id" -> playerId.asBSID),
+        JS("participants.$" -> 1)).cursor[JsObject].collect[Seq]()
+
+      // get just the first contest
+      symbols = JsArray(value = contests flatMap { contest =>
+
+        // get the first participant
+        val participants = (contest \ "participants" match {
+          case JsArray(players) => players.headOption
+          case js => Some(js)
+        }) getOrElse JS()
+
+        // get the symbol for each position
+        val positions = participants \ "positions"
+
+        // extract the sequence of symbols
+        positions \\ "symbol"
+      })
+
+    } yield symbols
+
+    outcome map (Ok(_))
+  }
+
+  /**
+   * Returns a trading clock state object
+   */
+  def getMyContests(userName: String) = Action.async {
+    (Contests ? FindContestsByPlayer(userName)).mapTo[JsArray].map(Ok(_))
+  }
+
+  def sendChatMessage(contestId: String, sender: String) = Action.async { implicit request =>
+    request.body.asJson flatMap (_.asOpt[String]) match {
+      case Some(text) =>
+        (Contests ? SendMessage(BSONObjectID(contestId), sender, text)).mapTo[Option[JsObject]].map {
+          case Some(messages) => Ok(JsArray(Seq(messages)))
+          case None => Ok(JsArray())
+        }
+      case None =>
+        Future.successful(Ok(JS("status" -> "error", "message" -> "No message sent")))
+    }
   }
 
   private def produceRankings(contestJson: JsObject): Future[JsArray] = {
@@ -118,6 +255,7 @@ object ContestResources extends Controller with MongoController with MongoExtras
 
       // sort the participants by net-worth
       rankedPlayers = (1 to rankings.size).toSeq zip rankings.sortBy(-_.totalEquity)
+
     } yield JsArray(rankedPlayers map {
       case (place, p) =>
         import p._
@@ -150,48 +288,28 @@ object ContestResources extends Controller with MongoController with MongoExtras
     } yield totalWorths
   }
 
-  private def asRanking(startingBalance: Option[Double], mapping: Map[String, Quote], p: JsValue): Option[Ranking] = {
+  private def getChartDataResults(contestId: String, playerName: String) = {
     for {
-      startingBal <- startingBalance
-      name <- (p \ "name").asOpt[String]
-      facebookID = (p \ "facebookID").asOpt[String].orNull
-      score <- (p \ "score").asOpt[Int]
-      symbols = ((p \ "positions") \\ "symbol") flatMap (_.asOpt[String])
-      fundsAvailable <- (p \ "fundsAvailable").asOpt[Double]
-      investment = (symbols flatMap (s => mapping.get(s) flatMap (_.lastTrade))).sum
-      totalEquity = fundsAvailable + investment
-      gainLoss_% = ((totalEquity - startingBal) / startingBal) * 100d
-    } yield Ranking(name, facebookID, score, totalEquity, gainLoss_%)
+    // lookup the contest by ID
+      contest_? <- mcC.findOneOpt(contestId)
+      contestJs = contest_?.getOrElse(die("Game not found"))
+
+      // get the contest participant details
+      rankings <- produceNetWorths(contestJs)
+
+    } yield rankings
   }
 
-  private def placeName(place: Int): String = {
-    place match {
-      case 1 => "1st"
-      case 2 => "2nd"
-      case 3 => "3rd"
-      case n => s"${n}th"
-    }
-  }
-
-  def getContentParticipant(id: String, playerName: String) = Action.async {
-    val results = for {
-    // query the contest
-      contests <- mcC.find(JS("_id" -> BSONObjectID(id))).cursor[JsObject].collect[Seq](1)
-
-      // ensure the contest exists
-      contest = contests.headOption
-        .getOrElse(throw new IllegalArgumentException(s"Contest #$id not found"))
-
-      // isolate the player
-      player = getParticipantByName(playerName, contest \ "participants")
-        .getOrElse(throw new IllegalArgumentException(s"Player $playerName not found"))
-
-      // generate the rankings
-      enrichedPlayer <- enrichParticipant(player)
-
-    } yield enrichedPlayer
-
-    results map (Ok(_))
+  private def extractParticipant(playerName: String, outcome: Future[Option[BSONDocument]]): Future[Result] = {
+    (outcome map (_.flatMap { bs =>
+      val js = Json.toJson(bs)
+      Logger.info(s"js => $js")
+      (js \\ "participants") find (p => (p \ "name").asOpt[String] == Some(playerName))
+    })).transform({
+      case Some(player) => Ok(player)
+      case None => Ok(JsNull)
+    },
+    e => throw e)
   }
 
   private def enrichParticipant(playerJs: JsValue): Future[JsObject] = {
@@ -233,254 +351,30 @@ object ContestResources extends Controller with MongoController with MongoExtras
     } yield enrichedPlayer
   }
 
-  def mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
-
-  def contestSearch = Action.async { implicit request =>
-    request.body.asJson map (_.as[SearchOptions]) match {
-      case Some(searchOptions) =>
-        for {
-          contests <- mcC.find(createQuery(searchOptions), DISPLAY_COLUMNS)
-            .sort(JS("status" -> 1, "name" -> 1))
-            .cursor[JsObject]
-            .collect[Seq]()
-        } yield Ok(JsArray(contests))
-
-      case None =>
-        Future.successful(BadRequest("Search options expected"))
-    }
-  }
-
-  private def createQuery(so: SearchOptions): JsObject = {
-    val levelCap = Option(so.levelCap).map(s => Try(s.toInt).getOrElse(0)).getOrElse(0)
-    var q = JS()
-    if (so.activeOnly) q = q ++ JS("status" -> "ACTIVE")
-    if (so.available) q = q ++ JS("playerCount" -> JS("$lt" -> 14))
-    if (so.levelCapAllowed) q = q ++ JS("levelCap" -> JS("$gte" -> levelCap))
-    if (so.perksAllowed) q = q ++ JS("$or" -> JsArray(Seq(JS("perksAllowed" -> so.perksAllowed), JS("perksAllowed" -> JS("$exists" -> false)))))
-    q
-  }
-
-  def cancelOrder(contestId: String, playerName: String, orderId: String) = Action.async {
-    import reactivemongo.bson.{BSONDocument => B}
-
-    System.out.println(s"cancelOrder - contestId: $contestId, playerName: $playerName, orderId: $orderId")
-    val outcome = for {
-    // retrieve the contest skeleton with orders only
-      contestWithOrders <- mcC.find(
-        JS("_id" -> BSONObjectID(contestId)),
-        JS("participants.name" -> 1, "participants.orders" -> 1))
-        .cursor[JsObject]
-        .headOption
-        .map(_.getOrElse(die(s"Game ID $contestId not found")))
-
-      // find the player by name
-      player = getParticipantByName(playerName, contestWithOrders \ "participants")
-        .getOrElse(die(s"Player '$playerName' not found"))
-
-      // find the order to cancel
-      order = (getOrderByID(orderId, player \ "orders").map(_.asInstanceOf[JsObject]) getOrElse die(s"Order ID $orderId not found")) ++ JS("message" -> "Canceled")
-
-      // pull the order, add it to orderHistory, and return the participant
-      updatedContest <- db.command(FindAndModify(
-        collection = "Contests",
-        query = B("_id" -> BSONObjectID(contestId), "participants.name" -> playerName),
-        modify = new Update(B(
-          "$pull" -> B("participants.$.orders" -> B("id" -> BSONObjectID(orderId))),
-          "$addToSet" -> B("participants.$.orderHistory" -> J2B(order))),
-          fetchNewObject = true),
-        fields = Some(B("participants.name" -> 1, "participants.orders" -> 1, "participants.orderHistory" -> 1)),
-        upsert = false))
-        .map(_.getOrElse(die(s"Order #$orderId not be canceled")))
-        .map(Json.toJson(_))
-
-      // extract just the updated participant
-      updatePlayer = getParticipantByName(playerName, updatedContest \ "participants")
-        .getOrElse(JsNull)
-
-    } yield updatePlayer
-
-    outcome map (Ok(_))
-  }
-
-  def mcC: JSONCollection = db.collection[JSONCollection]("Contests")
-
-  private def getParticipantByName(playerName: String, participants: JsValue): Option[JsValue] = {
-    participants match {
-      case JsArray(players) => players.find(p => (p \ "name").asOpt[String] == Some(playerName))
-      case _ => None
-    }
-  }
-
-  private def getOrderByID(orderId: String, orders: JsValue): Option[JsValue] = {
-    orders match {
-      case JsArray(myOrders) => myOrders.find(o => (o \ "id").asOpt[BSONObjectID] == Some(BSONObjectID(orderId)))
-      case _ => None
-    }
-  }
-
-  def J2B(json: JsObject): BSONDocument = {
-    import reactivemongo.bson.{BSONDocument => B}
-    Logger.info(s"JS = $json")
-    var bson = B()
-    json.fieldSet foreach {
-      case (key, value) =>
-        BSONFormats.toBSON(value) match {
-          case JsSuccess(v, p) => bson = bson ++ B(key -> v)
-          case JsError(errors) =>
-            errors foreach {
-              case (path, messages) =>
-                messages foreach { err =>
-                  Logger.error(s"$path: ${err.message}")
-                }
-            }
-        }
-    }
-    bson
-  }
-
-  def createOrder = Action.async { implicit request =>
-    import reactivemongo.bson.{BSONDocument => B}
-    try {
-      val result = for {
-        js <- request.body.asJson
-        contestId = (js \ "contestId").asOpt[String] getOrElse missing("contestId")
-        playerName = (js \ "playerName").asOpt[String] getOrElse missing("playerName")
-        order = B(
-          "id" -> BSONObjectID.generate,
-          "creationTime" -> new BSONDateTime(System.currentTimeMillis()),
-          "orderTime" -> new BSONDateTime(System.currentTimeMillis()),
-          "symbol" -> (js \ "symbol").asOpt[String].getOrElse(missing("symbol")),
-          "exchange" -> (js \ "exchange").asOpt[String].getOrElse(missing("exchange")),
-          "limitPrice" -> asDecimal(js \ "limitPrice").getOrElse(missing("limitPrice")),
-          "quantity" -> asDecimal(js \ "quantity").map(_.toInt).getOrElse(missing("quantity")),
-          "orderType" -> (js \ "orderType").asOpt[String].getOrElse(missing("orderType")),
-          "priceType" -> (js \ "priceType").asOpt[String].getOrElse(missing("priceType")),
-          "commision1" -> 9.99,
-          "volumeAtOrderTime" -> asDecimal(js \ "volumeAtOrderTime").map(_.toLong).getOrElse(missing("volume")),
-          "orderTerm" -> (js \ "orderTerm").asOpt[String].getOrElse(missing("orderTerm")),
-          "emailNotify" -> (js \ "emailNotify").asOpt[Boolean].getOrElse(missing("emailNotify")))
-      } yield db.command(FindAndModify(
-          collection = "Contests",
-          query = B("_id" -> BSONObjectID(contestId), "participants.name" -> playerName),
-          modify = new Update(B("$addToSet" -> B("participants.$.orders" -> order)), fetchNewObject = true),
-          fields = Some(B("participants.name" -> 1, "participants.orders" -> 1, "participants.orderHistory" -> 1)),
-          upsert = false)) map { contest_? =>
-          Ok((for {
-            contestBson <- contest_?
-            contestJs = Json.toJson(contestBson)
-            playerJs <- getParticipantByName(playerName, contestJs \ "participants")
-          } yield playerJs).getOrElse(die("Order could not be created")))
-        }
-      result.getOrElse(die("Invalid order"))
-    } catch {
-      case e: Exception => Future.successful(BadRequest(e.getMessage))
-    }
-  }
-
-  def asDecimal(js: JsValue): Option[Double] = {
-    js.asOpt[Double] match {
-      case Some(v) => Some(v)
-      case None => js.asOpt[String] map (_.toDouble)
-    }
-  }
-
-  def getHeldSecurities(playerId: String) = Action.async {
-    val outcome = for {
-    // lookup the contests
-      contests <- mcC.find(
-        JS("participants._id" -> BSONObjectID(playerId)),
-        JS("participants.$" -> 1)).cursor[JsObject].collect[Seq]()
-
-      // get just the first contest
-      symbols = JsArray(value = contests flatMap { contest =>
-
-        // get the first participant
-        val participants = (contest \ "participants" match {
-          case JsArray(players) => players.headOption
-          case js => Some(js)
-        }) getOrElse JS()
-
-        // get the symbol for each position
-        val positions = participants \ "positions"
-
-        // extract the sequence of symbols
-        positions \\ "symbol"
-      })
-
-    } yield symbols
-
-    outcome map (Ok(_))
-  }
-
-  /**
-   * Returns a trading clock state object
-   */
-  def getMyContests(userName: String) = Action.async {
-    mcC.find(JS("participants.name" -> userName, "status" -> "ACTIVE"), DISPLAY_COLUMNS)
-      .sort(JS("status" -> 1, "name" -> 1))
-      .cursor[JsObject]
-      .collect[Seq](5)
-      .map(JsArray(_))
-      .map(Ok(_))
-  }
-
-  /**
-   * Returns a trading clock state object
-   */
-  def getWinners(userName: String) = Action.async {
-    mcC.find(JS("participants.name" -> userName), DISPLAY_COLUMNS)
-      .cursor[JsObject]
-      .collect[Seq](5)
-      .map(JsArray(_))
-      .map(Ok(_))
-  }
-
-  def sendChatMessage(contestId: String, sender: String) = Action.async { implicit request =>
-    import reactivemongo.bson.{BSONDocument => B}
-
-    // create the message
-    val message =
-      B("_id" -> BSONObjectID.generate,
-        "sender" -> B("name" -> sender),
-        "sentTime" -> new BSONDateTime(System.currentTimeMillis()),
-        "text" -> (request.body.asJson flatMap (_.asOpt[String])))
-
-    (for {
-    // add the message to the messages, and return the updated message list
-      contest <- db.command(FindAndModify(
-        collection = "Contests",
-        query = B("_id" -> BSONObjectID(contestId)),
-        modify = new Update(B("$addToSet" -> B("messages" -> message)), fetchNewObject = true),
-        fields = Some(B("messages" -> 1)),
-        upsert = false))
-        .map(_.getOrElse(die(s"Game ID $contestId not found")))
-        .map(Json.toJson(_))
-    } yield contest) map (Ok(_))
-  }
-
-  private def extractParticipant(playerName: String, outcome: Future[Option[BSONDocument]]): Future[Result] = {
-    (outcome map (_.flatMap { bs =>
-      val js = Json.toJson(bs)
-      Logger.info(s"js => $js")
-      (js \\ "participants") find (p => (p \ "name").asOpt[String] == Some(playerName))
-    })).transform({
-      case Some(player) => Ok(player)
-      case None => Ok(JsNull)
-    },
-    e => throw e)
-  }
-
-  private def getChartDataResults(contestId: String, playerName: String) = {
+  private def asRanking(startingBalance: Option[Double], mapping: Map[String, Quote], p: JsValue): Option[Ranking] = {
     for {
-    // lookup the contest by ID
-      contest_? <- mcC.findOneOpt(contestId)
-      contestJs = contest_?.getOrElse(die("Game not found"))
-
-      // get the contest participant details
-      rankings <- produceNetWorths(contestJs)
-
-    } yield rankings
+      startingBal <- startingBalance
+      name <- (p \ "name").asOpt[String]
+      facebookID = (p \ "facebookID").asOpt[String].orNull
+      score <- (p \ "score").asOpt[Int]
+      symbols = ((p \ "positions") \\ "symbol") flatMap (_.asOpt[String])
+      fundsAvailable <- (p \ "fundsAvailable").asOpt[Double]
+      investment = (symbols flatMap (s => mapping.get(s) flatMap (_.lastTrade))).sum
+      totalEquity = fundsAvailable + investment
+      gainLoss_% = ((totalEquity - startingBal) / startingBal) * 100d
+    } yield Ranking(name, facebookID, score, totalEquity, gainLoss_%)
   }
+
+  private def placeName(place: Int): String = {
+    place match {
+      case 1 => "1st"
+      case 2 => "2nd"
+      case 3 => "3rd"
+      case n => s"${n}th"
+    }
+  }
+
+  private def findContestByID(id: String) = (Contests ? FindContestByID(id.asBSID)).mapTo[Option[JsObject]]
 
   case class Order(symbol: String,
                    limitPrice: Double,
@@ -491,13 +385,5 @@ object ContestResources extends Controller with MongoController with MongoExtras
                    emailNotify: Boolean)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: Double, gainLoss_% : Double)
-
-  case class SearchOptions(activeOnly: Boolean,
-                           available: Boolean,
-                           perksAllowed: Boolean,
-                           friendsOnly: Boolean,
-                           acquaintances: Boolean,
-                           levelCap: String,
-                           levelCapAllowed: Boolean)
 
 }

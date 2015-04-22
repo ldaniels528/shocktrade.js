@@ -2,9 +2,9 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.models.contest.Contest.{MaxPlayers, Modifiers}
 import com.shocktrade.util.BSONHelper
-import BSONHelper._
-import com.shocktrade.models.contest.Contest.Modifiers
+import com.shocktrade.util.BSONHelper._
 import play.api.libs.json.JsArray
 import play.api.libs.json.Json.{obj => JS}
 import play.modules.reactivemongo.json.BSONFormats._
@@ -18,11 +18,11 @@ case class Contest(name: String,
                    creationTime: Date,
                    expirationTime: Option[Date] = None,
                    startingBalance: BigDecimal,
-                   maxParticipants: Int = 14,
+                   maxParticipants: Int = MaxPlayers,
                    messages: List[Message] = Nil,
                    modifiers: Modifiers,
                    participants: List[Participant] = Nil,
-                   status: ContestStatus = ContestStatus.OPEN,
+                   status: ContestStatus = ContestStatus.ACTIVE,
                    id: Option[BSONObjectID] = None) {
 
   def toJson = JS(
@@ -47,6 +47,7 @@ case class Contest(name: String,
  * @author lawrence.daniels@gmail.com
  */
 object Contest {
+  val MaxPlayers = 14
 
   /**
    * Represents contest options
