@@ -4,11 +4,12 @@ import java.util.Date
 
 import com.shocktrade.models.contest.Contest.MaxPlayers
 import com.shocktrade.models.contest.ContestStatus.ContestStatus
+import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, _}
 
 /**
  * Represents a contest
@@ -38,37 +39,77 @@ object Contest {
   val MaxPlayers = 14
 
   implicit val contestReads: Reads[Contest] = (
-    (JsPath \ "name").read[String] and
-      (JsPath \ "creationTime").read[Date] and
-      (JsPath \ "expirationTime").read[Option[Date]] and
-      (JsPath \ "startingBalance").read[BigDecimal] and
-      (JsPath \ "maxParticipants").read[Int] and
-      (JsPath \ "messages").read[List[Message]] and
-      (JsPath \ "participants").read[List[Participant]] and
-      (JsPath \ "status").read[ContestStatus] and
-      (JsPath \ "acquaintances").read[Boolean] and
-      (JsPath \ "friendsOnly").read[Boolean] and
-      (JsPath \ "levelCap").read[Option[Int]] and
-      (JsPath \ "invitationOnly").read[Boolean] and
-      (JsPath \ "perksAllowed").read[Boolean] and
-      (JsPath \ "ranked").read[Boolean] and
-      (JsPath \ "_id").read[BSONObjectID])(Contest.apply _)
+    (__ \ "name").read[String] and
+      (__ \ "creationTime").read[Date] and
+      (__ \ "expirationTime").readNullable[Date] and
+      (__ \ "startingBalance").read[BigDecimal] and
+      (__ \ "maxParticipants").read[Int] and
+      (__ \ "messages").read[List[Message]] and
+      (__ \ "participants").read[List[Participant]] and
+      (__ \ "status").read[ContestStatus] and
+      (__ \ "acquaintances").read[Boolean] and
+      (__ \ "friendsOnly").read[Boolean] and
+      (__ \ "levelCap").readNullable[Int] and
+      (__ \ "invitationOnly").read[Boolean] and
+      (__ \ "perksAllowed").read[Boolean] and
+      (__ \ "ranked").read[Boolean] and
+      (__ \ "_id").read[BSONObjectID])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
-    (JsPath \ "name").write[String] and
-      (JsPath \ "creationTime").write[Date] and
-      (JsPath \ "expirationTime").write[Option[Date]] and
-      (JsPath \ "startingBalance").write[BigDecimal] and
-      (JsPath \ "maxParticipants").write[Int] and
-      (JsPath \ "messages").write[List[Message]] and
-      (JsPath \ "participants").write[List[Participant]] and
-      (JsPath \ "status").write[ContestStatus] and
-      (JsPath \ "acquaintances").write[Boolean] and
-      (JsPath \ "friendsOnly").write[Boolean] and
-      (JsPath \ "levelCap").write[Option[Int]] and
-      (JsPath \ "invitationOnly").write[Boolean] and
-      (JsPath \ "perksAllowed").write[Boolean] and
-      (JsPath \ "ranked").write[Boolean] and
-      (JsPath \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
+    (__ \ "name").write[String] and
+      (__ \ "creationTime").write[Date] and
+      (__ \ "expirationTime").writeNullable[Date] and
+      (__ \ "startingBalance").write[BigDecimal] and
+      (__ \ "maxParticipants").write[Int] and
+      (__ \ "messages").write[List[Message]] and
+      (__ \ "participants").write[List[Participant]] and
+      (__ \ "status").write[ContestStatus] and
+      (__ \ "acquaintances").write[Boolean] and
+      (__ \ "friendsOnly").write[Boolean] and
+      (__ \ "levelCap").writeNullable[Int] and
+      (__ \ "invitationOnly").write[Boolean] and
+      (__ \ "perksAllowed").write[Boolean] and
+      (__ \ "ranked").write[Boolean] and
+      (__ \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
+
+  implicit object ContestReader extends BSONDocumentReader[Contest] {
+    def read(doc: BSONDocument) = Contest(
+      doc.getAs[String]("name").get,
+      doc.getAs[Date]("creationTime").get,
+      doc.getAs[Date]("expirationTime"),
+      doc.getAs[BigDecimal]("startingBalance").get,
+      doc.getAs[Int]("maxParticipants").get,
+      doc.getAs[List[Message]]("messages").get,
+      doc.getAs[List[Participant]]("participants").get,
+      doc.getAs[ContestStatus]("status").get,
+      doc.getAs[Boolean]("acquaintances").get,
+      doc.getAs[Boolean]("friendsOnly").get,
+      doc.getAs[Int]("levelCap"),
+      doc.getAs[Boolean]("invitationOnly").get,
+      doc.getAs[Boolean]("perksAllowed").get,
+      doc.getAs[Boolean]("ranked").get,
+      doc.getAs[BSONObjectID]("_id").get
+    )
+  }
+
+  implicit object ContestWriter extends BSONDocumentWriter[Contest] {
+    def write(contest: Contest) = BSONDocument(
+      "_id" -> contest.id,
+      "name" -> contest.name,
+      "creationTime" -> contest.creationTime,
+      "expirationTime" -> contest.expirationTime,
+      "startingBalance" -> contest.startingBalance,
+      "maxParticipants" -> contest.maxParticipants,
+      "messages" -> contest.messages,
+      "participants" -> contest.participants,
+      "status" -> contest.status,
+      "acquaintances" -> contest.acquaintances,
+      "friendsOnly" -> contest.friendsOnly,
+      "levelCap" -> contest.levelCap,
+      "invitationOnly" -> contest.invitationOnly,
+      "perksAllowed" -> contest.perksAllowed,
+      "ranked" -> contest.ranked
+    )
+  }
 
 }

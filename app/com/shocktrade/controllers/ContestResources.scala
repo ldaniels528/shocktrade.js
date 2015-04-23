@@ -74,11 +74,14 @@ object ContestResources extends Controller with MongoExtras {
   }
 
   def contestSearch = Action.async { implicit request =>
-    request.body.asJson map (_.as[SearchOptions]) match {
-      case Some(searchOptions) =>
+    Try(request.body.asJson map (_.as[SearchOptions])) match {
+      case Success(Some(searchOptions)) =>
         Contests.findContests(searchOptions)() map (list => Ok(JsArray(list)))
-      case None =>
-        Future.successful(BadRequest("Search options expected"))
+      case Success(None) =>
+        Future.successful(BadRequest("Search options were expected as JSON body"))
+      case Failure(e) =>
+        Logger.error(s"${e.getMessage}: json = ${request.body.asJson.orNull}")
+        Future.successful(InternalServerError(e.getMessage))
     }
   }
 
@@ -86,14 +89,14 @@ object ContestResources extends Controller with MongoExtras {
    * Creates a new contest
    */
   def createNewContest = Action.async { implicit request =>
-    request.body.asJson.map(_.as[ContestForm]) match {
-      case Some(form) =>
-        Contests.createContest(makeContest(form)) map { lastError =>
-          Ok(JS("result" -> lastError.message))
-        }
-      case None =>
-        Logger.warn(s"json = ${request.body.asJson.orNull}")
-        Future.successful(BadRequest("One or more required property was missing"))
+    Try(request.body.asJson.map(_.as[ContestForm])) match {
+      case Success(Some(form)) =>
+        Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message)))
+      case Success(None) =>
+        Future.successful(BadRequest("Contest form was expected as JSON body"))
+      case Failure(e) =>
+        Logger.error(s"${e.getMessage}: json = ${request.body.asJson.orNull}")
+        Future.successful(InternalServerError(e.getMessage))
     }
   }
 

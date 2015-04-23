@@ -2,12 +2,12 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
-
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID}
 
 /**
  * Represents a contest participant
@@ -31,27 +31,57 @@ case class Participant(name: String,
 object Participant {
 
   implicit val participantReads: Reads[Participant] = (
-    (JsPath \ "name").read[String] and
-      (JsPath \ "facebookID").read[String] and
-      (JsPath \ "fundsAvailable").read[BigDecimal] and
-      (JsPath \ "score").read[Int] and
-      (JsPath \ "lastTradeTime").read[Option[Date]] and
-      (JsPath \ "orders").read[List[Order]] and
-      (JsPath \ "orderHistory").read[List[Order]] and
-      (JsPath \ "positions").read[List[Position]] and
-      (JsPath \ "performance").read[List[Performance]] and
-      (JsPath \ "_id").read[BSONObjectID])(Participant.apply _)
+    (__ \ "name").read[String] and
+      (__ \ "facebookID").read[String] and
+      (__ \ "fundsAvailable").read[BigDecimal] and
+      (__ \ "score").read[Int] and
+      (__ \ "lastTradeTime").read[Option[Date]] and
+      (__ \ "orders").read[List[Order]] and
+      (__ \ "orderHistory").read[List[Order]] and
+      (__ \ "positions").read[List[Position]] and
+      (__ \ "performance").read[List[Performance]] and
+      (__ \ "_id").read[BSONObjectID])(Participant.apply _)
 
   implicit val participantWrites: Writes[Participant] = (
-    (JsPath \ "name").write[String] and
-      (JsPath \ "facebookID").write[String] and
-      (JsPath \ "fundsAvailable").write[BigDecimal] and
-      (JsPath \ "score").write[Int] and
-      (JsPath \ "lastTradeTime").write[Option[Date]] and
-      (JsPath \ "orders").write[List[Order]] and
-      (JsPath \ "orderHistory").write[List[Order]] and
-      (JsPath \ "positions").write[List[Position]] and
-      (JsPath \ "performance").write[List[Performance]] and
-      (JsPath \ "_id").write[BSONObjectID])(unlift(Participant.unapply))
+    (__ \ "name").write[String] and
+      (__ \ "facebookID").write[String] and
+      (__ \ "fundsAvailable").write[BigDecimal] and
+      (__ \ "score").write[Int] and
+      (__ \ "lastTradeTime").write[Option[Date]] and
+      (__ \ "orders").write[List[Order]] and
+      (__ \ "orderHistory").write[List[Order]] and
+      (__ \ "positions").write[List[Position]] and
+      (__ \ "performance").write[List[Performance]] and
+      (__ \ "_id").write[BSONObjectID])(unlift(Participant.unapply))
+
+  implicit object ParticipantReader extends BSONDocumentReader[Participant] {
+    def read(doc: BSONDocument) = Participant(
+      doc.getAs[String]("name").get,
+      doc.getAs[String]("facebookID").get,
+      doc.getAs[BigDecimal]("fundsAvailable").get,
+      doc.getAs[Int]("score").get,
+      doc.getAs[Date]("lastTradeTime"),
+      doc.getAs[List[Order]]("orders").get,
+      doc.getAs[List[Order]]("orderHistory").get,
+      doc.getAs[List[Position]]("positions").get,
+      doc.getAs[List[Performance]]("performance").get,
+      doc.getAs[BSONObjectID]("_id").get
+    )
+  }
+
+  implicit object ParticipantWriter extends BSONDocumentWriter[Participant] {
+    def write(participant: Participant) = BSONDocument(
+      "_id" -> participant.id,
+      "name" -> participant.name,
+      "facebookID" -> participant.facebookId,
+      "fundsAvailable" -> participant.fundsAvailable,
+      "score" -> participant.score,
+      "lastTradeTime" -> participant.lastTradeTime,
+      "orders" -> participant.orders,
+      "orderHistory" -> participant.orderHistory,
+      "positions" -> participant.positions,
+      "performance" -> participant.performance
+    )
+  }
 
 }

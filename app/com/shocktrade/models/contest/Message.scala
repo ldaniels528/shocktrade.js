@@ -2,11 +2,12 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID}
 
 /**
  * Represents a contest chat message
@@ -49,5 +50,25 @@ object Message {
       (__ \ "text").write[String] and
       (__ \ "recipient").writeNullable[Addressee] and
       (__ \ "sentTime").write[Date])(unlift(Message.unapply))
+
+  implicit object MessageReader extends BSONDocumentReader[Message] {
+    def read(doc: BSONDocument) = Message(
+      doc.getAs[BSONObjectID]("_id").get,
+      doc.getAs[Addressee]("sender").get,
+      doc.getAs[String]("text").get,
+      doc.getAs[Addressee]("recipient"),
+      doc.getAs[Date]("sentTime").get
+    )
+  }
+
+  implicit object MessageWriter extends BSONDocumentWriter[Message] {
+    def write(message: Message) = BSONDocument(
+      "_id" -> message.id,
+      "sender" -> message.sentBy,
+      "text" -> message.text,
+      "recipient" -> message.recipient,
+      "sentTime" -> message.sentTime
+    )
+  }
 
 }

@@ -2,11 +2,12 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID}
 
 /**
  * Represents the performance associated with the sell of a position
@@ -29,26 +30,54 @@ case class Performance(symbol: String,
 object Performance {
 
   implicit val performanceReads: Reads[Performance] = (
-    (JsPath \ "symbol").read[String] and
-      (JsPath \ "exchange").read[String] and
-      (JsPath \ "pricePaid").read[BigDecimal] and
-      (JsPath \ "priceSold").read[BigDecimal] and
-      (JsPath \ "quantity").read[Int] and
-      (JsPath \ "commission").read[List[Commission]] and
-      (JsPath \ "purchasedDate").read[Date] and
-      (JsPath \ "soldDate").read[Date] and
-      (JsPath \ "_id").read[BSONObjectID])(Performance.apply _)
+    (__ \ "symbol").read[String] and
+      (__ \ "exchange").read[String] and
+      (__ \ "pricePaid").read[BigDecimal] and
+      (__ \ "priceSold").read[BigDecimal] and
+      (__ \ "quantity").read[Int] and
+      (__ \ "commissions").read[List[Commission]] and
+      (__ \ "purchasedDate").read[Date] and
+      (__ \ "soldDate").read[Date] and
+      (__ \ "_id").read[BSONObjectID])(Performance.apply _)
 
   implicit val performanceWrites: Writes[Performance] = (
-    (JsPath \ "symbol").write[String] and
-      (JsPath \ "exchange").write[String] and
-      (JsPath \ "pricePaid").write[BigDecimal] and
-      (JsPath \ "priceSold").write[BigDecimal] and
-      (JsPath \ "quantity").write[Int] and
-      (JsPath \ "commission").write[List[Commission]] and
-      (JsPath \ "purchasedDate").write[Date] and
-      (JsPath \ "soldDate").write[Date] and
-      (JsPath \ "_id").write[BSONObjectID])(unlift(Performance.unapply))
+    (__ \ "symbol").write[String] and
+      (__ \ "exchange").write[String] and
+      (__ \ "pricePaid").write[BigDecimal] and
+      (__ \ "priceSold").write[BigDecimal] and
+      (__ \ "quantity").write[Int] and
+      (__ \ "commissions").write[List[Commission]] and
+      (__ \ "purchasedDate").write[Date] and
+      (__ \ "soldDate").write[Date] and
+      (__ \ "_id").write[BSONObjectID])(unlift(Performance.unapply))
+
+  implicit object PerformanceReader extends BSONDocumentReader[Performance] {
+    def read(doc: BSONDocument) = Performance(
+      doc.getAs[String]("symbol").get,
+      doc.getAs[String]("exchange").get,
+      doc.getAs[BigDecimal]("pricePaid").get,
+      doc.getAs[BigDecimal]("priceSold").get,
+      doc.getAs[Int]("quantity").get,
+      doc.getAs[List[Commission]]("commissions").get,
+      doc.getAs[Date]("purchasedDate").get,
+      doc.getAs[Date]("soldDate").get,
+      doc.getAs[BSONObjectID]("_id").get
+    )
+  }
+
+  implicit object PerformanceWriter extends BSONDocumentWriter[Performance] {
+    def write(performance: Performance) = BSONDocument(
+      "_id" -> performance.id,
+      "symbol" -> performance.symbol,
+      "exchange" -> performance.exchange,
+      "pricePaid" -> performance.pricePaid,
+      "priceSold" -> performance.priceSold,
+      "quantity" -> performance.quantity,
+      "commissions" -> performance.commissions,
+      "purchasedDate" -> performance.purchasedDate,
+      "soldDate" -> performance.soldDate
+    )
+  }
 
 }
 

@@ -7,7 +7,7 @@ import com.shocktrade.models.contest.PriceType._
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{__, Reads, Writes}
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson._
 
@@ -35,32 +35,32 @@ case class Order(symbol: String,
 object Order {
 
   implicit val orderReads: Reads[Order] = (
-    (JsPath \ "symbol").read[String] and
-      (JsPath \ "exchange").read[String] and
-      (JsPath \ "creationTime").read[Date] and
-      (JsPath \ "expirationTime").read[Option[Date]] and
-      (JsPath \ "orderType").read[OrderType] and
-      (JsPath \ "price").read[BigDecimal] and
-      (JsPath \ "priceType").read[PriceType] and
-      (JsPath \ "processedTime").read[Option[Date]] and
-      (JsPath \ "quantity").read[Int] and
-      (JsPath \ "commission").read[BigDecimal] and
-      (JsPath \ "emailNotify").read[Boolean] and
-      (JsPath \ "_id").read[BSONObjectID])(Order.apply _)
+    (__ \ "symbol").read[String] and
+      (__ \ "exchange").read[String] and
+      (__ \ "creationTime").read[Date] and
+      (__ \ "expirationTime").read[Option[Date]] and
+      (__ \ "orderType").read[OrderType] and
+      (__ \ "price").read[BigDecimal] and
+      (__ \ "priceType").read[PriceType] and
+      (__ \ "processedTime").read[Option[Date]] and
+      (__ \ "quantity").read[Int] and
+      (__ \ "commission").read[BigDecimal] and
+      (__ \ "emailNotify").read[Boolean] and
+      (__ \ "_id").read[BSONObjectID])(Order.apply _)
 
   implicit val orderWrites: Writes[Order] = (
-    (JsPath \ "symbol").write[String] and
-      (JsPath \ "exchange").write[String] and
-      (JsPath \ "creationTime").write[Date] and
-      (JsPath \ "expirationTime").write[Option[Date]] and
-      (JsPath \ "orderType").write[OrderType] and
-      (JsPath \ "price").write[BigDecimal] and
-      (JsPath \ "priceType").write[PriceType] and
-      (JsPath \ "processedTime").write[Option[Date]] and
-      (JsPath \ "quantity").write[Int] and
-      (JsPath \ "commission").write[BigDecimal] and
-      (JsPath \ "emailNotify").write[Boolean] and
-      (JsPath \ "_id").write[BSONObjectID])(unlift(Order.unapply))
+    (__ \ "symbol").write[String] and
+      (__ \ "exchange").write[String] and
+      (__ \ "creationTime").write[Date] and
+      (__ \ "expirationTime").write[Option[Date]] and
+      (__ \ "orderType").write[OrderType] and
+      (__ \ "price").write[BigDecimal] and
+      (__ \ "priceType").write[PriceType] and
+      (__ \ "processedTime").write[Option[Date]] and
+      (__ \ "quantity").write[Int] and
+      (__ \ "commission").write[BigDecimal] and
+      (__ \ "emailNotify").write[Boolean] and
+      (__ \ "_id").write[BSONObjectID])(unlift(Order.unapply))
 
   implicit object OrderReader extends BSONDocumentReader[Order] {
     def read(doc: BSONDocument) = Order(

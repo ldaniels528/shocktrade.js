@@ -2,42 +2,72 @@ package com.shocktrade.models.contest
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{JsPath, Reads, Writes}
+import play.api.libs.json.{Reads, Writes, __}
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 /**
- * Contest Search Options
+ * SearchOptions Search Options
  * @author lawrence.daniels@gmail.com
  */
-case class SearchOptions(activeOnly: Boolean,
-                         available: Boolean,
-                         perksAllowed: Boolean,
-                         friendsOnly: Boolean,
-                         acquaintances: Boolean,
-                         levelCap: String,
-                         levelCapAllowed: Boolean)
+case class SearchOptions(acquaintances: Boolean = false,
+                         activeOnly: Boolean = true,
+                         available: Boolean = true,
+                         friendsOnly: Boolean = false,
+                         levelCap: Option[String] = None,
+                         levelCapAllowed: Boolean = true,
+                         perksAllowed: Boolean = true,
+                         ranked: Option[Boolean] = None)
 
 /**
- * Contest Search Options Singleton
+ * SearchOptions Search Options Singleton
  * @author lawrence.daniels@gmail.com
  */
 object SearchOptions {
 
   implicit val searchOptionReads: Reads[SearchOptions] = (
-    (JsPath \ "activeOnly").read[Boolean] and
-      (JsPath \ "available").read[Boolean] and
-      (JsPath \ "perksAllowed").read[Boolean] and
-      (JsPath \ "friendsOnly").read[Boolean] and
-      (JsPath \ "acquaintances").read[Boolean] and
-      (JsPath \ "levelCap").read[String] and
-      (JsPath \ "levelCapAllowed").read[Boolean])(SearchOptions.apply _)
+    (__ \ "acquaintances").read[Boolean] and
+      (__ \ "activeOnly").read[Boolean] and
+      (__ \ "available").read[Boolean] and
+      (__ \ "friendsOnly").read[Boolean] and
+      (__ \ "levelCap").readNullable[String] and
+      (__ \ "levelCapAllowed").read[Boolean] and
+      (__ \ "perksAllowed").read[Boolean] and
+      (__ \ "ranked").readNullable[Boolean])(SearchOptions.apply _)
 
   implicit val searchOptionWrites: Writes[SearchOptions] = (
-    (JsPath \ "activeOnly").write[Boolean] and
-      (JsPath \ "available").write[Boolean] and
-      (JsPath \ "perksAllowed").write[Boolean] and
-      (JsPath \ "friendsOnly").write[Boolean] and
-      (JsPath \ "acquaintances").write[Boolean] and
-      (JsPath \ "levelCap").write[String] and
-      (JsPath \ "levelCapAllowed").write[Boolean])(unlift(SearchOptions.unapply))
+    (__ \ "acquaintances").write[Boolean] and
+      (__ \ "activeOnly").write[Boolean] and
+      (__ \ "available").write[Boolean] and
+      (__ \ "friendsOnly").write[Boolean] and
+      (__ \ "levelCap").writeNullable[String] and
+      (__ \ "levelCapAllowed").write[Boolean] and
+      (__ \ "perksAllowed").write[Boolean] and
+      (__ \ "ranked").writeNullable[Boolean])(unlift(SearchOptions.unapply))
+
+  implicit object SearchOptionsReader extends BSONDocumentReader[SearchOptions] {
+    def read(doc: BSONDocument) = SearchOptions(
+      doc.getAs[Boolean]("acquaintances").get,
+      doc.getAs[Boolean]("activeOnly").get,
+      doc.getAs[Boolean]("available").get,
+      doc.getAs[Boolean]("friendsOnly").get,
+      doc.getAs[String]("levelCap"),
+      doc.getAs[Boolean]("levelCapAllowed").get,
+      doc.getAs[Boolean]("perksAllowed").get,
+      doc.getAs[Boolean]("ranked")
+    )
+  }
+
+  implicit object SearchOptionsWriter extends BSONDocumentWriter[SearchOptions] {
+    def write(contest: SearchOptions) = BSONDocument(
+      "acquaintances" -> contest.acquaintances,
+      "activeOnly" -> contest.activeOnly,
+      "available" -> contest.available,
+      "friendsOnly" -> contest.friendsOnly,
+      "levelCap" -> contest.levelCap,
+      "levelCapAllowed" -> contest.levelCapAllowed,
+      "perksAllowed" -> contest.perksAllowed,
+      "ranked" -> contest.ranked
+    )
+  }
 
 }
