@@ -44,10 +44,15 @@ class ContestActor extends Actor with ActorLogging {
 
     case CreateContest(contest) =>
       val mySender = sender()
+      log.info(s"contest = $contest")
+      contest.messages.headOption foreach { msg =>
+        log.info(s"contest.message = $msg")
+        log.info(s"contest.message.json = ${Json.toJson(msg)}")
+      }
       val json = Json.toJson(contest)
       mcC.insert(json) foreach { lastError =>
-        WebSocketRelay ! ContestUpdated(json)
         mySender ! lastError
+        WebSocketRelay ! ContestUpdated(json)
       }
 
     case CreateOrder(contestId, playerName, order, fields) =>

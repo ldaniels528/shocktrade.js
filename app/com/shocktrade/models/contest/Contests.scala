@@ -20,8 +20,8 @@ import reactivemongo.core.commands.LastError
 object Contests {
   private val system = Akka.system
   private implicit val ec = system.dispatcher
-  private val reader = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
-  private val writer = system.actorOf(Props[ContestActor])
+  private val reader = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "ContestReader")
+  private val writer = system.actorOf(Props[ContestActor], name = "ContestWriter")
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID, order: JsObject)(fields: String*)(implicit timeout: Timeout) = {
     (writer ? CloseOrder(contestId, playerId, orderId, order, fields)).mapTo[Option[JsValue]]

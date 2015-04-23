@@ -93,7 +93,7 @@ object ContestResources extends Controller with MongoExtras {
         }
       case None =>
         Logger.warn(s"json = ${request.body.asJson.orNull}")
-        Future.successful(BadRequest("error" -> "One or more required property was missing"))
+        Future.successful(BadRequest("One or more required property was missing"))
     }
   }
 
@@ -110,11 +110,14 @@ object ContestResources extends Controller with MongoExtras {
       ranked = js.ranked
     )
 
+    // create a welcome message
+    val welcomeMessage = Message(sentBy = Addressee(js.playerName, js.facebookId), text = s"Welcome to ${js.name}")
+
     // create the first participant (the contest creator)
     val creator = Participant(js.playerName, js.facebookId, fundsAvailable = contest.startingBalance, id = js.playerId.asBSID)
 
     // create the contest with its participant
-    contest.copy(participants = List(creator))
+    contest.copy(participants = List(creator), messages = List(welcomeMessage))
   }
 
   def createOrder = Action.async { implicit request =>

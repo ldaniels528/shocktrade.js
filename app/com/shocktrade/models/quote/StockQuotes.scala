@@ -28,9 +28,9 @@ object StockQuotes {
   private val realTimeCache = ConcurrentCache[String, JsObject](1.minute)
   private val diskCache = ConcurrentCache[String, JsObject](4.hours)
   private val system = Akka.system
-  private val quoteActor = system.actorOf(Props[RealTimeQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
-  private val mongoReader = system.actorOf(Props[DBaseQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
-  private val mongoWriter = system.actorOf(Props[DBaseQuoteActor])
+  private val quoteActor = system.actorOf(Props[RealTimeQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "QuoteRealTime")
+  private val mongoReader = system.actorOf(Props[DBaseQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "QuoteReader")
+  private val mongoWriter = system.actorOf(Props[DBaseQuoteActor], name = "QuoteWriter")
   implicit val timeout: Timeout = 45.seconds
 
   import system.dispatcher
