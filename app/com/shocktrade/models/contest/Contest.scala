@@ -2,6 +2,7 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
 import com.shocktrade.models.contest.Contest.MaxPlayers
 import com.shocktrade.models.contest.ContestStatus.ContestStatus
 import com.shocktrade.util.BSONHelper._
@@ -28,12 +29,9 @@ case class Contest(name: String,
                    messages: List[Message] = Nil,
                    participants: List[Participant] = Nil,
                    status: ContestStatus = ContestStatus.ACTIVE,
-                   acquaintances: Boolean = false,
-                   friendsOnly: Boolean = false,
                    levelCap: Option[Int] = None,
-                   invitationOnly: Boolean = false,
                    perksAllowed: Boolean = false,
-                   ranked: Boolean = false,
+                   restriction: Option[AccessRestrictionType] = None,
                    id: BSONObjectID = BSONObjectID.generate)
 
 /**
@@ -55,12 +53,9 @@ object Contest {
       (__ \ "messages").readNullable[List[Message]].map(_.getOrElse(Nil)) and
       (__ \ "participants").readNullable[List[Participant]].map(_.getOrElse(Nil)) and
       (__ \ "status").read[ContestStatus] and
-      (__ \ "acquaintances").read[Boolean] and
-      (__ \ "friendsOnly").read[Boolean] and
       (__ \ "levelCap").readNullable[Int] and
-      (__ \ "invitationOnly").read[Boolean] and
       (__ \ "perksAllowed").read[Boolean] and
-      (__ \ "ranked").read[Boolean] and
+      (__ \ "restriction").readNullable[AccessRestrictionType] and
       (__ \ "_id").read[BSONObjectID])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
@@ -75,12 +70,9 @@ object Contest {
       (__ \ "messages").write[List[Message]] and
       (__ \ "participants").write[List[Participant]] and
       (__ \ "status").write[ContestStatus] and
-      (__ \ "acquaintances").write[Boolean] and
-      (__ \ "friendsOnly").write[Boolean] and
       (__ \ "levelCap").writeNullable[Int] and
-      (__ \ "invitationOnly").write[Boolean] and
       (__ \ "perksAllowed").write[Boolean] and
-      (__ \ "ranked").write[Boolean] and
+      (__ \ "restriction").writeNullable[AccessRestrictionType] and
       (__ \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
@@ -96,12 +88,9 @@ object Contest {
       doc.getAs[List[Message]]("messages").getOrElse(Nil),
       doc.getAs[List[Participant]]("participants").getOrElse(Nil),
       doc.getAs[ContestStatus]("status").get,
-      doc.getAs[Boolean]("acquaintances").contains(true),
-      doc.getAs[Boolean]("friendsOnly").contains(true),
       doc.getAs[Int]("levelCap"),
-      doc.getAs[Boolean]("invitationOnly").contains(true),
       doc.getAs[Boolean]("perksAllowed").contains(true),
-      doc.getAs[Boolean]("ranked").contains(true),
+      doc.getAs[AccessRestrictionType]("restriction"),
       doc.getAs[BSONObjectID]("_id").get
     )) match {
       case Success(v) => v
@@ -125,12 +114,10 @@ object Contest {
       "messages" -> contest.messages,
       "participants" -> contest.participants,
       "status" -> contest.status,
-      "acquaintances" -> contest.acquaintances,
-      "friendsOnly" -> contest.friendsOnly,
       "levelCap" -> contest.levelCap,
-      "invitationOnly" -> contest.invitationOnly,
       "perksAllowed" -> contest.perksAllowed,
-      "ranked" -> contest.ranked
+      "restriction" -> contest.restriction,
+      "playerCount" -> contest.participants.size
     )
   }
 

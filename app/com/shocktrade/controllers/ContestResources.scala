@@ -5,6 +5,7 @@ import java.util.Date
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.QuoteResources.Quote
+import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
 import com.shocktrade.models.contest.SearchOptions._
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.StockQuotes
@@ -51,6 +52,7 @@ object ContestResources extends Controller with MongoExtras {
    * @return a JSON array of [[Contest]] instances
    */
   def contestSearch = Action.async { implicit request =>
+    Logger.info(s"SearchOptions = ${request.body.asJson.orNull}")
     Try(request.body.asJson map (_.as[SearchOptions])) match {
       case Success(Some(searchOptions)) =>
         Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests)))
@@ -78,24 +80,20 @@ object ContestResources extends Controller with MongoExtras {
   }
 
   private def makeContest(js: ContestForm) = {
-    val startingBalance = BigDecimal(25000d)
-
     // create a player instance
     val player = Player(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
 
-    // create the contest skeleton
+    // create the contest
     Contest(
       name = js.name,
       creator = player,
       creationTime = new Date(),
-      startingBalance = startingBalance,
-      friendsOnly = js.friendsOnly,
-      acquaintances = js.acquaintances,
-      invitationOnly = js.invitationOnly,
+      startingBalance = js.startingBalance,
+      levelCap = js.levelCap.map(_.toInt),
       perksAllowed = js.perksAllowed,
-      ranked = js.ranked,
+      restriction = js.restriction,
       messages = List(Message(sentBy = player, text = s"Welcome to ${js.name}")),
-      participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = startingBalance, id = js.playerId.toBSID))
+      participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = js.startingBalance, id = js.playerId.toBSID))
     )
   }
 
@@ -112,6 +110,10 @@ object ContestResources extends Controller with MongoExtras {
         }
       case None => Future.successful(BadRequest("No order information"))
     }
+  }
+
+  def getAccessRestrictions = Action {
+    Ok(JsArray(AccessRestrictionType.values.toSeq.map(v => JsString(v.toString))))
   }
 
   def getContestByID(id: String) = Action.async {
@@ -253,22 +255,24 @@ object ContestResources extends Controller with MongoExtras {
                          playerId: String,
                          playerName: String,
                          facebookId: String,
-                         acquaintances: Option[Boolean],
-                         friendsOnly: Option[Boolean],
-                         invitationOnly: Option[Boolean],
+                         startingBalance: BigDecimal,
+                         levelCapAllowed: Option[Boolean],
+                         levelCap: Option[String],
                          perksAllowed: Option[Boolean],
-                         ranked: Option[Boolean])
+                         restrictionEnabled: Option[Boolean],
+                         restriction: Option[AccessRestrictionType])
 
   implicit val contestFormReads: Reads[ContestForm] = (
     (__ \ "name").read[String] and
       (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
       (__ \ "player" \ "facebookId").read[String] and
-      (__ \ "acquaintances").readNullable[Boolean] and
-      (__ \ "friendsOnly").readNullable[Boolean] and
-      (__ \ "invitationOnly").readNullable[Boolean] and
+      (__ \ "startingBalance").read[BigDecimal] and
+      (__ \ "levelCapAllowed").readNullable[Boolean] and
+      (__ \ "levelCap").readNullable[String] and
       (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "ranked").readNullable[Boolean])(ContestForm.apply _)
+      (__ \ "restrictionEnabled").readNullable[Boolean] and
+      (__ \ "restriction").readNullable[AccessRestrictionType])(ContestForm.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 

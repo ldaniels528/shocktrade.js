@@ -9,7 +9,7 @@ import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.json.Json
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID}
+import reactivemongo.bson.{BSONDocument => BS, BSON, BSONObjectID}
 import reactivemongo.core.commands.{FindAndModify, Update}
 
 import scala.concurrent.Future
@@ -66,7 +66,7 @@ class ContestActor extends Actor with ActorLogging {
 
     case FindContests(searchOptions, fields) =>
       val mySender = sender()
-      mcC.find(createBsonQuery(searchOptions), fields.toBsonFields).sort(SortFields.toBsonFields)
+      mcC.find(createQuery(searchOptions), fields.toBsonFields).sort(SortFields.toBsonFields)
         .cursor[Contest]
         .collect[Seq]().onComplete {
         case Success(contests) => mySender ! contests
@@ -112,15 +112,21 @@ class ContestActor extends Actor with ActorLogging {
     })
   }
 
-  private def createBsonQuery(so: SearchOptions) = {
+  private def createQuery(so: SearchOptions) = {
     var q = BS()
-    if (so.activeOnly) q = q ++ BS("status" -> ContestStatus.ACTIVE)
-    if (so.available) q = q ++ BS("playerCount" -> BS("$lt" -> Contest.MaxPlayers))
-    if (so.levelCapAllowed) {
-      val levelCap = Try(so.levelCap.map(_.toInt)).toOption.flatten.getOrElse(0)
+    so.activeOnly.foreach { isSet =>
+      if (isSet) q = q ++ BS("status" -> ContestStatus.ACTIVE)
+    }
+    so.available.foreach { isSet =>
+      if (isSet) q = q ++ BS("playerCount" -> BS("$lt" -> Contest.MaxPlayers))
+    }
+    so.levelCap.foreach { lc =>
+      val levelCap = Try(lc.toInt).toOption.getOrElse(0)
       q = q ++ BS("levelCap" -> BS("$gte" -> levelCap))
     }
-    if (so.perksAllowed) q = q ++ BS("$or" -> BSONArray(Seq(BS("perksAllowed" -> so.perksAllowed), BS("perksAllowed" -> BS("$exists" -> false)))))
+    so.perksAllowed.foreach { isSet =>
+      if (isSet) q = q ++ BS("perksAllowed" -> so.perksAllowed)
+    }
     q
   }
 

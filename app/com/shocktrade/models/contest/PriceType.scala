@@ -11,6 +11,8 @@ object PriceType extends Enumeration {
   type PriceType = Value
 
   val LIMIT = Value("LIMIT")
+  val MARKET = Value("MARKET")
+  val MARKET_ON_CLOSE = Value("MARKET_ON_CLOSE")
 
   /**
    * Price Type Format
