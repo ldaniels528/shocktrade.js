@@ -21,7 +21,7 @@
 		</tr>
 	
 		<tr ng-repeat="p in participant.positions" ng-class-even="'even'" ng-class-odd="'odd'">		
-			<td style="width: 14%">{{ p.processedTime.$date | date:'MM/dd hh:mma' }}</td>
+			<td style="width: 14%">{{ p.processedTime | date:'MM/dd hh:mma' }}</td>
 			<td style="width: 10%">
 				<a href="" ng-click="loadQuote(p.symbol, true)">
 					<span ng-class="p.exchange">{{ p.symbol }}</span>

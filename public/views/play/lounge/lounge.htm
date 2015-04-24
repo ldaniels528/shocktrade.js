@@ -14,7 +14,8 @@
 		<div ng-repeat="message in contest.messages" class="chat_message">
 			<avatar id="{{ message.sender.facebookID }}" style="width: 20px; height: 20px; margin: 3px" />
 			<span style="color: {{ message.color }}; font-weight: bold">{{ message.sender.name }}</span>
-			[<span style="color: #0000ff">{{ message.sentTime.$date | date:'MM/dd hh:mma' }}</span>] {{ message.text }}
+			[<span style="color: #0000ff">{{ (message.sentTime || message.sentTime) | date:'MM/dd hh:mma' }}</span>]
+			{{ message.text }}
 		</div>
 	</div>
 	

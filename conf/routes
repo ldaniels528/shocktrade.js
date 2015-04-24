@@ -32,12 +32,12 @@ GET		/api/charts/ratings/:symbol						com.shocktrade.controllers.ChartResources.
 PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createNewContest
 
 GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContestByID(id)
-PUT		/api/contest/:id/chat/:sender					com.shocktrade.controllers.ContestResources.sendChatMessage(id, sender)
-PUT		/api/contest/order								com.shocktrade.controllers.ContestResources.createOrder
-DELETE	/api/contest/:id/order/:player/:orderId			com.shocktrade.controllers.ContestResources.cancelOrder(id, player, orderId)
-GET		/api/contest/:id/player/:name					com.shocktrade.controllers.ContestResources.getContentParticipant(id, name)
+PUT		/api/contest/:id/chat       					com.shocktrade.controllers.ContestResources.createChatMessage(id)
+PUT		/api/contest/:id/order/:playerId				com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
+DELETE	/api/contest/:id/order/:playerId/:orderId		com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
+GET		/api/contest/:id/player/:name					com.shocktrade.controllers.ContestResources.getContestParticipant(id, name)
 GET		/api/contest/:id/rankings						com.shocktrade.controllers.ContestResources.getContestRankings(id)
-GET 	/api/contests/mine/:userName					com.shocktrade.controllers.ContestResources.getMyContests(userName)
+GET 	/api/contests/mine/:playerId					com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
 GET 	/api/contests/positions/:playerId				com.shocktrade.controllers.ContestResources.getHeldSecurities(playerId)
 POST	/api/contests/search							com.shocktrade.controllers.ContestResources.contestSearch
 

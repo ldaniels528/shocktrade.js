@@ -35,11 +35,11 @@ object Participant {
       (__ \ "facebookID").read[String] and
       (__ \ "fundsAvailable").read[BigDecimal] and
       (__ \ "score").read[Int] and
-      (__ \ "lastTradeTime").read[Option[Date]] and
-      (__ \ "orders").read[List[Order]] and
-      (__ \ "orderHistory").read[List[Order]] and
-      (__ \ "positions").read[List[Position]] and
-      (__ \ "performance").read[List[Performance]] and
+      (__ \ "lastTradeTime").readNullable[Date] and
+      (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
+      (__ \ "orderHistory").readNullable[List[Order]].map(_.getOrElse(Nil)) and
+      (__ \ "positions").readNullable[List[Position]].map(_.getOrElse(Nil)) and
+      (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)) and
       (__ \ "_id").read[BSONObjectID])(Participant.apply _)
 
   implicit val participantWrites: Writes[Participant] = (
@@ -47,7 +47,7 @@ object Participant {
       (__ \ "facebookID").write[String] and
       (__ \ "fundsAvailable").write[BigDecimal] and
       (__ \ "score").write[Int] and
-      (__ \ "lastTradeTime").write[Option[Date]] and
+      (__ \ "lastTradeTime").writeNullable[Date] and
       (__ \ "orders").write[List[Order]] and
       (__ \ "orderHistory").write[List[Order]] and
       (__ \ "positions").write[List[Position]] and

@@ -9,20 +9,26 @@
 				<th class="det">Date Created</th> 
 				<th class="det">Initial Funds</th> 
 				<th class="det">Status</th> 
-				<th class="det">Starts</th> 
+				<th class="det">Started</th>
 				<th class="det">Ends</th> 
 			</tr>
 			<tr>
 				<td class="det">
 					<span style="padding-left: 8px">
-						<a href="" ng-click="loadGamerCard(contest.creator)">{{ contest.creator }}</a>
+						<a href="" ng-click="loadGamerCard(contest.creator)">{{ contest.creator.name }}</a>
 					</span>
 				</td>
-				<td class="det">{{ contest.creationTime.$date | date:'MMM dd hh:mma' }}</td>
+				<td class="det">{{ contest.creationTime | date:'MMM dd hh:mma' }}</td>
 				<td class="det">${{ contest.startingBalance | number }}</td>		
 				<td class="det"><span ng-class="contestStatusClass(contest)">{{ contest.status }}</span></td>
-				<td class="det">{{ contest.startTime.$date | date:'MM/dd/yy' }}</td>
-				<td class="det">{{ contest.expirationTime.$date | date:'MM/dd/yy' }}</td>
+				<td class="det">
+					<span ng-show="contest.startTime">{{ contest.startTime | date:'MM/dd/yy' }}</span>
+					<span ng-hide="contest.startTime">&#8212;</span>
+				</td>
+				<td class="det">
+					<span ng-show="contest.expirationTime">{{ contest.expirationTime | date:'MM/dd/yy' }}</span>
+					<span ng-hide="contest.expirationTime">&#8212;</span>
+				</td>
 			</tr>		
 		</table>
 	

@@ -20,8 +20,8 @@
 			<th colspan="2">
 				<div style="display: inline" class="qm_header">Last Updated</div>
 				<div style="display: inline; float: right" class="plain">
-					<span ng-show="q.tradeDateTime.$date">{{ q.tradeDateTime.$date | date:'MM/dd hh:mma Z' }}</span>
-					<span ng-hide="q.tradeDateTime.$date">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+					<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+					<span ng-hide="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
 				</div>
 			</th>	
 		</tr>

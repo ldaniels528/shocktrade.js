@@ -6,6 +6,7 @@ import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.bson.BSONObjectID
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
 /**
@@ -13,8 +14,6 @@ import scala.language.implicitConversions
  * @author lawrence.daniels@gmail.com
  */
 trait MongoExtras {
-
-  import scala.concurrent.{ExecutionContext, Future}
 
   def die[S](message: String): S = throw new IllegalStateException(message)
 

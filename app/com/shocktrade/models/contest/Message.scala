@@ -14,9 +14,9 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * @author lawrence.daniels@gmail.com
  */
 case class Message(id: BSONObjectID = BSONObjectID.generate,
-                   sentBy: Addressee,
+                   sentBy: Player,
                    text: String,
-                   recipient: Option[Addressee] = None,
+                   recipient: Option[Player] = None,
                    sentTime: Date = new Date())
 
 /**
@@ -39,24 +39,24 @@ object Message {
    **/
   implicit val messageReads: Reads[Message] = (
     (__ \ "_id").read[BSONObjectID] and
-      (__ \ "sender").read[Addressee] and
+      (__ \ "sender").read[Player] and
       (__ \ "text").read[String] and
-      (__ \ "recipient").readNullable[Addressee] and
+      (__ \ "recipient").readNullable[Player] and
       (__ \ "sentTime").read[Date])(Message.apply _)
 
   implicit val messageWrites: Writes[Message] = (
     (__ \ "_id").write[BSONObjectID] and
-      (__ \ "sender").write[Addressee] and
+      (__ \ "sender").write[Player] and
       (__ \ "text").write[String] and
-      (__ \ "recipient").writeNullable[Addressee] and
+      (__ \ "recipient").writeNullable[Player] and
       (__ \ "sentTime").write[Date])(unlift(Message.unapply))
 
   implicit object MessageReader extends BSONDocumentReader[Message] {
     def read(doc: BSONDocument) = Message(
       doc.getAs[BSONObjectID]("_id").get,
-      doc.getAs[Addressee]("sender").get,
+      doc.getAs[Player]("sender").get,
       doc.getAs[String]("text").get,
-      doc.getAs[Addressee]("recipient"),
+      doc.getAs[Player]("recipient"),
       doc.getAs[Date]("sentTime").get
     )
   }

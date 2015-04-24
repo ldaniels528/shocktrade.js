@@ -2,11 +2,8 @@ package com.shocktrade.util
 
 import java.util.Date
 
-import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.{JsError, JsObject, JsSuccess}
-import play.modules.reactivemongo.json.BSONFormats
-import reactivemongo.bson.{BSONDocument => BS, BSONDateTime, BSONDouble, BSONHandler, BSONObjectID}
+import reactivemongo.bson.{BSONDateTime, BSONDocument => BS, BSONDouble, BSONHandler, BSONObjectID}
 
 /**
  * BSON Helper
@@ -19,7 +16,7 @@ object BSONHelper {
    * @author lawrence.daniels@gmail.com
    */
   implicit object BigDecimalHandler extends BSONHandler[BSONDouble, BigDecimal] {
-    
+
     def read(double: BSONDouble) = BigDecimal(double.value)
 
     def write(bd: BigDecimal) = BSONDouble(bd.toDouble)
@@ -30,7 +27,7 @@ object BSONHelper {
    * @author lawrence.daniels@gmail.com
    */
   implicit object DateHandler extends BSONHandler[BSONDateTime, Date] {
-    
+
     def read(date: BSONDateTime) = new Date(date.value)
 
     def write(date: Date) = BSONDateTime(date.getTime)
@@ -41,10 +38,12 @@ object BSONHelper {
    * @param fields the given field names
    */
   implicit class JsonBsonFieldExtensions(val fields: Seq[String]) extends AnyVal {
-    
-    def toBsonFields = fields.foldLeft(BS()) { (obj, field) => obj ++ BS(field -> 1) }
 
-    def toJsonFields = fields.foldLeft(JS()) { (obj, field) => obj ++ JS(field -> 1) }
+    // TODO revisit the reduced field logic
+
+    def toBsonFields = BS() //fields.foldLeft(BS()) { (obj, field) => obj ++ BS(field -> 1) }
+
+    def toJsonFields = JS() // fields.foldLeft(JS()) { (obj, field) => obj ++ JS(field -> 1) }
 
   }
 
@@ -54,29 +53,8 @@ object BSONHelper {
    */
   implicit class BSONObjectIDExtensions(val id: String) extends AnyVal {
 
-    def asBSID = BSONObjectID(id)
+    def toBSID = BSONObjectID(id)
 
-  }
-
-  implicit class Json2BsonExtension(val json: JsObject) extends AnyVal {
-    def toBson = {
-      Logger.info(s"JS = $json")
-      var bson = BS()
-      json.fieldSet foreach {
-        case (key, value) =>
-          BSONFormats.toBSON(value) match {
-            case JsSuccess(v, p) => bson = bson ++ BS(key -> v)
-            case JsError(errors) =>
-              errors foreach {
-                case (path, messages) =>
-                  messages foreach { err =>
-                    Logger.error(s"$path: ${err.message}")
-                  }
-              }
-          }
-      }
-      bson
-    }
   }
 
 }

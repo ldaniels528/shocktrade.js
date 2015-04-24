@@ -11,12 +11,17 @@ import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, _}
 
+import scala.util.{Failure, Success, Try}
+
 /**
  * Represents a contest
  * @author lawrence.daniels@gmail.com
  */
 case class Contest(name: String,
+                   creator: Player,
                    creationTime: Date,
+                   startTime: Option[Date] = None,
+                   processedTime: Option[Date] = None,
                    expirationTime: Option[Date] = None,
                    startingBalance: BigDecimal,
                    maxParticipants: Int = MaxPlayers,
@@ -40,12 +45,15 @@ object Contest {
 
   implicit val contestReads: Reads[Contest] = (
     (__ \ "name").read[String] and
+      (__ \ "creator").read[Player] and
       (__ \ "creationTime").read[Date] and
+      (__ \ "startTime").readNullable[Date] and
+      (__ \ "processedTime").readNullable[Date] and
       (__ \ "expirationTime").readNullable[Date] and
       (__ \ "startingBalance").read[BigDecimal] and
       (__ \ "maxParticipants").read[Int] and
-      (__ \ "messages").read[List[Message]] and
-      (__ \ "participants").read[List[Participant]] and
+      (__ \ "messages").readNullable[List[Message]].map(_.getOrElse(Nil)) and
+      (__ \ "participants").readNullable[List[Participant]].map(_.getOrElse(Nil)) and
       (__ \ "status").read[ContestStatus] and
       (__ \ "acquaintances").read[Boolean] and
       (__ \ "friendsOnly").read[Boolean] and
@@ -57,7 +65,10 @@ object Contest {
 
   implicit val contestWrites: Writes[Contest] = (
     (__ \ "name").write[String] and
+      (__ \ "creator").write[Player] and
       (__ \ "creationTime").write[Date] and
+      (__ \ "startTime").writeNullable[Date] and
+      (__ \ "processedTime").writeNullable[Date] and
       (__ \ "expirationTime").writeNullable[Date] and
       (__ \ "startingBalance").write[BigDecimal] and
       (__ \ "maxParticipants").write[Int] and
@@ -73,30 +84,41 @@ object Contest {
       (__ \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
-    def read(doc: BSONDocument) = Contest(
+    def read(doc: BSONDocument) = Try(Contest(
       doc.getAs[String]("name").get,
-      doc.getAs[Date]("creationTime").get,
+      doc.getAs[Player]("creator").get,
+      doc.getAs[Date]("creationTime").getOrElse(new Date()),
+      doc.getAs[Date]("startTime"),
+      doc.getAs[Date]("processedTime"),
       doc.getAs[Date]("expirationTime"),
       doc.getAs[BigDecimal]("startingBalance").get,
-      doc.getAs[Int]("maxParticipants").get,
-      doc.getAs[List[Message]]("messages").get,
-      doc.getAs[List[Participant]]("participants").get,
+      doc.getAs[Int]("maxParticipants").getOrElse(MaxPlayers),
+      doc.getAs[List[Message]]("messages").getOrElse(Nil),
+      doc.getAs[List[Participant]]("participants").getOrElse(Nil),
       doc.getAs[ContestStatus]("status").get,
-      doc.getAs[Boolean]("acquaintances").get,
-      doc.getAs[Boolean]("friendsOnly").get,
+      doc.getAs[Boolean]("acquaintances").contains(true),
+      doc.getAs[Boolean]("friendsOnly").contains(true),
       doc.getAs[Int]("levelCap"),
-      doc.getAs[Boolean]("invitationOnly").get,
-      doc.getAs[Boolean]("perksAllowed").get,
-      doc.getAs[Boolean]("ranked").get,
+      doc.getAs[Boolean]("invitationOnly").contains(true),
+      doc.getAs[Boolean]("perksAllowed").contains(true),
+      doc.getAs[Boolean]("ranked").contains(true),
       doc.getAs[BSONObjectID]("_id").get
-    )
+    )) match {
+      case Success(v) => v
+      case Failure(e) =>
+        e.printStackTrace()
+        throw new IllegalStateException(e)
+    }
   }
 
   implicit object ContestWriter extends BSONDocumentWriter[Contest] {
     def write(contest: Contest) = BSONDocument(
       "_id" -> contest.id,
       "name" -> contest.name,
+      "creator" -> contest.creator,
       "creationTime" -> contest.creationTime,
+      "startTime" -> contest.startTime,
+      "processedTime" -> contest.processedTime,
       "expirationTime" -> contest.expirationTime,
       "startingBalance" -> contest.startingBalance,
       "maxParticipants" -> contest.maxParticipants,

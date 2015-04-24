@@ -17,9 +17,17 @@ case class Position(symbol: String,
                     exchange: String,
                     pricePaid: BigDecimal,
                     quantity: Int,
-                    commission: Commission,
-                    purchasedDate: Date,
-                    id: BSONObjectID = BSONObjectID.generate)
+                    commission: BigDecimal,
+                    processedTime: Date,
+                    id: BSONObjectID = BSONObjectID.generate) {
+
+  /**
+   * Returns the total cost of the position
+   * @return the total cost of the position
+   */
+  def cost: BigDecimal = pricePaid * quantity + commission
+
+}
 
 /**
  * Position Singleton
@@ -32,8 +40,8 @@ object Position {
       (__ \ "exchange").read[String] and
       (__ \ "pricePaid").read[BigDecimal] and
       (__ \ "quantity").read[Int] and
-      (__ \ "commission").read[Commission] and
-      (__ \ "purchasedDate").read[Date] and
+      (__ \ "commission").read[BigDecimal] and
+      (__ \ "processedTime").read[Date] and
       (__ \ "_id").read[BSONObjectID])(Position.apply _)
 
   implicit val positionWrites: Writes[Position] = (
@@ -41,8 +49,8 @@ object Position {
       (__ \ "exchange").write[String] and
       (__ \ "pricePaid").write[BigDecimal] and
       (__ \ "quantity").write[Int] and
-      (__ \ "commission").write[Commission] and
-      (__ \ "purchasedDate").write[Date] and
+      (__ \ "commission").write[BigDecimal] and
+      (__ \ "processedTime").write[Date] and
       (__ \ "_id").write[BSONObjectID])(unlift(Position.unapply))
 
   implicit object PositionReader extends BSONDocumentReader[Position] {
@@ -51,8 +59,8 @@ object Position {
       doc.getAs[String]("exchange").get,
       doc.getAs[BigDecimal]("pricePaid").get,
       doc.getAs[Int]("quantity").get,
-      doc.getAs[Commission]("commission").get,
-      doc.getAs[Date]("purchasedDate").get,
+      doc.getAs[BigDecimal]("commission").get,
+      doc.getAs[Date]("processedTime").get,
       doc.getAs[BSONObjectID]("_id").get
     )
   }
@@ -65,7 +73,7 @@ object Position {
       "pricePaid" -> position.pricePaid,
       "quantity" -> position.quantity,
       "commission" -> position.commission,
-      "purchasedDate" -> position.purchasedDate
+      "processedTime" -> position.processedTime
     )
   }
 

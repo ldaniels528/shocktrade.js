@@ -180,14 +180,14 @@
 					<th class="ks">Fiscal Year End</th>
 					<td class="ks">
 						<span ng-show="q.fiscalYearEndDate == null" class="null">N/A</span>
-						<span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate.$date | date:'MM/yy' }}</span>
+						<span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate | date:'MM/yy' }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Most Recent Qtr</th>
 					<td class="ks">
 						<span ng-show="q.mostRecentQuarterDate == null" class="null">N/A</span>
-						<span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate.$date | date:'MM/dd/yyyy' }}</span>
+						<span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate | date:'MM/dd/yyyy' }}</span>
 					</td>
 				</tr>
 			</table>
@@ -399,14 +399,14 @@
 					<th class="ks">Dividend Date</th>
 					<td class="ks">
 						<span ng-show="q.dividendDate == null" class="null">N/A</span>
-						<span ng-show="q.dividendDate != null">{{ q.dividendDate.$date | date:'MM/dd/yy' }}</span>
+						<span ng-show="q.dividendDate != null">{{ q.dividendDate | date:'MM/dd/yy' }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Ex-Dividend Date</th>
 					<td class="ks">
 						<span ng-show="q.exDividendDate == null" class="null">N/A</span>
-						<span ng-show="q.exDividendDate != null">{{ q.exDividendDate.$date | date:'MM/dd/yy' }}</span>
+						<span ng-show="q.exDividendDate != null">{{ q.exDividendDate | date:'MM/dd/yy' }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -420,7 +420,7 @@
 					<th class="ks">Last Split Date</th>
 					<td class="ks">
 						<span ng-show="q.lastSplitDate == null" class="null">N/A</span>
-						<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate.$date | date:'MM/dd/yy' }}</span>
+						<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate | date:'MM/dd/yy' }}</span>
 					</td>
 				</tr>
 				<tr>

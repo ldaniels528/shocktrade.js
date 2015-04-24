@@ -28,7 +28,7 @@
 		<th class="qm_header">Ex-Dividend Date</th>
 		<td class="qm_detail">
 			<span ng-show="q.exDividendDate == null" class="null">&#8212;</span>
-			<span ng-show="q.exDividendDate != null">{{ q.exDividendDate.$date | date:'MM/dd/yy' }}</span>
+			<span ng-show="q.exDividendDate != null">{{ q.exDividendDate | date:'MM/dd/yy' }}</span>
 		</td>
 
 		<th class="qm_header">Last Split Factor</th>
@@ -47,13 +47,13 @@
 		<th class="qm_header">Dividend Date</th>
 		<td class="qm_detail">
 			<span ng-show="q.dividendDate == null" class="null">&#8212;</span>
-			<span ng-show="q.dividendDate != null">{{ q.dividendDate.$date | date:'MM/dd/yy' }}</span>
+			<span ng-show="q.dividendDate != null">{{ q.dividendDate | date:'MM/dd/yy' }}</span>
 		</td>		
 		
 		<th class="qm_header">Last Split Date</th>
 		<td class="qm_detail">
 			<span ng-show="q.lastSplitDate == null" class="null">&#8212;</span>
-			<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate.$date | date:'MM/dd/yy' }}</span>
+			<span ng-show="q.lastSplitDate != null">{{ q.lastSplitDate | date:'MM/dd/yy' }}</span>
 		</td>													
 	</tr>		
 </table>

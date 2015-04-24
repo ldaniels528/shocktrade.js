@@ -31,7 +31,7 @@ db.Contests.insert({
 			"quantity" : 10000,
 			"volumeAtOrderTime" : 66281636,
 			"orderTime" : ISODate("2013-10-09T15:36:34.657Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-10T20:15:00Z"),
 			"processedTime" : ISODate("2013-10-10T20:15:27.194Z")
 		} ],
@@ -52,7 +52,7 @@ db.Contests.insert({
 			"quantity" : 3750000,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-06T14:01:54.473Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-07T14:01:54.473Z"),
 			"processedTime" : ISODate("2013-08-06T19:00:24.518Z")
 		}, {
@@ -65,7 +65,7 @@ db.Contests.insert({
 			"quantity" : 375000000,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-06T15:31:55.427Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-07T15:31:55.427Z"),
 			"processedTime" : ISODate("2013-08-07T15:32:22.075Z")
 		}, {
@@ -78,7 +78,7 @@ db.Contests.insert({
 			"quantity" : 147600,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T18:22:01.592Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-08T18:22:01.592Z"),
 			"processedTime" : ISODate("2013-08-08T18:22:25.545Z")
 		}, {
@@ -91,7 +91,7 @@ db.Contests.insert({
 			"quantity" : 991028,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T18:22:01.632Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-08T18:22:01.632Z"),
 			"processedTime" : ISODate("2013-08-08T18:22:25.551Z")
 		}, {
@@ -104,7 +104,7 @@ db.Contests.insert({
 			"quantity" : 991028,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T19:07:02.167Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-08T19:07:02.167Z"),
 			"processedTime" : ISODate("2013-08-08T19:07:31.495Z")
 		}, {
@@ -117,7 +117,7 @@ db.Contests.insert({
 			"quantity" : 144464,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T19:42:02.727Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-08T19:42:02.727Z"),
 			"processedTime" : ISODate("2013-08-07T19:51:39.149Z")
 		}, {
@@ -130,7 +130,7 @@ db.Contests.insert({
 			"quantity" : 144464,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T19:52:02.929Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T19:52:02.929Z"),
 			"processedTime" : ISODate("2013-08-07T19:55:13.155Z")
 		}, {
@@ -143,7 +143,7 @@ db.Contests.insert({
 			"quantity" : 142891,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-07T19:57:03.026Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-08T19:57:03.026Z"),
 			"processedTime" : ISODate("2013-08-08T19:57:25.449Z")
 		}, {
@@ -156,7 +156,7 @@ db.Contests.insert({
 			"quantity" : 17504231,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-08T19:20:36.289Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-09T19:20:36.289Z"),
 			"processedTime" : ISODate("2013-08-09T08:09:05.142Z")
 		}, {
@@ -169,7 +169,7 @@ db.Contests.insert({
 			"quantity" : 31825874,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-09T14:30:37.620Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-10T14:30:37.620Z"),
 			"processedTime" : ISODate("2013-08-10T14:33:00.245Z")
 		}, {
@@ -182,7 +182,7 @@ db.Contests.insert({
 			"quantity" : 853864,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-09T16:10:38.532Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-10T16:10:38.532Z"),
 			"processedTime" : ISODate("2013-08-10T16:13:13.925Z")
 		}, {
@@ -195,7 +195,7 @@ db.Contests.insert({
 			"quantity" : 90578,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-09T17:20:39.228Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-10T17:20:39.228Z"),
 			"processedTime" : ISODate("2013-08-09T19:42:55.725Z")
 		}, {
@@ -208,7 +208,7 @@ db.Contests.insert({
 			"quantity" : 13464793,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-09T18:15:39.779Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-10T18:15:39.779Z"),
 			"processedTime" : ISODate("2013-08-10T18:15:52.261Z")
 		}, {
@@ -221,7 +221,7 @@ db.Contests.insert({
 			"quantity" : 90578,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T13:50:39.546Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-19T13:50:39.546Z"),
 			"processedTime" : ISODate("2013-08-12T18:19:23.976Z")
 		}, {
@@ -234,7 +234,7 @@ db.Contests.insert({
 			"quantity" : 104455,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:20:39.967Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:20:39.967Z"),
 			"processedTime" : ISODate("2013-08-12T14:20:56.574Z")
 		}, {
@@ -247,7 +247,7 @@ db.Contests.insert({
 			"quantity" : 104455,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:20:39.971Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:20:39.971Z"),
 			"processedTime" : ISODate("2013-08-12T14:20:56.589Z")
 		}, {
@@ -260,7 +260,7 @@ db.Contests.insert({
 			"quantity" : 114671,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:25:40.041Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:25:40.041Z"),
 			"processedTime" : ISODate("2013-08-12T14:26:01.396Z")
 		}, {
@@ -273,7 +273,7 @@ db.Contests.insert({
 			"quantity" : 114671,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:25:40.045Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:25:40.045Z"),
 			"processedTime" : ISODate("2013-08-12T14:26:01.410Z")
 		}, {
@@ -286,7 +286,7 @@ db.Contests.insert({
 			"quantity" : 414562,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:35:40.246Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-19T14:35:40.246Z"),
 			"processedTime" : ISODate("2013-08-12T14:36:09.854Z")
 		}, {
@@ -299,7 +299,7 @@ db.Contests.insert({
 			"quantity" : 110385,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:40:40.365Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:40:40.365Z"),
 			"processedTime" : ISODate("2013-08-12T17:41:05.427Z")
 		}, {
@@ -312,7 +312,7 @@ db.Contests.insert({
 			"quantity" : 110385,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:40:40.369Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:40:40.369Z"),
 			"processedTime" : ISODate("2013-08-12T17:41:05.441Z")
 		}, {
@@ -325,7 +325,7 @@ db.Contests.insert({
 			"quantity" : 23690,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:40:40.374Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-19T14:40:40.374Z"),
 			"processedTime" : ISODate("2013-08-12T14:40:43.637Z")
 		}, {
@@ -338,7 +338,7 @@ db.Contests.insert({
 			"quantity" : 97872,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:45:40.472Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:45:40.472Z"),
 			"processedTime" : ISODate("2013-08-12T14:49:21.657Z")
 		}, {
@@ -351,7 +351,7 @@ db.Contests.insert({
 			"quantity" : 97872,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:45:40.476Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T14:45:40.476Z"),
 			"processedTime" : ISODate("2013-08-12T14:49:21.673Z")
 		}, {
@@ -364,7 +364,7 @@ db.Contests.insert({
 			"quantity" : 195744,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T14:50:40.661Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-19T14:50:40.661Z"),
 			"processedTime" : ISODate("2013-08-12T14:58:29.108Z")
 		}, {
@@ -377,7 +377,7 @@ db.Contests.insert({
 			"quantity" : 89402,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:00:40.851Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:00:40.851Z"),
 			"processedTime" : ISODate("2013-08-12T15:03:33.311Z")
 		}, {
@@ -390,7 +390,7 @@ db.Contests.insert({
 			"quantity" : 89402,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:00:40.854Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:00:40.854Z"),
 			"processedTime" : ISODate("2013-08-12T15:03:33.326Z")
 		}, {
@@ -403,7 +403,7 @@ db.Contests.insert({
 			"quantity" : 74989,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:05:40.940Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:05:40.940Z"),
 			"processedTime" : ISODate("2013-08-12T15:21:19.442Z")
 		}, {
@@ -416,7 +416,7 @@ db.Contests.insert({
 			"quantity" : 74989,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:05:40.945Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:05:40.945Z"),
 			"processedTime" : ISODate("2013-08-12T15:21:19.458Z")
 		}, {
@@ -429,7 +429,7 @@ db.Contests.insert({
 			"quantity" : 178804,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:15:41.067Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-19T15:15:41.067Z"),
 			"processedTime" : ISODate("2013-08-12T15:15:44.228Z")
 		}, {
@@ -442,7 +442,7 @@ db.Contests.insert({
 			"quantity" : 87088,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:20:41.132Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:20:41.132Z"),
 			"processedTime" : ISODate("2013-08-12T15:20:49.014Z")
 		}, {
@@ -455,7 +455,7 @@ db.Contests.insert({
 			"quantity" : 87088,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-12T15:20:41.137Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-13T15:20:41.137Z"),
 			"processedTime" : ISODate("2013-08-12T15:20:49.028Z")
 		}, {
@@ -468,7 +468,7 @@ db.Contests.insert({
 			"quantity" : 2351352,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T14:00:45.489Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T14:00:45.489Z"),
 			"processedTime" : ISODate("2013-08-14T18:55:53.045Z")
 		}, {
@@ -481,7 +481,7 @@ db.Contests.insert({
 			"quantity" : 2351352,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T14:00:45.528Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T14:00:45.528Z"),
 			"processedTime" : ISODate("2013-08-14T18:55:53.089Z")
 		}, {
@@ -494,7 +494,7 @@ db.Contests.insert({
 			"quantity" : 276629,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T19:40:50.676Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T19:40:50.676Z"),
 			"processedTime" : ISODate("2013-08-14T19:41:15.847Z")
 		}, {
@@ -507,7 +507,7 @@ db.Contests.insert({
 			"quantity" : 276629,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T19:40:50.681Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T19:40:50.681Z"),
 			"processedTime" : ISODate("2013-08-14T19:41:15.858Z")
 		}, {
@@ -520,7 +520,7 @@ db.Contests.insert({
 			"quantity" : 313513,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T19:45:50.796Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T19:45:50.796Z"),
 			"processedTime" : ISODate("2013-08-13T19:46:09.780Z")
 		}, {
@@ -533,7 +533,7 @@ db.Contests.insert({
 			"quantity" : 313513,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-13T19:45:50.846Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-14T19:45:50.846Z"),
 			"processedTime" : ISODate("2013-08-13T19:46:09.801Z")
 		}, {
@@ -546,7 +546,7 @@ db.Contests.insert({
 			"quantity" : 292400,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-14T18:55:52.880Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-21T18:55:52.880Z"),
 			"processedTime" : ISODate("2013-08-21T18:55:56.808Z")
 		}, {
@@ -559,7 +559,7 @@ db.Contests.insert({
 			"quantity" : 199835002,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T18:30:57.811Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-16T18:30:57.811Z"),
 			"processedTime" : ISODate("2013-08-15T18:31:17.672Z")
 		}, {
@@ -572,7 +572,7 @@ db.Contests.insert({
 			"quantity" : 199835002,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T18:30:57.817Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-16T18:30:57.817Z"),
 			"processedTime" : ISODate("2013-08-16T18:31:16.966Z")
 		}, {
@@ -585,7 +585,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:10:58.413Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:10:58.413Z"),
 			"processedTime" : ISODate("2013-08-15T19:11:16.848Z")
 		}, {
@@ -598,7 +598,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:15:58.483Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:15:58.483Z"),
 			"processedTime" : ISODate("2013-08-15T19:16:21.468Z")
 		}, {
@@ -611,7 +611,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:20:58.543Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:20:58.543Z"),
 			"processedTime" : ISODate("2013-08-15T19:21:27.760Z")
 		}, {
@@ -624,7 +624,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:25:58.614Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:25:58.614Z"),
 			"processedTime" : ISODate("2013-08-15T19:26:02.860Z")
 		}, {
@@ -637,7 +637,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:30:58.788Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:30:58.788Z"),
 			"processedTime" : ISODate("2013-08-15T19:31:13.284Z")
 		}, {
@@ -650,7 +650,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:35:58.854Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:35:58.854Z"),
 			"processedTime" : ISODate("2013-08-15T19:36:18.973Z")
 		}, {
@@ -663,7 +663,7 @@ db.Contests.insert({
 			"quantity" : 25115800,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:40:58.927Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:40:58.927Z"),
 			"processedTime" : ISODate("2013-08-15T19:41:23.583Z")
 		}, {
@@ -676,7 +676,7 @@ db.Contests.insert({
 			"quantity" : 24024402,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-15T19:45:58.995Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:45:58.995Z"),
 			"processedTime" : ISODate("2013-08-15T19:46:28.601Z")
 		}, {
@@ -689,7 +689,7 @@ db.Contests.insert({
 			"quantity" : 19527966,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-16T14:51:00.504Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-17T14:51:00.504Z"),
 			"processedTime" : ISODate("2013-08-17T14:52:35.478Z")
 		}, {
@@ -702,7 +702,7 @@ db.Contests.insert({
 			"quantity" : 19527966,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-16T14:51:00.509Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-17T14:51:00.509Z"),
 			"processedTime" : ISODate("2013-08-17T14:52:35.484Z")
 		}, {
@@ -715,7 +715,7 @@ db.Contests.insert({
 			"quantity" : 390559,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-19T16:36:07.825Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-20T16:36:07.825Z"),
 			"processedTime" : ISODate("2013-08-20T16:36:35.169Z")
 		}, {
@@ -728,7 +728,7 @@ db.Contests.insert({
 			"quantity" : 390559,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-19T16:36:07.830Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-20T16:36:07.830Z"),
 			"processedTime" : ISODate("2013-08-20T16:36:35.177Z")
 		}, {
@@ -741,7 +741,7 @@ db.Contests.insert({
 			"quantity" : 1042755,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-20T14:46:12.177Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-21T14:46:12.177Z"),
 			"processedTime" : ISODate("2013-08-21T14:46:27.431Z")
 		}, {
@@ -754,7 +754,7 @@ db.Contests.insert({
 			"quantity" : 1042755,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-20T14:46:12.183Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-21T14:46:12.183Z"),
 			"processedTime" : ISODate("2013-08-21T14:46:27.440Z")
 		}, {
@@ -767,7 +767,7 @@ db.Contests.insert({
 			"quantity" : 506567,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T19:06:23.127Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-28T19:06:23.127Z"),
 			"processedTime" : ISODate("2013-08-28T19:06:29.840Z")
 		}, {
@@ -780,7 +780,7 @@ db.Contests.insert({
 			"quantity" : 353884,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T19:21:23.395Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:21:23.395Z"),
 			"processedTime" : ISODate("2013-08-21T19:21:50.125Z")
 		}, {
@@ -793,7 +793,7 @@ db.Contests.insert({
 			"quantity" : 353884,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T19:21:23.402Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-22T19:21:23.402Z"),
 			"processedTime" : ISODate("2013-08-21T19:21:50.144Z")
 		}, {
@@ -806,7 +806,7 @@ db.Contests.insert({
 			"quantity" : 331233,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T19:56:24.516Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-28T19:56:24.516Z"),
 			"processedTime" : ISODate("2013-08-21T19:56:30.860Z")
 		}, {
@@ -819,7 +819,7 @@ db.Contests.insert({
 			"quantity" : 331233,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T20:01:24.637Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-28T20:01:24.637Z"),
 			"processedTime" : ISODate("2013-08-21T20:05:40.649Z")
 		}, {
@@ -832,7 +832,7 @@ db.Contests.insert({
 			"quantity" : 45302,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-21T20:11:24.820Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-28T20:11:24.820Z"),
 			"processedTime" : ISODate("2013-08-21T20:14:18.760Z")
 		}, {
@@ -845,7 +845,7 @@ db.Contests.insert({
 			"quantity" : 1464762,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-22T14:11:25.742Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-23T14:11:25.742Z"),
 			"processedTime" : ISODate("2013-08-23T14:11:39.934Z")
 		}, {
@@ -858,7 +858,7 @@ db.Contests.insert({
 			"quantity" : 1464762,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-22T14:11:25.749Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-23T14:11:25.749Z"),
 			"processedTime" : ISODate("2013-08-23T14:11:39.944Z")
 		}, {
@@ -871,7 +871,7 @@ db.Contests.insert({
 			"quantity" : 313877,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-23T18:26:37.418Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-24T18:26:37.418Z"),
 			"processedTime" : ISODate("2013-08-24T18:30:06.349Z")
 		}, {
@@ -884,7 +884,7 @@ db.Contests.insert({
 			"quantity" : 313877,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-23T18:26:37.425Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-24T18:26:37.425Z"),
 			"processedTime" : ISODate("2013-08-24T18:30:06.357Z")
 		}, {
@@ -897,7 +897,7 @@ db.Contests.insert({
 			"quantity" : 63685,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T14:13:20.572Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T14:13:20.572Z"),
 			"processedTime" : ISODate("2013-08-26T14:13:27.838Z")
 		}, {
@@ -910,7 +910,7 @@ db.Contests.insert({
 			"quantity" : 63685,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T14:13:20.579Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T14:13:20.579Z"),
 			"processedTime" : ISODate("2013-08-26T14:30:13.111Z")
 		}, {
@@ -923,7 +923,7 @@ db.Contests.insert({
 			"quantity" : 0,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T14:23:20.747Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-02T14:23:20.747Z"),
 			"processedTime" : ISODate("2013-09-02T14:23:45.313Z")
 		}, {
@@ -936,7 +936,7 @@ db.Contests.insert({
 			"quantity" : 230527,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T14:48:21.087Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T14:48:21.087Z"),
 			"processedTime" : ISODate("2013-08-26T14:48:32.451Z")
 		}, {
@@ -949,7 +949,7 @@ db.Contests.insert({
 			"quantity" : 230527,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T14:48:21.093Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T14:48:21.093Z"),
 			"processedTime" : ISODate("2013-08-26T14:48:32.467Z")
 		}, {
@@ -962,7 +962,7 @@ db.Contests.insert({
 			"quantity" : 1935223,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T16:33:22.750Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T16:33:22.750Z"),
 			"processedTime" : ISODate("2013-08-26T16:33:42.427Z")
 		}, {
@@ -975,7 +975,7 @@ db.Contests.insert({
 			"quantity" : 1935223,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T16:33:22.756Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T16:33:22.756Z"),
 			"processedTime" : ISODate("2013-08-26T16:33:42.449Z")
 		}, {
@@ -988,7 +988,7 @@ db.Contests.insert({
 			"quantity" : 449517,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T19:48:25.738Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T19:48:25.738Z"),
 			"processedTime" : ISODate("2013-08-27T19:48:49.863Z")
 		}, {
@@ -1001,7 +1001,7 @@ db.Contests.insert({
 			"quantity" : 449517,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-26T19:48:25.743Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-27T19:48:25.743Z"),
 			"processedTime" : ISODate("2013-08-27T19:48:49.868Z")
 		}, {
@@ -1014,7 +1014,7 @@ db.Contests.insert({
 			"quantity" : 82987,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-28T13:58:32.734Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-29T13:58:32.734Z"),
 			"processedTime" : ISODate("2013-08-28T13:59:05.513Z")
 		}, {
@@ -1027,7 +1027,7 @@ db.Contests.insert({
 			"quantity" : 82987,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-28T13:58:32.739Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-29T13:58:32.739Z"),
 			"processedTime" : ISODate("2013-08-28T13:59:05.534Z")
 		}, {
@@ -1040,7 +1040,7 @@ db.Contests.insert({
 			"quantity" : 379460,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-28T14:23:33.102Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-29T14:23:33.102Z"),
 			"processedTime" : ISODate("2013-08-28T14:24:01.650Z")
 		}, {
@@ -1053,7 +1053,7 @@ db.Contests.insert({
 			"quantity" : 379460,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-28T14:23:33.107Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-29T14:23:33.107Z"),
 			"processedTime" : ISODate("2013-08-28T14:24:01.667Z")
 		}, {
@@ -1066,7 +1066,7 @@ db.Contests.insert({
 			"quantity" : 703700,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-29T13:52:02.178Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-05T13:52:02.178Z"),
 			"processedTime" : ISODate("2013-09-05T13:52:28.973Z")
 		}, {
@@ -1079,7 +1079,7 @@ db.Contests.insert({
 			"quantity" : 544924,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-29T17:57:07.278Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-05T17:57:07.278Z"),
 			"processedTime" : ISODate("2013-08-29T18:05:11.253Z")
 		}, {
@@ -1092,7 +1092,7 @@ db.Contests.insert({
 			"quantity" : 16004563,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-29T19:52:09.298Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-30T19:52:09.298Z"),
 			"processedTime" : ISODate("2013-08-29T19:52:27.203Z")
 		}, {
@@ -1105,7 +1105,7 @@ db.Contests.insert({
 			"quantity" : 16004563,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-29T19:52:09.303Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-30T19:52:09.303Z"),
 			"processedTime" : ISODate("2013-08-29T19:52:27.222Z")
 		}, {
@@ -1118,7 +1118,7 @@ db.Contests.insert({
 			"quantity" : 20256400,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T13:32:10.083Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T13:32:10.083Z"),
 			"processedTime" : ISODate("2013-08-30T14:07:02.937Z")
 		}, {
@@ -1131,7 +1131,7 @@ db.Contests.insert({
 			"quantity" : 41114,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T13:47:10.358Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T13:47:10.358Z"),
 			"processedTime" : ISODate("2013-09-06T13:47:36.665Z")
 		}, {
@@ -1144,7 +1144,7 @@ db.Contests.insert({
 			"quantity" : 11752726,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T14:12:10.759Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T14:12:10.759Z"),
 			"processedTime" : ISODate("2013-08-30T16:51:02.060Z")
 		}, {
@@ -1157,7 +1157,7 @@ db.Contests.insert({
 			"quantity" : 2173703,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T19:12:16.094Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-31T19:12:16.094Z"),
 			"processedTime" : ISODate("2013-08-31T19:12:41.406Z")
 		}, {
@@ -1170,7 +1170,7 @@ db.Contests.insert({
 			"quantity" : 2173703,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T19:12:16.099Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-31T19:12:16.099Z"),
 			"processedTime" : ISODate("2013-08-31T19:12:41.413Z")
 		}, {
@@ -1183,7 +1183,7 @@ db.Contests.insert({
 			"quantity" : 138747,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T19:37:16.723Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-31T19:37:16.723Z"),
 			"processedTime" : ISODate("2013-08-30T19:37:44.186Z")
 		}, {
@@ -1196,7 +1196,7 @@ db.Contests.insert({
 			"quantity" : 138747,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-08-30T19:37:16.729Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-08-31T19:37:16.729Z"),
 			"processedTime" : ISODate("2013-08-30T19:37:44.202Z")
 		}, {
@@ -1209,7 +1209,7 @@ db.Contests.insert({
 			"quantity" : 10076,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-04T17:42:39.371Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-05T17:42:39.371Z"),
 			"processedTime" : ISODate("2013-09-05T17:42:53.214Z")
 		}, {
@@ -1222,7 +1222,7 @@ db.Contests.insert({
 			"quantity" : 10076,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-04T17:42:39.376Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-05T17:42:39.376Z"),
 			"processedTime" : ISODate("2013-09-05T17:42:53.222Z")
 		}, {
@@ -1235,7 +1235,7 @@ db.Contests.insert({
 			"quantity" : 13040456,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-05T18:02:48.027Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T18:02:48.027Z"),
 			"processedTime" : ISODate("2013-09-06T18:03:01.083Z")
 		}, {
@@ -1248,7 +1248,7 @@ db.Contests.insert({
 			"quantity" : 13040456,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-05T18:02:48.032Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T18:02:48.032Z"),
 			"processedTime" : ISODate("2013-09-06T18:03:01.089Z")
 		}, {
@@ -1261,7 +1261,7 @@ db.Contests.insert({
 			"quantity" : 633393,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-05T18:42:48.978Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T18:42:48.978Z"),
 			"processedTime" : ISODate("2013-09-06T18:43:14.970Z")
 		}, {
@@ -1274,7 +1274,7 @@ db.Contests.insert({
 			"quantity" : 633393,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-05T18:42:48.983Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-06T18:42:48.983Z"),
 			"processedTime" : ISODate("2013-09-06T18:43:14.977Z")
 		}, {
@@ -1287,7 +1287,7 @@ db.Contests.insert({
 			"quantity" : 3078996,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-10T15:11:51.077Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-11T15:11:51.077Z"),
 			"processedTime" : ISODate("2013-09-10T15:11:53.473Z")
 		}, {
@@ -1300,7 +1300,7 @@ db.Contests.insert({
 			"quantity" : 3078996,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-10T15:11:51.088Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-11T15:11:51.088Z"),
 			"processedTime" : ISODate("2013-09-10T15:41:40.299Z")
 		}, {
@@ -1313,7 +1313,7 @@ db.Contests.insert({
 			"quantity" : 61920,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T14:36:57.748Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T14:36:57.748Z"),
 			"processedTime" : ISODate("2013-09-19T19:33:54.751Z")
 		}, {
@@ -1326,7 +1326,7 @@ db.Contests.insert({
 			"quantity" : 1483500,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T15:21:58.355Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T15:21:58.355Z"),
 			"processedTime" : ISODate("2013-09-12T15:22:03.800Z")
 		}, {
@@ -1339,7 +1339,7 @@ db.Contests.insert({
 			"quantity" : 1483500,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T15:21:58.360Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T15:21:58.360Z"),
 			"processedTime" : ISODate("2013-09-12T15:22:03.808Z")
 		}, {
@@ -1352,7 +1352,7 @@ db.Contests.insert({
 			"quantity" : 94202,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:22:01.948Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T19:22:01.948Z"),
 			"processedTime" : ISODate("2013-09-11T19:22:13.144Z")
 		}, {
@@ -1365,7 +1365,7 @@ db.Contests.insert({
 			"quantity" : 94202,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:22:01.954Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T19:22:01.954Z"),
 			"processedTime" : ISODate("2013-09-11T19:22:13.164Z")
 		}, {
@@ -1378,7 +1378,7 @@ db.Contests.insert({
 			"quantity" : 62433,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:27:02.054Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T19:27:02.054Z"),
 			"processedTime" : ISODate("2013-09-11T19:27:28.086Z")
 		}, {
@@ -1391,7 +1391,7 @@ db.Contests.insert({
 			"quantity" : 62433,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:32:02.140Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T19:32:02.140Z"),
 			"processedTime" : ISODate("2013-09-11T19:32:42.197Z")
 		}, {
@@ -1404,7 +1404,7 @@ db.Contests.insert({
 			"quantity" : 62433,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:37:02.217Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T19:37:02.217Z"),
 			"processedTime" : ISODate("2013-09-11T19:39:00.355Z")
 		}, {
@@ -1417,7 +1417,7 @@ db.Contests.insert({
 			"quantity" : 92298,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:42:02.293Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T19:42:02.293Z"),
 			"processedTime" : ISODate("2013-09-11T19:43:44.093Z")
 		}, {
@@ -1430,7 +1430,7 @@ db.Contests.insert({
 			"quantity" : 92298,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-11T19:42:02.339Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-12T19:42:02.339Z"),
 			"processedTime" : ISODate("2013-09-11T19:43:44.110Z")
 		}, {
@@ -1443,7 +1443,7 @@ db.Contests.insert({
 			"quantity" : 179957,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-12T17:02:06.260Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-19T17:02:06.260Z"),
 			"processedTime" : ISODate("2013-09-19T19:33:54.765Z")
 		}, {
@@ -1456,7 +1456,7 @@ db.Contests.insert({
 			"quantity" : 7844000,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-13T18:47:14.727Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-14T18:47:14.727Z"),
 			"processedTime" : ISODate("2013-09-14T18:48:15.459Z")
 		}, {
@@ -1469,7 +1469,7 @@ db.Contests.insert({
 			"quantity" : 7844000,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-13T18:47:14.731Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-14T18:47:14.731Z"),
 			"processedTime" : ISODate("2013-09-14T18:48:15.485Z")
 		}, {
@@ -1482,7 +1482,7 @@ db.Contests.insert({
 			"quantity" : 547255,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-16T14:14:54.782Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-17T14:14:54.782Z"),
 			"processedTime" : ISODate("2013-09-16T14:32:11.490Z")
 		}, {
@@ -1495,7 +1495,7 @@ db.Contests.insert({
 			"quantity" : 547255,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-16T14:14:54.791Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-17T14:14:54.791Z"),
 			"processedTime" : ISODate("2013-09-16T14:32:11.507Z")
 		}, {
@@ -1508,7 +1508,7 @@ db.Contests.insert({
 			"quantity" : 437200,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-16T14:49:55.309Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-23T14:49:55.309Z"),
 			"processedTime" : ISODate("2013-09-16T14:50:12.834Z")
 		}, {
@@ -1521,7 +1521,7 @@ db.Contests.insert({
 			"quantity" : 437200,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-16T14:54:55.383Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-23T14:54:55.383Z"),
 			"processedTime" : ISODate("2013-09-23T14:55:12.244Z")
 		}, {
@@ -1534,7 +1534,7 @@ db.Contests.insert({
 			"quantity" : 305153,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-17T14:10:00.660Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T14:10:00.660Z"),
 			"processedTime" : ISODate("2013-09-19T19:33:54.781Z")
 		}, {
@@ -1547,7 +1547,7 @@ db.Contests.insert({
 			"quantity" : 305153,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-17T14:10:00.666Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T14:10:00.666Z"),
 			"processedTime" : ISODate("2013-09-19T19:33:54.795Z")
 		}, {
@@ -1560,7 +1560,7 @@ db.Contests.insert({
 			"quantity" : 152576,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-17T19:40:04.580Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T19:40:04.580Z"),
 			"processedTime" : ISODate("2013-09-17T19:40:39.959Z")
 		}, {
@@ -1573,7 +1573,7 @@ db.Contests.insert({
 			"quantity" : 152576,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-09-17T19:40:04.584Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-09-18T19:40:04.584Z"),
 			"processedTime" : ISODate("2013-09-17T20:14:12.478Z")
 		}, {
@@ -1586,7 +1586,7 @@ db.Contests.insert({
 			"quantity" : 2161007,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-10T17:02:30.059Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-11T17:02:30.059Z"),
 			"processedTime" : ISODate("2013-10-11T17:02:33.007Z")
 		}, {
@@ -1599,7 +1599,7 @@ db.Contests.insert({
 			"quantity" : 2161007,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-10T17:02:30.064Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-11T17:02:30.064Z"),
 			"processedTime" : ISODate("2013-10-11T17:02:33.015Z")
 		}, {
@@ -1612,7 +1612,7 @@ db.Contests.insert({
 			"quantity" : 1296604,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-28T20:00:33.998Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-29T20:00:33.998Z"),
 			"processedTime" : ISODate("2013-10-29T20:00:44.920Z")
 		}, {
@@ -1625,7 +1625,7 @@ db.Contests.insert({
 			"quantity" : 1296604,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-28T20:00:34.015Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-29T20:00:34.015Z"),
 			"processedTime" : ISODate("2013-10-29T20:00:44.941Z")
 		}, {
@@ -1638,7 +1638,7 @@ db.Contests.insert({
 			"quantity" : 197954,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T14:25:55.500Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-31T14:25:55.500Z"),
 			"processedTime" : ISODate("2013-10-30T14:26:09.471Z")
 		}, {
@@ -1651,7 +1651,7 @@ db.Contests.insert({
 			"quantity" : 197954,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T14:25:55.519Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-31T14:25:55.519Z"),
 			"processedTime" : ISODate("2013-10-30T14:26:09.512Z")
 		}, {
@@ -1664,7 +1664,7 @@ db.Contests.insert({
 			"quantity" : 317612,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T14:40:56.649Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-06T15:40:56.649Z"),
 			"processedTime" : ISODate("2013-10-30T14:41:11.195Z")
 		}, {
@@ -1677,7 +1677,7 @@ db.Contests.insert({
 			"quantity" : 78296,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T14:45:57.052Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-06T15:45:57.052Z"),
 			"processedTime" : ISODate("2013-10-30T14:46:21.778Z")
 		}, {
@@ -1690,7 +1690,7 @@ db.Contests.insert({
 			"quantity" : 4449822,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T19:51:12.243Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-31T19:51:12.243Z"),
 			"processedTime" : ISODate("2013-10-31T19:51:27.260Z")
 		}, {
@@ -1703,7 +1703,7 @@ db.Contests.insert({
 			"quantity" : 4449822,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-30T19:51:12.261Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-10-31T19:51:12.261Z"),
 			"processedTime" : ISODate("2013-10-31T19:51:27.285Z")
 		}, {
@@ -1716,7 +1716,7 @@ db.Contests.insert({
 			"quantity" : 27588902,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-31T15:21:19.136Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-01T15:21:19.136Z"),
 			"processedTime" : ISODate("2013-11-01T15:21:47.123Z")
 		}, {
@@ -1729,7 +1729,7 @@ db.Contests.insert({
 			"quantity" : 27588902,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-31T15:21:19.156Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-01T15:21:19.156Z"),
 			"processedTime" : ISODate("2013-11-01T15:21:47.149Z")
 		}, {
@@ -1742,7 +1742,7 @@ db.Contests.insert({
 			"quantity" : 12540410,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-31T19:56:33.467Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-01T19:56:33.467Z"),
 			"processedTime" : ISODate("2013-11-01T19:56:55.772Z")
 		}, {
@@ -1755,7 +1755,7 @@ db.Contests.insert({
 			"quantity" : 12540410,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-10-31T19:56:33.485Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-01T19:56:33.485Z"),
 			"processedTime" : ISODate("2013-11-01T19:56:55.801Z")
 		}, {
@@ -1768,7 +1768,7 @@ db.Contests.insert({
 			"quantity" : 6897225,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-01T15:31:40.089Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-02T15:31:40.089Z"),
 			"processedTime" : ISODate("2013-11-04T05:04:38.501Z")
 		}, {
@@ -1781,7 +1781,7 @@ db.Contests.insert({
 			"quantity" : 6897225,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-01T15:31:40.108Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-02T15:31:40.108Z"),
 			"processedTime" : ISODate("2013-11-04T05:04:38.580Z")
 		}, {
@@ -1794,7 +1794,7 @@ db.Contests.insert({
 			"quantity" : 1130692,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-04T16:47:07.228Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-05T16:47:07.228Z"),
 			"processedTime" : ISODate("2013-11-05T16:47:29.067Z")
 		}, {
@@ -1807,7 +1807,7 @@ db.Contests.insert({
 			"quantity" : 1130692,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-04T16:47:07.248Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-05T16:47:07.248Z"),
 			"processedTime" : ISODate("2013-11-05T16:47:29.093Z")
 		}, {
@@ -1820,7 +1820,7 @@ db.Contests.insert({
 			"quantity" : 919630,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-05T17:47:32.181Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-06T17:47:32.181Z"),
 			"processedTime" : ISODate("2013-11-06T17:47:59.404Z")
 		}, {
@@ -1833,7 +1833,7 @@ db.Contests.insert({
 			"quantity" : 919630,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-05T17:47:32.200Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-06T17:47:32.200Z"),
 			"processedTime" : ISODate("2013-11-06T17:47:59.431Z")
 		}, {
@@ -1846,7 +1846,7 @@ db.Contests.insert({
 			"quantity" : 3941271,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-06T18:38:55.684Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-07T18:38:55.684Z"),
 			"processedTime" : ISODate("2013-11-07T18:39:19.456Z")
 		}, {
@@ -1859,7 +1859,7 @@ db.Contests.insert({
 			"quantity" : 3941271,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-06T18:38:55.691Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-07T18:38:55.691Z"),
 			"processedTime" : ISODate("2013-11-07T18:39:19.471Z")
 		}, {
@@ -1872,7 +1872,7 @@ db.Contests.insert({
 			"quantity" : 9196300,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-07T20:49:06.100Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-08T20:49:06.100Z"),
 			"processedTime" : ISODate("2013-11-08T20:49:17.848Z")
 		}, {
@@ -1885,7 +1885,7 @@ db.Contests.insert({
 			"quantity" : 9196300,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-07T20:49:06.105Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-08T20:49:06.105Z"),
 			"processedTime" : ISODate("2013-11-08T20:49:17.860Z")
 		}, {
@@ -1898,7 +1898,7 @@ db.Contests.insert({
 			"quantity" : 1094797,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-08T18:29:11.542Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-09T18:29:11.542Z"),
 			"processedTime" : ISODate("2013-11-11T05:03:18.690Z")
 		}, {
@@ -1911,7 +1911,7 @@ db.Contests.insert({
 			"quantity" : 1094797,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-08T18:29:11.547Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-09T18:29:11.547Z"),
 			"processedTime" : ISODate("2013-11-11T05:03:18.700Z")
 		}, {
@@ -1924,7 +1924,7 @@ db.Contests.insert({
 			"quantity" : 52852,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-13T15:34:33.169Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-14T15:34:33.169Z"),
 			"processedTime" : ISODate("2013-11-14T15:34:54.635Z")
 		}, {
@@ -1937,7 +1937,7 @@ db.Contests.insert({
 			"quantity" : 52852,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-13T15:34:33.175Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-14T15:34:33.175Z"),
 			"processedTime" : ISODate("2013-11-14T15:34:54.645Z")
 		}, {
@@ -1950,7 +1950,7 @@ db.Contests.insert({
 			"quantity" : 459815,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-14T16:19:42.755Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-15T16:19:42.755Z"),
 			"processedTime" : ISODate("2013-11-15T16:20:11.648Z")
 		}, {
@@ -1963,7 +1963,7 @@ db.Contests.insert({
 			"quantity" : 459815,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-14T16:19:42.760Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-15T16:19:42.760Z"),
 			"processedTime" : ISODate("2013-11-15T16:20:11.662Z")
 		}, {
@@ -1976,7 +1976,7 @@ db.Contests.insert({
 			"quantity" : 978329,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-18T18:00:01.637Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-19T18:00:01.637Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.219Z")
 		}, {
@@ -1989,7 +1989,7 @@ db.Contests.insert({
 			"quantity" : 978329,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-18T18:00:01.642Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-19T18:00:01.642Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.257Z")
 		}, {
@@ -2002,7 +2002,7 @@ db.Contests.insert({
 			"quantity" : 2122223,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-18T19:25:03.796Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-19T19:25:03.796Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.279Z")
 		}, {
@@ -2015,7 +2015,7 @@ db.Contests.insert({
 			"quantity" : 2122223,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-18T19:25:03.802Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-19T19:25:03.802Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.300Z")
 		}, {
@@ -2028,7 +2028,7 @@ db.Contests.insert({
 			"quantity" : 137944511,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-19T15:55:08.372Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-20T15:55:08.372Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.323Z")
 		}, {
@@ -2041,7 +2041,7 @@ db.Contests.insert({
 			"quantity" : 137944511,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-19T15:55:08.415Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-20T15:55:08.415Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.343Z")
 		}, {
@@ -2054,7 +2054,7 @@ db.Contests.insert({
 			"quantity" : 68972255,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-19T17:05:09.739Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-20T17:05:09.739Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.362Z")
 		}, {
@@ -2067,7 +2067,7 @@ db.Contests.insert({
 			"quantity" : 68972255,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-19T17:05:09.760Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-20T17:05:09.760Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.380Z")
 		}, {
@@ -2080,7 +2080,7 @@ db.Contests.insert({
 			"quantity" : 492658,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-21T18:05:26.662Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-22T18:05:26.662Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.399Z")
 		}, {
@@ -2093,7 +2093,7 @@ db.Contests.insert({
 			"quantity" : 492658,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-21T18:05:26.669Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-22T18:05:26.669Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.416Z")
 		}, {
@@ -2106,7 +2106,7 @@ db.Contests.insert({
 			"quantity" : 6897225,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-25T17:45:44.028Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-26T17:45:44.028Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.433Z")
 		}, {
@@ -2119,7 +2119,7 @@ db.Contests.insert({
 			"quantity" : 137944511,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-11-25T18:00:44.357Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-11-26T18:00:44.357Z"),
 			"processedTime" : ISODate("2013-12-27T05:43:01.449Z")
 		}, {
@@ -2132,7 +2132,7 @@ db.Contests.insert({
 			"quantity" : 137944511,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T16:43:01.835Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T16:43:01.835Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.220Z")
 		}, {
@@ -2145,7 +2145,7 @@ db.Contests.insert({
 			"quantity" : 137944511,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T16:43:01.842Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T16:43:01.842Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.229Z")
 		}, {
@@ -2158,7 +2158,7 @@ db.Contests.insert({
 			"quantity" : 8114383,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T19:03:05.010Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T19:03:05.010Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.236Z")
 		}, {
@@ -2171,7 +2171,7 @@ db.Contests.insert({
 			"quantity" : 8114383,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T19:03:05.016Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T19:03:05.016Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.242Z")
 		}, {
@@ -2184,7 +2184,7 @@ db.Contests.insert({
 			"quantity" : 1915895,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T20:38:07.695Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T20:38:07.695Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.249Z")
 		}, {
@@ -2197,7 +2197,7 @@ db.Contests.insert({
 			"quantity" : 1915895,
 			"volumeAtOrderTime" : 0,
 			"orderTime" : ISODate("2013-12-27T20:38:07.702Z"),
-			"commision" : 9.99,
+			"commission" : 9.99,
 			"expirationTime" : ISODate("2013-12-28T20:38:07.702Z"),
 			"processedTime" : ISODate("2013-12-30T05:02:02.256Z")
 		} ],

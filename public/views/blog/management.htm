@@ -42,7 +42,7 @@
 										<a href="" ng-click="getBlogPost(post._id.$oid)">{{ post.title }}</a>
 									</td>
 									<td class="qm" style="width: 18%">{{ post.author }}</td>
-									<td class="qm" style="width: 22%; text-align: center">{{ post.creationTime.$date | date:'MM/dd/yyyy hh:mma' }}</td> 						
+									<td class="qm" style="width: 22%; text-align: center">{{ post.creationTime | date:'MM/dd/yyyy hh:mma' }}</td>
 								</tr>
 							</table>
 						</div>

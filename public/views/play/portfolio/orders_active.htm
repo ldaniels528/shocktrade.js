@@ -27,8 +27,8 @@
 					<img src="/assets/images/buttons/delete.png" ng-click="cancelOrder(contestId, participant.name, order.id.$oid)" style="cursor: pointer; vertical-align: top">
 	
 					<!-- order date -->
-					<span ng-show="order.creationTime.$date >= tradingStart()">{{ order.creationTime.$date | date:'hh:mma' }}</span>
-					<span ng-show="order.creationTime.$date < tradingStart()">{{ order.creationTime.$date | date:'MM/dd/yyyy' }}</span>
+					<span ng-show="order.creationTime >= tradingStart()">{{ order.creationTime | date:'hh:mma' }}</span>
+					<span ng-show="order.creationTime < tradingStart()">{{ order.creationTime | date:'MM/dd/yyyy' }}</span>
 				</td>
 				<td style="width: 10%">
 					<a href="" ng-click="loadQuote(order.symbol)">

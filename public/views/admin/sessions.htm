@@ -18,7 +18,7 @@
 					<img ng-hide="session.loggedIn || session.idle" src="/assets/images/status/offlight.png">
 					{{ session.name }}
 				</td>
-				<td style="width: 20%">{{ session.lastUpdatedTime.$date | date:'MM/dd hh:mma' }}</td>
+				<td style="width: 20%">{{ session.lastUpdatedTime | date:'MM/dd hh:mma' }}</td>
 				<td style="width: 20%">{{ session.remoteHost }}</td>
 				<td style="width: 40%">{{ session.userAgent }}</td>
 			</tr>

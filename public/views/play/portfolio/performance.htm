@@ -11,8 +11,8 @@
 		</tr>
 
 		<tr ng-repeat="p in participant.performance" ng-class-even="'even'" ng-class-odd="'odd'">		
-			<td style="width: 15%">{{ p.purchasedDate.$date | date:'MM/dd hh:mma' }}</td>	
-			<td style="width: 15%">{{ p.soldDate.$date | date:'MM/dd hh:mma' }}</td>					
+			<td style="width: 15%">{{ p.purchasedDate | date:'MM/dd hh:mma' }}</td>
+			<td style="width: 15%">{{ p.soldDate | date:'MM/dd hh:mma' }}</td>
 			<td style="width: 12%">
 				<a href="" ng-click="loadQuote(p.symbol)">
 					<span ng-class="p.exchange">{{ p.symbol }}</span>

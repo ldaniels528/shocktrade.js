@@ -1,14 +1,13 @@
-import scala.xml.Node
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import scala.xml.{Node, XML}
 
 object RSSParserTest {
-  import org.junit.Test
-  import scala.xml.XML
-  import java.io.File
-  import java.util.Date
-  import java.text.SimpleDateFormat
 
   def main(args: Array[String]) {
-    parseRSS(XML.loadFile(new File("./testscript/cnbc.xml"))) foreach(println)
+    parseRSS(XML.loadFile(new File("./testscript/cnbc.xml"))) foreach (println)
   }
 
   def parseRSS(rss: Node): Seq[RSSChannel] = {
@@ -40,19 +39,19 @@ object RSSParserTest {
   }
 
   case class RSSChannel(
-    title: Option[String],
-    description: Option[String],
-    link: Option[String],
-    pubDate: Option[Date],
-    lastBuildDate: Option[Date],
-    language: Option[String],
-    ttl: Option[Int],
-    items: Seq[RSSItem])
+                         title: Option[String],
+                         description: Option[String],
+                         link: Option[String],
+                         pubDate: Option[Date],
+                         lastBuildDate: Option[Date],
+                         language: Option[String],
+                         ttl: Option[Int],
+                         items: Seq[RSSItem])
 
   case class RSSItem(
-    title: Option[String],
-    description: Option[String],
-    link: Option[String],
-    pubDate: Option[Date])
+                      title: Option[String],
+                      description: Option[String],
+                      link: Option[String],
+                      pubDate: Option[Date])
 
 }

@@ -23,7 +23,7 @@
 			<td style="width: 25%">{{q.ipoYear}}</td>
 	
 			<th style="width: 25%">Fiscal Year End Date</th>
-			<td style="width: 25%">{{q.fiscalYearEndDate.$date | date:'MM/dd'}}</td>		
+			<td style="width: 25%">{{q.fiscalYearEndDate | date:'MM/dd'}}</td>
 		</tr>					
 			
 		<tr ng-hide="q.assetType == 'ETF' || !q.sicNumber">
@@ -50,7 +50,7 @@
 
 		<tr ng-show="q.assetType == 'ETF'">
 			<th style="width: 25%">Inception Date</th>
-			<td style="width: 25%">{{q.inceptionDate.$date | date:'MM/dd/yyyy' }}</td>
+			<td style="width: 25%">{{q.inceptionDate | date:'MM/dd/yyyy' }}</td>
 	
 			<th style="width: 25%">Number Of Holdings</th>
 			<td style="width: 25%">{{q.numberOfHoldings | number}}</td>			

@@ -87,7 +87,7 @@
 						<img ng-show="u.eventType == 'INVITE'" src="/assets/images/objects/sharing_header.png">				
 						<a href="" ng-click="selectUpdate(u)">{{ u.eventType == 'MAIL' ? u.title : u.description }}</a>
 					</td>
-					<td style="width: 15%">{{ u.creationTime.$date | date:'MM/dd hh:mma' }}</td>					
+					<td style="width: 15%">{{ (u.creationTime.$date || u.creationTime) | date:'MM/dd hh:mma' }}</td>
 				</tr>
 			</table>
 		</div>
@@ -102,7 +102,7 @@
 				<span style="font-weight: bold">From:</span> 
 				<span ng-show="myUpdate.sender.name" style="color: #0000ff">{{ myUpdate.sender.name }}</span>
 				<span ng-hide="myUpdate.sender.name" style="color: #ff00ff">ShockTrade</span>
-				on {{ myUpdate.creationTime.$date | date:"EEE MMM dd, yyyy 'at' hh:mma" }}</div>
+				on {{ (myUpdate.creationTime.$date || myUpdate.creationTime) | date:"EEE MMM dd, yyyy 'at' hh:mma" }}</div>
 			<div class="previewContainer" style="margin-top: 10px">
 				{{ myUpdate.description }}
 			</div>

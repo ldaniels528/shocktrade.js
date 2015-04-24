@@ -29,7 +29,7 @@
 					<img ng-show="order.status == 'FAILED' && (order.message != 'Expired' && order.message != 'Canceled')" src="/assets/images/status/redlight.gif">				
 				
 					<!-- processed date -->
-					{{ order.orderTime.$date | date:'MM/dd hh:mma' }}
+					{{ order.orderTime | date:'MM/dd hh:mma' }}
 				</td>
 				<td style="width: 10%">
 					<a href="" ng-click="loadQuote(order.symbol)"><span ng-class="order.exchange">{{ order.symbol }}</span></a>

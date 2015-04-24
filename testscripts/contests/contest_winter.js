@@ -19,7 +19,7 @@ db.Contests.insert({
 			priceType : "MARKET_AT_CLOSE",
 			quantity : 100,
 			volumeAtOrderTime : 0,
-			commision : 6.99,
+			commission : 6.99,
 			orderTime : new Date(),
 			creationTime: new Date(),
 			expirationTime : ISODate("2014-04-31")
@@ -31,7 +31,7 @@ db.Contests.insert({
 			priceType : "MARKET",
 			quantity : 100,
 			volumeAtOrderTime : 0,
-			commision : 9.99,
+			commission : 9.99,
 			orderTime : new Date(),
 			creationTime: new Date(),
 			expirationTime : ISODate("2014-04-31")

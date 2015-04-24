@@ -19,6 +19,7 @@ import play.libs.Akka
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
 /**
  * Stock Quote Proxy
@@ -136,7 +137,7 @@ object StockQuotes {
     } yield rtQuote.map(q => dbQuote.getOrElse(JS()) ++ q) ?? dbQuote
   }
 
-  def findQuotes(symbols: Seq[String])(fields: String*)(implicit ec: ExecutionContext): Future[Seq[JsValue]] = {
+  def findQuotes(symbols: Seq[String])(fields: String*)(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
     mcQ.find(JS("symbol" -> JS("$in" -> symbols)), fields.toJsonFields).cursor[JsObject].collect[Seq]()
   }
 
