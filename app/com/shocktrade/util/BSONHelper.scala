@@ -2,6 +2,7 @@ package com.shocktrade.util
 
 import java.util.Date
 
+import org.joda.time.DateTime
 import play.api.libs.json.Json.{obj => JS}
 import reactivemongo.bson.{BSONDateTime, BSONDocument => BS, BSONDouble, BSONHandler, BSONObjectID}
 
@@ -31,6 +32,17 @@ object BSONHelper {
     def read(date: BSONDateTime) = new Date(date.value)
 
     def write(date: Date) = BSONDateTime(date.getTime)
+  }
+
+  /**
+   * Joda DateTime to BSON Date Time Handler
+   * @author lawrence.daniels@gmail.com
+   */
+  implicit object JodaDateTimeHandler extends BSONHandler[BSONDateTime, DateTime] {
+
+    def read(date: BSONDateTime) = new DateTime(date.value)
+
+    def write(date: DateTime) = BSONDateTime(date.toDate.getTime)
   }
 
   /**

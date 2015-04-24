@@ -4,6 +4,7 @@ import java.util.UUID
 
 import akka.actor._
 import akka.routing.RoundRobinPool
+import com.shocktrade.models.contest.Contest
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json.{obj => JS, _}
 import play.libs.Akka
@@ -17,7 +18,7 @@ import scala.collection.concurrent.TrieMap
 object WebSocketRelay {
   private val actors = TrieMap[UUID, ActorRef]()
   private val system = Akka.system
-  private val relayActor = system.actorOf(Props[WebSocketRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)))
+  private val relayActor = system.actorOf(Props[WebSocketRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "WebSocketRelay")
 
   /**
    * Broadcasts the given message to all connected users
@@ -45,14 +46,19 @@ object WebSocketRelay {
    */
   class WebSocketRelayActor() extends Actor with ActorLogging {
     override def receive = {
+      case ContestCreated(contest) =>
+        actors.foreach { case (uid, actor) =>
+          actor ! JS("action" -> "contest_created", "data" -> contest)
+        }
+
       case ContestUpdated(contest) =>
         actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "contestUpdate", "data" -> contest)
+          actor ! JS("action" -> "contest_updated", "data" -> contest)
         }
 
       case QuoteUpdated(quote) =>
         actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "quoteUpdate", "data" -> quote)
+          actor ! JS("action" -> "quote_updated", "data" -> quote)
         }
 
       case message =>
@@ -61,7 +67,9 @@ object WebSocketRelay {
     }
   }
 
-  case class ContestUpdated(contest: JsValue)
+  case class ContestCreated(contest: Contest)
+
+  case class ContestUpdated(contest: Contest)
 
   case class QuoteUpdated(quote: JsValue)
 

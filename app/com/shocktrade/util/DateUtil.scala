@@ -397,6 +397,11 @@ object DateUtil {
   implicit def jodaTime2JavaDate(time: DateTime): Date = time.toDate
 
   /**
+   * Provides dynamic conversion from java.uil.Date to JodaTime
+   */
+  implicit def javaDate2JodaTime(time: Date): DateTime = new DateTime(time)
+
+  /**
    * Implicit conversion for dates
    * @author lawrence.daniels@gmail.com
    */

@@ -3,20 +3,19 @@ package com.shocktrade.actors
 import akka.actor.{Actor, ActorLogging}
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.ContestActor._
-import com.shocktrade.actors.WebSocketRelay.ContestUpdated
+import com.shocktrade.actors.WebSocketRelay.{ContestCreated, ContestUpdated}
 import com.shocktrade.controllers.Application._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
-import play.api.libs.json.Json
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS, BSON, BSONObjectID}
+import reactivemongo.bson.{BSONDocument => BS, BSONObjectID}
 import reactivemongo.core.commands.{FindAndModify, Update}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 /**
- * Contest Actor
+ * Contest I/O Actor
  * @author lawrence.daniels@gmail.com
  */
 class ContestActor extends Actor with ActorLogging {
@@ -30,7 +29,7 @@ class ContestActor extends Actor with ActorLogging {
       val mySender = sender()
       (for {
         order <- findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
-        contest <- db.command(FindAndModify(
+        contest_? <- db.command(FindAndModify(
           collection = "Contests",
           query = BS("_id" -> contestId, "participants._id" -> playerId),
           modify = new Update(BS(
@@ -39,13 +38,34 @@ class ContestActor extends Actor with ActorLogging {
             fetchNewObject = true),
           fields = Some(fields.toBsonFields),
           upsert = false))
-      } yield contest) map (_ flatMap (_.seeAsOpt[Contest])) foreach (mySender ! _) // ~> Option[Contest]
+      } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          contest_?.foreach(WebSocketRelay ! ContestUpdated(_))
+        case Failure(e) => mySender ! e
+      }
 
     case CreateContest(contest) =>
       val mySender = sender()
-      mcC.insert(contest) foreach { lastError =>
-        mySender ! lastError
-        WebSocketRelay ! ContestUpdated(Json.toJson(contest))
+      mcC.insert(contest) onComplete {
+        case Success(lastError) =>
+          mySender ! lastError
+          WebSocketRelay ! ContestCreated(contest)
+        case Failure(e) => mySender ! e
+      }
+
+    case CreateMessage(contestId, message, fields) =>
+      val mySender = sender()
+      db.command(FindAndModify(
+        collection = "Contests",
+        query = BS("_id" -> contestId),
+        modify = new Update(BS("$addToSet" -> fields.toBsonFields), fetchNewObject = true),
+        fields = Some(BS("messages" -> 1)), upsert = false))
+        .map(_ flatMap (_.seeAsOpt[Contest])) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          contest_?.foreach(WebSocketRelay ! ContestUpdated(_))
+        case Failure(e) => mySender ! e
       }
 
     case CreateOrder(contestId, playerId, order, fields) =>
@@ -56,19 +76,24 @@ class ContestActor extends Actor with ActorLogging {
         modify = new Update(BS("$addToSet" -> BS("participants.$.orders" -> order)), fetchNewObject = true),
         fields = Some(fields.toBsonFields),
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
-        case Success(contests) => mySender ! contests
+        case Success(contest_?) =>
+          mySender ! contest_?
+          contest_?.foreach(WebSocketRelay ! ContestUpdated(_))
         case Failure(e) => mySender ! e
       }
 
     case FindContestByID(id, fields) =>
       val mySender = sender()
-      findContestByID(id, fields).foreach(mySender ! _) // ~> Option[Contest]
+      findContestByID(id, fields) onComplete {
+        case Success(contest_?) => mySender ! contest_?
+        case Failure(e) => mySender ! e
+      }
 
     case FindContests(searchOptions, fields) =>
       val mySender = sender()
       mcC.find(createQuery(searchOptions), fields.toBsonFields).sort(SortFields.toBsonFields)
         .cursor[Contest]
-        .collect[Seq]().onComplete {
+        .collect[Seq]() onComplete {
         case Success(contests) => mySender ! contests
         case Failure(e) => mySender ! e
       }
@@ -77,7 +102,7 @@ class ContestActor extends Actor with ActorLogging {
       val mySender = sender()
       mcC.find(BS("participants._id" -> playerId, "status" -> ContestStatus.ACTIVE), fields.toBsonFields).sort(SortFields.toBsonFields)
         .cursor[Contest]
-        .collect[Seq]().onComplete {
+        .collect[Seq]() onComplete {
         case Success(contests) => mySender ! contests
         case Failure(e) => mySender ! e
       }
@@ -86,16 +111,10 @@ class ContestActor extends Actor with ActorLogging {
       val mySender = sender()
       mcC.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))), fields.toBsonFields)
         .cursor[Contest]
-        .collect[Seq](1).foreach(mySender ! _.headOption) // ~> Option[Contest]
-
-    case CreateMessage(contestId, message, fields) =>
-      val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId),
-        modify = new Update(BS("$addToSet" -> fields.toBsonFields), fetchNewObject = true),
-        fields = Some(BS("messages" -> 1)), upsert = false))
-        .map(_ flatMap (_.seeAsOpt[Contest])).foreach(mySender ! _) // ~> Option[Contest]
+        .collect[Seq](1) onComplete {
+        case Success(contests) => mySender ! contests.headOption
+        case Failure(e) => mySender ! e
+      }
 
     case message =>
       log.info(s"Unhandled message: $message (${message.getClass.getName})")
