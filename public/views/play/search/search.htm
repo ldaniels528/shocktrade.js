@@ -20,48 +20,54 @@
 				</legend>
 				<div class="availGamesContainer">
 					<table style="width: 100%">
+						<tr>
+							<th class="left" style="padding-left: 20px">Game Name</th>
+							<th class="left" style="padding-left: 20px">Leader</th>
+							<th class="right">Buy In</th>
+							<th class="right">Players</th>
+							<th class="right">Modifiers</th>
+						</tr>
 						<tr ng-repeat="c in searchResults" class="clickable" ng-click="loadContest(c._id.$oid)"
 							ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
 							<td style="width: 30%">
-							<span ng-if="c.status == 'ACTIVE'">
-								<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
-								<img ng-if="c.playerCount + 1 == c.maxParticipants" src="/assets/images/status/yellowlight.gif">
-								<img ng-if="c.playerCount >= c.maxParticipants" src="/assets/images/status/redlight.png">
-							</span>
-								<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
-								<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-								<a href="">{{ c.name }}</a>
+								<span ng-if="c.status == 'ACTIVE'">
+									<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
+									<img ng-if="c.playerCount + 1 == c.maxParticipants" src="/assets/images/status/yellowlight.gif">
+									<img ng-if="c.playerCount >= c.maxParticipants" src="/assets/images/status/redlight.png">
+								</span>
+									<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
+									<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
+									<a href="">{{ c.name }}</a>
 							</td>
 							<td style="width: 20%">
-							<span ng-show="c.leader">
-								<img ng-if="c.status == 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
-								<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
-								<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
-								<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
-								<span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-								<changearrow value="{{ c.leader.gainLoss }}" />
-								{{ c.leader.gainLoss | number:2 }}%</span>
-							</span>
+								<span ng-show="c.leader">
+									<img ng-if="c.status == 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
+									<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
+									<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
+									<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
+									<span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+									<changearrow value="{{ c.leader.gainLoss }}" />
+									{{ c.leader.gainLoss | number:2 }}%</span>
+								</span>
 							</td>
 							<td style="width: 15%">
 								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'" style="float: right">$ {{ c.startingBalance | number }}</span>
 							</td>
-							<td style="width: 5%">&nbsp;</td>
-							<td style="width: 15%; text-align: left">
+							<td style="width: 15%; text-align: right">
 								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
 								<img src="/assets/images/objects/friend_header.gif">
-							<span ng-if="c.status == 'ACTIVE'">
-								/ {{ c.maxParticipants < 10 ? '0' + c.maxParticipants : c.maxParticipants }}
-							</span>
+								<span ng-if="c.status == 'ACTIVE'">
+									/ {{ c.maxParticipants < 10 ? '0' + c.maxParticipants : c.maxParticipants }}
+								</span>
 							</td>
-							<td style="width: 15%">
-							<span style="float: right">
-								<img ng-if="c.ranked" src="/assets/images/objects/reward.png">
-								<img ng-if="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
-								<img ng-if="false" src="/assets/images/objects/sharing_header.png">
-								<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
-								<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
-							</span>
+							<td style="width: 20%">
+								<span style="float: right">
+									<img ng-if="c.ranked" src="/assets/images/objects/reward.png">
+									<img ng-if="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
+									<img ng-if="false" src="/assets/images/objects/sharing_header.png">
+									<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
+									<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
+								</span>
 							</td>
 						</tr>
 					</table>
@@ -70,90 +76,67 @@
 		</div>
 		<hr style="color: #888888; margin: 5px 0px 5px 0px">
 
-		<div style="display: inline; float: left; width: 59%">
+		<div style="display: inline; float: left; width: 79%">
 			<fieldset>
 				<legend>Game Filtering Options</legend>
-				<table style="width: 100%">	
+				<table style="width: 100%">
 					<tr>
 						<td class="gs_left">
 							<input type="checkbox" ng-model="searchOptions.activeOnly"> 
 							<img src="/assets/images/status/online.png"> Open/Available 
 						</td>
 						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.protected"> 
-							<img src="/assets/images/objects/protected.png"> Invitation Only
-						</td>						
-					</tr>
-					<tr>	
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.perksAllowed"> 
-							<img src="/assets/images/objects/gift.png"> Perks Allowed
-						</td>			
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.acquaintances"> 
-							<img src="/assets/images/objects/home.gif"> My Neighbors
-						</td>
-					</tr>	
-					<tr>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.ranked"> 
-							<img src="/assets/images/objects/reward.png"> Ranked
-						</td>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.currencies"> 
-							<img src="/assets/images/objects/gold-coin-stack.png"> Currencies
-						</td>										
-					</tr>
-					<tr>
-						<td class="gs_left">
 							<input type="checkbox" ng-model="searchOptions.levelCapAllowed"> 
 							<img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)
-						</td>			
+						</td>
 						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.friendsOnly"> 
+							<input type="checkbox" ng-model="searchOptions.friendsOnly">
 							<img src="/assets/images/objects/friend_header.gif"> My Friends
-						</td>		
-					</tr>	
+						</td>
+					</tr>
 					<tr>
+						<td class="gs_left">
+							<input type="checkbox" ng-model="searchOptions.perksAllowed">
+							<img src="/assets/images/objects/gift.png"> Perks Allowed
+						</td>
 						<td>
-							<select ng-disable="!searchOptions.levelCapAllowed" ng-controller="RewardsCtrl" ng-model="searchOptions.levelCap" style="margin-top: 3px; font-size: 10pt">
-								<option ng-repeat="level in levels" 
+							<select ng-disable="!searchOptions.levelCapAllowed"
+									ng-controller="RewardsCtrl"
+									ng-model="searchOptions.levelCap"
+									style="margin-top: 3px">
+								<option ng-repeat="level in levels"
 										style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
 										value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
-							</select>				
+							</select>
 						</td>
 						<td>
-							<select ng-disable="!searchOptions.friendsOnly" ng-model="searchOptions.friend" style="margin-top: 3px; font-size: 10pt">
-								<option ng-repeat="friend in getRegisteredFriends()" 
+							<select ng-disable="!searchOptions.friendsOnly"
+									ng-model="searchOptions.friend"
+									style="margin-top: 3px">
+								<option ng-repeat="friend in getRegisteredFriends()"
 										style="background-image:url(http://graph.facebook.com/{{friend.id }}/picture); background-repeat: no-repeat; background-size:16px 16px; text-indent: 16px"
 										value="{{ friend.id }}">{{ friend.name }}</option>
-							</select>				
+							</select>
 						</td>
-					</tr>				
+					</tr>
 				</table>
 			</fieldset>
 		</div>
-		<div style="display: inline; float: right; width: 39%">
+		<div style="display: inline; float: right; width: 19%">
 			<div style="display: block; width: 100%">
-				<div style="display: inline; float: left; width: 58%">
-					<fieldset>
-						<legend>Game Type</legend>
-						<div><input type="radio" ng-model="gameType" value="PRACTICE"> Practice</div>			
-						<div><input type="radio" ng-model="gameType" value="NORMAL"> Normal</div>
-						<div><input type="radio" ng-model="gameType" value="PYRAMID"> Pyramid</div>
-						<div><input type="radio" ng-model="gameType" value="ELIMINATION"> Elimination</div>
-						<div><input type="radio" ng-model="gameType" value="WINNER_TAKES_ALL">  Winner-Takes-All</div>
-					</fieldset>
-				</div>
-				<div style="display: inline; float: right; width: 36%">
-					<fieldset>
-						<legend>Legend</legend>
-						<div><img src="/assets/images/status/greenlight.png"> Open</div>
-						<div><img src="/assets/images/status/yellowlight.gif"> Almost Full</div>
-						<div><img src="/assets/images/status/redlight.png"> Full</div>
-						<div><img src="/assets/images/status/offlight.png"> Offline</div>
-					</fieldset>
-				</div>
+				<fieldset>
+					<legend>Legend</legend>
+					<table style="width: 100%">
+					<tr>
+						<td><img src="/assets/images/status/greenlight.png"> Open</td>
+						<td><img src="/assets/images/status/yellowlight.gif"> Almost Full</td>
+					</tr>
+					<tr>
+						<td><img src="/assets/images/status/redlight.png"> Full</td>
+						<td><img src="/assets/images/status/offlight.png"> Offline</td>
+					</tr>
+					</table>
+				</fieldset>
 			</div>
 		</div>
 		<br style="clear: both" />
