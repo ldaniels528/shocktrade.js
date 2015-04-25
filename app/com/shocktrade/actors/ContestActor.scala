@@ -98,7 +98,7 @@ class ContestActor extends Actor with ActorLogging {
         case Failure(e) => mySender ! e
       }
 
-    case FindContestsByPlayerID(playerId, fields) => // ~> Either[Seq[Contest], Exception]
+    case FindContestsByPlayerID(playerId, fields) =>
       val mySender = sender()
       mc.find(BS("participants._id" -> playerId, "status" -> ContestStatus.ACTIVE), fields.toBsonFields).sort(SortFields.toBsonFields)
         .cursor[Contest]
@@ -116,11 +116,11 @@ class ContestActor extends Actor with ActorLogging {
         case Failure(e) => mySender ! e
       }
 
-    case JoinContest(id, participant) =>
+    case JoinContest(contestId, participant) =>
       val mySender = sender()
       db.command(FindAndModify(
         collection = "Contests",
-        query = BS("_id" -> id),
+        query = BS("_id" -> contestId),
         modify = new Update(BS("$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
         fields = None,
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
@@ -135,8 +135,8 @@ class ContestActor extends Actor with ActorLogging {
       unhandled(message)
   }
 
-  private def findContestByID(id: BSONObjectID, fields: Seq[String]): Future[Option[Contest]] = {
-    mc.find(BS("_id" -> id), fields.toBsonFields).cursor[Contest].collect[Seq](1).map(_.headOption)
+  private def findContestByID(contestId: BSONObjectID, fields: Seq[String]): Future[Option[Contest]] = {
+    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].collect[Seq](1).map(_.headOption)
   }
 
   private def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID): Future[Option[Order]] = {
@@ -189,8 +189,6 @@ object ContestActor {
 
   case class FindOrderByID(contestId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String])
 
-  case class FindOrders(id: BSONObjectID, playerId: BSONObjectID)
-
-  case class JoinContest(id: BSONObjectID, participant: Participant)
+  case class JoinContest(contestId: BSONObjectID, participant: Participant) extends ContestMutation
 
 }

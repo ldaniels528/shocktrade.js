@@ -186,7 +186,9 @@ object ContestResources extends Controller with MongoExtras {
           contest <- Contests.joinContest(id.toBSID, participant)
         } yield contest) map (c => Ok(Json.toJson(c)))
       case Success(None) => Future.successful(Ok(JS("error" -> "Internal error")))
-      case Failure(e) => Future.successful(Ok(JS("error" -> "Internal error")))
+      case Failure(e) =>
+        Logger.error("Contest Join JSON parsing failed", e)
+        Future.successful(Ok(JS("error" -> "Internal error")))
     }
   }
 
@@ -320,7 +322,7 @@ object ContestResources extends Controller with MongoExtras {
   implicit val joinContestFormReads: Reads[JoinContestForm] = (
     (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
-      (__ \ "player" \ "facebookId").read[String])(JoinContestForm.apply _)
+      (__ \ "player" \ "facebookID").read[String])(JoinContestForm.apply _)
 
   /**
    * contestId = 553aa9f15dd0bcf00087f6ea, playerId = 51a308ac50c70a97d375a6b2,

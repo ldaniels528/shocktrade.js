@@ -21,46 +21,66 @@ object Contests {
   private val writer = system.actorOf(Props[ContestActor], name = "ContestWriter")
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (writer ? CloseOrder(contestId, playerId, orderId, fields)).mapTo[Option[Contest]]
+    (writer ? CloseOrder(contestId, playerId, orderId, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
   def createContest(contest: Contest)(implicit timeout: Timeout) = {
-    (writer ? CreateContest(contest)).mapTo[LastError]
+    (writer ? CreateContest(contest)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[LastError]
+    }
   }
 
   def createMessage(contestId: BSONObjectID, message: Message)(fields: String*)(implicit timeout: Timeout) = {
-    (writer ? CreateMessage(contestId, message, fields)).mapTo[Option[Contest]]
+    (writer ? CreateMessage(contestId, message, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(fields: String*)(implicit timeout: Timeout) = {
-    (writer ? CreateOrder(contestId, playerId, order, fields)).mapTo[Option[Contest]]
+    (writer ? CreateOrder(contestId, playerId, order, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
   def findContestByID(id: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (reader ? FindContestByID(id, fields)).mapTo[Option[Contest]]
+    (reader ? FindContestByID(id, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
   def findContests(searchOptions: SearchOptions)(fields: String*)(implicit timeout: Timeout) = {
-    (reader ? FindContests(searchOptions, fields)).mapTo[Seq[Contest]]
+    (reader ? FindContests(searchOptions, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Seq[Contest]]
+    }
   }
 
   def findContestsByPlayerID(playerId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (reader ? FindContestsByPlayerID(playerId, fields)).map {
+    (reader ? FindContestsByPlayerID(playerId, fields)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Seq[Contest]]
     }
   }
 
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (reader ? FindOrderByID(contestId, orderId, fields)).mapTo[Option[Order]]
-  }
-
-  def findOrders(id: BSONObjectID, playerId: BSONObjectID)(implicit timeout: Timeout) = {
-    (reader ? FindOrders(id, playerId)).mapTo[Seq[Order]]
+    (reader ? FindOrderByID(contestId, orderId, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
   def joinContest(id: BSONObjectID, participant: Participant)(implicit timeout: Timeout) = {
-    (reader ? JoinContest(id, participant)).mapTo[Contest]
+    (writer ? JoinContest(id, participant)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
   }
 
 }
