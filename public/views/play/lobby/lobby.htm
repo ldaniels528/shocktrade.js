@@ -35,7 +35,7 @@
 		<div ng-show="contest.status == 'ACTIVE'" style="display: block; width: 100%; padding: 2px 2px 2px 2px">
 			<!-- 'Join' option -->
 			<div style="display: inline; float: left">
-				<button ng-show="authenticated && contest.playerCount < contest.maxParticipants && !containsPlayer(contest, MySession.userProfile.name)"
+				<button ng-show="authenticated && contest.playerCount < contest.maxParticipants && !joinedParticipant(contest, MySession.userProfile)"
 						ng-click="joinGame()"
 						class="joinButton">Join Game</button>
 			</div>
@@ -43,7 +43,7 @@
 			<!-- 'Quit' or 'Delete' option -->
 			<div style="display: inline; float: right">
 				<button ng-show="contest.creator.name == MySession.userProfile.name" class="quitButton" ng-click="deleteGame()">Delete Game</button>
-				<button ng-show="contest.creator.name != MySession.userProfile.name && joinedParticipant(contest, MySession.userProfile.name)" class="quitButton" ng-click="quitGame()">Quit Game</button>
+				<button ng-show="contest.creator.name != MySession.userProfile.name && joinedParticipant(contest, MySession.userProfile)" class="quitButton" ng-click="quitGame()">Quit Game</button>
 			</div>
 			<br style="clear: both">
 		</div>
@@ -60,12 +60,17 @@
 						<a ng-show="p.name" style="color: #0000ff" href="" ng-click="showGamerCard(p.name)">{{ p.name }}</a>
 						<span ng-hide="p.name" style="color: #00a044">
 							Open/Available 
-							<button class="invite" ng-show="containsPlayer(contest, MySession.userProfile.name)" 
-									ng-click="invitePlayer()"
-									style="float: right; margin-right: 20px">Invite</button>
-							<button ng-hide="containsPlayer(contest, MySession.userProfile.name)" 
+							<button class="invite"
+									ng-show="joinedParticipant(contest, MySession.userProfile)"
 									style="float: right; margin-right: 20px"
-									ng-click="joinGame()">Join</button>
+									ng-click="invitePlayer(p)">Invite</button>
+
+							<button ng-disable="p.joiningGame"
+									ng-hide="joinedParticipant(contest, MySession.userProfile)"
+									style="float: right; margin-right: 20px"
+									ng-click="joinGame(p)">Join</button>
+
+							<img ng-show="p.joiningGame" src="/assets/images/status/loading.gif">
 						</span>
 					</span>
 					<div style="display: inline; float: right; margin-right: 10px">
