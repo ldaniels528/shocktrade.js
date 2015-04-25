@@ -1,3 +1,13 @@
+db.Contests.update({name: "Girl Power"}, { $set :
+{ creator : { "_id" : ObjectId("51a308ac50c70a97d375a6b8"), "name" : "seralovett", "facebookID" : "1589191728" }}});
+
+db.Contests.update({name: "Girl Power"}, { $set :
+{ "participants.$.name" : "seralovettt" } });
+
+
+
+
+
 curl -i -H "Content-Type: application/json" -X POST -d '
 {
 	"_id" : { "$oid" : "5206fe9d84ae3b6ecab176b6" },

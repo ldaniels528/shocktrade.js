@@ -35,13 +35,15 @@
 		<div ng-show="contest.status == 'ACTIVE'" style="display: block; width: 100%; padding: 2px 2px 2px 2px">
 			<!-- 'Join' option -->
 			<div style="display: inline; float: left">
-				<button ng-show="authenticated && contest.playerCount < contest.maxParticipants && !containsPlayer(contest, MySession.userProfile.name)" class="joinButton">Join Game</button>
+				<button ng-show="authenticated && contest.playerCount < contest.maxParticipants && !containsPlayer(contest, MySession.userProfile.name)"
+						ng-click="joinGame()"
+						class="joinButton">Join Game</button>
 			</div>
 			
 			<!-- 'Quit' or 'Delete' option -->
 			<div style="display: inline; float: right">
-				<button ng-show="contest.creator == MySession.userProfile.name" class="quitButton" ng-click="deleteGame()">Delete Game</button>
-				<button ng-show="contest.creator != MySession.userProfile.name && joinedPariticpant(contest, MySession.userProfile.name)" class="quitButton" ng-click="quitGame()">Quit Game</button>
+				<button ng-show="contest.creator.name == MySession.userProfile.name" class="quitButton" ng-click="deleteGame()">Delete Game</button>
+				<button ng-show="contest.creator.name != MySession.userProfile.name && joinedParticipant(contest, MySession.userProfile.name)" class="quitButton" ng-click="quitGame()">Quit Game</button>
 			</div>
 			<br style="clear: both">
 		</div>
@@ -62,7 +64,8 @@
 									ng-click="invitePlayer()"
 									style="float: right; margin-right: 20px">Invite</button>
 							<button ng-hide="containsPlayer(contest, MySession.userProfile.name)" 
-									style="float: right; margin-right: 20px">Join</button>
+									style="float: right; margin-right: 20px"
+									ng-click="joinGame()">Join</button>
 						</span>
 					</span>
 					<div style="display: inline; float: right; margin-right: 10px">
@@ -93,34 +96,4 @@
 	<br style="clear: both">
 </div>
 
-<script type="text/ng-template" id="invite_player.htm">
-	<div class="modal-header">
-   		<h3>Send Game Invite(s)</h3>
-    </div>
-    <div class="modal-body">
-		<div class="gameline">
-			{{ getInvitedCount() }} Friend(s) Selected
-		</div>
-		<div style="display: inline; float: left; width: 60%">
-			<div class="friendsContainer">
-				<table style="width: 100%">
-					<tr ng-repeat="friend in MySession.fbFriends">
-						<td>
-							<input type="checkbox" ng-model="invites[$index]">
-							<avatar id="{{ friend.id }}" style="width: 16px; height: 16px" />
-							{{ friend.name }}
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div style="display: inline; float: right; width: 40%">
-			<textarea style="width: 200px; height: 200px">Come play with us!</textarea>
-		</div>
-		<br style="clear: both">
-    </div>
-	<div class="modal-footer">
-    	<button class="btn btn-primary" ng-click="ok()">Send</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
-</script>
+<div ng-include src="'/assets/views/play/lobby/invite_player_dialog.htm'"></div>

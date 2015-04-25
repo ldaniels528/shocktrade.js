@@ -13,6 +13,7 @@ object PriceType extends Enumeration {
   val LIMIT = Value("LIMIT")
   val MARKET = Value("MARKET")
   val MARKET_ON_CLOSE = Value("MARKET_ON_CLOSE")
+  val STOP_LIMIT = Value("STOP_LIMIT")
 
   /**
    * Price Type Format

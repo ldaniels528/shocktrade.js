@@ -59,4 +59,8 @@ object Contests {
     (reader ? FindOrders(id, playerId)).mapTo[Seq[Order]]
   }
 
+  def joinContest(id: BSONObjectID, participant: Participant)(implicit timeout: Timeout) = {
+    (reader ? JoinContest(id, participant)).mapTo[Contest]
+  }
+
 }

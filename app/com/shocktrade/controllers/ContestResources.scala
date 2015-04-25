@@ -6,6 +6,8 @@ import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
+import com.shocktrade.models.contest.OrderType.OrderType
+import com.shocktrade.models.contest.PriceType.PriceType
 import com.shocktrade.models.contest.SearchOptions._
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.StockQuotes
@@ -67,7 +69,7 @@ object ContestResources extends Controller with MongoExtras {
   /**
    * Creates a new contest
    */
-  def createNewContest = Action.async { implicit request =>
+  def createContest = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[ContestForm])) match {
       case Success(Some(form)) =>
         Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message)))
@@ -97,19 +99,43 @@ object ContestResources extends Controller with MongoExtras {
     )
   }
 
+  /**
+   * Creates a new order
+   * @param contestId the given contest ID
+   * @param playerId the given player ID
+   * @return
+   */
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
-    request.body.asJson.flatMap(_.asOpt[Order]) match {
-      case Some(order) =>
-        Contests.createOrder(contestId.toBSID, playerId.toBSID, order)("participants.name", "participants.orders", "participants.orderHistory") map {
-          case Some(contest) =>
-            contest.participants.find(_.id == playerId) match {
-              case Some(player) => Ok(Json.toJson(player))
-              case None => BadRequest("No player found")
-            }
+    Logger.info(s"json = ${request.body.asJson}")
+    Try(request.body.asJson.map(_.as[OrderForm])) match {
+      case Success(Some(form)) =>
+        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(form))("participants.name", "participants.orders", "participants.orderHistory") map {
+          case Some(contest) => Ok(Json.toJson(contest))
           case None => BadRequest(s"Contest $contestId not found")
         }
-      case None => Future.successful(BadRequest("No order information"))
+      case Success(None) =>
+        Future.successful(BadRequest("No order information"))
+      case Failure(e) =>
+        Logger.error(s"Error parsing JSON", e)
+        Future.successful(BadRequest("Invalid JSON body"))
     }
+  }
+
+  private def makeOrder(form: OrderForm) = {
+    Order(
+      symbol = form.symbol,
+      exchange = form.exchange,
+      creationTime = new Date(),
+      expirationTime = None, // TODO set once orderTerm is implemented
+      orderType = form.orderType,
+      price = form.limitPrice,
+      priceType = form.priceType,
+      processedTime = None,
+      quantity = form.quantity,
+      commission = 9.99,
+      emailNotify = form.emailNotify,
+      volumeAtOrderTime = form.volumeAtOrderTime
+    )
   }
 
   def getAccessRestrictions = Action {
@@ -149,6 +175,19 @@ object ContestResources extends Controller with MongoExtras {
     Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map { contests =>
       contests.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
     } map (symbols => Ok(JsArray(symbols.distinct.map(JsString))))
+  }
+
+  def joinContest(id: String) = Action.async { implicit request =>
+    Try(request.body.asJson map (_.as[JoinContestForm])) match {
+      case Success(Some(js)) =>
+        (for {
+          startingBalance <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
+          participant = Participant(js.playerName, js.facebookId, fundsAvailable = startingBalance, id = js.playerId.toBSID)
+          contest <- Contests.joinContest(id.toBSID, participant)
+        } yield contest) map (c => Ok(Json.toJson(c)))
+      case Success(None) => Future.successful(Ok(JS("error" -> "Internal error")))
+      case Failure(e) => Future.successful(Ok(JS("error" -> "Internal error")))
+    }
   }
 
   def createChatMessage(contestId: String) = Action.async { implicit request =>
@@ -273,6 +312,40 @@ object ContestResources extends Controller with MongoExtras {
       (__ \ "perksAllowed").readNullable[Boolean] and
       (__ \ "restrictionEnabled").readNullable[Boolean] and
       (__ \ "restriction").readNullable[AccessRestrictionType])(ContestForm.apply _)
+
+  case class JoinContestForm(playerId: String,
+                             playerName: String,
+                             facebookId: String)
+
+  implicit val joinContestFormReads: Reads[JoinContestForm] = (
+    (__ \ "player" \ "id").read[String] and
+      (__ \ "player" \ "name").read[String] and
+      (__ \ "player" \ "facebookId").read[String])(JoinContestForm.apply _)
+
+  /**
+   * contestId = 553aa9f15dd0bcf00087f6ea, playerId = 51a308ac50c70a97d375a6b2,
+   * form = {"emailNotify":true,"symbol":"AMD","limitPrice":2.3,"exchange":"NasdaqCM","volumeAtOrderTime":15001242,"orderType":"BUY",
+   * "priceType":"MARKET","orderTerm":"GOOD_FOR_7_DAYS","quantity":"1000"}
+   */
+  case class OrderForm(symbol: String,
+                       exchange: String,
+                       limitPrice: BigDecimal,
+                       orderType: OrderType,
+                       priceType: PriceType,
+                       //orderTerm: OrderTermType,
+                       quantity: Int,
+                       volumeAtOrderTime: Long,
+                       emailNotify: Boolean)
+
+  implicit val orderFormReads: Reads[OrderForm] = (
+    (__ \ "symbol").read[String] and
+      (__ \ "exchange").read[String] and
+      (__ \ "limitPrice").read[BigDecimal] and
+      (__ \ "orderType").read[OrderType] and
+      (__ \ "priceType").read[PriceType] and
+      (__ \ "quantity").read[String].map(_.toInt) and
+      (__ \ "volumeAtOrderTime").read[Long] and
+      (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 

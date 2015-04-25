@@ -13,9 +13,9 @@ import play.api.libs.json.Json.{obj => JS}
 class WebSocketHandler(out: ActorRef) extends Actor with ActorLogging {
   private val uuid = UUID.randomUUID()
 
-  override def preStart() = WebSocketRelay.register(uuid, self)
+  override def preStart() = WebSockets.register(uuid, self)
 
-  override def postStop() = WebSocketRelay.unregister(uuid)
+  override def postStop() = WebSockets.unregister(uuid)
 
   override def receive = {
     case message: JsValue =>

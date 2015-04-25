@@ -12,10 +12,10 @@ import play.libs.Akka
 import scala.collection.concurrent.TrieMap
 
 /**
- * Web Socket Relay
+ * Web Sockets Proxy
  * @author lawrence.daniels@gmail.com
  */
-object WebSocketRelay {
+object WebSockets {
   private val actors = TrieMap[UUID, ActorRef]()
   private val system = Akka.system
   private val relayActor = system.actorOf(Props[WebSocketRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "WebSocketRelay")

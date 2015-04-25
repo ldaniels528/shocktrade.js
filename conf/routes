@@ -29,9 +29,10 @@ GET		/api/charts/stock/:symbol/:size/:range			com.shocktrade.controllers.ChartRe
 GET		/api/charts/ratings/:symbol						com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
 
 # Contests
-PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createNewContest
-GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContestByID(id)
+PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createContest
 PUT		/api/contest/:id/chat       					com.shocktrade.controllers.ContestResources.createChatMessage(id)
+GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContestByID(id)
+POST	/api/contest/:id/join           				com.shocktrade.controllers.ContestResources.joinContest(id)
 PUT		/api/contest/:id/order/:playerId				com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
 DELETE	/api/contest/:id/order/:playerId/:orderId		com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
 GET		/api/contest/:id/player/:name					com.shocktrade.controllers.ContestResources.getContestParticipant(id, name)

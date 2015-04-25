@@ -26,6 +26,7 @@ case class Order(symbol: String,
                  quantity: Int,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
+                 volumeAtOrderTime: Long,
                  id: BSONObjectID = BSONObjectID.generate)
 
 /**
@@ -46,6 +47,7 @@ object Order {
       (__ \ "quantity").read[Int] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "emailNotify").read[Boolean] and
+      (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "_id").read[BSONObjectID])(Order.apply _)
 
   implicit val orderWrites: Writes[Order] = (
@@ -60,6 +62,7 @@ object Order {
       (__ \ "quantity").write[Int] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "emailNotify").write[Boolean] and
+      (__ \ "volumeAtOrderTime").write[Long] and
       (__ \ "_id").write[BSONObjectID])(unlift(Order.unapply))
 
   implicit object OrderReader extends BSONDocumentReader[Order] {
@@ -75,6 +78,7 @@ object Order {
       doc.getAs[Int]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Boolean]("emailNotify").get,
+      doc.getAs[Long]("volumeAtOrderTime").get,
       doc.getAs[BSONObjectID]("_id").get
     )
   }
@@ -92,7 +96,8 @@ object Order {
       "processedTime" -> order.processedTime,
       "quantity" -> order.quantity,
       "commission" -> order.commission,
-      "emailNotify" -> order.emailNotify
+      "emailNotify" -> order.emailNotify,
+      "volumeAtOrderTime" -> order.volumeAtOrderTime
     )
   }
 
