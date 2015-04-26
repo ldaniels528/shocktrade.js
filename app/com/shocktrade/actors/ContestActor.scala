@@ -3,7 +3,6 @@ package com.shocktrade.actors
 import akka.actor.{Actor, ActorLogging}
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.ContestActor._
-import com.shocktrade.actors.WebSockets.{ContestCreated, ContestUpdated}
 import com.shocktrade.controllers.Application._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
@@ -39,18 +38,14 @@ class ContestActor extends Actor with ActorLogging {
           fields = Some(fields.toBsonFields),
           upsert = false))
       } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+        case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
 
     case CreateContest(contest) =>
       val mySender = sender()
       mc.insert(contest) onComplete {
-        case Success(lastError) =>
-          mySender ! lastError
-          WebSockets ! ContestCreated(contest)
+        case Success(lastError) => mySender ! lastError
         case Failure(e) => mySender ! e
       }
 
@@ -62,9 +57,7 @@ class ContestActor extends Actor with ActorLogging {
         modify = new Update(BS("$addToSet" -> fields.toBsonFields), fetchNewObject = true),
         fields = Some(BS("messages" -> 1)), upsert = false))
         .map(_ flatMap (_.seeAsOpt[Contest])) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+        case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
 
@@ -76,9 +69,7 @@ class ContestActor extends Actor with ActorLogging {
         modify = new Update(BS("$addToSet" -> BS("participants.$.orders" -> order)), fetchNewObject = true),
         fields = Some(fields.toBsonFields),
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+        case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
 
@@ -124,9 +115,10 @@ class ContestActor extends Actor with ActorLogging {
         modify = new Update(BS("$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
         fields = None,
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+        case Success(contest_?) => mySender ! contest_?
+        case Failure(e) => mySender ! e
+      }
+
         case Failure(e) => mySender ! e
       }
 

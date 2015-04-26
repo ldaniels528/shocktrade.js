@@ -47,6 +47,7 @@ object ContestResources extends Controller with MongoExtras {
     Contests.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)("participants.name", "participants.orders", "participants.orderHistory")
       .map(_.orDie(s"Order $orderId could not be canceled"))
       .map(contest => Ok(Json.toJson(contest)))
+      .recover { case e: Exception => Ok(createError(e)) }
   }
 
   /**
@@ -57,12 +58,28 @@ object ContestResources extends Controller with MongoExtras {
     Logger.info(s"SearchOptions = ${request.body.asJson.orNull}")
     Try(request.body.asJson map (_.as[SearchOptions])) match {
       case Success(Some(searchOptions)) =>
-        Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests)))
+        Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests))) recover {
+          case e: Exception => Ok(createError(e))
+        }
       case Success(None) =>
         Future.successful(BadRequest("Search options were expected as JSON body"))
       case Failure(e) =>
         Logger.error(s"${e.getMessage}: json = ${request.body.asJson.orNull}")
         Future.successful(InternalServerError(e.getMessage))
+    }
+  }
+
+  def createChatMessage(contestId: String) = Action.async { implicit request =>
+    request.body.asJson flatMap (_.asOpt[Message]) match {
+      case Some(message) =>
+        Contests.createMessage(contestId.toBSID, message)("messages") map {
+          case Some(contest) => Ok(Json.toJson(contest.messages))
+          case None => Ok(JsArray())
+        } recover {
+          case e: Exception => Ok(createError(e))
+        }
+      case None =>
+        Future.successful(Ok(createError("No message sent")))
     }
   }
 
@@ -72,7 +89,9 @@ object ContestResources extends Controller with MongoExtras {
   def createContest = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[ContestForm])) match {
       case Success(Some(form)) =>
-        Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message)))
+        Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message))) recover {
+          case e: Exception => Ok(createError(e))
+        }
       case Success(None) =>
         Future.successful(BadRequest("Contest form was expected as JSON body"))
       case Failure(e) =>
@@ -106,17 +125,18 @@ object ContestResources extends Controller with MongoExtras {
    * @return
    */
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
-    Logger.info(s"json = ${request.body.asJson}")
     Try(request.body.asJson.map(_.as[OrderForm])) match {
       case Success(Some(form)) =>
         Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(form))("participants.name", "participants.orders", "participants.orderHistory") map {
           case Some(contest) => Ok(Json.toJson(contest))
-          case None => BadRequest(s"Contest $contestId not found")
+          case None => Ok(createError(s"Contest $contestId not found"))
+        } recover {
+          case e: Exception => Ok(createError(e))
         }
       case Success(None) =>
         Future.successful(BadRequest("No order information"))
       case Failure(e) =>
-        Logger.error(s"Error parsing JSON", e)
+        Logger.error(s"Error parsing JSON: json = ${request.body.asJson.orNull}", e)
         Future.successful(BadRequest("Invalid JSON body"))
     }
   }
@@ -145,7 +165,9 @@ object ContestResources extends Controller with MongoExtras {
   def getContestByID(id: String) = Action.async {
     Contests.findContestByID(id.toBSID)() map {
       case Some(contest) => Ok(Json.toJson(contest))
-      case None => BadRequest(s"Contest $id not found")
+      case None => Ok(createError(s"Contest $id not found"))
+    } recover {
+      case e: Exception => Ok(createError(e))
     }
   }
 
@@ -153,7 +175,9 @@ object ContestResources extends Controller with MongoExtras {
     (for {
       contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
       rankings <- produceRankings(contest)
-    } yield rankings) map (Ok(_))
+    } yield rankings) map (Ok(_)) recover {
+      case e: Exception => Ok(createError(e))
+    }
   }
 
   def getContestParticipant(id: String, playerId: String) = Action.async {
@@ -161,7 +185,9 @@ object ContestResources extends Controller with MongoExtras {
       contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
       player = contest.participants.find(_.id == playerId) orDie s"Player $playerId not found"
       enrichedPlayer <- enrichParticipant(player)
-    } yield enrichedPlayer).map(p => Ok(JsArray(Seq(p))))
+    } yield enrichedPlayer).map(p => Ok(JsArray(Seq(p)))) recover {
+      case e: Exception => Ok(createError(e))
+    }
   }
 
   /**
@@ -174,7 +200,9 @@ object ContestResources extends Controller with MongoExtras {
   def getHeldSecurities(playerId: String) = Action.async {
     Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map { contests =>
       contests.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
-    } map (symbols => Ok(JsArray(symbols.distinct.map(JsString))))
+    } map (symbols => Ok(JsArray(symbols.distinct.map(JsString)))) recover {
+      case e: Exception => Ok(createError(e))
+    }
   }
 
   def joinContest(id: String) = Action.async { implicit request =>
@@ -184,24 +212,25 @@ object ContestResources extends Controller with MongoExtras {
           startingBalance <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
           participant = Participant(js.playerName, js.facebookId, fundsAvailable = startingBalance, id = js.playerId.toBSID)
           contest <- Contests.joinContest(id.toBSID, participant)
-        } yield contest) map (c => Ok(Json.toJson(c)))
+        } yield contest) map (c => Ok(Json.toJson(c))) recover {
+          case e: Exception => Ok(createError(e))
+        }
       case Success(None) => Future.successful(Ok(JS("error" -> "Internal error")))
       case Failure(e) =>
         Logger.error("Contest Join JSON parsing failed", e)
-        Future.successful(Ok(JS("error" -> "Internal error")))
+        Future.successful(Ok(createError("Internal error")))
     }
   }
 
-  def createChatMessage(contestId: String) = Action.async { implicit request =>
-    request.body.asJson flatMap (_.asOpt[Message]) match {
-      case Some(message) =>
-        Contests.createMessage(contestId.toBSID, message)("messages") map {
-          case Some(contest) => Ok(Json.toJson(contest.messages))
-          case None => Ok(JsArray())
-        }
-      case None =>
-        Future.successful(Ok(JS("status" -> "error", "message" -> "No message sent")))
     }
+  }
+
+  private def createError(message: String) = {
+    JS("error" -> message)
+  }
+
+  private def createError(e: Exception) = {
+    JS("error" -> e.getMessage)
   }
 
   private def produceRankings(contest: Contest): Future[JsArray] = {

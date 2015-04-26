@@ -4,8 +4,9 @@ import akka.actor.Props
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
-import com.shocktrade.actors.ContestActor
 import com.shocktrade.actors.ContestActor._
+import com.shocktrade.actors.WebSockets.{ContestCreated, ContestUpdated}
+import com.shocktrade.actors.{ContestActor, WebSockets}
 import play.libs.Akka
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.core.commands.LastError
@@ -23,28 +24,40 @@ object Contests {
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
     (writer ? CloseOrder(contestId, playerId, orderId, fields)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
+      case response =>
+        val contest_? = response.asInstanceOf[Option[Contest]]
+        contest_?.foreach(WebSockets ! ContestUpdated(_))
+        contest_?
     }
   }
 
   def createContest(contest: Contest)(implicit timeout: Timeout) = {
     (writer ? CreateContest(contest)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[LastError]
+      case response =>
+        val lastError = response.asInstanceOf[LastError]
+        WebSockets ! ContestCreated(contest)
+        lastError
     }
   }
 
   def createMessage(contestId: BSONObjectID, message: Message)(fields: String*)(implicit timeout: Timeout) = {
     (writer ? CreateMessage(contestId, message, fields)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
+      case response =>
+        val contest_? = response.asInstanceOf[Option[Contest]]
+        contest_?.foreach(WebSockets ! ContestUpdated(_))
+        contest_?
     }
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(fields: String*)(implicit timeout: Timeout) = {
     (writer ? CreateOrder(contestId, playerId, order, fields)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
+      case response =>
+        val contest_? = response.asInstanceOf[Option[Contest]]
+        contest_?.foreach(WebSockets ! ContestUpdated(_))
+        contest_?
     }
   }
 
@@ -79,7 +92,13 @@ object Contests {
   def joinContest(id: BSONObjectID, participant: Participant)(implicit timeout: Timeout) = {
     (writer ? JoinContest(id, participant)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
+      case response =>
+        val contest_? = response.asInstanceOf[Option[Contest]]
+        contest_?.foreach(WebSockets ! ContestUpdated(_))
+        contest_?
+    }
+  }
+
     }
   }
 
