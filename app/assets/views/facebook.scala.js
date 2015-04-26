@@ -1,7 +1,7 @@
 @(appId: String)
 
 var app = angular.module('shocktrade');
-app.factory('Facebook', function($q) {		
+app.factory('Facebook', function($log, $q) {
     var service = {
     	"userID" : null,
     	"auth" : null,

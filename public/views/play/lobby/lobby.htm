@@ -15,6 +15,7 @@
 			<tr>
 				<td class="det">
 					<span style="padding-left: 8px">
+						<avatar id="{{ contest.creator.facebookID }}" style="width: 20px; height: 20px" />
 						<a href="" ng-click="loadGamerCard(contest.creator)">{{ contest.creator.name }}</a>
 					</span>
 				</td>
@@ -63,9 +64,10 @@
 							<button class="invite"
 									ng-show="joinedParticipant(contest, MySession.userProfile)"
 									style="float: right; margin-right: 20px"
-									ng-click="invitePlayer(p)">Invite</button>
+									ng-click="popupInvitePlayerDialog(p)">Invite</button>
 
-							<button ng-disable="p.joiningGame"
+							<button class="join"
+									ng-disable="p.joiningGame"
 									ng-hide="joinedParticipant(contest, MySession.userProfile)"
 									style="float: right; margin-right: 20px"
 									ng-click="joinGame(p)">Join</button>
