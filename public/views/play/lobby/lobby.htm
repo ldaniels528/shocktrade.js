@@ -43,8 +43,17 @@
 			
 			<!-- 'Quit' or 'Delete' option -->
 			<div style="display: inline; float: right">
-				<button ng-show="contest.creator.name == MySession.userProfile.name" class="quitButton" ng-click="deleteGame()">Delete Game</button>
-				<button ng-show="contest.creator.name != MySession.userProfile.name && joinedParticipant(contest, MySession.userProfile)" class="quitButton" ng-click="quitGame()">Quit Game</button>
+				<button ng-show="contest.creator.name == MySession.userProfile.name"
+						ng-click="deleteGame(contest)"
+						class="quitButton">Delete Game</button>
+
+				<button ng-show="contest.creator.name != MySession.userProfile.name && joinedParticipant(contest, MySession.userProfile)"
+						ng-click="quitGame()"
+						ng-disable="quitingGame"
+						class="quitButton">Quit Game</button>
+
+				<img ng-show="quitingGame" src="/assets/images/status/loading.gif">
+				<img ng-hide="quitingGame" src="/assets/images/status/transparent.png">
 			</div>
 			<br style="clear: both">
 		</div>

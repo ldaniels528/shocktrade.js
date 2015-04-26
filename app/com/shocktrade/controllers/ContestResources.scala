@@ -171,6 +171,14 @@ object ContestResources extends Controller with MongoExtras {
     }
   }
 
+  def deleteContestByID(id: String) = Action.async {
+    Contests.deleteContestByID(id.toBSID) map { lastError =>
+      Ok(if(lastError.inError) JS("error" -> lastError.message) else JS())
+    } recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
   def getContestRankings(id: String) = Action.async {
     (for {
       contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
@@ -222,6 +230,12 @@ object ContestResources extends Controller with MongoExtras {
     }
   }
 
+  def quitContest(id: String, playerId: String) = Action.async { implicit request =>
+    Contests.quitContest(id.toBSID, playerId.toBSID) map {
+      case Some(contest) => Ok(Json.toJson(contest))
+      case None => Ok(createError("Contest not found"))
+    } recover {
+      case e: Exception => Ok(createError(e))
     }
   }
 

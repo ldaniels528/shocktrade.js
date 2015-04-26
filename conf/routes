@@ -8,16 +8,16 @@ GET 	/websocket  									com.shocktrade.controllers.Application.webSocket
 GET     /assets/javascripts/facebook.min.js				com.shocktrade.controllers.Application.facebook
 
 # Administrative (Bug Reports, Processing & Sessions)
+PUT		/api/admin/bugreport							com.shocktrade.controllers.BugReportResources.createBugReport
 GET		/api/admin/bugreport/list						com.shocktrade.controllers.BugReportResources.getBugReports
 GET		/api/admin/bugreport/:id						com.shocktrade.controllers.BugReportResources.getBugReport(id)
-PUT		/api/admin/bugreport							com.shocktrade.controllers.BugReportResources.createBugReport
 DELETE	/api/admin/bugreport/:id						com.shocktrade.controllers.BugReportResources.deleteBugReport(id)
 
 # Blog
-GET		/api/blog/id/:id								com.shocktrade.controllers.BlogResources.getBlogPost(id)
-GET		/api/blog/list/:limit							com.shocktrade.controllers.BlogResources.getBlogPosts(limit: Int)
 PUT		/api/blog										com.shocktrade.controllers.BlogResources.createBlogPost()
 POST	/api/blog										com.shocktrade.controllers.BlogResources.updateBlogPost()
+GET		/api/blog/id/:id								com.shocktrade.controllers.BlogResources.getBlogPost(id)
+GET		/api/blog/list/:limit							com.shocktrade.controllers.BlogResources.getBlogPosts(limit: Int)
 DELETE	/api/blog/:id									com.shocktrade.controllers.BlogResources.deleteBlogPost(id)
 
 # Charts
@@ -30,17 +30,26 @@ GET		/api/charts/ratings/:symbol						com.shocktrade.controllers.ChartResources.
 
 # Contests
 PUT     /api/contest                                    com.shocktrade.controllers.ContestResources.createContest
-PUT		/api/contest/:id/chat       					com.shocktrade.controllers.ContestResources.createChatMessage(id)
-GET		/api/contest/:id/find							com.shocktrade.controllers.ContestResources.getContestByID(id)
-POST	/api/contest/:id/join           				com.shocktrade.controllers.ContestResources.joinContest(id)
-PUT		/api/contest/:id/order/:playerId				com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
-DELETE	/api/contest/:id/order/:playerId/:orderId		com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
-GET		/api/contest/:id/player/:name					com.shocktrade.controllers.ContestResources.getContestParticipant(id, name)
+GET		/api/contest/:id    							com.shocktrade.controllers.ContestResources.getContestByID(id)
+DELETE	/api/contest/:id    							com.shocktrade.controllers.ContestResources.deleteContestByID(id)
+
 GET		/api/contest/:id/rankings						com.shocktrade.controllers.ContestResources.getContestRankings(id)
-GET     /api/contest/restrictions                       com.shocktrade.controllers.ContestResources.getAccessRestrictions
-GET 	/api/contests/mine/:playerId					com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
-GET 	/api/contests/positions/:playerId				com.shocktrade.controllers.ContestResources.getHeldSecurities(playerId)
+PUT		/api/contest/:id/chat       					com.shocktrade.controllers.ContestResources.createChatMessage(id)
+
+PUT 	/api/contest/:id/player           				com.shocktrade.controllers.ContestResources.joinContest(id)
+GET		/api/contest/:id/player/:playerId				com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
+DELETE 	/api/contest/:id/player/:playerId         		com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
+
+GET 	/api/contests/player/:playerId					com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
+GET     /api/contests/restrictions                      com.shocktrade.controllers.ContestResources.getAccessRestrictions
 POST	/api/contests/search							com.shocktrade.controllers.ContestResources.contestSearch
+
+# Orders
+PUT		/api/order/:id/:playerId			        	com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
+DELETE	/api/order/:id/:playerId/:orderId       		com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
+
+# Positions
+GET 	/api/positions/:playerId		       		    com.shocktrade.controllers.ContestResources.getHeldSecurities(playerId)
 
 # News
 GET		/api/news/sources								com.shocktrade.controllers.NewsResources.getSources

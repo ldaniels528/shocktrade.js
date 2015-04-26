@@ -5,9 +5,11 @@ import java.util.UUID
 import akka.actor._
 import akka.routing.RoundRobinPool
 import com.shocktrade.models.contest.Contest
+import play.api.Logger
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json.{obj => JS, _}
 import play.libs.Akka
+import reactivemongo.bson.BSONObjectID
 
 import scala.collection.concurrent.TrieMap
 
@@ -31,7 +33,10 @@ object WebSockets {
    * @param uuid the given [[UUID unique identifier]]
    * @param actor the given [[ActorRef]]
    */
-  def register(uuid: UUID, actor: ActorRef) = actors(uuid) = actor
+  def register(uuid: UUID, actor: ActorRef) = {
+    Logger.info(s"Registering web socket actor for session # $uuid...")
+    actors(uuid) = actor
+  }
 
   /**
    * Unregisters the given actor reference
@@ -47,16 +52,25 @@ object WebSockets {
   class WebSocketRelayActor() extends Actor with ActorLogging {
     override def receive = {
       case ContestCreated(contest) =>
+        Logger.info(s"ContestCreated - ${contest.name}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "contest_created", "data" -> contest)
         }
 
+      case ContestDeleted(id) =>
+        Logger.info(s"ContestDeleted - $id")
+        actors.foreach { case (uid, actor) =>
+          actor ! JS("action" -> "contest_deleted", "data" -> JS("id" -> id.stringify))
+        }
+
       case ContestUpdated(contest) =>
+        Logger.info(s"ContestCreated - ${contest.name}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "contest_updated", "data" -> contest)
         }
 
       case QuoteUpdated(quote) =>
+        Logger.info(s"QuoteUpdated - ${quote \ "symbol"}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "quote_updated", "data" -> quote)
         }
@@ -68,6 +82,8 @@ object WebSockets {
   }
 
   case class ContestCreated(contest: Contest)
+
+  case class ContestDeleted(id: BSONObjectID)
 
   case class ContestUpdated(contest: Contest)
 
