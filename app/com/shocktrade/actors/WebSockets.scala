@@ -52,25 +52,21 @@ object WebSockets {
   class WebSocketRelayActor() extends Actor with ActorLogging {
     override def receive = {
       case ContestCreated(contest) =>
-        Logger.info(s"ContestCreated - ${contest.name}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "contest_created", "data" -> contest)
         }
 
       case ContestDeleted(id) =>
-        Logger.info(s"ContestDeleted - $id")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "contest_deleted", "data" -> JS("id" -> id.stringify))
         }
 
       case ContestUpdated(contest) =>
-        Logger.info(s"ContestCreated - ${contest.name}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "contest_updated", "data" -> contest)
         }
 
       case QuoteUpdated(quote) =>
-        Logger.info(s"QuoteUpdated - ${quote \ "symbol"}")
         actors.foreach { case (uid, actor) =>
           actor ! JS("action" -> "quote_updated", "data" -> quote)
         }
