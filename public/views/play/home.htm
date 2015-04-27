@@ -38,7 +38,7 @@
 		<div style="display: inline; float: left; width: 49%">
 			<fieldset>
 				<legend>My Games</legend>
-				<div ng-controller="PlayCtrl" ng-init="loadMyContests(userProfile._id.$oid)" style="border: 1px solid #ddddcc; height: 100px; border-radius: 6px 6px 6px 6px; background-color: #ffffee; padding-left: 10px">
+				<div ng-controller="PlayCtrl" ng-init="loadContestsByPlayerID(userProfile.id)" style="border: 1px solid #ddddcc; height: 100px; border-radius: 6px 6px 6px 6px; background-color: #ffffee; padding-left: 10px">
 					<table style="width: 100%">
 						<tr ng-repeat="c in myContests" ng-class="c._id.$oid == myContestId ? 'highlight' : ''">
 							<td>

@@ -20,7 +20,7 @@ import scala.collection.concurrent.TrieMap
 object WebSockets {
   private val actors = TrieMap[UUID, ActorRef]()
   private val system = Akka.system
-  private val relayActor = system.actorOf(Props[WebSocketRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "WebSocketRelay")
+  private val relayActor = system.actorOf(Props[WsRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "WsRelay")
 
   /**
    * Broadcasts the given message to all connected users
@@ -49,7 +49,7 @@ object WebSockets {
    * Web Socket Relay Actor
    * @author lawrence.daniels@gmail.com
    */
-  class WebSocketRelayActor() extends Actor with ActorLogging {
+  class WsRelayActor() extends Actor with ActorLogging {
     override def receive = {
       case ContestCreated(contest) =>
         actors.foreach { case (uid, actor) =>

@@ -75,12 +75,6 @@
 									style="float: right; margin-right: 20px"
 									ng-click="popupInvitePlayerDialog(p)">Invite</button>
 
-							<button class="join"
-									ng-disable="p.joiningGame"
-									ng-hide="joinedParticipant(contest, MySession.userProfile)"
-									style="float: right; margin-right: 20px"
-									ng-click="joinGame(p)">Join</button>
-
 							<img ng-show="p.joiningGame" src="/assets/images/status/loading.gif">
 						</span>
 					</span>

@@ -8,7 +8,6 @@ import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
 import com.shocktrade.models.contest.OrderType.OrderType
 import com.shocktrade.models.contest.PriceType.PriceType
-import com.shocktrade.models.contest.SearchOptions._
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.util.BSONHelper._
@@ -28,7 +27,7 @@ import scala.util.{Failure, Success, Try}
  * Contest Resources
  * @author lawrence.daniels@gmail.com
  */
-object ContestResources extends Controller with MongoExtras {
+object ContestResources extends Controller with MongoExtras with ErrorHandler {
   val DisplayColumns = Seq(
     "name", "creator", "startTime", "expirationTime", "startingBalance", "status",
     "ranked", "playerCount", "levelCap", "perksAllowed", "maxParticipants",
@@ -55,9 +54,14 @@ object ContestResources extends Controller with MongoExtras {
    * @return a JSON array of [[Contest]] instances
    */
   def contestSearch = Action.async { implicit request =>
-    Logger.info(s"SearchOptions = ${request.body.asJson.orNull}")
-    Try(request.body.asJson map (_.as[SearchOptions])) match {
-      case Success(Some(searchOptions)) =>
+    Try(request.body.asJson map (_.as[ContestSearchForm])) match {
+      case Success(Some(form)) =>
+        val searchOptions = SearchOptions(
+          activeOnly = form.available ?? form.activeOnly,
+          available = form.available ?? form.activeOnly,
+          levelCap = for {allowed <- form.levelCapAllowed; cap <- form.levelCap if allowed} yield cap,
+          perksAllowed = form.perksAllowed,
+          restriction = for {used <- form.restrictionUsed; restrict <- form.restriction if used} yield restrict)
         Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests))) recover {
           case e: Exception => Ok(createError(e))
         }
@@ -173,7 +177,7 @@ object ContestResources extends Controller with MongoExtras {
 
   def deleteContestByID(id: String) = Action.async {
     Contests.deleteContestByID(id.toBSID) map { lastError =>
-      Ok(if(lastError.inError) JS("error" -> lastError.message) else JS())
+      Ok(if (lastError.inError) JS("error" -> lastError.message) else JS())
     } recover {
       case e: Exception => Ok(createError(e))
     }
@@ -237,14 +241,6 @@ object ContestResources extends Controller with MongoExtras {
     } recover {
       case e: Exception => Ok(createError(e))
     }
-  }
-
-  private def createError(message: String) = {
-    JS("error" -> message)
-  }
-
-  private def createError(e: Exception) = {
-    JS("error" -> e.getMessage)
   }
 
   private def produceRankings(contest: Contest): Future[JsArray] = {
@@ -350,7 +346,7 @@ object ContestResources extends Controller with MongoExtras {
     (__ \ "name").read[String] and
       (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
-      (__ \ "player" \ "facebookId").read[String] and
+      (__ \ "player" \ "facebookID").read[String] and
       (__ \ "startingBalance").read[BigDecimal] and
       (__ \ "levelCapAllowed").readNullable[Boolean] and
       (__ \ "levelCap").readNullable[String] and
@@ -393,5 +389,28 @@ object ContestResources extends Controller with MongoExtras {
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
+
+  /**
+   * {"activeOnly":true,"available":false,"perksAllowed":false,"levelCap":"1","levelCapAllowed":true,"friendsOnly":true,"restrictionUsed":true}
+   */
+  case class ContestSearchForm(activeOnly: Option[Boolean],
+                               available: Option[Boolean],
+                               friendsOnly: Option[Boolean],
+                               levelCap: Option[String],
+                               levelCapAllowed: Option[Boolean],
+                               perksAllowed: Option[Boolean],
+                               restrictionUsed: Option[Boolean],
+                               restriction: Option[AccessRestrictionType])
+
+
+  implicit val contestSearchFormReads: Reads[ContestSearchForm] = (
+    (__ \ "activeOnly").readNullable[Boolean] and
+      (__ \ "available").readNullable[Boolean] and
+      (__ \ "friendsOnly").readNullable[Boolean] and
+      (__ \ "levelCap").readNullable[String] and
+      (__ \ "levelCapAllowed").readNullable[Boolean] and
+      (__ \ "perksAllowed").readNullable[Boolean] and
+      (__ \ "restrictionUsed").readNullable[Boolean] and
+      (__ \ "restriction").readNullable[AccessRestrictionType])(ContestSearchForm.apply _)
 
 }

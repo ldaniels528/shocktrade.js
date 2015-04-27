@@ -14,12 +14,11 @@ import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.{JsArray, JsObject, JsValue}
+import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.reflect.ClassTag
 
 /**
  * Stock Quote Proxy

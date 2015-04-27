@@ -1,5 +1,7 @@
 package com.shocktrade.controllers
 
+import com.shocktrade.models.profile.UserProfiles
+import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
@@ -18,7 +20,7 @@ import scala.util.{Failure, Success, Try}
  * User Profile Resources
  * @author lawrence.daniels@gmail.com
  */
-object ProfileResources extends Controller with MongoController with MongoExtras {
+object ProfileResources extends Controller with MongoController with MongoExtras with ErrorHandler {
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
 
@@ -57,7 +59,7 @@ object ProfileResources extends Controller with MongoController with MongoExtras
 
   private def newProfile(account: AccountInfo) = {
     import account._
-    JS("_id" -> JS("$oid" -> BSONObjectID.generate.stringify), "name" -> userName, "facebookID" -> facebookID,
+    JS("_id" -> BSONObjectID.generate.stringify, "name" -> userName, "facebookID" -> facebookID,
       "firstName" -> firstName, "lastName" -> lastName, "email" -> email,
       "gender" -> gender, "country" -> country,
       "totalXP" -> 0, "rep" -> 1,
@@ -91,7 +93,15 @@ object ProfileResources extends Controller with MongoController with MongoExtras
    * Returns a trading clock state object
    */
   def findProfileByFacebookID(id: String) = Action.async {
-    mcP.find(JS("facebookID" -> id)).cursor[JsObject].collect[Seq](1) map (o => Ok(JsArray(o)))
+    UserProfiles.findProfileByFacebookID(id) map {
+      case Some(profile) =>
+        Ok(Json.toJson(profile))
+      case None => Ok(createError("No profile found"))
+    } recover {
+      case e: Exception =>
+        e.printStackTrace()
+        Ok(createError(e))
+    }
   }
 
   def findFacebookFriends = Action.async { request =>
@@ -179,9 +189,6 @@ object ProfileResources extends Controller with MongoController with MongoExtras
    * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
    */
   def purchasePerks(userId: String) = Action.async { request =>
-    import reactivemongo.bson.{BSONDocument => B, _}
-    import reactivemongo.core.commands._
-
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
       case Some(perkCodes) =>
@@ -189,9 +196,7 @@ object ProfileResources extends Controller with MongoController with MongoExtras
         val totalCost = (perkCodes flatMap PERKS.get).sum
 
         // find and modify the profile with the perks
-        val q = B("name" -> "ldaniels", "perkPoints" -> B("$gte" -> totalCost))
-        val u = B("$addToSet" -> B("perks" -> B("$each" -> perkCodes))) ++ B("$inc" -> B("perkPoints" -> -totalCost))
-        val outcome = db.command(FindAndModify("Players", q, Update(u, fetchNewObject = true), upsert = false, sort = None))
+        val outcome = UserProfiles.purchasePerks(userId.toBSID, perkCodes, totalCost)
         outcome.map(_.map(Json.toJson(_))).transform({
           case Some(js) => Ok(js \ "perks")
           case None => Ok(JsNull)
@@ -227,14 +232,13 @@ object ProfileResources extends Controller with MongoController with MongoExtras
 
   class FieldException(val field: String) extends RuntimeException(s"Required field '$field' is missing")
 
-  case class AccountInfo(
-                          userName: String,
-                          facebookID: String,
-                          firstName: String,
-                          lastName: String,
-                          email: String,
-                          gender: String,
-                          country: String)
+  case class AccountInfo(userName: String,
+                         facebookID: String,
+                         firstName: String,
+                         lastName: String,
+                         email: String,
+                         gender: String,
+                         country: String)
 
   def toExchangeUpdate(js: JsValue): ExchangeUpdate = {
     val id = (js \ "id").asOpt[String].getOrElse(throw new FieldException("id"))

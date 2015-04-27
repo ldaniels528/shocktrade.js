@@ -4,6 +4,7 @@ import java.util.Date
 
 import org.joda.time.DateTime
 import play.api.libs.json.Json.{obj => JS}
+import play.api.libs.json.{JsObject, JsValue}
 import reactivemongo.bson.{BSONDateTime, BSONDocument => BS, BSONDouble, BSONHandler, BSONObjectID}
 
 /**
@@ -11,6 +12,18 @@ import reactivemongo.bson.{BSONDateTime, BSONDocument => BS, BSONDouble, BSONHan
  * @author lawrence.daniels@gmail.com
  */
 object BSONHelper {
+
+  implicit class JsonExtensions(val json: JsValue) extends AnyVal {
+
+    def flatId: JsValue = {
+      json match {
+        case js: JsObject =>
+          val id = (js \ "_id" \ "$oid").as[String]
+          js ++ JS("_id" -> id)
+        case js => js
+      }
+    }
+  }
 
   /**
    * Big Decimal to BSON Double Handler
