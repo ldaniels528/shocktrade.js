@@ -1,5 +1,7 @@
-<div ng-if="! contest.name" class="gameline">Please choose a game from the list below</div>
-<div class="gamesSearchContainer">
+@(maxPlayers: Int)
+
+<div class="gamesSearchContainer" ng-controller="PlaySearchCtrl">
+	<div ng-if="! contest.name" class="gameline">Please choose a game from the list below</div>
 	<div style="display: block; width: 100%">
 		<!-- row of contestants -->
 		<div ng-show="contest.participants">
@@ -13,7 +15,7 @@
 		<hr style="color: #888888; margin: 5px 0px 5px 0px">
 
 		<!-- Search Results -->
-		<div>
+		<div class="col-md-12">
 			<fieldset>
 				<legend>Available Games (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
 					<button class="new_game" style="float: right" ng-click="popupNewGameDialog()">New Game</button>
@@ -31,9 +33,9 @@
 							ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
 							<td style="width: 30%">
 								<span ng-if="c.status == 'ACTIVE'">
-									<img ng-if="c.playerCount + 1 < c.maxParticipants" src="/assets/images/status/greenlight.png">
-									<img ng-if="c.playerCount + 1 == c.maxParticipants" src="/assets/images/status/yellowlight.gif">
-									<img ng-if="c.playerCount >= c.maxParticipants" src="/assets/images/status/redlight.png">
+									<img ng-if="c.playerCount + 1 < @maxPlayers" src="/assets/images/status/greenlight.png">
+									<img ng-if="c.playerCount + 1 == @maxPlayers" src="/assets/images/status/yellowlight.gif">
+									<img ng-if="c.playerCount >= @maxPlayers" src="/assets/images/status/redlight.png">
 								</span>
 									<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
 									<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
@@ -57,7 +59,7 @@
 								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
 								<img src="/assets/images/objects/friend_header.gif">
 								<span ng-if="c.status == 'ACTIVE'">
-									/ {{ c.maxParticipants < 10 ? '0' + c.maxParticipants : c.maxParticipants }}
+									/ {{ @maxPlayers < 10 ? '0' + @maxPlayers : @maxPlayers }}
 								</span>
 							</td>
 							<td style="width: 20%">

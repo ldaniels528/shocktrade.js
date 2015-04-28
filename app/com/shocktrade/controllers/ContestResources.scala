@@ -4,6 +4,7 @@ import java.util.Date
 
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
+import com.shocktrade.controllers.Application._
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
 import com.shocktrade.models.contest.OrderType.OrderType
@@ -74,13 +75,16 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   }
 
   def createChatMessage(contestId: String) = Action.async { implicit request =>
-    request.body.asJson flatMap (_.asOpt[Message]) match {
-      case Some(message) =>
+    request.body.asJson map (_.as[MessageForm]) match {
+      case Some(form) =>
+        val message = Message(sender = form.sender, recipient = form.recipient, text = form.text)
         Contests.createMessage(contestId.toBSID, message)("messages") map {
           case Some(contest) => Ok(Json.toJson(contest.messages))
           case None => Ok(JsArray())
         } recover {
-          case e: Exception => Ok(createError(e))
+          case e: Exception =>
+            Logger.error(s"${e.getMessage}: json = ${request.body.asJson.orNull}")
+            Ok(createError(e))
         }
       case None =>
         Future.successful(Ok(createError("No message sent")))
@@ -106,7 +110,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
 
   private def makeContest(js: ContestForm) = {
     // create a player instance
-    val player = Player(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
+    val player = PlayerRef(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
 
     // create the contest
     Contest(
@@ -117,7 +121,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       levelCap = js.levelCap.map(_.toInt),
       perksAllowed = js.perksAllowed,
       restriction = js.restriction,
-      messages = List(Message(sentBy = player, text = s"Welcome to ${js.name}")),
+      messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
       participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = js.startingBalance, id = js.playerId.toBSID))
     )
   }
@@ -412,5 +416,14 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "perksAllowed").readNullable[Boolean] and
       (__ \ "restrictionUsed").readNullable[Boolean] and
       (__ \ "restriction").readNullable[AccessRestrictionType])(ContestSearchForm.apply _)
+
+  case class MessageForm(sender: PlayerRef,
+                         recipient: Option[PlayerRef],
+                         text: String)
+
+  implicit val messageFormReads: Reads[MessageForm] = (
+    (__ \ "sender").read[PlayerRef] and
+      (__ \ "recipient").readNullable[PlayerRef] and
+      (__ \ "text").read[String])(MessageForm.apply _)
 
 }

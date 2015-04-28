@@ -4,7 +4,8 @@
 <div ng-if="MySession.userProfile._id && !contest._id" class="spectator_message" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
 </div>
-<div ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%; background-color: #ffffff">
+<div ng-controller="PlayChatCtrl" ng-if="MySession.userProfile._id && contest._id"
+	 style="display: block; width: 100%; background-color: #ffffff">
 	<div class="lounge_players" style="margin-top: 3px; margin-bottom: 3px">
 		<span ng-repeat="p in contest.participants">
 			<avatar id="{{ p.facebookID }}" style="width: 32px; height: 32px; margin: 3px 0px 0px 2px" />
@@ -18,9 +19,7 @@
 			{{ message.text }}
 		</div>
 	</div>
-	
-	<div ng-show="{{ errors }}">{{ errors }}</div>
-	
+
 	<div style="width: 100%; margin-left: auto">
 		<table style="width: 95%; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 5px">
 			<tr>

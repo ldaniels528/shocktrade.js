@@ -14,9 +14,9 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * @author lawrence.daniels@gmail.com
  */
 case class Message(id: BSONObjectID = BSONObjectID.generate,
-                   sentBy: Player,
+                   sender: PlayerRef,
                    text: String,
-                   recipient: Option[Player] = None,
+                   recipient: Option[PlayerRef] = None,
                    sentTime: Date = new Date())
 
 /**
@@ -30,6 +30,7 @@ object Message {
 			"_id" : ObjectId("534208d6f09e3fe069ee34ff"),
 			"sentTime" : ISODate("2014-04-07T02:09:26.507Z"),
 			"sender" : {
+        "_id" : ObjectId("534208d6f09e3fe069ee34ee"),
 				"name" : "gadget",
 				"facebookID" : "100002058615115"
 			},
@@ -39,24 +40,24 @@ object Message {
    **/
   implicit val messageReads: Reads[Message] = (
     (__ \ "_id").read[BSONObjectID] and
-      (__ \ "sender").read[Player] and
+      (__ \ "sender").read[PlayerRef] and
       (__ \ "text").read[String] and
-      (__ \ "recipient").readNullable[Player] and
+      (__ \ "recipient").readNullable[PlayerRef] and
       (__ \ "sentTime").read[Date])(Message.apply _)
 
   implicit val messageWrites: Writes[Message] = (
     (__ \ "_id").write[BSONObjectID] and
-      (__ \ "sender").write[Player] and
+      (__ \ "sender").write[PlayerRef] and
       (__ \ "text").write[String] and
-      (__ \ "recipient").writeNullable[Player] and
+      (__ \ "recipient").writeNullable[PlayerRef] and
       (__ \ "sentTime").write[Date])(unlift(Message.unapply))
 
   implicit object MessageReader extends BSONDocumentReader[Message] {
     def read(doc: BSONDocument) = Message(
       doc.getAs[BSONObjectID]("_id").get,
-      doc.getAs[Player]("sender").get,
+      doc.getAs[PlayerRef]("sender").get,
       doc.getAs[String]("text").get,
-      doc.getAs[Player]("recipient"),
+      doc.getAs[PlayerRef]("recipient"),
       doc.getAs[Date]("sentTime").get
     )
   }
@@ -64,7 +65,7 @@ object Message {
   implicit object MessageWriter extends BSONDocumentWriter[Message] {
     def write(message: Message) = BSONDocument(
       "_id" -> message.id,
-      "sender" -> message.sentBy,
+      "sender" -> message.sender,
       "text" -> message.text,
       "recipient" -> message.recipient,
       "sentTime" -> message.sentTime

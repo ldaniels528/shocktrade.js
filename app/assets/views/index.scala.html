@@ -2,36 +2,36 @@
 <!DOCTYPE html>
 <html ng-app="shocktrade">
 <head>
-<title>ShockTrade: Invest like the Pros</title>
-<meta charset='utf-8'>
-<meta name="keywords" content="stock game, investment game, research, investing, trading, stock, stocks, bonds, fixed income, mutual funds, etf, options, futures, IRAs, roll over 401k, retirement, Roth IRA, online trading, stock quotes, mobile trading, active trader, etrade pro, managed investments, etrade" />
-<link href='@routes.Assets.at("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/key_statistics.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/news.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/quotes.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/search.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/sector_industry.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/discover/trading_history.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/drill_down.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/awards.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/lounge.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/perks.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/play.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/portfolio.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/lobby.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/play/statistics.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/main.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
-<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
-<link href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))' type="text/css" rel="stylesheet" media="screen">
-<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media="screen">
-<link href='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.css"))' type="text/css" rel="stylesheet" media="screen">
-<style type="text/css">
- .panel-body { padding: 0px }
-</style>
+	<title>ShockTrade: Invest like the Pros</title>
+	<meta charset='utf-8'>
+	<meta name="keywords" content="stock game, investment game, research, investing, trading, stock, stocks, bonds, fixed income, mutual funds, etf, options, futures, IRAs, roll over 401k, retirement, Roth IRA, online trading, stock quotes, mobile trading, active trader, etrade pro, managed investments, etrade" />
+	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))' type="text/css" rel="stylesheet" media="screen">
+	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media="screen">
+	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.css"))' type="text/css" rel="stylesheet" media="screen">
+	<link href='@routes.Assets.at("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/key_statistics.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/news.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/quotes.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/search.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/sector_industry.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/discover/trading_history.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/drill_down.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/awards.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/lounge.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/perks.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/play.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/portfolio.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/lobby.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/play/statistics.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/main.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
+	<style type="text/css">
+	 .panel-body { padding: 0px }
+	</style>
 </head>
 
 <body style="min-width: 1024px; margin-right: 25px; margin-left: 25px">
@@ -101,7 +101,7 @@
 	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
 
 	<!-- local JS libraries -->
-	<script src='@routes.Assets.at("javascripts/app.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/app-filters.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/directives.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/errors.min.js")' type="text/javascript"></script>
@@ -136,8 +136,13 @@
 	<script src='@routes.Assets.at("javascripts/play/dialogs/invite_player_dialog.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/dialogs/new_game_dialog.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/dialogs/new_order_dialog.min.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/play/perks_ctrl.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/play_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_chat_ctrl.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_lobby_ctrl.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_perks_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_portfolio_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_search_ctrl.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/play_statistics_ctrl.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/rewards_ctrl.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/preferences.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/profile/profile_svc.min.js")' type="text/javascript"></script>

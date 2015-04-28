@@ -35,7 +35,7 @@ object Application extends Controller with MongoController {
       case s if s.contains("shocktrade.net") => "616569495084446" // shocktrade.net
       case _ => "522523074535098" // unknown, so local dev
     }
-    Ok(assets.views.js.facebook(appId))
+    Ok(assets.javascripts.js.facebook(appId))
   }
 
   /**

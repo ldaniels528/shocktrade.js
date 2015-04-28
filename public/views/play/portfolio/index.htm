@@ -1,13 +1,15 @@
 <div ng-init="setPlayActiveTab(3)" style="display: block; width: 100%">
-	<div ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
-	
-	<div style="display: inline; float: left; width: 14%; margin-top: 5px">
-		<div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
+	<div ng-controller="PlayPortfolioCtrl" style="display: block; width: 100%">
+		<div ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+
+		<div style="display: inline; float: left; width: 14%; margin-top: 5px">
+			<div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
+		</div>
+
+		<div style="display: inline; float: right; width: 85%">
+			<div ng-include src="'/assets/views/play/portfolio/portfolio.htm'"></div>
+		</div>
+
+		<br style="clear: both"/>
 	</div>
-	
-	<div style="display: inline; float: right; width: 85%">
-		<div ng-include src="'/assets/views/play/portfolio/portfolio.htm'"></div>
-	</div>
-	
-	<br style="clear: both"/>
 </div>

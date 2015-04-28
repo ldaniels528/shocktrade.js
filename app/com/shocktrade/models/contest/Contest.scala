@@ -19,7 +19,7 @@ import scala.util.{Failure, Success, Try}
  * @author lawrence.daniels@gmail.com
  */
 case class Contest(name: String,
-                   creator: Player,
+                   creator: PlayerRef,
                    creationTime: Date,
                    startTime: Option[Date] = None,
                    processedTime: Option[Date] = None,
@@ -39,11 +39,11 @@ case class Contest(name: String,
  * @author lawrence.daniels@gmail.com
  */
 object Contest {
-  val MaxPlayers = 14
+  val MaxPlayers = 12
 
   implicit val contestReads: Reads[Contest] = (
     (__ \ "name").read[String] and
-      (__ \ "creator").read[Player] and
+      (__ \ "creator").read[PlayerRef] and
       (__ \ "creationTime").read[Date] and
       (__ \ "startTime").readNullable[Date] and
       (__ \ "processedTime").readNullable[Date] and
@@ -60,7 +60,7 @@ object Contest {
 
   implicit val contestWrites: Writes[Contest] = (
     (__ \ "name").write[String] and
-      (__ \ "creator").write[Player] and
+      (__ \ "creator").write[PlayerRef] and
       (__ \ "creationTime").write[Date] and
       (__ \ "startTime").writeNullable[Date] and
       (__ \ "processedTime").writeNullable[Date] and
@@ -78,7 +78,7 @@ object Contest {
   implicit object ContestReader extends BSONDocumentReader[Contest] {
     def read(doc: BSONDocument) = Try(Contest(
       doc.getAs[String]("name").get,
-      doc.getAs[Player]("creator").get,
+      doc.getAs[PlayerRef]("creator").get,
       doc.getAs[Date]("creationTime").getOrElse(new Date()),
       doc.getAs[Date]("startTime"),
       doc.getAs[Date]("processedTime"),

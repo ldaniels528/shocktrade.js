@@ -148,7 +148,6 @@ db.Players.insert({
 	"level" : 3,
 	"loginTime" : ISODate("2013-06-14T23:56:43.748Z"),
 	"modules" : [ "MKT_WATCH" ],
-	"name" : "ldaniels",
 	"netCashEarned" : 29000.57,
 	"netWorth" : 250000.00,
 	"perks" : [ "CREATOR" ],

@@ -11,14 +11,14 @@ scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7", "-target", "1.7", "-g:vars")
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, play.twirl.sbt.SbtTwirl)
 
 val akkaVersion = "2.3.9"
 
 val playVersion = "2.3.8" //2.4.0-M3"
 
 libraryDependencies ++= Seq(
-  anorm, cache, jdbc, filters, ws
+  cache, filters, ws
 )
 
 // Shocktrade dependencies
@@ -28,18 +28,17 @@ libraryDependencies ++= Seq(
 	"com.ldaniels528" %% "shocktrade-services" % "0.3.0"
 )
 
-// Play dependencies
+// TypeSafe dependencies
 libraryDependencies ++= Seq(
-//  "com.typesafe.play" %% "play" % playVersion,
-//  "com.typesafe.play" %% "play-jdbc" % playVersion,
-  "com.typesafe.play" %% "play-ws" % playVersion
-//  "com.typesafe.play" %% "anorm" % playVersion,
+	"com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
 //  "com.typesafe.play" %% "filters-helpers" % playVersion
+//  "com.typesafe.play" %% "play" % playVersion,
+  "com.typesafe.play" %% "play-ws" % playVersion,
+	"com.typesafe.play" %% "twirl-api" % "1.0.4"
 )
 
 // Third Party dependencies
 libraryDependencies ++= Seq(
-	"net.liftweb" %% "lift-json" % "2.6",
 	"org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1",
 	"org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23"
 )
@@ -57,9 +56,4 @@ libraryDependencies ++= Seq(
 	"org.webjars" % "angular-ui-router" % "0.2.13",
 	"org.webjars" % "bootstrap" % "3.1.1", // 3.3.2-2
  	"org.webjars" % "font-awesome" % "4.3.0"
-)
-
-// Test Dependencies
-libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test"
 )

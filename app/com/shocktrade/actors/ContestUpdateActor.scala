@@ -59,8 +59,8 @@ class ContestUpdateActor extends Actor with ActorLogging {
       db.command(FindAndModify(
         collection = "Contests",
         query = BS("_id" -> contestId),
-        modify = new Update(BS("$addToSet" -> fields.toBsonFields), fetchNewObject = true),
-        fields = Some(BS("messages" -> 1)), upsert = false))
+        modify = new Update(BS("$addToSet" -> BS("messages" -> message)), fetchNewObject = true),
+        fields = Some(fields.toBsonFields), upsert = false))
         .map(_ flatMap (_.seeAsOpt[Contest])) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?

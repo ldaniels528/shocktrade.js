@@ -7,40 +7,40 @@ import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, _}
 
 /**
- * Represents a message addressee; either a sender or recipient of a message
+ * Represents a player reference
  * @param id the given player ID
  * @param name the name of the addressee
  * @param facebookId the FaceBook ID of the addressee
  * @author lawrence.daniels@gmail.com
  */
-case class Player(id: BSONObjectID, name: String, facebookId: String)
+case class PlayerRef(id: BSONObjectID, name: String, facebookId: String)
 
 /**
  * Addressee Singleton
  * @author lawrence.daniels@gmail.com
  */
-object Player {
+object PlayerRef {
 
-  implicit val playerReads: Reads[Player] = (
+  implicit val playerInfoReads: Reads[PlayerRef] = (
     (__ \ "_id").read[BSONObjectID] and
       (__ \ "name").read[String] and
-      (__ \ "facebookID").read[String])(Player.apply _)
+      (__ \ "facebookID").read[String])(PlayerRef.apply _)
 
-  implicit val playerWrites: Writes[Player] = (
+  implicit val playerInfoWrites: Writes[PlayerRef] = (
     (__ \ "_id").write[BSONObjectID] and
       (__ \ "name").write[String] and
-      (__ \ "facebookID").write[String])(unlift(Player.unapply))
+      (__ \ "facebookID").write[String])(unlift(PlayerRef.unapply))
 
-  implicit object PlayerReader extends BSONDocumentReader[Player] {
-    def read(doc: BSONDocument) = Player(
+  implicit object PlayerInfoReader extends BSONDocumentReader[PlayerRef] {
+    def read(doc: BSONDocument) = PlayerRef(
       doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("name").get,
       doc.getAs[String]("facebookID").get
     )
   }
 
-  implicit object PlayerWriter extends BSONDocumentWriter[Player] {
-    def write(player: Player) = BSONDocument(
+  implicit object PlayerInfoWriter extends BSONDocumentWriter[PlayerRef] {
+    def write(player: PlayerRef) = BSONDocument(
       "_id" -> player.id,
       "name" -> player.name,
       "facebookID" -> player.facebookId

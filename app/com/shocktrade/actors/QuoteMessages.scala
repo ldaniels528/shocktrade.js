@@ -1,4 +1,4 @@
-package com.shocktrade.actors.quote
+package com.shocktrade.actors
 
 import play.api.libs.json.JsObject
 

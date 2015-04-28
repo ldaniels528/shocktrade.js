@@ -1,7 +1,7 @@
-package com.shocktrade.actors.quote
+package com.shocktrade.actors
 
+import QuoteMessages._
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.actors.quote.QuoteMessages._
 import com.shocktrade.controllers.QuoteResources._
 import play.api.libs.json.Json.{obj => JS, _}
 import play.api.libs.json.{JsArray, JsObject}

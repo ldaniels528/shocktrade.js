@@ -1,7 +1,10 @@
-<div ng-hide="contest._id" class="spectator_message" style="display: block; width: 100%">
+@(maxPlayers: Int)
+@import com.shocktrade.models.contest.ContestStatus
+
+<div ng-hide="MySession.contestId" class="spectator_message" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/no_contest_selected_dash.htm'"></div>
 </div>
-<div ng-if="contest._id" style="background-color: #ffffff; width: 100%; height: 550px">
+<div ng-if="contest._id" style="background-color: #ffffff; width: 100%; height: 550px" ng-controller="PlayLobbyCtrl">
 	<div style="display:block; border: 1px solid #dddddd; border-radius: 4px 4px 4px 4px; margin-top: 5px">
 		<table style="width: 100%; margin-bottom: 5px">
 			<tr style="background-color: #dddddd">
@@ -36,7 +39,7 @@
 		<div ng-show="contest.status == 'ACTIVE'" style="display: block; width: 100%; padding: 2px 2px 2px 2px">
 			<!-- 'Join' option -->
 			<div style="display: inline; float: left">
-				<button ng-show="authenticated && contest.playerCount < contest.maxParticipants && !joinedParticipant(contest, MySession.userProfile)"
+				<button ng-show="authenticated && contest.playerCount < @maxPlayers && !joinedParticipant(contest, MySession.userProfile)"
 						ng-click="joinGame()"
 						class="joinButton">Join Game</button>
 			</div>
@@ -79,9 +82,9 @@
 						</span>
 					</span>
 					<div style="display: inline; float: right; margin-right: 10px">
-						<img ng-if="contest.status == 'CLOSED' && p.rank == '1st'" src="/assets/images/contests/gold.png">
-						<img ng-if="contest.status == 'CLOSED' && p.rank == '2nd'" src="/assets/images/contests/silver.png">
-						<img ng-if="contest.status == 'CLOSED' && p.rank == '3rd'" src="/assets/images/contests/bronze.png">
+						<img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '1st'" src="/assets/images/contests/gold.png">
+						<img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '2nd'" src="/assets/images/contests/silver.png">
+						<img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '3rd'" src="/assets/images/contests/bronze.png">
 					</div>
 				</div>
 				<div style="display: block">
