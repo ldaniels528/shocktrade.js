@@ -1,49 +1,115 @@
 @(maxPlayers: Int)
 
 <div class="gamesSearchContainer" ng-controller="PlaySearchCtrl">
-	<div ng-if="! contest.name" class="gameline">Please choose a game from the list below</div>
-	<div style="display: block; width: 100%">
-		<!-- row of contestants -->
-		<div ng-show="contest.participants">
-			<fieldset>
-				<legend>Contestants for '<span class="game_title">{{contest.name}}</span>'</legend>
-				<span ng-repeat="p in contest.participants">
-					<avatar id="{{ p.facebookID }}" style="width: 52px; height: 53px; margin: 3px 0px 0px 2px" />
-				</span>
-			</fieldset>
-		</div>
-		<hr style="color: #888888; margin: 5px 0px 5px 0px">
 
-		<!-- Search Results -->
-		<div class="col-md-12">
+	<!-- Game Filtering Options -->
+	<div class="col-md-8">
+		<fieldset>
+			<legend>Game Filtering Options</legend>
+			<table>
+				<tr>
+					<td class="col-md-3">
+						<input type="checkbox" ng-model="searchOptions.activeOnly">
+						<img src="/assets/images/objects/market.png"> Online
+					</td>
+					<td class="col-md-4">
+						<input type="checkbox" ng-model="searchOptions.perksAllowed">
+						<img src="/assets/images/objects/gift.png"> Perks
+					</td>
+					<td class="col-md-5">
+						<input type="checkbox" ng-model="searchOptions.botsAllowed">
+						<img src="/assets/images/objects/robot.png"> Robots
+					</td>
+				</tr>
+				<tr>
+					<td class="col-md-3">
+						<input type="checkbox" ng-model="searchOptions.available">
+						<img src="/assets/images/status/online.png"> Available
+					</td>
+					<td class="col-md-4">
+						<input type="checkbox" ng-model="searchOptions.friendsOnly">
+						<img src="/assets/images/objects/friend_header.gif"> My Friends
+					</td>
+					<td class="col-md-5">
+						<input type="checkbox" ng-model="searchOptions.levelCapAllowed">
+						<img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)
+					</td>
+				</tr>
+				<tr>
+					<td class="col-md-3">&nbsp;</td>
+					<td class="col-md-4">
+						<select ng-show="searchOptions.friendsOnly"
+						ng-model="searchOptions.friend"
+						style="margin-top: 3px; margin-left: 16px">
+							<option value="">-- None --</option>
+							<option ng-repeat="friend in getRegisteredFriends()"
+							style="background-image:url(http://graph.facebook.com/{{friend.id }}/picture); background-repeat: no-repeat; background-size:16px 16px; text-indent: 16px"
+							value="{{ friend.id }}">{{ friend.name }}</option>
+						</select>
+					</td>
+					<td class="col-md-5">
+						<select ng-show="searchOptions.levelCapAllowed"
+							ng-controller="RewardsCtrl"
+							ng-model="searchOptions.levelCap"
+							style="margin-top: 3px; margin-left: 16px">
+								<option value="">-- None --</option>
+								<option ng-repeat="level in levels"
+								style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
+								value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<!-- Legend -->
+	<div class="col-md-4">
+		<fieldset>
+			<legend>Legend</legend>
+			<table style="width: 100%">
+				<tr>
+					<td><img src="/assets/images/status/greenlight.png"> Open</td>
+					<td><img src="/assets/images/status/yellowlight.gif"> Almost Full</td>
+				</tr>
+				<tr>
+					<td><img src="/assets/images/status/redlight.png"> Full</td>
+					<td><img src="/assets/images/status/offlight.png"> Offline</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<!-- Search Results -->
+	<div class="col-md-12" style="margin-top: 20px">
+		<legend style="margin-top: 10px">Available Games (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
+			<button class="new_game" style="float: right" ng-click="popupNewGameDialog()">New Game</button>
+		</legend>
+
+		<div ng-class="{'col-md-12':(!splitScreen), 'col-md-5':(splitScreen)}">
 			<fieldset>
-				<legend>Available Games (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
-					<button class="new_game" style="float: right" ng-click="popupNewGameDialog()">New Game</button>
-				</legend>
 				<div class="availGamesContainer">
 					<table style="width: 100%">
 						<tr>
 							<th class="left" style="padding-left: 20px">Game Name</th>
-							<th class="left" style="padding-left: 20px">Leader</th>
-							<th class="right">Buy In</th>
-							<th class="right">Players</th>
-							<th class="right">Modifiers</th>
+							<th ng-hide="splitScreen" class="left" style="padding-left: 20px">Leader</th>
+							<th ng-hide="splitScreen" class="right">Buy In</th>
+							<th ng-hide="splitScreen" class="right">Players</th>
+							<th ng-hide="splitScreen" class="right">Modifiers</th>
 						</tr>
-						<tr ng-repeat="c in searchResults" class="clickable" ng-click="loadContest(c._id.$oid)"
-							ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
+						<tr ng-repeat="c in searchResults" class="clickable" ng-click="selectContest(c)"
+							ng-class="contest._id.$oid === c._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )">
 							<td style="width: 30%">
-								<span ng-if="c.status == 'ACTIVE'">
-									<img ng-if="c.playerCount + 1 < @maxPlayers" src="/assets/images/status/greenlight.png">
-									<img ng-if="c.playerCount + 1 == @maxPlayers" src="/assets/images/status/yellowlight.gif">
-									<img ng-if="c.playerCount >= @maxPlayers" src="/assets/images/status/redlight.png">
+								<span ng-if="c.status === 'ACTIVE'">
+									<img ng-src="{{ getStatusIcon(c) }}">
 								</span>
-									<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
-									<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-									<a href="">{{ c.name }}</a>
+								<img ng-hide="c.status === 'ACTIVE'" src="/assets/images/status/offlight.png">
+								<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
+								<a href="">{{ c.name }}</a>
 							</td>
-							<td style="width: 20%">
+							<td ng-hide="splitScreen" style="width: 20%">
 								<span ng-show="c.leader">
-									<img ng-if="c.status == 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
+									<img ng-if="c.status === 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
 									<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
 									<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
 									<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
@@ -52,20 +118,22 @@
 									{{ c.leader.gainLoss | number:2 }}%</span>
 								</span>
 							</td>
-							<td style="width: 15%">
-								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'" style="float: right">$ {{ c.startingBalance | number }}</span>
+							<td ng-hide="splitScreen" style="width: 15%">
+								<span ng-class="c.status === 'ACTIVE' ? '' : 'null'" style="float: right">
+									$ {{ c.startingBalance | number }}
+								</span>
 							</td>
-							<td style="width: 15%; text-align: right">
-								<span ng-class="c.status == 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
+							<td ng-hide="splitScreen" style="width: 15%; text-align: right">
+								<span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
 								<img src="/assets/images/objects/friend_header.gif">
-								<span ng-if="c.status == 'ACTIVE'">
+								<span ng-if="c.status === 'ACTIVE'">
 									/ {{ @maxPlayers < 10 ? '0' + @maxPlayers : @maxPlayers }}
 								</span>
 							</td>
-							<td style="width: 20%">
+							<td ng-hide="splitScreen" style="width: 20%">
 								<span style="float: right">
 									<img ng-if="c.robotsAllowed" src="/assets/images/objects/robot.png">
-									<img ng-if="c.restriction == 'Friends-Only'" src="/assets/images/objects/friend_header.gif">
+									<img ng-if="c.friendsOnly" src="/assets/images/objects/friend_header.gif">
 									<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
 									<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
 								</span>
@@ -75,92 +143,87 @@
 				</div>
 			</fieldset>
 		</div>
-		<hr style="color: #888888; margin: 5px 0px 5px 0px">
 
-		<div style="display: inline; float: left; width: 79%">
-			<fieldset>
-				<legend>Game Filtering Options</legend>
-				<table style="width: 100%">
+		<!-- Game Details -->
+		<div ng-show="splitScreen" ng-class="col-md-7">
+			<fieldset ng-show="contest.participants">
+				<legend>Game Details for '<span class="game_title">{{contest.name}}</span>'
+					<img style="float: right"
+						class="clickable"
+						ng-click="splitScreen = false"
+						title="Return to results"
+						src="/assets/images/buttons/back-24.png">
+				</legend>
+				<span ng-repeat="p in contest.participants">
+					<avatar id="{{ p.facebookID }}" style="width: 52px; height: 53px; margin: 3px 0px 0px 2px" />
+				</span>
+
+				<table style="margin-top: 15px; background: #ffffee; border: 1px solid #cccccc; padding: 6px">
 					<tr>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.activeOnly"> 
-							<img src="/assets/images/status/online.png"> Available
-						</td>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.perksAllowed">
-							<img src="/assets/images/objects/gift.png"> Perks
-						</td>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.botsAllowed">
-							<img src="/assets/images/objects/robot.png"> Robots
+						<th class="col-md-3">Status</th>
+						<td class="col-md-9">
+							<img ng-show="contest" ng-src="{{ getStatusIcon(contest) }}">
+							<span ng-class="getStatusClass(contest)">{{ contest.status }}</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.levelCapAllowed">
-							<img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)
-						</td>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.friendsOnly">
-							<img src="/assets/images/objects/friend_header.gif"> My Friends
-						</td>
-						<td class="gs_left">
-							<input type="checkbox" ng-model="searchOptions.restrictionUsed">
-							<img src="/assets/images/objects/protected.png"> Restrictions
+						<th class="col-md-3">Created</th>
+						<td class="col-md-9">{{ contest.creationTime | date:'MM/dd/yyyy hh:mma' }}</td>
+					</tr>
+					<tr>
+						<th class="col-md-3">Starts</th>
+						<td class="col-md-9">
+							<span ng-show="contest.startTime">{{ contest.startTime | date:'MM/dd/yyyy hh:mma' }}</span>
+							<span ng-hide="contest.startTime" class="null">
+								<span ng-show="isContestOwner(contest)">
+									<button class="btn btn-default start_game" ng-click="startContest(contest)">
+										<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/play.png' }}"> Start
+									</button>
+								</span>
+								<span ng-show="!isContestOwner(contest)">Not Specified</span>
+							</span>
 						</td>
 					</tr>
 					<tr>
-						<td>
-							<select ng-show="searchOptions.levelCapAllowed"
-									ng-controller="RewardsCtrl"
-									ng-model="searchOptions.levelCap"
-									style="margin-top: 3px; margin-left: 16px">
-								<option value="">-- None --</option>
-								<option ng-repeat="level in levels"
-										style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
-										value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
-							</select>
+						<th class="col-md-3">Ends</th>
+						<td class="col-md-9">
+							<span ng-show="contest.expirationTime">{{ contest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
+							<span ng-hide="contest.expirationTime" class="null">Not Specified</span>
 						</td>
-						<td>
-							<select ng-show="searchOptions.friendsOnly"
-									ng-model="searchOptions.friend"
-									style="margin-top: 3px; margin-left: 16px">
-								<option value="">-- None --</option>
-								<option ng-repeat="friend in getRegisteredFriends()"
-										style="background-image:url(http://graph.facebook.com/{{friend.id }}/picture); background-repeat: no-repeat; background-size:16px 16px; text-indent: 16px"
-										value="{{ friend.id }}">{{ friend.name }}</option>
-							</select>
-						</td>
-						<td>
-							<select ng-show="searchOptions.restrictionUsed"
-									ng-model="searchOptions.restriction"
-									style="margin-top: 3px; margin-left: 16px">
-								<option value="">-- None --</option>
-								<option ng-repeat="r in restrictions">{{ r }}</option>
-							</select>
+					</tr>
+					<tr>
+						<th class="col-md-3">Buy-In Cost</th>
+						<td class="col-md-9">$ {{ contest.startingBalance | number }}</td>
+					</tr>
+					<tr>
+						<th class="col-md-3">Level Cap</th>
+						<td class="col-md-9">
+							{{ contest.levelCap }} &#8212; {{ levels[contest.levelCap].description }}
 						</td>
 					</tr>
 				</table>
+				<div class="row" style="margin-top: 15px">
+					<div class="col-md-4">
+						<input type="checkbox" ng-model="contest.friendsOnly" disabled>
+						<img src="/assets/images/objects/friend_header.gif"> Friends-Only
+					</div>
+					<div class="col-md-4">
+						<input type="checkbox" ng-model="contest.perksAllowed" disabled>
+						<img src="/assets/images/objects/gift.png"> Perks Allowed
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<input type="checkbox" ng-model="contest.privateGame" disabled>
+						<img src="/assets/images/objects/protected.png"> Invitation-Only
+					</div>
+					<div class="col-md-4">
+						<input type="checkbox" ng-model="contest.robotsAllowed" disabled>
+						<img src="/assets/images/objects/robot.png"> Robots Allowed
+					</div>
+				</div>
 			</fieldset>
 		</div>
-		<div style="display: inline; float: right; width: 19%">
-			<div style="display: block; width: 100%">
-				<fieldset>
-					<legend>Legend</legend>
-					<table style="width: 100%">
-					<tr>
-						<td><img src="/assets/images/status/greenlight.png"> Open</td>
-						<td><img src="/assets/images/status/yellowlight.gif"> Almost Full</td>
-					</tr>
-					<tr>
-						<td><img src="/assets/images/status/redlight.png"> Full</td>
-						<td><img src="/assets/images/status/offlight.png"> Offline</td>
-					</tr>
-					</table>
-				</fieldset>
-			</div>
-		</div>
-		<br style="clear: both" />
 	</div>
 </div>
 

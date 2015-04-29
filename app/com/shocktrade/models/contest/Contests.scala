@@ -1,13 +1,14 @@
 package com.shocktrade.models.contest
 
+import java.util.Date
+
 import akka.actor.Props
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import com.shocktrade.actors.ContestReaderActor._
 import com.shocktrade.actors.ContestUpdateActor._
-import com.shocktrade.actors.WebSockets.ContestUpdated
-import com.shocktrade.actors.{ContestReaderActor, ContestUpdateActor, WebSockets}
+import com.shocktrade.actors.{ContestReaderActor, ContestUpdateActor}
 import play.libs.Akka
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.core.commands.LastError
@@ -88,15 +89,19 @@ object Contests {
   def joinContest(id: BSONObjectID, participant: Participant)(implicit timeout: Timeout) = {
     (writer ? JoinContest(id, participant)) map {
       case e: Exception => throw new IllegalStateException(e)
-      case response =>
-        val contest_? = response.asInstanceOf[Option[Contest]]
-        contest_?.foreach(WebSockets ! ContestUpdated(_))
-        contest_?
+      case response => response.asInstanceOf[Option[Contest]]
     }
   }
 
   def quitContest(id: BSONObjectID, playerId: BSONObjectID)(implicit timeout: Timeout) = {
     (writer ? QuitContest(id, playerId)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
+  }
+
+  def startContest(id: BSONObjectID, startTime: Date)(implicit timeout: Timeout) = {
+    (writer ? StartContest(id, startTime)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]
     }

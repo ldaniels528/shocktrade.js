@@ -1,5 +1,7 @@
 package com.shocktrade.actors
 
+import java.util.Date
+
 import akka.actor.{Actor, ActorLogging}
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.ContestUpdateActor._
@@ -119,6 +121,20 @@ class ContestUpdateActor extends Actor with ActorLogging {
         case Failure(e) => mySender ! e
       }
 
+    case StartContest(contestId, startTime) =>
+      val mySender = sender()
+      db.command(FindAndModify(
+        collection = "Contests",
+        query = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
+        modify = new Update(BS("$set" -> BS("startTime" -> startTime)), fetchNewObject = true),
+        fields = None,
+        upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          contest_?.foreach(WebSockets ! ContestUpdated(_))
+        case Failure(e) => mySender ! e
+      }
+
   }
 
   private def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit mc: BSONCollection, ec: ExecutionContext): Future[Option[Order]] = {
@@ -148,5 +164,7 @@ object ContestUpdateActor {
   case class JoinContest(contestId: BSONObjectID, participant: Participant)
 
   case class QuitContest(contestId: BSONObjectID, playerId: BSONObjectID)
+
+  case class StartContest(contestId: BSONObjectID, startTime: Date)
 
 }

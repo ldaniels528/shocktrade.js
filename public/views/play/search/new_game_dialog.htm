@@ -3,58 +3,67 @@
         <h4 style="color: #345688">Create New Game</h4>
     </div>
     <div class="modal-body">
-        <table style="width: 100%">
-            <tr>
-                <td class="gs_left" colspan="2">
-                    <label for="name" style="font-weight: bold;">Game Title</label>
-                    <input id="name" class="form-control col-md-12" ng-model="form.name" placeholder="Enter the name of the game here">
-                </td>
-            </tr>
-            <tr>
-                <td class="gs_left">
-                    <label for="startingBalance" style="font-weight: bold;">Starting Balance</label>
-                    <select id="startingBalance" class="form-control"
-                            ng-model="form.startingBalance">
-                        <option ng-repeat="bal in startingBalances" value="{{ bal }}">${{ bal | number }}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="gs_left">
-                    <input id="levelCapAllowed" type="checkbox" ng-model="form.levelCapAllowed">
-                    <label for="levelCapAllowed"><img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)</label>
-                </td>
-                <td class="gs_left">
-                    <input id="perksAllowed" type="checkbox" ng-model="form.perksAllowed">
-                    <label for="perksAllowed"><img src="/assets/images/objects/gift.png"> Perks Allowed</label>
-                </td>
-            </tr>
-            <tr ng-hide="!form.levelCapAllowed">
-                <td colspan="2">
-                    <select class="form-control" ng-model="form.levelCap" ng-controller="RewardsCtrl">
-                        <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="gs_left">
-                    <input id="restrictionEnabled" type="checkbox" ng-model="form.restrictionEnabled">
-                    <label for="restrictionEnabled"><img src="/assets/images/objects/protected.png"> Access Restrictions</label>
-                </td>
-            </tr>
-            <tr ng-hide="!form.restrictionEnabled">
-                <td colspan="2">
-                    <select class="form-control" ng-model="form.restriction">
-                        <option ng-repeat="r in restrictionTypes" value="{{ r }}">{{ r }}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button class="new_game" style="margin-top: 10px" ng-click="create()">Create Game</button>
-                    <button class="cancel_button" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
-                </td>
-            </tr>
-        </table>
+        <span ng-show="errors.length">
+            <span class="error">Please correct the following:</span>
+            <ul>
+                <li class="error" ng-repeat="error in errors">
+                    <span class="error">{{ error }}</span>
+                </li>
+            </ul>
+        </span>
+
+        <div class="row">
+            <div class="col-md-12">
+                <label for="name" class="bold">Game Title</label>
+                <input id="name" class="form-control col-md-12" ng-model="form.name"
+                       placeholder="Enter the name of the game here">
+            </div>
+            <div class="col-md-12">
+                <label for="startingBalance" class="bold">Buy-In / Initial Funds</label>
+                <select id="startingBalance" class="form-control"
+                        ng-model="form.startingBalance">
+                    <option ng-repeat="bal in startingBalances" value="{{ bal }}">${{ bal | number }}</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input id="startManually" type="checkbox" ng-model="form.startManually">
+                <label for="startManually"><img src="/assets/images/objects/clock16.png"> Start Manually</label>
+            </div>
+            <div class="col-md-6">
+                <input id="friendsOnly" type="checkbox" ng-model="form.friendsOnly" ng-disabled="form.privateGame">
+                <label for="friendsOnly"><img src="/assets/images/objects/friend_header.gif"> Friends-Only</label>
+            </div>
+            <div class="col-md-6">
+                <input id="levelCapAllowed" type="checkbox" ng-model="form.levelCapAllowed">
+                <label for="levelCapAllowed"><img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)</label>
+            </div>
+            <div class="col-md-6">
+                <input id="privateGame" type="checkbox" ng-model="form.privateGame" ng-change="enforceInvitationOnly()">
+                <label for="privateGame"><img src="/assets/images/objects/protected.png"> Invitation-Only</label>
+            </div>
+            <div class="col-md-6">
+                <select class="form-control"
+                        ng-model="form.levelCap"
+                        ng-controller="RewardsCtrl"
+                        ng-disabled="!form.levelCapAllowed">
+                    <option value="">-- Level Cap --</option>
+                    <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' +
+                        level.description }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <input id="perksAllowed" type="checkbox" ng-model="form.perksAllowed">
+                <label for="perksAllowed"><img src="/assets/images/objects/gift.png"> Perks Allowed</label>
+            </div>
+            <div class="col-md-6">
+                <input id="robotsAllowed" type="checkbox" ng-model="form.robotsAllowed">
+                <label for="robotsAllowed"><img src="/assets/images/objects/robot.png"> Robots Allowed</label>
+            </div>
+            <div class="col-md-12">
+                <button class="new_game" style="margin-top: 10px" ng-click="create()">Create Game</button>
+                <button class="cancel_button" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
     </div>
 </script>

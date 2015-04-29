@@ -31,7 +31,14 @@ a:active  { cursor: pointer; text-decoration: none; }
 }
 
 body {
-	background-color: white
+	min-width: 1024px;
+	margin-right: 25px;
+	margin-left: 25px;
+	background-color: white;
+}
+
+.bold {
+	font-weight: bold
 }
 
 img {

@@ -5,6 +5,7 @@
 # Home page
 GET           /                                                           com.shocktrade.controllers.Application.index
 GET           /websocket                                                  com.shocktrade.controllers.Application.webSocket
+GET           /assets/javascripts/app.min.js                              com.shocktrade.controllers.Application.ngApp
 GET           /assets/javascripts/facebook.min.js                         com.shocktrade.controllers.Application.facebook
 
 # Administrative (Bug Reports, Processing & Sessions)
@@ -40,6 +41,7 @@ GET           /assets/javascripts/play/play_statistics_ctrl.min.js        com.sh
 PUT           /api/contest                                                com.shocktrade.controllers.ContestResources.createContest
 GET           /api/contest/:id                                            com.shocktrade.controllers.ContestResources.getContestByID(id)
 DELETE        /api/contest/:id                                            com.shocktrade.controllers.ContestResources.deleteContestByID(id)
+GET           /api/contest/:id/start                                      com.shocktrade.controllers.ContestResources.startContest(id)
 
 GET           /api/contest/:id/rankings                                   com.shocktrade.controllers.ContestResources.getContestRankings(id)
 PUT           /api/contest/:id/chat                                       com.shocktrade.controllers.ContestResources.createChatMessage(id)

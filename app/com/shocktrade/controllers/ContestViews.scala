@@ -26,7 +26,7 @@ object ContestViews extends Controller {
   }
 
   def playSearchCtrl = Action {
-    Ok(assets.javascripts.js.playSearchCtrl())
+    Ok(assets.javascripts.js.playSearchCtrl(Contest.MaxPlayers))
   }
 
   def playStatisticsCtrl = Action {

@@ -5,3 +5,59 @@ http://localhost:9000/api/profile/create
 curl -X PUT -H "Content-Type: application/json" -d \
 '{"emailNotify":true,"symbol":"AMD","limitPrice":4.01,"quantity":"1000","orderType":"BUY","priceType":"LIMIT","orderTerm":"GOOD_FOR_7_DAYS","contestId":"532d248e4cb15ab024a83417","playerId":"51a308ac50c70a97d375a6b2"}' \
 http://localhost:9000/api/orders/create
+
+
+# Participants
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51b6a6a4ea2364b878e0701c", "name":"gadget", "facebookID":"100002058615115"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b8", "name":"seralovett", "facebookID":"1589191728"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b4", "name":"dizorganizer", "facebookID":"100003027501772"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6af", "name":"erv970", "facebookID":"100001920054300"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b3", "name":"brooklynn", "facebookID":"1438994287"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b7", "name":"natech", "facebookID":"1377815655"  } }' \
+http://localhost:9000/api/contest/554076b25dd0bc9103d5f68b/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b6", "name":"gunstarhero", "facebookID":"692041392"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6bb", "name":"shell", "facebookID":"1132188595"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6bc", "name":"sugarmomma", "facebookID":"1038556524"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6bd", "name":"raeci", "facebookID":"1251680188"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ad50c70a97d375a6be", "name":"mrbrooks", "facebookID":"661287058"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b9", "name":"shanc37", "facebookID":"100002209250070"  } }' \
+http://localhost:9000/api/contest/554062f85dd0bc6001b67567/player
+
+curl -X PUT -H "Content-Type: application/json" -d \
+'{ "player": { "id":"51a308ac50c70a97d375a6b5", "name":"daisy", "facebookID":"100001992439064"  } }' \
+http://localhost:9000/api/contest/553d76d71100004700116e03/player
+

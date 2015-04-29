@@ -4,9 +4,7 @@ import java.util.Date
 
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.controllers.Application._
 import com.shocktrade.controllers.QuoteResources.Quote
-import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
 import com.shocktrade.models.contest.OrderType.OrderType
 import com.shocktrade.models.contest.PriceType.PriceType
 import com.shocktrade.models.contest._
@@ -58,11 +56,12 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Try(request.body.asJson map (_.as[ContestSearchForm])) match {
       case Success(Some(form)) =>
         val searchOptions = SearchOptions(
-          activeOnly = form.available ?? form.activeOnly,
-          available = form.available ?? form.activeOnly,
+          activeOnly = form.activeOnly,
+          available = form.available,
+          friendsOnly = form.friendsOnly,
           levelCap = for {allowed <- form.levelCapAllowed; cap <- form.levelCap if allowed} yield cap,
           perksAllowed = form.perksAllowed,
-          restriction = for {used <- form.restrictionUsed; restrict <- form.restriction if used} yield restrict)
+          robotsAllowed = form.robotsAllowed)
         Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests))) recover {
           case e: Exception => Ok(createError(e))
         }
@@ -95,7 +94,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
    * Creates a new contest
    */
   def createContest = Action.async { implicit request =>
-    Try(request.body.asJson.map(_.as[ContestForm])) match {
+    Try(request.body.asJson.map(_.as[ContestCreateForm])) match {
       case Success(Some(form)) =>
         Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message))) recover {
           case e: Exception => Ok(createError(e))
@@ -108,7 +107,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
-  private def makeContest(js: ContestForm) = {
+  private def makeContest(js: ContestCreateForm) = {
     // create a player instance
     val player = PlayerRef(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
 
@@ -118,9 +117,12 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       creator = player,
       creationTime = new Date(),
       startingBalance = js.startingBalance,
-      levelCap = js.levelCap.map(_.toInt),
+      startTime = if (js.startManually.contains(true)) None else Some(new Date()),
+      friendsOnly = js.friendsOnly,
+      levelCap = (for {allowed <- js.levelCapAllowed; cap <- js.levelCap if allowed} yield cap) map (_.toInt),
       perksAllowed = js.perksAllowed,
-      restriction = js.restriction,
+      privateGame = js.privateGame,
+      robotsAllowed = js.robotsAllowed,
       messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
       participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = js.startingBalance, id = js.playerId.toBSID))
     )
@@ -247,6 +249,15 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
+  def startContest(id: String) = Action.async {
+    Contests.startContest(id.toBSID, startTime = new Date()) map {
+      case Some(contest) => Ok(Json.toJson(contest))
+      case None => Ok(createError("No qualifying contest found"))
+    } recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
   private def produceRankings(contest: Contest): Future[JsArray] = {
     for {
     // compute the total equity for each player
@@ -335,28 +346,56 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
-  case class ContestForm(name: String,
-                         playerId: String,
-                         playerName: String,
-                         facebookId: String,
-                         startingBalance: BigDecimal,
-                         levelCapAllowed: Option[Boolean],
-                         levelCap: Option[String],
-                         perksAllowed: Option[Boolean],
-                         restrictionEnabled: Option[Boolean],
-                         restriction: Option[AccessRestrictionType])
+  case class ContestCreateForm(name: String,
+                               playerId: String,
+                               playerName: String,
+                               facebookId: String,
+                               startingBalance: BigDecimal,
+                               startManually: Option[Boolean],
+                               friendsOnly: Option[Boolean],
+                               levelCapAllowed: Option[Boolean],
+                               levelCap: Option[String],
+                               perksAllowed: Option[Boolean],
+                               privateGame: Option[Boolean],
+                               robotsAllowed: Option[Boolean])
 
-  implicit val contestFormReads: Reads[ContestForm] = (
+  implicit val contestFormReads: Reads[ContestCreateForm] = (
     (__ \ "name").read[String] and
       (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
       (__ \ "player" \ "facebookID").read[String] and
       (__ \ "startingBalance").read[BigDecimal] and
+      (__ \ "startManually").readNullable[Boolean] and
+      (__ \ "friendsOnly").readNullable[Boolean] and
       (__ \ "levelCapAllowed").readNullable[Boolean] and
       (__ \ "levelCap").readNullable[String] and
       (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "restrictionEnabled").readNullable[Boolean] and
-      (__ \ "restriction").readNullable[AccessRestrictionType])(ContestForm.apply _)
+      (__ \ "privateGame").readNullable[Boolean] and
+      (__ \ "robotsAllowed").readNullable[Boolean])(ContestCreateForm.apply _)
+
+  /**
+   * {"activeOnly":true,"available":false,"perksAllowed":false,"levelCap":"1","levelCapAllowed":true,"friendsOnly":true,"restrictionUsed":true}
+   */
+  case class ContestSearchForm(activeOnly: Option[Boolean],
+                               available: Option[Boolean],
+                               friendsOnly: Option[Boolean],
+                               levelCap: Option[String],
+                               levelCapAllowed: Option[Boolean],
+                               perksAllowed: Option[Boolean],
+                               privateGame: Option[Boolean],
+                               robotsAllowed: Option[Boolean])
+
+
+  implicit val contestSearchFormReads: Reads[ContestSearchForm] = (
+    (__ \ "activeOnly").readNullable[Boolean] and
+      (__ \ "available").readNullable[Boolean] and
+      (__ \ "friendsOnly").readNullable[Boolean] and
+      (__ \ "levelCap").readNullable[String] and
+      (__ \ "levelCapAllowed").readNullable[Boolean] and
+      (__ \ "perksAllowed").readNullable[Boolean] and
+      (__ \ "privateGame").readNullable[Boolean] and
+      (__ \ "robotsAllowed").readNullable[Boolean])(ContestSearchForm.apply _)
+
 
   case class JoinContestForm(playerId: String,
                              playerName: String,
@@ -366,6 +405,15 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
       (__ \ "player" \ "facebookID").read[String])(JoinContestForm.apply _)
+
+  case class MessageForm(sender: PlayerRef,
+                         recipient: Option[PlayerRef],
+                         text: String)
+
+  implicit val messageFormReads: Reads[MessageForm] = (
+    (__ \ "sender").read[PlayerRef] and
+      (__ \ "recipient").readNullable[PlayerRef] and
+      (__ \ "text").read[String])(MessageForm.apply _)
 
   /**
    * contestId = 553aa9f15dd0bcf00087f6ea, playerId = 51a308ac50c70a97d375a6b2,
@@ -393,37 +441,5 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
-
-  /**
-   * {"activeOnly":true,"available":false,"perksAllowed":false,"levelCap":"1","levelCapAllowed":true,"friendsOnly":true,"restrictionUsed":true}
-   */
-  case class ContestSearchForm(activeOnly: Option[Boolean],
-                               available: Option[Boolean],
-                               friendsOnly: Option[Boolean],
-                               levelCap: Option[String],
-                               levelCapAllowed: Option[Boolean],
-                               perksAllowed: Option[Boolean],
-                               restrictionUsed: Option[Boolean],
-                               restriction: Option[AccessRestrictionType])
-
-
-  implicit val contestSearchFormReads: Reads[ContestSearchForm] = (
-    (__ \ "activeOnly").readNullable[Boolean] and
-      (__ \ "available").readNullable[Boolean] and
-      (__ \ "friendsOnly").readNullable[Boolean] and
-      (__ \ "levelCap").readNullable[String] and
-      (__ \ "levelCapAllowed").readNullable[Boolean] and
-      (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "restrictionUsed").readNullable[Boolean] and
-      (__ \ "restriction").readNullable[AccessRestrictionType])(ContestSearchForm.apply _)
-
-  case class MessageForm(sender: PlayerRef,
-                         recipient: Option[PlayerRef],
-                         text: String)
-
-  implicit val messageFormReads: Reads[MessageForm] = (
-    (__ \ "sender").read[PlayerRef] and
-      (__ \ "recipient").readNullable[PlayerRef] and
-      (__ \ "text").read[String])(MessageForm.apply _)
 
 }

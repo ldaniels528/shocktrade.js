@@ -198,24 +198,14 @@ div.leaderboardContainer {
 	height: 190px;
 }
 
-.composeButton {
-    background:url('../images/objects/mail.png') no-repeat;
-    background-color: #3080e0;
-	font-weight: bold;
-	text-align: right;
-	color: #000000;	
-	cursor: pointer;
-
-	text-indent: +8px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    border: solid 1px #20538D;
-    
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+.start_game {
+	background-color: #00ff00;
+	color: #000000;
+	font-size: 10pt;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .new_game {
@@ -236,7 +226,7 @@ div.leaderboardContainer {
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-#contestCreateButton {
+button.contest_create {
     background:url('/assets/images/buttons/new_item.png') no-repeat;
     background-color: #ffff00;
 	font-weight: normal;
@@ -256,12 +246,12 @@ div.leaderboardContainer {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-#contestMgmtButton {
+button.create_new {
     background:url('/assets/images/buttons/new_item.png') no-repeat;
     background-color: #ffaa00;
 	font-weight: normal;
 	text-align: right;
-	color: #000000;	
+	color: #000000;
 	cursor: pointer;
 
 	text-indent: +8px;
@@ -269,7 +259,7 @@ div.leaderboardContainer {
     -moz-border-radius: 4px;
     border-radius: 4px;
     border: solid 1px #20538D;
-    
+
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);

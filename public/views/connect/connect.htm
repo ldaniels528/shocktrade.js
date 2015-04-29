@@ -9,20 +9,7 @@
 			<div ng-show="contact.profile" ng-include src="'/assets/views/connect/contact_card.htm'"></div>
 			
 			<!-- Non-ShockTrade user -->
-			<div ng-hide="contact.profile" style="background-color: #ffffee; width: 100%; height: 150px; border: 1px solid #aaaaaa; border-radius: 4px 4px 4px 4px">
-				<div style="width: 100%; background-color: #aaaaaa; color: white; font-weight: bold; text-align: center">{{ contact.name }}</div>
-				<div>
-					<div style="display: inline; float: left; width: 80px">
-						<avatar id="{{ contact.id }}" style="width: 75px; height: 75px; margin: 5px" />
-					</div>
-					<div style="display: inline; float: right; width: 200px">
-						<div class="error" style=" text-align: left">Non-member</div>
-						<div style=" text-align: left">Related via <span class="facebook">facebook</span></div>
-					</div>
-					<br style="clear: both">
-				</div>
-				<button style="float: right; margin-right: 20px">Invite to <span style="color: #0000ff">ShockTrade</span></button>
-			</div>
+			<div ng-hide="contact.profile" ng-include src="'/assets/views/connect/unregistered_user_card.htm'"></div>
 		</div>		
 		<div class="contactsContainer">
 			<span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
@@ -36,7 +23,7 @@
 						<img ng-show="friend.idle" src="/assets/images/status/yellowlight.gif">
 						<img ng-show="!friend.active && !friend.idle" src="/assets/images/status/offlight.png">
 					</td>
-					<td><avatar id="{{ friend.id }}" style="width: 16px; height: 16px"></td>
+					<td><avatar id="{{ friend.id }}" style="width: 16px; height: 16px"/></td>
 					<td><a href="" ng-click="chooseContact(friend)" style="padding-left: 5px">{{friend.name}}</a></td>
 				</tr>
 			</table>
@@ -112,23 +99,4 @@
 	<br style="clear: both">
 </div>
 
-<script type="text/ng-template" id="new_mail.htm">
-	<div class="modal-header">
-   		<h3>New Message</h3>
-    </div>
-    <div class="modal-body">
-		<div>
-			<textarea ng-model="newMessage.recipient" placeholder="Recipient(s)" rows="1" style="width: 512px"></textarea>
-		</div>
-		<div>
-			<textarea ng-model="newMessage.subject" placeholder="Subject" rows="1" style="width: 512px"></textarea>
-		</div>
-		<div>
-			<textarea ng-model="newMessage.body" style="width: 512px; height: 250px" spellcheck="true"></textarea>
-		</div>
-    </div>
-	<div class="modal-footer">
-    	<button class="btn btn-primary" ng-click="ok()">Send</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
-</script>
+<div ng-include src="'/assets/views/connect/new_mail.htm'"></div>

@@ -1,7 +1,7 @@
 angular
     .module('shocktrade')
-    .controller('PlayPortfolioCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
-        function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
+    .controller('PlayPortfolioCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewOrderDialog',
+        function ($scope, $location, $log, $timeout, MySession, ContestService, Errors, NewOrderDialog) {
 
             $scope.newOrderPopup = function () {
                 NewOrderDialog.popup($scope);
@@ -11,7 +11,7 @@ angular
                 ContestService.deleteOrder(contestId, playerId, orderId)
                     .success(function (participant) {
                         $scope.participant = participant;
-                        updateWithPricing(participant);
+                        $scope.updateWithPricing(participant);
                     })
                     .error(function (response) {
                         Errors.addMessage("Failed to cancel order");

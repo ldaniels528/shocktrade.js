@@ -75,7 +75,10 @@ class ContestReaderActor extends Actor with ActorLogging {
       q = q ++ BS("levelCap" -> BS("$gte" -> levelCap))
     }
     so.perksAllowed.foreach { isSet =>
-      if (isSet) q = q ++ BS("perksAllowed" -> so.perksAllowed)
+      if (isSet) q = q ++ BS("perksAllowed" -> true)
+    }
+    so.robotsAllowed.foreach { isSet =>
+      if (isSet) q = q ++ BS("robotsAllowed" -> true)
     }
     q
   }

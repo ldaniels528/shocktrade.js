@@ -4,6 +4,7 @@ angular
     .module('shocktrade')
     .controller('PlayCtrl', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
         function ($rootScope, $scope, $location, $log, $timeout, MySession, ContestService, Errors, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
+            var maxPlayers = parseInt('@maxPlayers');
 
             // setup the current contest
             $scope.contest = null;
@@ -26,7 +27,9 @@ angular
                 "url": "/play/search",
                 "active": false,
                 "lockable": false,
-                "disabled": false
+                "isVisible": function(c) {
+                    return true;
+                }
             }, {
                 "name": "Lobby",
                 "imageURL": "/assets/images/objects/reward.png",
@@ -34,7 +37,9 @@ angular
                 "url": "/play/lobby",
                 "active": false,
                 "lockable": false,
-                "disabled": false
+                "isVisible": function(c) {
+                    return c && c._id;
+                }
             }, {
                 "name": "Lounge",
                 "imageURL": "/assets/images/objects/friend_header.gif",
@@ -42,7 +47,10 @@ angular
                 "url": "/play/lounge",
                 "active": false,
                 "lockable": true,
-                "disabled": false
+                "disabled": false,
+                "isVisible": function(c) {
+                    return c && c._id;
+                }
             }, {
                 "name": "Portfolio",
                 "imageURL": "/assets/images/objects/portfolio_header.png",
@@ -50,7 +58,9 @@ angular
                 "url": "/play/portfolio",
                 "active": false,
                 "lockable": true,
-                "disabled": false
+                "isVisible": function(c) {
+                    return c && c._id;
+                }
             }, {
                 "name": "Awards",
                 "path": "/assets/views/play/awards/awards.htm",
@@ -58,7 +68,9 @@ angular
                 "url": "/play/awards",
                 "active": false,
                 "lockable": false,
-                "disabled": false
+                "isVisible": function(c) {
+                    return true;
+                }
             }, {
                 "name": "Perks",
                 "path": "/assets/views/play/perks/perks.htm",
@@ -66,7 +78,10 @@ angular
                 "url": "/play/perks",
                 "active": false,
                 "lockable": false,
-                "disabled": false
+                "disabled": false,
+                "isVisible": function(c) {
+                    return true;
+                }
             }, {
                 "name": "Statistics",
                 "path": "/assets/views/play/statistics/statistics.htm",
@@ -74,20 +89,22 @@ angular
                 "url": "/play/statistics",
                 "active": false,
                 "lockable": false,
-                "disabled": false
+                "isVisible": function(c) {
+                    return true;
+                }
             }];
 
             $scope.changePlayTab = function (tabIndex) {
-                console.log("Changing location to " + $scope.playTabs[tabIndex].url);
+                $log.info("Changing location to " + $scope.playTabs[tabIndex].url);
                 $location.path($scope.playTabs[tabIndex].url);
                 return true;
             };
 
             $scope.setPlayActiveTab = function (tabIndex) {
-                console.log("Setting Play active tab to #" + tabIndex + " (" + $scope.playTabs[tabIndex].url + ")");
+                $log.info("Setting Play active tab to #" + tabIndex + " (" + $scope.playTabs[tabIndex].url + ")");
 
                 // make all of the tabs inactive
-                angular.forEach($scope.playTabs, function(tab) {
+                angular.forEach($scope.playTabs, function (tab) {
                     tab.active = false;
                 });
                 $scope.playTabs[tabIndex].active = true;
@@ -122,7 +139,7 @@ angular
 
             $scope.changeContest = function (contest) {
                 if (contest != null) {
-                    console.log("Changing contest to " + contest._id.$oid);
+                    $log.info("Changing contest to " + contest._id.$oid);
                     MySession.contestId = contest._id.$oid;
                 }
             };
@@ -175,13 +192,13 @@ angular
                             exposure.write(target);
                         },
                         function (err) {
-                            console.log("Error: " + angular.toJson(err));
+                            $log.info("Error: " + angular.toJson(err));
                         });
                 }
             };
 
             $scope.loadContest = function (contestId) {
-                if (contestId && contestId != "") {
+                if (contestId) {
                     // load the contest
                     ContestService.getContestByID(contestId)
                         .success(function (contest) {
@@ -196,11 +213,11 @@ angular
                             $scope.participant = lookupParticipantByName(playerName);
 
                             // load the enriched participant
-                            updateWithRankings(playerName, contest);
+                            $scope.updateWithRankings(playerName, contest);
 
                             // load the pricing for the participant's position
                             if ($scope.participant) {
-                                updateWithPricing($scope.participant);
+                                $scope.updateWithPricing($scope.participant);
                             }
                         })
                         .error(function (xhr, status, error) {
@@ -211,15 +228,10 @@ angular
             };
 
             $scope.selectContest = function (contest) {
+                $log.info("Selecting contest " + contest.name);
                 $scope.contest = contest;
                 MySession.contestId = contest._id.$oid;
-
-                if (!contest.rankings) {
-                    updateWithRankings(MySession.userProfile.name, contest);
-                    if(MySession.userProfile.id) {
-                        loadEnrichedParticipant(MySession.contestId, MySession.userProfile.id);
-                    }
-                }
+                $scope.$broadcast("contest_selected", contest);
             };
 
             $scope.starRating = function (gainLoss) {
@@ -232,14 +244,14 @@ angular
             };
 
             $scope.isMedalist = function (rank) {
-                return rank == '1st' || rank == '2nd' || rank == '3rd';
+                return rank === '1st' || rank === '2nd' || rank === '3rd';
             };
 
             $scope.gainLoss = function (tx) {
                 var cost = (tx.pricePaid || 0) * tx.quantity;
                 var gross = (tx.priceSold || 0) * tx.quantity;
-                var comissions = (tx.commision1 || 0) + (tx.commision2 || 0) + (tx.commission || 0);
-                var net = gross - (cost + comissions);
+                var commissions = (tx.commision1 || 0) + (tx.commision2 || 0) + (tx.commission || 0);
+                var net = gross - (cost + commissions);
                 return net != 0 ? ( net / cost) * 100 : 0;
             };
 
@@ -297,26 +309,14 @@ angular
             }
 
             function isContestSelected(contestId) {
-                return ($scope.contest && $scope.contest._id.$oid == contestId);
-            }
-
-            function loadEnrichedParticipant(contestId, playerId) {
-                ContestService.getParticipantByID(contestId, playerId)
-                    .success(function (response) {
-                        // TODO console.log("BEFORE participant = " + JSON.stringify($scope.participant, null, '\t'));
-                        // TODO console.log("AFTER participant = " + JSON.stringify(response.data, null, '\t'));
-                        $scope.participant = response.data;
-                    })
-                    .error(function (err) {
-
-                    });
+                return ($scope.contest && $scope.contest._id.$oid === contestId);
             }
 
             function lookupParticipantByName(userName) {
                 if ($scope.contest) {
-                    for(var n = 0; n < $scope.contest.participants.length; n++) {
+                    for (var n = 0; n < $scope.contest.participants.length; n++) {
                         var participant = $scope.contest.participants[n];
-                        if(participant.name == userName) return participant;
+                        if (participant.name === userName) return participant;
                     }
                     return {};
                 }
@@ -339,14 +339,11 @@ angular
             /**
              * Updates a participant with pricing information
              */
-            function updateWithPricing(participant) {
+            $scope.updateWithPricing = function (participant) {
                 // retrieve the symbols
-                var symbols = [];
-                if (participant.positions) {
-                    for (var n = 0; n < participant.positions.length; n++) {
-                        symbols.push(participant.positions[n].symbol);
-                    }
-                }
+                var symbols = (participant.positions || []).map(function (p) {
+                    return p.symbol;
+                });
 
                 // load the symbols
                 if (symbols.length) {
@@ -363,12 +360,12 @@ angular
                         }
                     });
                 }
-            }
+            };
 
             /**
              * Updates the contest with participant rankings
              */
-            function updateWithRankings(playerName, contest) {
+            $scope.updateWithRankings = function(playerName, contest) {
                 ContestService.getRankings(contest._id.$oid).then(
                     function (response) {
                         contest.rankings = response.data;
@@ -377,7 +374,7 @@ angular
                         if ($scope.participant) {
                             for (var n = 0; n < contest.rankings.length; n++) {
                                 var ranking = contest.rankings[n];
-                                if (ranking.name == playerName) {
+                                if (ranking.name === playerName) {
                                     $scope.participant.gainLoss = ranking.gainLoss;
                                     $scope.participant.rank = ranking.rank;
                                 }
@@ -385,7 +382,7 @@ angular
 
                             // add empty slots if the contest is active
                             if (contest.status == 'ACTIVE' && contest.rankings) {
-                                for (var m = contest.rankings.length; m < @maxPlayers; m++) {
+                                for (var m = contest.rankings.length; m < maxPlayers; m++) {
                                     contest.rankings.push({
                                         name: null,
                                         rank: placeName(m + 1),
@@ -397,10 +394,10 @@ angular
                             }
                         }
                     },
-                    function(err) {
+                    function (err) {
                         $log.error("An error occurred loading rankings")
                     });
-            }
+            };
 
             //////////////////////////////////////////////////////////////////////
             //              Event Listeners
@@ -426,15 +423,17 @@ angular
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' updated");
                 insertID(contest);
-                if(contest.id == MySession.contestId) {
+                if (contest.id === MySession.contestId) {
                     $scope.contest = contest;
                 }
             });
 
             // watch the contest ID
             $scope.$watch("MySession.contestId", function (oldVal, newVal) {
-                // load the contest
-                $scope.loadContest(MySession.contestId);
+                if(MySession.contestId) {
+                    // load the contest
+                    $scope.loadContest(MySession.contestId);
+                }
             });
 
         }]);

@@ -8,6 +8,7 @@
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))' type="text/css" rel="stylesheet" media="screen">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media="screen">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.css"))' type="text/css" rel="stylesheet" media="screen">
+
 	<link href='@routes.Assets.at("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.at("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.at("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
@@ -34,7 +35,7 @@
 	</style>
 </head>
 
-<body style="min-width: 1024px; margin-right: 25px; margin-left: 25px">
+<body>
 	<div id="ShockTradeMain" ng-controller="MainCtrl" ng-init="appInit()" ng-cloak>
 		<!-- title bar -->
 		<h1 class="titleline">
@@ -97,11 +98,11 @@
 	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-ui-router.min.js"))' type="text/javascript"></script>
 	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-sanitize.min.js"))' type="text/javascript"></script>
 	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.js"))' type="text/javascript"></script>
 	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.js"))' type="text/javascript"></script>
 
 	<!-- local JS libraries -->
-	<script src='@routes.Assets.at("javascripts/app.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/app.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/app-filters.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/directives.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/errors.min.js")' type="text/javascript"></script>
@@ -132,7 +133,7 @@
 	<script src='@routes.Assets.at("javascripts/news/news_services.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/news/news_symbols.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/awards_ctrl.min.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/play/contest_svc.min.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.at("javascripts/play/contestService.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/dialogs/invite_player_dialog.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/dialogs/new_game_dialog.min.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.at("javascripts/play/dialogs/new_order_dialog.min.js")' type="text/javascript"></script>

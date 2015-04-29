@@ -2,8 +2,6 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
-import com.shocktrade.models.contest.AccessRestrictionType.AccessRestrictionType
-import com.shocktrade.models.contest.Contest.MaxPlayers
 import com.shocktrade.models.contest.ContestStatus.ContestStatus
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
@@ -24,14 +22,16 @@ case class Contest(name: String,
                    startTime: Option[Date] = None,
                    processedTime: Option[Date] = None,
                    expirationTime: Option[Date] = None,
+                   lastMarketClose: Option[Date] = None,
                    startingBalance: BigDecimal,
-                   maxParticipants: Int = MaxPlayers,
                    messages: List[Message] = Nil,
                    participants: List[Participant] = Nil,
                    status: ContestStatus = ContestStatus.ACTIVE,
+                   friendsOnly: Boolean = false,
                    levelCap: Option[Int] = None,
                    perksAllowed: Boolean = false,
-                   restriction: Option[AccessRestrictionType] = None,
+                   privateGame: Boolean = false,
+                   robotsAllowed: Boolean = false,
                    id: BSONObjectID = BSONObjectID.generate)
 
 /**
@@ -39,7 +39,7 @@ case class Contest(name: String,
  * @author lawrence.daniels@gmail.com
  */
 object Contest {
-  val MaxPlayers = 12
+  val MaxPlayers = 18
 
   implicit val contestReads: Reads[Contest] = (
     (__ \ "name").read[String] and
@@ -48,14 +48,16 @@ object Contest {
       (__ \ "startTime").readNullable[Date] and
       (__ \ "processedTime").readNullable[Date] and
       (__ \ "expirationTime").readNullable[Date] and
+      (__ \ "lastMarketClose").readNullable[Date] and
       (__ \ "startingBalance").read[BigDecimal] and
-      (__ \ "maxParticipants").read[Int] and
       (__ \ "messages").readNullable[List[Message]].map(_.getOrElse(Nil)) and
       (__ \ "participants").readNullable[List[Participant]].map(_.getOrElse(Nil)) and
       (__ \ "status").read[ContestStatus] and
+      (__ \ "friendsOnly").read[Boolean] and
       (__ \ "levelCap").readNullable[Int] and
       (__ \ "perksAllowed").read[Boolean] and
-      (__ \ "restriction").readNullable[AccessRestrictionType] and
+      (__ \ "privateGame").read[Boolean] and
+      (__ \ "robotsAllowed").read[Boolean] and
       (__ \ "_id").read[BSONObjectID])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
@@ -65,14 +67,16 @@ object Contest {
       (__ \ "startTime").writeNullable[Date] and
       (__ \ "processedTime").writeNullable[Date] and
       (__ \ "expirationTime").writeNullable[Date] and
+      (__ \ "lastMarketClose").writeNullable[Date] and
       (__ \ "startingBalance").write[BigDecimal] and
-      (__ \ "maxParticipants").write[Int] and
       (__ \ "messages").write[List[Message]] and
       (__ \ "participants").write[List[Participant]] and
       (__ \ "status").write[ContestStatus] and
+      (__ \ "friendsOnly").write[Boolean] and
       (__ \ "levelCap").writeNullable[Int] and
       (__ \ "perksAllowed").write[Boolean] and
-      (__ \ "restriction").writeNullable[AccessRestrictionType] and
+      (__ \ "privateGame").write[Boolean] and
+      (__ \ "robotsAllowed").write[Boolean] and
       (__ \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
@@ -83,14 +87,16 @@ object Contest {
       doc.getAs[Date]("startTime"),
       doc.getAs[Date]("processedTime"),
       doc.getAs[Date]("expirationTime"),
+      doc.getAs[Date]("lastMarketClose"),
       doc.getAs[BigDecimal]("startingBalance").get,
-      doc.getAs[Int]("maxParticipants").getOrElse(MaxPlayers),
       doc.getAs[List[Message]]("messages").getOrElse(Nil),
       doc.getAs[List[Participant]]("participants").getOrElse(Nil),
       doc.getAs[ContestStatus]("status").get,
+      doc.getAs[Boolean]("friendsOnly").contains(true),
       doc.getAs[Int]("levelCap"),
       doc.getAs[Boolean]("perksAllowed").contains(true),
-      doc.getAs[AccessRestrictionType]("restriction"),
+      doc.getAs[Boolean]("privateGame").contains(true),
+      doc.getAs[Boolean]("robotsAllowed").contains(true),
       doc.getAs[BSONObjectID]("_id").get
     )) match {
       case Success(v) => v
@@ -109,14 +115,16 @@ object Contest {
       "startTime" -> contest.startTime,
       "processedTime" -> contest.processedTime,
       "expirationTime" -> contest.expirationTime,
+      "lastMarketClose" -> contest.lastMarketClose,
       "startingBalance" -> contest.startingBalance,
-      "maxParticipants" -> contest.maxParticipants,
       "messages" -> contest.messages,
       "participants" -> contest.participants,
       "status" -> contest.status,
+      "friendsOnly" -> contest.friendsOnly,
       "levelCap" -> contest.levelCap,
       "perksAllowed" -> contest.perksAllowed,
-      "restriction" -> contest.restriction,
+      "privateGame" -> contest.privateGame,
+      "robotsAllowed" -> contest.robotsAllowed,
       "playerCount" -> contest.participants.size
     )
   }

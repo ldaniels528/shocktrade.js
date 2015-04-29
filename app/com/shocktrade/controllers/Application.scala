@@ -39,6 +39,14 @@ object Application extends Controller with MongoController {
   }
 
   /**
+   * Angular application main
+   * @return
+   */
+  def ngApp = Action {
+    Ok(assets.javascripts.js.app())
+  }
+
+  /**
    * Handles web socket connections
    */
   def webSocket = WebSocket.acceptWithActor[JsValue, JsValue] { request => out =>
