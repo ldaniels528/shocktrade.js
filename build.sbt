@@ -13,7 +13,7 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7",
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
-pipelineStages := Seq(rjs, uglify, digest, gzip)
+//pipelineStages := Seq(rjs, uglify, digest, gzip)
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, play.twirl.sbt.SbtTwirl)
 

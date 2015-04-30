@@ -5,24 +5,6 @@
 			Net Worth: <span class="positive">$ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}</span>
 			<changeArrow value="{{ MySession.userProfile.netWorth }}" />
 		</div>
-		<div style="display: inline">
-			<span ng-if="contest.name" style="color: #2266ff; font-size: 14pt">
-				<span class="game_title">{{ contest.name }}</span>
-				
-				<span ng-if="participant.name">
-					<span class="null">&#8212;</span> 
-					<span ng-class="'rank_' + participant.rank">{{ participant.rank }}</span>
-					<img ng-if="contest.status == 'CLOSED' && participant.rank == '1st'" src="/assets/images/contests/gold.png">
-					<img ng-if="contest.status == 'CLOSED' && participant.rank == '2nd'" src="/assets/images/contests/silver.png">
-					<img ng-if="contest.status == 'CLOSED' && participant.rank == '3rd'" src="/assets/images/contests/bronze.png">
-					<span ng-class="participant.gainLoss >= 0 ? 'positive' : 'negative'">
-						<changearrow ng-hide="(participant.gainLoss || 0) == 0" value="{{ participant.gainLoss }}" />
-						<span ng-if="(participant.gainLoss || 0) == 0" class="positive">+</span>
-						{{ participant.gainLoss | number:2 }}%
-					</span>
-				</span>
-			</span>
-		</div>
 		<div ng-controller="AwardsCtrl" ng-init="setupAwards()" style="display:inline; float: right">
 			<img ng-repeat="award in MySession.userProfile.awards.slice(0,7)" 
 				title="{{ award.name }}"  

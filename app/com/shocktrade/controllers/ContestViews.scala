@@ -10,11 +10,11 @@ import play.api.mvc.{Action, Controller}
 object ContestViews extends Controller {
 
   def lobby = Action {
-    Ok(assets.views.html.playtab.lobby(Contest.MaxPlayers))
+    Ok(assets.views.html.playtab.lobby())
   }
 
   def playCtrl = Action {
-    Ok(assets.javascripts.js.playCtrl(Contest.MaxPlayers))
+    Ok(assets.javascripts.js.playCtrl())
   }
 
   def playPerksCtrl = Action {
@@ -26,7 +26,7 @@ object ContestViews extends Controller {
   }
 
   def playSearchCtrl = Action {
-    Ok(assets.javascripts.js.playSearchCtrl(Contest.MaxPlayers))
+    Ok(assets.javascripts.js.playSearchCtrl())
   }
 
   def playStatisticsCtrl = Action {
@@ -34,7 +34,7 @@ object ContestViews extends Controller {
   }
 
   def search = Action {
-    Ok(assets.views.html.playtab.search(Contest.MaxPlayers))
+    Ok(assets.views.html.playtab.search())
   }
 
 }

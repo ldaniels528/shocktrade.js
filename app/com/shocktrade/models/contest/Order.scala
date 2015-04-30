@@ -7,7 +7,7 @@ import com.shocktrade.models.contest.PriceType._
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{__, Reads, Writes}
+import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson._
 
@@ -15,7 +15,8 @@ import reactivemongo.bson._
  * Represents a stock purchase order
  * @author lawrence.daniels@gmail.com
  */
-case class Order(symbol: String,
+case class Order(id: BSONObjectID = BSONObjectID.generate,
+                 symbol: String,
                  exchange: String,
                  creationTime: Date,
                  expirationTime: Option[Date] = None,
@@ -26,8 +27,7 @@ case class Order(symbol: String,
                  quantity: Int,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
-                 volumeAtOrderTime: Long,
-                 id: BSONObjectID = BSONObjectID.generate)
+                 volumeAtOrderTime: Long)
 
 /**
  * Order Singleton
@@ -36,37 +36,38 @@ case class Order(symbol: String,
 object Order {
 
   implicit val orderReads: Reads[Order] = (
-    (__ \ "symbol").read[String] and
+    (__ \ "_id").read[BSONObjectID] and
+      (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
       (__ \ "creationTime").read[Date] and
-      (__ \ "expirationTime").read[Option[Date]] and
+      (__ \ "expirationTime").readNullable[Date] and
       (__ \ "orderType").read[OrderType] and
       (__ \ "price").read[BigDecimal] and
       (__ \ "priceType").read[PriceType] and
-      (__ \ "processedTime").read[Option[Date]] and
+      (__ \ "processedTime").readNullable[Date] and
       (__ \ "quantity").read[Int] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "emailNotify").read[Boolean] and
-      (__ \ "volumeAtOrderTime").read[Long] and
-      (__ \ "_id").read[BSONObjectID])(Order.apply _)
+      (__ \ "volumeAtOrderTime").read[Long])(Order.apply _)
 
   implicit val orderWrites: Writes[Order] = (
-    (__ \ "symbol").write[String] and
+    (__ \ "_id").write[BSONObjectID] and
+      (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
       (__ \ "creationTime").write[Date] and
-      (__ \ "expirationTime").write[Option[Date]] and
+      (__ \ "expirationTime").writeNullable[Date] and
       (__ \ "orderType").write[OrderType] and
       (__ \ "price").write[BigDecimal] and
       (__ \ "priceType").write[PriceType] and
-      (__ \ "processedTime").write[Option[Date]] and
+      (__ \ "processedTime").writeNullable[Date] and
       (__ \ "quantity").write[Int] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "emailNotify").write[Boolean] and
-      (__ \ "volumeAtOrderTime").write[Long] and
-      (__ \ "_id").write[BSONObjectID])(unlift(Order.unapply))
+      (__ \ "volumeAtOrderTime").write[Long])(unlift(Order.unapply))
 
   implicit object OrderReader extends BSONDocumentReader[Order] {
     def read(doc: BSONDocument) = Order(
+      doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("symbol").get,
       doc.getAs[String]("exchange").get,
       doc.getAs[Date]("creationTime").get,
@@ -78,8 +79,7 @@ object Order {
       doc.getAs[Int]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Boolean]("emailNotify").get,
-      doc.getAs[Long]("volumeAtOrderTime").get,
-      doc.getAs[BSONObjectID]("_id").get
+      doc.getAs[Long]("volumeAtOrderTime").get
     )
   }
 

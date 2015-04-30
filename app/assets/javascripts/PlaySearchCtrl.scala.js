@@ -1,10 +1,7 @@
-@(maxPlayers: Int)
-
 angular
     .module('shocktrade')
     .controller('PlaySearchCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewGameDialog',
         function ($scope, $location, $log, $timeout, MySession, ContestService, Errors, NewGameDialog) {
-            var maxPlayers = parseInt('@maxPlayers');
 
             // setup contest variables
             $scope.myContests = [];
@@ -38,17 +35,17 @@ angular
 
             $scope.getStatusIcon = function (c) {
                 var playerCount = ((c && c.participants) || []).length;
-                if (playerCount + 1 < maxPlayers) return "/assets/images/status/greenlight.png";
-                else if (playerCount + 1 === maxPlayers) return "/assets/images/status/yellowlight.gif";
-                else if (playerCount >= maxPlayers) return "/assets/images/status/redlight.png";
+                if (playerCount + 1 < $scope.maxPlayers) return "/assets/images/status/greenlight.png";
+                else if (playerCount + 1 === $scope.maxPlayers) return "/assets/images/status/yellowlight.gif";
+                else if (playerCount >= $scope.maxPlayers) return "/assets/images/status/redlight.png";
                 else return "/assets/images/status/offlight.png";
             };
 
             $scope.getStatusClass = function (c) {
                 var playerCount = ((c && c.participants) || []).length;
-                if (playerCount + 1 < maxPlayers) return "positive";
-                else if (playerCount + 1 === maxPlayers) return "warning";
-                else if (playerCount >= maxPlayers) return "negative";
+                if (playerCount + 1 < $scope.maxPlayers) return "positive";
+                else if (playerCount + 1 === $scope.maxPlayers) return "warning";
+                else if (playerCount >= $scope.maxPlayers) return "negative";
                 else return "null";
             };
 

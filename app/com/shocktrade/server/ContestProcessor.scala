@@ -1,19 +1,16 @@
 package com.shocktrade.server
 
-import java.net.InetAddress
 import java.util.Date
 
 import com.shocktrade.models.contest.{Contest, OrderType, PriceType}
-import com.shocktrade.server.TradingDAO.{Claim, WorkOrder}
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.util.Tabular
 import com.shocktrade.services.{NASDAQIntraDayQuotesService, YahooFinanceServices}
 import org.joda.time.DateTime
 import play.api.Logger
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import scala.util.Try
 
 /**
  * Contest Processor
@@ -27,6 +24,7 @@ object ContestProcessor {
    * Processes the given contest
    */
   def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Int] = {
+    // compute the market close time (+20 minutes for margin of error)
     val tradingClose = new DateTime(getTradeStopTime()).plusMinutes(20).toDate
 
     // perform claiming
@@ -37,8 +35,8 @@ object ContestProcessor {
       // if not, was there already an end-of-Trading Day-event?
       else if (c.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
 
-      // nothing happens
-      else promiseSuccess(Seq.empty)
+      // otherwise nothing happens
+      else Future.successful(Nil)
     }
 
     // gather the outcomes
@@ -80,20 +78,22 @@ object ContestProcessor {
       quotes <- getStockQuotes(c, orders, asOfDate)
 
       // process the market close orders
-      claims = orders flatMap (processOrder(_, asOfDate, quotes))
+      eligibleClaims = orders flatMap (processOrder(_, asOfDate, quotes))
 
+      // display the eligible claims
       _ = {
         info(c, "Eligible claims:")
-        tabular.transform(claims) foreach Logger.info
+        tabular.transform(eligibleClaims) foreach (s => Logger.info(s))
 
         quotes foreach {
           case (k, v) =>
-            tabular.transform(v) foreach Logger.info
+            tabular.transform(v) foreach (s => Logger.info(s))
         }
       }
 
       // update positions for processed orders
-      ordersAndPositions <- updateOrdersAndPositions(c, asOfDate, claims)
+      ordersAndPositions <- updateOrdersAndPositions(c, asOfDate, eligibleClaims)
+
     } yield ordersAndPositions
   }
 
@@ -110,14 +110,16 @@ object ContestProcessor {
     } yield Claim(wo.symbol, wo.exchange, price, wo.quantity, wo.commission, asOfDate, wo)
   }
 
-  private def updateOrdersAndPositions(c: Contest, asOfDate: Date, claims: Seq[Claim]) = {
+  private def updateOrdersAndPositions(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
     Future.sequence(claims map { claim =>
       for {
       // perform the BUY or SELL
-        outcome <- if (claim.workOrder.orderType == OrderType.BUY)
-          TradingDAO.increasePosition(c, claim, asOfDate)
-        else
-          TradingDAO.reducePosition(c, claim, asOfDate)
+        outcome <- claim.workOrder.orderType match {
+          case OrderType.BUY => TradingDAO.increasePosition(c, claim, asOfDate)
+          case OrderType.SELL => TradingDAO.reducePosition(c, claim, asOfDate)
+          case orderType =>
+            throw new IllegalStateException(s"Unrecognized order type $orderType")
+        }
       } yield (claim, outcome)
     })
   }
@@ -132,7 +134,7 @@ object ContestProcessor {
     // display the failures
     outcomes foreach {
       case (claim, outcome) =>
-        info(c, s"Order #${claim.workOrder._id}: count = $outcome")
+        info(c, s"Order #${claim.workOrder.id}: count = $outcome")
     }
   }
 
@@ -146,7 +148,7 @@ object ContestProcessor {
       // is it a valid claim?
       requiredVolume = wo.quantity + (if (wo.orderTime < getTradeStartTime) 0d else wo.volumeAtOrderTime)
       goodTimeAndVolume = (wo.orderTime <= tradeDateTime) && (volume >= requiredVolume)
-      goodPrice = wo.limitPrice map (limit => if (wo.orderType == OrderType.BUY) limit >= price else limit <= price)
+      goodPrice = wo.price map (limit => if (wo.orderType == OrderType.BUY) limit >= price else limit <= price)
 
     } yield (wo.priceType != PriceType.LIMIT || goodPrice.contains(true)) && goodTimeAndVolume
   }
@@ -186,36 +188,9 @@ object ContestProcessor {
     }) map (_.flatten groupBy (_.symbol))
   }
 
-  private def info(c: Contest, message: String) = {
-    Logger.info(s"${c.name}: $message")
-  }
+  private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 
-  private def error(c: Contest, message: String, e: Throwable = null) = {
-    Logger.error(s"${c.name}: $message", e)
-  }
-
-  /**
-   * Returns the name of the host that the process is running on
-   */
-  private def getHostName = Try(InetAddress.getLocalHost.getHostName).toOption.orNull
-
-  /**
-   * Returns a fulfilled promise of a successful result
-   */
-  private def promiseSuccess[S](result: S): Future[S] = {
-    val promise = Promise[S]()
-    promise.success(result)
-    promise.future
-  }
-
-  /**
-   * Returns a fulfilled promise of a failure result
-   */
-  private def promiseFailure[S](cause: Throwable): Future[S] = {
-    val promise = Promise[S]()
-    promise.failure(cause)
-    promise.future
-  }
+  private def error(c: Contest, message: String, e: Throwable = null) = Logger.error(s"${c.name}: $message", e)
 
   /**
    * Generically represents the common elements of a stock quote

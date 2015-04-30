@@ -19,7 +19,7 @@ case class Participant(name: String,
                        score: Int = 0,
                        lastTradeTime: Option[Date] = None,
                        orders: List[Order] = Nil,
-                       orderHistory: List[Order] = Nil,
+                       orderHistory: List[ClosedOrder] = Nil,
                        positions: List[Position] = Nil,
                        performance: List[Performance] = Nil,
                        id: BSONObjectID = BSONObjectID.generate)
@@ -37,7 +37,7 @@ object Participant {
       (__ \ "score").read[Int] and
       (__ \ "lastTradeTime").readNullable[Date] and
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
-      (__ \ "orderHistory").readNullable[List[Order]].map(_.getOrElse(Nil)) and
+      (__ \ "orderHistory").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
       (__ \ "positions").readNullable[List[Position]].map(_.getOrElse(Nil)) and
       (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)) and
       (__ \ "_id").read[BSONObjectID])(Participant.apply _)
@@ -49,7 +49,7 @@ object Participant {
       (__ \ "score").write[Int] and
       (__ \ "lastTradeTime").writeNullable[Date] and
       (__ \ "orders").write[List[Order]] and
-      (__ \ "orderHistory").write[List[Order]] and
+      (__ \ "orderHistory").write[List[ClosedOrder]] and
       (__ \ "positions").write[List[Position]] and
       (__ \ "performance").write[List[Performance]] and
       (__ \ "_id").write[BSONObjectID])(unlift(Participant.unapply))
@@ -62,7 +62,7 @@ object Participant {
       doc.getAs[Int]("score").get,
       doc.getAs[Date]("lastTradeTime"),
       doc.getAs[List[Order]]("orders").get,
-      doc.getAs[List[Order]]("orderHistory").get,
+      doc.getAs[List[ClosedOrder]]("orderHistory").get,
       doc.getAs[List[Position]]("positions").get,
       doc.getAs[List[Performance]]("performance").get,
       doc.getAs[BSONObjectID]("_id").get

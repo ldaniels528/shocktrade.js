@@ -13,13 +13,13 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * Represents a financial position
  * @author lawrence.daniels@gmail.com
  */
-case class Position(symbol: String,
+case class Position(id: BSONObjectID = BSONObjectID.generate,
+                    symbol: String,
                     exchange: String,
                     pricePaid: BigDecimal,
                     quantity: Int,
                     commission: BigDecimal,
-                    processedTime: Date,
-                    id: BSONObjectID = BSONObjectID.generate) {
+                    processedTime: Date) {
 
   /**
    * Returns the total cost of the position
@@ -36,32 +36,32 @@ case class Position(symbol: String,
 object Position {
 
   implicit val positionReads: Reads[Position] = (
+    (__ \ "_id").read[BSONObjectID] and
     (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
       (__ \ "pricePaid").read[BigDecimal] and
       (__ \ "quantity").read[Int] and
       (__ \ "commission").read[BigDecimal] and
-      (__ \ "processedTime").read[Date] and
-      (__ \ "_id").read[BSONObjectID])(Position.apply _)
+      (__ \ "processedTime").read[Date])(Position.apply _)
 
   implicit val positionWrites: Writes[Position] = (
+    (__ \ "_id").write[BSONObjectID] and
     (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
       (__ \ "pricePaid").write[BigDecimal] and
       (__ \ "quantity").write[Int] and
       (__ \ "commission").write[BigDecimal] and
-      (__ \ "processedTime").write[Date] and
-      (__ \ "_id").write[BSONObjectID])(unlift(Position.unapply))
+      (__ \ "processedTime").write[Date])(unlift(Position.unapply))
 
   implicit object PositionReader extends BSONDocumentReader[Position] {
     def read(doc: BSONDocument) = Position(
+      doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("symbol").get,
       doc.getAs[String]("exchange").get,
       doc.getAs[BigDecimal]("pricePaid").get,
       doc.getAs[Int]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
-      doc.getAs[Date]("processedTime").get,
-      doc.getAs[BSONObjectID]("_id").get
+      doc.getAs[Date]("processedTime").get
     )
   }
 

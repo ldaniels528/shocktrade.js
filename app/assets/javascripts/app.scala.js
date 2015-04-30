@@ -1,3 +1,5 @@
+@(maxPlayers: Int)
+
 (function() {
     var app = angular.module('shocktrade', ['ngCookies', 'ngRoute', 'ngSanitize', 'ui.bootstrap' ]);
     app.config(['$locationProvider', '$parseProvider', '$routeProvider',
@@ -43,6 +45,7 @@
         $rootScope.QuoteService = QuoteService;
         $rootScope.RecentSymbols = RecentSymbols;
         $rootScope.WebSockets = WebSockets;
+        $rootScope.maxPlayers = parseInt('@maxPlayers');
         $rootScope.loading = false;
 
     });

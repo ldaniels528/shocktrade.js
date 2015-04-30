@@ -1,6 +1,7 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.actors.WebSocketHandler
+import com.shocktrade.models.contest.Contest
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._
@@ -43,7 +44,7 @@ object Application extends Controller with MongoController {
    * @return
    */
   def ngApp = Action {
-    Ok(assets.javascripts.js.app())
+    Ok(assets.javascripts.js.app(Contest.MaxPlayers))
   }
 
   /**

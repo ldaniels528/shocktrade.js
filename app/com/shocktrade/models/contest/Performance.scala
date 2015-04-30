@@ -13,15 +13,15 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * Represents the performance associated with the sell of a position
  * @author lawrence.daniels@gmail.com
  */
-case class Performance(symbol: String,
+case class Performance(id: BSONObjectID = BSONObjectID.generate,
+                       symbol: String,
                        exchange: String,
                        pricePaid: BigDecimal,
                        priceSold: BigDecimal,
                        quantity: Int,
-                       commissions: List[Commission] = Nil,
+                       commissions: BigDecimal,
                        purchasedDate: Date,
-                       soldDate: Date,
-                       id: BSONObjectID = BSONObjectID.generate)
+                       soldDate: Date)
 
 /**
  * Performance Singleton
@@ -30,38 +30,38 @@ case class Performance(symbol: String,
 object Performance {
 
   implicit val performanceReads: Reads[Performance] = (
-    (__ \ "symbol").read[String] and
+    (__ \ "_id").read[BSONObjectID] and
+      (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
       (__ \ "pricePaid").read[BigDecimal] and
       (__ \ "priceSold").read[BigDecimal] and
       (__ \ "quantity").read[Int] and
-      (__ \ "commissions").read[List[Commission]] and
+      (__ \ "commissions").read[BigDecimal] and
       (__ \ "purchasedDate").read[Date] and
-      (__ \ "soldDate").read[Date] and
-      (__ \ "_id").read[BSONObjectID])(Performance.apply _)
+      (__ \ "soldDate").read[Date])(Performance.apply _)
 
   implicit val performanceWrites: Writes[Performance] = (
-    (__ \ "symbol").write[String] and
+    (__ \ "_id").write[BSONObjectID] and
+      (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
       (__ \ "pricePaid").write[BigDecimal] and
       (__ \ "priceSold").write[BigDecimal] and
       (__ \ "quantity").write[Int] and
-      (__ \ "commissions").write[List[Commission]] and
+      (__ \ "commissions").write[BigDecimal] and
       (__ \ "purchasedDate").write[Date] and
-      (__ \ "soldDate").write[Date] and
-      (__ \ "_id").write[BSONObjectID])(unlift(Performance.unapply))
+      (__ \ "soldDate").write[Date])(unlift(Performance.unapply))
 
   implicit object PerformanceReader extends BSONDocumentReader[Performance] {
     def read(doc: BSONDocument) = Performance(
+      doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("symbol").get,
       doc.getAs[String]("exchange").get,
       doc.getAs[BigDecimal]("pricePaid").get,
       doc.getAs[BigDecimal]("priceSold").get,
       doc.getAs[Int]("quantity").get,
-      doc.getAs[List[Commission]]("commissions").get,
+      doc.getAs[BigDecimal]("commissions").get,
       doc.getAs[Date]("purchasedDate").get,
-      doc.getAs[Date]("soldDate").get,
-      doc.getAs[BSONObjectID]("_id").get
+      doc.getAs[Date]("soldDate").get
     )
   }
 

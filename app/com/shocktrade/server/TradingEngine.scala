@@ -34,6 +34,7 @@ object TradingEngine {
   def init() {
     // process orders once every 5 minutes
     system.scheduler.schedule(5.seconds, 5.minutes, () => processOrders())
+    ()
   }
 
   def processOrders() {
