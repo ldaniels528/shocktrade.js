@@ -10,6 +10,7 @@ import com.shocktrade.models.contest.PriceType.PriceType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.util.BSONHelper._
+import org.joda.time.DateTime
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
@@ -20,6 +21,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -110,6 +112,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   private def makeContest(js: ContestCreateForm) = {
     // create a player instance
     val player = PlayerRef(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
+    val startTime = if (js.startAutomatically.contains(true)) Some(new Date()) else None
 
     // create the contest
     Contest(
@@ -117,11 +120,12 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       creator = player,
       creationTime = new Date(),
       startingBalance = js.startingBalance,
-      startTime = if (js.startManually.contains(true)) None else Some(new Date()),
+      startTime = startTime,
+      expirationTime = startTime.map(t => new DateTime(t).plusDays(js.duration).toDate),
       friendsOnly = js.friendsOnly,
+      invitationOnly = js.invitationOnly,
       levelCap = (for {allowed <- js.levelCapAllowed; cap <- js.levelCap if allowed} yield cap) map (_.toInt),
       perksAllowed = js.perksAllowed,
-      privateGame = js.privateGame,
       robotsAllowed = js.robotsAllowed,
       messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
       participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = js.startingBalance, id = js.playerId.toBSID))
@@ -166,10 +170,6 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       emailNotify = form.emailNotify,
       volumeAtOrderTime = form.volumeAtOrderTime
     )
-  }
-
-  def getAccessRestrictions = Action {
-    Ok(JsArray(AccessRestrictionType.values.toSeq.map(v => JsString(v.toString))))
   }
 
   def getContestByID(id: String) = Action.async {
@@ -351,12 +351,13 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
                                playerName: String,
                                facebookId: String,
                                startingBalance: BigDecimal,
-                               startManually: Option[Boolean],
+                               startAutomatically: Option[Boolean],
+                               duration: Int,
                                friendsOnly: Option[Boolean],
+                               invitationOnly: Option[Boolean],
                                levelCapAllowed: Option[Boolean],
                                levelCap: Option[String],
                                perksAllowed: Option[Boolean],
-                               privateGame: Option[Boolean],
                                robotsAllowed: Option[Boolean])
 
   implicit val contestFormReads: Reads[ContestCreateForm] = (
@@ -365,12 +366,13 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "player" \ "name").read[String] and
       (__ \ "player" \ "facebookID").read[String] and
       (__ \ "startingBalance").read[BigDecimal] and
-      (__ \ "startManually").readNullable[Boolean] and
+      (__ \ "startAutomatically").readNullable[Boolean] and
+      (__ \ "duration" \ "value").read[Int] and
       (__ \ "friendsOnly").readNullable[Boolean] and
+      (__ \ "invitationOnly").readNullable[Boolean] and
       (__ \ "levelCapAllowed").readNullable[Boolean] and
       (__ \ "levelCap").readNullable[String] and
       (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "privateGame").readNullable[Boolean] and
       (__ \ "robotsAllowed").readNullable[Boolean])(ContestCreateForm.apply _)
 
   /**
@@ -379,36 +381,30 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   case class ContestSearchForm(activeOnly: Option[Boolean],
                                available: Option[Boolean],
                                friendsOnly: Option[Boolean],
+                               invitationOnly: Option[Boolean],
                                levelCap: Option[String],
                                levelCapAllowed: Option[Boolean],
                                perksAllowed: Option[Boolean],
-                               privateGame: Option[Boolean],
                                robotsAllowed: Option[Boolean])
-
 
   implicit val contestSearchFormReads: Reads[ContestSearchForm] = (
     (__ \ "activeOnly").readNullable[Boolean] and
       (__ \ "available").readNullable[Boolean] and
       (__ \ "friendsOnly").readNullable[Boolean] and
+      (__ \ "invitationOnly").readNullable[Boolean] and
       (__ \ "levelCap").readNullable[String] and
       (__ \ "levelCapAllowed").readNullable[Boolean] and
       (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "privateGame").readNullable[Boolean] and
       (__ \ "robotsAllowed").readNullable[Boolean])(ContestSearchForm.apply _)
 
-
-  case class JoinContestForm(playerId: String,
-                             playerName: String,
-                             facebookId: String)
+  case class JoinContestForm(playerId: String, playerName: String, facebookId: String)
 
   implicit val joinContestFormReads: Reads[JoinContestForm] = (
     (__ \ "player" \ "id").read[String] and
       (__ \ "player" \ "name").read[String] and
       (__ \ "player" \ "facebookID").read[String])(JoinContestForm.apply _)
 
-  case class MessageForm(sender: PlayerRef,
-                         recipient: Option[PlayerRef],
-                         text: String)
+  case class MessageForm(sender: PlayerRef, recipient: Option[PlayerRef], text: String)
 
   implicit val messageFormReads: Reads[MessageForm] = (
     (__ \ "sender").read[PlayerRef] and

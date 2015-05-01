@@ -16,7 +16,8 @@ import scala.util.{Failure, Success, Try}
  * Represents a contest
  * @author lawrence.daniels@gmail.com
  */
-case class Contest(name: String,
+case class Contest(id: BSONObjectID = BSONObjectID.generate,
+                   name: String,
                    creator: PlayerRef,
                    creationTime: Date,
                    startTime: Option[Date] = None,
@@ -28,21 +29,21 @@ case class Contest(name: String,
                    participants: List[Participant] = Nil,
                    status: ContestStatus = ContestStatus.ACTIVE,
                    friendsOnly: Boolean = false,
+                   invitationOnly: Boolean = false,
                    levelCap: Option[Int] = None,
                    perksAllowed: Boolean = false,
-                   privateGame: Boolean = false,
-                   robotsAllowed: Boolean = false,
-                   id: BSONObjectID = BSONObjectID.generate)
+                   robotsAllowed: Boolean = false)
 
 /**
  * Contest Singleton
  * @author lawrence.daniels@gmail.com
  */
 object Contest {
-  val MaxPlayers = 18
+  val MaxPlayers = 20
 
   implicit val contestReads: Reads[Contest] = (
-    (__ \ "name").read[String] and
+    (__ \ "_id").read[BSONObjectID] and
+      (__ \ "name").read[String] and
       (__ \ "creator").read[PlayerRef] and
       (__ \ "creationTime").read[Date] and
       (__ \ "startTime").readNullable[Date] and
@@ -54,13 +55,13 @@ object Contest {
       (__ \ "participants").readNullable[List[Participant]].map(_.getOrElse(Nil)) and
       (__ \ "status").read[ContestStatus] and
       (__ \ "friendsOnly").read[Boolean] and
+      (__ \ "invitationOnly").read[Boolean] and
       (__ \ "levelCap").readNullable[Int] and
       (__ \ "perksAllowed").read[Boolean] and
-      (__ \ "privateGame").read[Boolean] and
-      (__ \ "robotsAllowed").read[Boolean] and
-      (__ \ "_id").read[BSONObjectID])(Contest.apply _)
+      (__ \ "robotsAllowed").read[Boolean])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
+    (__ \ "_id").write[BSONObjectID] and
     (__ \ "name").write[String] and
       (__ \ "creator").write[PlayerRef] and
       (__ \ "creationTime").write[Date] and
@@ -73,14 +74,14 @@ object Contest {
       (__ \ "participants").write[List[Participant]] and
       (__ \ "status").write[ContestStatus] and
       (__ \ "friendsOnly").write[Boolean] and
+      (__ \ "invitationOnly").write[Boolean] and
       (__ \ "levelCap").writeNullable[Int] and
       (__ \ "perksAllowed").write[Boolean] and
-      (__ \ "privateGame").write[Boolean] and
-      (__ \ "robotsAllowed").write[Boolean] and
-      (__ \ "_id").write[BSONObjectID])(unlift(Contest.unapply))
+      (__ \ "robotsAllowed").write[Boolean])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
     def read(doc: BSONDocument) = Try(Contest(
+      doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("name").get,
       doc.getAs[PlayerRef]("creator").get,
       doc.getAs[Date]("creationTime").getOrElse(new Date()),
@@ -93,11 +94,10 @@ object Contest {
       doc.getAs[List[Participant]]("participants").getOrElse(Nil),
       doc.getAs[ContestStatus]("status").get,
       doc.getAs[Boolean]("friendsOnly").contains(true),
+      doc.getAs[Boolean]("invitationOnly").contains(true),
       doc.getAs[Int]("levelCap"),
       doc.getAs[Boolean]("perksAllowed").contains(true),
-      doc.getAs[Boolean]("privateGame").contains(true),
-      doc.getAs[Boolean]("robotsAllowed").contains(true),
-      doc.getAs[BSONObjectID]("_id").get
+      doc.getAs[Boolean]("robotsAllowed").contains(true)
     )) match {
       case Success(v) => v
       case Failure(e) =>
@@ -121,9 +121,9 @@ object Contest {
       "participants" -> contest.participants,
       "status" -> contest.status,
       "friendsOnly" -> contest.friendsOnly,
+      "invitationOnly" -> contest.invitationOnly,
       "levelCap" -> contest.levelCap,
       "perksAllowed" -> contest.perksAllowed,
-      "privateGame" -> contest.privateGame,
       "robotsAllowed" -> contest.robotsAllowed,
       "playerCount" -> contest.participants.size
     )

@@ -21,7 +21,7 @@ angular
                     //"recipient": null,
                     "sender": {
                         "_id": MySession.userProfile._id,
-                        "name": MySession.userProfile.name,
+                        "name": MySession.getUserName(),
                         "facebookID": MySession.fbUserID
                     }
                 };

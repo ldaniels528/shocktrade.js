@@ -28,7 +28,6 @@ GET           /assets/views/play/lobby/lobby.htm                          com.sh
 GET           /assets/views/play/search/search.htm                        com.shocktrade.controllers.ContestViews.search
 GET           /assets/javascripts/play/play_ctrl.min.js                   com.shocktrade.controllers.ContestViews.playCtrl
 GET           /assets/javascripts/play/play_perks_ctrl.min.js             com.shocktrade.controllers.ContestViews.playPerksCtrl
-GET           /assets/javascripts/play/play_portfolio_ctrl.min.js         com.shocktrade.controllers.ContestViews.playPortfolioCtrl
 GET           /assets/javascripts/play/play_statistics_ctrl.min.js        com.shocktrade.controllers.ContestViews.playStatisticsCtrl
 
 PUT           /api/contest                                                com.shocktrade.controllers.ContestResources.createContest
@@ -44,7 +43,6 @@ GET           /api/contest/:id/player/:playerId                           com.sh
 DELETE        /api/contest/:id/player/:playerId                           com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
 
 GET           /api/contests/player/:playerId                              com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
-GET           /api/contests/restrictions                                  com.shocktrade.controllers.ContestResources.getAccessRestrictions
 POST          /api/contests/search                                        com.shocktrade.controllers.ContestResources.contestSearch
 
 # Orders

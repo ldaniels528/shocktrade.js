@@ -25,12 +25,20 @@
                     <option ng-repeat="bal in startingBalances" value="{{ bal }}">${{ bal | number }}</option>
                 </select>
             </div>
-            <div class="col-md-6">
-                <input id="startManually" type="checkbox" ng-model="form.startManually">
-                <label for="startManually"><img src="/assets/images/objects/clock16.png"> Start Manually</label>
+            <div class="col-md-12">
+                <label for="duration" class="bold">Game Duration</label>
+                <select id="duration" class="form-control"
+                        ng-model="form.duration"
+                        ng-options="d.label for d in durations">
+                    <option value="">-- Choose a Duration --</option>
+                </select>
             </div>
             <div class="col-md-6">
-                <input id="friendsOnly" type="checkbox" ng-model="form.friendsOnly" ng-disabled="form.privateGame">
+                <input id="startAutomatically" type="checkbox" ng-model="form.startAutomatically">
+                <label for="startAutomatically"><img src="/assets/images/objects/clock16.png"> Start Automatically</label>
+            </div>
+            <div class="col-md-6">
+                <input id="friendsOnly" type="checkbox" ng-model="form.friendsOnly" ng-disabled="form.friendsOnly">
                 <label for="friendsOnly"><img src="/assets/images/objects/friend_header.gif"> Friends-Only</label>
             </div>
             <div class="col-md-6">
@@ -38,8 +46,8 @@
                 <label for="levelCapAllowed"><img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)</label>
             </div>
             <div class="col-md-6">
-                <input id="privateGame" type="checkbox" ng-model="form.privateGame" ng-change="enforceInvitationOnly()">
-                <label for="privateGame"><img src="/assets/images/objects/protected.png"> Invitation-Only</label>
+                <input id="invitationOnly" type="checkbox" ng-model="form.invitationOnly" ng-change="enforceInvitationOnly()">
+                <label for="invitationOnly"><img src="/assets/images/objects/protected.png"> Invitation-Only</label>
             </div>
             <div class="col-md-6">
                 <select class="form-control"

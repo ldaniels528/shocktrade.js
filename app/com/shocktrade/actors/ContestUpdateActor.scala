@@ -97,9 +97,10 @@ class ContestUpdateActor extends Actor with ActorLogging {
       val mySender = sender()
       db.command(FindAndModify(
         collection = "Contests",
-        query = BS("_id" -> contestId),
-        modify = new Update(BS("$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
-        fields = None,
+        query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers), "invitationOnly" -> false),
+        modify = new Update(
+          BS("$inc" -> BS("playerCount" -> 1),
+            "$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
@@ -112,8 +113,9 @@ class ContestUpdateActor extends Actor with ActorLogging {
       db.command(FindAndModify(
         collection = "Contests",
         query = BS("_id" -> contestId),
-        modify = new Update(BS("$pull" -> BS("participants._id" -> playerId)), fetchNewObject = true),
-        fields = None,
+        modify = new Update(
+          BS("$inc" -> BS("playerCount" -> -1),
+            "$pull" -> BS("participants" -> BS("_id" -> playerId))), fetchNewObject = true),
         upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?

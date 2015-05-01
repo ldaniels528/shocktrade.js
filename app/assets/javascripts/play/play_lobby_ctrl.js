@@ -38,7 +38,7 @@ angular
                 $scope.joiningGame = true;
                 var contestId = MySession.contestId;
                 var playerId = MySession.getUserID();
-                var playerName = MySession.userProfile.name;
+                var playerName = MySession.getUserName();
                 var facebookID = MySession.fbUserID;
                 var playerInfo = {"player": {"id": playerId, "name": playerName, "facebookID": facebookID}};
                 ContestService.joinContest(contestId, playerInfo).then(

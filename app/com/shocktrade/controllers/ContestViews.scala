@@ -21,10 +21,6 @@ object ContestViews extends Controller {
     Ok(assets.javascripts.js.playPerksCtrl())
   }
 
-  def playPortfolioCtrl = Action {
-    Ok(assets.javascripts.js.playPortfolioCtrl())
-  }
-
   def playStatisticsCtrl = Action {
     Ok(assets.javascripts.js.playStatisticsCtrl())
   }

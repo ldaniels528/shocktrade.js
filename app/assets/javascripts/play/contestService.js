@@ -7,12 +7,40 @@ angular
     .factory('ContestService', function($http, $log, $q, Errors, QuoteService) {
         var service = {};
 
+        ///////////////////////////////////////////////////////////////
+        //          Contest C.R.U.D.
+        ///////////////////////////////////////////////////////////////
+
         service.createContest = function(form) {
             return $http({method: "PUT", url: "/api/contest", data: angular.toJson(form)});
         };
 
         service.deleteContest = function(contestId) {
             return $http.delete('/api/contest/' + contestId);
+        };
+
+        service.joinContest = function(contestId, playerInfo) {
+            return $http({method : 'PUT', url : "/api/contest/" + contestId + "/player", data : angular.toJson(playerInfo)});
+        };
+
+        service.quitContest = function(contestId, playerId) {
+            return $http.delete('/api/contest/' + contestId + "/player/" + playerId);
+        };
+
+        service.startContest = function(contestId) {
+            return $http.get("/api/contest/" + contestId + "/start");
+        };
+
+        ///////////////////////////////////////////////////////////////
+        //          Contest Finders
+        ///////////////////////////////////////////////////////////////
+
+        service.findContests = function (searchOptions) {
+            return $http({method: 'POST', url: '/api/contests/search', data: angular.toJson(searchOptions)})
+                .then(function(response) {
+                    var contests = response.data;
+                    return contests.map(insertID)
+                });
         };
 
         service.getContestByID = function(contestId) {
@@ -34,33 +62,9 @@ angular
             })
         };
 
-        service.findContests = function (searchOptions) {
-            return $http({method: 'POST', url: '/api/contests/search', data: angular.toJson(searchOptions)})
-                .then(function(response) {
-                    var contests = response.data;
-                    return contests.map(insertID)
-                });
-        };
-
-        service.joinContest = function(contestId, playerInfo) {
-            return $http({method : 'PUT', url : "/api/contest/" + contestId + "/player", data : angular.toJson(playerInfo)});
-        };
-
-        service.quitContest = function(contestId, playerId) {
-            return $http.delete('/api/contest/' + contestId + "/player/" + playerId);
-        };
-
-        service.startContest = function(contestId) {
-            return $http.get("/api/contest/" + contestId + "/start");
-        };
-
         /////////////////////////////////////////////////////////////////////////////
         //			Miscellaneous
         /////////////////////////////////////////////////////////////////////////////
-
-        service.getRestrictions = function() {
-            return $http.get("/api/contests/restrictions");
-        };
 
         service.getChart = function(contestId, participantName, chartName) {
             // build the appropriate URL

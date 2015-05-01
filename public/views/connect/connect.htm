@@ -42,9 +42,9 @@
 					<td>
 						<span>
 						<img ng-click="composeMessage()" src="/assets/images/buttons/new-mail24.png" title="Create new message" style="cursor: pointer"> &nbsp;
-						<img ng-click="deleteMessages(MySession.userProfile.name)" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
-						<img ng-click="deleteMessages(MySession.userProfile.name)" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
-						<img ng-click="loadMyUpdates(MySession.userProfile.name)" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
+						<img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
+						<img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
+						<img ng-click="loadMyUpdates(MySession.getUserName())" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
 						</span>
 					</td>
 					<td>
@@ -55,7 +55,7 @@
 		</div>
 		
 		<div class="updatesContainer">
-			<span ng-init="loadMyUpdates(MySession.userProfile.name)" ng-show="myUpdates.length == 0" class="notice">
+			<span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="myUpdates.length == 0" class="notice">
 				<img src="/assets/images/status/alert.gif"> You have no messages 
 			</span>
 			<table style="width: 100%">

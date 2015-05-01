@@ -1,7 +1,7 @@
-<div class="gamesSearchContainer" ng-controller="PlaySearchCtrl">
+<div class="gamesSearchContainer">
 
 	<!-- Game Filtering Options -->
-	<div ng-hide="splitScreen" class="col-md-8">
+	<div ng-hide="isSplitScreen()" class="col-md-8">
 		<fieldset class="contest">
 			<legend class="contest"><img src="/assets/images/buttons/search.png"> Search for Games</legend>
 			<table>
@@ -59,26 +59,9 @@
 		</fieldset>
 	</div>
 
-	<!-- Legend -->
-	<div ng-hide="splitScreen" class="col-md-4">
-		<fieldset class="contest">
-			<legend class="contest">Legend</legend>
-			<table style="width: 100%">
-				<tr>
-					<td><img src="/assets/images/status/greenlight.png"> Open</td>
-					<td><img src="/assets/images/status/yellowlight.gif"> Almost Full</td>
-				</tr>
-				<tr>
-					<td><img src="/assets/images/status/redlight.png"> Full</td>
-					<td><img src="/assets/images/status/offlight.png"> Offline</td>
-				</tr>
-			</table>
-		</fieldset>
-	</div>
-
 	<!-- Search Results -->
 	<div class="col-md-12">
-		<div ng-class="{'col-md-12':(!splitScreen), 'col-md-5':(splitScreen)}">
+		<div ng-class="{'col-md-12':(!isSplitScreen()), 'col-md-5':(isSplitScreen())}">
 			<fieldset class="contest">
 				<legend class="contest">
 					Search Results (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
@@ -86,15 +69,15 @@
 				<div class="availGamesContainer">
 					<table style="width: 100%">
 						<tr>
-							<th class="left" style="padding-left: 20px">Game Name</th>
-							<th ng-hide="splitScreen" class="left" style="padding-left: 20px">Leader</th>
-							<th ng-hide="splitScreen" class="right">Buy In</th>
-							<th ng-hide="splitScreen" class="right">Players</th>
-							<th ng-hide="splitScreen" class="right">Modifiers</th>
+							<th class="col-md-4 left" style="padding-left: 20px">Game Name</th>
+							<th ng-hide="isSplitScreen()" class="col-md-2 center">Started</th>
+							<th ng-hide="isSplitScreen()" class="col-md-2 right">Buy In</th>
+							<th ng-hide="isSplitScreen()" class="col-md-2 right">Players</th>
+							<th ng-hide="isSplitScreen()" class="col-md-2 right">Modifiers</th>
 						</tr>
 						<tr ng-repeat="c in searchResults" class="clickable" ng-click="selectContest(c)"
 							ng-class="contest._id.$oid === c._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )">
-							<td style="width: 30%">
+							<td>
 								<span ng-if="c.status === 'ACTIVE'">
 									<img ng-src="{{ getStatusIcon(c) }}">
 								</span>
@@ -102,35 +85,28 @@
 								<avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
 								<a href="">{{ c.name }}</a>
 							</td>
-							<td ng-hide="splitScreen" style="width: 20%">
-								<span ng-show="c.leader">
-									<img ng-if="c.status === 'CLOSED'" ng-src="/assets/images/{{ tropy(c.leader.rank) }}">
-									<img ng-if="c.status != 'CLOSED'" src="/assets/images/status/transparent.png">
-									<avatar id="{{ c.leader.facebookID }}" style="width: 20px; height: 20px" />
-									<span ng-class="'rank_' + c.leader.rank">{{ c.leader.rank }}</span>
-									<span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-									<changearrow value="{{ c.leader.gainLoss }}" />
-									{{ c.leader.gainLoss | number:2 }}%</span>
-								</span>
+							<td ng-hide="isSplitScreen()" class="center">
+								<span ng-show="c.startTime">{{ c.startTime | date:'MM-dd-yyyy' }}</span>
+								<span ng-hide="c.startTime">&#8212;</span>
 							</td>
-							<td ng-hide="splitScreen" style="width: 15%">
+							<td ng-hide="isSplitScreen()">
 								<span ng-class="c.status === 'ACTIVE' ? '' : 'null'" style="float: right">
 									$ {{ c.startingBalance | number }}
 								</span>
 							</td>
-							<td ng-hide="splitScreen" style="width: 15%; text-align: right">
+							<td ng-hide="isSplitScreen()" class="right">
 								<span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
 								<img src="/assets/images/objects/friend_header.gif">
 								<span ng-if="c.status === 'ACTIVE'">
 									/ {{ maxPlayers < 10 ? '0' + maxPlayers : maxPlayers }}
 								</span>
 							</td>
-							<td ng-hide="splitScreen" style="width: 20%">
+							<td ng-hide="isSplitScreen()">
 								<span style="float: right">
-									<img ng-if="c.robotsAllowed" src="/assets/images/objects/robot.png">
-									<img ng-if="c.friendsOnly" src="/assets/images/objects/friend_header.gif">
-									<img ng-if="c.levelCap" src="/assets/images/objects/friend_delete.png">
-									<img ng-if="c.perksAllowed" src="/assets/images/objects/gift.png">
+									<img ng-src="/assets/images/{{ c.friendsOnly ? 'objects/friend_header.gif' : 'status/transparent.png' }}">
+									<img ng-src="/assets/images/{{ c.levelCap ? 'objects/friend_delete.png' : 'status/transparent.png' }}">
+									<img ng-src="/assets/images/{{ c.perksAllowed ? 'objects/gift.png' : 'status/transparent.png' }}">
+									<img ng-src="/assets/images/{{ c.robotsAllowed ? 'objects/robot.png' : 'status/transparent.png' }}">
 								</span>
 							</td>
 						</tr>
@@ -139,34 +115,47 @@
 			</fieldset>
 			<button class="btn btn-default new_game"
 				style="float: right"
-				ng-hide="splitScreen"
+				ng-hide="isSplitScreen()"
 				ng-click="popupNewGameDialog()"> New Game
 			</button>
 		</div>
 
 		<!-- Game Details -->
-		<div ng-show="splitScreen" ng-class="col-md-7">
+		<div ng-show="isSplitScreen()" ng-class="col-md-7">
 			<fieldset class="contest" ng-show="contest.participants">
 				<legend class="contest">Game Details for '<span class="game_title">{{contest.name}}</span>'
 					<img style="float: right"
 						class="clickable"
-						ng-click="splitScreen = false"
+						ng-click="toggleSplitScreen()"
 						title="Return to results"
 						src="/assets/images/buttons/back-24.png">
 				</legend>
-				<span ng-repeat="p in contest.participants">
-					<avatar id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 0px 2px" />
-				</span>
-				<span ng-repeat="slot in getAvailableSlots()">
-					<img class="spectatorAvatar clickable"
-						ng-click="popupInvitePlayerDialog(contest)"
-						popover-trigger="mouseenter"
-						popover="Invite a friend to this game"
-						style="margin: 2px 0px 0px 2px"
-						src="/assets/images/objects/nobody1.jpg" />
-				</span>
-
 				<div class="row" style="margin-top: 5px; background: #ffffee; border: 1px solid #cccccc; border-radius: 8px; padding: 6px">
+					<div class="col-md-12">
+						<span ng-repeat="p in contest.participants">
+							<avatar id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
+						</span>
+						<span ng-repeat="slot in getAvailableSlots()">
+							<img class="spectatorAvatar clickable"
+							ng-click="popupInvitePlayerDialog(contest)"
+							popover-trigger="mouseenter"
+							popover="Invite a friend to this game"
+							style="width: 53px; height: 53px; margin: 2px 0px 2px 0px"
+							src="/assets/images/objects/nobody1.jpg" />
+						</span>
+					</div>
+
+					<div ng-hide="contest.leader" class="col-md-12">&nbsp;</div>
+					<div ng-show="contest.leader" class="col-md-3">Leader</div>
+					<div ng-show="contest.leader" class="col-md-9">
+						<img ng-if="contest.status === 'CLOSED'" ng-src="/assets/images/{{ tropy(contest.leader.rank) }}">
+						<avatar id="{{ contest.leader.facebookID }}" style="width: 20px; height: 20px" />
+						<span ng-class="'rank_' + contest.leader.rank">{{ contest.leader.rank }}</span>
+						<span ng-class="contest.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+							<changearrow value="{{ contest.leader.gainLoss }}" /> {{ contest.leader.gainLoss | number:2 }}%
+                        </span>
+					</div>
+
 					<div class="col-md-3">Status</div>
 					<div class="col-md-5">
 						<img ng-show="contest" ng-src="{{ getStatusIcon(contest) }}">
@@ -190,7 +179,7 @@
 						<span ng-hide="contest.startTime" class="null">Not Started</span>
 					</div>
 					<div class="col-md-4">
-						<input type="checkbox" ng-model="contest.privateGame" disabled>
+						<input type="checkbox" ng-model="contest.invitationOnly" disabled>
 						<img src="/assets/images/objects/protected.png"> Invitation-Only
 					</div>
 
@@ -215,34 +204,32 @@
 				<div class="row" style="margin-top: 5px">
 					<div class="col-md-2">
 						<button class="btn btn-default start_game"
-						ng-show="isContestOwner(contest)"
+						ng-show="isParticipant(contest)"
 						ng-click="changePlayTab(1)">
 							<img src="/assets/images/objects/enter.png"> Enter
 						</button>
 					</div>
 					<div class="col-md-6">&nbsp;</div>
-					<div class="col-md-2">
+					<div class="col-md-4">
 						<button class="btn btn-default start_game"
-							ng-show="isContestOwner(contest)"
+							ng-show="isContestOwner(contest) && !contest.startTime"
 							ng-click="startContest(contest)">
 							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/play.png' }}"> Start
 						</button>
 						<button class="btn btn-default join_game"
-							ng-show="!isContestOwner(contest)"
+							ng-show="isJoinable(contest)"
 							ng-click="joinContest(contest)">
-							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/friend.png' }}"> Join
+							<img ng-src="/assets/images/{{ contest.joining ? 'status/loading.gif' : 'objects/friend.png' }}"> Join
 						</button>
-					</div>
-					<div class="col-md-2">
 						<button class="btn btn-default delete_game"
-						ng-show="isContestOwner(contest)"
-						ng-click="stopContest(contest)">
-							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'buttons/remove.png' }}"> Stop
+						ng-show="isContestOwner(contest) && (!contest.startTime || contest.participants.length == 1)"
+						ng-click="deleteContest(contest)">
+							<img ng-src="/assets/images/{{ contest.deleting ? 'status/loading.gif' : 'buttons/remove.png' }}"> Delete
 						</button>
 						<button class="btn btn-default quit_game"
-						ng-show="!isContestOwner(contest)"
-						ng-click="joinContest(contest)">
-							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/alert.png' }}"> Quit
+						ng-show="!isContestOwner(contest) && isParticipant(contest)"
+						ng-click="quitContest(contest)">
+							<img ng-src="/assets/images/{{ contest.quitting ? 'status/loading.gif' : 'objects/alert.png' }}"> Quit
 						</button>
 					</div>
 				</div>
