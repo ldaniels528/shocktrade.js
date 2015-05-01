@@ -57,53 +57,9 @@
 			src="/assets/images/buttons/cart-add16.png" 
 			class="clickable middle"
 			popover="Buy or Sell this security" 
-			popover-trigger="mouseenter">
-			
-		<!-- Admin Tools -->
-		<span ng-show="MySession.isAdmin()"
-			popover="Launch Administration Tools" 
-			popover-trigger="mouseenter">
-			<img class="clickable" ng-click="adminToolsPopup()" src="/assets/images/links/system_header.png">
-		</span>			
+			popover-trigger="mouseenter"
+			ng-click="newOrderPopup(q.symbol)">
 	</div>
 	<br style="clear: both">
 </div>
-
-<script type="text/ng-template" id="processingTools.htm">
-	<div class="modal-header">
-	  	<h4>Processing Tools</h4>
-	</div>	
-	<div id="admin_tools" class="modal-body" ng-init="init()">
-		<div>
-			<table style="width: 100%">
-				<tr>
-					<td><h4>Symbol</h4></td> 
-					<td><input type="text" class="input-small form-control" ng-model="params.symbol"></td>
-				</tr>
-				<tr>
-					<td><h4>Tool</h4></td>
-					<td>
-						<select 
-							ng-model="params.tool" 
-							ng-options="tool.id as tool.name for tool in tools"
-							class="form-control">
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td><h4>Status</h4></td> 
-					<td><input type="text" class="form-control" ng-model="status" readonly=true></td>
-				</tr>
-				<tr>
-					<td><h4>Progress</h4></td>
-					<td><progressbar value="50" class="bottom"></progressbar></td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="modal-footer">
-	    <button class="btn btn-primary" ng-click="ok()">Execute</button>
-	    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-	</div>
-</script>
 	
