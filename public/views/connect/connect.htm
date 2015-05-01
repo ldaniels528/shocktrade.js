@@ -23,7 +23,6 @@
 						<img ng-show="friend.idle" src="/assets/images/status/yellowlight.gif">
 						<img ng-show="!friend.active && !friend.idle" src="/assets/images/status/offlight.png">
 					</td>
-					<td><avatar id="{{ friend.id }}" style="width: 16px; height: 16px"/></td>
 					<td><a href="" ng-click="chooseContact(friend)" style="padding-left: 5px">{{friend.name}}</a></td>
 				</tr>
 			</table>
@@ -98,5 +97,3 @@
 	
 	<br style="clear: both">
 </div>
-
-<div ng-include src="'/assets/views/connect/new_mail.htm'"></div>
