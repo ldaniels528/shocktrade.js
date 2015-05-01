@@ -8,12 +8,6 @@ GET           /websocket                                                  com.sh
 GET           /assets/javascripts/app.min.js                              com.shocktrade.controllers.Application.ngApp
 GET           /assets/javascripts/facebook.min.js                         com.shocktrade.controllers.Application.facebook
 
-# Administrative (Bug Reports, Processing & Sessions)
-PUT           /api/admin/bugreport                                        com.shocktrade.controllers.BugReportResources.createBugReport
-GET           /api/admin/bugreport/list                                   com.shocktrade.controllers.BugReportResources.getBugReports
-GET           /api/admin/bugreport/:id                                    com.shocktrade.controllers.BugReportResources.getBugReport(id)
-DELETE        /api/admin/bugreport/:id                                    com.shocktrade.controllers.BugReportResources.deleteBugReport(id)
-
 # Blog
 PUT           /api/blog                                                   com.shocktrade.controllers.BlogResources.createBlogPost()
 POST          /api/blog                                                   com.shocktrade.controllers.BlogResources.updateBlogPost()

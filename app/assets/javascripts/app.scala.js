@@ -12,7 +12,6 @@
 
             // setup the routes
             $routeProvider.
-                when('/admin', { templateUrl: '/assets/views/admin/template.htm', controller: 'AdminCtrl' }).
                 when('/blog', { templateUrl: '/assets/views/blog/postings.htm', controller: 'BlogCtrl' }).
                 when('/blog/management', { templateUrl: '/assets/views/blog/management.htm', controller: 'BlogCtrl' }).
                 when('/connect', { templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectCtrl' }).
