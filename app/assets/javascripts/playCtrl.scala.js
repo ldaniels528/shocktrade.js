@@ -33,7 +33,7 @@
                     }
                 }, {
                     "name": "Lobby",
-                    "imageURL": "/assets/images/objects/reward.png",
+                    "imageURL": "/assets/images/objects/home.gif",
                     "path": "/assets/views/play/lobby/lobby.htm",
                     "url": "/play/lobby",
                     "active": false,
@@ -49,16 +49,6 @@
                     "active": false,
                     "lockable": true,
                     "disabled": false,
-                    "isVisible": function (c) {
-                        return c && c._id;
-                    }
-                }, {
-                    "name": "Portfolio",
-                    "imageURL": "/assets/images/objects/portfolio_header.png",
-                    "path": "/assets/views/play/portfolio/portfolio.htm",
-                    "url": "/play/portfolio",
-                    "active": false,
-                    "lockable": true,
                     "isVisible": function (c) {
                         return c && c._id;
                     }
@@ -111,6 +101,9 @@
                     $scope.playTabs[tabIndex].active = true;
                 };
 
+                $scope.popupInvitePlayerDialog = function (participant) {
+                    InvitePlayerDialog.popup($scope, participant);
+                };
 
                 $scope.containsPlayer = function (contest, userProfile) {
                     return userProfile.id && $scope.findPlayerByID(contest, userProfile.id) != null;
@@ -381,6 +374,7 @@
                                     }
                                 }
 
+                                /*
                                 // add empty slots if the contest is active
                                 if (contest.status == 'ACTIVE' && contest.rankings) {
                                     for (var m = contest.rankings.length; m < $scope.maxPlayers; m++) {
@@ -392,7 +386,7 @@
                                             score: 0
                                         });
                                     }
-                                }
+                                }*/
                             }
                         },
                         function (err) {

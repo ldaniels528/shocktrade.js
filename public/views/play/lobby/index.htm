@@ -1,13 +1,8 @@
-<div ng-init="setPlayActiveTab(1)" style="display: block; width: 100%">
+<div ng-init="setPlayActiveTab(1)">
 	<div ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
-	
-	<div style="display: inline; float: left; width: 14%; margin-top: 5px">
-		<div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
-	</div>
-	
-	<div style="display: inline; float: right; width: 85%">
-		<div ng-include src="'/assets/views/play/lobby/lobby.htm'"></div>
-	</div>
-	
-	<br style="clear: both"/>
+	<fieldset class="contest">
+		<legend class="contest">Game Lobby &#8212; '<span class="game_title">{{contest.name}}</span>'</legend>
+	</fieldset>
+	<div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
+	<div ng-include src="'/assets/views/play/lobby/lobby.htm'"></div>
 </div>

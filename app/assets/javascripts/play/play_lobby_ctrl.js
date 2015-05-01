@@ -11,10 +11,6 @@ angular
             $scope.joining = false;
             $scope.quiting = false;
 
-            $scope.popupInvitePlayerDialog = function (participant) {
-                InvitePlayerDialog.popup($scope, participant);
-            };
-
             $scope.joinedParticipant = function (contest, userProfile) {
                 return $scope.containsPlayer(contest, userProfile);
             };

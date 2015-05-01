@@ -1,9 +1,9 @@
 <div class="gamesSearchContainer" ng-controller="PlaySearchCtrl">
 
-		<!-- Game Filtering Options -->
+	<!-- Game Filtering Options -->
 	<div ng-hide="splitScreen" class="col-md-8">
-		<fieldset>
-			<legend><img src="/assets/images/buttons/search.png"> Search for Games</legend>
+		<fieldset class="contest">
+			<legend class="contest"><img src="/assets/images/buttons/search.png"> Search for Games</legend>
 			<table>
 				<tr>
 					<td class="col-md-3">
@@ -61,10 +61,10 @@
 		</fieldset>
 	</div>
 
-		<!-- Legend -->
+	<!-- Legend -->
 	<div ng-hide="splitScreen" class="col-md-4">
-		<fieldset>
-			<legend>Legend</legend>
+		<fieldset class="contest">
+			<legend class="contest">Legend</legend>
 			<table style="width: 100%">
 				<tr>
 					<td><img src="/assets/images/status/greenlight.png"> Open</td>
@@ -81,8 +81,8 @@
 	<!-- Search Results -->
 	<div class="col-md-12">
 		<div ng-class="{'col-md-12':(!splitScreen), 'col-md-5':(splitScreen)}">
-			<fieldset>
-				<legend>
+			<fieldset class="contest">
+				<legend class="contest">
 					Search Results (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
 				</legend>
 				<div class="availGamesContainer">
@@ -148,8 +148,8 @@
 
 		<!-- Game Details -->
 		<div ng-show="splitScreen" ng-class="col-md-7">
-			<fieldset ng-show="contest.participants">
-				<legend>Game Details for '<span class="game_title">{{contest.name}}</span>'
+			<fieldset class="contest" ng-show="contest.participants">
+				<legend class="contest">Game Details for '<span class="game_title">{{contest.name}}</span>'
 					<img style="float: right"
 						class="clickable"
 						ng-click="splitScreen = false"
@@ -157,7 +157,15 @@
 						src="/assets/images/buttons/back-24.png">
 				</legend>
 				<span ng-repeat="p in contest.participants">
-					<avatar id="{{ p.facebookID }}" style="width: 52px; height: 53px; margin: 3px 0px 0px 2px" />
+					<avatar id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 0px 2px" />
+				</span>
+				<span ng-repeat="slot in getAvailableSlots()">
+					<img class="spectatorAvatar clickable"
+						ng-click="popupInvitePlayerDialog(contest)"
+						popover-trigger="mouseenter"
+						popover="Invite a friend to this game"
+						style="margin: 2px 0px 0px 2px"
+						src="/assets/images/objects/nobody1.jpg" />
 				</span>
 
 				<div class="row" style="margin-top: 5px; background: #ffffee; border: 1px solid #cccccc; border-radius: 8px; padding: 6px">
@@ -207,6 +215,13 @@
 					</div>
 				</div>
 				<div class="row" style="margin-top: 5px">
+					<div class="col-md-2">
+						<button class="btn btn-default start_game"
+						ng-show="isContestOwner(contest)"
+						ng-click="changePlayTab(1)">
+							<img src="/assets/images/objects/enter.png"> Enter
+						</button>
+					</div>
 					<div class="col-md-6">&nbsp;</div>
 					<div class="col-md-2">
 						<button class="btn btn-default start_game"
@@ -221,7 +236,7 @@
 						</button>
 					</div>
 					<div class="col-md-2">
-						<button class="btn btn-default stop_game"
+						<button class="btn btn-default delete_game"
 						ng-show="isContestOwner(contest)"
 						ng-click="stopContest(contest)">
 							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'buttons/remove.png' }}"> Stop
@@ -232,12 +247,6 @@
 							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/alert.png' }}"> Quit
 						</button>
 					</div>
-					<div class="col-md-2">
-						<button class="btn btn-default invite_game"
-						ng-click="joinContest(contest)">
-							<img ng-src="/assets/images/{{ contest.starting ? 'status/loading.gif' : 'objects/participant.png' }}"> Invite
-						</button>
-					</div>
 				</div>
 			</fieldset>
 		</div>
@@ -245,4 +254,3 @@
 
 </div>
 
-<div ng-include src="'/assets/views/play/search/new_game_dialog.htm'"></div>

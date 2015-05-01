@@ -33,6 +33,18 @@ angular
                 return count;
             };
 
+            $scope.getAvailableSlots = function () {
+                if($scope.contest == null) return[];
+                else {
+                    var slots = [];
+                    var count = $scope.maxPlayers - $scope.contest.participants.length;
+                    for(var n = 0; n < count; n++) {
+                        slots.push(n);
+                    }
+                    return slots;
+                }
+            };
+
             $scope.getStatusIcon = function (c) {
                 var playerCount = ((c && c.participants) || []).length;
                 if (playerCount + 1 < $scope.maxPlayers) return "/assets/images/status/greenlight.png";

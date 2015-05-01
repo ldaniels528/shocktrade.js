@@ -7,21 +7,15 @@ div.rank_cell_spectator {
 }
 
 div.rank_cell_even {
-	display: inline;
-	float: left;
 	border: 1px solid #ddddcc;
 	border-radius: 5px 5px 5px 5px;
 	margin-bottom: 5px;
-	width: 48%; 
 }
 
 div.rank_cell_odd {
-	display: inline;
-	float: right;
 	border: 1px solid #ddddcc;
 	border-radius: 5px 5px 5px 5px;
 	margin-bottom: 5px;
-	width: 48%; 
 }
 
 .rank_1st, .rank_2nd, .rank_3rd {

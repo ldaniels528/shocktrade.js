@@ -35,7 +35,6 @@ GET           /assets/views/play/search/search.htm                        com.sh
 GET           /assets/javascripts/play/play_ctrl.min.js                   com.shocktrade.controllers.ContestViews.playCtrl
 GET           /assets/javascripts/play/play_perks_ctrl.min.js             com.shocktrade.controllers.ContestViews.playPerksCtrl
 GET           /assets/javascripts/play/play_portfolio_ctrl.min.js         com.shocktrade.controllers.ContestViews.playPortfolioCtrl
-GET           /assets/javascripts/play/play_search_ctrl.min.js            com.shocktrade.controllers.ContestViews.playSearchCtrl
 GET           /assets/javascripts/play/play_statistics_ctrl.min.js        com.shocktrade.controllers.ContestViews.playStatisticsCtrl
 
 PUT           /api/contest                                                com.shocktrade.controllers.ContestResources.createContest

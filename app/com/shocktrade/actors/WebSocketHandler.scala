@@ -15,7 +15,10 @@ class WebSocketHandler(out: ActorRef) extends Actor with ActorLogging {
 
   override def preStart() = WebSockets.register(uuid, self)
 
-  override def postStop() = WebSockets.unregister(uuid)
+  override def postStop() = {
+    WebSockets.unregister(uuid)
+    ()
+  }
 
   override def receive = {
     case message: JsValue =>

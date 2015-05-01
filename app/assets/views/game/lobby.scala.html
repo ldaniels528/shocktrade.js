@@ -1,0 +1,52 @@
+@import com.shocktrade.models.contest.ContestStatus
+
+<div ng-hide="MySession.contestId" class="spectator_message" style="display: block; width: 100%">
+	<div ng-include src="'/assets/views/play/no_contest_selected_dash.htm'"></div>
+</div>
+<div ng-if="contest._id" ng-controller="PlayLobbyCtrl">
+    <div class="col-md-3">
+        <div style="margin-top: 5px" ng-repeat="p in contest.rankings">
+            <div ng-class="p.name ? 'rank_cell_player' : 'rank_cell_spectator'" ng-class-odd="'rank_cell_even'" ng-class-even="'rank_cell_odd'">
+                <div style="display: inline; float: left">
+                    <avatar id="{{ p.facebookID }}" style="margin: 3px; width: 45px; height: 45px" />
+                </div>
+                <div style="display: block">
+                    <span ng-class="'rank_' + p.rank">{{ p.rank }} <span class="null">&#8212;</span>
+                        <a ng-show="p.name" style="color: #0000ff" href="" ng-click="showGamerCard(p.name)">{{ p.name }}</a>
+                        <span ng-hide="p.name" style="color: #00a044">
+                            Open/Available
+                        </span>
+                    </span>
+                    <div style="display: inline; float: right; margin-right: 10px">
+                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '1st'" src="/assets/images/contests/gold.png">
+                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '2nd'" src="/assets/images/contests/silver.png">
+                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '3rd'" src="/assets/images/contests/bronze.png">
+                    </div>
+                </div>
+                <div style="display: block">
+                    <img src="/assets/images/objects/cash.gif">
+                    <span class="positive">{{ p.totalEquity | number:2 }}</span>
+                    <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
+                        <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}" />
+                        <span ng-if="(p.gainLoss || 0) == 0" class="null">&#8212;</span>
+                        <span ng-if="p.gainLoss > 0">+</span>{{ p.gainLoss | number:2 }}%
+                    </span>
+                </div>
+                <div style="display: block">
+                    <img src="/assets/images/objects/reward.png">
+                    <span style="color: #0080ff">{{ p.score | number }} pts</span>
+                    <span style="float: right; padding-right: 10px" ng-if="p.gainLoss >= 25">
+                        <img ng-repeat="n in starRating(p.gainLoss)" src="/assets/images/status/star.png">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br style="clear: both">
+    </div>
+    <div class="col-md-9"
+        ng-cloak
+        ng-controller="PlayPortfolioCtrl"
+        ng-include src="'/assets/views/play/portfolio/portfolio.htm'">
+
+    </div>
+</div>

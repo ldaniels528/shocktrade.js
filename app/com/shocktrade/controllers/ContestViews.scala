@@ -10,7 +10,7 @@ import play.api.mvc.{Action, Controller}
 object ContestViews extends Controller {
 
   def lobby = Action {
-    Ok(assets.views.html.playtab.lobby())
+    Ok(assets.views.html.game.lobby())
   }
 
   def playCtrl = Action {
@@ -25,16 +25,12 @@ object ContestViews extends Controller {
     Ok(assets.javascripts.js.playPortfolioCtrl())
   }
 
-  def playSearchCtrl = Action {
-    Ok(assets.javascripts.js.playSearchCtrl())
-  }
-
   def playStatisticsCtrl = Action {
     Ok(assets.javascripts.js.playStatisticsCtrl())
   }
 
   def search = Action {
-    Ok(assets.views.html.playtab.search())
+    Ok(assets.views.html.game.search())
   }
 
 }
