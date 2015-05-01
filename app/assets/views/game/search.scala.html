@@ -40,9 +40,7 @@
 						ng-model="searchOptions.friend"
 						style="margin-left: 16px">
 							<option value="">-- None --</option>
-							<option ng-repeat="friend in getRegisteredFriends()"
-							style="background-image:url(http://graph.facebook.com/{{friend.id }}/picture); background-repeat: no-repeat; background-size:16px 16px; text-indent: 16px"
-							value="{{ friend.id }}">{{ friend.name }}</option>
+							<option ng-repeat="friend in getRegisteredFriends()" value="{{ friend.id }}">{{ friend.name }}</option>
 						</select>
 					</td>
 					<td class="col-md-5">

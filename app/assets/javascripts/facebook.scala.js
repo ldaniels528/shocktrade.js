@@ -18,7 +18,6 @@
             var deferred = $q.defer();
             FB.api("/v2.3/me/" + friendListId + "/members&access_token=" + service.accessToken,
                 function (response) {
-                    $log.info("response = " + angular.toJson(response, true));
                     if (response && !response.error) {
                         deferred.resolve(response);
                     }
@@ -33,7 +32,6 @@
             var deferred = $q.defer();
             FB.api("/v2.3/me/friends?access_token=" + service.accessToken,
                 function (response) {
-                    $log.info("response = " + angular.toJson(response, true));
                     if (response && !response.error) {
                         deferred.resolve(response);
                     }
@@ -48,7 +46,6 @@
             var deferred = $q.defer();
             FB.api("/v2.3/me/taggable_friends?access_token=" + service.accessToken,
                 function (response) {
-                    $log.info("response = " + angular.toJson(response, true));
                     if (response && !response.error) {
                         deferred.resolve(response);
                     }
@@ -63,7 +60,6 @@
             var deferred = $q.defer();
             FB.api("/v2.3/me/friendlists?list_type=" + (listType || "close_friends") + "&access_token=" + service.accessToken,
                 function (response) {
-                    $log.info("response = " + angular.toJson(response, true));
                     if (response && !response.error) {
                         deferred.resolve(response);
                     }
@@ -78,7 +74,6 @@
             var deferred = $q.defer();
             FB.api("/v2.3/me/" + friendListId + "/members&access_token=" + service.accessToken,
                 function (response) {
-                    $log.info("response = " + angular.toJson(response, true));
                     if (response && !response.error) {
                         deferred.resolve(response);
                     }
