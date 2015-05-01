@@ -37,7 +37,7 @@ angular
             $scope.joinGame = function () {
                 $scope.joiningGame = true;
                 var contestId = MySession.contestId;
-                var playerId = MySession.userProfile.id;
+                var playerId = MySession.getUserID();
                 var playerName = MySession.userProfile.name;
                 var facebookID = MySession.fbUserID;
                 var playerInfo = {"player": {"id": playerId, "name": playerName, "facebookID": facebookID}};
@@ -63,7 +63,7 @@ angular
             $scope.quitGame = function () {
                 $scope.quitingGame = true;
                 var contestId = MySession.contestId;
-                var playerId = MySession.userProfile.id;
+                var playerId = MySession.getUserID();
                 $log.info("Quiting game # " + contestId + "...");
                 ContestService.quitContest(contestId, playerId)
                     .success(function () {

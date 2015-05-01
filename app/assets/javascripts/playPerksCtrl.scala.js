@@ -28,7 +28,7 @@ angular
             // send the purchase order
             $http({
                 method: 'PUT',
-                url: "/api/profile/" + MySession.userProfile.id + "/perks/purchase",
+                url: "/api/profile/" + MySession.getUserID() + "/perks/purchase",
                 data: angular.toJson(purchasePerks)
             }).success(function(response) {
                 $scope.message =  purchasePerks.length + " Perk(s) purchased";

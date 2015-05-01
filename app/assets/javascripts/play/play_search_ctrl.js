@@ -246,8 +246,8 @@ angular
 
                 if (!contest.rankings) {
                     $scope.updateWithRankings(MySession.userProfile.name, contest);
-                    if (MySession.userProfile.id) {
-                        loadEnrichedParticipant(MySession.contestId, MySession.userProfile.id);
+                    if (MySession.getUserID()) {
+                        loadEnrichedParticipant(MySession.contestId, MySession.getUserID());
                     }
                 }
             });
@@ -269,7 +269,7 @@ angular
                 var playerName = MySession.userProfile.name;
                 if (playerName !== 'Spectator') {
                     // load the player's games
-                    $scope.loadContestsByPlayerID(MySession.userProfile.id);
+                    $scope.loadContestsByPlayerID(MySession.getUserID());
 
                     // load the contest
                     $scope.loadContest(MySession.contestId);
