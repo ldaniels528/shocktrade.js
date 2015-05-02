@@ -1,6 +1,6 @@
 package com.shocktrade.controllers
 
-import com.shocktrade.services.YFRealtimeStockQuoteService
+import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
 import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}

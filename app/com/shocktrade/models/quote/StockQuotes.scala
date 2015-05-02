@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.actors.WebSockets.QuoteUpdated
-import com.shocktrade.actors.{DBaseQuoteActor, QuoteMessages, RealTimeQuoteActor, WebSockets}
+import com.shocktrade.actors.{DBaseQuoteActor, RealTimeQuoteActor, WebSockets}
 import com.shocktrade.controllers.QuoteResources._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
@@ -71,6 +71,11 @@ object StockQuotes {
         case None =>
           relayQuote(findRealTimeQuoteFromService(symbol))
       }
+  }
+
+  def findRealTimeQuotes(symbols: Seq[String])(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
+    val quotes = Future.sequence(symbols map findRealTimeQuote)
+    quotes.map(_.flatten)
   }
 
   def findRealTimeQuoteFromService(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {

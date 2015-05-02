@@ -1,8 +1,11 @@
 package com.shocktrade.controllers
 
+import java.util.Date
+
 import com.shocktrade.models.quote.StockQuotes
-import com.shocktrade.services.GoogleFinanceTradingHistoryService
-import com.shocktrade.services.GoogleFinanceTradingHistoryService.GFHistoricalQuote
+import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
+import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
+import org.joda.time.DateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.Reads._
@@ -359,22 +362,17 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   /**
    * Retrieve the historical quotes for the given symbol
    */
-  def getTradingHistory(symbol: String) = Action.async {
-    import java.util.Date
-
-    import org.joda.time.DateTime
-
+  def getTradingHistory(symbol: String) = Action {
     // define the start and end dates
     val endDate = new Date()
     val startDate = new DateTime(endDate).plusDays(-45).toDate
 
-    (for {
     // get the trading history
-      tradingHistory <- GoogleFinanceTradingHistoryService.getTradingHistory(symbol, startDate, endDate)
+    val tradingHistory = GoogleFinanceTradingHistoryService.getTradingHistory(symbol, startDate, endDate)
 
-      // convert to historical quotes (in JSON)
-      quotes = transformHistoricalQuotes(tradingHistory)
-    } yield JsArray(quotes)) map (Ok(_))
+    // convert to historical quotes (in JSON)
+    val quotes = transformHistoricalQuotes(tradingHistory)
+    Ok(JsArray(quotes))
   }
 
   /**

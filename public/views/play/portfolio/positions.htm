@@ -1,42 +1,73 @@
-<table style="width: 100%">
-	<tr style="background-color: #dddddd">
-		<th style="width: 14%">Purchased</th>
-		<th style="width: 10%">Symbol</th>
-		<th style="width: 11%; text-align: right">Paid</th>
-		<th style="width: 11%; text-align: right">Market</th>
-		<th style="width: 14%; text-align: right">Quantity</th>
-		<th style="width: 15%; text-align: right">Est Value</th>
-		<th style="width: 20%; text-align: center">Gain/Loss</th>
-	</tr>
-</table>
+<div style="background-color: #dddddd">
+	<div class="col-md-3 bold">Symbol</div>
+	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
+	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market</div>
+	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Quantity</div>
+    <div ng-show="isPositionSelected()" class="col-md-offset-11 col-md-1">
+        <img style="float: right"
+             class="clickable"
+             ng-click="toggleSelectedPosition()"
+             title="Return to results"
+             src="/assets/images/buttons/back-24.png">
+    </div>
+</div>
 
 <div class="positionsContainer">
-	<table style="width: 100%">
-		<tr ng-show="participant.positions.length == 0">
-			<td colspan="8">
-				<div style="display: block; width: 100%; margin-top: 5px; text-align: center">
-					<img src="/assets/images/status/alert.gif"> No positions found
-				</div>
-			</td>
-		</tr>
-	
-		<tr ng-repeat="p in participant.positions" ng-class-even="'even'" ng-class-odd="'odd'">		
-			<td style="width: 14%">{{ p.processedTime | date:'MM/dd hh:mma' }}</td>
-			<td style="width: 10%">
-				<a href="" ng-click="loadQuote(p.symbol, true)">
-					<span ng-class="p.exchange">{{ p.symbol }}</span>
-				</a>
-			</td>
-			<td style="width: 11%; text-align: right">$ {{ p.price | number:2 }}</td>
-			<td style="width: 11%; text-align: right">{{ p.lastTrade | number:2 }}</td>				
-			<td style="width: 14%; text-align: right">{{ p.quantity | number }}</td>
-			<td style="width: 14%; text-align: right">{{ p.netValue | number:2 }}</td>
-			<td style="width: 20%; text-align: right">
-				<span ng-show="p.gainLoss == null" class="null">&#8212;</span>	
-				<span ng-show="p.gainLoss != null" ng-class="p.gainLoss < 0 ? 'negative' : ''">{{ p.gainLoss | number:1 }}%</span>	
-				<changearrow value="{{ p.gainLoss }}"/>
-				<button class="sell_button" ng-click="sellPosition(p.symbol, p.price, p.quantity)">Sell</button>
-			</td>
-		</tr>
-	</table>
+	<div class="col-md-12 center" ng-show="getPositions(contest).length === 0">
+		<img src="/assets/images/status/alert.gif">
+        <span class="warning">No positions found</span>
+	</div>
+
+    <div class="row">
+        <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-5':(isPositionSelected())}">
+            <div class="col-md-12" ng-repeat="p in getPositions(contest)"
+                 ng-class="selectedPosition._id.$oid === p._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
+                 ng-click="selectPosition(p)">
+                <div class="col-md-3">
+                    <span class="clickable"
+                          ng-class="getExchangeClass(p.exchange)"
+                          ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
+                </div>
+                <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.pricePaid | number:2 }}</div>
+                <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.lastTrade | number:2 }}</div>
+                <div ng-hide="isPositionSelected()" class="col-md-3 right">{{ p.quantity | number }}</div>
+            </div>
+        </div>
+        <div ng-if="isPositionSelected()" class="col-md-7">
+            <div class="col-md-4 bold">Purchased Time</div>
+            <div class="col-md-8">{{ selectedPosition.processedTime | date:'MM/dd hh:mma' }}</div>
+
+            <div class="col-md-4 bold">Symbol</div>
+            <div class="col-md-8">
+                <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.symbol }}</span>
+            </div>
+
+            <div class="col-md-4 bold">Exchange</div>
+            <div class="col-md-8">{{ selectedPosition.exchange }}</div>
+
+            <div class="col-md-4 bold">Purchase Cost</div>
+            <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
+
+            <div class="col-md-4 bold">Estimated Value</div>
+            <div class="col-md-8">
+                $ {{ selectedPosition.netValue | number:2 }}
+                    <span ng-if="selectedPosition.gainLoss != null">
+                        <changearrow value="{{ selectedPosition.gainLoss }}"/>
+                        <span ng-class="selectedPosition.gainLoss < 0 ? 'negative' : ''">{{ selectedPosition.gainLoss | number:1 }}%</span>
+                    </span>
+            </div>
+
+            <div class="col-md-4 bold">Price Paid</div>
+            <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
+
+            <div class="col-md-4 bold">Commission Paid</div>
+            <div class="col-md-8">$ {{ selectedPosition.commission | number:2 }}</div>
+
+            <div class="col-md-offset-4 col-md-8">
+                <button class="sell_button" ng-click="sellPosition(selectedPosition.symbol, selectedPosition.price, selectedPosition.quantity)">
+                    Sell
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

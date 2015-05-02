@@ -59,7 +59,11 @@ angular
             return $http.get('/api/contests/player/' + playerId).then(function(response) {
                 var contests = response.data;
                 return contests.map(insertID);
-            })
+            });
+        };
+
+        service.getEnrichedPositions = function(contestId, playerId) {
+            return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
         };
 
         /////////////////////////////////////////////////////////////////////////////

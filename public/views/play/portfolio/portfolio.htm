@@ -4,16 +4,22 @@
 <div ng-if="MySession.userProfile._id && !contest._id" class="spectator_message" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
 </div>
-<div ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%">	
+<div ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
+
+    <div class="row">
+        <div class="col-md-3" style="margin-bottom: 5px">
+            <button class="new_game" ng-click="popupNewOrderDialog()">
+                <img src="/assets/images/buttons/cart_add.png"> New Order
+            </button>
+        </div>
+        <div class="col-md-9">&nbsp;</div>
+    </div>
+
 	<accordion close-others="true">
 		<accordion-group  is-open="true">
 			<accordion-heading>
 				<img src="/assets/images/objects/order.png"> Orders
-				<img style="float: right; vertical-align: top"
-					 ng-show="contest.status == 'ACTIVE'"
-					 ng-click="newOrderPopup()"
-					 src="/assets/images/play/cart-24.png">
 			</accordion-heading>
 			<div ng-include src="'/assets/views/play/portfolio/orders.htm'"></div>
 		</accordion-group>

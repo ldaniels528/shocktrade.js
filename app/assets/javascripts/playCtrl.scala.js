@@ -37,9 +37,14 @@
 
                 // setup contest variables
                 $scope.orderChoice = "active";
+                $scope.selectedPosition = null;
 
                 $scope.popupNewGameDialog = function () {
                     NewGameDialog.popup($scope);
+                };
+
+                $scope.popupNewOrderDialog = function () {
+                    NewOrderDialog.popup($scope);
                 };
 
                 $scope.getAvailableCount = function () {
@@ -246,19 +251,6 @@
                     return userProfile.id && findPlayerByID(contest, userProfile.id) != null;
                 };
 
-                function findPlayerByID(contest, playerId) {
-                    var participants = contest ? contest.participants : null;
-                    if (participants) {
-                        for (var n = 0; n < participants.length; n++) {
-                            var participant = participants[n];
-                            if (participant._id.$oid == playerId) {
-                                return participant;
-                            }
-                        }
-                    }
-                    return null;
-                }
-
                 $scope.contestStatusClass = function (contest) {
                     if (contest == null) return "";
                     else if (contest.status == 'ACTIVE') return "positive";
@@ -343,7 +335,7 @@
                                 var playerName = MySession.getUserName();
 
                                 // find participant that represents the player
-                                $scope.participant = lookupParticipantByName(playerName);
+                                $scope.participant = findPlayerByID(contest, MySession.getUserID());
 
                                 // load the enriched participant
                                 updateWithRankings(playerName, contest);
@@ -371,16 +363,11 @@
                 $scope.selectContest = function (contest) {
                     $log.info("Selecting contest '" + contest.name + "' (" + contest._id.$oid + ")");
                     $scope.contest = contest;
-                    $scope.participant = findPlayerByID;
+                    $scope.participant = findPlayerByID(contest, MySession.getUserID());
                     MySession.contestId = contest._id.$oid;
                     $scope.splitScreen = true;
 
-                    if (!contest.rankings) {
-                        updateWithRankings(MySession.getUserName(), contest);
-                        if (MySession.getUserID()) {
-                            loadEnrichedParticipant(MySession.contestId, MySession.getUserID());
-                        }
-                    }
+                    enrichContest(contest);
                 };
 
                 $scope.starRating = function (gainLoss) {
@@ -404,7 +391,7 @@
                     return net != 0 ? ( net / cost) * 100 : 0;
                 };
 
-                $scope.tropy = function (place) {
+                $scope.trophy = function (place) {
                     switch (place) {
                         case '1st':
                             return "contests/gold.png";
@@ -417,12 +404,30 @@
                     }
                 };
 
+                /////////////////////////////////////////////////////////////////////
+                //          Positions and Orders
+                /////////////////////////////////////////////////////////////////////
+
                 $scope.tradingStart = function () {
                     return (new Date()).getTime(); // TODO replace with service call
                 };
 
-                $scope.newOrderPopup = function () {
-                    NewOrderDialog.popup($scope);
+                $scope.getParticipant = function(contest) {
+                    if($scope.participant == null) {
+                        $scope.participant = findPlayerByID(contest, MySession.getUserID());
+                        enrichParticipant(contest, $scope.participant);
+                    }
+                    return $scope.participant;
+                };
+
+                $scope.getActiveOrders = function(contest) {
+                    var participant = $scope.getParticipant(contest);
+                    return participant ? (participant.orders || []) : [];
+                };
+
+                $scope.getClosedOrders = function(contest) {
+                    var participant = $scope.getParticipant(contest);
+                    return participant ? (participant.orderHistory || []) : [];
                 };
 
                 $scope.cancelOrder = function (contestId, playerId, orderId) {
@@ -436,12 +441,29 @@
                         });
                 };
 
+                $scope.getPositions = function(contest) {
+                    var participant = $scope.getParticipant(contest);
+                    return participant ? (participant.positions || []) : [];
+                };
+
+                $scope.isPositionSelected = function() {
+                    return $scope.selectedPosition != null;
+                };
+
+                $scope.selectPosition = function(position) {
+                    $scope.selectedPosition = position;
+                };
+
+                $scope.toggleSelectedPosition = function () {
+                    $scope.selectedPosition = null;
+                };
+
                 $scope.getCashAvailable = function (participant) {
-                    return (participant.fundsAvailable || 0) - $scope.getTotalBuyOrders(participant);
+                    return participant ? (participant.fundsAvailable || 0) - $scope.getTotalBuyOrders(participant) : 0;
                 };
 
                 $scope.asOfDate = function (participant) {
-                    return participant.lastTradeTime ? participant.lastTradeTime : new Date();
+                    return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
                 };
 
                 $scope.getTotalOrders = function (participant) {
@@ -449,11 +471,11 @@
                 };
 
                 $scope.getTotalEquity = function (participant) {
-                    return $scope.getTotalInvestment(participant) + (participant.fundsAvailable || 0);
+                    return $scope.getTotalInvestment(participant) + (participant ? (participant.fundsAvailable || 0) : 0);
                 };
 
                 $scope.getTotalInvestment = function (participant) {
-                    var positions = participant.positions || [];
+                    var positions = ((participant || {}).positions) || [];
                     var total = 0;
                     for (var n = 0; n < positions.length; n++) {
                         var p = positions[n];
@@ -463,7 +485,7 @@
                 };
 
                 $scope.getTotalBuyOrders = function (participant) {
-                    var orders = participant.orders || [];
+                    var orders = ((participant || {}).orders) || [];
                     var total = 0;
                     angular.forEach(orders, function (o) {
                         if (o.orderType == 'BUY') {
@@ -496,19 +518,50 @@
                     return value.charAt(0).toUpperCase() + value.substring(1);
                 }
 
-                function isContestSelected(contestId) {
-                    return ($scope.contest && $scope.contest._id.$oid === contestId);
+                function enrichContest(contest) {
+                    if (!contest.rankings) {
+                        updateWithRankings(MySession.getUserName(), contest);
+                        if (MySession.getUserID()) {
+                            loadEnrichedParticipant(MySession.contestId, MySession.getUserID());
+                        }
+                    }
                 }
 
-                function lookupParticipantByName(userName) {
-                    if ($scope.contest) {
-                        for (var n = 0; n < $scope.contest.participants.length; n++) {
-                            var participant = $scope.contest.participants[n];
-                            if (participant.name === userName) return participant;
+                function enrichParticipant(contest, participant) {
+                    ContestService.getEnrichedPositions(contest._id.$oid, participant._id.$oid)
+                        .success(function(response) {
+                            var enrichedPosition = response[0];
+                            $log.info("Loaded enriched player " + angular.toJson(enrichedPosition));
+
+                            for(var n = 0; n < participant.positions.length; n++) {
+                                var p = participant.positions[n];
+                                if(p._id.$oid === enrichedPosition._id.$oid) {
+                                    participant.enriched = true;
+                                    participant.positions[n] = enrichedPosition;
+                                    return;
+                                }
+                            }
+                        })
+                        .error(function(err) {
+                            Errors.addMessage("Error loading player positions");
+                        });
+                }
+
+                function findPlayerByID(contest, playerId) {
+                    var participants = contest ? contest.participants : null;
+                    if (participants) {
+                        for (var n = 0; n < participants.length; n++) {
+                            var participant = participants[n];
+                            if (participant._id.$oid == playerId) {
+                                return participant;
+                            }
                         }
-                        return {};
                     }
-                    else return {};
+                    return null;
+                }
+
+                function isContestSelected(contestId) {
+                    return ($scope.contest && $scope.contest._id.$oid === contestId);
                 }
 
                 function placeName(n) {

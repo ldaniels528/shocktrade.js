@@ -109,6 +109,14 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
+  def deleteContestByID(id: String) = Action.async {
+    Contests.deleteContestByID(id.toBSID) map { lastError =>
+      Ok(if (lastError.inError) JS("error" -> lastError.message) else JS())
+    } recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
   private def makeContest(js: ContestCreateForm) = {
     // create a player instance
     val player = PlayerRef(id = js.playerId.toBSID, name = js.playerName, facebookId = js.facebookId)
@@ -128,7 +136,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       perksAllowed = js.perksAllowed,
       robotsAllowed = js.robotsAllowed,
       messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
-      participants = List(Participant(js.playerName, js.facebookId, fundsAvailable = js.startingBalance, id = js.playerId.toBSID))
+      participants = List(Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = js.startingBalance ))
     )
   }
 
@@ -159,7 +167,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Order(
       symbol = form.symbol,
       exchange = form.exchange,
-      creationTime = new Date(),
+      creationTime = new DateTime().minusDays(3).toDate, // TODO for testing new Date()
       expirationTime = None, // TODO set once orderTerm is implemented
       orderType = form.orderType,
       price = form.limitPrice,
@@ -176,14 +184,6 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Contests.findContestByID(id.toBSID)() map {
       case Some(contest) => Ok(Json.toJson(contest))
       case None => Ok(createError(s"Contest $id not found"))
-    } recover {
-      case e: Exception => Ok(createError(e))
-    }
-  }
-
-  def deleteContestByID(id: String) = Action.async {
-    Contests.deleteContestByID(id.toBSID) map { lastError =>
-      Ok(if (lastError.inError) JS("error" -> lastError.message) else JS())
     } recover {
       case e: Exception => Ok(createError(e))
     }
@@ -215,6 +215,19 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Contests.findContestsByPlayerID(playerId.toBSID)(DisplayColumns: _*) map (contests => Ok(Json.toJson(contests)))
   }
 
+  def getEnrichedPositions(id: String, playerId: String) = Action.async {
+    val outcome = for {
+      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
+      enriched <- enrichParticipant(player)
+      participants = enriched \ "positions"
+    } yield participants
+
+    outcome map (js => Ok(js)) recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
   def getHeldSecurities(playerId: String) = Action.async {
     Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map { contests =>
       contests.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
@@ -228,7 +241,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       case Success(Some(js)) =>
         (for {
           startingBalance <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
-          participant = Participant(js.playerName, js.facebookId, fundsAvailable = startingBalance, id = js.playerId.toBSID)
+          participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = startingBalance)
           contest <- Contests.joinContest(id.toBSID, participant)
         } yield contest) map (c => Ok(Json.toJson(c))) recover {
           case e: Exception => Ok(createError(e))
@@ -240,13 +253,14 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
-  def quitContest(id: String, playerId: String) = Action.async { implicit request =>
-    Contests.quitContest(id.toBSID, playerId.toBSID) map {
-      case Some(contest) => Ok(Json.toJson(contest))
-      case None => Ok(createError("Contest not found"))
-    } recover {
-      case e: Exception => Ok(createError(e))
-    }
+  def quitContest(id: String, playerId: String) = Action.async {
+    implicit request =>
+      Contests.quitContest(id.toBSID, playerId.toBSID) map {
+        case Some(contest) => Ok(Json.toJson(contest))
+        case None => Ok(createError("Contest not found"))
+      } recover {
+        case e: Exception => Ok(createError(e))
+      }
   }
 
   def startContest(id: String) = Action.async {
@@ -267,12 +281,11 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       rankedPlayers = (1 to rankings.size).toSeq zip rankings.sortBy(-_.totalEquity)
 
     } yield JsArray(rankedPlayers map { case (place, p) =>
-      import p._
-      JS("name" -> name,
-        "facebookID" -> facebookID,
-        "score" -> score,
-        "totalEquity" -> totalEquity,
-        "gainLoss" -> gainLoss_%,
+      JS("name" -> p.name,
+        "facebookID" -> p.facebookID,
+        "score" -> p.score,
+        "totalEquity" -> p.totalEquity,
+        "gainLoss" -> p.gainLoss_%,
         "rank" -> placeName(place))
     })
   }
@@ -298,10 +311,8 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   }
 
   private def enrichParticipant(player: Participant): Future[JsObject] = {
-    import player.positions
-
     // get the positions and associated symbols
-    val symbols = positions.map(_.symbol).distinct
+    val symbols = player.positions.map(_.symbol).distinct
 
     for {
     // load the quotes for all position symbols
@@ -309,16 +320,23 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
 
       // build a mapping of symbol to last trade
       quotes = Map(quotesJs flatMap { js =>
-        for {symbol <- (js \ "symbol").asOpt[String]; lastTrade <- (js \ "lastTrade").asOpt[Double]} yield (symbol, lastTrade)
+          for {
+            symbol <- (js \ "symbol").asOpt[String]
+            lastTrade <- (js \ "lastTrade").asOpt[Double]
+          } yield (symbol, lastTrade)
       }: _*)
 
       // enrich the positions
-      enrichedPositions = positions flatMap { pos =>
-        for {
-          marketPrice <- quotes.get(pos.symbol)
-          netValue = marketPrice * pos.quantity
-          gainLoss = netValue - pos.cost
-        } yield JS("lastTrade" -> marketPrice, "netValue" -> netValue, "gainLoss" -> gainLoss) ++ Json.toJson(pos).asInstanceOf[JsObject]
+      enrichedPositions = player.positions flatMap { pos =>
+          for {
+            marketPrice <- quotes.get(pos.symbol)
+            netValue = marketPrice * pos.quantity
+            gainLoss = netValue - pos.cost
+          } yield Json.toJson(pos).asInstanceOf[JsObject] ++ JS(
+            "cost" -> pos.cost,
+            "lastTrade" -> marketPrice,
+            "netValue" -> netValue,
+            "gainLoss" -> gainLoss)
       }
 
       // re-insert into the participant object
@@ -435,6 +453,12 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "quantity").read[String].map(_.toInt) and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
+
+  case class QuoteSnapshot(symbol: String, lastTrade: Double)
+
+  implicit val quoteSnapshotReads: Reads[QuoteSnapshot] = (
+    (__ \ "symbol").read[String] and
+      (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 

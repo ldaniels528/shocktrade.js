@@ -13,7 +13,8 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * Represents a contest participant
  * @author lawrence.daniels@gmail.com
  */
-case class Participant(name: String,
+case class Participant(id: BSONObjectID = BSONObjectID.generate,
+                       name: String,
                        facebookId: String,
                        fundsAvailable: BigDecimal,
                        score: Int = 0,
@@ -21,8 +22,7 @@ case class Participant(name: String,
                        orders: List[Order] = Nil,
                        orderHistory: List[ClosedOrder] = Nil,
                        positions: List[Position] = Nil,
-                       performance: List[Performance] = Nil,
-                       id: BSONObjectID = BSONObjectID.generate)
+                       performance: List[Performance] = Nil)
 
 /**
  * Participant Singleton
@@ -31,7 +31,8 @@ case class Participant(name: String,
 object Participant {
 
   implicit val participantReads: Reads[Participant] = (
-    (__ \ "name").read[String] and
+    (__ \ "_id").read[BSONObjectID] and
+      (__ \ "name").read[String] and
       (__ \ "facebookID").read[String] and
       (__ \ "fundsAvailable").read[BigDecimal] and
       (__ \ "score").read[Int] and
@@ -39,11 +40,11 @@ object Participant {
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
       (__ \ "orderHistory").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
       (__ \ "positions").readNullable[List[Position]].map(_.getOrElse(Nil)) and
-      (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)) and
-      (__ \ "_id").read[BSONObjectID])(Participant.apply _)
+      (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)))(Participant.apply _)
 
   implicit val participantWrites: Writes[Participant] = (
-    (__ \ "name").write[String] and
+    (__ \ "_id").write[BSONObjectID] and
+      (__ \ "name").write[String] and
       (__ \ "facebookID").write[String] and
       (__ \ "fundsAvailable").write[BigDecimal] and
       (__ \ "score").write[Int] and
@@ -51,11 +52,11 @@ object Participant {
       (__ \ "orders").write[List[Order]] and
       (__ \ "orderHistory").write[List[ClosedOrder]] and
       (__ \ "positions").write[List[Position]] and
-      (__ \ "performance").write[List[Performance]] and
-      (__ \ "_id").write[BSONObjectID])(unlift(Participant.unapply))
+      (__ \ "performance").write[List[Performance]])(unlift(Participant.unapply))
 
   implicit object ParticipantReader extends BSONDocumentReader[Participant] {
     def read(doc: BSONDocument) = Participant(
+      doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("name").get,
       doc.getAs[String]("facebookID").get,
       doc.getAs[BigDecimal]("fundsAvailable").get,
@@ -64,8 +65,7 @@ object Participant {
       doc.getAs[List[Order]]("orders").get,
       doc.getAs[List[ClosedOrder]]("orderHistory").get,
       doc.getAs[List[Position]]("positions").get,
-      doc.getAs[List[Performance]]("performance").get,
-      doc.getAs[BSONObjectID]("_id").get
+      doc.getAs[List[Performance]]("performance").get
     )
   }
 

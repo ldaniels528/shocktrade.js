@@ -9,7 +9,7 @@ import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID}
+import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}
 import reactivemongo.core.commands.{FindAndModify, Update}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -55,16 +55,17 @@ object TradingDAO {
    * Queries all active contests that haven't been update in 5 minutes
    * <pre>
    * db.Contests.count({"status": "ACTIVE",
-   *    "$or" : [ { processedTime : { "$lte" : new Date() } }, { processedTime : { "$exists" : false } } ],
-   *    "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
+   * "$or" : [ { processedTime : { "$lte" : new Date() } }, { processedTime : { "$exists" : false } } ],
+   * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
    * </pre>
-   * @param asOfDate the last time an update was performed
+   * @param lastProcessedTime the last time an update was performed
    * @return a [[reactivemongo.api.Cursor]] of [[Contest]] instances
    */
-  def getActiveContests(asOfDate: Date)(implicit ec: ExecutionContext) = {
+  def getActiveContests(asOfDate: Date, lastProcessedTime: Date)(implicit ec: ExecutionContext) = {
     mc.find(BS(
       "status" -> ContestStatus.ACTIVE,
-      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> new DateTime(asOfDate).minusMinutes(5).toDate)), BS("processedTime" -> BS("$exists" -> false)))),
+      "startTime" -> BS("$lte" -> asOfDate),
+      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))),
       "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
     )).cursor[Contest]
   }
@@ -122,7 +123,7 @@ object TradingDAO {
   def increasePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     findPosition(c, claim, 0.0d) match {
       case Some(position) => increasePositionUpdate(c, claim, position, asOfDate)
-      case None => increasePositionCreate(c, claim, asOfDate)
+      case None => increasePositionCreate2(c, claim, asOfDate) map (_ => 1)
     }
   }
 
@@ -136,6 +137,8 @@ object TradingDAO {
    */
   private def increasePositionCreate(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     val wo = claim.workOrder
+
+    // attempt to update the matching the record
     mc.update(
       // find the matching the record
       BS("_id" -> c.id,
@@ -159,6 +162,58 @@ object TradingDAO {
           "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
       ),
       upsert = false, multi = false) map (_.n)
+  }
+
+  private def increasePositionCreate2(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    val wo = claim.workOrder
+
+    // attempt to update the matching the record
+    performUpdate(
+      // find the matching the record
+      BS("_id" -> c.id) -> "Contest not found",
+      BS("participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> claim.cost)))) -> "Insufficient funds") {
+
+      BS(
+        // set the last update time
+        "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
+
+        // deduct funds
+        "$inc" -> BS("participants.$.fundsAvailable" -> -claim.cost),
+
+        // remove the order
+        "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id)),
+
+        "$addToSet" -> BS(
+          // create the new position
+          "participants.$.positions" -> claim.toPosition,
+
+          // create the order history record
+          "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
+      )
+    }
+  }
+
+  private def performUpdate(comps: (BS, String)*)(update: BS)(implicit ec: ExecutionContext): Future[Seq[Int]] = {
+    // build the query document
+    val query = comps.foldLeft[BS](BS()) { case (obj, (e, msg)) => obj ++ e }
+
+    // attempt the update
+    for {
+      result <- mc.update(query, update, upsert = false, multi = false)
+      outcome <- if (result.n == 0) findFailedMatch(comps) else Future.successful(Seq(result.n))
+    } yield outcome
+  }
+
+  private def findFailedMatch(queryComps: Seq[(BS, String)])(implicit ec: ExecutionContext): Future[Seq[Int]] = {
+    Future.sequence {
+      queryComps.map { case (comp, message) =>
+        mc.find(comp, BS("_id" -> 1)).cursor[BS].headOption map {
+          case Some(rec) => 1
+          case None =>
+            throw new IllegalArgumentException(message)
+        }
+      }
+    }
   }
 
   /**
@@ -237,7 +292,9 @@ object TradingDAO {
             "$inc" -> BS("participants.$.fundsAvailable" -> claim.proceeds),
 
             // remove the order and existing position
-            "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id), "participants.$.positions" -> BS("_id" -> existingPos.id)),
+            "$pull" -> BS(
+              "participants.$.orders" -> BS("_id" -> wo.id),
+              "participants.$.positions" -> BS("_id" -> existingPos.id)),
 
             // add the performance & order history records
             "$addToSet" -> BS(

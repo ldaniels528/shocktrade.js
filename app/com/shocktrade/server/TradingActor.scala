@@ -2,6 +2,8 @@ package com.shocktrade.server
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
+import com.shocktrade.actors.WebSockets
+import com.shocktrade.actors.WebSockets.ContestUpdated
 import com.shocktrade.models.contest._
 import com.shocktrade.server.TradingActor._
 import com.shocktrade.util.DateUtil._
@@ -16,7 +18,6 @@ import scala.util.{Failure, Success}
  */
 class TradingActor() extends Actor with ActorLogging {
   private implicit val timeout: Timeout = 30.second
-  private var lastMarketClose: Option[DateTime] = None
 
   import context.dispatcher
 
@@ -29,63 +30,43 @@ class TradingActor() extends Actor with ActorLogging {
 
   /**
    * Process all active orders
-   * @param contest the given contest
+   * @param contest the given [[Contest contest]]
    * @param asOfDate the given effective date
    */
   private def processOrders(contest: Contest, lockExpirationTime: DateTime, asOfDate: DateTime) {
     // if trading was active during the as-of date
-    if (isTradingActive(asOfDate)) {
-      // get the active orders
-      val orders = getActiveOrders(contest)
-        .filterNot(_.order.priceType == PriceType.MARKET_ON_CLOSE)
-        .groupBy(_.order.priceType)
+    ContestProcessor.processContest(contest, asOfDate) onComplete {
+      case Success(updateCount) =>
+        // if an update occurred, notify the users
+        if (updateCount > 0) {
+          Contests.findContestByID(contest.id)() foreach {
+            _ foreach { updatedContest =>
+              WebSockets ! ContestUpdated(updatedContest)
+            }
+          }
+        }
 
-      if (orders.nonEmpty) {
-        log.info(s"${contest.name} [LIMIT/MARKET]: Found ${orders.size} orders...")
+        // finally unlock the contest
+        unlock(contest, lockExpirationTime)
 
-        // process limit and market orders
-        orders.get(PriceType.LIMIT) foreach processLimitOrders
-        orders.get(PriceType.MARKET) foreach processMarketOrders
-      }
+      case Failure(e) =>
+        log.error(s"An error occur while processing contest '${contest.name}'", e)
+
+        // finally unlock the contest
+        unlock(contest, lockExpirationTime)
     }
+  }
 
-    // only process market on close orders after market close
-    else if (lastMarketClose.isEmpty || lastMarketClose.exists(_.toDate.before(asOfDate))) {
-      val orders = getActiveOrders(contest) filter (_.order.priceType == PriceType.MARKET_ON_CLOSE)
-      if (orders.nonEmpty) {
-        log.info(s"${contest.name} [MARKET CLOSE]: Found ${orders.size} orders...")
-
-        processMarketAtCloseOrders(orders)
-        lastMarketClose = Some(new DateTime(getNextTradeStartTime))
-      }
-    }
-
-    // close all expired orders
-    TradingDAO.closeExpiredOrders(contest, asOfDate)
-
-    // finally unlock the contest
+  /**
+   * Unlocks the contest
+   * @param contest the given [[Contest contest]]
+   * @param lockExpirationTime the given lock expiration [[DateTime date]]
+   */
+  private def unlock(contest: Contest, lockExpirationTime: DateTime): Unit = {
     TradingDAO.unlockContest(contest.id, lockExpirationTime) onComplete {
       case Failure(e) =>
         log.error(e, s"Failed while attempting to unlock Contest '${contest.name}'")
       case Success(_) =>
-    }
-  }
-
-  private def processLimitOrders(orders: List[ActiveOrder]): Unit = {
-
-  }
-
-  private def processMarketOrders(orders: List[ActiveOrder]): Unit = {
-
-  }
-
-  private def processMarketAtCloseOrders(orders: List[ActiveOrder]): Unit = {
-
-  }
-
-  private def getActiveOrders(contest: Contest) = {
-    contest.participants flatMap { participant =>
-      participant.orders map (o => ActiveOrder(contest, participant, o))
     }
   }
 
@@ -96,8 +77,6 @@ class TradingActor() extends Actor with ActorLogging {
  * @author lawrence.daniels@gmail.com
  */
 object TradingActor {
-
-  case class ActiveOrder(contest: Contest, participant: Participant, order: Order)
 
   case class ProcessOrders(contest: Contest, lockExpirationTime: DateTime, asOfDate: DateTime)
 

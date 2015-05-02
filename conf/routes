@@ -42,6 +42,8 @@ PUT           /api/contest/:id/player                                     com.sh
 GET           /api/contest/:id/player/:playerId                           com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
 DELETE        /api/contest/:id/player/:playerId                           com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
 
+GET           /api/contest/:id/positions/:playerId                        com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
+
 GET           /api/contests/player/:playerId                              com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
 POST          /api/contests/search                                        com.shocktrade.controllers.ContestResources.contestSearch
 

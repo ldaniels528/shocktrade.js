@@ -1,8 +1,8 @@
 package com.shocktrade.actors
 
-import QuoteMessages._
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.services.YFRealtimeStockQuoteService
+import com.shocktrade.actors.QuoteMessages._
+import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
 import play.api.libs.json.JsObject
 import play.api.libs.json.Json.{obj => JS, _}
 

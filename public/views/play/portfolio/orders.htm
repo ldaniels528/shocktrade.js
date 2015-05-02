@@ -2,15 +2,12 @@
 	Status: 
 	<input ng-model="orderChoice" type="radio" value="active"> Active
 	<input ng-model="orderChoice" type="radio" value="history"> Closed
-	<img ng-show="contest.status == 'ACTIVE'" 
-		ng-click="newOrderPopup()"
-		src="/assets/images/buttons/cart_add.png" 
-		title="Create new order"
-		style="cursor: pointer; float: right; vertical-align: bottom; margin-top: 3px; margin-right: 16px">
 </span>
-<div ng-include src="'/assets/views/play/portfolio/orders_' + orderChoice + '.htm'" 
+
+<div ng-include src="'/assets/views/play/portfolio/orders_' + orderChoice + '.htm'"
 	 ng-hide="contest.status == 'CLOSED'"></div>
-<div ng-include src="'/assets/views/play/portfolio/orders_history.htm'" 
+
+<div ng-include src="'/assets/views/play/portfolio/orders_history.htm'"
 	 ng-show="contest.status == 'CLOSED'"></div>
 
 	

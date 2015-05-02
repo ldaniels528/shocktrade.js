@@ -148,7 +148,7 @@
 					<div ng-hide="contest.leader" class="col-md-12">&nbsp;</div>
 					<div ng-show="contest.leader" class="col-md-3">Leader</div>
 					<div ng-show="contest.leader" class="col-md-9">
-						<img ng-if="contest.status === 'CLOSED'" ng-src="/assets/images/{{ tropy(contest.leader.rank) }}">
+						<img ng-if="contest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(contest.leader.rank) }}">
 						<avatar id="{{ contest.leader.facebookID }}" style="width: 20px; height: 20px" />
 						<span ng-class="'rank_' + contest.leader.rank">{{ contest.leader.rank }}</span>
 						<span ng-class="contest.leader.gainLoss >= 0 ? 'positive' : 'negative'">
