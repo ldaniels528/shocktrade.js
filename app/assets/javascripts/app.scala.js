@@ -32,8 +32,17 @@
                 otherwise({ redirectTo: '/discover' });
         }]);
 
-    app.run(function($rootScope, Errors, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession,
-                     NewsSymbols, QuoteService, RecentSymbols, WebSockets) {
+    app.run(function($rootScope,
+                     Errors,
+                     Facebook,
+                     FavoriteSymbols,
+                     HeldSecurities,
+                     MarketStatus,
+                     MySession,
+                     NewsSymbols,
+                     QuoteService,
+                     RecentSymbols,
+                     WebSockets) {
         $rootScope.Errors = Errors;
         $rootScope.Facebook = Facebook;
         $rootScope.FavoriteSymbols = FavoriteSymbols;

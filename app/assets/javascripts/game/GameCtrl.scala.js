@@ -1,5 +1,5 @@
 /**
- * Play Module Controller
+ * Game Play Controller
  */
 (function () {
     angular
@@ -40,11 +40,15 @@
                 $scope.selectedPosition = null;
 
                 $scope.popupNewGameDialog = function () {
-                    NewGameDialog.popup($scope);
+                    NewGameDialog.popup({});
                 };
 
                 $scope.popupNewOrderDialog = function () {
-                    NewOrderDialog.popup($scope);
+                    NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
+                };
+
+                $scope.sellPosition = function (symbol, quantity) {
+                    NewOrderDialog.popup({symbol: symbol, quantity: quantity});
                 };
 
                 $scope.getAvailableCount = function () {
@@ -442,7 +446,7 @@
                             $scope.participant = participant;
                             updateWithPricing(participant);
                         })
-                        .error(function (response) {
+                        .error(function (err) {
                             Errors.addMessage("Failed to cancel order");
                         });
                 };

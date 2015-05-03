@@ -6,11 +6,11 @@ angular
 	.module('shocktrade')
 	.factory('QuoteService', function($rootScope, $http, $log, $q) {
 		
-	var quotes = {}
-	var tradingHistory = {}
+	var quotes = {};
+	var tradingHistory = {};
 	var service = {
 		lastSymbol: "GOOG"	
-	}
+	};
 	
 	function setFavorites(quotes) {
 		for(var n = 0; n < quotes.length; n++) {

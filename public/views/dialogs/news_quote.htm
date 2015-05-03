@@ -1,0 +1,88 @@
+<script type="text/ng-template" id="news_quote.htm">
+    <div class="modal-header">
+        <h3>Quote</h3>
+    </div>
+    <div id="order_dialog" class="modal-body" ng-init="init()">
+        <table style="width: 100%">
+            <tr>
+                <td colspan="4">
+                    <span style="font-weight: bold">{{ quote.name }}</span>
+                    <span ng-show="quote.exchange">(<span ng-class="quote.exchange">{{ quote.exchange }}</span>)</span>
+                    <span ng-hide="quote.name">&nbsp;</span>
+
+                    <span ng-show="quote.changePct > 0">&#8212;</span>
+                    <span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>
+                    <changearrow value="{{ quote.changePct }}" style="vertical-align: bottom" />
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <th class="info">Prev Close</th>
+                <th class="info">Open</th>
+                <th class="info">Day's High</th>
+                <th class="info">Day's Low</th>
+            </tr>
+            <tr>
+                <td class="info">
+                    <span ng-show="quote.prevClose == null" class="null">N/A</span>
+                    <span ng-show="quote.prevClose != null">{{ quote.prevClose | number:2 }}</span>
+                </td>
+                <td class="info">
+                    <span ng-show="quote.open == null" class="null">N/A</span>
+                    <span ng-show="quote.open != null">{{ quote.open | number:2 }}</span>
+                </td>
+                <td class="info">
+                    <span ng-show="quote.high == null" class="null">N/A</span>
+                    <span ng-show="quote.high != null">{{ quote.high | number:2 }}</span>
+                </td>
+                <td class="info">
+                    <span ng-show="quote.low == null" class="null">N/A</span>
+                    <span ng-show="quote.low != null">{{ quote.low | number:2 }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th class="info">Volume</th>
+                <th class="info">Spread %</th>
+                <th class="info">52-Wk High</th>
+                <th class="info">52-Wk Low</th>
+            </tr>
+            <tr>
+                <td>
+                    <span ng-show="quote.volume == null" class="null">N/A</span>
+                    <span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
+                </td>
+                <td>
+                    <span ng-show="quote.spread == null" class="null">N/A</span>
+                    <span ng-show="quote.spread != null">{{ quote.spread | number:2 }}%</span>
+                </td>
+                <td>
+                    <span ng-show="quote.high52Week == null" class="null">N/A</span>
+                    <span ng-show="quote.high52Week != null">{{ quote.high52Week | number:2 }}</span>
+                </td>
+                <td>
+                    <span ng-show="quote.low52Week == null" class="null">N/A</span>
+                    <span ng-show="quote.low52Week != null">{{ quote.low52Week | number:2 }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th class="info" colspan="2">Total Cost</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="width: 100%; color: #00a050">
+                        $ {{ getTotal(order) | number:2 }}
+                    </div>
+                </td>
+                <td colspan="2">
+					<span style="float: left">
+						<label><input ng-model="order.emailNotify" type="checkbox"> Notify by Email</label>
+					</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">Ok</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

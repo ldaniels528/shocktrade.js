@@ -10,33 +10,27 @@
      * @author lawrence.daniels@gmail.com
      */
     app.factory('NewOrderDialog', function ($http, $log, $modal, $q) {
-        var service = {
-            lastSymbol: "GOOG"
-        };
+        var service = {};
 
         /**
          * Opens a new Order Entry Pop-up Dialog
+         * @param params the given input parameters (e.g. { symbol: *, quantity: * })
          */
-        service.popup = function ($scope, symbol, callback) {
-            // capture the symbol
-            if(symbol) {
-                service.lastSymbol = symbol;
-            }
-
+        service.popup = function (params) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'NewOrderDialogCtrl',
                 templateUrl: 'new_order_dialog.htm',
                 resolve: {
-                    form: function () {
-                        return $scope.form;
+                    params: function () {
+                        return params;
                     }
                 }
             });
 
             $modalInstance.result.then(
                 function (form) {
-                    if (callback) callback(form)
+                    //if (callback) callback(form)
                 },
                 function () {
                     $log.info('Modal dismissed at: ' + new Date());
@@ -54,16 +48,18 @@
      * New Order Dialog Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewOrderDialogCtrl', ['$scope', '$log', '$modalInstance', 'ContestService', 'MySession', 'NewOrderDialog', 'QuoteService',
-        function ($scope, $log, $modalInstance, ContestService, MySession, NewOrderDialog, QuoteService) {
+    app.controller('NewOrderDialogCtrl', ['$scope', '$log', '$modalInstance', 'params', 'ContestService', 'MySession', 'NewOrderDialog', 'QuoteService',
+        function ($scope, $log, $modalInstance, params, ContestService, MySession, NewOrderDialog, QuoteService) {
             $scope.form = {
                 emailNotify: true,
+                symbol: (params.symbol || "AAPL"),
+                quantity: params.quantity
             };
             $scope.messages = [];
-            $scope.quote = {symbol: NewOrderDialog.lastSymbol};
+            $scope.quote = {symbol: $scope.form.symbol};
 
             $scope.init = function () {
-                $scope.orderQuote(NewOrderDialog.lastSymbol);
+                $scope.orderQuote($scope.form.symbol);
             };
 
             $scope.autoCompleteSymbols = function (searchTerm) {

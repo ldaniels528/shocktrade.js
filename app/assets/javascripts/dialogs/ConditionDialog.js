@@ -5,7 +5,7 @@
      * Condition Dialog Singleton
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('ConditionDialog', function ($http, $log, $modal, $q) {
+    app.factory('ConditionDialog', function ($http, $log, $modal) {
         var service = {};
 
         /**
@@ -31,6 +31,8 @@
                     $log.info('Modal dismissed at: ' + new Date())
                 })
         };
+
+        return service;
     });
 
     /**

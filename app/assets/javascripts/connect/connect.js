@@ -4,8 +4,8 @@
  */
 angular
 	.module('shocktrade')
-	.controller('ConnectCtrl', ['$scope', '$log', '$modal', 'ConnectService', 'MySession',
-	                    function($scope, $log, $modal, ConnectService, MySession) {
+	.controller('ConnectCtrl', ['$scope', '$log', 'ComposeMessageDialog', 'ConnectService', 'MySession',
+	                    function($scope, $log, ComposeMessageDialog, ConnectService, MySession) {
 	$scope.searchName = "";
 	$scope.myUpdates = [];
 	$scope.myUpdate = {};
@@ -58,7 +58,7 @@ angular
 			function(err) {
 				$scope.stopLoading();
 			});		
-	}
+	};
 	
 	/**
 	 * Returns the contacts matching the given search term
@@ -115,22 +115,7 @@ angular
 	 * Composes a new message via pop-up dialog
 	 */
 	$scope.composeMessage = function() {
-		
-		var modalInstance = $modal.open({
-			templateUrl: 'new_mail.htm',
-			controller: 'MessagingCtrl',
-			resolve: {
-				items: function () {
-		          return $scope.items;
-		        }
-			}
-		});
-
-		modalInstance.result.then(function (selectedItem) {
-			$scope.selected = selectedItem;
-		}, function () {
-			$log.info('Modal dismissed at: ' + new Date());
-		});
+		ComposeMessageDialog.popup({});
 	};
 	
 	/**

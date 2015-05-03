@@ -12,11 +12,11 @@ angular
 
 	service.isEmpty = function() {
 		return service.quotes.length === 0;
-	}
+	};
 	
 	service.setQuotes = function(quotes) {
 		service.quotes = quotes;
-	}
+	};
 	
 	service.getQuotes = function() {
 		var quotes = service.quotes;
@@ -25,7 +25,7 @@ angular
 			quotes[n].held = HeldSecurities.isHeld(quotes[n].symbol);
 		}
 		return quotes;
-	}
+	};
 	
 	return service;
 });

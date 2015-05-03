@@ -5,8 +5,8 @@
      * @author lawrence.daniels@gmail.com
      */
     angular.module('shocktrade')
-        .controller('MainCtrl', ['$scope', '$interval', '$location', '$log', '$timeout', 'Errors', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpService',
-            function ($scope, $interval, $location, $log, $timeout, Errors, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpService) {
+        .controller('MainCtrl', ['$scope', '$interval', '$location', '$log', '$timeout', 'Errors', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+            function ($scope, $interval, $location, $log, $timeout, Errors, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
                 // setup the loading mechanism
                 $scope._loading = false;
 
@@ -187,7 +187,7 @@
 
                 function signUpPopup(fbUserID, profile, userInitiated) {
                     if (userInitiated) {
-                        SignUpService.popup($scope, fbUserID,
+                        SignUpDialog.popup(fbUserID,
                             function (profile) {
                                 MySession.userProfile = profile;
                                 MySession.authenticated = true;

@@ -6,20 +6,20 @@
      * Sign-Up Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('SignUpService', function ($http, $log, $modal, $q) {
+    app.factory('SignUpDialog', function ($http, $log, $modal, $q) {
         var service = {};
 
         /**
          * Sign-up Modal Dialog
          */
-        service.popup = function ($scope, fbUserID, successCB, errorCB) {
+        service.popup = function (fbUserID, successCB, errorCB) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'SignUpCtrl',
                 templateUrl: 'sign_up.htm',
                 resolve: {
-                    form: function () {
-                        return $scope.form;
+                    fbUserID: function () {
+                        return fbUserID;
                     }
                 }
             });

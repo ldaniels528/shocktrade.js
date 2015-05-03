@@ -5,8 +5,8 @@
 angular
 	.module('shocktrade')
 	.controller('DiscoverCtrl', 
-		['$scope', '$cookieStore', '$log', '$modal', '$routeParams', '$timeout', 'Errors', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
-	    function($scope, $cookieStore, $log, $modal, $routeParams, $timeout, Errors, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
+		['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'Errors', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
+	    function($scope, $cookieStore, $log, $routeParams, $timeout, Errors, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
 	
 	// setup a private loading variable
 	$scope.loading = false;
@@ -126,7 +126,7 @@ angular
 	};
 
 	$scope.popupNewOrderDialog = function (symbol) {
-		NewOrderDialog.popup($scope, symbol);
+		NewOrderDialog.popup({symbol: symbol});
 	};
 
 	$scope.expandSection = function(module) {
@@ -149,7 +149,7 @@ angular
 	
 	$scope.isFavorite = function(symbol) {
 		return FavoriteSymbols.isFavorite(symbol);
-	}
+	};
 
 	$scope.removeFavoriteSymbol = function(symbol) {
 		FavoriteSymbols.remove(symbol);
@@ -203,7 +203,7 @@ angular
 		else if(riskLevel === "High") return "Not recommended for investment";
 		else if(riskLevel === "Unknown") return "The risk level could not be determined";
 		else return "The risk level could not be determined";
-	}
+	};
 	
 	$scope.getBetaClass = function(beta) {
 		if(beta == null) return "";
@@ -211,12 +211,12 @@ angular
 		else if(beta >= 0.0) return "volatile_green";
 		else if(beta < 0) return "volatile_yellow";
 		else return "";
-	}
+	};
 	
 	$scope.loadTickerQuote = function(_ticker) {
 		var ticker = $("#stockTicker").val() || _ticker;
 		$scope.loadQuote(ticker);
-	}
+	};
 	
 	$scope.loadQuote = function(ticker) {
 		$log.info("Loading symbol " + angular.toJson(ticker));
@@ -305,30 +305,11 @@ angular
 				$scope.loading = false;
 				Errors.addMessage("Error loading filter " + filter.name);
 			});	
-	}
-	
-	$scope.adminToolsPopup = function() {
-		var modalInstance = $modal.open({
-			templateUrl: 'processingTools.htm',
-			controller: 'ProcessingToolsDialogCtrl',
-			resolve: {
-				outcome: function() {
-		          return $scope.outcome;
-		        }
-			}
-		});
-
-		modalInstance.result.then(
-			function(response) {
-				$log.info("response = " + angular.toJson(response));
-			}, function () {
-				$log.info('Modal dismissed at: ' + new Date());
-			});
-	}
+	};
 	
 	$scope.tradingActive = function(time) {
 		return (new Date()).getTime();
-	}
+	};
 	
 	// maintain the appropriate aspect ratio for the application
 	var lastWindowUpdate = 0;
@@ -343,7 +324,7 @@ angular
 			//console.log("pct = " + pct + ", adjWidth = " + adjWidth);
 		}
 		return mainWidthPctValue;
-	}
+	};
 	
 	// watch for changes to the player's profile
 	$scope.$watch("MySession.userProfile", function() {

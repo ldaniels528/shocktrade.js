@@ -15,14 +15,14 @@
         /**
          * Sign-up Modal Dialog
          */
-        service.popup = function ($scope, callback) {
+        service.popup = function (params) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'NewGameDialogCtrl',
                 templateUrl: 'new_game_dialog.htm',
                 resolve: {
-                    form: function () {
-                        return $scope.form;
+                    params: function () {
+                        return params;
                     }
                 }
             });
@@ -30,7 +30,7 @@
             $modalInstance.result.then(function (form) {
                 service.createNewGame(form).then(
                     function (response) {
-                        if (callback) callback(response);
+                        if (params.callback) params.callback(response);
                     },
                     function (err) {
 
