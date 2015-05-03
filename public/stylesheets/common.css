@@ -9,7 +9,7 @@
 /*********************************************************************************
  * 							Global Styles										 *
  *********************************************************************************/ 
- 
+
 * {
  	/* font-family: "Times New Roman", Times, serif; */ 
  	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
@@ -24,6 +24,10 @@ a:link    { cursor: pointer; text-decoration: none; }
 a:visited { cursor: pointer; text-decoration: none; }
 a:hover   { cursor: pointer; text-decoration: none; }
 a:active  { cursor: pointer; text-decoration: none; }
+
+.fb {
+	color: #3a5795;
+}
 
 .narrow {
 	margin: 0px 0px 0px 0px; 
@@ -154,15 +158,7 @@ td.app {
 .inline {
  	display: inline
 }
- 
-.pull-left {
- 	float: left
-}
- 
-.pull-right {
- 	float: right
-}
-  
+
 .left {
 	text-align: left
 }

@@ -3,71 +3,73 @@
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Quantity</div>
-    <div ng-show="isPositionSelected()" class="col-md-offset-11 col-md-1">
-        <img style="float: right"
-             class="clickable"
+
+    <div ng-show="isPositionSelected()" class="col-md-offset-8 col-md-1">
+        <img class="clickable pull-right"
              ng-click="toggleSelectedPosition()"
              title="Return to results"
              src="/assets/images/buttons/back-24.png">
     </div>
 </div>
 
-<div class="positionsContainer">
+<div class="row positionsContainer">
 	<div class="col-md-12 center" ng-show="getPositions(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
         <span class="warning">No positions found</span>
 	</div>
 
-    <div class="row">
-        <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-5':(isPositionSelected())}">
-            <div class="col-md-12" ng-repeat="p in getPositions(contest)"
-                 ng-class="selectedPosition._id.$oid === p._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
-                 ng-click="selectPosition(p)">
-                <div class="col-md-3">
-                    <span class="clickable"
-                          ng-class="getExchangeClass(p.exchange)"
-                          ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
-                </div>
-                <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.pricePaid | number:2 }}</div>
-                <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.lastTrade | number:2 }}</div>
-                <div ng-hide="isPositionSelected()" class="col-md-3 right">{{ p.quantity | number }}</div>
+    <!-- Data Rows -->
+    <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-5':(isPositionSelected())}">
+        <div class="col-md-12" ng-repeat="p in getPositions(contest)"
+             ng-class="selectedPosition._id.$oid === p._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
+             ng-click="selectPosition(p)">
+            <div class="col-md-3">
+                <span class="clickable"
+                      ng-class="getExchangeClass(p.exchange)"
+                      ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
             </div>
+            <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.pricePaid | number:2 }}</div>
+            <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.lastTrade | number:2 }}</div>
+            <div ng-hide="isPositionSelected()" class="col-md-3 right">{{ p.quantity | number }}</div>
         </div>
-        <div ng-if="isPositionSelected()" class="col-md-7">
-            <div class="col-md-4 bold">Purchased Time</div>
-            <div class="col-md-8">{{ selectedPosition.processedTime | date:'MM/dd hh:mma' }}</div>
+    </div>
 
-            <div class="col-md-4 bold">Symbol</div>
-            <div class="col-md-8">
-                <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.symbol }}</span>
-            </div>
+    <!-- Expanded Section -->
+    <div ng-if="isPositionSelected()" class="col-md-7">
+        <div class="col-md-4 bold">Purchased Time</div>
+        <div class="col-md-8">{{ selectedPosition.processedTime | date:'MM/dd hh:mma' }}</div>
 
-            <div class="col-md-4 bold">Exchange</div>
-            <div class="col-md-8">{{ selectedPosition.exchange }}</div>
+        <div class="col-md-4 bold">Symbol</div>
+        <div class="col-md-8">
+            <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.symbol }}</span>
+        </div>
 
-            <div class="col-md-4 bold">Purchase Cost</div>
-            <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
+        <div class="col-md-4 bold">Exchange</div>
+        <div class="col-md-8">{{ selectedPosition.exchange }}</div>
 
-            <div class="col-md-4 bold">Estimated Value</div>
-            <div class="col-md-8">
-                $ {{ selectedPosition.netValue | number:2 }}
-                    <span ng-if="selectedPosition.gainLoss != null">
-                        <changearrow value="{{ selectedPosition.gainLoss }}"/>
-                        <span ng-class="selectedPosition.gainLoss < 0 ? 'negative' : ''">{{ selectedPosition.gainLoss | number:1 }}%</span>
-                    </span>
-            </div>
+        <div class="col-md-4 bold">Purchase Cost</div>
+        <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
 
-            <div class="col-md-4 bold">Price Paid</div>
-            <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
+        <div class="col-md-4 bold">Estimated Value</div>
+        <div class="col-md-8">
+            $ {{ selectedPosition.netValue | number:2 }}
+                <span ng-if="selectedPosition.gainLoss != null">
+                    <changearrow value="{{ selectedPosition.gainLoss }}"/>
+                    <span ng-class="selectedPosition.gainLoss < 0 ? 'negative' : ''">{{ selectedPosition.gainLoss | number:1 }}%</span>
+                </span>
+        </div>
 
-            <div class="col-md-4 bold">Commission Paid</div>
-            <div class="col-md-8">$ {{ selectedPosition.commission | number:2 }}</div>
+        <div class="col-md-4 bold">Price Paid</div>
+        <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
 
-            <div class="col-md-offset-4 col-md-8">
-                <button class="sell_button" ng-click="sellPosition(selectedPosition.symbol, selectedPosition.price, selectedPosition.quantity)">
-                    Sell
-                </button>
-            </div>
+        <div class="col-md-4 bold">Commission Paid</div>
+        <div class="col-md-8">$ {{ selectedPosition.commission | number:2 }}</div>
+
+        <div class="col-md-offset-4 col-md-8">
+            <button class="sell_button"
+                    ng-click="sellPosition(selectedPosition.symbol, selectedPosition.price, selectedPosition.quantity)">
+                Sell
+            </button>
         </div>
     </div>
 </div>

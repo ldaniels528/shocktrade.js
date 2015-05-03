@@ -18,13 +18,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 /**
- * Contest Processor
+ * Trading Processor
  * @author lawrence.daniels@gmail.com
  */
-object ContestProcessor {
+object TradingProcessor {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
-  private val quoteCache = ConcurrentCache[String, Seq[GfPriceQuote]](15.minute)
+  private val quoteCache = ConcurrentCache[String, Seq[GfPriceQuote]](2.hours)
 
   def isTradingActive(asOfDate: Date) = true // TODO remove after testing
 

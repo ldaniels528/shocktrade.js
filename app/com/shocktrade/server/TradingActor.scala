@@ -35,7 +35,7 @@ class TradingActor() extends Actor with ActorLogging {
    */
   private def processOrders(contest: Contest, lockExpirationTime: DateTime, asOfDate: DateTime) {
     // if trading was active during the as-of date
-    ContestProcessor.processContest(contest, asOfDate) onComplete {
+    TradingProcessor.processContest(contest, asOfDate) onComplete {
       case Success(updateCount) =>
         // if an update occurred, notify the users
         if (updateCount > 0) {

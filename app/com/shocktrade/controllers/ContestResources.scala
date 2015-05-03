@@ -36,6 +36,26 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
 
   implicit val timeout: Timeout = 20.seconds
 
+  ////////////////////////////////////////////////////////////////////////////
+  //     Views & JavaScript
+  ////////////////////////////////////////////////////////////////////////////
+
+  def GameCtrl = Action {
+    Ok(assets.javascripts.game.js.GameCtrl())
+  }
+
+  def lobby = Action {
+    Ok(assets.views.html.game.lobby())
+  }
+
+  def search = Action {
+    Ok(assets.views.html.game.search())
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  //      API functions
+  ////////////////////////////////////////////////////////////////////////////
+
   /**
    * Cancels the specified order
    * @param contestId the given contest ID
@@ -136,7 +156,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       perksAllowed = js.perksAllowed,
       robotsAllowed = js.robotsAllowed,
       messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
-      participants = List(Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = js.startingBalance ))
+      participants = List(Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = js.startingBalance))
     )
   }
 
@@ -320,23 +340,23 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
 
       // build a mapping of symbol to last trade
       quotes = Map(quotesJs flatMap { js =>
-          for {
-            symbol <- (js \ "symbol").asOpt[String]
-            lastTrade <- (js \ "lastTrade").asOpt[Double]
-          } yield (symbol, lastTrade)
+        for {
+          symbol <- (js \ "symbol").asOpt[String]
+          lastTrade <- (js \ "lastTrade").asOpt[Double]
+        } yield (symbol, lastTrade)
       }: _*)
 
       // enrich the positions
       enrichedPositions = player.positions flatMap { pos =>
-          for {
-            marketPrice <- quotes.get(pos.symbol)
-            netValue = marketPrice * pos.quantity
-            gainLoss = netValue - pos.cost
-          } yield Json.toJson(pos).asInstanceOf[JsObject] ++ JS(
-            "cost" -> pos.cost,
-            "lastTrade" -> marketPrice,
-            "netValue" -> netValue,
-            "gainLoss" -> gainLoss)
+        for {
+          marketPrice <- quotes.get(pos.symbol)
+          netValue = marketPrice * pos.quantity
+          gainLoss = netValue - pos.cost
+        } yield Json.toJson(pos).asInstanceOf[JsObject] ++ JS(
+          "cost" -> pos.cost,
+          "lastTrade" -> marketPrice,
+          "netValue" -> netValue,
+          "gainLoss" -> gainLoss)
       }
 
       // re-insert into the participant object

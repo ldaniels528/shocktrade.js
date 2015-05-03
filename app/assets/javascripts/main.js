@@ -74,10 +74,10 @@
                  */
                 $scope.setMainTab = function (tabIndex) {
                     var tab = $scope.tabs[tabIndex];
-                    console.log("Setting main tab to '" + tab.name + "'")
+                    console.log("Setting main tab to '" + tab.name + "'");
                     $location.path(tab.path);
                     $scope.changeTab(tabIndex);
-                }
+                };
 
                 /**
                  * Initializes the application
@@ -168,7 +168,7 @@
                             signUpPopup(fbUserID, profile, userInitiated);
                         }
                     );
-                }
+                };
 
                 function loadFacebookFriends() {
                     Facebook.getTaggableFriends().then(
@@ -201,7 +201,7 @@
                 $scope.isTab = function (tabName) {
                     var path = $location.path();
                     return tabName.indexOf(tabName) != -1;
-                }
+                };
 
                 $scope.updateTabs = function () {
                     // determine the tab index
@@ -214,11 +214,11 @@
 
                     // select the one we want
                     $scope.tabs[tabIndex].active = true;
-                }
+                };
 
                 $scope.abs = function (value) {
                     return !value ? value : ((value < 0) ? -value : value);
-                }
+                };
 
                 $scope.changeTab = function (tabIndex, event) {
                     // deactivate all tabs
@@ -241,7 +241,7 @@
                             event.preventDefault();
                         }
                     }
-                }
+                };
 
                 $scope.getExchangeClass = function(exchange) {
                     if(exchange == null) return null;
@@ -249,9 +249,9 @@
                         var name = exchange.toUpperCase();
                         if (name.indexOf("NASD") != -1) return "NASDAQ";
                         if (name.indexOf("OTC") != -1) return "OTCBB";
-                        else name;
+                        else return name;
                     }
-                }
+                };
 
                 $scope.getPreferenceIcon = function (q) {
                     // fail-safe
@@ -262,7 +262,7 @@
                     if (HeldSecurities.isHeld(symbol)) return "star.png";
                     else if (FavoriteSymbols.isFavorite(symbol)) return "favorite_small.png";
                     else return "transparent12.png";
-                }
+                };
 
                 function determineTab() {
                     // determine the right one

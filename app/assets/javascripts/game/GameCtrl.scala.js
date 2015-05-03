@@ -4,7 +4,7 @@
 (function () {
     angular
         .module('shocktrade')
-        .controller('PlayCtrl', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
+        .controller('GameCtrl', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
             function ($rootScope, $scope, $location, $log, $timeout, MySession, ContestService, Errors, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
 
                 // setup the current contest
@@ -146,6 +146,7 @@
                             }, 500);
                         })
                         .error(function (err) {
+                            Errors.addMessage("Failed to delete contest");
                             $log.error("An error occurred while deleting the contest");
                             $timeout(function () {
                                 contest.deleting = false;
@@ -175,11 +176,16 @@
                         }, 500);
                     })
                         .error(function (err) {
+                            Errors.addMessage("Failed to join contest");
                             $log.error("An error occurred while joining the contest");
                             $timeout(function () {
                                 contest.joining = false;
                             }, 500);
                         });
+                };
+
+                $scope.joinedParticipant = function (contest, userProfile) {
+                    return $scope.containsPlayer(contest, userProfile);
                 };
 
                 $scope.quitContest = function (contest) {

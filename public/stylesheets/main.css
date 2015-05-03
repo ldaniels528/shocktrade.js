@@ -1,86 +1,4 @@
 /*********************************************************************************
- * 							Global Styles										 *
- *********************************************************************************/
-
-.clickable {
-	cursor: pointer;
-}
-
-.fb {
-	color: #3a5795;
-}
-
-/*********************************************************************************
- * 							Admin Styles										 *
- *********************************************************************************/
- 
-.admin_toolbar {
-	display: block;
-	border: 1px solid #888888;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #ffee44;	
- 	color: #cc8822; 
-	vertical-align: middle;
-	font-weight: bold;
-	width: 100%;
-	height: auto;	
-}
-
-.admin-button-A {
-    background:url('/assets/images/objects/marketActivity.gif') no-repeat;
-    background-color: #0080ff;
-    border: solid 1px #6000cc;    
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-	text-indent: +16px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);		
-}
-
-.admin-button-B {
-    background:url('/assets/images/objects/marketActivity.gif') no-repeat;
-    background-color: #ff8000;
-    border: solid 1px #cc6000;
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-	text-indent: +16px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);		
-}
-
-.admin-button-C {
-    background:url('/assets/images/objects/marketActivity.gif') no-repeat;
-    background-color: #ff00ff;
-    border: solid 1px #cc00cc;
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-	text-indent: +16px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);		
-}
-
-/*********************************************************************************
  * 							Market Status										 *
  *********************************************************************************/
  
@@ -170,34 +88,6 @@ img.logo {
 	vertical-align: top;
 }
 
-.tab_bar {
-	display: block; 
-	width: auto;
-	background-color: #dddddd;
-    border: solid 1px #20538D;	
-	border-bottom-left-radius: 10px 5px;
-	border-bottom-right-radius: 10px 5px;
-}
-
-td.tabs {
-	font-size: 16px; 
-}
-
-#main_tab_block {
-	display: block; 
-	border: 1px solid #888888;
-	background-color: #dddddd;
-	width: 100%;
-	
-	width: 200px;
-	height: 632px;
-	padding: 5px;
-	
-	clear: both;
-	overflow: auto;	
-}
-
-
 .spectator_message {
 	font-weight: bold;	
 	color: #cc8822; 
@@ -217,14 +107,6 @@ td.tabs {
 /*********************************************************************************
  * 							Title Blocks										 *
  *********************************************************************************/
- 
-.block_lite_gray {
- 	border-radius: 5px 5px 5px 5px;
- 	border: 1px solid #cccccc;
- 	background-color: #eeeeee; 
- 	width: 100%; 
- 	font-weight: bold;
-}
 
 .block_lite_blue {
  	border-radius: 5px 5px 5px 5px;
@@ -232,22 +114,5 @@ td.tabs {
  	background-color: #ddeeff; 
  	width: 100%; 
  	font-weight: bold;
-}
-
-.block_sub_title {
- 	border-radius: 5px 5px 5px 5px;
- 	border: 1px solid #357ebd;
-	background-color: #428bca;
-	width: 100%; 
-	height: 36px;
-	font-weight: bold;
- }
-
-.block_sub_heading {
-	 border-radius: 5px 5px 5px 5px;
- 	border: 1px solid #cccccc;
-	background-color: #eeeeee;
-	width: 100%; 
-	font-weight: bold;
 }
 

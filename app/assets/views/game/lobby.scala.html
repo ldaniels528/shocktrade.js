@@ -3,7 +3,7 @@
 <div ng-hide="MySession.contestId" class="spectator_message" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/no_contest_selected_dash.htm'"></div>
 </div>
-<div ng-if="contest._id" ng-controller="PlayLobbyCtrl">
+<div ng-if="contest._id">
     <div class="col-md-3">
         <div style="margin-top: 5px" ng-repeat="p in contest.rankings">
             <div ng-class="p.name ? 'rank_cell_player' : 'rank_cell_spectator'" ng-class-odd="'rank_cell_even'" ng-class-even="'rank_cell_odd'">

@@ -24,6 +24,22 @@ object ProfileResources extends Controller with MongoController with MongoExtras
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
 
+  ////////////////////////////////////////////////////////////////////////////
+  //     Views & JavaScript
+  ////////////////////////////////////////////////////////////////////////////
+
+  def PerksCtrl = Action {
+    Ok(assets.javascripts.profile.js.PerksCtrl())
+  }
+
+  def StatisticsCtrl = Action {
+    Ok(assets.javascripts.profile.js.StatisticsCtrl())
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  //      API functions
+  ////////////////////////////////////////////////////////////////////////////
+
   def createProfile = Action.async { request =>
     // attempt to retrieve the account info properties from the request
     Try(request.body.asJson map toAccount) match {

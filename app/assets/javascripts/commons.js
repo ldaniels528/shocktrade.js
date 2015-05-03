@@ -48,4 +48,4 @@ function clone(obj) {
 function insertID(entity) {
     entity.id = entity._id.$oid;
     return entity;
-};
+}

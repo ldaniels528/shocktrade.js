@@ -5,7 +5,7 @@ angular
 	    function($scope, $cookieStore, $http, $log, $modal, $timeout, Errors, MySession, ProfileService, QuoteService) {	
 	
 	// exchange loading variable
-	$scope.updatingExchanges = false		
+	$scope.updatingExchanges = false;
 			
 	// search reference data components
 	$scope.exchanges = {
@@ -14,7 +14,7 @@ angular
 	  NYSE : { id:"NYSE", desc:"New York", selected:true, count:null }, 
 	  OTCBB : { id:"OTCBB", desc:"New York", selected:true, count:null },
 	  OTHER_OTC : { id:"OTHER_OTC", desc:"New York", selected:true, count:null }
-	}
+	};
 	
 	/**
 	 * Refreshes the exchange counts (and selections if authorized)
@@ -23,35 +23,35 @@ angular
 		// load the exchange counts
 		QuoteService.getExchangeCounts().then(function(response) {
 			// create the exchange to count mapping
-			var exchanges = {}
+			var exchanges = {};
 			angular.forEach(response.data, function(v, k) {	
 				exchanges[v._id] = v.total
-			})
+			});
 			
 			// populate the counts
 			angular.forEach($scope.exchanges, function(xchg, idx) {
 				$scope.exchanges[idx].count = exchanges[xchg.id]
 			})
-		})
+		});
 		
 		// set the exchange selection preferences
 		if( MySession.isAuthorized() ) {
-			var id = MySession.getUserID()
+			var id = MySession.getUserID();
 			
 			// load the user's exchange preferences
 			ProfileService.getExchanges(id).then(function(response) {
-				var results = response.data[0]
+				var results = response.data[0];
 				
 				// build the exchange mapping
-				var mapping = {}
+				var mapping = {};
 				angular.forEach($scope.exchanges, function(v, k) {
 					mapping[k] = false
-				})
+				});
 				
 				angular.forEach(results.exchanges, function(v, k) {
 					mapping[v] = true
-				})
-				console.log("mapping => " + angular.toJson(mapping))
+				});
+				console.log("mapping => " + angular.toJson(mapping));
 				
 				// turn on/off each exchange
 				angular.forEach(mapping, function(v, k) {
@@ -59,32 +59,32 @@ angular
 				})
 			})
 		}
-	}
+	};
 	
 	$scope.setExchangeState = function(exchange) {
 		if( MySession.isAuthorized() ) {
-			var id = MySession.getUserID()
+			var id = MySession.getUserID();
 			QuoteService.setExchangeState(id, exchange.id, !exchange.selected).then(function() {
 				// request search results update 
 				$scope.$emit('exchange_updated', exchange.id);
 			})
 		}
-	}
+	};
 	
 	/**
 	 * Persists update exchange preferences
 	 */
 	$scope.updateExchanges = function() {
-		$scope.updatingExchanges = true
+		$scope.updatingExchanges = true;
 		
 		// build the array
-		var exchanges = []
+		var exchanges = [];
 		angular.forEach($scope.exchanges, function(xchg, idx) {
 			if( xchg.selected ) exchanges.push(xchg.id)
-		})
+		});
 		
 		// perform the update
-		var id = MySession.getUserID()
+		var id = MySession.getUserID();
 		ProfileService.updateExchanges(id, exchanges).then(
 			function(response) {
 				$scope.updatingExchanges = false
@@ -92,11 +92,11 @@ angular
 			function(response) {
 				$scope.updatingExchanges = false
 			})
-	}
+	};
 	
 	// watch for changes to the player's profile
 	$scope.$watch("MySession.userProfile", function() {
 		$scope.refreshCounts()
 	})
 	
-}])
+}]);
