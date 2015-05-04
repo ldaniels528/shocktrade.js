@@ -1,10 +1,13 @@
 <div style="background-color: #dddddd">
 	<div class="col-md-3 bold">Symbol</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
-	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market</div>
+	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market Price</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Quantity</div>
 
-    <div ng-show="isPositionSelected()" class="col-md-offset-8 col-md-1">
+    <div ng-show="isPositionSelected()" class="col-md-8">
+        <span class="bold" ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.companyName }}</span>
+    </div>
+    <div ng-show="isPositionSelected()" class="col-md-1">
         <img class="clickable pull-right"
              ng-click="toggleSelectedPosition()"
              title="Return to results"
@@ -19,8 +22,8 @@
 	</div>
 
     <!-- Data Rows -->
-    <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-5':(isPositionSelected())}">
-        <div class="col-md-12" ng-repeat="p in getPositions(contest)"
+    <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}">
+        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)"
              ng-class="selectedPosition._id.$oid === p._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
              ng-click="selectPosition(p)">
             <div class="col-md-3">
@@ -35,17 +38,14 @@
     </div>
 
     <!-- Expanded Section -->
-    <div ng-if="isPositionSelected()" class="col-md-7">
+    <div ng-if="isPositionSelected()" class="col-md-9">
         <div class="col-md-4 bold">Purchased Time</div>
         <div class="col-md-8">{{ selectedPosition.processedTime | date:'MM/dd hh:mma' }}</div>
 
-        <div class="col-md-4 bold">Symbol</div>
-        <div class="col-md-8">
-            <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.symbol }}</span>
-        </div>
-
         <div class="col-md-4 bold">Exchange</div>
-        <div class="col-md-8">{{ selectedPosition.exchange }}</div>
+        <div class="col-md-8">
+            <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.exchange }}</span>
+        </div>
 
         <div class="col-md-4 bold">Purchase Cost</div>
         <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
@@ -53,9 +53,11 @@
         <div class="col-md-4 bold">Estimated Value</div>
         <div class="col-md-8">
             $ {{ selectedPosition.netValue | number:2 }}
-                <span ng-if="selectedPosition.gainLoss != null">
-                    <changearrow value="{{ selectedPosition.gainLoss }}"/>
-                    <span ng-class="selectedPosition.gainLoss < 0 ? 'negative' : ''">{{ selectedPosition.gainLoss | number:1 }}%</span>
+                <span ng-if="selectedPosition.gainLossPct != null">
+                    <changearrow value="{{ selectedPosition.gainLossPct }}"/>
+                    <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
+                        {{ selectedPosition.gainLossPct | number:2 }}%
+                    </span>
                 </span>
         </div>
 

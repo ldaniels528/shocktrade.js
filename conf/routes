@@ -19,7 +19,7 @@ GET           /api/charts/ratings/:symbol                               com.shoc
 # Contests
 GET           /assets/views/play/lobby/lobby.htm                        com.shocktrade.controllers.ContestResources.lobby
 GET           /assets/views/play/search/search.htm                      com.shocktrade.controllers.ContestResources.search
-GET           /assets/javascripts/game/GameController.js                com.shocktrade.controllers.ContestResources.GameController
+GET           /assets/javascripts/game/GameController.js                com.shocktrade.controllers.ContestResources.gameController
 
 PUT           /api/contest                                              com.shocktrade.controllers.ContestResources.createContest
 GET           /api/contest/:id                                          com.shocktrade.controllers.ContestResources.getContestByID(id)

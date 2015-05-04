@@ -57,12 +57,12 @@
                 "imageURL": "/assets/images/objects/overview.png",
                 "path": "/explore",
                 "active": false
-            }, {
+            }, /*{
                 "name": "Research",
                 "imageURL": "/assets/images/buttons/search.png",
                 "path": "/search",
                 "active": false
-            }, {
+            },*/ {
                 "name": "News",
                 "imageURL": "/assets/images/objects/headlines.png",
                 "path": "/news",
@@ -272,12 +272,8 @@
                 else if (path.indexOf("/connect") != -1) tabIndex = 1;
                 else if (path.indexOf("/discover") != -1) tabIndex = 2;
                 else if (path.indexOf("/explore") != -1) tabIndex = 3;
-                else if (path.indexOf("/search") != -1) tabIndex = 4;
-                else if (path.indexOf("/news") != -1) tabIndex = 5;
-                else if (path.indexOf("/blog") != -1) {
-                    if ($scope.admin) tabIndex = 6;
-                    else tabIndex = 0;
-                }
+                //else if (path.indexOf("/search") != -1) tabIndex = 4;
+                else if (path.indexOf("/news") != -1) tabIndex = 4;
                 else tabIndex = 0;
 
                 // activate the tab

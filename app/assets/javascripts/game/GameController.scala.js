@@ -468,51 +468,58 @@
                 $scope.selectedPosition = null;
             };
 
-            $scope.getCashAvailable = function (participant) {
-                return participant ? (participant.fundsAvailable || 0) - $scope.getTotalBuyOrders(participant) : 0;
+            $scope.getCashAvailable = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.fundsAvailable || 0) : 0;
             };
 
-            $scope.asOfDate = function (participant) {
+            $scope.asOfDate = function (contest) {
+                var participant = $scope.getParticipant(contest);
                 return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
             };
 
-            $scope.getTotalOrders = function (participant) {
-                return $scope.getTotalBuyOrders(participant) + $scope.getTotalSellOrders(participant);
+            $scope.getTotalOrders = function (contest) {
+                return $scope.getTotalBuyOrders(contest) + $scope.getTotalSellOrders(contest);
             };
 
-            $scope.getTotalEquity = function (participant) {
-                return $scope.getTotalInvestment(participant) + (participant ? (participant.fundsAvailable || 0) : 0);
+            $scope.getTotalEquity = function (contest) {
+                return $scope.getTotalInvestment(contest) + $scope.getCashAvailable(contest);
             };
 
-            $scope.getTotalInvestment = function (participant) {
-                var positions = ((participant || {}).positions) || [];
+            $scope.getTotalInvestment = function (contest) {
+                var participant = $scope.getParticipant(contest);
                 var total = 0;
-                for (var n = 0; n < positions.length; n++) {
-                    var p = positions[n];
-                    total += p.price * p.quantity + p.commission;
+                if (participant != null) {
+                    angular.forEach(participant.positions, function (p) {
+                        total += p.netValue;
+                    });
                 }
                 return total;
             };
 
-            $scope.getTotalBuyOrders = function (participant) {
-                var orders = ((participant || {}).orders) || [];
+            $scope.getTotalBuyOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
                 var total = 0;
-                angular.forEach(orders, function (o) {
-                    if (o.orderType == 'BUY') {
-                        total += o.price * o.quantity + o.commission;
-                    }
-                });
+                if (participant != null) {
+                    angular.forEach(participant.orders, function (o) {
+                        if (o.orderType == 'BUY') {
+                            total += o.price * o.quantity + o.commission;
+                        }
+                    });
+                }
                 return total;
             };
 
-            $scope.getTotalSellOrders = function (participant) {
-                var orders = ((participant || {}).orders) || [];
+            $scope.getTotalSellOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
                 var total = 0;
-                angular.forEach(orders, function (o) {
-                    if (o.orderType == 'SELL') {
-                        total += o.price * o.quantity + o.commission;
-                    }
-                });
+                if (participant != null) {
+                    angular.forEach(participant.orders, function (o) {
+                        if (o.orderType == 'SELL') {
+                            total += o.price * o.quantity + o.commission;
+                        }
+                    });
+                }
                 return total;
             };
 

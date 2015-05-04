@@ -4,6 +4,7 @@ import java.util.Date
 
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
+import com.ldaniels528.tabular.Tabular
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.OrderType.OrderType
 import com.shocktrade.models.contest.PriceType.PriceType
@@ -29,7 +30,8 @@ import scala.util.{Failure, Success, Try}
  * @author lawrence.daniels@gmail.com
  */
 object ContestResources extends Controller with MongoExtras with ErrorHandler {
-  val DisplayColumns = Seq(
+  private val tabular = new Tabular()
+  private val DisplayColumns = Seq(
     "name", "creator", "startTime", "expirationTime", "startingBalance", "status",
     "ranked", "playerCount", "levelCap", "perksAllowed", "maxParticipants",
     "participants._id", "participants.name", "participants.facebookID")
@@ -40,7 +42,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   //     Views & JavaScript
   ////////////////////////////////////////////////////////////////////////////
 
-  def GameController = Action {
+  def gameController = Action {
     Ok(assets.javascripts.game.js.GameController())
   }
 
@@ -320,11 +322,15 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     // query the quotes for all symbols
       quotes <- QuoteResources.findQuotesBySymbols(allSymbols)
 
+      _ = tabular.transform(quotes) foreach (s => Logger.info(s))
+
       // create the mapping of symbols to quotes
-      mapping = Map(quotes map (q => (q.symbol.getOrElse(""), q)): _*)
+      mapping = Map(quotes map (q => (q.symbol.orNull, q)): _*)
 
       // get the participants' net worth and P&L
       totalWorths = participants map (asRanking(startingBalance, mapping, _))
+
+      _ = tabular.transform(totalWorths) foreach (s => Logger.info(s))
 
     // return the players' total worth
     } yield totalWorths
@@ -336,27 +342,25 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
 
     for {
     // load the quotes for all position symbols
-      quotesJs <- StockQuotes.findQuotes(symbols)("symbol", "lastTrade")
+      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
 
       // build a mapping of symbol to last trade
-      quotes = Map(quotesJs flatMap { js =>
-        for {
-          symbol <- (js \ "symbol").asOpt[String]
-          lastTrade <- (js \ "lastTrade").asOpt[Double]
-        } yield (symbol, lastTrade)
-      }: _*)
+      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
 
       // enrich the positions
       enrichedPositions = player.positions flatMap { pos =>
         for {
-          marketPrice <- quotes.get(pos.symbol)
-          netValue = marketPrice * pos.quantity
+          quote <- quotes.get(pos.symbol)
+          netValue = quote.lastTrade * pos.quantity
           gainLoss = netValue - pos.cost
+          gainLossPct = 100d * (gainLoss / pos.cost)
         } yield Json.toJson(pos).asInstanceOf[JsObject] ++ JS(
+          "companyName" -> quote.name,
           "cost" -> pos.cost,
-          "lastTrade" -> marketPrice,
+          "lastTrade" -> quote.lastTrade,
           "netValue" -> netValue,
-          "gainLoss" -> gainLoss)
+          "gainLoss" -> gainLoss,
+          "gainLossPct" -> gainLossPct)
       }
 
       // re-insert into the participant object
@@ -366,13 +370,16 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   }
 
   private def asRanking(startingBalance: BigDecimal, mapping: Map[String, Quote], p: Participant) = {
-    import p.{facebookId, fundsAvailable, name, positions, score}
+    val investment = p.positions flatMap { p =>
+      for {
+        quote <- mapping.get(p.symbol)
+        lastTrade <- quote.lastTrade
+      } yield lastTrade * p.quantity
+    } sum
 
-    val symbols = positions.map(_.symbol).distinct
-    val investment = (symbols flatMap (s => mapping.get(s) flatMap (_.lastTrade))).sum
-    val totalEquity = fundsAvailable + investment
+    val totalEquity = p.fundsAvailable + investment
     val gainLoss_% = ((totalEquity - startingBalance) / startingBalance) * 100d
-    Ranking(name, facebookId, score, totalEquity, gainLoss_%)
+    Ranking(p.name, p.facebookId, p.score, totalEquity, gainLoss_%)
   }
 
   private def placeName(place: Int) = {
@@ -474,10 +481,11 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
 
-  case class QuoteSnapshot(symbol: String, lastTrade: Double)
+  case class QuoteSnapshot(name: String, symbol: String, lastTrade: Double)
 
   implicit val quoteSnapshotReads: Reads[QuoteSnapshot] = (
-    (__ \ "symbol").read[String] and
+    (__ \ "name").read[String] and
+      (__ \ "symbol").read[String] and
       (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
 
   case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)

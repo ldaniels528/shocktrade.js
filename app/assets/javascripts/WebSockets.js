@@ -77,7 +77,7 @@
 
                 $timeout(function () {
                     connect();
-                }, 30000);
+                }, 15000);
             };
 
             socket.onmessage = function (event) {
