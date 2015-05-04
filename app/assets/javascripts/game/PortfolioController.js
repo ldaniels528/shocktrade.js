@@ -1,0 +1,212 @@
+(function () {
+    var app = angular.module('shocktrade');
+
+    /**
+     * Portfolio Controller
+     */
+    app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewOrderDialog', 'QuoteService',
+        function ($scope, $log, $timeout, MySession, ContestService, Errors, NewOrderDialog, QuoteService) {
+
+            /////////////////////////////////////////////////////////////////////
+            //          Participant Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getParticipant = function (contest) {
+                if ($scope.participant == null) {
+                    $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
+                    enrichParticipant(contest, $scope.participant);
+                }
+                return $scope.participant;
+            };
+
+            function enrichParticipant(contest, participant) {
+                ContestService.getEnrichedPositions(contest._id.$oid, participant._id.$oid)
+                    .success(function (response) {
+                        var enrichedPosition = response[0];
+                        $log.info("Loaded enriched player " + angular.toJson(enrichedPosition));
+
+                        for (var n = 0; n < participant.positions.length; n++) {
+                            var p = participant.positions[n];
+                            if (p._id.$oid === enrichedPosition._id.$oid) {
+                                participant.enriched = true;
+                                participant.positions[n] = enrichedPosition;
+                                return;
+                            }
+                        }
+                    })
+                    .error(function (err) {
+                        Errors.addMessage("Error loading player positions");
+                    });
+            }
+
+            /////////////////////////////////////////////////////////////////////
+            //          Order Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getActiveOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.orders || []) : [];
+            };
+
+            $scope.getClosedOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.orderHistory || []) : [];
+            };
+
+            $scope.popupNewOrderDialog = function () {
+                NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
+            };
+
+            $scope.isOrderSelected = function() {
+                return $scope.selectedOrder != null;
+            };
+
+            $scope.selectOrder = function (position) {
+                $scope.selectedPosition = position;
+            };
+
+            $scope.toggleSelectedOrder = function () {
+                $scope.selectedOrder = null;
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Position Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getPositions = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.positions || []) : [];
+            };
+
+
+            $scope.isPositionSelected = function () {
+                return $scope.selectedPosition != null;
+            };
+
+            $scope.selectPosition = function (position) {
+                $scope.selectedPosition = position;
+            };
+
+            $scope.sellPosition = function (symbol, quantity) {
+                NewOrderDialog.popup({symbol: symbol, quantity: quantity});
+            };
+
+            $scope.toggleSelectedPosition = function () {
+                $scope.selectedPosition = null;
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Summary Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getCashAvailable = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.fundsAvailable || 0) : 0;
+            };
+
+            $scope.asOfDate = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
+            };
+
+            $scope.getTotalOrders = function (contest) {
+                return $scope.getTotalBuyOrders(contest) + $scope.getTotalSellOrders(contest);
+            };
+
+            $scope.getTotalEquity = function (contest) {
+                return $scope.getTotalInvestment(contest) + $scope.getCashAvailable(contest);
+            };
+
+            $scope.getTotalInvestment = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                var total = 0;
+                if (participant != null) {
+                    angular.forEach(participant.positions, function (p) {
+                        total += p.netValue;
+                    });
+                }
+                return total;
+            };
+
+            $scope.getTotalBuyOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                var total = 0;
+                if (participant != null) {
+                    angular.forEach(participant.orders, function (o) {
+                        if (o.orderType == 'BUY') {
+                            total += o.price * o.quantity + o.commission;
+                        }
+                    });
+                }
+                return total;
+            };
+
+            $scope.getTotalSellOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                var total = 0;
+                if (participant != null) {
+                    angular.forEach(participant.orders, function (o) {
+                        if (o.orderType == 'SELL') {
+                            total += o.price * o.quantity + o.commission;
+                        }
+                    });
+                }
+                return total;
+            };
+
+            $scope.isMarketOrder = function (order) {
+                return order.priceType == 'MARKET' || order.priceType == 'MARKET_ON_CLOSE';
+            };
+
+            $scope.tradingStart = function () {
+                return (new Date()).getTime(); // TODO replace with service call
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Chart Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getExposureChart = function (target) {
+                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.exposure, target);
+            };
+
+            $scope.getPerformanceChart = function (target) {
+                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.performance, target);
+            };
+
+            $scope.getChart = function (contestId, participantName, chartName, target) {
+                if ((contestId && contestId != "") && (participantName && participantName != "")) {
+                    // load the chart representing the securities
+                    ContestService.getChart(contestId, participantName, chartName).then(
+                        function (exposureData) {
+                            // create the chart title & sub-title
+                            var subTitle = chartName.capitalize();
+                            var title = (chartName == "gains" || chartName == "losses") ? "Performance " + subTitle : subTitle + " Exposure";
+
+                            // construct the chart
+                            var exposure = new AmCharts.AmPieChart();
+                            exposure.colors = ["#00dd00", "#ff00ff", "#00ffff", "#885500", "#0044ff", "#888800"];
+                            exposure.addTitle(title, 12);
+                            exposure.dataProvider = exposureData;
+                            exposure.titleField = "title";
+                            exposure.valueField = "value";
+                            exposure.sequencedAnimation = true;
+                            exposure.startEffect = "elastic";
+                            exposure.startDuration = 2;
+                            exposure.innerRadius = "30%";
+                            exposure.labelRadius = 15;
+
+                            // 3D chart
+                            exposure.depth3D = 10;
+                            exposure.angle = 15;
+                            exposure.write(target);
+                        },
+                        function (err) {
+                            $log.info("Error: " + angular.toJson(err));
+                        });
+                }
+            };
+
+        }]);
+
+})();

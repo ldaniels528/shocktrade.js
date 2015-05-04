@@ -9,7 +9,9 @@
 
 <div class="ordersContainer">
 	<div class="col-md-12 center" ng-show="getActiveOrders(contest).length === 0">
-		<img src="/assets/images/status/alert.gif">  No active orders found
+		<span class="warning">
+			<img src="/assets/images/status/alert.gif">  No active orders found
+		</span>
 	</div>
 
 	<div class="row" ng-repeat="order in getActiveOrders(contest)" ng-class-even="'even'" ng-class-odd="'odd'">
@@ -17,7 +19,7 @@
 			<!-- cancel order button -->
 			<img src="/assets/images/buttons/delete.png"
                  class="clickable top"
-                 ng-click="cancelOrder(contestId, participant.name, order.id.$oid)">
+                 ng-click="cancelOrder(contest._id.$oid, participant._id.$oid, order._id.$oid)">
 
 			<!-- order date -->
 			<span ng-show="order.creationTime >= tradingStart()">{{ order.creationTime | date:'hh:mma' }}</span>

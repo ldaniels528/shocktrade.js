@@ -43,8 +43,7 @@
         service.findContests = function (searchOptions) {
             return $http({method: 'POST', url: '/api/contests/search', data: angular.toJson(searchOptions)})
                 .then(function (response) {
-                    var contests = response.data;
-                    return contests.map(insertID)
+                    return response.data;
                 });
         };
 
@@ -62,8 +61,7 @@
 
         service.getContestsByPlayerID = function (playerId) {
             return $http.get('/api/contests/player/' + playerId).then(function (response) {
-                var contests = response.data;
-                return contests.map(insertID);
+                return response.data;
             });
         };
 

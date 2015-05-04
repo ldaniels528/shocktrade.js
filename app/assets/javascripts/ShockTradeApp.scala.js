@@ -63,7 +63,51 @@
         $rootScope.WebSockets = WebSockets;
         $rootScope.maxPlayers = parseInt('@maxPlayers');
         $rootScope.loading = false;
+
+        $rootScope.clone = function(obj) {
+            // Handle the 3 simple types, and null or undefined
+            if (null == obj || "object" != typeof obj) return obj;
+
+            // Handle Date
+            else if (obj instanceof Date) {
+                var copy = new Date();
+                copy.setTime(obj.getTime());
+                return copy;
+            }
+
+            // Handle Array
+            else if (obj instanceof Array) {
+                var copy = [];
+                for (var i = 0, len = obj.length; i < len; i++) {
+                    copy[i] = $rootScope.clone(obj[i]);
+                }
+                return copy;
+            }
+
+            // Handle Object
+            else if (obj instanceof Object) {
+                var copy = {};
+                for (var attr in obj) {
+                    if (obj.hasOwnProperty(attr)) copy[attr] = $rootScope.clone(obj[attr]);
+                }
+                return copy;
+            }
+
+            else {
+                throw new Error("Unable to copy object! Its type isn't supported.");
+            }
+        };
+
     });
+
+    ////////////////////////////////////////////////////////////////////////////
+    //      Utility Functions
+    ////////////////////////////////////////////////////////////////////////////
+
+    Object.prototype.OID = function() {
+        var self = this;
+        return self._id ? self._id.$oid : null;
+    };
 
     ////////////////////////////////////////////////////////////////////////////
     //      Filters

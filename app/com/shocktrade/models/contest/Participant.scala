@@ -62,10 +62,10 @@ object Participant {
       doc.getAs[BigDecimal]("fundsAvailable").get,
       doc.getAs[Int]("score").get,
       doc.getAs[Date]("lastTradeTime"),
-      doc.getAs[List[Order]]("orders").get,
-      doc.getAs[List[ClosedOrder]]("orderHistory").get,
-      doc.getAs[List[Position]]("positions").get,
-      doc.getAs[List[Performance]]("performance").get
+      doc.getAs[List[Order]]("orders").getOrElse(Nil),
+      doc.getAs[List[ClosedOrder]]("orderHistory").getOrElse(Nil),
+      doc.getAs[List[Position]]("positions").getOrElse(Nil),
+      doc.getAs[List[Performance]]("performance").getOrElse(Nil)
     )
   }
 

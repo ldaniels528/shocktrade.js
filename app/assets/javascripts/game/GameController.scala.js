@@ -43,17 +43,9 @@
                 NewGameDialog.popup({});
             };
 
-            $scope.popupNewOrderDialog = function () {
-                NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
-            };
-
-            $scope.sellPosition = function (symbol, quantity) {
-                NewOrderDialog.popup({symbol: symbol, quantity: quantity});
-            };
-
             $scope.getAvailableCount = function () {
                 var count = 0;
-                $scope.searchResults.forEach(function (r) {
+                angular.forEach($scope.searchResults, function (r) {
                     if (r.status === 'ACTIVE') count++;
                 });
                 return count;
@@ -115,6 +107,36 @@
                 }
             };
 
+            $scope.loadContest = function (contestId) {
+                if (contestId) {
+                    // load the contest
+                    ContestService.getContestByID(contestId)
+                        .success(function (contest) {
+                            $scope.contest = contest;
+                            $scope.orderChoice = contest.status == 'ACTIVE' ? "active" : "history";
+                            MySession.contestId = contestId;
+
+                            // cache the player's name
+                            var playerName = MySession.getUserName();
+
+                            // find participant that represents the player
+                            $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
+
+                            // load the enriched participant
+                            updateWithRankings(playerName, contest);
+
+                            // load the pricing for the participant's position
+                            if ($scope.participant) {
+                                updateWithPricing($scope.participant);
+                            }
+                        })
+                        .error(function (xhr, status, error) {
+                            $log.error("Error selecting feed: " + error.status);
+                            //toaster.pop('error', 'Error!', xhr.error);
+                        });
+                }
+            };
+
             $scope.loadContestsByPlayerID = function (playerId) {
                 if (playerId) {
                     $scope.startLoading();
@@ -137,14 +159,14 @@
 
             $scope.isParticipant = function (contest) {
                 var id = MySession.getUserID();
-                return id && findPlayerByID(contest, id) != null;
+                return id && $scope.findPlayerByID(contest, id) != null;
             };
 
             $scope.deleteContest = function (contest) {
                 contest.deleting = true;
                 ContestService.deleteContest(contest._id.$oid)
                     .success(function (response) {
-                        removeContestFromList(contest.id);
+                        removeContestFromList(contest.OID());
                         $timeout(function () {
                             contest.deleting = false;
                         }, 500);
@@ -171,15 +193,24 @@
                         "facebookID": MySession.fbUserID
                     }
                 }).success(function (contest) {
-                    if (!contest.error) {
+                    if(!contest) {
+                        Errors.addMessage("Failed to join game");
+                        $log.error("Returned contest was null")
+                    }
+                    else if (!contest.error) {
+                        Errors.addMessage(contest.error);
+                        $log.error(contest.error);
+                    }
+                    else {
                         $scope.contest = contest;
                         updateWithRankings(MySession.getUserName(), contest)
                     }
+
                     $timeout(function () {
                         contest.joining = false;
                     }, 500);
-                })
-                    .error(function (err) {
+
+                }).error(function (err) {
                         Errors.addMessage("Failed to join contest");
                         $log.error("An error occurred while joining the contest");
                         $timeout(function () {
@@ -258,7 +289,7 @@
             };
 
             $scope.containsPlayer = function (contest, userProfile) {
-                return userProfile.id && findPlayerByID(contest, userProfile.id) != null;
+                return userProfile.id && $scope.findPlayerByID(contest, userProfile.id) != null;
             };
 
             $scope.contestStatusClass = function (contest) {
@@ -291,77 +322,6 @@
                 return fbFriends.slice(0, 20);
             };
 
-            $scope.getExposureChart = function (target) {
-                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.exposure, target);
-            };
-
-            $scope.getPerformanceChart = function (target) {
-                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.performance, target);
-            };
-
-            $scope.getChart = function (contestId, participantName, chartName, target) {
-                if ((contestId && contestId != "") && (participantName && participantName != "")) {
-                    // load the chart representing the securities
-                    ContestService.getChart(contestId, participantName, chartName).then(
-                        function (exposureData) {
-                            // create the chart title & sub-title
-                            var subTitle = capitalize(chartName);
-                            var title = (chartName == "gains" || chartName == "losses") ? "Performance " + subTitle : subTitle + " Exposure";
-
-                            // construct the chart
-                            var exposure = new AmCharts.AmPieChart();
-                            exposure.colors = ["#00dd00", "#ff00ff", "#00ffff", "#885500", "#0044ff", "#888800"];
-                            exposure.addTitle(title, 12);
-                            exposure.dataProvider = exposureData;
-                            exposure.titleField = "title";
-                            exposure.valueField = "value";
-                            exposure.sequencedAnimation = true;
-                            exposure.startEffect = "elastic";
-                            exposure.startDuration = 2;
-                            exposure.innerRadius = "30%";
-                            exposure.labelRadius = 15;
-
-                            // 3D chart
-                            exposure.depth3D = 10;
-                            exposure.angle = 15;
-                            exposure.write(target);
-                        },
-                        function (err) {
-                            $log.info("Error: " + angular.toJson(err));
-                        });
-                }
-            };
-
-            $scope.loadContest = function (contestId) {
-                if (contestId) {
-                    // load the contest
-                    ContestService.getContestByID(contestId)
-                        .success(function (contest) {
-                            $scope.contest = contest;
-                            $scope.orderChoice = contest.status == 'ACTIVE' ? "active" : "history";
-                            MySession.contestId = contestId;
-
-                            // cache the player's name
-                            var playerName = MySession.getUserName();
-
-                            // find participant that represents the player
-                            $scope.participant = findPlayerByID(contest, MySession.getUserID());
-
-                            // load the enriched participant
-                            updateWithRankings(playerName, contest);
-
-                            // load the pricing for the participant's position
-                            if ($scope.participant) {
-                                updateWithPricing($scope.participant);
-                            }
-                        })
-                        .error(function (xhr, status, error) {
-                            $log.error("Error selecting feed: " + error.status);
-                            //toaster.pop('error', 'Error!', xhr.error);
-                        });
-                }
-            };
-
             $scope.toggleSplitScreen = function () {
                 $scope.splitScreen = false;
             };
@@ -373,7 +333,7 @@
             $scope.selectContest = function (contest) {
                 $log.info("Selecting contest '" + contest.name + "' (" + contest._id.$oid + ")");
                 $scope.contest = contest;
-                $scope.participant = findPlayerByID(contest, MySession.getUserID());
+                $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
                 MySession.contestId = contest._id.$oid;
                 $scope.splitScreen = true;
 
@@ -418,28 +378,6 @@
             //          Positions and Orders
             /////////////////////////////////////////////////////////////////////
 
-            $scope.tradingStart = function () {
-                return (new Date()).getTime(); // TODO replace with service call
-            };
-
-            $scope.getParticipant = function (contest) {
-                if ($scope.participant == null) {
-                    $scope.participant = findPlayerByID(contest, MySession.getUserID());
-                    enrichParticipant(contest, $scope.participant);
-                }
-                return $scope.participant;
-            };
-
-            $scope.getActiveOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.orders || []) : [];
-            };
-
-            $scope.getClosedOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.orderHistory || []) : [];
-            };
-
             $scope.cancelOrder = function (contestId, playerId, orderId) {
                 ContestService.deleteOrder(contestId, playerId, orderId)
                     .success(function (participant) {
@@ -451,89 +389,9 @@
                     });
             };
 
-            $scope.getPositions = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.positions || []) : [];
-            };
-
-            $scope.isPositionSelected = function () {
-                return $scope.selectedPosition != null;
-            };
-
-            $scope.selectPosition = function (position) {
-                $scope.selectedPosition = position;
-            };
-
-            $scope.toggleSelectedPosition = function () {
-                $scope.selectedPosition = null;
-            };
-
-            $scope.getCashAvailable = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.fundsAvailable || 0) : 0;
-            };
-
-            $scope.asOfDate = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
-            };
-
-            $scope.getTotalOrders = function (contest) {
-                return $scope.getTotalBuyOrders(contest) + $scope.getTotalSellOrders(contest);
-            };
-
-            $scope.getTotalEquity = function (contest) {
-                return $scope.getTotalInvestment(contest) + $scope.getCashAvailable(contest);
-            };
-
-            $scope.getTotalInvestment = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.positions, function (p) {
-                        total += p.netValue;
-                    });
-                }
-                return total;
-            };
-
-            $scope.getTotalBuyOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.orders, function (o) {
-                        if (o.orderType == 'BUY') {
-                            total += o.price * o.quantity + o.commission;
-                        }
-                    });
-                }
-                return total;
-            };
-
-            $scope.getTotalSellOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.orders, function (o) {
-                        if (o.orderType == 'SELL') {
-                            total += o.price * o.quantity + o.commission;
-                        }
-                    });
-                }
-                return total;
-            };
-
-            $scope.isMarketOrder = function (order) {
-                return order.priceType == 'MARKET' || order.priceType == 'MARKET_ON_CLOSE';
-            };
-
             //////////////////////////////////////////////////////////////////////
             //              Private Methods
             //////////////////////////////////////////////////////////////////////
-
-            function capitalize(value) {
-                return value.charAt(0).toUpperCase() + value.substring(1);
-            }
 
             function enrichContest(contest) {
                 if (!contest.rankings) {
@@ -544,27 +402,7 @@
                 }
             }
 
-            function enrichParticipant(contest, participant) {
-                ContestService.getEnrichedPositions(contest._id.$oid, participant._id.$oid)
-                    .success(function (response) {
-                        var enrichedPosition = response[0];
-                        $log.info("Loaded enriched player " + angular.toJson(enrichedPosition));
-
-                        for (var n = 0; n < participant.positions.length; n++) {
-                            var p = participant.positions[n];
-                            if (p._id.$oid === enrichedPosition._id.$oid) {
-                                participant.enriched = true;
-                                participant.positions[n] = enrichedPosition;
-                                return;
-                            }
-                        }
-                    })
-                    .error(function (err) {
-                        Errors.addMessage("Error loading player positions");
-                    });
-            }
-
-            function findPlayerByID(contest, playerId) {
+            $scope.findPlayerByID = function (contest, playerId) {
                 var participants = contest ? contest.participants : null;
                 if (participants) {
                     for (var n = 0; n < participants.length; n++) {
@@ -575,7 +413,7 @@
                     }
                 }
                 return null;
-            }
+            };
 
             function isContestSelected(contestId) {
                 return ($scope.contest && $scope.contest._id.$oid === contestId);
@@ -647,7 +485,7 @@
             function indexOfContest(contestId) {
                 for (var n = 0; n < $scope.searchResults.length; n++) {
                     var contest = $scope.searchResults[n];
-                    if (contest.id == contestId) return n;
+                    if (contest.OID() === contestId) return n;
                 }
                 return -1;
             }
@@ -719,6 +557,7 @@
                     });
             }
 
+            /*
             function updateWithRankingsForContests(contests) {
                 if (contests.length) {
                     $log.info("Preparing to load rankings for " + contests.length + " contest(s)");
@@ -732,7 +571,7 @@
                         loadLeaderRankings(contests);
                     }
                 }
-            }
+            }*/
 
             //////////////////////////////////////////////////////////////////////
             //              Data Graphs
@@ -750,7 +589,7 @@
                     return true;
                 }
             }, {
-                "name": "Lobby",
+                "name": "Trading",
                 "imageURL": "/assets/images/objects/home.gif",
                 "path": "/assets/views/play/lobby/lobby.htm",
                 "url": "/play/lobby",
@@ -840,7 +679,6 @@
              */
             $scope.$on("contest_created", function (event, contest) {
                 $log.info("New contest created '" + contest.name + "'");
-                insertID(contest);
                 $scope.searchResults.push(contest);
             });
 
@@ -848,7 +686,7 @@
              * Listen for contest deletion events
              */
             $scope.$on("contest_deleted", function (event, contest) {
-                removeContestFromList(contest.id);
+                removeContestFromList(contest.OID());
             });
 
             /**
@@ -856,18 +694,9 @@
              */
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' updated");
-                insertID(contest);
-                if (contest.id === MySession.contestId) {
+                if (contest.OID() === MySession.contestId) {
                     $scope.contest = contest;
                 }
-            });
-
-            /**
-             * Listen for contest update events
-             */
-            $scope.$on("contest_updated", function (event, contest) {
-                $log.info("Contest '" + contest.name + "' updated");
-                insertID(contest);
             });
 
             //////////////////////////////////////////////////////////////////////

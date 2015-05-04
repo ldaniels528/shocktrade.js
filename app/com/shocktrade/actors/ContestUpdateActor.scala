@@ -97,7 +97,7 @@ class ContestUpdateActor extends Actor with ActorLogging {
       val mySender = sender()
       db.command(FindAndModify(
         collection = "Contests",
-        query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers), "invitationOnly" -> false),
+        query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers)/*, "invitationOnly" -> false*/),
         modify = new Update(
           BS("$inc" -> BS("playerCount" -> 1),
             "$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
