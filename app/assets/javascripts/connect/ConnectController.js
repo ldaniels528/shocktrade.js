@@ -5,7 +5,7 @@
      * Connect Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('ConnectCtrl', ['$scope', '$log', 'ComposeMessageDialog', 'ConnectService', 'MySession',
+    app.controller('ConnectController', ['$scope', '$log', 'ComposeMessageDialog', 'ConnectService', 'MySession',
         function ($scope, $log, ComposeMessageDialog, ConnectService, MySession) {
             $scope.searchName = "";
             $scope.myUpdates = [];

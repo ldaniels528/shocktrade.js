@@ -5,7 +5,7 @@
      * Discover Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DiscoverCtrl', ['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'Errors', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
+    app.controller('DiscoverController', ['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'Errors', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
         function ($scope, $cookieStore, $log, $routeParams, $timeout, Errors, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
 
             // setup a private loading variable

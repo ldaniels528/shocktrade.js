@@ -40,8 +40,8 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   //     Views & JavaScript
   ////////////////////////////////////////////////////////////////////////////
 
-  def GameCtrl = Action {
-    Ok(assets.javascripts.game.js.GameCtrl())
+  def GameController = Action {
+    Ok(assets.javascripts.game.js.GameController())
   }
 
   def lobby = Action {

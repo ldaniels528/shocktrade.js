@@ -5,20 +5,20 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainCtrl', ['$scope', '$interval', '$location', '$log', '$timeout', 'Errors', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+    app.controller('MainController', ['$scope', '$interval', '$location', '$log', '$timeout', 'Errors', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
         function ($scope, $interval, $location, $log, $timeout, Errors, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
 
             $scope.isLoading = function () {
-                return $scope._loading
+                return $scope._loading;
             };
 
             $scope.startLoading = function (timeout) {
                 $scope._loading = true;
-                var _timeout = timeout || 4000;
-
                 /*
+                 var _timeout = timeout || 4000;
+
                  // set loading timeout
                  var promise = $timeout(function() {
                  console.log("Disabling the loading animation due to time-out (" + _timeout + " msec)...");
@@ -309,19 +309,6 @@
                     }, delay);
                 });
             }
-
-            // watch for changes to the player's profile
-            $scope.$watch("MySession.userProfile", function () {
-                if (!$scope.admin && (MySession.userProfile || {}).name === "ldaniels") {
-                    $scope.admin = true;
-                    $scope.tabs.push({
-                        "name": "Blog",
-                        "imageURL": "/assets/images/objects/blog.png",
-                        "path": "/blog",
-                        "active": false
-                    });
-                }
-            });
 
         }]);
 })();

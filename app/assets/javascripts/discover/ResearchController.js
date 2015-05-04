@@ -4,7 +4,7 @@
     /**
      * Search Controller
      */
-    app.controller('SearchCtrl', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'ConditionDialog', 'Errors', 'HeldSecurities', 'MySession', 'QuoteService',
+    app.controller('ResearchController', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'ConditionDialog', 'Errors', 'HeldSecurities', 'MySession', 'QuoteService',
         function ($scope, $cookieStore, $http, $log, $timeout, ConditionDialog, Errors, HeldSecurities, MySession, QuoteService) {
             $scope.message = "";
 

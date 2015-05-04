@@ -6,7 +6,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <age value="{{ myDate }}" /> ~> "5 days ago"
 	 */
-	app.directive('age', ['MySession', function(MySession) {
+	app.directive('age', ['$log', function($log) {
 		return {
 		    restrict: 'E',
 		    scope: { class:'@class', value:'@value' },
@@ -34,7 +34,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <avatar id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
 	 */
-    app.directive('avatar', ['$log', 'MySession', function($log, MySession) {
+    app.directive('avatar', ['$log', function($log) {
 		return {
 		    restrict: 'E',
 		    scope: { id:'@id', object:'@object', alt:'@alt', style:'@style' },
@@ -81,7 +81,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <country id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
 	 */
-    app.directive('country', ['MySession', function(MySession) {
+    app.directive('country', ['$log', function($log) {
 		return {
 		    restrict: 'E',
 		    scope: { profile:'@profile' },
@@ -99,7 +99,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <changeArrow value="{{ q.change }}" />
 	 */
-	app.directive('changearrow', ['MySession', function(MySession) {
+	app.directive('changearrow', ['$log', function($log) {
 		return {
 		    restrict: 'E',
 		    scope: { value:'@value' },
@@ -120,7 +120,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <news text="{{ myDate }}" /> ~> "5 days ago"
 	 */
-	app.directive('news', ['MySession', function(MySession) {
+	app.directive('news', ['$log', function($log) {
 		return {
 		    restrict: 'E',
 		    scope: { class:'@class', content:'@content' },

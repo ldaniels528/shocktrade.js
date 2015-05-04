@@ -1,4 +1,4 @@
-<div ng-controller="GameCtrl" style="width: 100%; height: 100%; border: 1px solid #888888; background-color: #ffffee; border-radius: 5px 5px 5px 5px">
+<div ng-controller="GameController" style="width: 100%; height: 100%; border: 1px solid #888888; background-color: #ffffee; border-radius: 5px 5px 5px 5px">
 	<div style="width: 100%; background-color: #004080; color: #ffffee; text-align: center">{{ userProfile.name }}</div>
 	<div style="display:block; width: 100%; background-color: #ccddff">
 		<country profile="{{ MySession.profile }}" />
@@ -34,7 +34,7 @@
 			</table>
 		</div>
 		<br style="clear: both">
-		<div ng-controller="AwardsCtrl" ng-init="setupAwards()"  style="display: block; background-color: #cccccc; border: 1px solid #888888; border-radius: 4px 4px 4px 4px; height: 33px; text-align: center">
+		<div ng-controller="AwardsController" ng-init="setupAwards()"  style="display: block; background-color: #cccccc; border: 1px solid #888888; border-radius: 4px 4px 4px 4px; height: 33px; text-align: center">
 			<img ng-repeat="award in MySession.userProfile.awards.slice(0,7)" style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">			
 		</div>
 	</div>

@@ -5,7 +5,7 @@
      * Rewards Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('RewardsCtrl', ['$scope', function ($scope) {
+    app.controller('RewardsController', ['$scope', function ($scope) {
         var tabClasses;
         $scope.tabs = [{
             "name": "Awards",

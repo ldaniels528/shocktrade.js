@@ -5,7 +5,7 @@
      * Explore: Drill-Down Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DrillDownCtrl', ['$scope', '$anchorScroll', '$cookieStore', '$http', '$location', '$log', '$routeParams', '$timeout', 'QuoteService', 'RecentSymbols',
+    app.controller('DrillDownController', ['$scope', '$anchorScroll', '$cookieStore', '$http', '$location', '$log', '$routeParams', '$timeout', 'QuoteService', 'RecentSymbols',
         function ($scope, $anchorScroll, $cookieStore, $http, $location, $log, $routeParams, $timeout, QuoteService, RecentSymbols) {
 
             // tree data

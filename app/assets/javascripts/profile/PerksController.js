@@ -4,7 +4,7 @@
     /**
      * Perks Controller
      */
-    app.controller('PerksCtrl', ['$scope', '$http', 'MySession', function ($scope, $http, MySession) {
+    app.controller('PerksController', ['$scope', '$http', 'MySession', function ($scope, $http, MySession) {
             $scope.message = null;
             $scope.perks = [
                 {

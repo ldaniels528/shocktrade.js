@@ -6,14 +6,7 @@
 GET           /                                                         com.shocktrade.controllers.Application.index
 GET           /websocket                                                com.shocktrade.controllers.Application.webSocket
 GET           /assets/javascripts/app.min.js                            com.shocktrade.controllers.Application.ngApp
-GET           /assets/javascripts/facebook.min.js                       com.shocktrade.controllers.Application.facebook
-
-# Blog
-PUT           /api/blog                                                 com.shocktrade.controllers.BlogResources.createBlogPost()
-POST          /api/blog                                                 com.shocktrade.controllers.BlogResources.updateBlogPost()
-GET           /api/blog/id/:id                                          com.shocktrade.controllers.BlogResources.getBlogPost(id)
-GET           /api/blog/list/:limit                                     com.shocktrade.controllers.BlogResources.getBlogPosts(limit: Int)
-DELETE        /api/blog/:id                                             com.shocktrade.controllers.BlogResources.deleteBlogPost(id)
+GET           /assets/javascripts/Facebook.js                           com.shocktrade.controllers.Application.facebook
 
 # Charts
 GET           /api/charts/exposure/exchange/:id/:userName               com.shocktrade.controllers.ChartResources.getExposureByExchange(id, userName)
@@ -26,7 +19,7 @@ GET           /api/charts/ratings/:symbol                               com.shoc
 # Contests
 GET           /assets/views/play/lobby/lobby.htm                        com.shocktrade.controllers.ContestResources.lobby
 GET           /assets/views/play/search/search.htm                      com.shocktrade.controllers.ContestResources.search
-GET           /assets/javascripts/game/play_ctrl.min.js                 com.shocktrade.controllers.ContestResources.GameCtrl
+GET           /assets/javascripts/game/GameController.js                com.shocktrade.controllers.ContestResources.GameController
 
 PUT           /api/contest                                              com.shocktrade.controllers.ContestResources.createContest
 GET           /api/contest/:id                                          com.shocktrade.controllers.ContestResources.getContestByID(id)
@@ -94,9 +87,6 @@ POST          /api/profile/:id/quotes/filter/full                       com.shoc
 POST          /api/profile/:id/quotes/filter/mini                       com.shocktrade.controllers.QuoteResources.filterMiniQuotes(id)
 
 # Profiles
-GET           /assets/javascripts/profile/perks_ctrl.min.js             com.shocktrade.controllers.ProfileResources.PerksCtrl
-GET           /assets/javascripts/profile/statistics_ctrl.min.js        com.shocktrade.controllers.ProfileResources.StatisticsCtrl
-
 POST          /api/profile/create                                       com.shocktrade.controllers.ProfileResources.createProfile
 PUT           /api/profile/:id/favorite/:symbol                         com.shocktrade.controllers.ProfileResources.addFavoriteSymbol(id, symbol)
 DELETE        /api/profile/:id/favorite/:symbol                         com.shocktrade.controllers.ProfileResources.removeFavoriteSymbol(id, symbol)

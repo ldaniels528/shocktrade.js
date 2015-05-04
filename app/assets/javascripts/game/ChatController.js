@@ -5,7 +5,7 @@
      * Play Lounge/Chat Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PlayChatCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
+    app.controller('ChatCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
         function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
 
             $scope.chatMessage = null;

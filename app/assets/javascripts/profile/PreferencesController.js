@@ -4,7 +4,7 @@
     /**
      * Preferences Controller
      */
-    app.controller('PreferencesCtrl', ['$scope', '$cookieStore', '$http', '$log', '$modal', '$timeout', 'Errors', 'MySession', 'ProfileService', 'QuoteService',
+    app.controller('PreferencesController', ['$scope', '$cookieStore', '$http', '$log', '$modal', '$timeout', 'Errors', 'MySession', 'ProfileService', 'QuoteService',
         function ($scope, $cookieStore, $http, $log, $modal, $timeout, Errors, MySession, ProfileService, QuoteService) {
 
             // exchange loading variable

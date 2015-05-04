@@ -5,7 +5,7 @@
      * Awards Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('AwardsCtrl', ['$scope', '$http', 'MySession', function ($scope, $http, MySession) {
+    app.controller('AwardsController', ['$scope', '$http', 'MySession', function ($scope, $http, MySession) {
         $scope.awardImageMap = [];
         $scope.getAwardImage = function (code) {
             return $scope.awardImageMap[code] || '';

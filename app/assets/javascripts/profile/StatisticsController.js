@@ -4,7 +4,7 @@
     /**
      * Statistics Controller
      */
-    app.controller('StatisticsCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
+    app.controller('StatisticsController', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
         function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
 
 

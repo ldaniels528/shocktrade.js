@@ -36,7 +36,7 @@ object Application extends Controller with MongoController {
       case s if s.contains("shocktrade.net") => "616569495084446" // shocktrade.net
       case _ => "522523074535098" // unknown, so local dev
     }
-    Ok(assets.javascripts.js.facebook(appId))
+    Ok(assets.javascripts.js.Facebook(appId))
   }
 
   /**
@@ -44,7 +44,7 @@ object Application extends Controller with MongoController {
    * @return
    */
   def ngApp = Action {
-    Ok(assets.javascripts.js.app(Contest.MaxPlayers))
+    Ok(assets.javascripts.js.ShockTradeApp(Contest.MaxPlayers))
   }
 
   /**

@@ -4,7 +4,7 @@
     /**
      * Game Play Controller
      */
-    app.controller('GameCtrl', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
+    app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
         function ($rootScope, $scope, $location, $log, $timeout, MySession, ContestService, Errors, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
 
             // setup the current contest

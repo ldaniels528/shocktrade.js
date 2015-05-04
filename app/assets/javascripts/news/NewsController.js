@@ -5,7 +5,7 @@
      * News Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewsCtrl', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'MySession', 'NewsQuoteDialog', 'NewsService', 'NewsSymbols',
+    app.controller('NewsController', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'MySession', 'NewsQuoteDialog', 'NewsService', 'NewsSymbols',
         function ($scope, $cookieStore, $log, $sce, $timeout, MySession, NewsQuoteDialog, NewsService, NewsSymbols) {
 
             $scope.channels = [];
@@ -13,7 +13,7 @@
             $scope.newsSources = [];
 
             // define the view layout
-            $scope.view = $cookieStore.get('NewsCtrl_view') || 'list';
+            $scope.view = $cookieStore.get('NewsController_view') || 'list';
 
             // define the news tabs
             $scope.newsTabs = [{

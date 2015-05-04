@@ -21,7 +21,7 @@
 		<tr>
 			<td colspan="4" ng-show="searchOptions.levelCapAllowed">
 				Level:
-				<select ng-controller="RewardsCtrl" ng-model="searchOptions.levelCap">
+				<select ng-controller="RewardsController" ng-model="searchOptions.levelCap">
 					<option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
 				</select>
 			</td>
