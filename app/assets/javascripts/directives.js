@@ -1,13 +1,12 @@
 (function() {
+	var app = angular.module('shocktrade');
 
 	/**
 	 * Age Directive
 	 * @author lawrence.daniels@gmail.com
 	 * <age value="{{ myDate }}" /> ~> "5 days ago"
 	 */
-	angular
-		.module('shocktrade')
-		.directive('age', ['MySession', function(MySession) {
+	app.directive('age', ['MySession', function(MySession) {
 		return {
 		    restrict: 'E',
 		    scope: { class:'@class', value:'@value' },
@@ -35,9 +34,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <avatar id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
 	 */
-	angular
-		.module('shocktrade')
-		.directive('avatar', ['$log', 'MySession', function($log, MySession) {
+    app.directive('avatar', ['$log', 'MySession', function($log, MySession) {
 		return {
 		    restrict: 'E',
 		    scope: { id:'@id', object:'@object', alt:'@alt', style:'@style' },
@@ -84,9 +81,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <country id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
 	 */
-	angular
-		.module('shocktrade')
-		.directive('country', ['MySession', function(MySession) {
+    app.directive('country', ['MySession', function(MySession) {
 		return {
 		    restrict: 'E',
 		    scope: { profile:'@profile' },
@@ -104,9 +99,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <changeArrow value="{{ q.change }}" />
 	 */
-	angular
-		.module('shocktrade')
-		.directive('changearrow', ['MySession', function(MySession) {
+	app.directive('changearrow', ['MySession', function(MySession) {
 		return {
 		    restrict: 'E',
 		    scope: { value:'@value' },
@@ -127,9 +120,7 @@
 	 * @author lawrence.daniels@gmail.com
 	 * <news text="{{ myDate }}" /> ~> "5 days ago"
 	 */
-	angular
-		.module('shocktrade')
-		.directive('news', ['MySession', function(MySession) {
+	app.directive('news', ['MySession', function(MySession) {
 		return {
 		    restrict: 'E',
 		    scope: { class:'@class', content:'@content' },
@@ -160,60 +151,59 @@
 		};
 	}]);
 
-	function replaceToken(encodedText) {
-		var start = 0;
-		do {
-			start = encodedText.indexOf("${", start);
-			var end = encodedText.indexOf("}$", end);
-			if(start != -1 && end > start) {
-				var token = encodedText.substring(start+2, end - 1);
-				console.log("token = '" + token + "'");
-				var pcs = token.split("|");
-				var symbol = pcs[0];
-				var exchange = pcs[1];
-				var changePct = pcs[2];
-				console.log("symbol = " + symbol + ", exchange = " + exchange + ", changePct = " + changePct);
-				encodedText = replace(encodedText, start, end + 2,
-					'<a href="" ng-click="loadNewsQuote(\'${symbol}\')">' +
-						'<nobr><span class="${exchange}">${symbol} ${changeArrow(change)}</span>' +
-						'<span class="${changeClass(changePct)}">${changePct}</span></nobr>' +
-					'</a>');
-			}
-			start = end;
+    app.directive('compile', ['$compile', function ($compile) {
+        return function (scope, element, attrs) {
+            scope.$watch(
+                function (scope) {
+                    // watch the 'compile' expression for changes
+                    return scope.$eval(attrs.compile);
+                },
+                function (value) {
+                    // when the 'compile' expression changes
+                    // assign it into the current DOM
+                    element.html(value);
 
-		} while(start != -1 && start < encodedText.length);
+                    // compile the new DOM and link it to the current
+                    // scope.
+                    // NOTE: we only compile .childNodes so that
+                    // we don't get into infinite loop compiling ourselves
+                    $compile(element.contents())(scope);
+                }
+            );
+        };
+    }]);
 
-		return encodedText;
-	}
+    function replaceToken(encodedText) {
+        var start = 0;
+        do {
+            start = encodedText.indexOf("${", start);
+            var end = encodedText.indexOf("}$", end);
+            if (start != -1 && end > start) {
+                var token = encodedText.substring(start + 2, end - 1);
+                console.log("token = '" + token + "'");
+                var pcs = token.split("|");
+                var symbol = pcs[0];
+                var exchange = pcs[1];
+                var changePct = pcs[2];
+                console.log("symbol = " + symbol + ", exchange = " + exchange + ", changePct = " + changePct);
+                encodedText = replace(encodedText, start, end + 2,
+                    '<a href="" ng-click="loadNewsQuote(\'${symbol}\')">' +
+                    '<nobr><span class="${exchange}">${symbol} ${changeArrow(change)}</span>' +
+                    '<span class="${changeClass(changePct)}">${changePct}</span></nobr>' +
+                    '</a>');
+            }
+            start = end;
 
-	function replace(source, start, end, replacement) {
-		var s1 = source.substring(0, start);
-		var s2 = source.substring(end, source.length);
-		return s1 + replacement + s2;
-	}
+        } while (start != -1 && start < encodedText.length);
 
-	angular.module('shocktrade')
-	  .directive('compile', ['$compile', function ($compile) {
-	  return function(scope, element, attrs) {
-	      scope.$watch(
-	        function(scope) {
-	           // watch the 'compile' expression for changes
-	          return scope.$eval(attrs.compile);
-	        },
-	        function(value) {
-	          // when the 'compile' expression changes
-	          // assign it into the current DOM
-	          element.html(value);
+        return encodedText;
+    }
 
-	          // compile the new DOM and link it to the current
-	          // scope.
-	          // NOTE: we only compile .childNodes so that
-	          // we don't get into infinite loop compiling ourselves
-	          $compile(element.contents())(scope);
-	        }
-	    );
-	};
-	}]);
+    function replace(source, start, end, replacement) {
+        var s1 = source.substring(0, start);
+        var s2 = source.substring(end, source.length);
+        return s1 + replacement + s2;
+    }
 
 })();
 

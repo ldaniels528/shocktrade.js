@@ -1,10 +1,11 @@
-/**
- * Retrieves the current stock market status
- * @author lawrence.daniels@gmail.com
- */
-angular
-    .module('shocktrade')
-    .factory('MarketStatus', function ($http, $log) {
+(function () {
+    var app = angular.module('shocktrade');
+
+    /**
+     * Retrieves the current stock market status
+     * @author lawrence.daniels@gmail.com
+     */
+    app.factory('MarketStatus', function ($http, $log) {
         return {
             getMarketStatus: function (callback) {
                 // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
@@ -21,3 +22,5 @@ angular
             }
         };
     });
+
+})();

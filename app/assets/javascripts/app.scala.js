@@ -1,7 +1,15 @@
 @(maxPlayers: Int)
 
 (function() {
+
+    /**
+     * ShockTrade Angular.js Application
+     */
     var app = angular.module('shocktrade', ['ngCookies', 'ngRoute', 'ngSanitize', 'ui.bootstrap' ]);
+
+    /**
+     * Configure the application
+     */
     app.config(['$locationProvider', '$parseProvider', '$routeProvider',
         function($locationProvider, $parseProvider, $routeProvider) {
             // remove the # from URLs

@@ -1,10 +1,11 @@
-/**
- * Play Lounge/Chat Controller
- * @author lawrence.daniels@gmail.com
- */
-angular
-    .module('shocktrade')
-    .controller('PlayChatCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
+(function () {
+    var app = angular.module('shocktrade');
+
+    /**
+     * Play Lounge/Chat Controller
+     * @author lawrence.daniels@gmail.com
+     */
+    app.controller('PlayChatCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
         function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
 
             $scope.chatMessage = null;
@@ -30,12 +31,12 @@ angular
                 $log.info("Transmitting message " + angular.toJson(message));
                 ContestService
                     .sendChatMessage(MySession.contestId, message).then(
-                        function (response) {
-                            $scope.chatMessage = null;
-                        },
-                        function (response) {
-                            Errors.addMessage("Failed to send message (" + response.message + ")");
-                        });
+                    function (response) {
+                        $scope.chatMessage = null;
+                    },
+                    function (response) {
+                        Errors.addMessage("Failed to send message (" + response.message + ")");
+                    });
             };
 
             $scope.emoticons = [
@@ -60,3 +61,5 @@ angular
                 {"symbol": "=>", "uri": "icon_arrow.gif", "tooltip": "Arrow"}];
 
         }]);
+
+})();

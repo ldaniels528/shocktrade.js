@@ -1,11 +1,11 @@
-angular
-    .module('shocktrade')
-    .controller('SearchCtrl',
-    ['$scope', '$cookieStore', '$http', '$log', '$modal', '$timeout',
-        'ConditionDialog', 'Errors', 'HeldSecurities', 'MySession', 'QuoteService',
-        function ($scope, $cookieStore, $http, $log, $modal, $timeout,
-                  ConditionDialog, Errors, HeldSecurities, MySession, QuoteService) {
+(function () {
+    var app = angular.module('shocktrade');
 
+    /**
+     * Search Controller
+     */
+    app.controller('SearchCtrl', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'ConditionDialog', 'Errors', 'HeldSecurities', 'MySession', 'QuoteService',
+        function ($scope, $cookieStore, $http, $log, $timeout, ConditionDialog, Errors, HeldSecurities, MySession, QuoteService) {
             $scope.message = "";
 
             // search reference data components
@@ -203,3 +203,5 @@ angular
             })
 
         }]);
+
+})();
