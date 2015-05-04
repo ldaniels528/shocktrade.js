@@ -4,7 +4,7 @@
 		<div style="display: inline; float: left; width: 50%">
 			<span style="font-weight: bold; color: #0000aa">Filter:</span>
 			<select ng-model="selection.filterId" ng-change="updateFilter(selection.filterId)">
-				<option ng-repeat="filter in MySession.userProfile.filters" value="{{ filter._id.$oid }}">{{ filter.name }}</option>
+				<option ng-repeat="filter in MySession.userProfile.filters" value="{{ filter.OID() }}">{{ filter.name }}</option>
 			</select>
 			<img ng-hide="isLoading()" class="middle clickable" ng-click="search()" src="/assets/images/objects/refresh.png">
 			<img ng-show="isLoading()" class="middle" src="/assets/images/status/loading.gif">		

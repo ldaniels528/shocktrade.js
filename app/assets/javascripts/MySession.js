@@ -31,7 +31,7 @@
          * @returns {*}
          */
         service.getUserID = function () {
-            return service.userProfile._id ? service.userProfile._id.$oid : service.userProfile.id;
+            return service.userProfile.OID();
         };
 
         service.getUserName = function () {

@@ -1,8 +1,7 @@
 <tabset>
-	<tab ng-repeat="tab in playTabs	" active="tab.active" disabled="!tab.isVisible(contest)" select="changePlayTab($index)">
+	<tab ng-repeat="tab in playTabs	" active="tab.active" select="changePlayTab($index)">
 		<tab-heading>
 			<img class="links" ng-src="{{ tab.imageURL }}"> {{ tab.name }}
-			<img ng-show="tab.lockable && !MySession.authenticated" src="/assets/images/notice/locked_12.png">
 		</tab-heading>
 	</tab>
 </tabset>

@@ -83,7 +83,7 @@
         }
 
         service.init = function (id) {
-            ContestService.getHeldSecurities(id.$oid).then(
+            ContestService.getHeldSecurities(id).then(
                 function (response) {
                     $log.info("Loading held securities...");
                     service.setSymbols(response.data);

@@ -88,7 +88,7 @@
                         function (data) {
                             $scope.stopLoading();
                             $scope.myUpdates = data;
-                            if (!$scope.myUpdate._id && data.length > 0) {
+                            if (!$scope.myUpdate.OID() && data.length > 0) {
                                 $scope.myUpdate = data[0];
                             }
                             for (var n = 0; n < data.length; n++) {
@@ -130,7 +130,7 @@
                 var messageIDs = [];
                 for (var n = 0; n < myUpdates.length; n++) {
                     if (myUpdates[n].selected) {
-                        messageIDs.push(myUpdates[n]._id.$oid);
+                        messageIDs.push(myUpdates[n].OID());
                     }
                 }
 

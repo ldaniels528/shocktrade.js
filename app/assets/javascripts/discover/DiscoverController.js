@@ -350,7 +350,7 @@
                 }
 
                 // load the held securities
-                var id = MySession.userProfile._id;
+                var id = MySession.userProfile.OID();
                 if (id) {
                     HeldSecurities.init(id);
                 }

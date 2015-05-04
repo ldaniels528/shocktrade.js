@@ -58,7 +58,7 @@
                 if (filters && (filters.length > 0)) {
                     // set the active filter
                     $scope.filter = filters[0];
-                    $scope.selection.filterId = filters[0]._id.$oid;
+                    $scope.selection.filterId = filters[0].OID();
                     $scope.search();
 
                     // build the filter list
@@ -170,7 +170,7 @@
                 var filters = MySession.userProfile.filters;
                 if (filters) {
                     for (var n = 0; n < filters.length; n++) {
-                        if (filters[n]._id.$oid == filterId) {
+                        if (filters[n].OID() == filterId) {
                             $scope.filter = filters[n];
                             console.log("filter = " + angular.toJson(filters[n], null, '\t'));
                             $scope.search();

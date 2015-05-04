@@ -19,7 +19,7 @@
 			<!-- cancel order button -->
 			<img src="/assets/images/buttons/delete.png"
                  class="clickable top"
-                 ng-click="cancelOrder(contest._id.$oid, participant._id.$oid, order._id.$oid)">
+                 ng-click="cancelOrder(contest.OID(), participant.OID(), order.OID())">
 
 			<!-- order date -->
 			<span ng-show="order.creationTime >= tradingStart()">{{ order.creationTime | date:'hh:mma' }}</span>

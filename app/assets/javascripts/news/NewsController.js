@@ -49,7 +49,7 @@
                 NewsService.getSources().then(
                     function (response) {
                         $scope.newsSources = response.data;
-                        $scope.selection.feed = response.data[0]._id.$oid;
+                        $scope.selection.feed = response.data[0].OID();
                         $scope.getNewsFeed($scope.selection.feed);
                         $scope.stopLoading();
                     },

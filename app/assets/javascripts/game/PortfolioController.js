@@ -20,14 +20,14 @@
             };
 
             function enrichParticipant(contest, participant) {
-                ContestService.getEnrichedPositions(contest._id.$oid, participant._id.$oid)
+                ContestService.getEnrichedPositions(contest.OID(), participant.OID())
                     .success(function (response) {
                         var enrichedPosition = response[0];
                         $log.info("Loaded enriched player " + angular.toJson(enrichedPosition));
 
                         for (var n = 0; n < participant.positions.length; n++) {
                             var p = participant.positions[n];
-                            if (p._id.$oid === enrichedPosition._id.$oid) {
+                            if (p.OID() === enrichedPosition.OID()) {
                                 participant.enriched = true;
                                 participant.positions[n] = enrichedPosition;
                                 return;

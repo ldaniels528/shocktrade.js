@@ -30,14 +30,14 @@
 	<hr style="color: #888888; margin: 5px 0px 5px 0px">
 	<div>
 		<table style="width: 100%">
-			<tr ng-repeat="c in searchResults" ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ( $index % 2 == 0 ? '' : 'odd' )">
+			<tr ng-repeat="c in searchResults" ng-class="contest.OID() == c.OID() ? 'highlighted_game' : ( $index % 2 == 0 ? '' : 'odd' )">
 				<td style="width: 100%">
 					<span ng-show="c.status == 'ACTIVE'">
 						<img ng-show="c.playerCount < 14" src="/assets/images/status/greenlight.png">
 						<img ng-hide="c.playerCount < 14" src="/assets/images/status/yellowlight.gif">
 					</span>
 					<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
-					<a href="" ng-click="loadContest(c._id.$oid)">{{ c.name }}</a>
+					<a href="" ng-click="loadContest(c.OID())">{{ c.name }}</a>
 					
 					<span style="float: right">
 						<img ng-show="MySession.userProfile.authenticated" ng-src="/assets/images/objects/friend_header.gif">

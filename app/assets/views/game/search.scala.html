@@ -76,7 +76,7 @@
 							<th ng-hide="isSplitScreen()" class="col-md-2 right">Modifiers</th>
 						</tr>
 						<tr ng-repeat="c in searchResults" class="clickable" ng-click="selectContest(c)"
-							ng-class="contest._id.$oid === c._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )">
+							ng-class="contest.OID() === c.OID() ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )">
 							<td>
 								<span ng-if="c.status === 'ACTIVE'">
 									<img ng-src="{{ getStatusIcon(c) }}">

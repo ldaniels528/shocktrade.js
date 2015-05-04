@@ -16,7 +16,7 @@
         service.getProfileByFacebookID = function (fbId) {
             return $http.get("/api/profile/facebook/" + fbId).then(function (response) {
                 var profile = response.data;
-                profile.id = profile._id.$oid;
+                profile.id = profile.OID();
                 return profile;
             });
         };

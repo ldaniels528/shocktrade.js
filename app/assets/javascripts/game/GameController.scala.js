@@ -164,7 +164,7 @@
 
             $scope.deleteContest = function (contest) {
                 contest.deleting = true;
-                ContestService.deleteContest(contest._id.$oid)
+                ContestService.deleteContest(contest.OID())
                     .success(function (response) {
                         removeContestFromList(contest.OID());
                         $timeout(function () {
@@ -186,7 +186,7 @@
 
             $scope.joinContest = function (contest) {
                 contest.joining = true;
-                ContestService.joinContest(contest._id.$oid, {
+                ContestService.joinContest(contest.OID(), {
                     player: {
                         "id": MySession.getUserID(),
                         "name": MySession.getUserName(),
@@ -225,7 +225,7 @@
 
             $scope.quitContest = function (contest) {
                 contest.quitting = true;
-                ContestService.quitContest(contest._id.$oid, MySession.getUserID())
+                ContestService.quitContest(contest.OID(), MySession.getUserID())
                     .success(function (updatedContest) {
                         if (!updatedContest.error) {
                             $scope.contest = updatedContest;
@@ -249,7 +249,7 @@
 
             $scope.startContest = function (contest) {
                 contest.starting = true;
-                ContestService.startContest(contest._id.$oid)
+                ContestService.startContest(contest.OID())
                     .success(function (contest) {
                         if (contest.error) {
                             Errors.addMessage(contest.error);
@@ -305,8 +305,8 @@
 
             $scope.changeContest = function (contest) {
                 if (contest != null) {
-                    $log.info("Changing contest to " + contest._id.$oid);
-                    MySession.contestId = contest._id.$oid;
+                    $log.info("Changing contest to " + contest.OID());
+                    MySession.contestId = contest.OID();
                 }
             };
 
@@ -331,10 +331,10 @@
             };
 
             $scope.selectContest = function (contest) {
-                $log.info("Selecting contest '" + contest.name + "' (" + contest._id.$oid + ")");
+                $log.info("Selecting contest '" + contest.name + "' (" + contest.OID() + ")");
                 $scope.contest = contest;
                 $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
-                MySession.contestId = contest._id.$oid;
+                MySession.contestId = contest.OID();
                 $scope.splitScreen = true;
 
                 enrichContest(contest);
@@ -407,7 +407,7 @@
                 if (participants) {
                     for (var n = 0; n < participants.length; n++) {
                         var participant = participants[n];
-                        if (participant._id.$oid == playerId) {
+                        if (participant.OID() == playerId) {
                             return participant;
                         }
                     }
@@ -416,7 +416,7 @@
             };
 
             function isContestSelected(contestId) {
-                return ($scope.contest && $scope.contest._id.$oid === contestId);
+                return ($scope.contest && $scope.contest.OID() === contestId);
             }
 
             function placeName(n) {
@@ -457,8 +457,8 @@
 
             function loadLeaderRankings(contests) {
                 angular.forEach(contests, function (contest) {
-                    ContestService.getRankings(contest._id.$oid).then(function (response) {
-                        $log.info("Loading rankings for contest " + contest._id.$oid + "...");
+                    ContestService.getRankings(contest.OID()).then(function (response) {
+                        $log.info("Loading rankings for contest " + contest.OID() + "...");
                         var rankings = response.data;
                         contest.rankings = rankings;
                         if (rankings.length) {
@@ -472,8 +472,8 @@
                 angular.forEach(contests, function (contest) {
                     // is the player in the contest?
                     if ($scope.containsPlayer(contest.participants, playerName)) {
-                        $log.info("Loading rankings for contest " + contest._id.$oid + " for player " + playerName + "...");
-                        ContestService.getRankings(contest._id.$oid).then(function (response) {
+                        $log.info("Loading rankings for contest " + contest.OID() + " for player " + playerName + "...");
+                        ContestService.getRankings(contest.OID()).then(function (response) {
                             var rankings = response.data;
                             contest.rankings = rankings;
                             contest.leader = findPlayerByName(rankings, playerName);
@@ -534,7 +534,7 @@
              * Updates the contest with participant rankings
              */
             function updateWithRankings(playerName, contest) {
-                ContestService.getRankings(contest._id.$oid).then(
+                ContestService.getRankings(contest.OID()).then(
                     function (response) {
                         contest.rankings = response.data;
                         if (contest.rankings.length) {
@@ -583,63 +583,37 @@
                 "imageURL": "/assets/images/buttons/search.png",
                 "path": "/assets/views/play/search/search.htm",
                 "url": "/play/search",
-                "active": false,
-                "lockable": false,
-                "isVisible": function (c) {
-                    return true;
-                }
+                "active": false
             }, {
                 "name": "Trading",
                 "imageURL": "/assets/images/objects/home.gif",
                 "path": "/assets/views/play/lobby/lobby.htm",
                 "url": "/play/lobby",
-                "active": false,
-                "lockable": false,
-                "isVisible": function (c) {
-                    return c && c._id;
-                }
+                "active": false
             }, {
                 "name": "Lounge",
                 "imageURL": "/assets/images/objects/friend_header.gif",
                 "path": "/assets/views/play/lounge/lounge.htm",
                 "url": "/play/lounge",
-                "active": false,
-                "lockable": true,
-                "disabled": false,
-                "isVisible": function (c) {
-                    return c && c._id;
-                }
+                "active": false
             }, {
                 "name": "Awards",
                 "path": "/assets/views/play/awards/awards.htm",
                 "imageURL": "/assets/images/objects/award.gif",
                 "url": "/play/awards",
-                "active": false,
-                "lockable": false,
-                "isVisible": function (c) {
-                    return true;
-                }
+                "active": false
             }, {
                 "name": "Perks",
                 "path": "/assets/views/play/perks/perks.htm",
                 "imageURL": "/assets/images/objects/gift.png",
                 "url": "/play/perks",
-                "active": false,
-                "lockable": false,
-                "disabled": false,
-                "isVisible": function (c) {
-                    return true;
-                }
+                "active": false
             }, {
                 "name": "Statistics",
                 "path": "/assets/views/play/statistics/statistics.htm",
                 "imageURL": "/assets/images/objects/stats.gif",
                 "url": "/play/statistics",
-                "active": false,
-                "lockable": false,
-                "isVisible": function (c) {
-                    return true;
-                }
+                "active": false
             }];
 
             // define the levels

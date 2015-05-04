@@ -7,7 +7,7 @@
 			<div style="display: inline; float: right">
 				<select 
 					ng-model="selection.feed" 
-					ng-options="source._id.$oid as source.name for source in newsSources"
+					ng-options="source.OID() as source.name for source in newsSources"
 					ng-change="getNewsFeed(selection.feed)">
 				</select>
 				<a href="" ng-click="view = 'list'">

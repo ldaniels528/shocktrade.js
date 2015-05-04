@@ -24,7 +24,7 @@
     <!-- Data Rows -->
     <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}">
         <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)"
-             ng-class="selectedPosition._id.$oid === p._id.$oid ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
+             ng-class="selectedPosition.OID() === p.OID() ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
              ng-click="selectPosition(p)">
             <div class="col-md-3">
                 <span class="clickable"

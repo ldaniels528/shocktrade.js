@@ -1,7 +1,7 @@
 <input type="text" ng-model="searchMyGame" placeholder="Search my games...">
 <div class="myGamesContainer">
 	<table style="width: 100%">
-		<tr ng-repeat="c in getMyContests(searchMyGame)" ng-class="contest._id.$oid == c._id.$oid ? 'highlighted_game' : ''">
+		<tr ng-repeat="c in getMyContests(searchMyGame)" ng-class="contest.OID() == c.OID() ? 'highlighted_game' : ''">
 			<td style="width: 100%">
 				<span ng-show="c.status == 'ACTIVE'">
 					<img ng-show="c.playerCount < 14" src="/assets/images/status/greenlight.png">
@@ -9,7 +9,7 @@
 				</span>
 				<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
 				<img style="vertical-align: middle" class="avatar" ng-src="/api/avatar/{{ c.creator }}/16">
-				<a href="" ng-click="loadContest(c._id.$oid)">{{ c.name }}</a>
+				<a href="" ng-click="loadContest(c.OID())">{{ c.name }}</a>
 			</td>				
 		</tr>
 	</table>
