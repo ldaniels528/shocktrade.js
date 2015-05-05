@@ -33,6 +33,7 @@ PUT           /api/contest/:id/player                                   com.shoc
 GET           /api/contest/:id/player/:playerId                         com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
 DELETE        /api/contest/:id/player/:playerId                         com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
 
+GET           /api/contest/:id/orders/:playerId                         com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
 GET           /api/contest/:id/positions/:playerId                      com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
 
 GET           /api/contests/player/:playerId                            com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)

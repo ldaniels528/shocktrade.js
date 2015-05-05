@@ -65,6 +65,10 @@
             });
         };
 
+        service.getEnrichedOrders = function (contestId, playerId) {
+            return $http.get('/api/contest/' + contestId + '/orders/' + playerId);
+        };
+
         service.getEnrichedPositions = function (contestId, playerId) {
             return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
         };

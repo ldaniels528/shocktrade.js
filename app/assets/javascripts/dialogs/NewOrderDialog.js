@@ -118,7 +118,7 @@
 
             $scope.ok = function () {
                 if ($scope.validate($scope.form)) {
-                    var contestId = MySession.contestId;
+                    var contestId = MySession.getContestID();
                     var playerId = MySession.getUserID();
                     $log.info("contestId = " + contestId + ", playerId = " + playerId + ", form = " + angular.toJson($scope.form));
 

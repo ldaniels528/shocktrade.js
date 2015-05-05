@@ -224,7 +224,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     (for {
       contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
       player = contest.participants.find(_.id == playerId) orDie s"Player $playerId not found"
-      enrichedPlayer <- enrichParticipant(player)
+      enrichedPlayer <- enrichPositions(player)
     } yield enrichedPlayer).map(p => Ok(JsArray(Seq(p)))) recover {
       case e: Exception => Ok(createError(e))
     }
@@ -237,13 +237,24 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Contests.findContestsByPlayerID(playerId.toBSID)(DisplayColumns: _*) map (contests => Ok(Json.toJson(contests)))
   }
 
+  def getEnrichedOrders(id: String, playerId: String) = Action.async {
+    val outcome = for {
+      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
+      enriched <- enrichOrders(player)
+    } yield enriched \ "orders"
+
+    outcome map (js => Ok(js)) recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
   def getEnrichedPositions(id: String, playerId: String) = Action.async {
     val outcome = for {
       contest <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
       player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
-      enriched <- enrichParticipant(player)
-      participants = enriched \ "positions"
-    } yield participants
+      enriched <- enrichPositions(player)
+    } yield enriched \ "positions"
 
     outcome map (js => Ok(js)) recover {
       case e: Exception => Ok(createError(e))
@@ -336,7 +347,31 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     } yield totalWorths
   }
 
-  private def enrichParticipant(player: Participant): Future[JsObject] = {
+  private def enrichOrders(player: Participant): Future[JsObject] = {
+    // get the orders and associated symbols
+    val symbols = player.orders.map(_.symbol).distinct
+
+    for {
+    // load the quotes for all order symbols
+      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
+
+      // build a mapping of symbol to last trade
+      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
+
+      // enrich the orders
+      enrichedOrders = player.orders flatMap { order =>
+        for {
+          quote <- quotes.get(order.symbol)
+        } yield Json.toJson(order).asInstanceOf[JsObject] ++ JS(
+          "companyName" -> quote.name,
+          "lastTrade" -> quote.lastTrade)
+      }
+
+      // re-insert into the participant object
+    } yield Json.toJson(player).asInstanceOf[JsObject] ++ JS("orders" -> JsArray(enrichedOrders))
+  }
+
+  private def enrichPositions(player: Participant): Future[JsObject] = {
     // get the positions and associated symbols
     val symbols = player.positions.map(_.symbol).distinct
 
@@ -364,9 +399,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       }
 
       // re-insert into the participant object
-      enrichedPlayer = Json.toJson(player).asInstanceOf[JsObject] ++ JS("positions" -> JsArray(enrichedPositions))
-      _ = Logger.info(s"enrichedPositions = $enrichedPositions")
-    } yield enrichedPlayer
+    } yield Json.toJson(player).asInstanceOf[JsObject] ++ JS("positions" -> JsArray(enrichedPositions))
   }
 
   private def asRanking(startingBalance: BigDecimal, mapping: Map[String, Quote], p: Participant) = {

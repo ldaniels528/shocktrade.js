@@ -1,4 +1,4 @@
-<div style="background-color: #dddddd">
+<div>
 	<div class="col-md-3 bold">Symbol</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market Price</div>
@@ -24,7 +24,7 @@
     <!-- Data Rows -->
     <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}">
         <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)"
-             ng-class="selectedPosition.OID() === p.OID() ? 'highlighted_game' : ( $index % 2 === 0 ? 'even' : 'odd' )"
+             ng-class="selectedPosition.OID() === p.OID() ? 'selected' : ''"
              ng-click="selectPosition(p)">
             <div class="col-md-3">
                 <span class="clickable"
@@ -32,7 +32,10 @@
                       ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
             </div>
             <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.pricePaid | number:2 }}</div>
-            <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.lastTrade | number:2 }}</div>
+            <div ng-hide="isPositionSelected()" class="col-md-3 right">
+                <span ng-show="p.lastTrade">$ {{ p.lastTrade | number:2 }}</span>
+                <span ng-hide="p.lastTrade" class="null">Unavailable</span>
+            </div>
             <div ng-hide="isPositionSelected()" class="col-md-3 right">{{ p.quantity | number }}</div>
         </div>
     </div>
@@ -46,6 +49,15 @@
         <div class="col-md-8">
             <span ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.exchange }}</span>
         </div>
+
+        <div class="col-md-4 bold">Price Paid</div>
+        <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
+
+        <div class="col-md-4 bold">Shares Owned</div>
+        <div class="col-md-8">{{ selectedPosition.quantity | number }}</div>
+
+        <div class="col-md-4 bold">Commission(s) Paid</div>
+        <div class="col-md-8">$ {{ selectedPosition.commission | number:2 }}</div>
 
         <div class="col-md-4 bold">Purchase Cost</div>
         <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
@@ -61,16 +73,9 @@
                 </span>
         </div>
 
-        <div class="col-md-4 bold">Price Paid</div>
-        <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
-
-        <div class="col-md-4 bold">Commission Paid</div>
-        <div class="col-md-8">$ {{ selectedPosition.commission | number:2 }}</div>
-
         <div class="col-md-offset-4 col-md-8">
-            <button class="sell_button"
-                ng-click="sellPosition(selectedPosition.symbol, selectedPosition.quantity)">
-                Sell
+            <button class="btn btn-default sell_button"
+                ng-click="sellPosition(selectedPosition.symbol, selectedPosition.quantity)"> Sell
             </button>
         </div>
     </div>

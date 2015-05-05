@@ -36,9 +36,9 @@ a:active  { cursor: pointer; text-decoration: none; }
 
 body {
 	min-width: 1024px;
-	margin-right: 25px;
-	margin-left: 25px;
 	background-color: white;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .bold {
@@ -65,11 +65,12 @@ table td, table th
 }
 
 .selected {
+	border-radius: 4px 4px 4px 4px;
 	background-color: #ffff00;
 }
 
 .even {
-	background-color: #dfefff
+	background-color: #d0eeff
 }
 
 .odd {

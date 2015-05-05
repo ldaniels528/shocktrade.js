@@ -1,15 +1,11 @@
-<div style="width: 100%; border: 1px solid #ccccbb; background-color: #fffaee; border-radius: 5px 5px 5px 5px">
-	<div style="display: block; width: 100%; font-size: 13pt">
-		<div style="display: inline; float: left; width: 35%; vertical-align: middle">
-			<avatar id="{{ MySession.fbUserID }}" style="margin-top: 2px; margin-left: 2px; width: 32px; height: 32px" />
-			Net Worth: <span class="positive">$ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}</span>
-			<changeArrow value="{{ MySession.userProfile.netWorth }}" />
-		</div>
-		<div ng-controller="AwardsController" ng-init="setupAwards()" style="display:inline; float: right">
-			<img ng-repeat="award in MySession.userProfile.awards.slice(0,7)" 
-				title="{{ award.name }}"  
-				style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">			
-		</div>
-		<br style="clear: both">
-	</div>
+<div class="row player_info_bar contest_colors">
+	<div class="col-md-6">
+        <avatar id="{{ MySession.fbUserID }}" style="margin-top: 2px; margin-left: 2px; width: 32px; height: 32px" />
+        Net Worth: <span class="positive">$ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}</span>
+    </div>
+    <div class="col-md-6" ng-controller="AwardsController" ng-init="setupAwards()">
+        <img style="float: right" ng-repeat="award in MySession.userProfile.awards.slice(0,7)"
+             title="{{ award.name }}"
+             style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
+    </div>
 </div>

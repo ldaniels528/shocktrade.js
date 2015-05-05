@@ -1,19 +1,4 @@
-div.rank_cell_player {
-	background-color: #ffffee;
-}
-
-div.rank_cell_spectator {
-	background-color: #eeeeee;
-}
-
-div.rank_cell_even {
-	border: 1px solid #ddddcc;
-	border-radius: 5px 5px 5px 5px;
-	margin-bottom: 5px;
-}
-
-div.rank_cell_odd {
-	border: 1px solid #ddddcc;
+div.rank_cell {
 	border-radius: 5px 5px 5px 5px;
 	margin-bottom: 5px;
 }

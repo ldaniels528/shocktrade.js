@@ -9,6 +9,7 @@
 
             // setup the current contest
             $scope.contest = null;
+            $scope.selectedContest = null;
 
             // setup contest variables
             $scope.myContests = [];
@@ -30,17 +31,15 @@
 
             // setup UI variables
             $scope.statusBar = "";
-            $scope.selection = {
-                exposure: "sector",
-                performance: "gains"
-            };
-
-            // setup contest variables
-            $scope.orderChoice = "active";
-            $scope.selectedPosition = null;
 
             $scope.popupNewGameDialog = function () {
                 NewGameDialog.popup({});
+            };
+
+            $scope.enterGame = function(contest) {
+                $scope.contest = contest;
+                MySession.setContest(contest);
+                $scope.changePlayTab(1);
             };
 
             $scope.getAvailableCount = function () {
@@ -51,16 +50,17 @@
                 return count;
             };
 
-            $scope.getAvailableSlots = function () {
-                if ($scope.contest == null) return [];
-                else {
-                    var slots = [];
-                    var count = $scope.maxPlayers - $scope.contest.participants.length;
-                    for (var n = 0; n < count; n++) {
-                        slots.push(n);
+            $scope.getAvailableSlots = function (contest, row) { // 0,1
+                var slots = [];
+                if (contest) {
+                    var participants = contest.participants || [];
+                    var start = row == 0 ? 0 : 10;
+                    var end = row == 0 ? 10 : $scope.maxPlayers;
+                    for (var n = start; n < end; n++) {
+                        slots.push((n < participants.length) ? participants[n] : null);
                     }
-                    return slots;
                 }
+                return slots;
             };
 
             $scope.getStatusIcon = function (c) {
@@ -113,21 +113,20 @@
                     ContestService.getContestByID(contestId)
                         .success(function (contest) {
                             $scope.contest = contest;
-                            $scope.orderChoice = contest.status == 'ACTIVE' ? "active" : "history";
-                            MySession.contestId = contestId;
+                            MySession.setContest(contest);
 
                             // cache the player's name
                             var playerName = MySession.getUserName();
 
                             // find participant that represents the player
-                            $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
+                            var participant = $scope.findPlayerByID(contest, MySession.getUserID());
 
                             // load the enriched participant
                             updateWithRankings(playerName, contest);
 
                             // load the pricing for the participant's position
-                            if ($scope.participant) {
-                                updateWithPricing($scope.participant);
+                            if (participant) {
+                                updateWithPricing(participant);
                             }
                         })
                         .error(function (xhr, status, error) {
@@ -203,6 +202,7 @@
                     }
                     else {
                         $scope.contest = contest;
+                        MySession.setContest(contest);
                         updateWithRankings(MySession.getUserName(), contest)
                     }
 
@@ -229,6 +229,7 @@
                     .success(function (updatedContest) {
                         if (!updatedContest.error) {
                             $scope.contest = updatedContest;
+                            MySession.setContest(updatedContest);
                         }
                         else {
                             $log.error("error = " + updatedContest.error);
@@ -304,10 +305,9 @@
             };
 
             $scope.changeContest = function (contest) {
-                if (contest != null) {
-                    $log.info("Changing contest to " + contest.OID());
-                    MySession.contestId = contest.OID();
-                }
+                $log.info("Changing contest to " + contest.OID());
+                $scope.contest = contest;
+                MySession.contest = contest;
             };
 
             /**
@@ -327,14 +327,12 @@
             };
 
             $scope.isSplitScreen = function () {
-                return $scope.splitScreen && $scope.contest != null;
+                return $scope.splitScreen && $scope.selectedContest != null;
             };
 
             $scope.selectContest = function (contest) {
                 $log.info("Selecting contest '" + contest.name + "' (" + contest.OID() + ")");
-                $scope.contest = contest;
-                $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
-                MySession.contestId = contest.OID();
+                $scope.selectedContest = contest;
                 $scope.splitScreen = true;
 
                 enrichContest(contest);
@@ -381,7 +379,6 @@
             $scope.cancelOrder = function (contestId, playerId, orderId) {
                 ContestService.deleteOrder(contestId, playerId, orderId)
                     .success(function (participant) {
-                        $scope.participant = participant;
                         updateWithPricing(participant);
                     })
                     .error(function (err) {
@@ -396,20 +393,15 @@
             function enrichContest(contest) {
                 if (!contest.rankings) {
                     updateWithRankings(MySession.getUserName(), contest);
-                    if (MySession.getUserID()) {
-                        loadEnrichedParticipant(MySession.contestId, MySession.getUserID());
-                    }
                 }
             }
 
             $scope.findPlayerByID = function (contest, playerId) {
-                var participants = contest ? contest.participants : null;
-                if (participants) {
-                    for (var n = 0; n < participants.length; n++) {
-                        var participant = participants[n];
-                        if (participant.OID() == playerId) {
-                            return participant;
-                        }
+                var participants = contest ? contest.participants : [];
+                for (var n = 0; n < participants.length; n++) {
+                    var participant = participants[n];
+                    if (participant.OID() == playerId) {
+                        return participant;
                     }
                 }
                 return null;
@@ -441,18 +433,6 @@
                     }
                 }
                 return null;
-            }
-
-            function loadEnrichedParticipant(contestId, playerId) {
-                ContestService.getParticipantByID(contestId, playerId)
-                    .success(function (response) {
-                        // TODO $log.info("BEFORE participant = " + JSON.stringify($scope.participant, null, '\t'));
-                        // TODO $log.info("AFTER participant = " + JSON.stringify(response.data, null, '\t'));
-                        $scope.participant = response.data;
-                    })
-                    .error(function (err) {
-
-                    });
             }
 
             function loadLeaderRankings(contests) {
@@ -499,8 +479,8 @@
                 // if the delete contest is selected, change the selection
                 if (isContestSelected(contestId)) {
                     $scope.contest = null;
+                    MySession.setContest(null);
                     $scope.splitScreen = false;
-                    MySession.contestId = null;
                 }
             }
 
@@ -557,22 +537,6 @@
                     });
             }
 
-            /*
-            function updateWithRankingsForContests(contests) {
-                if (contests.length) {
-                    $log.info("Preparing to load rankings for " + contests.length + " contest(s)");
-
-                    // load the rankings for the current player or leader
-                    var playerName = MySession.getUserName();
-                    if (playerName != 'Spectator') {
-                        loadPlayerRankings(contests, playerName);
-                    }
-                    else {
-                        loadLeaderRankings(contests);
-                    }
-                }
-            }*/
-
             //////////////////////////////////////////////////////////////////////
             //              Data Graphs
             //////////////////////////////////////////////////////////////////////
@@ -583,37 +547,73 @@
                 "imageURL": "/assets/images/buttons/search.png",
                 "path": "/assets/views/play/search/search.htm",
                 "url": "/play/search",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return true;
+                }
             }, {
-                "name": "Trading",
+                "name": "Play",
                 "imageURL": "/assets/images/objects/home.gif",
                 "path": "/assets/views/play/lobby/lobby.htm",
                 "url": "/play/lobby",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
             }, {
                 "name": "Lounge",
                 "imageURL": "/assets/images/objects/friend_header.gif",
                 "path": "/assets/views/play/lounge/lounge.htm",
                 "url": "/play/lounge",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
             }, {
-                "name": "Awards",
+                "name": "Quotes",
+                "imageURL": "/assets/images/objects/stock_header.png",
+                "path": "/assets/views/discover/index.htm",
+                "url": "/discover",
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
+            }, {
+                "name": "News",
+                "imageURL": "/assets/images/objects/headlines.png",
+                "path": "/assets/views/news/news_center.htm",
+                "url": "/news",
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
+            }, {
+                "name": "My Awards",
                 "path": "/assets/views/play/awards/awards.htm",
                 "imageURL": "/assets/images/objects/award.gif",
                 "url": "/play/awards",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
             }, {
-                "name": "Perks",
+                "name": "My Perks",
                 "path": "/assets/views/play/perks/perks.htm",
                 "imageURL": "/assets/images/objects/gift.png",
                 "url": "/play/perks",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
             }, {
-                "name": "Statistics",
+                "name": "My Statistics",
                 "path": "/assets/views/play/statistics/statistics.htm",
                 "imageURL": "/assets/images/objects/stats.gif",
                 "url": "/play/statistics",
-                "active": false
+                "active": false,
+                "isVisible": function(c) {
+                    return c != null;
+                }
             }];
 
             // define the levels
@@ -668,8 +668,9 @@
              */
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' updated");
-                if (contest.OID() === MySession.contestId) {
+                if (!$scope.contest || (contest.OID() === $scope.contest.OID)) {
                     $scope.contest = contest;
+                    MySession.setContest(contest);
                 }
             });
 

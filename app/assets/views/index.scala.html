@@ -32,18 +32,22 @@
 	<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
 </head>
 
-<body>
+<body class="page-body">
 	<div id="ShockTradeMain" ng-controller="MainController" ng-init="appInit()" ng-cloak>
-		<!-- title bar -->
-		<h1 class="titleline">
-			<span class="title">ShockTrade<span class="trademark">&#0153;</span></span>
-			<span style="float:right; margin-right: 15px; color: #ffd000; font-size: 12pt">
-				<avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
-				<a ng-hide="MySession.authenticated" href="" ng-click="login($event)" style="color: #ffd000">{{ MySession.nonMember ? 'Sign Up' : 'Sign In' }}</a>
-				<a ng-show="MySession.authenticated" href="" ng-click="logout($event)" style="color: #ffd000">Sign Out</a> 
-				<span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" style="color: white">- {{ MySession.fbProfile.name }}</span>
-			</span>
-		</h1>
+        <!-- title bar -->
+        <div class="row">
+            <div class="col-md-3">
+                <span class="title">ShockTrade</span>
+            </div>
+            <div class="col-md-offset-5 col-md-4">
+                <span class="title_color pull-right" style="margin-right: 20px">
+                    <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
+                    <span ng-show="MySession.authenticated" class="title_color clickable" ng-click="logout()">Sign Out</span>
+                    <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">- {{ MySession.fbProfile.name }}</span>
+                    <span ng-hide="MySession.authenticated" class="title_color clickable" ng-click="login()">{{ MySession.nonMember ? 'Sign Up' : 'Sign In' }}</span>
+                </span>
+            </div>
+        </div>
 	
 		<!-- alerts -->
 		<div ng-hide="MySession.authenticated" class="spectator_bar">
@@ -58,16 +62,8 @@
 				<img src="/assets/images/status/redlight.png"> {{ msg }}
 			</div>
 		</div>
-		
-		<!-- tabs -->
-		<div style="border: 1px solid #aaaaaa">
-			<tabset type="tabs">
-				<tab ng-repeat="tab in tabs" active="tab.active" select="changeTab($index, $event)">
-					<tab-heading><img class="links" ng-src="{{ tab.imageURL }}"> {{ tab.name }}</tab-heading>
-				</tab>
-			</tabset>
-		</div>
-		
+
+        <!-- main view -->
 		<div ng-controller="GameController">
 			<!-- application module -->
 			<div ng-view ng-cloak></div>

@@ -37,55 +37,13 @@
 
             // setup main-specific variables
             $scope.admin = false;
-            $scope.tabs = [{
-                "name": "Play",
-                "imageURL": "/assets/images/links/simulation_header.gif",
-                "path": "/play/search",
-                "active": false
-            }, /*{
-                "name": "Connect",
-                "imageURL": "/assets/images/objects/friend_header.gif",
-                "path": "/connect",
-                "active": false
-            },*/ {
-                "name": "Discover",
-                "imageURL": "/assets/images/objects/stock_header.png",
-                "path": "/discover",
-                "active": false
-            }, /*{
-                "name": "Explore",
-                "imageURL": "/assets/images/objects/overview.png",
-                "path": "/explore",
-                "active": false
-            }, {
-                "name": "Research",
-                "imageURL": "/assets/images/buttons/search.png",
-                "path": "/search",
-                "active": false
-            },*/ {
-                "name": "News",
-                "imageURL": "/assets/images/objects/headlines.png",
-                "path": "/news",
-                "active": false
-            }];
-
-            /**
-             * Sets the main application tab
-             */
-            $scope.setMainTab = function (tabIndex) {
-                var tab = $scope.tabs[tabIndex];
-                console.log("Setting main tab to '" + tab.name + "'");
-                $location.path(tab.path);
-                $scope.changeTab(tabIndex);
-            };
 
             /**
              * Initializes the application
              */
             $scope.appInit = function () {
-                // set the active tab
-                var tabIndex = determineTab();
-                $scope.tabs[tabIndex].active = true;
+                // switch to the Play view
+                $location.path("/play");
 
                 // setup market status w/updates
                 $interval(function () {
@@ -198,49 +156,8 @@
                 }
             }
 
-            $scope.isTab = function (tabName) {
-                var path = $location.path();
-                return tabName.indexOf(tabName) != -1;
-            };
-
-            $scope.updateTabs = function () {
-                // determine the tab index
-                var tabIndex = determineTab();
-
-                // deactivate all tabs
-                for (var i = 0; i < $scope.tabs.length; i++) {
-                    $scope.tabs[i].active = false;
-                }
-
-                // select the one we want
-                $scope.tabs[tabIndex].active = true;
-            };
-
             $scope.abs = function (value) {
                 return !value ? value : ((value < 0) ? -value : value);
-            };
-
-            $scope.changeTab = function (tabIndex, event) {
-                // deactivate all tabs
-                for (var n = 0; n < $scope.tabs.length; n++) {
-                    $scope.tabs[n].active = false;
-                }
-
-                // select the one we want
-                $scope.tabs[tabIndex].active = true;
-
-                // change the address bar
-                var tab = $scope.tabs[tabIndex];
-                if (tab.path) {
-                    // change the view
-                    console.log("Changing view from '" + $location.path() + "' to '" + tab.path + "'");
-                    $location.path(tab.path);
-
-                    // prevent the default action
-                    if (event) {
-                        event.preventDefault();
-                    }
-                }
             };
 
             $scope.getExchangeClass = function (exchange) {
@@ -263,22 +180,6 @@
                 else if (FavoriteSymbols.isFavorite(symbol)) return "favorite_small.png";
                 else return "transparent12.png";
             };
-
-            function determineTab() {
-                // determine the right one
-                var tabIndex = 0;
-                var path = $location.path();
-                if (path.indexOf("/play") != -1) tabIndex = 0;
-                //else if (path.indexOf("/connect") != -1) tabIndex = 1;
-                else if (path.indexOf("/discover") != -1) tabIndex = 1;
-                //else if (path.indexOf("/explore") != -1) tabIndex = 2;
-                //else if (path.indexOf("/search") != -1) tabIndex = 4;
-                else if (path.indexOf("/news") != -1) tabIndex = 2;
-                else tabIndex = 0;
-
-                // activate the tab
-                return tabIndex;
-            }
 
             function setupMarketStatusUpdates() {
                 $scope.usMarketsOpen = null;

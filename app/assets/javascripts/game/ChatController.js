@@ -30,13 +30,13 @@
                 // transmit the message
                 $log.info("Transmitting message " + angular.toJson(message));
                 ContestService
-                    .sendChatMessage(MySession.contestId, message).then(
-                    function (response) {
-                        $scope.chatMessage = null;
-                    },
-                    function (response) {
-                        Errors.addMessage("Failed to send message (" + response.message + ")");
-                    });
+                    .sendChatMessage($scope.contest.OID(), message).then(
+                        function (response) {
+                            $scope.chatMessage = null;
+                        },
+                        function (response) {
+                            Errors.addMessage("Failed to send message (" + response.message + ")");
+                        });
             };
 
             $scope.emoticons = [

@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
   cache, filters, ws
 )
 
-// Shocktrade dependencies
+// Shocktrade/ldaniels528 dependencies
 libraryDependencies ++= Seq(
 	"com.ldaniels528" %% "commons-helpers" % "0.1.0",
 	"com.ldaniels528" %% "play-json-compat" % "0.1.0",

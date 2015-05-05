@@ -3,7 +3,7 @@
 	<div>
 		<fieldset>
 			<table style="width: 100%">
-				<tr ng-repeat="c in searchResults" ng-class="contest.OID() == c.OID() ? 'highlighted_game' : ( $index % 2 == 0 ? 'even' : 'odd' )">
+				<tr ng-repeat="c in searchResults" ng-class="contest.OID() == c.OID() ? 'selected' : ( $index % 2 == 0 ? 'even' : 'odd' )">
 					<td style="width: 55%">
 						<span ng-show="c.status == 'ACTIVE'">
 							<img ng-show="c.playerCount < c.maxParticipants" src="/assets/images/status/greenlight.png">

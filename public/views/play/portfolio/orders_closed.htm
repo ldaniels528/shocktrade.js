@@ -16,14 +16,14 @@
 </div>
 
 <div class="row positionsContainer">
-	<div class="col-md-12 center" ng-show="getActiveOrders(contest).length === 0">
+	<div class="col-md-12 center" ng-show="getClosedOrders(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
 		<span class="warning">No orders found</span>
 	</div>
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders(contest)"
+		<div class="col-md-12 clickable" ng-repeat="o in getClosedOrders(contest)"
 			 ng-class="selectedOrder.OID() === o.OID() ? 'selected' : ''"
 			 ng-click="selectOrder(o)">
 			<div class="col-md-3">
@@ -33,24 +33,24 @@
 			</div>
 			<div ng-hide="isOrderSelected()" class="col-md-3 right">$ {{ o.price | number:2 }}</div>
 			<div ng-hide="isOrderSelected()" class="col-md-3 right">
-                <span ng-show="o.lastTrade">$ {{ o.lastTrade | number:2 }}</span>
-                <span ng-hide="o.lastTrade" class="null">Unavailable</span>
-            </div>
+				<span ng-show="o.lastTrade">$ {{ o.lastTrade | number:2 }}</span>
+				<span ng-hide="o.lastTrade" class="null">Unavailable</span>
+			</div>
 			<div ng-hide="isOrderSelected()" class="col-md-3 right">{{ o.quantity | number }}</div>
 		</div>
 	</div>
 
 	<!-- Expanded Section -->
 	<div ng-if="isOrderSelected()" class="col-md-9">
-        <div class="col-md-4 bold">Order Type</div>
-        <div class="col-md-8">{{ selectedOrder.orderType }}</div>
+		<div class="col-md-4 bold">Order Type</div>
+		<div class="col-md-8">{{ selectedOrder.orderType }}</div>
 
 		<div class="col-md-4 bold">Creation Time</div>
 		<div class="col-md-8">{{ selectedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
 
 		<div class="col-md-4 bold">Expiration Time</div>
 		<div ng-show="selectedOrder.expirationTime" class="col-md-8">{{ selectedOrder.expirationTime | date:'MM/dd hh:mma' }}</div>
-        <div ng-hide="selectedOrder.expirationTime" class="col-md-8 null">NONE</div>
+		<div ng-hide="selectedOrder.expirationTime" class="col-md-8 null">NONE</div>
 
 		<div class="col-md-4 bold">Exchange</div>
 		<div class="col-md-8">

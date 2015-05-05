@@ -1,7 +1,7 @@
 <input type="text" ng-model="searchMyGame" placeholder="Search my games...">
 <div class="myGamesContainer">
 	<table style="width: 100%">
-		<tr ng-repeat="c in getMyContests(searchMyGame)" ng-class="contest.OID() == c.OID() ? 'highlighted_game' : ''">
+		<tr ng-repeat="c in getMyContests(searchMyGame)" ng-class="contest.OID() == c.OID() ? 'selected' : ''">
 			<td style="width: 100%">
 				<span ng-show="c.status == 'ACTIVE'">
 					<img ng-show="c.playerCount < 14" src="/assets/images/status/greenlight.png">

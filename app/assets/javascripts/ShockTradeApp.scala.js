@@ -21,7 +21,7 @@
             $routeProvider
                 .when('/connect', {templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectController'})
                 .when('/developers', {templateUrl: '/assets/views/developers/developer.htm', controller: 'DeveloperCtrl'})
-                .when('/discover', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
+                .when('/discover', {templateUrl: '/assets/views/discover/index.htm', controller: 'DiscoverController'})
                 .when('/discover/:symbol', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
                 .when('/explore', {templateUrl: '/assets/views/explore/drill_down.htm', controller: 'DrillDownController'})
                 .when('/news', {templateUrl: '/assets/views/news/index.htm', controller: 'NewsController'})
@@ -158,7 +158,6 @@
      * Quote Change Filter
      */
     app.filter('quoteChange', function () {
-
         function abs(value) {
             return !value ? value : (value < 0 ? -value : value);
         }

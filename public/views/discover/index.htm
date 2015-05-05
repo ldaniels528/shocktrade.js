@@ -1,0 +1,8 @@
+<div ng-init="setPlayActiveTab(3)">
+    <div ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+    <fieldset class="contest">
+        <legend class="contest">Now Playing &#8212; <span class="game_title">{{contest.name}}</span></legend>
+    </fieldset>
+    <div ng-include src="'/assets/views/play/play_tabs.htm'"></div>
+    <div ng-include src="'/assets/views/discover/discover.htm'"></div>
+</div>

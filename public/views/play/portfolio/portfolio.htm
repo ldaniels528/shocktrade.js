@@ -9,39 +9,19 @@
 
     <div class="row">
         <div class="col-md-3" style="margin-bottom: 5px">
-            <button class="new_game" ng-click="popupNewOrderDialog()">
+            <button class="btn btn-default new_game" ng-click="popupNewOrderDialog()">
                 <img src="/assets/images/buttons/cart_add.png"> New Order
             </button>
         </div>
         <div class="col-md-9">&nbsp;</div>
     </div>
 
-	<accordion close-others="true">
-		<accordion-group  is-open="true">
-			<accordion-heading>
-				<img src="/assets/images/objects/order.png"> Orders
-			</accordion-heading>
-			<div ng-include src="'/assets/views/play/portfolio/orders.htm'"></div>
-		</accordion-group>
-		<accordion-group>
-			<accordion-heading>
-				<img src="/assets/images/objects/financials.gif"> Positions
-			</accordion-heading>
-			<div ng-include src="'/assets/views/play/portfolio/positions.htm'"></div>
-		</accordion-group>
-		<!--
-		<accordion-group>
-			<accordion-heading>
-				<img src="/assets/images/objects/sector.png"> Exposure
-			</accordion-heading>
-			<div ng-include src="'/assets/views/play/portfolio/exposure.htm'"></div>
-		</accordion-group>
-		<accordion-group>
-			<accordion-heading>
-				<img src="/assets/images/objects/marketGain.png"> Performance
-			</accordion-heading>
-			<div ng-include src="'/assets/views/play/portfolio/performance.htm'"></div>
-		</accordion-group>
-		-->
-	</accordion>
+    <tabset>
+        <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked(contest)" select="tab.init(contest)">
+            <tab-heading>
+                <img ng-src="{{ tab.imageURL }}"> {{ tab.name }}
+            </tab-heading>
+            <div class="portfolio_tab" ng-include src="tab.path"></div>
+        </tab>
+    </tabset>
 </div>

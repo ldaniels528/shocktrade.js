@@ -250,9 +250,6 @@
                             // save the cookie
                             $cookieStore.put('symbol', quote.symbol);
 
-                            // switch to the Discover tab
-                            $scope.updateTabs();
-
                             // add the symbol to the Recently-viewed Symbols
                             RecentSymbols.add(symbol);
 

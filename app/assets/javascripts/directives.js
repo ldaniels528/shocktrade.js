@@ -51,7 +51,8 @@
                     }
                     else if (scope.object) {
                         var json = JSON.parse(scope.object);
-                        if(json.picture) scope.url = json.picture.data.url;
+						if(!json) scope.url = scope.alt || "/assets/images/avatars/avatar100.png";
+                        else if(json.picture) scope.url = json.picture.data.url;
                         else if(json.fbUserID) scope.url = "http://graph.facebook.com/" + json.fbUserID + "/picture";
                         else if(json.facebookID) scope.url = "http://graph.facebook.com/" + json.facebookID + "/picture";
                         else {

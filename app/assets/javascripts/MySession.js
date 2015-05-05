@@ -7,7 +7,7 @@
      */
     app.factory('MySession', function ($log) {
         var service = {
-            contestId: null
+            contest: null
         };
 
         /**
@@ -24,6 +24,14 @@
          */
         service.isAuthorized = function () {
             return service.getUserID() != null;
+        };
+
+        service.getContestID = function () {
+            return service.contest ? service.contest.OID() : null;
+        };
+
+        service.setContest = function (contest) {
+            service.contest = contest;
         };
 
         /**

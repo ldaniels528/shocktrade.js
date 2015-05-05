@@ -7,6 +7,47 @@
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, MySession, ContestService, Errors, NewOrderDialog, QuoteService) {
 
+            $scope.selectedPosition = null;
+            $scope.selection = {
+                exposure: "sector",
+                performance: "gains"
+            };
+
+            $scope.portfolioTabs = [{
+                "name": "Positions",
+                "imageURL": "/assets/images/objects/position.png",
+                "path": "/assets/views/play/portfolio/positions.htm",
+                "active": false,
+                "init": function(contest) {
+                    // TODO enrich positions here
+                },
+                "isLocked": function(contest) {
+                    return contest.status !== 'ACTIVE';
+                }
+            }, {
+                "name": "Open Orders",
+                "imageURL": "/assets/images/objects/portfolio_query.png",
+                "path": "/assets/views/play/portfolio/orders_active.htm",
+                "active": false,
+                "init": function(contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function(contest) {
+                    return contest.status !== 'ACTIVE';
+                }
+            }, {
+                "name": "Closed Orders",
+                "imageURL": "/assets/images/objects/portfolio_header.png",
+                "path": "/assets/views/play/portfolio/orders_closed.htm",
+                "active": false,
+                "init": function(contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function(contest) {
+                    return contest.status !== 'ACTIVE';
+                }
+            }];
+
             /////////////////////////////////////////////////////////////////////
             //          Participant Functions
             /////////////////////////////////////////////////////////////////////
@@ -20,22 +61,26 @@
             };
 
             function enrichParticipant(contest, participant) {
-                ContestService.getEnrichedPositions(contest.OID(), participant.OID())
+                // enrich the orders
+                ContestService.getEnrichedOrders(contest.OID(), participant.OID())
                     .success(function (response) {
-                        var enrichedPosition = response[0];
-                        $log.info("Loaded enriched player " + angular.toJson(enrichedPosition));
-
-                        for (var n = 0; n < participant.positions.length; n++) {
-                            var p = participant.positions[n];
-                            if (p.OID() === enrichedPosition.OID()) {
-                                participant.enriched = true;
-                                participant.positions[n] = enrichedPosition;
-                                return;
-                            }
-                        }
+                        var enrichedOrders = response;
+                        $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
+                        participant.orders = enrichedOrders;
                     })
                     .error(function (err) {
-                        Errors.addMessage("Error loading player positions");
+                        Errors.addMessage("Error loading enriched orders");
+                    });
+
+                // enrich the positions
+                ContestService.getEnrichedPositions(contest.OID(), participant.OID())
+                    .success(function (response) {
+                        var enrichedPositions = response;
+                        $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
+                        participant.positions = enrichedPositions;
+                    })
+                    .error(function (err) {
+                        Errors.addMessage("Error loading enriched positions");
                     });
             }
 
@@ -62,7 +107,7 @@
             };
 
             $scope.selectOrder = function (position) {
-                $scope.selectedPosition = position;
+                $scope.selectedOrder = position;
             };
 
             $scope.toggleSelectedOrder = function () {
@@ -167,11 +212,11 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getExposureChart = function (target) {
-                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.exposure, target);
+                $scope.getChart(MySession.getContestID(), MySession.getUserName(), $scope.selection.exposure, target);
             };
 
             $scope.getPerformanceChart = function (target) {
-                $scope.getChart(MySession.contestId, MySession.getUserName(), $scope.selection.performance, target);
+                $scope.getChart(MySession.getContestID(), MySession.getUserName(), $scope.selection.performance, target);
             };
 
             $scope.getChart = function (contestId, participantName, chartName, target) {
@@ -206,6 +251,15 @@
                         });
                 }
             };
+
+            //////////////////////////////////////////////////////////////////////
+            //              Watch Event Listeners
+            //////////////////////////////////////////////////////////////////////
+
+            $scope.$watch(MySession.contest, function () {
+                // clear the cached participant
+                $scope.participant = null;
+            }, true);
 
         }]);
 
