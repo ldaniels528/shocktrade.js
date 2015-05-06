@@ -1,0 +1,36 @@
+<div ng-controller="ChatController" ng-if="MySession.getUserID() && contest.OID()">
+    <div class="chat_messages">
+        <div ng-repeat="message in getMessages()" class="chat_message">
+            <avatar id="{{ message.sender.facebookID }}" style="width: 20px; height: 20px; margin: 3px" />
+            <span style="color: {{ message.color }}; font-weight: bold">{{ message.sender.name }}</span>
+            [<span style="color: #0000ff">{{ message.sentTime | date:'MM/dd hh:mma' }}</span>]
+            {{ message.text }}
+        </div>
+    </div>
+
+    <div style="width: 100%; margin-left: auto">
+        <table style="width: 95%; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 5px">
+            <tr>
+                <td ng-repeat="emoticon in emoticons">
+                    <a href="" ng-click="addSmiley(emoticon)" title="{{ emoticon.tooltip }}">
+                        <img class="emoticon" ng-src="/assets/images/smilies/{{ emoticon.uri }}">
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="block_full">
+		<textarea ng-model="chatMessage" style="width: 100%; height: 75px"
+                  ng-disabled="contest.status == 'CLOSED'"></textarea>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-default new_game"
+                    ng-disabled="contest.status == 'CLOSED'"
+                    ng-click="sendChatMessage(chatMessage)">Send</button>
+        </div>
+        <div class="col-md-6">
+            &nbsp;
+        </div>
+    </div>
+</div>

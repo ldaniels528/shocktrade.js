@@ -46,6 +46,17 @@
                 "isLocked": function(contest) {
                     return contest.status !== 'ACTIVE';
                 }
+            }, {
+                "name": "Messages",
+                "imageURL": "/assets/images/objects/chat.png",
+                "path": "/assets/views/play/portfolio/chat.htm",
+                "active": false,
+                "init": function(contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function(contest) {
+                    return contest.status !== 'ACTIVE';
+                }
             }];
 
             /////////////////////////////////////////////////////////////////////

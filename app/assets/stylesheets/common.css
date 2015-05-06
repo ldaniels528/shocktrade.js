@@ -35,20 +35,15 @@ a:active  { cursor: pointer; text-decoration: none; }
 }
 
 body {
+	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
+	background: #dddddd;
 	min-width: 1024px;
-	background-color: white;
 	margin-left: 10px;
 	margin-right: 10px;
 }
 
 .bold {
 	font-weight: bold
-}
-
-img {
-	vertical-align: middle;
-	border: 0;
-	border-color: #ffffff	
 }
 
 table {
@@ -65,8 +60,8 @@ table td, table th
 }
 
 .selected {
-	border-radius: 4px 4px 4px 4px;
-	background-color: #ffff00;
+	font-weight: bold;
+	color: #1090ff;
 }
 
 .even {
@@ -75,6 +70,10 @@ table td, table th
 
 .odd {
 	background-color: #ffffff
+}
+
+.padding-left-16 {
+	padding-left: 16px
 }
 
 th {

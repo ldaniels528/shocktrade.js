@@ -2,7 +2,7 @@
 	<div class="col-md-3 bold">Symbol</div>
 	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Your Price</div>
 	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Market Price</div>
-	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Quantity</div>
+	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Shares</div>
 
 	<div ng-show="isOrderSelected()" class="col-md-8">
 		<span class="bold" ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>
@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-<div class="row positionsContainer">
+<div class="positionsContainer">
 	<div class="col-md-12 center" ng-show="getActiveOrders(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
 		<span class="warning">No orders found</span>
@@ -65,8 +65,16 @@
 
 		<div class="col-md-offset-4 col-md-8">
 			<button class="btn btn-default cancel_button"
-					ng-click="cancelOrder(contest.OID(), participant.OID(), selectedOrder.OID())"> Cancel
+					ng-click="cancelOrder(contest.OID(), participant.OID(), selectedOrder.OID())">
+                <img class="middle" src="/assets/images/objects/alertsHeader.gif"> Cancel
 			</button>
 		</div>
 	</div>
+</div>
+<div class="row">
+    <div class="col-md-offset-9 col-md-3">
+        <button class="btn btn-default new_order pull-right" ng-click="popupNewOrderDialog()">
+            <img class="middle" src="/assets/images/buttons/cart_add.png"> New
+        </button>
+    </div>
 </div>

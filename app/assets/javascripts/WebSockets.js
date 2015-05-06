@@ -14,11 +14,16 @@
         }
 
         var socket;
+        var connected = false;
         if (window.WebSocket) {
             connect();
         } else {
             alert("Your browser does not support Web Sockets.");
         }
+
+        service.isConnected = function () {
+            return connected;
+        };
 
         /**
          * Transmits the message to the server via web-socket
@@ -70,10 +75,12 @@
 
             socket.onopen = function (event) {
                 $log.debug("onOpen: event = " + angular.toJson(event));
+                connected = true;
             };
 
             socket.onclose = function (event) {
                 $log.error("onClose: event = " + angular.toJson(event));
+                connected = false;
 
                 $timeout(function () {
                     connect();

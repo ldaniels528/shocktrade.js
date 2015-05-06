@@ -12,6 +12,7 @@
 }
 
 .portfolio_tab {
+    background: #ffffff;
 	border-left: 1px solid #cccccc;
 	border-right: 1px solid #cccccc;
 	border-bottom: 1px solid #cccccc;
@@ -20,18 +21,19 @@
 	padding: 5px;
 }
 
-.sell_button {
+button.new_order {
+    background-color: #00ff00;
+    font-size: 11pt;
+    border-radius: 4px;
+}
+
+button.sell_button {
     background-color: #ff8000;
     border: solid 1px #cc6000;
 	font-weight: bold;
 	text-align: right;
 	color: white;	
 	cursor: pointer;
-}
-
-#infoPanel {
-	border: solid 1px #888888;
-	padding: 10px 10px 10px 10px;
 }
 
 .label {

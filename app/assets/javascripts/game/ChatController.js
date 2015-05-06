@@ -5,14 +5,21 @@
      * Play Lounge/Chat Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('ChatCtrl', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
+    app.controller('ChatController', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
         function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
 
-            $scope.chatMessage = null;
+            $scope.chatMessage = "";
             $scope.errors = [];
+            $scope.messages = ((MySession.contest || {}).messages || []);
 
             $scope.addSmiley = function (emoticon) {
-                $scope.chatMessage += emoticon;
+                $scope.chatMessage += emoticon.symbol;
+            };
+
+            $scope.getMessages = function() {
+                return $scope.messages.sort(function(a,b) {
+                    return b.sentTime - a.sentTime;
+                });
             };
 
             $scope.sendChatMessage = function (messageText) {
@@ -32,7 +39,7 @@
                 ContestService
                     .sendChatMessage($scope.contest.OID(), message).then(
                         function (response) {
-                            $scope.chatMessage = null;
+                            $scope.chatMessage = "";
                         },
                         function (response) {
                             Errors.addMessage("Failed to send message (" + response.message + ")");
@@ -59,6 +66,18 @@
                 {"symbol": "(!)", "uri": "icon_exclaim.gif", "tooltip": "Exclamation"},
                 {"symbol": "(?)", "uri": "icon_question.gif", "tooltip": "Question"},
                 {"symbol": "=>", "uri": "icon_arrow.gif", "tooltip": "Arrow"}];
+
+            //////////////////////////////////////////////////////////////////////
+            //              Broadcast Event Listeners
+            //////////////////////////////////////////////////////////////////////
+
+            /**
+             * Listen for contest update events
+             */
+            $scope.$on("contest_updated", function (event, contest) {
+                $log.info("[Chat] Contest '" + contest.name + "' updated");
+                $scope.messages = contest.messages;
+            });
 
         }]);
 

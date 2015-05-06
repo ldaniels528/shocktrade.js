@@ -46,7 +46,6 @@ img.logo {
 
 .title {
 	-webkit-text-stroke: 1px #0099cc;
-	color: #ffffff;
 	font-size: 24px;
 	vertical-align: top;
 	margin-left: 5px;
@@ -62,7 +61,6 @@ img.logo {
 }
 
 .spectator_bar {
-	border: 1px solid #888888;
 	border-radius: 4px 4px 4px 4px;
 	background-color: #ffee44;	
  	color: #cc8822; 

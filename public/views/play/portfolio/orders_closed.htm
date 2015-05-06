@@ -2,7 +2,7 @@
 	<div class="col-md-3 bold">Symbol</div>
 	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Your Price</div>
 	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Market Price</div>
-	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Quantity</div>
+	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Shares</div>
 
 	<div ng-show="isOrderSelected()" class="col-md-8">
 		<span class="bold" ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>

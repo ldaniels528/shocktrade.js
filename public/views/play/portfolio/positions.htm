@@ -2,7 +2,7 @@
 	<div class="col-md-3 bold">Symbol</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
 	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market Price</div>
-	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Quantity</div>
+	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Shares</div>
 
     <div ng-show="isPositionSelected()" class="col-md-8">
         <span class="bold" ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.companyName }}</span>
@@ -31,12 +31,16 @@
                       ng-class="getExchangeClass(p.exchange)"
                       ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
             </div>
-            <div ng-hide="isPositionSelected()" class="col-md-3 right">$ {{ p.pricePaid | number:2 }}</div>
             <div ng-hide="isPositionSelected()" class="col-md-3 right">
-                <span ng-show="p.lastTrade">$ {{ p.lastTrade | number:2 }}</span>
-                <span ng-hide="p.lastTrade" class="null">Unavailable</span>
+                $ {{ p.pricePaid | number:2 }}
             </div>
-            <div ng-hide="isPositionSelected()" class="col-md-3 right">{{ p.quantity | number }}</div>
+            <div ng-hide="isPositionSelected()" class="col-md-3 right">
+                <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | number:2 }}</span>
+                <span ng-hide="p.lastTrade" class="right null">Unavailable</span>
+            </div>
+            <div ng-hide="isPositionSelected()" class="col-md-3">
+                <span class="right pull-right">{{ p.quantity | number }}</span>
+            </div>
         </div>
     </div>
 
@@ -75,7 +79,8 @@
 
         <div class="col-md-offset-4 col-md-8">
             <button class="btn btn-default sell_button"
-                ng-click="sellPosition(selectedPosition.symbol, selectedPosition.quantity)"> Sell
+                ng-click="sellPosition(selectedPosition.symbol, selectedPosition.quantity)">
+                <img class="middle" src="/assets/images/buttons/cart_add.png"> Sell
             </button>
         </div>
     </div>

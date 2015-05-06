@@ -2,7 +2,9 @@
 	<!-- Game Filtering Options -->
 	<div ng-hide="isSplitScreen()" class="col-md-8">
 		<fieldset class="contest">
-			<legend class="contest"><img src="/assets/images/buttons/search.png"> Search for Games</legend>
+			<legend class="contest">
+                <img src="/assets/images/buttons/search.png"> Search for Games
+            </legend>
 			<table>
 				<tr>
 					<td class="col-md-3">
@@ -63,15 +65,15 @@
 		<div ng-class="{'col-md-12':(!isSplitScreen()), 'col-md-4':(isSplitScreen())}">
 			<fieldset class="contest">
 				<legend class="contest">
-					Search Results (<span class="positive">{{ getAvailableCount() }}</span>/{{ searchResults.length || 0 }})
+					Search Results ({{ getAvailableCount() }}/{{ searchResults.length || 0 }})
 				</legend>
 				<div class="availGamesContainer">
                     <div class="row">
-                        <div class="col-md-4 bold left" style="padding-left: 16px">Game Name</div>
+                        <div class="col-md-4 bold left padding-left-16">Game Name</div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 bold center">Started</div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Buy In</div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Players</div>
-                        <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Game Modifiers</div>
+                        <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Game Features</div>
                     </div>
 
                     <div ng-repeat="c in searchResults" class="row clickable"
@@ -83,26 +85,23 @@
                             </span>
                             <img ng-hide="c.status === 'ACTIVE'" src="/assets/images/status/offlight.png">
                             <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-                            <a href="">{{ c.name }}</a>
+                            {{ c.name }}
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 center">
                             <span ng-show="c.startTime">{{ c.startTime | date:'MM-dd-yyyy' }}</span>
                             <span ng-hide="c.startTime">&#8212;</span>
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2">
-                            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'" style="float: right">
+                            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'" class="pull-right">
                                 $ {{ c.startingBalance | number }}
                             </span>
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 right">
                             <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
                             <img src="/assets/images/objects/friend_header.gif">
-                            <span ng-if="c.status === 'ACTIVE'">
-                                / {{ maxPlayers < 10 ? '0' + maxPlayers : maxPlayers }}
-                            </span>
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2">
-                            <span style="float: right">
+                            <span class="pull-right">
                                 <img ng-src="/assets/images/{{ c.friendsOnly ? 'objects/friend_header.gif' : 'status/transparent.png' }}">
                                 <img ng-src="/assets/images/{{ c.levelCap ? 'objects/friend_delete.png' : 'status/transparent.png' }}">
                                 <img ng-src="/assets/images/{{ c.perksAllowed ? 'objects/gift.png' : 'status/transparent.png' }}">
@@ -114,8 +113,7 @@
 				</div>
 			</fieldset>
 
-			<button class="btn btn-default new_game"
-				style="float: right"
+			<button class="btn btn-default new_game pull-right"
 				ng-hide="isSplitScreen()"
 				ng-click="popupNewGameDialog()"> New Game
 			</button>
@@ -124,15 +122,14 @@
 		<!-- Game Lobby -->
 		<div ng-show="isSplitScreen()" class="col-md-8">
 			<fieldset class="contest" ng-show="selectedContest.participants">
-				<legend class="contest">Game Lobby &#8212; <span class="game_title">{{selectedContest.name}}</span>
-					<img style="float: right"
-						class="clickable"
+				<legend class="contest"><span class="game_title">{{selectedContest.name}}</span>
+					<img class="clickable pull-right"
 						ng-click="toggleSplitScreen()"
 						title="Return to results"
 						src="/assets/images/buttons/back-24.png">
 				</legend>
 				<div class="row contest_lobby contest_colors">
-					<div class="col-md-12">
+					<div class="col-md-12" style="background: #e0e0e0; border-radius: 6px; padding: 4px">
 						<div style="margin-left: auto; margin-right: auto" ng-repeat="row in [0,1]">
 							<span ng-repeat="p in getAvailableSlots(selectedContest, row) track by $index">
 								<avatar ng-show="p" id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
@@ -140,7 +137,7 @@
 									ng-hide="p"
 									ng-click="popupInvitePlayerDialog(findPlayerByID(selectedContest, MySession.getUserID()))"
 									title="invite a friend"
-									src="/assets/images/avatars/unknown.jpg">
+									src="/assets/images/play/unknown-53.jpg">
 							</span>
 						</div>
 					</div>
@@ -203,14 +200,13 @@
 				</div>
 				<div class="row" style="margin-top: 5px">
 					<div class="col-md-2">
-						<button class="btn btn-default start_game"
-						ng-show="isParticipant(selectedContest)"
-						ng-click="enterGame(selectedContest)">
+						<button class="btn btn-default enter_game"
+                            ng-disabled="!isParticipant(selectedContest)"
+                            ng-click="enterGame(selectedContest)">
 							<img src="/assets/images/objects/enter.png"> Enter
 						</button>
 					</div>
-					<div class="col-md-6">&nbsp;</div>
-					<div class="col-md-4">
+					<div class="col-md-2">
 						<button class="btn btn-default start_game"
 							ng-show="isContestOwner(selectedContest) && !selectedContest.startTime"
 							ng-click="startContest(selectedContest)">
@@ -221,17 +217,20 @@
 							ng-click="joinContest(selectedContest)">
 							<img ng-src="/assets/images/{{ selectedContest.joining ? 'status/loading.gif' : 'objects/friend.png' }}"> Join
 						</button>
+                    </div>
+                    <div class="col-md-2">
 						<button class="btn btn-default delete_game"
-						ng-show="isContestOwner(selectedContest) && (!selectedContest.startTime || selectedContest.participants.length == 1)"
-						ng-click="deleteContest(selectedContest)">
+                            ng-show="isDeletable(selectedContest)"
+                            ng-click="deleteContest(selectedContest)">
 							<img ng-src="/assets/images/{{ selectedContest.deleting ? 'status/loading.gif' : 'buttons/remove.png' }}"> Delete
 						</button>
 						<button class="btn btn-default quit_game"
-						ng-show="!isContestOwner(selectedContest) && isParticipant(selectedContest)"
-						ng-click="quitContest(selectedContest)">
+                            ng-show="!isContestOwner(selectedContest) && isParticipant(selectedContest)"
+                            ng-click="quitContest(selectedContest)">
 							<img ng-src="/assets/images/{{ selectedContest.quitting ? 'status/loading.gif' : 'objects/alert.png' }}"> Quit
 						</button>
 					</div>
+                    <div class="col-md-6">&nbsp;</div>
 				</div>
 			</fieldset>
 		</div>

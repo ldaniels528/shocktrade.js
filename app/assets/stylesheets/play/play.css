@@ -1,6 +1,6 @@
 .contest_colors {
-	border: 1px solid #c0ddee;
-	background-color: #ddf0ff;
+/*	border: 1px solid #c0ddee;*/
+	background-color: #eeeeee;
 }
 
 .contest_lobby {
@@ -59,11 +59,6 @@ img.participant_gang {
 
 img.no_picture_gang {
 	background: #ffffff;
-	border: 1px solid #cccccc;
-	border-radius: 5px 5px 5px 5px;
-	padding-top: 3px;
-	padding-left: 2px;
-	padding-right: 0px;
 	width: 53px;
 	height: 53px;
 }
@@ -191,7 +186,17 @@ div.gamesSearchContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 550px;
+	height: 450px;
+}
+
+div.portfolio_container {
+	background-color: #f0f0f0;
+	border-radius: 4px;
+	padding: 4px;
+	clear: both;
+	overflow: auto;
+	width: auto;
+	height: 350px;
 }
 
 div.gamesQuickSearchContainer {
@@ -234,73 +239,67 @@ div.leaderboardContainer {
 	height: 190px;
 }
 
-.start_game {
-	background-color: #00ff00;
+button.enter_game {
+	background-color: #ff8000;
 	color: #000000;
-	font-size: 10pt;
 	border-radius: 4px;
+	font-weight: bold;
 }
 
-.new_game {
-	background-color: #00cc00;
-	font-size: 11pt;
-	border-radius: 4px;
-}
-
-.cancel_button {
-	background-color: #ffaa00;
-	font-size: 11pt;
-	border-radius: 4px;
-}
-
-.contest_create {
-	background: url('/assets/images/buttons/new_item.png') no-repeat;
-	background-color: #ffff00;
-	font-weight: normal;
-	text-align: right;
+button.start_game {
+	background-color: #ff8000;
 	color: #000000;
-	cursor: pointer;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
-.create_new {
-    background:url('/assets/images/buttons/new_item.png') no-repeat;
-    background-color: #ffaa00;
-	font-weight: normal;
-	text-align: right;
+button.new_game {
+	background-color: #ff8000;
 	color: #000000;
-	cursor: pointer;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
-.join_game {
-	background-color: #55bbff;
-	font-weight: normal;
-	text-align: right;
-	color: #ffffff;
-	cursor: pointer;
-}
-	
-.quit_game {
-    background-color: #dd4422;
-	font-weight: normal;
-	text-align: right;
-	color: #ffff00;	
-	cursor: pointer;
+button.cancel_button {
+	background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
-.delete_game {
-	background-color: #dd4422;
-	font-weight: normal;
-	text-align: right;
-	color: #ffff00;
-	cursor: pointer;
+button.create_new {
+    background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
-.search_game {
-    background-color: #40ff40;
-	font-weight: normal;
-	text-align: right;
-	color: #000000;	
-	cursor: pointer;
+button.join_game {
+	background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
+}
+
+button.quit_game {
+    background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
+}
+
+button.delete_game {
+	background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
+}
+
+button.search_game {
+    background-color: #ff8000;
+	color: #000000;
+	border-radius: 4px;
+	font-weight: bold;
 }
 
 .block_full {
@@ -312,11 +311,4 @@ div.leaderboardContainer {
 
 .mini {
 	font-size: 9pt
-}
-
-#previewButton {	
-	background:url('/assets/images/buttons/cart.png') no-repeat;
-	text-align: left;
-	text-indent: +8px;
-	margin-top: 5px;
 }

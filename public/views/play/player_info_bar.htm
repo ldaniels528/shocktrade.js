@@ -1,10 +1,12 @@
 <div class="row player_info_bar contest_colors">
 	<div class="col-md-6">
-        <avatar id="{{ MySession.fbUserID }}" style="margin-top: 2px; margin-left: 2px; width: 32px; height: 32px" />
+        <img ng-show="WebSockets.isConnected()" src="/assets/images/status/greenlight.png">
+        <img ng-hide="WebSockets.isConnected()" src="/assets/images/status/offlight.png">
+        <avatar id="{{ MySession.fbUserID }}" style="margin-top: 2px; width: 32px; height: 32px" />
         Net Worth: <span class="positive">$ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}</span>
     </div>
     <div class="col-md-6" ng-controller="AwardsController" ng-init="setupAwards()">
-        <img style="float: right" ng-repeat="award in MySession.userProfile.awards.slice(0,7)"
+        <img class="pull-right" ng-repeat="award in MySession.userProfile.awards.slice(0,7)"
              title="{{ award.name }}"
              style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
     </div>

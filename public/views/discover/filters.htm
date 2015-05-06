@@ -1,5 +1,5 @@
 <div style="display: block; width: 100%; margin-right: 5px">
-	<span style="float: right">
+	<span class="pull-right">
 		<input id="stockTicker" type="text" ng-model="ticker" placeholder="Enter Symbol or Company name" 
 				typeahead="quote as quote.symbol + ' - ' + quote.name for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}" 
 				typeahead-template-url="symbol_lookup.htm" 

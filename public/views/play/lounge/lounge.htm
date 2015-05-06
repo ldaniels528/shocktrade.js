@@ -4,7 +4,7 @@
 <div ng-if="MySession.userProfile._id && !contest._id" class="spectator_message" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
 </div>
-<div ng-controller="ChatCtrl" ng-if="MySession.userProfile._id && contest._id"
+<div ng-controller="ChatController" ng-if="MySession.getUserID() && contest.OID()"
 	 style="display: block; width: 100%; background-color: #ffffff">
 	<div class="lounge_players" style="margin-top: 3px; margin-bottom: 3px">
 		<span ng-repeat="p in contest.participants">

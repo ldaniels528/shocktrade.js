@@ -54,8 +54,8 @@
                 var slots = [];
                 if (contest) {
                     var participants = contest.participants || [];
-                    var start = row == 0 ? 0 : 10;
-                    var end = row == 0 ? 10 : $scope.maxPlayers;
+                    var start = row == 0 ? 0 : $scope.maxPlayers/2;
+                    var end = row == 0 ? $scope.maxPlayers/2 : $scope.maxPlayers;
                     for (var n = start; n < end; n++) {
                         slots.push((n < participants.length) ? participants[n] : null);
                     }
@@ -154,6 +154,10 @@
 
             $scope.isContestOwner = function (contest) {
                 return contest && contest.creator.name === MySession.getUserName();
+            };
+
+            $scope.isDeletable = function (contest) {
+                return $scope.isContestOwner(contest) && (!contest.startTime || contest.participants.length == 1);
             };
 
             $scope.isParticipant = function (contest) {
@@ -556,15 +560,6 @@
                 "imageURL": "/assets/images/objects/home.gif",
                 "path": "/assets/views/play/lobby/lobby.htm",
                 "url": "/play/lobby",
-                "active": false,
-                "isVisible": function(c) {
-                    return c != null;
-                }
-            }, {
-                "name": "Lounge",
-                "imageURL": "/assets/images/objects/friend_header.gif",
-                "path": "/assets/views/play/lounge/lounge.htm",
-                "url": "/play/lounge",
                 "active": false,
                 "isVisible": function(c) {
                     return c != null;

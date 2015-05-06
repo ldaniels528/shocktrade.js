@@ -13,12 +13,12 @@
 						<img ng-src="http://graph.facebook.com/{{ c.participants[0].facebookID }}/picture" class="avatar">
 						<a href="" ng-click="loadContest(c.OID())">{{ c.name }}</a>
 					</td>
-					<td style="width: 15%"><span style="float: right">$ {{ c.startingBalance | number }}</span></td>
+					<td style="width: 15%"><span class="pull-right">$ {{ c.startingBalance | number }}</span></td>
 					<td style="width: 15%; text-align: right">
 						{{ c.participants.length || 0 }} <img src="/assets/images/objects/friend_header.gif"> / {{ c.maxParticipants }}
 					</td>
 					<td style="width: 15%">					
-						<span style="float: right">
+						<span class="pull-right">
 							<img ng-show="c.ranked" src="/assets/images/objects/reward.png">
 							<img ng-show="MySession.userProfile.authenticated" src="/assets/images/objects/friend_header.gif">
 							<img ng-show="false" src="/assets/images/objects/sharing_header.png">

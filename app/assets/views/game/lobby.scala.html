@@ -1,12 +1,9 @@
 @import com.shocktrade.models.contest.ContestStatus
 
-<div ng-hide="contest.UID()" class="spectator_message" style="display: block; width: 100%">
-	<div ng-include src="'/assets/views/play/no_contest_selected_dash.htm'"></div>
-</div>
-<div ng-if="contest._id">
+<div ng-if="contest.OID()" class="portfolio_container">
     <div class="col-md-3">
         <div style="margin-top: 5px" ng-repeat="p in contest.rankings">
-            <div class="row rank_cell contest_colors">
+            <div class="row rank_cell">
                 <div style="display: inline; float: left">
                     <avatar id="{{ p.facebookID }}" style="margin: 3px; width: 45px; height: 45px" />
                 </div>
@@ -18,9 +15,9 @@
                         </span>
                     </span>
                     <div style="display: inline; float: right; margin-right: 10px">
-                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '1st'" src="/assets/images/contests/gold.png">
-                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '2nd'" src="/assets/images/contests/silver.png">
-                        <img ng-if="contest.status == '@{ContestStatus.CLOSED}' && p.rank == '3rd'" src="/assets/images/contests/bronze.png">
+                        <img ng-if="contest.status === '@{ContestStatus.CLOSED}' && p.rank === '1st'" src="/assets/images/contests/gold.png">
+                        <img ng-if="contest.status === '@{ContestStatus.CLOSED}' && p.rank === '2nd'" src="/assets/images/contests/silver.png">
+                        <img ng-if="contest.status === '@{ContestStatus.CLOSED}' && p.rank === '3rd'" src="/assets/images/contests/bronze.png">
                     </div>
                 </div>
                 <div style="display: block">
@@ -44,6 +41,5 @@
         <br style="clear: both">
     </div>
 
-    <div class="col-md-9" ng-include src="'/assets/views/play/portfolio/portfolio.htm'">
-    </div>
+    <div class="col-md-9" ng-include src="'/assets/views/play/portfolio/portfolio.htm'"></div>
 </div>

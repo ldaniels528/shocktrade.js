@@ -39,7 +39,7 @@
 					<img ng-hide="c.status == 'ACTIVE'" src="/assets/images/status/offlight.png">
 					<a href="" ng-click="loadContest(c.OID())">{{ c.name }}</a>
 					
-					<span style="float: right">
+					<span class="pull-right">
 						<img ng-show="MySession.userProfile.authenticated" ng-src="/assets/images/objects/friend_header.gif">
 						<img ng-show="false" ng-src="/assets/images/objects/sharing_header.png">
 						<img ng-show="c.levelCap" ng-src="/assets/images/objects/friend_delete.png">
@@ -50,4 +50,4 @@
 		</table>
 	</div>
 </div>
-<span style="float: right">{{ searchResults.length }} result(s) found</span>
+<span class="pull-right">{{ searchResults.length }} result(s) found</span>
