@@ -20,10 +20,10 @@ import scala.language.implicitConversions
 import scala.util.{Failure, Success}
 
 /**
- * Trading Engine
+ * Order Qualification and Processing Engine
  * @author lawrence.daniels@gmail.com
  */
-object TradingEngine {
+object QualificationEngine {
   private lazy val system = Akka.system
   private lazy val tradingActor = system.actorOf(Props[TradingActor].withRouter(RoundRobinPool(nrOfInstances = 10)), name = "TradingActor")
   private lazy val mc = db.collection[BSONCollection]("Contests")
@@ -33,7 +33,7 @@ object TradingEngine {
 
   import system.dispatcher
 
-  def init() {
+  def start() {
     // TODO for now, only run it in DEV
     if (Play.isDev) {
       // process orders once every 5 minutes

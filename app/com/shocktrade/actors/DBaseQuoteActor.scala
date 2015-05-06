@@ -1,8 +1,11 @@
 package com.shocktrade.actors
 
-import QuoteMessages._
 import akka.actor.{Actor, ActorLogging}
+import com.shocktrade.actors.QuoteMessages._
+import com.shocktrade.controllers.QuoteFiltering
 import com.shocktrade.controllers.QuoteResources._
+import com.shocktrade.models.profile.Filter
+import com.shocktrade.models.quote.RealTimeQuote
 import play.api.libs.json.Json.{obj => JS, _}
 import play.api.libs.json.{JsArray, JsObject}
 import play.modules.reactivemongo.json.collection.JSONCollection
@@ -14,19 +17,23 @@ import scala.concurrent.{ExecutionContext, Future}
  * Database Stock Quote Actor
  * @author lawrence.daniels@gmail.com
  */
-class DBaseQuoteActor() extends Actor with ActorLogging {
+class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
   private lazy val mcQ = db.collection[JSONCollection]("Stocks")
 
   import context.dispatcher
 
   override def receive = {
-    case GetQuote(symbol) =>
+    case FindQuotes(filter)=>
       val mySender = sender()
-      loadQuote(symbol) foreach (mySender ! _)
+      findQuotes(filter) foreach(mySender ! _)
 
     case GetFullQuote(symbol) =>
       val mySender = sender()
       loadFullQuote(symbol) foreach (mySender ! _)
+
+    case GetQuote(symbol) =>
+      val mySender = sender()
+      loadQuote(symbol) foreach (mySender ! _)
 
     case GetQuotes(symbols) =>
       val mySender = sender()
@@ -37,6 +44,12 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
 
     case message =>
       unhandled(message)
+  }
+
+  private def findQuotes(filter: Filter)(implicit ec: ExecutionContext): Future[Seq[RealTimeQuote]] = {
+    val query = createQueryJs(filter)
+    log.info(s"findQuotes: query = $query")
+    mcQ.find(query, JS()).cursor[RealTimeQuote].collect[Seq]()
   }
 
   /**

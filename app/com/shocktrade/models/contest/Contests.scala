@@ -79,6 +79,13 @@ object Contests {
     }
   }
 
+  def findContestsByPlayerName(playerName: String)(fields: String*)(implicit timeout: Timeout) = {
+    (reader ? FindContestsByPlayerName(playerName, fields)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Seq[Contest]]
+    }
+  }
+
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
     (reader ? FindOrderByID(contestId, orderId, fields)) map {
       case e: Exception => throw new IllegalStateException(e)

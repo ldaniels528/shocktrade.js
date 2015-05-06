@@ -1,6 +1,6 @@
 package com.shocktrade.plugins
 
-import com.shocktrade.server.TradingEngine
+import com.shocktrade.server.robots.TradingRobots
 import play.api.{Application, Plugin}
 
 /**
@@ -12,7 +12,13 @@ class TradingEnginePlugin(app: Application) extends Plugin {
   /**
    * Called when the application starts.
    */
-  override def onStart() = TradingEngine.init()
+  override def onStart() = {
+    // start the trading engine
+    //QualificationEngine.start()
+
+    // start the trading robots
+    TradingRobots.start()
+  }
 
   /**
    * Called when the application stops.

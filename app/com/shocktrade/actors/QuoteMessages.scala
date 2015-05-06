@@ -1,5 +1,6 @@
 package com.shocktrade.actors
 
+import com.shocktrade.models.profile.Filter
 import play.api.libs.json.JsObject
 
 /**
@@ -7,6 +8,8 @@ import play.api.libs.json.JsObject
  * @author lawrence.daniels@gmail.com
  */
 object QuoteMessages {
+
+  case class FindQuotes(filter: Filter)
 
   case class GetQuote(symbol: String)
 

@@ -39,7 +39,7 @@ case class Contest(id: BSONObjectID = BSONObjectID.generate,
  * @author lawrence.daniels@gmail.com
  */
 object Contest {
-  val MaxPlayers = 20
+  val MaxPlayers = 24
 
   implicit val contestReads: Reads[Contest] = (
     (__ \ "_id").read[BSONObjectID] and

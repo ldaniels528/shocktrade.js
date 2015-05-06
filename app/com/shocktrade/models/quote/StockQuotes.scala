@@ -9,6 +9,7 @@ import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.actors.WebSockets.QuoteUpdated
 import com.shocktrade.actors.{DBaseQuoteActor, RealTimeQuoteActor, WebSockets}
 import com.shocktrade.controllers.QuoteResources._
+import com.shocktrade.models.profile.Filter
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import play.api.Logger
@@ -44,6 +45,13 @@ object StockQuotes {
           diskCache.put(symbol, jo)
         }
       }
+    }
+  }
+
+  def findQuotes(filter: Filter): Future[Seq[RealTimeQuote]] = {
+    (mongoReader ? FindQuotes(filter)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Seq[RealTimeQuote]]
     }
   }
 

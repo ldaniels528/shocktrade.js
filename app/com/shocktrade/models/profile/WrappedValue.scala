@@ -15,6 +15,10 @@ case class WrappedValue(value: Either[String, BigDecimal])
  */
 object WrappedValue {
 
+  def apply(value: String): WrappedValue = WrappedValue(Left(value))
+
+  def apply(value: BigDecimal): WrappedValue = WrappedValue(Right(value))
+
   /**
    * Wrapped Value Format
    * @author lawrence.daniels@gmail.com
@@ -38,12 +42,11 @@ object WrappedValue {
    * @author lawrence.daniels@gmail.com
    */
   implicit object WrappedValueReader extends BSONDocumentReader[WrappedValue] {
-    def read(doc: BSONDocument) = WrappedValue(
+    def read(doc: BSONDocument) =
       doc.getAs[BSONValue]("value").get match {
-        case BSONString(s) => Left(s)
-        case BSONDouble(n) => Right(n)
+        case BSONString(s) => WrappedValue(s)
+        case BSONDouble(n) => WrappedValue(n)
       }
-    )
   }
 
   /**

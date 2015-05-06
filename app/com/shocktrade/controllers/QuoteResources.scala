@@ -17,7 +17,7 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api._
 import reactivemongo.bson.{BSONDocument => B, _}
 import reactivemongo.core.commands.GetLastError
-
+import com.shocktrade.models.profile.Filter
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
@@ -201,12 +201,14 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
         // attempt to retrieve the player's exchanges
           exchanges <- findStockExchanges(Option(userID))
 
+          maxResults = filter.maxResults.getOrElse(25)
+
           // retrieve the quotes
           quotes <- mcQ.find(createQueryJs(filter, exchanges), fields)
             .sort(sortJs(filter))
-            .options(QueryOpts(batchSizeN = filter.maxResults))
+            .options(QueryOpts(batchSizeN = maxResults))
             .cursor[JsObject]
-            .collect[Seq](filter.maxResults)
+            .collect[Seq](maxResults)
         } yield quotes
 
         quotes map (js => Ok(JsArray(js)))

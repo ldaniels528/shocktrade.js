@@ -48,6 +48,15 @@ class ContestReaderActor extends Actor with ActorLogging {
         case Failure(e) => mySender ! e
       }
 
+    case FindContestsByPlayerName(playerName, fields) =>
+      val mySender = sender()
+      mc.find(BS("participants.name" -> playerName, "status" -> ContestStatus.ACTIVE), fields.toBsonFields).sort(SortFields.toBsonFields)
+        .cursor[Contest]
+        .collect[Seq]() onComplete {
+        case Success(contests) => mySender ! contests
+        case Failure(e) => mySender ! e
+      }
+
     case FindOrderByID(contestId, orderId, fields) =>
       val mySender = sender()
       mc.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))), fields.toBsonFields)
@@ -100,6 +109,8 @@ object ContestReaderActor {
   case class FindContests(searchOptions: SearchOptions, fields: Seq[String])
 
   case class FindContestsByPlayerID(playerId: BSONObjectID, fields: Seq[String])
+
+  case class FindContestsByPlayerName(playerName: String, fields: Seq[String])
 
   case class FindOrderByID(contestId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String])
 

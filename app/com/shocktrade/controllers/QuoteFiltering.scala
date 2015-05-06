@@ -1,10 +1,9 @@
 package com.shocktrade.controllers
 
+import com.shocktrade.models.profile.{Condition, Filter}
 import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
 import play.api.Logger
-import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.Reads._
 import play.api.libs.json._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,17 +17,15 @@ trait QuoteFiltering {
   def createQueryJs(filter: Filter): JsObject = {
 
     def toJson(c: Condition): JsObject = {
-      val field = toField(c.field)
-      val value = c.value //toValue(c.field, c.value)
       c.operator match {
-        case "=" => JS(field -> value)
-        case "!=" => JS(field -> JS("$ne" -> value))
-        case "<" => JS(field -> JS("$lt" -> value))
-        case ">" => JS(field -> JS("$gt" -> value))
-        case "<=" => JS(field -> JS("$lte" -> value))
-        case ">=" => JS(field -> JS("$gte" -> value))
+        case "=" => JS(c.field -> c.value)
+        case "!=" => JS(c.field -> JS("$ne" -> c.value))
+        case "<" => JS(c.field -> JS("$lt" -> c.value))
+        case ">" => JS(c.field -> JS("$gt" -> c.value))
+        case "<=" => JS(c.field -> JS("$lte" -> c.value))
+        case ">=" => JS(c.field -> JS("$gte" -> c.value))
         case _ =>
-          Logger.warn(s"Unhandled condition: [$field ${c.operator} $value]")
+          Logger.warn(s"Unhandled condition: [${c.field} ${c.operator} ${c.value}]")
           JS()
       }
     }
@@ -36,8 +33,8 @@ trait QuoteFiltering {
     filter.conditions.foldLeft[JsObject](JS("active" -> true)) { (res, c) => res ++ toJson(c) }
   }
 
-  def createQueryJs(filter: Filter, exchanges: Seq[String]): JsObject = {
-    createQueryJs(filter) ++ JS("exchange" -> JS("$in" -> exchanges))
+  def createQueryJs(filter: Filter, exchanges: Seq[String] = Nil): JsObject = {
+    createQueryJs(filter) ++ (if (exchanges.nonEmpty) JS("exchange" -> JS("$in" -> exchanges)) else JS())
   }
 
   def findRealtimeQuote(symbol: String)(implicit ec: ExecutionContext): Future[JsObject] = {
@@ -57,39 +54,8 @@ trait QuoteFiltering {
   }
 
   def sortJs(f: Filter): JsObject = {
-    val direction = if (f.ascending) 1 else -1
-    JS(toField(f.sortField) -> direction)
+    val direction = if (f.ascending.contains(true)) 1 else -1
+    JS(f.sortField.get -> direction)
   }
-
-  private def toField(field: String) = {
-    field match {
-      case "CHANGE" => "changePct"
-      case "CHANGEPCT" => "changePct"
-      case _ => field.toLowerCase
-    }
-  }
-
-  private def toValue(field: String, value: String) = value.toDouble
-
-  implicit val conditionReads: Reads[Condition] = (
-    (JsPath \ "field").read[String] and
-      (JsPath \ "operator").read[String] and
-      (JsPath \ "value").read[Double])(Condition.apply _)
-
-  implicit val filterReads: Reads[Filter] = (
-    (JsPath \ "name").read[String] and
-      (JsPath \ "sortField").read[String] and
-      (JsPath \ "ascending").read[Boolean] and
-      (JsPath \ "maxResults").read[Int] and
-      (JsPath \ "conditions").read[Seq[Condition]])(Filter.apply _)
-
-  case class Filter(
-                     name: String,
-                     sortField: String,
-                     ascending: Boolean,
-                     maxResults: Int,
-                     conditions: Seq[Condition])
-
-  case class Condition(field: String, operator: String, value: Double)
 
 }
