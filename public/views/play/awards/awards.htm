@@ -1,5 +1,5 @@
 <div ng-controller="AwardsController" ng-init="setupAwards()" style="background: #ffffff; height: 100%; padding: 10px">
-	<div style="width: 100%; height: 425px; clear: both; overflow: scroll">
+	<div style="width: 100%; height: auto; clear: both; overflow: scroll">
 		<div style="width: 100%; padding-bottom: 5px" ng-repeat="award in awards">
 			<img style="vertical-align: middle" ng-src="{{ award.owned ? award.icon : '/assets/images/awards/locked_award.gif'}}"> 
 			<span style="vertical-align: middle" ng-class="award.owned ? '' : 'null'" ><span style="font-weight: bold">{{award.name}}</span> &#8212; {{award.description}}</span>

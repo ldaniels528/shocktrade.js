@@ -29,11 +29,6 @@ a:active  { cursor: pointer; text-decoration: none; }
 	color: #3a5795;
 }
 
-.narrow {
-	margin: 0px 0px 0px 0px; 
-	padding: 0px 0px 0px 0px
-}
-
 body {
 	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
 	background: #dddddd;

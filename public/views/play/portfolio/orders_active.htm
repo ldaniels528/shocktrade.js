@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-<div class="positionsContainer">
+<div class="ordersContainer">
 	<div class="col-md-12 center" ng-show="getActiveOrders(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
 		<span class="warning">No orders found</span>
@@ -23,7 +23,7 @@
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders(contest)"
+		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
 			 ng-class="selectedOrder.OID() === o.OID() ? 'selected' : ''"
 			 ng-click="selectOrder(o)">
 			<div class="col-md-3">

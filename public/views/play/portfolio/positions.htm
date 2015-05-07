@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<div class="row positionsContainer">
+<div class="positionsContainer">
 	<div class="col-md-12 center" ng-show="getPositions(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
         <span class="warning">No positions found</span>
@@ -23,7 +23,7 @@
 
     <!-- Data Rows -->
     <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}">
-        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)"
+        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
              ng-class="selectedPosition.OID() === p.OID() ? 'selected' : ''"
              ng-click="selectPosition(p)">
             <div class="col-md-3">
