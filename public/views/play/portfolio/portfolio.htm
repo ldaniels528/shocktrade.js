@@ -6,6 +6,16 @@
 </div>
 <div ng-controller="PortfolioController" ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%">
 	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
+    <div class="row">
+        <div class="col-md-offset-9 col-md-3">
+            <button class="btn btn-default new_order pull-right"
+                    ng-click="popupNewOrderDialog()"
+                    popover="Place a new order"
+                    popover-trigger="mouseenter">
+                <img class="middle" src="/assets/images/buttons/cart_add.png"> New
+            </button>
+        </div>
+    </div>
     <tabset>
         <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked(contest)" select="tab.init(contest)">
             <tab-heading>
