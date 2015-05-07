@@ -1,12 +1,4 @@
 /*********************************************************************************
- * 							Container											 *
- *********************************************************************************/
- 
- #container {
- 	display: block;	
- }
- 
-/*********************************************************************************
  * 							Global Styles										 *
  *********************************************************************************/ 
 
@@ -50,7 +42,7 @@ table td, table th
     padding: 0; /* 'cellpadding' equivalent */
 }
 
-.highlight {
+.highlighted {
 	background-color: #aaeeff
 }
 
@@ -92,7 +84,7 @@ td {
 }
 
 .error_bar {	
-	border: 1px solid #888888;
+	border: 1px solid #aa0000;
 	background-color: #ffcc44;	
  	color: #cc2222; 
 	vertical-align: middle;
@@ -140,6 +132,10 @@ span.small {
 .plain {
 	font-weight: normal;
 	color: black
+}
+
+.underlined {
+	text-decoration: underline;
 }
 
 /*********************************************************************************

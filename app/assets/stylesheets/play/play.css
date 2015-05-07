@@ -117,12 +117,6 @@ img.locked {
 	padding: 1px 2px 1px 2px
 }
 
-.highlighted_game {
-	background-color: #ffff00;
-	border: 1px solid #dddd00;
-	border-radius: 4px 4px 4px 4px;
-}
-
 .contest_left_side {
 	display: inline;
 	float: left;
@@ -189,7 +183,7 @@ div.gamesSearchContainer {
 	height: 450px;
 }
 
-div.portfolio_container {
+div.play_container {
 	background-color: #f0f0f0;
 	border-radius: 4px;
 	padding: 4px;
@@ -197,6 +191,13 @@ div.portfolio_container {
 	overflow: auto;
 	width: auto;
 	/*	height: 450px;*/
+}
+
+div.rankings_container {
+	clear: both;
+	overflow: auto;
+	width: 100%;
+	height: 500px;
 }
 
 div.gamesQuickSearchContainer {

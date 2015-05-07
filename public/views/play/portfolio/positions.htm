@@ -1,13 +1,15 @@
-<div>
-	<div class="col-md-3 bold">Symbol</div>
-	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Price Paid</div>
-	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Market Price</div>
-	<div ng-hide="isPositionSelected()" class="col-md-3 bold right">Shares</div>
+<div class="col-md-12">
+	<div class="col-md-3 bold left">Symbol</div>
+	<div class="col-md-3 bold right" ng-hide="isPositionSelected()">Price Paid</div>
+	<div class="col-md-3 bold right" ng-hide="isPositionSelected()">Market Price</div>
+	<div class="col-md-3 bold right" ng-hide="isPositionSelected()">Shares</div>
 
-    <div ng-show="isPositionSelected()" class="col-md-8">
-        <span class="bold" ng-class="getExchangeClass(selectedPosition.exchange)">{{ selectedPosition.companyName }}</span>
+    <div class="col-md-8 bold" ng-show="isPositionSelected()">
+        <span ng-class="getExchangeClass(selectedPosition.exchange)"
+              ng-click="loadQuote(selectedPosition.symbol, true)"
+              class="clickable">{{ selectedPosition.companyName }}</span>
     </div>
-    <div ng-show="isPositionSelected()" class="col-md-1">
+    <div class="col-md-1" ng-show="isPositionSelected()">
         <img class="clickable pull-right"
              ng-click="toggleSelectedPosition()"
              title="Return to results"
@@ -16,30 +18,31 @@
 </div>
 
 <div class="positionsContainer">
-	<div class="col-md-12 center" ng-show="getPositions(contest).length === 0">
-		<img src="/assets/images/status/alert.gif">
+    <div class="col-md-offset-1 col-md-11" ng-show="getPositions(contest).length === 0">
+        <img src="/assets/images/status/alert.gif">
         <span class="warning">No positions found</span>
-	</div>
+    </div>
 
     <!-- Data Rows -->
-    <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}">
-        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
-             ng-class="selectedPosition.OID() === p.OID() ? 'selected' : ''"
+    <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-3':(isPositionSelected())}" class="clickable">
+        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest)"
+             ng-class-even="'contest_even'"
+             ng-class-odd="'contest_odd'"
              ng-click="selectPosition(p)">
-            <div class="col-md-3">
-                <span class="clickable"
-                      ng-class="getExchangeClass(p.exchange)"
-                      ng-click="loadQuote(p.symbol, true)">{{ p.symbol }}</span>
+            <div class="col-md-3 left">
+                <span ng-class="getExchangeClass(p.exchange)">
+                    <span ng-class="selectedPosition.OID() === p.OID() ? 'underlined' : ''">{{ p.symbol }}</span>
+                </span>
             </div>
-            <div ng-hide="isPositionSelected()" class="col-md-3 right">
+            <div class="col-md-3 right" ng-hide="isPositionSelected()">
                 $ {{ p.pricePaid | number:2 }}
             </div>
-            <div ng-hide="isPositionSelected()" class="col-md-3 right">
+            <div class="col-md-3 right" ng-hide="isPositionSelected()">
                 <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | number:2 }}</span>
                 <span ng-hide="p.lastTrade" class="right null">Unavailable</span>
             </div>
-            <div ng-hide="isPositionSelected()" class="col-md-3">
-                <span class="right pull-right">{{ p.quantity | number }}</span>
+            <div class="col-md-3 right" ng-hide="isPositionSelected()">
+                {{ p.quantity | number }}
             </div>
         </div>
     </div>

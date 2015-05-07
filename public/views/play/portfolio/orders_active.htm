@@ -1,13 +1,15 @@
-<div>
-	<div class="col-md-3 bold">Symbol</div>
-	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Your Price</div>
-	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Market Price</div>
-	<div ng-hide="isOrderSelected()" class="col-md-3 bold right">Shares</div>
+<div class="col-md-12">
+	<div class="col-md-3 bold left">Symbol</div>
+	<div class="col-md-3 bold right" ng-hide="isOrderSelected()">Your Price</div>
+	<div class="col-md-3 bold right" ng-hide="isOrderSelected()">Market Price</div>
+	<div class="col-md-3 bold right" ng-hide="isOrderSelected()">Shares</div>
 
-	<div ng-show="isOrderSelected()" class="col-md-8">
-		<span class="bold" ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>
+	<div class="col-md-8 bold" ng-show="isOrderSelected()">
+		<span ng-class="getExchangeClass(selectedOrder.exchange)">
+            {{ selectedOrder.companyName }}
+        </span>
 	</div>
-	<div ng-show="isOrderSelected()" class="col-md-1">
+	<div class="col-md-1" ng-show="isOrderSelected()">
 		<img class="clickable pull-right"
 			 ng-click="toggleSelectedOrder()"
 			 title="Return to results"
@@ -16,7 +18,7 @@
 </div>
 
 <div class="ordersContainer">
-	<div class="col-md-12 center" ng-show="getActiveOrders(contest).length === 0">
+	<div class="col-md-offset-1 col-md-11" ng-show="getActiveOrders(contest).length === 0">
 		<img src="/assets/images/status/alert.gif">
 		<span class="warning">No orders found</span>
 	</div>
@@ -24,12 +26,11 @@
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
 		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
-			 ng-class="selectedOrder.OID() === o.OID() ? 'selected' : ''"
 			 ng-click="selectOrder(o)">
 			<div class="col-md-3">
-                <span class="clickable"
-					  ng-class="getExchangeClass(o.exchange)"
-					  ng-click="loadQuote(o.symbol, true)">{{ o.symbol }}</span>
+                <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">
+                    <span ng-class="selectedOrder.OID() === o.OID() ? 'underlined' : ''">{{ o.symbol }}</span>
+                </span>
 			</div>
 			<div ng-hide="isOrderSelected()" class="col-md-3 right">$ {{ o.price | number:2 }}</div>
 			<div ng-hide="isOrderSelected()" class="col-md-3 right">

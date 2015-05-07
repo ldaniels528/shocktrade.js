@@ -7,6 +7,8 @@
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, MySession, ContestService, Errors, NewOrderDialog, QuoteService) {
 
+            $scope.selectedClosedOrder = null;
+            $scope.selectedOrder = null;
             $scope.selectedPosition = null;
             $scope.selection = {
                 exposure: "sector",
@@ -18,10 +20,10 @@
                 "imageURL": "/assets/images/objects/position.png",
                 "path": "/assets/views/play/portfolio/positions.htm",
                 "active": false,
-                "init": function(contest) {
+                "init": function (contest) {
                     // TODO enrich positions here
                 },
-                "isLocked": function(contest) {
+                "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
             }, {
@@ -29,10 +31,10 @@
                 "imageURL": "/assets/images/objects/portfolio_query.png",
                 "path": "/assets/views/play/portfolio/orders_active.htm",
                 "active": false,
-                "init": function(contest) {
+                "init": function (contest) {
                     // TODO enrich orders here
                 },
-                "isLocked": function(contest) {
+                "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
             }, {
@@ -40,10 +42,10 @@
                 "imageURL": "/assets/images/objects/portfolio_header.png",
                 "path": "/assets/views/play/portfolio/orders_closed.htm",
                 "active": false,
-                "init": function(contest) {
+                "init": function (contest) {
                     // TODO enrich orders here
                 },
-                "isLocked": function(contest) {
+                "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
             }, {
@@ -51,10 +53,10 @@
                 "imageURL": "/assets/images/objects/chat.png",
                 "path": "/assets/views/play/portfolio/chat.htm",
                 "active": false,
-                "init": function(contest) {
+                "init": function (contest) {
                     // TODO enrich orders here
                 },
-                "isLocked": function(contest) {
+                "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
             }];
@@ -113,16 +115,28 @@
                 NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
             };
 
-            $scope.isOrderSelected = function() {
+            $scope.isOrderSelected = function () {
                 return $scope.selectedOrder != null;
             };
 
-            $scope.selectOrder = function (position) {
-                $scope.selectedOrder = position;
+            $scope.selectOrder = function (order) {
+                $scope.selectedOrder = order;
             };
 
             $scope.toggleSelectedOrder = function () {
                 $scope.selectedOrder = null;
+            };
+
+            $scope.isClosedOrderSelected = function () {
+                return $scope.selectedClosedOrder != null;
+            };
+
+            $scope.selectClosedOrder = function (order) {
+                $scope.selectedClosedOrder = order;
+            };
+
+            $scope.toggleSelectedClosedOrder = function () {
+                $scope.selectedClosedOrder = null;
             };
 
             /////////////////////////////////////////////////////////////////////
@@ -267,9 +281,26 @@
             //              Watch Event Listeners
             //////////////////////////////////////////////////////////////////////
 
-            $scope.$watch(MySession.contest, function () {
-                // clear the cached participant
+            function reset() {
                 $scope.participant = null;
+                $scope.selectedClosedOrder = null;
+                $scope.selectedOrder = null;
+                $scope.selectedPosition = null;
+            }
+
+            /**
+             * Listen for contest update events
+             */
+            $scope.$on("contest_updated", function (event, contest) {
+                $log.info("[Portfolio] Contest '" + contest.name + "' updated");
+                reset();
+            });
+
+            /**
+             * Watch for contest change events
+             */
+            $scope.$watch(MySession.contest, function () {
+                reset();
             }, true);
 
         }]);
