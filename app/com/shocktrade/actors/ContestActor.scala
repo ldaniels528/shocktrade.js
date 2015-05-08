@@ -9,7 +9,7 @@ import com.shocktrade.actors.ContestActor._
 import com.shocktrade.actors.WebSockets.{ContestCreated, ContestDeleted, ContestUpdated}
 import com.shocktrade.controllers.Application.db
 import com.shocktrade.models.contest.{Contest, _}
-import com.shocktrade.server.trading.{OrderProcessor, TradingDAO}
+import com.shocktrade.server.trading.OrderProcessor
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
@@ -157,8 +157,8 @@ class ContestActor extends Actor with ActorLogging {
         case Failure(e) => mySender ! e
       }
 
-    case ProcessOrders(contest, lockExpirationTime, asOfDate) =>
-      processOrders(contest, lockExpirationTime, asOfDate)
+    case ProcessOrders(contest, asOfDate) =>
+      processOrders(contest, asOfDate)
 
     case QuitContest(contestId, playerId) =>
       val mySender = sender()
@@ -226,7 +226,7 @@ class ContestActor extends Actor with ActorLogging {
    * @param contest the given [[Contest contest]]
    * @param asOfDate the given effective date
    */
-  private def processOrders(contest: Contest, lockExpirationTime: DateTime, asOfDate: DateTime) {
+  private def processOrders(contest: Contest, asOfDate: DateTime) {
     // if trading was active during the as-of date
     OrderProcessor.processContest(contest, asOfDate) onComplete {
       case Success(updateCount) =>
@@ -239,27 +239,8 @@ class ContestActor extends Actor with ActorLogging {
           }
         }
 
-        // finally unlock the contest
-        unlock(contest, lockExpirationTime)
-
       case Failure(e) =>
         log.error(s"An error occur while processing contest '${contest.name}'", e)
-
-        // finally unlock the contest
-        unlock(contest, lockExpirationTime)
-    }
-  }
-
-  /**
-   * Unlocks the contest
-   * @param contest the given [[Contest contest]]
-   * @param lockExpirationTime the given lock expiration [[DateTime date]]
-   */
-  private def unlock(contest: Contest, lockExpirationTime: DateTime): Unit = {
-    TradingDAO.unlockContest(contest.id, lockExpirationTime) onComplete {
-      case Failure(e) =>
-        log.error(e, s"Failed while attempting to unlock Contest '${contest.name}'")
-      case Success(_) =>
     }
   }
 
@@ -293,7 +274,7 @@ object ContestActor {
 
   case class JoinContest(contestId: BSONObjectID, participant: Participant)
 
-  case class ProcessOrders(contest: Contest, lockExpirationTime: DateTime, asOfDate: DateTime)
+  case class ProcessOrders(contest: Contest, asOfDate: DateTime)
 
   case class QuitContest(contestId: BSONObjectID, playerId: BSONObjectID)
 
