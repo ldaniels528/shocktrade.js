@@ -33,6 +33,11 @@ body {
 	font-weight: bold
 }
 
+.header {
+	font-weight: bold;
+	color: #1090ff;
+}
+
 table {
 	border-collapse: collapse
 }
@@ -46,9 +51,19 @@ table td, table th
 	background-color: #aaeeff
 }
 
+.modal_colors {
+	background-color: #dddddd;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px
+}
+
 .selected {
 	font-weight: bold;
 	color: #1090ff;
+}
+
+.yellow {
+	background-color: #ffff00
 }
 
 .even {
@@ -78,9 +93,13 @@ td {
  * 							Global Text Definitions								 *
  *********************************************************************************/
 
-.error {
+span.error {
 	color: #ff0000;
 	font-weight: bold
+}
+
+ul.error {
+	list-style-image: url("/assets/images/status/redlight.gif");
 }
 
 .error_bar {	

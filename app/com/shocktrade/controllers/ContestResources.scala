@@ -368,7 +368,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
           "lastTrade" -> quote.lastTrade)
       }
 
-      // re-insert into the participant object
+    // re-insert into the participant object
     } yield Json.toJson(player).asInstanceOf[JsObject] ++ JS("orders" -> JsArray(enrichedOrders))
   }
 
@@ -399,7 +399,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
           "gainLossPct" -> gainLossPct)
       }
 
-      // re-insert into the participant object
+    // re-insert into the participant object
     } yield Json.toJson(player).asInstanceOf[JsObject] ++ JS("positions" -> JsArray(enrichedPositions))
   }
 
@@ -500,7 +500,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
                        limitPrice: BigDecimal,
                        orderType: OrderType,
                        priceType: PriceType,
-                       //orderTerm: OrderTermType,
+                       //orderTerm: OrderTerm,
                        quantity: Int,
                        volumeAtOrderTime: Long,
                        emailNotify: Boolean)
@@ -511,7 +511,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       (__ \ "limitPrice").read[BigDecimal] and
       (__ \ "orderType").read[OrderType] and
       (__ \ "priceType").read[PriceType] and
-      (__ \ "quantity").read[String].map(_.toInt) and
+      (__ \ "quantity").read[Int] and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
 

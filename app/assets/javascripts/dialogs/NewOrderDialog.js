@@ -48,8 +48,10 @@
      * New Order Dialog Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewOrderDialogCtrl', ['$scope', '$log', '$modalInstance', 'params', 'ContestService', 'MySession', 'NewOrderDialog', 'QuoteService',
-        function ($scope, $log, $modalInstance, params, ContestService, MySession, NewOrderDialog, QuoteService) {
+    app.controller('NewOrderDialogCtrl', ['$scope', '$log', '$modalInstance', 'toaster', 'params', 'ContestService', 'MySession', 'NewOrderDialog', 'QuoteService',
+        function ($scope, $log, $modalInstance, toaster, params, ContestService, MySession, NewOrderDialog, QuoteService) {
+            $scope.loading = false;
+            $scope.processing = false;
             $scope.form = {
                 emailNotify: true,
                 symbol: (params.symbol || "AAPL"),
@@ -108,6 +110,9 @@
             $scope.validate = function (form) {
                 $scope.messages = [];
 
+                // quantity must be numeric
+                if(form.quantity && angular.isString(form.quantity)) form.quantity = parseInt(form.quantity);
+
                 // perform the validations
                 if (!form.orderType) $scope.messages.push("No Order Type (BUY or SELL) specified");
                 if (!form.priceType) $scope.messages.push("No Pricing Method specified");
@@ -118,16 +123,18 @@
 
             $scope.ok = function () {
                 if ($scope.validate($scope.form)) {
+                    $scope.processing = true;
                     var contestId = MySession.getContestID();
                     var playerId = MySession.getUserID();
                     $log.info("contestId = " + contestId + ", playerId = " + playerId + ", form = " + angular.toJson($scope.form));
 
                     ContestService.createOrder(contestId, playerId, $scope.form).then(
                         function (contest) {
+                            $scope.processing = false;
                             $modalInstance.close(contest);
                         },
                         function (err) {
-                            $scope.messages = [];
+                            $scope.processing = false;
                             $scope.messages.push("The order could not be processed (error code " + err.status + ")");
                         });
                 }
