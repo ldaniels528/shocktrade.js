@@ -52,7 +52,7 @@ libraryDependencies ++= Seq(
 libraryDependencies ++= Seq(
 //	"org.webjars" % "amcharts" % "3.13.1",
 	"org.webjars" % "angularjs" % "1.3.15",
-  "org.webjars.bower" % "angular-animate" % "1.3.15",
+//  "org.webjars.bower" % "angular-animate" % "1.3.15",
   "org.webjars" % "angularjs-toaster" % "0.4.7",
 //	"org.webjars" % "angular-file-upload" % "1.6.12",
 //	"org.webjars" % "angular-translate" % "2.3.0",

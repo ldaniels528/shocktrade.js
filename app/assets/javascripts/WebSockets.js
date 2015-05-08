@@ -5,7 +5,7 @@
      * Web Socket Singleton Service
      * @author Lawrence Daniels <lawrence.daniels@gmail.com>
      */
-    app.factory('WebSockets', function ($rootScope, $location, $log, $timeout) {
+    app.factory('WebSockets', function ($rootScope, $location, $log, $timeout, toaster) {
         var service = {};
 
         // establish the web socket connection
@@ -71,16 +71,15 @@
             var endpoint = "ws://" + $location.host() + ":" + $location.port() + "/websocket";
             $log.info("Connecting to websocket endpoint '" + endpoint + "'...");
             socket = new WebSocket(endpoint);
-            //$log.info("socket = " + angular.toJson(socket));
 
             socket.onopen = function (event) {
-                $log.debug("onOpen: event = " + angular.toJson(event));
                 connected = true;
+                toaster.pop('info', 'Online Status', 'You are connected to ShockTrade');
             };
 
             socket.onclose = function (event) {
-                $log.error("onClose: event = " + angular.toJson(event));
                 connected = false;
+                toaster.pop('warning', 'Online Status', 'Lost connection to server');
 
                 $timeout(function () {
                     connect();

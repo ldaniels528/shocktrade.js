@@ -4,8 +4,8 @@
     /**
      * Search Controller
      */
-    app.controller('ResearchController', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'ConditionDialog', 'Errors', 'HeldSecurities', 'MySession', 'QuoteService',
-        function ($scope, $cookieStore, $http, $log, $timeout, ConditionDialog, Errors, HeldSecurities, MySession, QuoteService) {
+    app.controller('ResearchController', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'toaster', 'ConditionDialog', 'HeldSecurities', 'MySession', 'QuoteService',
+        function ($scope, $cookieStore, $http, $log, $timeout, toaster, ConditionDialog, HeldSecurities, MySession, QuoteService) {
             $scope.message = "";
 
             // search reference data components
@@ -82,7 +82,7 @@
                         }, 750)
                     },
                     function (err) {
-                        Errors.addMessage("Error loading filter " + filter.name);
+                        toaster.pop('error', 'Error!', "Error loading filter " + filter.name);
                         $timeout(function () {
                             filter.loading = false
                         }, 750)
@@ -105,7 +105,7 @@
                     },
                     function (data, status, headers, config) {
                         $log.error("Filter Match - json => " + angular.toJson(filter));
-                        Errors.addMessage("Failed to execute filter search");
+                        toaster.pop('error', 'Error!', "Failed to execute filter search");
                         $scope.loading = false
                     })
             };

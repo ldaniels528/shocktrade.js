@@ -5,7 +5,7 @@
      * Contest Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('ContestService', function ($http, $log, $q, Errors, QuoteService) {
+    app.factory('ContestService', function ($http, $log, $q, toaster, QuoteService) {
         var service = {};
 
         ///////////////////////////////////////////////////////////////

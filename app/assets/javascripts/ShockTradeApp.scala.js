@@ -35,7 +35,6 @@
      * Initialize the application
      */
     app.run(function ($rootScope,
-                      Errors,
                       Facebook,
                       FavoriteSymbols,
                       HeldSecurities,
@@ -45,7 +44,6 @@
                       QuoteService,
                       RecentSymbols,
                       WebSockets) {
-        $rootScope.Errors = Errors;
         $rootScope.Facebook = Facebook;
         $rootScope.FavoriteSymbols = FavoriteSymbols;
         $rootScope.HeldSecurities = HeldSecurities;

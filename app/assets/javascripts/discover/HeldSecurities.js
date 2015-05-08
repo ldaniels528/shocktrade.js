@@ -5,7 +5,7 @@
      * Held Securities Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('HeldSecurities', function ($rootScope, $http, $log, $q, $timeout, Errors, MySession, ContestService, FavoriteSymbols) {
+    app.factory('HeldSecurities', function ($rootScope, $http, $log, $q, $timeout, toaster, MySession, ContestService, FavoriteSymbols) {
 
         var service = {
             symbols: [],
@@ -97,7 +97,7 @@
                     }
                 },
                 function (response) {
-                    Errors.addMessage("Failed to retrieve held securities");
+                    toaster.pop('error', 'Error!', "Failed to retrieve held securities");
                     console.error(JSON.stringify(response.status, null, '\t'));
                 });
         };

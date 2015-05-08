@@ -5,8 +5,8 @@
      * Play Lounge/Chat Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('ChatController', ['$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors',
-        function ($scope, $location, $log, $timeout, MySession, ContestService, Errors) {
+    app.controller('ChatController', ['$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService',
+        function ($scope, $location, $log, $timeout, toaster, MySession, ContestService) {
 
             $scope.chatMessage = "";
             $scope.errors = [];
@@ -42,7 +42,7 @@
                             $scope.chatMessage = "";
                         },
                         function (response) {
-                            Errors.addMessage("Failed to send message (" + response.message + ")");
+                            toaster.pop('error', 'Error!', "Failed to send message (" + response.message + ")");
                         });
             };
 

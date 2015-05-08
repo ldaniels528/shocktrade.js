@@ -56,17 +56,9 @@
 			You are currently in spectator mode. Please <a class="links" href="" ng-click="login($event)">sign-in</a>
 			(via <span class="fb">FaceBook</span>) to access all features (sample profile shown).
 		</div>
-		
-		<!-- errors -->
-		<div ng-if="Errors.hasErrors()" class="error_bar">
-			<div ng-repeat="msg in Errors.getMessages()">
-				<img src="/assets/images/status/redlight.png"> {{ msg }}
-			</div>
-		</div>
 
         <!-- main view -->
 		<div ng-controller="GameController">
-			<!-- application module -->
 			<div ng-view ng-cloak></div>
 			<div style="display: none" id="fb-root"></div>
 		</div>
@@ -89,7 +81,6 @@
 	
 	<!-- Controllers and Services -->
     <script src='@routes.Assets.at("javascripts/Facebook.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/Errors.js")' type="text/javascript"></script>
     <script src='@routes.Assets.at("javascripts/MainController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.at("javascripts/MySession.js")' type="text/javascript"></script>
     <script src='@routes.Assets.at("javascripts/WebSockets.js")' type="text/javascript"></script>

@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$interval', '$location', '$log', '$timeout', 'Errors', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
-        function ($scope, $interval, $location, $log, $timeout, Errors, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+        function ($scope, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
 
@@ -103,7 +103,7 @@
                         MySession.fbAuthenticated = true;
                     },
                     function (err) {
-                        Errors.addMessage("Facebook login error - " + err.data);
+                        toaster.pop('error', 'Error!', "Facebook login error - " + err.data);
                     });
 
                 // load the user's ShockTrade profile
@@ -122,7 +122,7 @@
                         }
                     },
                     function (err) {
-                        Errors.addMessage("ShockTrade Profile retrieval error - " + err.data);
+                        toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
                         signUpPopup(fbUserID, profile, userInitiated);
                     }
                 );
@@ -139,7 +139,7 @@
                         });
                     },
                     function (err) {
-                        Errors.addMessage("Failed to retrieve Facebook friends - " + err.data);
+                        toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends - " + err.data);
                     });
             }
 
@@ -151,7 +151,7 @@
                             MySession.authenticated = true;
                         },
                         function (err) {
-                            Errors.addMessage("ShockTrade Profile retrieval error - " + err.data);
+                            toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
                         });
                 }
             }

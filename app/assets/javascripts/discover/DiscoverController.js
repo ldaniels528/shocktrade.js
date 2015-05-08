@@ -5,8 +5,8 @@
      * Discover Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DiscoverController', ['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'Errors', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
-        function ($scope, $cookieStore, $log, $routeParams, $timeout, Errors, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
+    app.controller('DiscoverController', ['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
+        function ($scope, $cookieStore, $log, $routeParams, $timeout, toaster, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
 
             // setup a private loading variable
             $scope.loading = false;
@@ -259,7 +259,7 @@
                                     quote.riskLevel = response.data;
                                 },
                                 function (response) {
-                                    Errors.addMessage("Error retrieving risk level for " + symbol);
+                                    toaster.pop('error', 'Error!', "Error retrieving risk level for " + symbol);
                                 });
 
                             // load the trading history
@@ -269,7 +269,7 @@
                             }
                         }
                         else {
-                            Errors.addMessage("No quote found for " + symbol);
+                            toaster.pop('error', 'Error!', "No quote found for " + symbol);
                             console.log("Empty quote? " + angular.toJson(quote));
                         }
 
@@ -279,7 +279,7 @@
                     function (response) {
                         $log.error("Failed to retrieve quote: " + response.status);
                         $scope.stopLoading();
-                        Errors.addMessage("Error loading quote " + symbol);
+                        toaster.pop('error', 'Error!', "Error loading quote " + symbol);
                     });
             }
 
@@ -290,7 +290,7 @@
                         if (callback) callback();
                     },
                     function (response) {
-                        Errors.addMessage("Error loading trading history for " + symbol);
+                        toaster.pop('error', 'Error!', "Error loading trading history for " + symbol);
                         if (callback) callback();
                     });
             };
@@ -304,7 +304,7 @@
                     },
                     function (err) {
                         $scope.loading = false;
-                        Errors.addMessage("Error loading filter " + filter.name);
+                        toaster.pop('error', 'Error!', "Error loading filter " + filter.name);
                     });
             };
 

@@ -4,8 +4,8 @@
     /**
      * Game Play Controller
      */
-    app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
-        function ($rootScope, $scope, $location, $log, $timeout, MySession, ContestService, Errors, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
+    app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
+        function ($rootScope, $scope, $location, $log, $timeout, toaster, MySession, ContestService, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
 
             // setup the current contest
             $scope.contest = null;
@@ -91,7 +91,7 @@
                         $scope.stopLoading();
                     },
                     function (err) {
-                        Errors.addMessage("Failed to execute Contest Search");
+                        toaster.pop('error', 'Error!', "Failed to execute Contest Search");
                         $scope.stopLoading();
                     });
             };
@@ -131,7 +131,7 @@
                         })
                         .error(function (xhr, status, error) {
                             $log.error("Error selecting feed: " + error.status);
-                            //toaster.pop('error', 'Error!', xhr.error);
+                            toaster.pop('error', 'Error!', xhr.error);
                         });
                 }
             };
@@ -175,7 +175,7 @@
                         }, 500);
                     })
                     .error(function (err) {
-                        Errors.addMessage("Failed to delete contest");
+                        toaster.pop('error', 'Error!', "Failed to delete contest");
                         $log.error("An error occurred while deleting the contest");
                         $timeout(function () {
                             contest.deleting = false;
@@ -197,11 +197,11 @@
                     }
                 }).success(function (contest) {
                     if(!contest) {
-                        Errors.addMessage("Failed to join game");
+                        toaster.pop('error', 'Error!', "Failed to join game");
                         $log.error("Returned contest was null")
                     }
                     else if (!contest.error) {
-                        Errors.addMessage(contest.error);
+                        toaster.pop('error', 'Error!', contest.error);
                         $log.error(contest.error);
                     }
                     else {
@@ -215,7 +215,7 @@
                     }, 500);
 
                 }).error(function (err) {
-                        Errors.addMessage("Failed to join contest");
+                        toaster.pop('error', 'Error!', "Failed to join contest");
                         $log.error("An error occurred while joining the contest");
                         $timeout(function () {
                             contest.joining = false;
@@ -237,7 +237,7 @@
                         }
                         else {
                             $log.error("error = " + updatedContest.error);
-                            Errors.addMessage("Unable to process your quit command at this time.")
+                            toaster.pop('error', 'Error!', "Unable to process your quit command at this time.")
                         }
 
                         $timeout(function () {
@@ -257,7 +257,7 @@
                 ContestService.startContest(contest.OID())
                     .success(function (contest) {
                         if (contest.error) {
-                            Errors.addMessage(contest.error);
+                            toaster.pop('error', 'Error!', contest.error);
                             $log.error(contest.error);
                         }
 
@@ -386,7 +386,7 @@
                         updateWithPricing(participant);
                     })
                     .error(function (err) {
-                        Errors.addMessage("Failed to cancel order");
+                        toaster.pop('error', 'Error!', "Failed to cancel order");
                     });
             };
 

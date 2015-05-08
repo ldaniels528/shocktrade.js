@@ -4,8 +4,8 @@
     /**
      * Portfolio Controller
      */
-    app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'MySession', 'ContestService', 'Errors', 'NewOrderDialog', 'QuoteService',
-        function ($scope, $log, $timeout, MySession, ContestService, Errors, NewOrderDialog, QuoteService) {
+    app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
+        function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
 
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
@@ -82,7 +82,7 @@
                         participant.orders = enrichedOrders;
                     })
                     .error(function (err) {
-                        Errors.addMessage("Error loading enriched orders");
+                        toaster.pop('error', 'Error!', "Error loading enriched orders");
                     });
 
                 // enrich the positions
@@ -93,7 +93,7 @@
                         participant.positions = enrichedPositions;
                     })
                     .error(function (err) {
-                        Errors.addMessage("Error loading enriched positions");
+                        toaster.pop('error', 'Error!', "Error loading enriched positions");
                     });
             }
 
