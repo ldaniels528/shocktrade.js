@@ -22,7 +22,7 @@ class WebSocketHandler(out: ActorRef) extends Actor with ActorLogging {
 
   override def receive = {
     case message: JsValue =>
-      log.info(s"Sending message $message")
+      //log.info(s"Sending message $message")
       out ! message
 
     case message =>

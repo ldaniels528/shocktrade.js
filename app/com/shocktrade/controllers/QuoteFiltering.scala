@@ -5,6 +5,7 @@ import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json._
+import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,6 +32,10 @@ trait QuoteFiltering {
     }
 
     filter.conditions.foldLeft[JsObject](JS("active" -> true)) { (res, c) => res ++ toJson(c) }
+  }
+
+  def createQueryBS(filter: Filter): BS = {
+    filter.conditions.foldLeft[BS](BS("active" -> true)) { (res, c) => res ++ c.asExpression }
   }
 
   def createQueryJs(filter: Filter, exchanges: Seq[String] = Nil): JsObject = {

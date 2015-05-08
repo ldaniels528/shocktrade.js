@@ -1,5 +1,6 @@
 package com.shocktrade.models.quote
 
+import reactivemongo.bson.{BSONDocument => BS}
 import akka.actor.Props
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
@@ -48,10 +49,10 @@ object StockQuotes {
     }
   }
 
-  def findQuotes(filter: Filter): Future[Seq[RealTimeQuote]] = {
+  def findQuotes(filter: Filter): Future[Seq[JsObject]] = {
     (mongoReader ? FindQuotes(filter)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Seq[RealTimeQuote]]
+      case e: Throwable => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Seq[JsObject]]
     }
   }
 

@@ -43,7 +43,8 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1, "tradeDate" -> 1, "spread" -> 1, "volume" -> 1)
 
   // preload the quotes
-  StockQuotes.init(searchFields)
+  // TODO reinstate this later ...
+  // StockQuotes.init(searchFields)
 
   /**
    * Auto-completes symbols and company names

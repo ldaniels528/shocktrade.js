@@ -27,7 +27,11 @@ case class Order(id: BSONObjectID = BSONObjectID.generate,
                  quantity: Int,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
-                 volumeAtOrderTime: Long)
+                 volumeAtOrderTime: Long) {
+
+  def cost: BigDecimal = price * quantity + commission
+
+}
 
 /**
  * Order Singleton

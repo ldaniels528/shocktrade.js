@@ -1,10 +1,11 @@
 package com.shocktrade.models.profile
 
+import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, _}
+import reactivemongo.bson.{BSONDocument => BS, _}
 
 import scala.util.{Failure, Success, Try}
 
@@ -15,7 +16,23 @@ import scala.util.{Failure, Success, Try}
 case class Condition(id: BSONObjectID = BSONObjectID.generate,
                      field: String,
                      operator: String,
-                     value: WrappedValue)
+                     value: WrappedValue) {
+
+  def asExpression: BS = {
+    operator match {
+      case "=" => BS(field -> value)
+      case "!=" => BS(field -> BS("$ne" -> value))
+      case "<" => BS(field -> BS("$lt" -> value))
+      case ">" => BS(field -> BS("$gt" -> value))
+      case "<=" => BS(field -> BS("$lte" -> value))
+      case ">=" => BS(field -> BS("$gte" -> value))
+      case _ =>
+        Logger.warn(s"Unhandled condition: [$field $operator $value]")
+        BS()
+    }
+  }
+
+}
 
 /**
  * Condition Singleton
@@ -36,7 +53,7 @@ object Condition {
       (__ \ "value").write[WrappedValue])(unlift(Condition.unapply))
 
   implicit object ConditionReader extends BSONDocumentReader[Condition] {
-    def read(doc: BSONDocument) = Try(Condition(
+    def read(doc: BS) = Try(Condition(
       doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("field").get,
       doc.getAs[String]("operator").get,
@@ -50,7 +67,7 @@ object Condition {
   }
 
   implicit object ConditionWriter extends BSONDocumentWriter[Condition] {
-    def write(condition: Condition) = BSONDocument(
+    def write(condition: Condition) = BS(
       "_id" -> condition.id,
       "field" -> condition.field,
       "operator" -> condition.operator,

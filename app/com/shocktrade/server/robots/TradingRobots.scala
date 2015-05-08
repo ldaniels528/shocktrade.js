@@ -12,7 +12,7 @@ import scala.concurrent.duration._
  */
 object TradingRobots {
   val system = Akka.system
-  val robots = Seq(("gadget", DayTradingStrategy), ("daisy", DayTradingStrategy)) map { case (name, strategy) =>
+  val robots = Seq(("gadget", DayTradingStrategy)/*, ("daisy", DayTradingStrategy)*/) map { case (name, strategy) =>
     system.actorOf(Props(new TradingRobot(name, strategy)), name)
   }
 

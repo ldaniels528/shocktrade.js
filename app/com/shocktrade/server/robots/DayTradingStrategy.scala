@@ -13,7 +13,8 @@ object DayTradingStrategy extends TradingStrategy {
       name = "Day-Trading Filter",
       dataSource = "Robot",
       conditions = List(
-        Condition(field = "lastTrade", operator = "<=", value = WrappedValue(1.0d))
+        Condition(field = "lastTrade", operator = "<=", value = WrappedValue(1.0d)),
+        Condition(field = "volume", operator = ">=", value = WrappedValue(500000))
       ))
   }
 }
