@@ -1,19 +1,17 @@
-package com.shocktrade.server
+package com.shocktrade.server.trading
 
 import java.util.Date
 
 import akka.actor.Props
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
-import com.shocktrade.controllers.Application._
-import com.shocktrade.server.TradingActor.ProcessOrders
+import com.shocktrade.server.trading.TradingActor.ProcessOrders
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
-import play.api.Play.current
+import org.slf4j.LoggerFactory
+import play.api.Logger
 import play.api.libs.iteratee.Iteratee
-import play.api.{Logger, Play}
 import play.libs.Akka
-import reactivemongo.api.collections.default.BSONCollection
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
@@ -23,22 +21,23 @@ import scala.util.{Failure, Success}
  * Order Qualification and Processing Engine
  * @author lawrence.daniels@gmail.com
  */
-object QualificationEngine {
+object OrderQualificationAndProcessingEngine {
   private lazy val system = Akka.system
+  private lazy val logger = LoggerFactory.getLogger(getClass)
   private lazy val tradingActor = system.actorOf(Props[TradingActor].withRouter(RoundRobinPool(nrOfInstances = 10)), name = "TradingActor")
-  private lazy val mc = db.collection[BSONCollection]("Contests")
+  private implicit val ec = system.dispatcher
   private implicit val timeout: Timeout = 30.second
   private var lastEffectiveDate: DateTime = computeInitialFulfillmentDate
   private val frequency = 1 // TODO should be 5 (in minutes)
 
-  import system.dispatcher
-
+  /**
+   * Starts the Order Qualification and Processing Engine
+   */
   def start() {
-    // TODO for now, only run it in DEV
-    if (Play.isDev) {
-      // process orders once every 5 minutes
-      system.scheduler.schedule(5.seconds, frequency.minutes, () => processOrders())
-    }
+    logger.info("Starting Order Qualification and Processing Engine ...")
+
+    // process orders once every 5 minutes
+    system.scheduler.schedule(5.seconds, frequency.minutes)(processOrders())
     ()
   }
 
@@ -72,7 +71,7 @@ object QualificationEngine {
   private def computeInitialFulfillmentDate: Date = {
     val tradeStart = getTradeStartTime
     val currentTime = new Date()
-    if(tradeStart >= currentTime) currentTime else tradeStart
+    if (tradeStart >= currentTime) currentTime else tradeStart
   }
 
   /**

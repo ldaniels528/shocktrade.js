@@ -1,4 +1,4 @@
-package com.shocktrade.server.robots
+package com.shocktrade.server.trading.robots
 
 import com.shocktrade.models.profile.Filter
 

@@ -1,11 +1,11 @@
-package com.shocktrade.server
+package com.shocktrade.server.trading
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.ContestUpdated
 import com.shocktrade.models.contest._
-import com.shocktrade.server.TradingActor._
+import com.shocktrade.server.trading.TradingActor.ProcessOrders
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
 

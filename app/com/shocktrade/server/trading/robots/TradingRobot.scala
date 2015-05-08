@@ -1,4 +1,4 @@
-package com.shocktrade.server.robots
+package com.shocktrade.server.trading.robots
 
 import java.util.Date
 
@@ -8,7 +8,7 @@ import com.ldaniels528.commons.helpers.StringHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
-import com.shocktrade.server.robots.TradingRobot.{Invest, _}
+import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
 import org.joda.time.DateTime
 
 import scala.concurrent.duration._

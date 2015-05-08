@@ -1,4 +1,4 @@
-package com.shocktrade.server
+package com.shocktrade.server.trading
 
 import java.net.InetAddress
 import java.util.Date

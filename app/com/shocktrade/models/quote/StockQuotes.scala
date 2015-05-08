@@ -1,6 +1,5 @@
 package com.shocktrade.models.quote
 
-import reactivemongo.bson.{BSONDocument => BS}
 import akka.actor.Props
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
@@ -13,10 +12,12 @@ import com.shocktrade.controllers.QuoteResources._
 import com.shocktrade.models.profile.Filter
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
+import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
+import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -151,6 +152,12 @@ object StockQuotes {
 
   def findQuotes(symbols: Seq[String])(fields: String*)(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
     mcQ.find(JS("symbol" -> JS("$in" -> symbols)), fields.toJsonFields).cursor[JsObject].collect[Seq]()
+  }
+
+  def getSymbolsForCsvUpdate(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
+    mcQ.find(JS("active" -> true, "yfDynLastUpdated" -> JS("$lte" -> new DateTime().minusHours(1).toDate)), JS(" symbol" -> 1))
+      .cursor[JsObject]
+      .collect[Seq]()
   }
 
 }
