@@ -98,6 +98,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       price <- stock.price
       quantity <- stock.quantity
       volume <- stock.volume
+      priceType = PriceType.LIMIT
     } yield {
       Order(symbol = stock.symbol,
         exchange = exchange,
@@ -105,9 +106,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
         expirationTime = Some(new DateTime().plusDays(3).toDate),
         orderType = OrderType.BUY,
         price = price,
-        priceType = PriceType.LIMIT,
+        priceType = priceType,
         quantity = quantity,
-        commission = Commissions.forLimit,
+        commission = Commissions.getCommission(priceType),
         volumeAtOrderTime = volume)
     }
   }

@@ -17,6 +17,7 @@ import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
+import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.duration._
@@ -33,6 +34,7 @@ object StockQuotes {
   private val quoteActor = system.actorOf(Props[RealTimeQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "QuoteRealTime")
   private val mongoReader = system.actorOf(Props[DBaseQuoteActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "QuoteReader")
   private val mongoWriter = system.actorOf(Props[DBaseQuoteActor], name = "QuoteWriter")
+  private lazy val mcQBS = db.collection[BSONCollection]("Stocks")
   implicit val timeout: Timeout = 45.seconds
 
   import system.dispatcher
@@ -154,10 +156,14 @@ object StockQuotes {
     mcQ.find(JS("symbol" -> JS("$in" -> symbols)), fields.toJsonFields).cursor[JsObject].collect[Seq]()
   }
 
-  def getSymbolsForCsvUpdate(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
-    mcQ.find(JS("active" -> true, "yfDynLastUpdated" -> JS("$lte" -> new DateTime().minusHours(1).toDate)), JS(" symbol" -> 1))
-      .cursor[JsObject]
+  def getSymbolsForCsvUpdate(implicit ec: ExecutionContext): Future[Seq[BS]] = {
+    mcQBS.find(BS("active" -> true, "yfDynLastUpdated" -> BS("$lte" -> new DateTime().minusMinutes(15))), BS("symbol" -> 1))
+      .cursor[BS]
       .collect[Seq]()
+  }
+
+  def updateQuote(symbol: String, doc: BS): Unit = {
+    mcQBS.update(BS("symbol" -> symbol), BS("$set" -> doc))
   }
 
 }
