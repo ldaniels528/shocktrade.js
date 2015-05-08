@@ -1,9 +1,9 @@
 package com.shocktrade.plugins
 
 import com.shocktrade.server.loaders.StockQuoteUpdateProcess
-import com.shocktrade.server.trading.OrderQualificationAndProcessingEngine
+import com.shocktrade.server.trading.Contests
 import com.shocktrade.server.trading.robots.TradingRobots
-import play.api.{Logger, Application, Play, Plugin}
+import play.api.{Application, Logger, Play, Plugin}
 
 /**
  * Trading Engine Plugin
@@ -23,7 +23,7 @@ class TradingEnginePlugin(app: Application) extends Plugin {
       StockQuoteUpdateProcess.start()
 
       // start the trading engine
-      OrderQualificationAndProcessingEngine.start()
+      Contests.start()
 
       // start the trading robots
       TradingRobots.start()

@@ -8,7 +8,7 @@ import com.shocktrade.models.contest.{Contest, OrderType, PriceType}
 import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService
 import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService.{GfGetPricesRequest, GfPriceQuote}
 import com.shocktrade.services.util.DateUtil._
-import com.shocktrade.util.ConcurrentCache
+import com.shocktrade.util.{DateUtil, ConcurrentCache}
 import org.joda.time.DateTime
 import play.api.Logger
 import reactivemongo.bson.BSONObjectID
@@ -18,15 +18,15 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 /**
- * Trading Processor
+ * Trading Order Processor
  * @author lawrence.daniels@gmail.com
  */
-object TradingProcessor {
+object OrderProcessor {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
   private val quoteCache = ConcurrentCache[String, Seq[GfPriceQuote]](2.hours)
 
-  def isTradingActive(asOfDate: Date) = true // TODO remove after testing
+  def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
 
   /**
    * Processes the given contest

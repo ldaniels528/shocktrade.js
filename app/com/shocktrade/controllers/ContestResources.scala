@@ -10,6 +10,7 @@ import com.shocktrade.models.contest.OrderType.OrderType
 import com.shocktrade.models.contest.PriceType.PriceType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.StockQuotes
+import com.shocktrade.server.trading.Contests
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api._

@@ -8,6 +8,7 @@ import com.ldaniels528.commons.helpers.StringHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.models.contest._
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
+import com.shocktrade.server.trading.Contests
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
 import org.joda.time.DateTime
 
