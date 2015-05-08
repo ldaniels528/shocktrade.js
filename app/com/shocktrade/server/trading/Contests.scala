@@ -82,8 +82,8 @@ object Contests {
     }
   }
 
-  def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(fields: String*)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? CreateOrder(contestId, playerId, order, fields)) map {
+  def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? CreateOrder(contestId, playerId, order)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]
     }
@@ -143,7 +143,7 @@ object Contests {
       val currentTime = new Date()
 
       Logger.info(s"Processing order fulfillment [as of $lastEffectiveDate]...")
-      TradingDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(frequency)).enumerate().apply(Iteratee.foreach { contest =>
+      ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(frequency)).enumerate().apply(Iteratee.foreach { contest =>
         contestActor(contest.id) ! ProcessOrders(contest, lastEffectiveDate)
       })
 

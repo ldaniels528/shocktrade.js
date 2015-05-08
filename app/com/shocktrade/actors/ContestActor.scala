@@ -3,50 +3,28 @@ package com.shocktrade.actors
 import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
-import akka.util.Timeout
-import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.ContestActor._
 import com.shocktrade.actors.WebSockets.{ContestCreated, ContestDeleted, ContestUpdated}
-import com.shocktrade.controllers.Application.db
 import com.shocktrade.models.contest.{Contest, _}
-import com.shocktrade.server.trading.OrderProcessor
-import com.shocktrade.util.BSONHelper._
+import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS, BSONObjectID}
-import reactivemongo.core.commands.{FindAndModify, Update}
+import reactivemongo.bson.BSONObjectID
 
-import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * Contest I/O Actor
  * @author lawrence.daniels@gmail.com
  */
 class ContestActor extends Actor with ActorLogging {
-  private implicit val mc = db.collection[BSONCollection]("Contests")
-  private implicit val timeout: Timeout = 30.second
-  private val SortFields = Seq("status", "name")
 
   import context.dispatcher
 
   override def receive = {
     case CloseOrder(contestId, playerId, orderId, fields) =>
       val mySender = sender()
-      (for {
-        order <- findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
-        contest_? <- db.command(FindAndModify(
-          collection = "Contests",
-          query = BS("_id" -> contestId, "participants._id" -> playerId),
-          modify = new Update(BS(
-            "$pull" -> BS("participants.$.orders" -> BS("_id" -> orderId)),
-            "$addToSet" -> BS("participants.$.orderHistory" -> order)),
-            fetchNewObject = true),
-          fields = Some(fields.toBsonFields),
-          upsert = false))
-      } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
@@ -55,7 +33,7 @@ class ContestActor extends Actor with ActorLogging {
 
     case CreateContest(contest) =>
       val mySender = sender()
-      mc.insert(contest) onComplete {
+      ContestDAO.createContest(contest) onComplete {
         case Success(lastError) =>
           WebSockets ! ContestCreated(contest)
           mySender ! lastError
@@ -64,26 +42,16 @@ class ContestActor extends Actor with ActorLogging {
 
     case CreateMessage(contestId, message, fields) =>
       val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId),
-        modify = new Update(BS("$addToSet" -> BS("messages" -> message)), fetchNewObject = true),
-        fields = Some(fields.toBsonFields), upsert = false))
-        .map(_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.createMessage(contestId, message) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
         case Failure(e) => mySender ! e
       }
 
-    case CreateOrder(contestId, playerId, order, fields) =>
+    case CreateOrder(contestId, playerId, order) =>
       val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId, "participants._id" -> playerId),
-        modify = new Update(BS("$addToSet" -> BS("participants.$.orders" -> order)), fetchNewObject = true),
-        fields = Some(fields.toBsonFields),
-        upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.createOrder(contestId, playerId, order) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
@@ -92,7 +60,7 @@ class ContestActor extends Actor with ActorLogging {
 
     case DeleteContestByID(contestId) =>
       val mySender = sender()
-      mc.remove(query = BS("_id" -> contestId), firstMatchOnly = true) onComplete {
+      ContestDAO.deleteContestByID(contestId) onComplete {
         case Success(lastError) =>
           mySender ! lastError
           WebSockets ! ContestDeleted(contestId)
@@ -101,56 +69,42 @@ class ContestActor extends Actor with ActorLogging {
 
     case FindContestByID(id, fields) =>
       val mySender = sender()
-      findContestByID(id, fields) onComplete {
+      ContestDAO.findContestByID(id, fields) onComplete {
         case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
 
     case FindContests(searchOptions, fields) =>
       val mySender = sender()
-      mc.find(createQuery(searchOptions), fields.toBsonFields).sort(SortFields.toBsonFields)
-        .cursor[Contest]
-        .collect[Seq]() onComplete {
+      ContestDAO.findContests(searchOptions, fields) onComplete {
         case Success(contests) => mySender ! contests
         case Failure(e) => mySender ! e
       }
 
     case FindContestsByPlayerID(playerId, fields) =>
       val mySender = sender()
-      mc.find(BS("participants._id" -> playerId, "status" -> ContestStatus.ACTIVE), fields.toBsonFields).sort(SortFields.toBsonFields)
-        .cursor[Contest]
-        .collect[Seq]() onComplete {
+      ContestDAO.findContestsByPlayerID(playerId) onComplete {
         case Success(contests) => mySender ! contests
         case Failure(e) => mySender ! e
       }
 
     case FindContestsByPlayerName(playerName, fields) =>
       val mySender = sender()
-      mc.find(BS("participants.name" -> playerName, "status" -> ContestStatus.ACTIVE), fields.toBsonFields).sort(SortFields.toBsonFields)
-        .cursor[Contest]
-        .collect[Seq]() onComplete {
+      ContestDAO.findContestsByPlayerName(playerName) onComplete {
         case Success(contests) => mySender ! contests
         case Failure(e) => mySender ! e
       }
 
     case FindOrderByID(contestId, orderId, fields) =>
       val mySender = sender()
-      mc.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))), fields.toBsonFields)
-        .cursor[Contest]
-        .collect[Seq](1) onComplete {
+      ContestDAO.findOrderByID(contestId, orderId) onComplete {
         case Success(contests) => mySender ! contests.headOption
         case Failure(e) => mySender ! e
       }
 
     case JoinContest(contestId, participant) =>
       val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers) /*, "invitationOnly" -> false*/),
-        modify = new Update(
-          BS("$inc" -> BS("playerCount" -> 1),
-            "$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
-        upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.joinContest(contestId, participant) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
@@ -162,13 +116,7 @@ class ContestActor extends Actor with ActorLogging {
 
     case QuitContest(contestId, playerId) =>
       val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId),
-        modify = new Update(
-          BS("$inc" -> BS("playerCount" -> -1),
-            "$pull" -> BS("participants" -> BS("_id" -> playerId))), fetchNewObject = true),
-        upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.quitContest(contestId, playerId) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
@@ -177,48 +125,12 @@ class ContestActor extends Actor with ActorLogging {
 
     case StartContest(contestId, startTime) =>
       val mySender = sender()
-      db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
-        modify = new Update(BS("$set" -> BS("startTime" -> startTime)), fetchNewObject = true),
-        fields = None,
-        upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) onComplete {
+      ContestDAO.startContest(contestId, startTime) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! ContestUpdated(_))
         case Failure(e) => mySender ! e
       }
-  }
-
-  private def createQuery(so: SearchOptions) = {
-    var q = BS()
-    so.activeOnly.foreach { isSet =>
-      if (isSet) q = q ++ BS("status" -> ContestStatus.ACTIVE)
-    }
-    so.available.foreach { isSet =>
-      if (isSet) q = q ++ BS("playerCount" -> BS("$lt" -> Contest.MaxPlayers))
-    }
-    so.levelCap.foreach { lc =>
-      val levelCap = Try(lc.toInt).toOption.getOrElse(0)
-      q = q ++ BS("levelCap" -> BS("$gte" -> levelCap))
-    }
-    so.perksAllowed.foreach { isSet =>
-      if (isSet) q = q ++ BS("perksAllowed" -> true)
-    }
-    so.robotsAllowed.foreach { isSet =>
-      if (isSet) q = q ++ BS("robotsAllowed" -> true)
-    }
-    q
-  }
-
-  private def findContestByID(contestId: BSONObjectID, fields: Seq[String])(implicit mc: BSONCollection, ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].collect[Seq](1).map(_.headOption)
-  }
-
-  private def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit mc: BSONCollection, ec: ExecutionContext): Future[Option[Order]] = {
-    findContestByID(contestId, Seq("participants.name", "participants.orders")) map (_ flatMap { contest =>
-      contest.participants.flatMap(_.orders.find(_.id == orderId)).headOption
-    })
   }
 
   /**
@@ -232,7 +144,7 @@ class ContestActor extends Actor with ActorLogging {
       case Success(updateCount) =>
         // if an update occurred, notify the users
         if (updateCount > 0) {
-          findContestByID(contest.id, fields = Nil) foreach {
+          ContestDAO.findContestByID(contest.id, fields = Nil) foreach {
             _ foreach { updatedContest =>
               WebSockets ! ContestUpdated(updatedContest)
             }
@@ -258,7 +170,7 @@ object ContestActor {
 
   case class CreateMessage(contestId: BSONObjectID, message: Message, fields: Seq[String])
 
-  case class CreateOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order, fields: Seq[String])
+  case class CreateOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)
 
   case class DeleteContestByID(contestId: BSONObjectID)
 

@@ -172,7 +172,7 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[OrderForm])) match {
       case Success(Some(form)) =>
-        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(form))("participants.name", "participants.orders", "participants.orderHistory") map {
+        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(form)) map {
           case Some(contest) => Ok(Json.toJson(contest))
           case None => Ok(createError(s"Contest $contestId not found"))
         } recover {

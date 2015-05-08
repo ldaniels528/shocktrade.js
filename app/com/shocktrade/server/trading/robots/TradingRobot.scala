@@ -78,7 +78,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
                 stocks.take(numOfSecuritiesToBuy) foreach { stock =>
                   createOrder(stock) foreach { order =>
                     log.info(s"$name: Creating order ${order.orderType} ${order.symbol} @ ${order.price} x ${order.quantity} ${order.priceType}")
-                    Contests.createOrder(contest.id, participant.id, order)()
+                    Contests.createOrder(contest.id, participant.id, order)
                   }
                 }
               }

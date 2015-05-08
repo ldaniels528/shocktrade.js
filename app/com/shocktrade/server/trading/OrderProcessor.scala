@@ -64,7 +64,7 @@ object OrderProcessor {
       claimOutcomes <- results
 
       // close any expired orders
-      closeOrders <- TradingDAO.closeExpiredOrders(c, asOfDate)
+      closeOrders <- ContestDAO.closeExpiredOrders(c, asOfDate)
 
       // compute the updated count
       updatedCount = (claimOutcomes map { case (_, oc) => oc } sum) + closeOrders
@@ -87,7 +87,7 @@ object OrderProcessor {
     info(c, s"Processing Orders as of ${new DateTime(asOfDate).toString("MM/dd/yyyy hh:mm:ss")} [Market ${daysCloseLabels(isDaysClose)}]")
 
     // if it's day's close, grab all orders; otherwise, all non-Market Close orders
-    val openOrders = TradingDAO.getOpenWorkOrders(c, asOfDate)
+    val openOrders = ContestDAO.getOpenWorkOrders(c, asOfDate)
     val orders = if (isDaysClose) openOrders else openOrders.filterNot(_.priceType == PriceType.MARKET_ON_CLOSE)
 
     info(c, s"${orders.size} eligible order(s) found")
@@ -124,10 +124,10 @@ object OrderProcessor {
         outcome <- claim.workOrder.orderType match {
           case OrderType.BUY =>
             info(c, s"[${claim.workOrder.playerId.stringify}] Increasing position of ${claim.symbol} x ${claim.quantity}")
-            TradingDAO.increasePosition(c, claim, asOfDate)
+            ContestDAO.increasePosition(c, claim, asOfDate)
           case OrderType.SELL =>
             info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
-            TradingDAO.reducePosition(c, claim, asOfDate)
+            ContestDAO.reducePosition(c, claim, asOfDate)
           case orderType =>
             error(c, s"[${claim.workOrder.playerId.stringify}] position of ${claim.symbol} x ${claim.quantity} - Unrecognized order type $orderType")
             throw new IllegalStateException(s"Unrecognized order type $orderType")

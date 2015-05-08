@@ -1,27 +1,149 @@
 package com.shocktrade.server.trading
 
-import java.net.InetAddress
 import java.util.Date
 
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.Application._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
-import org.joda.time.DateTime
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}
-import reactivemongo.core.commands.{FindAndModify, Update}
+import reactivemongo.core.commands.{FindAndModify, LastError, Update}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.Try
 
 /**
- * Trading Data Access Object
+ * Contest Data Access Object
  * @author lawrence.daniels@gmail.com
  */
-object TradingDAO {
+object ContestDAO {
   private lazy val mc = db.collection[BSONCollection]("Contests")
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //        Contests
+  /////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new contest
+   * @param c the given [[Contest]]
+   * @param ec the implicit [[ExecutionContext execution context]]
+   * @return a promise of the [[LastError outcome]]
+   */
+  def createContest(c: Contest)(implicit ec: ExecutionContext): Future[LastError] = mc.insert(c)
+
+  /**
+   * Deletes a contest by ID
+   * @param contestId the given contest ID
+   * @param ec the implicit [[ExecutionContext execution context]]
+   * @return a promise of the [[LastError outcome]]
+   */
+  def deleteContestByID(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[LastError] = {
+    mc.remove(query = BS("_id" -> contestId), firstMatchOnly = true)
+  }
+
+  /**
+   * Queries all active contests that haven't been update in 5 minutes
+   * <pre>
+   * db.Contests.count({"status": "ACTIVE",
+   * "$or" : [ { processedTime : { "$lte" : new Date() } }, { processedTime : { "$exists" : false } } ],
+   * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
+   * </pre>
+   * @param lastProcessedTime the last time an update was performed
+   * @return a [[reactivemongo.api.Cursor]] of [[Contest]] instances
+   */
+  def getActiveContests(asOfDate: Date, lastProcessedTime: Date)(implicit ec: ExecutionContext) = {
+    mc.find(BS(
+      "status" -> ContestStatus.ACTIVE,
+      "startTime" -> BS("$lte" -> asOfDate),
+      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))),
+      "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
+    )).cursor[Contest]
+  }
+
+  def findContestByID(contestId: BSONObjectID, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].headOption
+  }
+
+  def findContests(searchOptions: SearchOptions, fields: Seq[String])(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
+    mc.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest].collect[Seq]()
+  }
+
+  def findContestsByPlayerName(playerName: String)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
+    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatus.ACTIVE)).cursor[Contest].collect[Seq]()
+  }
+
+  def findContestsByPlayerID(playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
+    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatus.ACTIVE)).cursor[Contest].collect[Seq]()
+  }
+
+  def joinContest(contestId: BSONObjectID, participant: Participant)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers) /*, "invitationOnly" -> false*/),
+      modify = new Update(
+        BS("$inc" -> BS("playerCount" -> 1),
+          "$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  def quitContest(contestId: BSONObjectID, playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId),
+      modify = new Update(
+        BS("$inc" -> BS("playerCount" -> -1),
+          "$pull" -> BS("participants" -> BS("_id" -> playerId))), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  def startContest(contestId: BSONObjectID, startTime: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
+      modify = new Update(BS("$set" -> BS("startTime" -> startTime)), fetchNewObject = true),
+      fields = None,
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  private def createQuery(so: SearchOptions) = {
+    var q = BS()
+    so.activeOnly.foreach { isSet =>
+      if (isSet) q = q ++ BS("status" -> ContestStatus.ACTIVE)
+    }
+    so.available.foreach { isSet =>
+      if (isSet) q = q ++ BS("playerCount" -> BS("$lt" -> Contest.MaxPlayers))
+    }
+    so.levelCap.foreach { lc =>
+      val levelCap = Try(lc.toInt).toOption.getOrElse(0)
+      q = q ++ BS("levelCap" -> BS("$gte" -> levelCap))
+    }
+    so.perksAllowed.foreach { isSet =>
+      if (isSet) q = q ++ BS("perksAllowed" -> true)
+    }
+    so.robotsAllowed.foreach { isSet =>
+      if (isSet) q = q ++ BS("robotsAllowed" -> true)
+    }
+    q
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //        Messages
+  /////////////////////////////////////////////////////////////////////////////////
+
+  def createMessage(contestId: BSONObjectID, message: Message)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId),
+      modify = new Update(BS("$addToSet" -> BS("messages" -> message)), fetchNewObject = true), upsert = false))
+      .map(_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //        Orders
+  /////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Closes all expired orders; resulting in closed orders in order history
@@ -51,23 +173,26 @@ object TradingDAO {
     }) map (_.sum)
   }
 
-  /**
-   * Queries all active contests that haven't been update in 5 minutes
-   * <pre>
-   * db.Contests.count({"status": "ACTIVE",
-   * "$or" : [ { processedTime : { "$lte" : new Date() } }, { processedTime : { "$exists" : false } } ],
-   * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
-   * </pre>
-   * @param lastProcessedTime the last time an update was performed
-   * @return a [[reactivemongo.api.Cursor]] of [[Contest]] instances
-   */
-  def getActiveContests(asOfDate: Date, lastProcessedTime: Date)(implicit ec: ExecutionContext) = {
-    mc.find(BS(
-      "status" -> ContestStatus.ACTIVE,
-      "startTime" -> BS("$lte" -> asOfDate),
-      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))),
-      "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
-    )).cursor[Contest]
+  def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    (for {
+      order <- ContestDAO.findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
+      contest_? <- db.command(FindAndModify(
+        collection = "Contests",
+        query = BS("_id" -> contestId, "participants._id" -> playerId),
+        modify = new Update(BS(
+          "$pull" -> BS("participants.$.orders" -> BS("_id" -> orderId)),
+          "$addToSet" -> BS("participants.$.orderHistory" -> order)),
+          fetchNewObject = true),
+        upsert = false))
+    } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId, "participants._id" -> playerId),
+      modify = new Update(BS("$addToSet" -> BS("participants.$.orders" -> order)), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
   /**
@@ -94,6 +219,29 @@ object TradingDAO {
         "$addToSet" -> BS("participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, message))),
       upsert = false, multi = false) map (_.n)
   }
+
+  def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Order]] = {
+    mc.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))))
+      .cursor[Contest].headOption map (_ flatMap (_.participants.flatMap(_.orders.find(_.id == orderId)).headOption))
+  }
+
+  def getExpiredWorkOrders(c: Contest, asOfDate: Date): Seq[WorkOrder] = {
+    for {
+      p <- c.participants
+      o <- p.orders filter (_.expirationTime.exists(_ < asOfDate))
+    } yield toWorkOrder(p, o)
+  }
+
+  def getOpenWorkOrders(c: Contest, asOfDate: Date): Seq[WorkOrder] = {
+    for {
+      p <- c.participants
+      o <- p.orders filter (o => o.expirationTime.isEmpty || o.expirationTime.exists(_ >= asOfDate))
+    } yield toWorkOrder(p, o)
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
+  //        Positions
+  /////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Attempts to retrieve a position matching the given criteria
@@ -317,39 +465,6 @@ object TradingDAO {
   }
 
   /**
-   * Attempts to attain a lock on a contest for processing
-   * @param contestId the given [[BSONObjectID contest ID]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of an option of a locked  [[Contest contest]] and an [[Date lock expiration time]]
-   */
-  def lockContest(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[(Contest, Date)]] = {
-    val expirationTime = new DateTime(new Date()).plusHours(1).toDate
-    val lockHost = Try(InetAddress.getLocalHost.getHostName).toOption.orNull
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "$or" -> BSONArray(BS("locked" -> false), BS("lockExpirationTime" -> BS("$lte" -> new Date())), BS("lockExpirationTime" -> BS("$exists" -> false)))),
-      modify = new Update(BS("$set" -> BS("locked" -> true, "lockHost" -> lockHost, "lockTime" -> new Date(), "lockExpirationTime" -> expirationTime)), fetchNewObject = true),
-      fields = None,
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest])) map (_ map ((_, expirationTime)))
-  }
-
-  /**
-   * Releases the processing lock
-   * @param contestId the given [[BSONObjectID contest ID]]
-   * @param expirationTime the given [[Date lock expiration time]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of an option of an unlocked [[Contest contest]]
-   */
-  def unlockContest(contestId: BSONObjectID, expirationTime: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "locked" -> true, "lockExpirationTime" -> expirationTime),
-      modify = new Update(BS("$set" -> BS("locked" -> false, "lockExpirationTime" -> new Date())), fetchNewObject = true),
-      fields = None,
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
-  }
-
-  /**
    * Performs a secondary update because MongoDB doesn't allow a record to be pulled and added to the sub-document
    * in a single atomic operation
    * @param c the given [[Contest contest]]
@@ -366,20 +481,6 @@ object TradingDAO {
 
       BS("$pull" -> BS("participants.$.positions_TEMP" -> BS("_id" -> tmpPos.id))) ++
         (if (tmpPos.quantity > 0) BS("$addToSet" -> BS("participants.$.positions" -> tmpPos)) else BS()))
-  }
-
-  def getExpiredWorkOrders(c: Contest, asOfDate: Date): Seq[WorkOrder] = {
-    for {
-      p <- c.participants
-      o <- p.orders filter (_.expirationTime.exists(_ < asOfDate))
-    } yield toWorkOrder(p, o)
-  }
-
-  def getOpenWorkOrders(c: Contest, asOfDate: Date): Seq[WorkOrder] = {
-    for {
-      p <- c.participants
-      o <- p.orders filter (o => o.expirationTime.isEmpty || o.expirationTime.exists(_ >= asOfDate))
-    } yield toWorkOrder(p, o)
   }
 
   private def toWorkOrder(p: Participant, o: Order): WorkOrder = {
