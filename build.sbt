@@ -50,18 +50,19 @@ libraryDependencies ++= Seq(
 
 // Web Jar dependencies
 libraryDependencies ++= Seq(
-	"org.webjars" % "amcharts" % "3.13.1",
-  "org.webjars" % "angularjs" % "1.3.15",
-  "org.webjars" % "angularjs-toaster" % "0.4.8",
+//	"org.webjars" % "amcharts" % "3.13.1",
+	"org.webjars" % "angularjs" % "1.3.15",
+  "org.webjars.bower" % "angular-animate" % "1.3.15",
+  "org.webjars" % "angularjs-toaster" % "0.4.7",
 //	"org.webjars" % "angular-file-upload" % "1.6.12",
-	"org.webjars" % "angular-translate" % "2.3.0",
+//	"org.webjars" % "angular-translate" % "2.3.0",
 	"org.webjars" % "angular-ui-bootstrap" % "0.12.1-1",
 	"org.webjars" % "angular-ui-router" % "0.2.13",
-	"org.webjars" % "bootstrap" % "3.3.2-2",
-  "org.webjars" % "d3js" % "3.5.3",
+//	"org.webjars" % "bootstrap" % "3.3.2-2",
+//  "org.webjars" % "d3js" % "3.5.3",
  	"org.webjars" % "font-awesome" % "4.3.0-2",
   "org.webjars" % "jquery" % "2.1.3",
-	"org.webjars" % "less" % "2.5.0",
-  "org.webjars" % "textAngular" % "1.2.0",
+//	"org.webjars" % "less" % "2.5.0",
+//  "org.webjars" % "textAngular" % "1.2.0",
   "org.webjars" %% "webjars-play" % "2.3.0-3"
 )

@@ -4,19 +4,13 @@
     /**
      * ShockTrade Angular.js Application
      */
-    var app = angular.module('shocktrade', ['ngCookies', 'ngRoute', 'ngSanitize', 'ui.bootstrap']);
+    var app = angular.module('shocktrade', ['ngAnimate', 'ngCookies', 'ngRoute', 'ngSanitize', 'toaster', 'ui.bootstrap']);
 
     /**
      * Configure the application
      */
-    app.config(['$locationProvider', '$parseProvider', '$routeProvider',
-        function ($locationProvider, $parseProvider, $routeProvider) {
-            // remove the # from URLs
-            //$locationProvider.html5Mode(true);
-
-            // now we can directly consume promises
-            //$parseProvider.unwrapPromises(true);
-
+    app.config(['$routeProvider',
+        function ($routeProvider) {
             // setup the routes
             $routeProvider
                 .when('/connect', {templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectController'})
