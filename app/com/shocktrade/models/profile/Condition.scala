@@ -54,7 +54,7 @@ object Condition {
 
   implicit object ConditionReader extends BSONDocumentReader[Condition] {
     def read(doc: BS) = Try(Condition(
-      doc.getAs[BSONObjectID]("_id").get,
+      doc.getAs[BSONObjectID]("_id").getOrElse(BSONObjectID.generate),
       doc.getAs[String]("field").get,
       doc.getAs[String]("operator").get,
       doc.getAs[WrappedValue]("value").get

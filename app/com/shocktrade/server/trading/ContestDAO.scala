@@ -13,7 +13,7 @@ import reactivemongo.core.commands.{FindAndModify, LastError, Update}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
-import scala.util.Try
+import scala.util.{Success, Failure, Try}
 
 /**
  * Contest Data Access Object
@@ -338,6 +338,11 @@ object ContestDAO {
           // create the order history record
           "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
       )
+    }  andThen {
+      case Success(outcome) => outcome
+      case Failure(e) =>
+        failOrder(c, wo, e.getMessage, asOfDate)
+        throw new IllegalStateException(e)
     }
   }
 

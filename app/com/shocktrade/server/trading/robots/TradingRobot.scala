@@ -4,9 +4,11 @@ import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.commons.helpers.StringHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.models.contest._
+import com.shocktrade.models.profile.{UserProfile, UserProfiles}
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
 import com.shocktrade.server.trading.Contests
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
@@ -26,6 +28,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 
   import context.dispatcher
 
+  // pre-load my profile
+  lazy val profile_? = UserProfiles.findProfileByName(name)
+
   override def receive = {
     case Invest => invest()
 
@@ -37,14 +42,20 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
   private def invest() {
     Try {
       for {
-      // lookup the quotes using our trading strategy
-      // db.Stocks.find({lastTrade:{$lte : 1.0}, volume:{$gte : 500000}})
+      // lookup my user profile
+        profile <- profile_? map (_ orDie s"The user profile for robot $name could not be found")
+
+        // lookup the quotes using our trading strategy
+        // db.Stocks.find({lastTrade:{$lte : 1.0}, volume:{$gte : 500000}})
         jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
 
         // first let's retrieve the contests I've involved in ...
         contests <- Contests.findContestsByPlayerName(name)()
 
       } {
+        // find contests to join
+        findContestsToJoin(profile, contests)
+
         // process each contest
         contests.foreach { contest =>
           // the contest must be active and started
@@ -90,6 +101,16 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       case Success(_) =>
       case Failure(e) =>
         log.error(s"$name: Error while attempting to invest", e)
+    }
+  }
+
+  private def findContestsToJoin(u: UserProfile, contests: Seq[Contest]): Unit = {
+    contests.foreach { contest =>
+      // if robots are allowed, and I have not already joined ...
+      if (contest.robotsAllowed && !contest.participants.exists(_.id == u.id)) {
+        log.info(s"$name: Joining '${contest.name}' ...")
+        Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, fundsAvailable = contest.startingBalance))
+      }
     }
   }
 

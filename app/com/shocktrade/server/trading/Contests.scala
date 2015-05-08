@@ -29,11 +29,11 @@ object Contests {
   private val system = Akka.system
   private implicit val ec = system.dispatcher
   private val finderActor = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 10)), name = "ContestFinder")
-  private val contestActors = TrieMap[BSONObjectID, ActorRef]()
+  private val contestActors = TrieMap[String, ActorRef]()
 
   private implicit val timeout: Timeout = 30.second
   private var lastEffectiveDate: DateTime = computeInitialFulfillmentDate
-  private val frequency = 5 // TODO should be 5 (in minutes)
+  private val frequency = 1 // TODO should be 5 (in minutes)
 
   /**
    * Starts the Order Processing System
@@ -52,7 +52,7 @@ object Contests {
    * @return a reference to the actor that manages the contest
    */
   private def contestActor(id: BSONObjectID): ActorRef = {
-    contestActors.getOrElseUpdate(id, system.actorOf(Props[ContestActor], name = s"ContestActor-${id.stringify}"))
+    contestActors.getOrElseUpdate(id.stringify, system.actorOf(Props[ContestActor], name = s"ContestActor-${id.stringify}"))
   }
 
   private def computeInitialFulfillmentDate: Date = {

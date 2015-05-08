@@ -145,9 +145,7 @@ class ContestActor extends Actor with ActorLogging {
         // if an update occurred, notify the users
         if (updateCount > 0) {
           ContestDAO.findContestByID(contest.id, fields = Nil) foreach {
-            _ foreach { updatedContest =>
-              WebSockets ! ContestUpdated(updatedContest)
-            }
+            _ foreach (updatedContest => WebSockets ! ContestUpdated(updatedContest))
           }
         }
 

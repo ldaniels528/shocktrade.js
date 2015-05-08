@@ -31,17 +31,14 @@ object OrderProcessor {
   /**
    * Processes the given contest
    */
-  def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Int] = {
+  def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // compute the market close time (+20 minutes for margin of error)
     val tradingClose = new DateTime(getTradeStopTime()).plusMinutes(20).toDate
 
     // perform the claiming process
     val results = {
-      /*
       // if claiming has never occurred, serially execute each
-      if (c.processedTime.isEmpty) {
-        processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
-      }
+      if (c.processedTime.isEmpty) processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
 
       // was the last run while trading still active?
       else if (c.processedTime.isEmpty || c.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
@@ -50,12 +47,13 @@ object OrderProcessor {
       else if (c.lastMarketClose.isEmpty || c.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
 
       // otherwise nothing happens
-      else Future.successful(Nil)*/
+      else Future.successful(Nil)
 
+      /*
       for {
         task1 <- processOrders(c, asOfDate, isDaysClose = false)
         task2 <- processOrders(c, asOfDate, isDaysClose = true)
-      } yield task1 ++ task2
+      } yield task1 ++ task2*/
     }
 
     // gather the outcomes
@@ -104,7 +102,7 @@ object OrderProcessor {
     tabular.transform(eligibleClaims) foreach (info(c, _))
 
     // update positions for processed orders
-    updateOrdersAndPositions(c, asOfDate, eligibleClaims)
+    processClaims(c, asOfDate, eligibleClaims)
   }
 
   private def processOrder(c: Contest, wo: WorkOrder, asOfDate: Date, quoteMap: Seq[StockQuote]): Option[Claim] = {
@@ -117,7 +115,7 @@ object OrderProcessor {
     } yield Claim(wo.symbol, wo.exchange, quote.price, wo.quantity, wo.commission, asOfDate, wo)
   }
 
-  private def updateOrdersAndPositions(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
+  private def processClaims(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
     Future.sequence(claims map { claim =>
       for {
       // perform the BUY or SELL

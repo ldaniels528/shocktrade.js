@@ -86,7 +86,7 @@ object UserProfile {
       doc.getAs[Int]("totalXP").getOrElse(0),
       doc.getAs[List[String]]("awards").getOrElse(Nil),
       doc.getAs[List[String]]("favorites").getOrElse(Nil),
-      doc.getAs[List[Filter]]("filters").getOrElse(Nil),
+      Nil, //doc.getAs[List[Filter]]("filters").getOrElse(Nil),
       doc.getAs[List[String]]("friends").getOrElse(Nil),
       doc.getAs[List[String]]("recentSymbols").getOrElse(Nil),
       doc.getAs[List[String]]("modules").getOrElse(Nil),
