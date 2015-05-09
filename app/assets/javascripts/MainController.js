@@ -42,9 +42,6 @@
              * Initializes the application
              */
             $scope.appInit = function () {
-                // switch to the Play view
-                $location.path("/play");
-
                 // setup market status w/updates
                 $interval(function () {
                     $scope.marketClock = (new Date()).toTimeString();
