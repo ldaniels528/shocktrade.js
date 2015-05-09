@@ -146,10 +146,6 @@
                 SignUpDialog.popup(fbUserID, fbProfile);
             };
 
-            $scope.abs = function (value) {
-                return !value ? value : ((value < 0) ? -value : value);
-            };
-
             $scope.getExchangeClass = function (exchange) {
                 if (exchange == null) return null;
                 else {

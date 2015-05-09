@@ -7,8 +7,6 @@
     app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
         function ($rootScope, $scope, $location, $log, $timeout, toaster, MySession, ContestService, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
 
-            $scope.tabIndex = 0;
-
             // setup the current contest
             $scope.contest = null;
             $scope.selectedContest = null;
@@ -548,65 +546,6 @@
             //////////////////////////////////////////////////////////////////////
             //              Data Graphs
             //////////////////////////////////////////////////////////////////////
-
-            // setup the tabs
-            $scope.playTabs = [{
-                "name": "Search",
-                "icon_class": "fa-search",
-                "tool_tip": "Search for games",
-                "url": "/play/search",
-                "isVisible": function(c) {
-                    return true;
-                }
-            }, {
-                "name": "Play",
-                "icon_class": "fa-home",
-                "tool_tip": "Play the game",
-                "url": "/play/lobby",
-                "isVisible": function(c) {
-                    return c != null;
-                }
-            }, {
-                "name": "Quotes",
-                "icon_class": "fa-table",
-                "tool_tip": "Stock Quotes and Research",
-                "url": "/discover",
-                "isVisible": function(c) {
-                    return true;
-                }
-            }, {
-                "name": "News",
-                "icon_class": "fa-newspaper-o",
-                "tool_tip": "Stocks News",
-                "url": "/news",
-                "isVisible": function(c) {
-                    return true;
-                }
-            }, {
-                "name": "My Awards",
-                "icon_class": "fa-trophy",
-                "tool_tip": "My Awards",
-                "url": "/play/awards",
-                "isVisible": function(c) { //
-                    return true;
-                }
-            }, {
-                "name": "My Perks",
-                "icon_class": "fa-gift",
-                "tool_tip": "My Perks",
-                "url": "/play/perks",
-                "isVisible": function(c) {
-                    return true;
-                }
-            }, {
-                "name": "My Statistics",
-                "icon_class": "fa-bar-chart",
-                "tool_tip": "My Statistics",
-                "url": "/play/statistics",
-                "isVisible": function(c) {
-                    return true;
-                }
-            }];
 
             // define the levels
             $scope.levels = [
