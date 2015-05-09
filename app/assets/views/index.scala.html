@@ -56,11 +56,14 @@
 			and join the fun!
 		</div>
 
+        <toaster-container toaster-options="{'position-class': 'toast-container','time-out': 3000, 'close-button':true}">
+        </toaster-container>
+
         <!-- main view -->
-		<div ng-controller="GameController">
-			<div ng-view ng-cloak></div>
-			<div style="display: none" id="fb-root"></div>
-		</div>
+        <div ng-controller="GameController">
+            <div ng-view ng-cloak></div>
+            <div style="display: none" id="fb-root"></div>
+        </div>
 	</div>
 	
 	<!-- WebJar JS libraries -->
