@@ -340,7 +340,7 @@
                 var filters = MySession.userProfile.filters;
                 $scope.filterQuotes = [];
                 for (var n = 0; n < filters.length; n++) {
-                    var clonedFilter = clone(filters[n]);
+                    var clonedFilter = $scope.clone(filters[n]);
                     clonedFilter.rows = [];
                     clonedFilter.maxResults = 10;
                     $scope.filterQuotes.push(clonedFilter);
