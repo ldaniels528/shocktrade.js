@@ -5,6 +5,7 @@ import java.util.UUID
 import akka.actor._
 import akka.routing.RoundRobinPool
 import com.shocktrade.models.contest.Contest
+import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json.{obj => JS, _}
@@ -71,6 +72,11 @@ object WebSockets {
           actor ! JS("action" -> "quote_updated", "data" -> quote)
         }
 
+      case UserProfileUpdated(profile) =>
+        actors.foreach { case (uid, actor) =>
+          actor ! JS("action" -> "profile_updated", "data" -> profile)
+        }
+
       case message =>
         log.warning(s"Unhandled message $message")
         unhandled(message)
@@ -84,5 +90,7 @@ object WebSockets {
   case class ContestUpdated(contest: Contest)
 
   case class QuoteUpdated(quote: JsValue)
+
+  case class UserProfileUpdated(profile: UserProfile)
 
 }

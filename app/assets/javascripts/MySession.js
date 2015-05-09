@@ -10,6 +10,11 @@
             contest: null
         };
 
+        service.deduct = function(amount) {
+            $log.info("Deducting " + amount + " from " + service.userProfile.netWorth);
+            service.userProfile.netWorth -= amount;
+        };
+
         /**
          * Indicates whether the given user is an administrator
          * @returns {boolean}
@@ -32,6 +37,10 @@
 
         service.setContest = function (contest) {
             service.contest = contest;
+        };
+
+        service.getNetWorth = function () {
+            return service.userProfile.netWorth || 0;
         };
 
         /**

@@ -192,7 +192,11 @@
 					</div>
 
 					<div class="col-md-3">Buy-In Cost</div>
-					<div class="col-md-9">$ {{ selectedContest.startingBalance | number }}</div>
+					<div class="col-md-9">
+						<span ng-class="MySession.getNetWorth() >= selectedContest.startingBalance ? 'positive' : 'negative'">
+							$ {{ selectedContest.startingBalance | number }}
+						</span>
+					</div>
 
 					<div class="col-md-3">Level Cap</div>
 					<div class="col-md-9">

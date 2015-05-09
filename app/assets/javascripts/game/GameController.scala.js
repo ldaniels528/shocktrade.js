@@ -204,13 +204,14 @@
                         toaster.pop('error', 'Error!', "Failed to join game");
                         $log.error("Returned contest was null")
                     }
-                    else if (!contest.error) {
+                    else if (contest.error) {
                         toaster.pop('error', 'Error!', contest.error);
                         $log.error(contest.error);
                     }
                     else {
                         $scope.contest = contest;
                         MySession.setContest(contest);
+                        //MySession.deduct(contest.startingBalance);
                         updateWithRankings(MySession.getUserName(), contest)
                     }
 
@@ -656,6 +657,10 @@
              */
             $scope.$on("contest_deleted", function (event, contest) {
                 removeContestFromList(contest.OID());
+
+                if ($scope.selectedContest && (contest.OID() === $scope.selectedContest.OID())) {
+                    $scope.selectedContest = null;
+                }
             });
 
             /**
@@ -663,10 +668,21 @@
              */
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' updated");
-                if (!$scope.contest || (contest.OID() === $scope.contest.OID)) {
+                if (!$scope.contest || (contest.OID() === $scope.contest.OID())) {
                     $scope.contest = contest;
                     MySession.setContest(contest);
                 }
+                if ($scope.selectedContest && (contest.OID() === $scope.selectedContest.OID())) {
+                    $scope.selectedContest = contest;
+                }
+            });
+
+            /**
+             * Listen for contest update events
+             */
+            $scope.$on("profile_updated", function (event, profile) {
+                $log.info("User Profile updated");
+                MySession.userProfile.netWorth = profile.netWorth;
             });
 
             //////////////////////////////////////////////////////////////////////

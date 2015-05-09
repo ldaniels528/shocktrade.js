@@ -5,10 +5,13 @@ import java.util.Date
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
+import com.shocktrade.actors.WebSockets
+import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest.OrderType.OrderType
 import com.shocktrade.models.contest.PriceType.PriceType
 import com.shocktrade.models.contest._
+import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.server.trading.Contests
 import com.shocktrade.util.BSONHelper._
@@ -276,8 +279,13 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
         (for {
           startingBalance <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
           participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = startingBalance)
+          userProfile <- UserProfiles.deductFunds(participant.id, startingBalance) map (_ orDie "Insufficient funds")
           contest <- Contests.joinContest(id.toBSID, participant)
-        } yield contest) map (c => Ok(Json.toJson(c))) recover {
+        } yield (userProfile, contest)) map { case (userProfile, contest_?) =>
+          WebSockets ! UserProfileUpdated(userProfile)
+          Ok(Json.toJson(contest_?))
+
+        } recover {
           case e: Exception => Ok(createError(e))
         }
       case Success(None) => Future.successful(Ok(JS("error" -> "Internal error")))
@@ -287,14 +295,21 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     }
   }
 
-  def quitContest(id: String, playerId: String) = Action.async {
-    implicit request =>
-      Contests.quitContest(id.toBSID, playerId.toBSID) map {
+  def quitContest(id: String, playerId: String) = Action.async { implicit request =>
+    (for {
+      c <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      p = c.participants.find(_.id.stringify == playerId) orDie "Player not found"
+      u <- UserProfiles.deductFunds(playerId.toBSID, -p.fundsAvailable)
+      updatedContest <- Contests.quitContest(id.toBSID, playerId.toBSID)
+    } yield (u, updatedContest)) map { case (profile_?, contest_?) =>
+      profile_?.foreach(WebSockets ! UserProfileUpdated(_))
+      contest_? match {
         case Some(contest) => Ok(Json.toJson(contest))
         case None => Ok(createError("Contest not found"))
-      } recover {
-        case e: Exception => Ok(createError(e))
       }
+    } recover {
+      case e: Exception => Ok(createError(e))
+    }
   }
 
   def startContest(id: String) = Action.async {
