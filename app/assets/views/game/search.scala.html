@@ -3,35 +3,35 @@
 	<div ng-hide="isSplitScreen()" class="col-md-8">
 		<fieldset class="contest">
 			<legend class="contest">
-                <img src="/assets/images/buttons/search.png"> Search for Games
+				<i class="fa fa-search"></i> Search for Games
             </legend>
 			<table>
 				<tr>
 					<td class="col-md-3">
 						<input type="checkbox" ng-model="searchOptions.activeOnly">
-						<img src="/assets/images/objects/market.png"> Online
+                        <i class="fa fa-heartbeat"></i> Active
 					</td>
 					<td class="col-md-4">
 						<input type="checkbox" ng-model="searchOptions.perksAllowed">
-						<img src="/assets/images/objects/gift.png"> Perks
+                        <i class="fa fa-gift"></i> Perks
 					</td>
 					<td class="col-md-5">
 						<input type="checkbox" ng-model="searchOptions.botsAllowed">
-						<img src="/assets/images/objects/robot.png"> Robots
+                        <i class="fa fa-android"></i> Robots
 					</td>
 				</tr>
 				<tr>
 					<td class="col-md-3">
 						<input type="checkbox" ng-model="searchOptions.available">
-						<img src="/assets/images/status/online.png"> Available
+                        <i class="fa fa-globe"></i> Joinable
 					</td>
 					<td class="col-md-4">
 						<input type="checkbox" ng-model="searchOptions.friendsOnly">
-						<img src="/assets/images/objects/friend_header.gif"> My Friends
+                        <i class="fa fa-users"></i> My Friends
 					</td>
 					<td class="col-md-5">
 						<input type="checkbox" ng-model="searchOptions.levelCapAllowed">
-						<img src="/assets/images/objects/friend_delete.png"> Level Cap (by Rank)
+                        <i class="fa fa-user-times"></i> Level Cap (by Rank)
 					</td>
 				</tr>
 				<tr>
@@ -69,11 +69,11 @@
 				</legend>
 				<div class="availGamesContainer">
                     <div class="row">
-                        <div class="col-md-4 bold left padding-left-16">Game Name</div>
-                        <div ng-hide="isSplitScreen()" class="col-md-2 bold center">Started</div>
-                        <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Buy In</div>
-                        <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Players</div>
-                        <div ng-hide="isSplitScreen()" class="col-md-2 bold right">Game Features</div>
+                        <div class="col-md-4 header left padding-left-16">Game Name</div>
+                        <div ng-hide="isSplitScreen()" class="col-md-2 header center">Started</div>
+                        <div ng-hide="isSplitScreen()" class="col-md-2 header right">Buy In</div>
+                        <div ng-hide="isSplitScreen()" class="col-md-2 header right">Players</div>
+                        <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
                     </div>
 
                     <div ng-repeat="c in searchResults" class="row clickable"
@@ -97,15 +97,15 @@
                             </span>
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2 right">
-                            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} x</span>
-                            <img src="/assets/images/objects/friend_header.gif">
+                            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} / {{ maxPlayers }}</span>
                         </div>
                         <div ng-hide="isSplitScreen()" class="col-md-2">
                             <span class="pull-right">
-                                <img ng-src="/assets/images/{{ c.friendsOnly ? 'objects/friend_header.gif' : 'status/transparent.png' }}">
-                                <img ng-src="/assets/images/{{ c.levelCap ? 'objects/friend_delete.png' : 'status/transparent.png' }}">
-                                <img ng-src="/assets/images/{{ c.perksAllowed ? 'objects/gift.png' : 'status/transparent.png' }}">
-                                <img ng-src="/assets/images/{{ c.robotsAllowed ? 'objects/robot.png' : 'status/transparent.png' }}">
+                                <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
+                                <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
+                                <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
+                                <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
+                                <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
                             </span>
                         </div>
                     </div>
@@ -161,14 +161,14 @@
 					</div>
 					<div class="col-md-4">
 						<input type="checkbox" ng-model="selectedContest.friendsOnly" disabled>
-						<img src="/assets/images/objects/friend_header.gif"> Friends-Only
+                        <i class="fa fa-users"></i> Friends-Only
 					</div>
 
 					<div class="col-md-3">Created</div>
 					<div class="col-md-5">{{ selectedContest.creationTime | date:'MM/dd/yyyy hh:mma' }}</div>
 					<div class="col-md-4">
 						<input type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
-						<img src="/assets/images/objects/gift.png"> Perks Allowed
+                        <i class="fa fa-gift"></i> Perks Allowed
 					</div>
 
 					<div class="col-md-3">Started</div>
@@ -178,7 +178,7 @@
 					</div>
 					<div class="col-md-4">
 						<input type="checkbox" ng-model="selectedContest.invitationOnly" disabled>
-						<img src="/assets/images/objects/protected.png"> Invitation-Only
+                        <i class="fa fa-lock"></i> Invitation-Only
 					</div>
 
 					<div class="col-md-3">Ends</div>
@@ -188,7 +188,7 @@
 					</div>
 					<div class="col-md-4">
 						<input type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
-						<img src="/assets/images/objects/robot.png"> Robots Allowed
+                        <i class="fa fa-android"></i> Robots Allowed
 					</div>
 
 					<div class="col-md-3">Buy-In Cost</div>
