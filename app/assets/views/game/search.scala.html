@@ -115,6 +115,7 @@
 
 			<button class="btn btn-default new_game pull-right"
 				ng-hide="isSplitScreen()"
+				ng-disabled="!MySession.authenticated"
 				ng-click="popupNewGameDialog()"> New Game
 			</button>
 		</div>
@@ -130,7 +131,7 @@
 				</legend>
 				<div class="row contest_lobby contest_colors">
 					<div class="col-md-12" style="background: #e0e0e0; border-radius: 6px; padding: 4px">
-						<div style="margin-left: auto; margin-right: auto" ng-repeat="row in [0,1]">
+						<div style="margin-left: auto; margin-right: auto" ng-repeat="row in [0,1,2]">
 							<span ng-repeat="p in getAvailableSlots(selectedContest, row) track by $index">
 								<avatar ng-show="p" id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
 								<img class="no_picture_gang clickable"
@@ -213,6 +214,7 @@
 							<img ng-src="/assets/images/{{ selectedContest.starting ? 'status/loading.gif' : 'objects/play.png' }}"> Start
 						</button>
 						<button class="btn btn-default join_game"
+							ng-disabled="!MySession.authenticated"
 							ng-show="isJoinable(selectedContest)"
 							ng-click="joinContest(selectedContest)">
 							<img ng-src="/assets/images/{{ selectedContest.joining ? 'status/loading.gif' : 'objects/friend.png' }}"> Join

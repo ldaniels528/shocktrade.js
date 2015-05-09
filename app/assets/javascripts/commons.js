@@ -21,4 +21,14 @@
         return this.charAt(0).toUpperCase() + this.substring(1).toLocaleLowerCase();
     };
 
+    /**
+     * Indicates whether the email address is valid
+     * @returns {boolean}
+     */
+    String.prototype.isValidEmail = function () {
+        var email = this;
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    }
+
 })();

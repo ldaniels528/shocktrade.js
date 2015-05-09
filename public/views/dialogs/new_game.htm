@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="new_game_dialog.htm">
-    <div class="modal-header modal_colors">
+    <div class="modal-header st_modal_header">
         <h4 style="color: #345688">Create New Game</h4>
     </div>
     <div class="modal-body">
@@ -68,10 +68,16 @@
                 <input id="robotsAllowed" type="checkbox" ng-model="form.robotsAllowed">
                 <label for="robotsAllowed"><img src="/assets/images/objects/robot.png"> Robots Allowed</label>
             </div>
-            <div class="col-md-12">
-                <button class="btn btn-primary" style="margin-top: 10px" ng-click="create()">Create Game</button>
-                <button class="btn btn-warning" style="float: right; margin-top: 10px" ng-click="cancel()">Cancel</button>
-            </div>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-left" style="margin-top: 10px" ng-click="create()">
+                Create Game
+            </button>
+            <button class="btn btn-warning pull-right" style="float: right; margin-top: 10px" ng-click="cancel()">
+                Cancel
+            </button>
         </div>
     </div>
 </script>

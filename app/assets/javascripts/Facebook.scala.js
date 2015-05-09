@@ -185,6 +185,8 @@ window.fbAsyncInit = function () {
         if (response.status === 'connected') {
             // capture the Facebook login status
             if (response.authResponse) {
+                console.log("Successfully loaded the Facebook profile...");
+
                 // capture the user ID and access token
                 var rootElem = $("#ShockTradeMain");
                 var injector = angular.element(rootElem).injector();

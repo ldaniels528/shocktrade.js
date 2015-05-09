@@ -110,6 +110,7 @@
                 ProfileService.getProfileByFacebookID(fbUserID).then(
                     function (profile) {
                         if (!profile.error) {
+                            $log.info("ShockTrade user profile loaded...");
                             MySession.userProfile = profile;
                             MySession.authenticated = true;
 
@@ -117,13 +118,14 @@
                             $scope.filters = MySession.userProfile.filters;
                         }
                         else {
+                            $log.info("Non-member identified... Launching Sign-up dialog...");
                             MySession.nonMember = true;
-                            signUpPopup(fbUserID, profile, userInitiated);
+                            $scope.signUpPopup(fbUserID, MySession.fbProfile);
                         }
                     },
                     function (err) {
                         toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
-                        signUpPopup(fbUserID, profile, userInitiated);
+                        $scope.signUpPopup(fbUserID, MySession.fbProfile);
                     }
                 );
             };
@@ -143,18 +145,9 @@
                     });
             }
 
-            function signUpPopup(fbUserID, profile, userInitiated) {
-                if (userInitiated) {
-                    SignUpDialog.popup(fbUserID,
-                        function (profile) {
-                            MySession.userProfile = profile;
-                            MySession.authenticated = true;
-                        },
-                        function (err) {
-                            toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
-                        });
-                }
-            }
+            $scope.signUpPopup = function(fbUserID, fbProfile) {
+                SignUpDialog.popup(fbUserID, fbProfile);
+            };
 
             $scope.abs = function (value) {
                 return !value ? value : ((value < 0) ? -value : value);

@@ -18,19 +18,18 @@ import scala.util.{Failure, Success, Try}
 case class UserProfile(id: BSONObjectID = BSONObjectID.generate,
                        name: String,
                        facebookID: String,
-                       email: Option[String],
-                       netWorth: BigDecimal,
-                       level: Int,
-                       rep: Int,
-                       totalXP: Int,
-                       awards: List[String],
-                       favorites: List[String],
-                       filters: List[Filter],
-                       friends: List[String],
-                       recentSymbols: List[String],
-                       modules: List[String],
-                       country: Option[String],
-                       lastLoginTime: Option[Date])
+                       email: Option[String] = None,
+                       netWorth: BigDecimal = 100000,
+                       level: Int = 1,
+                       rep: Int = 1,
+                       totalXP: Int = 0,
+                       awards: List[String] = Nil,
+                       favorites: List[String] = Nil,
+                       filters: List[Filter] = Nil,
+                       friends: List[String] = Nil,
+                       recentSymbols: List[String] = Nil,
+                       country: Option[String] = None,
+                       lastLoginTime: Option[Date] = None)
 
 /**
  * User Profile Singleton
@@ -52,7 +51,6 @@ object UserProfile {
       (__ \ "filters").read[List[Filter]] and
       (__ \ "friends").read[List[String]] and
       (__ \ "recentSymbols").read[List[String]] and
-      (__ \ "modules").read[List[String]] and
       (__ \ "country").readNullable[String] and
       (__ \ "lastLoginTime").readNullable[Date])(UserProfile.apply _)
 
@@ -70,7 +68,6 @@ object UserProfile {
       (__ \ "filters").write[List[Filter]] and
       (__ \ "friends").write[List[String]] and
       (__ \ "recentSymbols").write[List[String]] and
-      (__ \ "modules").write[List[String]] and
       (__ \ "country").writeNullable[String] and
       (__ \ "lastLoginTime").writeNullable[Date])(unlift(UserProfile.unapply))
 
@@ -89,7 +86,6 @@ object UserProfile {
       Nil, //doc.getAs[List[Filter]]("filters").getOrElse(Nil),
       doc.getAs[List[String]]("friends").getOrElse(Nil),
       doc.getAs[List[String]]("recentSymbols").getOrElse(Nil),
-      doc.getAs[List[String]]("modules").getOrElse(Nil),
       doc.getAs[String]("country"),
       doc.getAs[Date]("lastLoginTime")
     )) match {
@@ -115,7 +111,6 @@ object UserProfile {
       "filters" -> userProfile.filters,
       "friends" -> userProfile.friends,
       "recentSymbols" -> userProfile.recentSymbols,
-      "modules" -> userProfile.modules,
       "country" -> userProfile.country,
       "lastLoginTime" -> userProfile.lastLoginTime
     )

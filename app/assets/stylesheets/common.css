@@ -47,14 +47,24 @@ table td, table th
     padding: 0; /* 'cellpadding' equivalent */
 }
 
-.highlighted {
-	background-color: #aaeeff
+.emphasis {
+	color: #1090ff
 }
 
-.modal_colors {
+img.profile_pic {
+	border-radius: 6px 6px 6px 6px;
+	width: 60px;
+	height: 60px;
+}
+
+.st_modal_header {
 	background-color: #dddddd;
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px
+}
+
+.st_modal_footer {
+	background-color: #dddddd;
 }
 
 .selected {

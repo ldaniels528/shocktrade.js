@@ -33,8 +33,8 @@
 	<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
 </head>
 
-<body class="page-body">
-	<div id="ShockTradeMain" ng-controller="MainController" ng-init="appInit()" ng-cloak>
+<body class="page-body" ng-controller="MainController" ng-init="appInit()" ng-cloak>
+	<div id="ShockTradeMain">
         <!-- title bar -->
         <div class="row">
             <div class="col-md-3">
@@ -45,16 +45,15 @@
                     <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
                     <span ng-show="MySession.authenticated" class="title_color clickable" ng-click="logout()">Sign Out</span>
                     <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">- {{ MySession.fbProfile.name }}</span>
-                    <span ng-hide="MySession.authenticated" class="title_color clickable" ng-click="login()">{{ MySession.nonMember ? 'Sign Up' : 'Sign In' }}</span>
                 </span>
             </div>
         </div>
 	
 		<!-- alerts -->
-		<div ng-hide="MySession.authenticated" class="spectator_bar">
-			<img style="vertical-align: middle" src="/assets/images/status/alert.gif">
-			You are currently in spectator mode. Please <a class="links" href="" ng-click="login($event)">sign-in</a>
-			(via <span class="fb">FaceBook</span>) to access all features (sample profile shown).
+		<div ng-class="col-md-9" ng-hide="MySession.authenticated" class="spectator_bar">
+			If you're already a member? <a class="links" href="" ng-click="login($event)">Sign-in</a>.
+			Don't have an account yet? <a class="links" ng-click="signUpPopup(MySession.fbUserID, MySession.fbProfile)">Sign-up</a>
+			and join the fun!
 		</div>
 
         <!-- main view -->

@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="new_order_dialog.htm">
-    <div class="modal-header modal_colors">
+    <div class="modal-header st_modal_header">
         <h4>Create New Order</h4>
     </div>
     <div class="modal-body" ng-init="init()">
@@ -133,14 +133,14 @@
             </ul>
         </div>
     </div>
-    <div class="modal-footer">
-        <div class="col-md-6">
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
             <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="ok()">
                 <img ng-show="processing" src="/assets/images/status/loading.gif"> Place Order
             </button>
-        </div>
-        <div class="col-md-6">
-            <button class="btn btn-warning" ng-disabled="processing" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">
+                Cancel
+            </button>
         </div>
     </div>
 </script>

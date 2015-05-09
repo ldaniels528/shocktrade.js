@@ -36,6 +36,10 @@
                 NewGameDialog.popup({});
             };
 
+            $scope.popupInvitePlayerDialog = function (participant) {
+                InvitePlayerDialog.popup($scope, participant);
+            };
+
             $scope.enterGame = function(contest) {
                 $scope.contest = contest;
                 MySession.setContest(contest);
@@ -54,8 +58,8 @@
                 var slots = [];
                 if (contest) {
                     var participants = contest.participants || [];
-                    var start = row == 0 ? 0 : $scope.maxPlayers/2;
-                    var end = row == 0 ? $scope.maxPlayers/2 : $scope.maxPlayers;
+                    var start = row * 8; // 0=0, 1=8, 2=16
+                    var end = row * 8 + 8; // 0=7, 1=8, 2=15
                     for (var n = start; n < end; n++) {
                         slots.push((n < participants.length) ? participants[n] : null);
                     }
@@ -287,10 +291,6 @@
                     tab.active = false;
                 });
                 $scope.playTabs[tabIndex].active = true;
-            };
-
-            $scope.popupInvitePlayerDialog = function (participant) {
-                InvitePlayerDialog.popup($scope, participant);
             };
 
             $scope.containsPlayer = function (contest, userProfile) {

@@ -1,10 +1,12 @@
 package com.shocktrade.controllers
 
-import com.shocktrade.models.profile.UserProfiles
+import com.shocktrade.models.profile.{UserProfile, UserProfiles}
 import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
+import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
@@ -30,45 +32,26 @@ object ProfileResources extends Controller with MongoController with MongoExtras
 
   def createProfile = Action.async { request =>
     // attempt to retrieve the account info properties from the request
-    Try(request.body.asJson map toAccount) match {
-      case Success(Some(acc)) =>
-        val profile = newProfile(acc)
-        for {
-        // is the screen name already taken?
-          taken <- mcP.find(JS("name" -> acc.userName), JS("name" -> 1)).cursor[JsObject].headOption map (_.isDefined)
-
-          // if taken, notify the user
-          resp <- taken match {
-            case true => Future.successful(BadRequest(s"Screen name ${acc.userName} is unavailable"))
-            case false =>
-              for {
-              // attempt to create the new profile
-                outcome <- mcP.insert(profile)
-
-              // if the count is 1, the profile was created, now retrieve it.
-              } yield if (!outcome.inError) Ok(profile) else BadRequest(s"User Account ${acc.userName} could not be created")
-          }
-
-        } yield resp
-
+    Try(request.body.asJson map (_.as[ProfileForm])) match {
+      case Success(Some(form)) =>
+        val profile = UserProfile(name = form.userName, facebookID = form.facebookID, email = form.email)
+        val profileJs = Json.toJson(profile)
+        mcP.insert(profileJs) map { _ => Ok(profileJs) } recover {
+          case e: Exception =>
+            Logger.error(s"Error creating user profile [${request.body.asJson.orNull}]", e)
+            val messages = e.getMessage match {
+              case s if s.contains("duplicate key") => "Screen name is already taken"
+              case _ => "The service is temporarily unavailable"
+            }
+            Ok(JS("status" -> "error", "error" -> messages))
+        }
       case Success(None) =>
         Logger.error(s"Account information was incomplete: json => ${request.body.asJson}")
         Future.successful(BadRequest("Account information was incomplete"))
-
       case Failure(e) =>
         Logger.error(s"${e.getMessage}: json => ${request.body.asJson}")
         Future.successful(BadRequest(e.getMessage))
     }
-  }
-
-  private def newProfile(account: AccountInfo) = {
-    import account._
-    JS("_id" -> BSONObjectID.generate.stringify, "name" -> userName, "facebookID" -> facebookID,
-      "firstName" -> firstName, "lastName" -> lastName, "email" -> email,
-      "gender" -> gender, "country" -> country,
-      "totalXP" -> 0, "rep" -> 1,
-      "awards" -> JsArray(), "favorites" -> JsArray(),
-      "filters" -> JsArray(), "friends" -> JsArray(), "perks" -> JsArray())
   }
 
   def getExchanges(id: String) = Action.async { implicit request =>
@@ -223,26 +206,16 @@ object ProfileResources extends Controller with MongoController with MongoExtras
     "MUTFUNDS" -> 10,
     "RISKMGMT" -> 12)
 
-  def toAccount(js: JsValue): AccountInfo = {
-    val facebookID = (js \ "facebookID").asOpt[String].getOrElse(throw new FieldException("facebookID"))
-    val userName = (js \ "userName").asOpt[String].getOrElse(throw new FieldException("userName"))
-    val firstName = (js \ "first").asOpt[String].getOrElse(throw new FieldException("first"))
-    val lastName = (js \ "last").asOpt[String].getOrElse(throw new FieldException("last"))
-    val email = (js \ "email").asOpt[String].getOrElse(throw new FieldException("email"))
-    val gender = (js \ "gender").asOpt[String].getOrElse(throw new FieldException("gender"))
-    val country = (js \ "country").asOpt[String].getOrElse(throw new FieldException("country"))
-    AccountInfo(userName, facebookID, firstName, lastName, email, gender, country)
-  }
+  case class ProfileForm(userName: String,
+                         facebookID: String,
+                         email: Option[String])
+
+  implicit val profileFormReads: Reads[ProfileForm] = (
+    (__ \ "userName").read[String] and
+      (__ \ "facebookID").read[String] and
+      (__ \ "email").readNullable[String])(ProfileForm.apply _)
 
   class FieldException(val field: String) extends RuntimeException(s"Required field '$field' is missing")
-
-  case class AccountInfo(userName: String,
-                         facebookID: String,
-                         firstName: String,
-                         lastName: String,
-                         email: String,
-                         gender: String,
-                         country: String)
 
   def toExchangeUpdate(js: JsValue): ExchangeUpdate = {
     val id = (js \ "id").asOpt[String].getOrElse(throw new FieldException("id"))
