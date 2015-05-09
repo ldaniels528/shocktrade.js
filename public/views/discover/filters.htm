@@ -1,22 +1,22 @@
-<div style="display: block; width: 100%; margin-right: 5px">
-	<span class="pull-right">
-		<input id="stockTicker" type="text" ng-model="ticker" placeholder="Enter Symbol or Company name" 
-				typeahead="quote as quote.symbol + ' - ' + quote.name for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}" 
-				typeahead-template-url="symbol_lookup.htm" 
-				typeahead-loading="loadingLocations"
-				typeahead-on-select="loadQuote(ticker)"
-				popover="Enter a Symbol or Business here"  
-				popover-trigger="focus"
-				style="width: 350px; background-color: #ffff44; border-radius: 5px 5px 5px 5px">
-		<button class="btn btn-default quote_button" ng-click="loadTickerQuote(ticker)">
-			<img src="/assets/images/buttons/search.png"> Search
-		</button>
-	</span>
-	<br style="clear: both">
+<div class="pull-right">
+	<input class="col-md-11 form-control"
+		   id="stockTicker" type="text" ng-model="ticker"
+		   placeholder="Enter Symbol or Company name"
+			typeahead="quote as quote.symbol + ' - ' + quote.name for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
+			typeahead-template-url="symbol_lookup.htm"
+			typeahead-loading="loadingLocations"
+			typeahead-on-select="loadQuote(ticker)"
+			popover="Enter a Symbol or Business here"
+			popover-trigger="focus"
+			style="width: 350px; background-color: #ffff44; border-radius: 5px 5px 5px 5px">
+	<button class="btn btn-default quote_button" ng-click="loadTickerQuote(ticker)">
+		<img src="/assets/images/buttons/search.png"> Search
+	</button>
 </div>
-	
+<br style="clear: both"/>
+
 <div ng-include src="'/assets/views/discover/quotes/stock_chart.htm'"></div>
-	
+
 <accordion> 
 	<accordion-group is-open="true">
 		<accordion-heading><img src="/assets/images/objects/clock16.png"> Recently Viewed</accordion-heading>

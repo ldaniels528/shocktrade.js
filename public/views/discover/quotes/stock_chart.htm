@@ -1,4 +1,4 @@
-<div style="border: 1px solid #428bca" style="display: block; width: 100%">	
+<div style="display: block; width: 100%; border: 1px solid #428bca">
 	<div style="display: block; text-align: center; border: 1px solid #357ebd; background-color: #428bca; color: white">
 		<span style="font-weight: bold">Duration:</span> 
 		<input type="radio" ng-model="options.range" value="1d"> 1d
@@ -10,7 +10,7 @@
 		<input type="radio" ng-model="options.range" value="my"> Max
 		<span style="margin-right: 20px">&nbsp;</span>
 	</div>
-	<div id="chart" style="display: block; width: 458px; height: 273px">
+	<div id="chart" style="display: block; width: 100%; height: 273px">
 		<img ng-if="!q.symbol" class='chart' src='/assets/images/charts/blank.png'>
 		<img ng-if="q.symbol" class='chart' ng-src='/api/charts/stock/{{ q.symbol }}/medium/{{ options.range }}'>
 	</div>	

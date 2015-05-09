@@ -21,6 +21,27 @@ a:active  { cursor: pointer; text-decoration: none; }
 	color: #3a5795;
 }
 
+.nav_icon {
+    font-size: 24px;
+}
+
+.st_nav_selected {
+    color: #1090ff;
+}
+
+div.st_nav_bar {
+    border: 1px solid #bbbbbb;
+    border-radius: 4px 4px 4px 4px;
+    background: #cccccc;
+    padding: 4px 4px 4px 4px;
+    height: auto
+}
+
+li.st_nav_bar {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
 body {
 	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
 	background: #dddddd;
@@ -55,6 +76,11 @@ img.profile_pic {
 	border-radius: 6px 6px 6px 6px;
 	width: 60px;
 	height: 60px;
+}
+
+img.st_rounded {
+    border: 1px solid #dddddd;
+    border-radius: 4px 4px 4px 4px;
 }
 
 .st_modal_header {

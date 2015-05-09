@@ -7,6 +7,8 @@
     app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
         function ($rootScope, $scope, $location, $log, $timeout, toaster, MySession, ContestService, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
 
+            $scope.tabIndex = 0;
+
             // setup the current contest
             $scope.contest = null;
             $scope.selectedContest = null;
@@ -281,6 +283,7 @@
             $scope.changePlayTab = function (tabIndex) {
                 $log.info("Changing location to " + $scope.playTabs[tabIndex].url);
                 $location.path($scope.playTabs[tabIndex].url);
+                $scope.tabIndex = tabIndex;
                 return true;
             };
 
@@ -549,66 +552,59 @@
             // setup the tabs
             $scope.playTabs = [{
                 "name": "Search",
-                "imageURL": "/assets/images/buttons/search.png",
-                "path": "/assets/views/play/search/search.htm",
+                "icon_class": "fa-search",
+                "tool_tip": "Search for games",
                 "url": "/play/search",
-                "active": false,
                 "isVisible": function(c) {
                     return true;
                 }
             }, {
                 "name": "Play",
-                "imageURL": "/assets/images/objects/home.gif",
-                "path": "/assets/views/play/lobby/lobby.htm",
+                "icon_class": "fa-home",
+                "tool_tip": "Play the game",
                 "url": "/play/lobby",
-                "active": false,
                 "isVisible": function(c) {
                     return c != null;
                 }
             }, {
                 "name": "Quotes",
-                "imageURL": "/assets/images/objects/stock_header.png",
-                "path": "/assets/views/discover/index.htm",
+                "icon_class": "fa-table",
+                "tool_tip": "Stock Quotes and Research",
                 "url": "/discover",
-                "active": false,
                 "isVisible": function(c) {
-                    return c != null;
+                    return true;
                 }
             }, {
                 "name": "News",
-                "imageURL": "/assets/images/objects/headlines.png",
-                "path": "/assets/views/news/news_center.htm",
+                "icon_class": "fa-newspaper-o",
+                "tool_tip": "Stocks News",
                 "url": "/news",
-                "active": false,
                 "isVisible": function(c) {
-                    return c != null;
+                    return true;
                 }
             }, {
                 "name": "My Awards",
-                "path": "/assets/views/play/awards/awards.htm",
-                "imageURL": "/assets/images/objects/award.gif",
+                "icon_class": "fa-trophy",
+                "tool_tip": "My Awards",
                 "url": "/play/awards",
-                "active": false,
-                "isVisible": function(c) {
-                    return c != null;
+                "isVisible": function(c) { //
+                    return true;
                 }
             }, {
                 "name": "My Perks",
-                "path": "/assets/views/play/perks/perks.htm",
-                "imageURL": "/assets/images/objects/gift.png",
+                "icon_class": "fa-gift",
+                "tool_tip": "My Perks",
                 "url": "/play/perks",
-                "active": false,
                 "isVisible": function(c) {
-                    return c != null;
+                    return true;
                 }
             }, {
                 "name": "My Statistics",
-                "path": "/assets/views/play/statistics/statistics.htm",
-                "imageURL": "/assets/images/objects/stats.gif",
+                "icon_class": "fa-bar-chart",
+                "tool_tip": "My Statistics",
                 "url": "/play/statistics",
-                "active": false,
                 "isVisible": function(c) {
-                    return c != null;
+                    return true;
                 }
             }];
 
@@ -683,6 +679,8 @@
             $scope.$on("profile_updated", function (event, profile) {
                 $log.info("User Profile updated");
                 MySession.userProfile.netWorth = profile.netWorth;
+                //type, title, body, timeout, bodyOutputType, clickHandler
+                toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
             });
 
             //////////////////////////////////////////////////////////////////////

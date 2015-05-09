@@ -42,11 +42,11 @@ div.news_quotes_container {
 }
 
 .news_tile0 {
-	background-color: white;
+
 }
 
 .news_tile1 {
-	background-color: #efefef;
+
 }
 
 .news_grid_even {
@@ -67,14 +67,12 @@ div.news_quotes_container {
 	display: block;	
 	width: 100%;
 	padding-left: 5px;
-	background-color: #efefef;
 }
 
 .news_list_odd {
 	display: block;		
 	width: 100%;	
 	padding-left: 5px;
-	background-color: white;
 }
 
 .newsContainer {

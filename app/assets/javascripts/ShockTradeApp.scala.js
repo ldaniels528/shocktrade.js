@@ -15,19 +15,19 @@
             $routeProvider
                 .when('/connect', {templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectController'})
                 .when('/developers', {templateUrl: '/assets/views/developers/developer.htm', controller: 'DeveloperCtrl'})
-                .when('/discover', {templateUrl: '/assets/views/discover/index.htm', controller: 'DiscoverController'})
+                .when('/discover', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
                 .when('/discover/:symbol', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
                 .when('/explore', {templateUrl: '/assets/views/explore/drill_down.htm', controller: 'DrillDownController'})
                 .when('/news', {templateUrl: '/assets/views/news/index.htm', controller: 'NewsController'})
                 .when('/play', {redirectTo: '/play/search'})
-                .when('/play/awards', {templateUrl: '/assets/views/play/awards/index.htm'})
-                .when('/play/lounge', {templateUrl: '/assets/views/play/lounge/index.htm'})
-                .when('/play/perks', {templateUrl: '/assets/views/play/perks/index.htm'})
-                .when('/play/portfolio', {templateUrl: '/assets/views/play/portfolio/index.htm'})
-                .when('/play/lobby', {templateUrl: '/assets/views/play/lobby/index.htm'})
-                .when('/play/search', {templateUrl: '/assets/views/play/search/index.htm'})
-                .when('/play/statistics', {templateUrl: '/assets/views/play/statistics/index.htm'})
-                .when('/search', {templateUrl: '/assets/views/search/index.htm'})
+                .when('/play/awards', {templateUrl: '/assets/views/play/awards/awards.htm'})
+                .when('/play/lounge', {templateUrl: '/assets/views/play/lounge/lounge.htm'})
+                .when('/play/perks', {templateUrl: '/assets/views/play/perks/perks.htm'})
+                .when('/play/portfolio', {templateUrl: '/assets/views/play/portfolio/portfolio.htm'})
+                .when('/play/lobby', {templateUrl: '/assets/views/play/lobby/lobby.htm'})
+                .when('/play/search', {templateUrl: '/assets/views/play/search/search.htm'})
+                .when('/play/statistics', {templateUrl: '/assets/views/play/statistics/statistics.htm'})
+                .when('/research', {templateUrl: '/assets/views/research/index.htm'})
                 .otherwise({redirectTo: '/discover'});
         }]);
 

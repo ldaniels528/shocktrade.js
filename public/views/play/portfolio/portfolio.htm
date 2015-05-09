@@ -1,10 +1,4 @@
-<div ng-hide="MySession.userProfile._id" class="spectator_message" style="display: block; width: 100%">
-	<div ng-include src="'/assets/views/signin_notice.htm'"></div>
-</div>
-<div ng-if="MySession.userProfile._id && !contest._id" class="spectator_message" style="display: block; width: 100%">
-	<div ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
-</div>
-<div ng-controller="PortfolioController" ng-if="MySession.userProfile._id && contest._id" style="display: block; width: 100%">
+<div ng-controller="PortfolioController">
 	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
     <div class="row">
         <div class="col-md-offset-9 col-md-3">

@@ -12,6 +12,15 @@ img.chart {
 	max-width: 100%;
 }
 
+.market_status {
+	border: 1px solid #bbbbbb;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #eeeeee;
+	color: black;
+	width: 100%;
+	height: 24px;
+}
+
 .quote_control_panel {
 	border: 1px solid #cccccc;
 	border-radius: 5px 5px 5px 5px;
