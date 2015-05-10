@@ -5,7 +5,7 @@
      * Web Socket Singleton Service
      * @author Lawrence Daniels <lawrence.daniels@gmail.com>
      */
-    app.factory('WebSockets', function ($rootScope, $location, $log, $timeout, toaster) {
+    app.factory('WebSockets', function ($rootScope, $http, $location, $log, $timeout, toaster, MySession) {
         var service = {};
 
         // establish the web socket connection
@@ -32,14 +32,14 @@
          */
         service.send = function (message, scope) {
             if (!window.WebSocket) {
-                scope.addErrorMessage("Web socket closed");
+                toaster.pop('error', 'Online Status', 'Web socket closed');
                 return false;
             }
             if (socket.readyState == WebSocket.OPEN) {
                 socket.send(message);
                 return true;
             } else {
-                scope.addErrorMessage("Web socket closed: readyState = " + socket.readyState);
+                toaster.pop('error', 'Online Status', 'Web socket closed: readyState = ' + socket.readyState);
                 return false;
             }
         };
@@ -64,6 +64,23 @@
             }
         }
 
+        function sendState(connected) {
+            var userID = MySession.fbUserID;
+            if(userID) {
+                $log.info("Sending connected status for user " + userID + "...");
+                if(connected)
+                    return $http.put('/api/online/' + userID);
+                else
+                    return $http.delete('/api/online/' + userID);
+            }
+            else {
+                $log.info("User unknown, waiting 5 seconds...");
+                $timeout(function() {
+                    sendState(connected);
+                }, 5000);
+            }
+        }
+
         /**
          * Establishes a web socket connection
          */
@@ -74,11 +91,13 @@
 
             socket.onopen = function (event) {
                 connected = true;
+                sendState(connected);
                 //toaster.pop('info', 'Online Status', 'You are connected to ShockTrade');
             };
 
             socket.onclose = function (event) {
                 connected = false;
+                sendState(connected);
                 //toaster.pop('warning', 'Online Status', 'Lost connection to server');
 
                 $timeout(function () {

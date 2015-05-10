@@ -1,3 +1,3 @@
 #!/bin/bash
-activator clean dist
+activator dist
 scp /Users/ldaniels/git/shocktrade/shocktrade-js/target/universal/shocktrade-js-*.zip dev803:~/

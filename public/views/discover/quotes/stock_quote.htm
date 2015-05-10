@@ -1,10 +1,8 @@
 <div class="row">
 	<div class="col-md-4">
         <span class="qm_header">Last Sale</span>
-		<img ng-src="/assets/images/status/{{ isLoading() ? 'loading.gif' : 'refresh.png' }}"
-			title="Refresh"
-			ng-click="loadQuote(ticker)"
-			class="clickable">
+        <i ng-hide="isLoading()" class="fa fa-refresh positive clickable" title="Refresh" ng-click="loadQuote(ticker)"></i>
+		<img ng-show="isLoading()" ng-src="/assets/images/status/loading.gif">
         <span class="qm_detail pull-right">{{ q.lastTrade | quoteNumber }}</span>
 	</div>
 	<div class="col-md-4">

@@ -4,7 +4,6 @@ import java.util.UUID
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import play.api.libs.json.JsValue
-import play.api.libs.json.Json.{obj => JS}
 
 /**
  * Web Socket Handler

@@ -16,6 +16,17 @@
             };
 
             $scope.portfolioTabs = [{
+                "name": "Chat",
+                "imageURL": "/assets/images/objects/chat.png",
+                "path": "/assets/views/play/portfolio/chat.htm",
+                "active": false,
+                "init": function (contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function (contest) {
+                    return contest.status !== 'ACTIVE';
+                }
+            }, {
                 "name": "Positions",
                 "imageURL": "/assets/images/objects/position.png",
                 "path": "/assets/views/play/portfolio/positions.htm",
@@ -48,17 +59,6 @@
                 "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
-            }, {
-                "name": "Messages",
-                "imageURL": "/assets/images/objects/chat.png",
-                "path": "/assets/views/play/portfolio/chat.htm",
-                "active": false,
-                "init": function (contest) {
-                    // TODO enrich orders here
-                },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
-                }
             }];
 
             /////////////////////////////////////////////////////////////////////
@@ -71,6 +71,23 @@
                     enrichParticipant(contest, $scope.participant);
                 }
                 return $scope.participant;
+            };
+
+            $scope.getRankings = function(contest) {
+                if(!contest) return [];
+                else if(!contest.rankings) {
+                    contest.rankings = [];
+                    $log.info("Loading rankings....");
+                    ContestService.getRankings(contest.OID())
+                        .success(function(rankings) {
+                            contest.rankings = rankings;
+                        })
+                        .error(function(response) {
+                            toaster.pop('error', 'Error!', "Error loading play rankings");
+                            $log.error(response.error)
+                        });
+                }
+                return contest.rankings;
             };
 
             function enrichParticipant(contest, participant) {

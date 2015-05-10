@@ -7,9 +7,10 @@ import akka.routing.RoundRobinPool
 import com.shocktrade.models.contest.Contest
 import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
-import play.api.libs.json.JsValue
 import play.api.libs.json.Json.{obj => JS, _}
+import play.api.libs.json.{JsObject, JsValue}
 import play.libs.Akka
+import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.BSONObjectID
 
 import scala.collection.concurrent.TrieMap
@@ -52,29 +53,9 @@ object WebSockets {
    */
   class WsRelayActor() extends Actor with ActorLogging {
     override def receive = {
-      case ContestCreated(contest) =>
+      case msg: WsRelayMessage =>
         actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "contest_created", "data" -> contest)
-        }
-
-      case ContestDeleted(id) =>
-        actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "contest_deleted", "data" -> JS("id" -> id.stringify))
-        }
-
-      case ContestUpdated(contest) =>
-        actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "contest_updated", "data" -> contest)
-        }
-
-      case QuoteUpdated(quote) =>
-        actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "quote_updated", "data" -> quote)
-        }
-
-      case UserProfileUpdated(profile) =>
-        actors.foreach { case (uid, actor) =>
-          actor ! JS("action" -> "profile_updated", "data" -> profile)
+          actor ! msg.toJsonMessage
         }
 
       case message =>
@@ -83,14 +64,48 @@ object WebSockets {
     }
   }
 
-  case class ContestCreated(contest: Contest)
+  /**
+   * Base trait for all Web Socket Replay Messages
+   */
+  trait WsRelayMessage {
 
-  case class ContestDeleted(id: BSONObjectID)
+    def toJsonMessage: JsObject
+  }
 
-  case class ContestUpdated(contest: Contest)
+  case class ContestCreated(contest: Contest) extends WsRelayMessage {
 
-  case class QuoteUpdated(quote: JsValue)
+    def toJsonMessage = JS("action" -> "contest_created", "data" -> contest)
+  }
 
-  case class UserProfileUpdated(profile: UserProfile)
+  case class ContestDeleted(id: BSONObjectID) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "contest_deleted", "data" -> JS("id" -> id.stringify))
+  }
+
+  case class ContestUpdated(contest: Contest) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "contest_updated", "data" -> contest)
+  }
+
+  case class ContestMessagesUpdated(c: Contest) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "contest_messages_updated", "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
+  }
+
+  case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "quote_updated", "data" -> quote)
+  }
+
+  case class UserProfileUpdated(profile: UserProfile) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "profile_updated", "data" -> profile)
+  }
+
+  case class UserStateChanged(userID: String, connected: Boolean) extends WsRelayMessage {
+
+    def toJsonMessage = JS("action" -> "user_status_changed", "data" -> JS("userID" -> userID, "connected" -> connected))
+  }
+
 
 }

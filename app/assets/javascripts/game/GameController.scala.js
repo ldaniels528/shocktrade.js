@@ -344,15 +344,6 @@
                 enrichContest(contest);
             };
 
-            $scope.starRating = function (gainLoss) {
-                if (gainLoss > 250) return [1, 2, 3, 4, 5];
-                else if (gainLoss > 100) return [1, 2, 3, 4];
-                else if (gainLoss > 75) return [1, 2, 3];
-                else if (gainLoss > 50) return [1, 2];
-                else if (gainLoss > 25) return [1];
-                else return [];
-            };
-
             $scope.isMedalist = function (rank) {
                 return rank === '1st' || rank === '2nd' || rank === '3rd';
             };
@@ -607,8 +598,13 @@
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' updated");
                 if (!$scope.contest || (contest.OID() === $scope.contest.OID())) {
+                    var oldContest = $scope.contest;
                     $scope.contest = contest;
                     MySession.setContest(contest);
+                    /*
+                    if(oldContest) {
+                        $scope.contest.rankings = oldContest.rankings;
+                    }*/
                 }
                 if ($scope.selectedContest && (contest.OID() === $scope.selectedContest.OID())) {
                     $scope.selectedContest = contest;
@@ -620,9 +616,11 @@
              */
             $scope.$on("profile_updated", function (event, profile) {
                 $log.info("User Profile updated");
-                MySession.userProfile.netWorth = profile.netWorth;
-                //type, title, body, timeout, bodyOutputType, clickHandler
-                toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
+                if(MySession.getUserID() == profile.OID()) {
+                    MySession.userProfile.netWorth = profile.netWorth;
+                    //type, title, body, timeout, bodyOutputType, clickHandler
+                    toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
+                }
             });
 
             //////////////////////////////////////////////////////////////////////

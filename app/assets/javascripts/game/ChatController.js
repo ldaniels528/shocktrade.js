@@ -9,15 +9,13 @@
         function ($scope, $location, $log, $timeout, toaster, MySession, ContestService) {
 
             $scope.chatMessage = "";
-            $scope.errors = [];
-            $scope.messages = ((MySession.contest || {}).messages || []);
 
             $scope.addSmiley = function (emoticon) {
                 $scope.chatMessage += emoticon.symbol;
             };
 
-            $scope.getMessages = function() {
-                return $scope.messages.sort(function(a,b) {
+            $scope.getMessages = function(contest) {
+                return contest.messages.sort(function(a,b) {
                     return b.sentTime - a.sentTime;
                 });
             };
@@ -72,11 +70,13 @@
             //////////////////////////////////////////////////////////////////////
 
             /**
-             * Listen for contest update events
+             * Listen for contest message update events
              */
-            $scope.$on("contest_updated", function (event, contest) {
-                $log.info("[Chat] Contest '" + contest.name + "' updated");
-                $scope.messages = contest.messages;
+            $scope.$on("contest_messages_updated", function(event, contest) {
+                if($scope.contest && ($scope.contest.OID() == contest.OID())) {
+                    $log.info("[Chat] Messages for '" + contest.name + "' updated");
+                    $scope.contest.messages = contest.messages;
+                }
             });
 
         }]);

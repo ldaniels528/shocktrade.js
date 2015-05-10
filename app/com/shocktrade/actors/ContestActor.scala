@@ -4,7 +4,7 @@ import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.actors.ContestActor._
-import com.shocktrade.actors.WebSockets.{ContestCreated, ContestDeleted, ContestUpdated}
+import com.shocktrade.actors.WebSockets._
 import com.shocktrade.models.contest.{Contest, _}
 import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
 import com.shocktrade.util.DateUtil._
@@ -45,7 +45,7 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.createMessage(contestId, message) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+          contest_?.foreach(WebSockets ! ContestMessagesUpdated(_))
         case Failure(e) => mySender ! e
       }
 

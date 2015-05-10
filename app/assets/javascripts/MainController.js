@@ -5,10 +5,19 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
-        function ($scope, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
+
+            // setup the market clock
+            $scope.marketClock = (new Date()).toTimeString();
+
+            // setup main-specific variables
+            $scope.admin = false;
+
+            // mapping of online players
+            var onlinePlayers = {};
 
             $scope.isLoading = function () {
                 return $scope._loading;
@@ -32,11 +41,23 @@
                 }, 500);
             };
 
-            // setup the market clock
-            $scope.marketClock = (new Date()).toTimeString();
+            $scope.isOnline = function(player) {
+                var playerID = player.facebookID;
+                var state = onlinePlayers[playerID];
+                if(!state) {
+                    state = {connected: false};
+                    onlinePlayers[playerID] = state;
+                    $http.get("/api/online/" + playerID)
+                        .success(function(newState) {
+                            onlinePlayers[playerID] = newState;
+                        })
+                        .error(function(err) {
+                            $log.error("Error retrieving online state for user " + playerID);
+                        });
 
-            // setup main-specific variables
-            $scope.admin = false;
+                }
+                return state && state.connected;
+            };
 
             /**
              * Initializes the application
@@ -49,14 +70,6 @@
 
                 // setup the market status updates
                 setupMarketStatusUpdates();
-            };
-
-            $scope.alertMessage = function (message) {
-                $("#alert_placeholder").html(
-                    '<div class="alert">' +
-                    '<a class="close" data-dismiss="alert">x</a>' +
-                    '<span>' + message + '</span>' +
-                    '</div>');
             };
 
             $scope.range = function (n) {
@@ -192,6 +205,10 @@
                     }, delay);
                 });
             }
+
+            $scope.$on("user_status_changed", function(event, newState) {
+                $log.info("user_status_changed: newState = " + angular.toJson(newState));
+            });
 
         }]);
 })();

@@ -1,6 +1,6 @@
 <div ng-controller="ChatController" ng-if="MySession.getUserID() && contest.OID()">
     <div class="chat_messages">
-        <div ng-repeat="message in getMessages()" class="chat_message">
+        <div ng-repeat="message in getMessages(contest)" class="chat_message">
             <avatar id="{{ message.sender.facebookID }}" style="width: 20px; height: 20px; margin: 3px" />
             <span style="color: {{ message.color }}; font-weight: bold">{{ message.sender.name }}</span>
             [<span style="color: #0000ff">{{ message.sentTime | date:'MM/dd hh:mma' }}</span>]

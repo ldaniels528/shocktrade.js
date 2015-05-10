@@ -154,6 +154,14 @@
                 }
             };
 
+            $scope.alertMessage = function (message) {
+                $("#alert_placeholder").html(
+                    '<div class="alert">' +
+                    '<a class="close" data-dismiss="alert">x</a>' +
+                    '<span>' + message + '</span>' +
+                    '</div>');
+            };
+
             /**
              * Selects all currently visible messages
              */

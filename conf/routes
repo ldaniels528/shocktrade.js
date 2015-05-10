@@ -3,112 +3,118 @@
 # ~~~~
 
 # Home page
-GET           /                                                         com.shocktrade.controllers.Application.index
-GET           /websocket                                                com.shocktrade.controllers.Application.webSocket
-GET           /assets/javascripts/app.min.js                            com.shocktrade.controllers.Application.ngApp
-GET           /assets/javascripts/Facebook.js                           com.shocktrade.controllers.Application.facebook
+GET           /                                                    com.shocktrade.controllers.Application.index
+GET           /websocket                                           com.shocktrade.controllers.Application.webSocket
+GET           /assets/javascripts/app.min.js                       com.shocktrade.controllers.Application.ngApp
+GET           /assets/javascripts/Facebook.js                      com.shocktrade.controllers.Application.facebook
 
 # Charts
-GET           /api/charts/exposure/exchange/:id/:userName               com.shocktrade.controllers.ChartResources.getExposureByExchange(id, userName)
-GET           /api/charts/exposure/industry/:id/:userName               com.shocktrade.controllers.ChartResources.getExposureByIndustry(id, userName)
-GET           /api/charts/exposure/sector/:id/:userName                 com.shocktrade.controllers.ChartResources.getExposureBySector(id, userName)
-GET           /api/charts/exposure/securities/:id/:userName             com.shocktrade.controllers.ChartResources.getExposureBySecurities(id, userName)
-GET           /api/charts/stock/:symbol/:size/:range                    com.shocktrade.controllers.ChartResources.getStockChart(symbol, size, range)
-GET           /api/charts/ratings/:symbol                               com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
+GET           /api/charts/exposure/exchange/:id/:userName          com.shocktrade.controllers.ChartResources.getExposureByExchange(id, userName)
+GET           /api/charts/exposure/industry/:id/:userName          com.shocktrade.controllers.ChartResources.getExposureByIndustry(id, userName)
+GET           /api/charts/exposure/sector/:id/:userName            com.shocktrade.controllers.ChartResources.getExposureBySector(id, userName)
+GET           /api/charts/exposure/securities/:id/:userName        com.shocktrade.controllers.ChartResources.getExposureBySecurities(id, userName)
+GET           /api/charts/stock/:symbol/:size/:range               com.shocktrade.controllers.ChartResources.getStockChart(symbol, size, range)
+GET           /api/charts/ratings/:symbol                          com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
 
 # Contests
-GET           /assets/views/play/lobby/lobby.htm                        com.shocktrade.controllers.ContestResources.lobby
-GET           /assets/views/play/search/search.htm                      com.shocktrade.controllers.ContestResources.search
-GET           /assets/javascripts/game/GameController.js                com.shocktrade.controllers.ContestResources.gameController
+GET           /assets/views/play/lobby/lobby.htm                   com.shocktrade.controllers.ContestResources.lobby
+GET           /assets/views/play/search/search.htm                 com.shocktrade.controllers.ContestResources.search
+GET           /assets/javascripts/game/GameController.js           com.shocktrade.controllers.ContestResources.gameController
 
-PUT           /api/contest                                              com.shocktrade.controllers.ContestResources.createContest
-GET           /api/contest/:id                                          com.shocktrade.controllers.ContestResources.getContestByID(id)
-DELETE        /api/contest/:id                                          com.shocktrade.controllers.ContestResources.deleteContestByID(id)
-GET           /api/contest/:id/start                                    com.shocktrade.controllers.ContestResources.startContest(id)
+PUT           /api/contest                                         com.shocktrade.controllers.ContestResources.createContest
+GET           /api/contest/:id                                     com.shocktrade.controllers.ContestResources.getContestByID(id)
+DELETE        /api/contest/:id                                     com.shocktrade.controllers.ContestResources.deleteContestByID(id)
+GET           /api/contest/:id/start                               com.shocktrade.controllers.ContestResources.startContest(id)
 
-GET           /api/contest/:id/rankings                                 com.shocktrade.controllers.ContestResources.getContestRankings(id)
-PUT           /api/contest/:id/chat                                     com.shocktrade.controllers.ContestResources.createChatMessage(id)
+GET           /api/contest/:id/rankings                            com.shocktrade.controllers.ContestResources.getContestRankings(id)
+PUT           /api/contest/:id/chat                                com.shocktrade.controllers.ContestResources.createChatMessage(id)
 
-PUT           /api/contest/:id/player                                   com.shocktrade.controllers.ContestResources.joinContest(id)
-GET           /api/contest/:id/player/:playerId                         com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
-DELETE        /api/contest/:id/player/:playerId                         com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
+PUT           /api/contest/:id/player                              com.shocktrade.controllers.ContestResources.joinContest(id)
+GET           /api/contest/:id/player/:playerId                    com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
+DELETE        /api/contest/:id/player/:playerId                    com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
 
-GET           /api/contest/:id/orders/:playerId                         com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
-GET           /api/contest/:id/positions/:playerId                      com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
+GET           /api/contest/:id/orders/:playerId                    com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
+GET           /api/contest/:id/positions/:playerId                 com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
 
-GET           /api/contests/player/:playerId                            com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
-POST          /api/contests/search                                      com.shocktrade.controllers.ContestResources.contestSearch
+GET           /api/contests/player/:playerId                       com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
+POST          /api/contests/search                                 com.shocktrade.controllers.ContestResources.contestSearch
 
 # Orders
-PUT           /api/order/:id/:playerId                                  com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
-DELETE        /api/order/:id/:playerId/:orderId                         com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
+PUT           /api/order/:id/:playerId                             com.shocktrade.controllers.ContestResources.createOrder(id, playerId)
+DELETE        /api/order/:id/:playerId/:orderId                    com.shocktrade.controllers.ContestResources.cancelOrder(id, playerId, orderId)
 
 # Positions
-GET           /api/positions/:playerId                                  com.shocktrade.controllers.ContestResources.getHeldSecurities(playerId)
+GET           /api/positions/:playerId                             com.shocktrade.controllers.ContestResources.getHeldSecurities(playerId)
 
 # News
-GET           /api/news/sources                                         com.shocktrade.controllers.NewsResources.getSources
-GET           /api/news/feed/:id                                        com.shocktrade.controllers.NewsResources.getFeed(id)
+GET           /api/news/sources                                    com.shocktrade.controllers.NewsResources.getSources
+GET           /api/news/feed/:id                                   com.shocktrade.controllers.NewsResources.getFeed(id)
 
 # Explore
-GET           /api/explore/symbol/:symbol                               com.shocktrade.controllers.QuoteResources.getSectorInfo(symbol)
-GET           /api/explore/sectors                                      com.shocktrade.controllers.QuoteResources.exploreSectors(userId ?= null)
-GET           /api/explore/industries                                   com.shocktrade.controllers.QuoteResources.exploreIndustries(userId ?= null, sector)
-GET           /api/explore/subIndustries                                com.shocktrade.controllers.QuoteResources.exploreSubIndustries(userId ?= null, sector, industry)
-GET           /api/explore/quotes                                       com.shocktrade.controllers.QuoteResources.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
-GET           /api/explore/naics                                        com.shocktrade.controllers.QuoteResources.exploreNAICSSectors
-GET           /api/explore/sic                                          com.shocktrade.controllers.QuoteResources.exploreSICSectors
+GET           /api/explore/symbol/:symbol                          com.shocktrade.controllers.QuoteResources.getSectorInfo(symbol)
+GET           /api/explore/sectors                                 com.shocktrade.controllers.QuoteResources.exploreSectors(userId ?= null)
+GET           /api/explore/industries                              com.shocktrade.controllers.QuoteResources.exploreIndustries(userId ?= null, sector)
+GET           /api/explore/subIndustries                           com.shocktrade.controllers.QuoteResources.exploreSubIndustries(userId ?= null, sector, industry)
+GET           /api/explore/quotes                                  com.shocktrade.controllers.QuoteResources.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
+GET           /api/explore/naics                                   com.shocktrade.controllers.QuoteResources.exploreNAICSSectors
+GET           /api/explore/sic                                     com.shocktrade.controllers.QuoteResources.exploreSICSectors
 
 # Exchanges
-GET           /api/exchanges                                            com.shocktrade.controllers.QuoteResources.getExchangeCounts
-POST          /api/exchanges                                            com.shocktrade.controllers.ProfileResources.setExchanges()
+GET           /api/exchanges                                       com.shocktrade.controllers.QuoteResources.getExchangeCounts
+POST          /api/exchanges                                       com.shocktrade.controllers.ProfileResources.setExchanges()
 
 # Quotes
-GET           /api/quotes/cached/:symbol                                com.shocktrade.controllers.QuoteResources.getCachedQuote(symbol)
-GET           /api/quotes/autocomplete                                  com.shocktrade.controllers.QuoteResources.autocomplete(searchTerm, maxResults:Int)
-POST          /api/quotes/filter/full                                   com.shocktrade.controllers.QuoteResources.filterFullQuotes(userId ?= null)
-POST          /api/quotes/filter/mini                                   com.shocktrade.controllers.QuoteResources.filterMiniQuotes(userId ?= null)
-POST          /api/quotes/list                                          com.shocktrade.controllers.QuoteResources.getQuotes
-GET           /api/quotes/order/symbol/:symbol                          com.shocktrade.controllers.QuoteResources.getOrderQuote(symbol)
-POST          /api/quotes/pricing                                       com.shocktrade.controllers.QuoteResources.getPricing
-GET           /api/quotes/realTime/:symbol                              com.shocktrade.controllers.QuoteResources.getRealtimeQuote(symbol)
-GET           /api/quotes/riskLevel/:symbol                             com.shocktrade.controllers.QuoteResources.getRiskLevel(symbol)
-GET           /api/quotes/symbol/:symbol                                com.shocktrade.controllers.QuoteResources.getQuote(symbol)
-GET           /api/quotes/tradingHistory/:symbol                        com.shocktrade.controllers.QuoteResources.getTradingHistory(symbol)
+GET           /api/quotes/cached/:symbol                           com.shocktrade.controllers.QuoteResources.getCachedQuote(symbol)
+GET           /api/quotes/autocomplete                             com.shocktrade.controllers.QuoteResources.autocomplete(searchTerm, maxResults:Int)
+POST          /api/quotes/filter/full                              com.shocktrade.controllers.QuoteResources.filterFullQuotes(userId ?= null)
+POST          /api/quotes/filter/mini                              com.shocktrade.controllers.QuoteResources.filterMiniQuotes(userId ?= null)
+POST          /api/quotes/list                                     com.shocktrade.controllers.QuoteResources.getQuotes
+GET           /api/quotes/order/symbol/:symbol                     com.shocktrade.controllers.QuoteResources.getOrderQuote(symbol)
+POST          /api/quotes/pricing                                  com.shocktrade.controllers.QuoteResources.getPricing
+GET           /api/quotes/realTime/:symbol                         com.shocktrade.controllers.QuoteResources.getRealtimeQuote(symbol)
+GET           /api/quotes/riskLevel/:symbol                        com.shocktrade.controllers.QuoteResources.getRiskLevel(symbol)
+GET           /api/quotes/symbol/:symbol                           com.shocktrade.controllers.QuoteResources.getQuote(symbol)
+GET           /api/quotes/tradingHistory/:symbol                   com.shocktrade.controllers.QuoteResources.getTradingHistory(symbol)
+
+# Online Status
+GET           /api/online/:userID                                  com.shocktrade.controllers.OnlineStatusResources.getStatus(userID)
+POST          /api/online                                          com.shocktrade.controllers.OnlineStatusResources.getGroupStatus
+PUT           /api/online/:userID                                  com.shocktrade.controllers.OnlineStatusResources.setIsOnline(userID)
+DELETE        /api/online/:userID                                  com.shocktrade.controllers.OnlineStatusResources.setIsOffline(userID)
 
 # Profile Quotes
-PUT           /api/profile/:id/exchange/:exchange                       com.shocktrade.controllers.QuoteResources.addExchange(id, exchange)
-DELETE        /api/profile/:id/exchange/:exchange                       com.shocktrade.controllers.QuoteResources.removeExchange(id, exchange)
-GET           /api/profile/:id/exchanges                                com.shocktrade.controllers.ProfileResources.getExchanges(id)
-GET           /api/profile/:id/explore/sectors                          com.shocktrade.controllers.QuoteResources.exploreSectors(id)
-GET           /api/profile/:id/explore/industries                       com.shocktrade.controllers.QuoteResources.exploreIndustries(id, sector)
-GET           /api/profile/:id/explore/subIndustries                    com.shocktrade.controllers.QuoteResources.exploreSubIndustries(id, sector, industry)
-GET           /api/profile/:id/explore/quotes                           com.shocktrade.controllers.QuoteResources.exploreQuotesBySubIndustry(id, sector, industry, subIndustry)
-POST          /api/profile/:id/quotes/filter/full                       com.shocktrade.controllers.QuoteResources.filterFullQuotes(id)
-POST          /api/profile/:id/quotes/filter/mini                       com.shocktrade.controllers.QuoteResources.filterMiniQuotes(id)
+PUT           /api/profile/:id/exchange/:exchange                  com.shocktrade.controllers.QuoteResources.addExchange(id, exchange)
+DELETE        /api/profile/:id/exchange/:exchange                  com.shocktrade.controllers.QuoteResources.removeExchange(id, exchange)
+GET           /api/profile/:id/exchanges                           com.shocktrade.controllers.ProfileResources.getExchanges(id)
+GET           /api/profile/:id/explore/sectors                     com.shocktrade.controllers.QuoteResources.exploreSectors(id)
+GET           /api/profile/:id/explore/industries                  com.shocktrade.controllers.QuoteResources.exploreIndustries(id, sector)
+GET           /api/profile/:id/explore/subIndustries               com.shocktrade.controllers.QuoteResources.exploreSubIndustries(id, sector, industry)
+GET           /api/profile/:id/explore/quotes                      com.shocktrade.controllers.QuoteResources.exploreQuotesBySubIndustry(id, sector, industry, subIndustry)
+POST          /api/profile/:id/quotes/filter/full                  com.shocktrade.controllers.QuoteResources.filterFullQuotes(id)
+POST          /api/profile/:id/quotes/filter/mini                  com.shocktrade.controllers.QuoteResources.filterMiniQuotes(id)
 
 # Profiles
-POST          /api/profile/create                                       com.shocktrade.controllers.ProfileResources.createProfile
-PUT           /api/profile/:id/favorite/:symbol                         com.shocktrade.controllers.ProfileResources.addFavoriteSymbol(id, symbol)
-DELETE        /api/profile/:id/favorite/:symbol                         com.shocktrade.controllers.ProfileResources.removeFavoriteSymbol(id, symbol)
-PUT           /api/profile/:id/perks/purchase                           com.shocktrade.controllers.ProfileResources.purchasePerks(id)
-PUT           /api/profile/:id/recent/:symbol                           com.shocktrade.controllers.ProfileResources.addRecentSymbol(id, symbol)
-DELETE        /api/profile/:id/recent/:symbol                           com.shocktrade.controllers.ProfileResources.removeRecentSymbol(id, symbol)
-GET           /api/profile/facebook/:fbid                               com.shocktrade.controllers.ProfileResources.findProfileByFacebookID(fbid)
-POST          /api/profile/facebook/friends                             com.shocktrade.controllers.ProfileResources.findFacebookFriends
+POST          /api/profile/create                                  com.shocktrade.controllers.ProfileResources.createProfile
+PUT           /api/profile/:id/favorite/:symbol                    com.shocktrade.controllers.ProfileResources.addFavoriteSymbol(id, symbol)
+DELETE        /api/profile/:id/favorite/:symbol                    com.shocktrade.controllers.ProfileResources.removeFavoriteSymbol(id, symbol)
+PUT           /api/profile/:id/perks/purchase                      com.shocktrade.controllers.ProfileResources.purchasePerks(id)
+PUT           /api/profile/:id/recent/:symbol                      com.shocktrade.controllers.ProfileResources.addRecentSymbol(id, symbol)
+DELETE        /api/profile/:id/recent/:symbol                      com.shocktrade.controllers.ProfileResources.removeRecentSymbol(id, symbol)
+GET           /api/profile/facebook/:fbid                          com.shocktrade.controllers.ProfileResources.findProfileByFacebookID(fbid)
+POST          /api/profile/facebook/friends                        com.shocktrade.controllers.ProfileResources.findFacebookFriends
 
 # Profile Updates
-GET           /api/updates/:userName/:limit                             com.shocktrade.controllers.ProfileResources.getNotifications(userName, limit:Int)
-DELETE        /api/updates                                              com.shocktrade.controllers.ProfileResources.deleteNotifications()
+GET           /api/updates/:userName/:limit                        com.shocktrade.controllers.ProfileResources.getNotifications(userName, limit:Int)
+DELETE        /api/updates                                         com.shocktrade.controllers.ProfileResources.deleteNotifications()
 
 # Sessions
-GET           /api/session/list                                         com.shocktrade.controllers.SessionsResources.getSessions
+GET           /api/session/list                                    com.shocktrade.controllers.SessionsResources.getSessions
 
 # Trading
-GET           /api/tradingClock/status/:lastUpdate                      com.shocktrade.controllers.TradingResources.status(lastUpdate: Long)
-GET           /api/tradingClock/delayUntilStart                         com.shocktrade.controllers.TradingResources.delayUntilTradingStart
+GET           /api/tradingClock/status/:lastUpdate                 com.shocktrade.controllers.TradingResources.status(lastUpdate: Long)
+GET           /api/tradingClock/delayUntilStart                    com.shocktrade.controllers.TradingResources.delayUntilTradingStart
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                                             controllers.Assets.at(path="/public", file)
-GET           /webjars/*file                                            controllers.WebJarAssets.at(file)
+GET           /assets/*file                                        controllers.Assets.at(path="/public", file)
+GET           /webjars/*file                                       controllers.WebJarAssets.at(file)
 
