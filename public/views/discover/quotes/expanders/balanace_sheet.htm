@@ -1,80 +1,104 @@
-<table style="width: 100%; border-collapse: separate">
-	<tr>
-		<th class="qm_header">Total Cash</th>
-		<td class="qm_detail">
+<div class="row">
+    <div class="col-md-4">
+		<span class="qm_header">Total Cash</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.totalCash == null" class="null">&#8212;</span>
 			<span ng-show="q.totalCash != null">{{ q.totalCash | number | bigNumber }}</span>
-		</td>	
-		
-		<th class="qm_header">Total Debt</th>
-		<td class="qm_detail">
-			<span ng-show="q.totalDebt == null" class="null">&#8212;</span>
-			<span ng-show="q.totalDebt != null">{{ q.totalDebt | number | bigNumber }}</span>
-		</td>	
-				
-		<th class="qm_header">Current Ratio</th>
-		<td class="qm_detail">
-			<span ng-show="q.currentRatio == null" class="null">&#8212;</span>
-			<span ng-show="q.currentRatio != null" ng-class="q.currentRatio >= 1.5 ? 'positive' : ''">{{ q.currentRatio | number:2 }}</span>
-		</td>			
-	</tr>
-	<tr>
-		<th class="qm_header">Total Cash/Share</th>
-		<td class="qm_detail">
-			<span ng-show="q.totalCashPerShare == null" class="null">&#8212;</span>
-			<span ng-show="q.totalCashPerShare != null">{{ q.totalCashPerShare | quoteNumber }}</span>
-		</td>			
-		
-				<th class="qm_header">Total Debt/Equity</th>
-		<td class="qm_detail">
-			<span ng-show="q.totalDebtOverEquity == null" class="null">&#8212;</span>
-			<span ng-show="q.totalDebtOverEquity != null">{{ q.totalDebtOverEquity | number:2 }}</span>
-		</td>	
-		
+		</span>	
+	</div>
 
-		<th class="qm_header">Book Value/Share</th>
-		<td class="qm_detail">
-			<span ng-show="q.bookValuePerShare == null" class="null">&#8212;</span>
-			<span ng-show="q.bookValuePerShare != null"
-				ng-class="q.bookValuePerShare < 0 ? 'negative' : ''">{{ q.bookValuePerShare | quoteNumber }}</span>
-		</td>					
-	</tr>
-	<tr>
-		<th class="qm_header">Return On Assets</th>
-		<td class="qm_detail">
-			<span ng-show="q.returnOnAssets == null" class="null">&#8212;</span>
-			<span ng-show="q.returnOnAssets != null" ng-class="q.returnOnAssets < 0 ? 'negative' : ''">{{ q.returnOnAssets | number:2 }}%</span>
-		</td>
+    <div class="col-md-4">
+        <span class="qm_header">Total Debt</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.totalDebt == null" class="null">&#8212;</span>
+            <span ng-show="q.totalDebt != null">{{ q.totalDebt | number | bigNumber }}</span>
+        </span>
+    </div>
 
-		<th class="qm_header">Profit Margin</th>
-		<td class="qm_detail">
-			<span ng-show="q.profitMargin == null" class="null">&#8212;</span>
-			<span ng-show="q.profitMargin != null" ng-class="q.profitMargin < 0 ? 'negative' : ''">{{  q.profitMargin | number:2 }}%</span>
-		</td>
-		
-		<th class="qm_header">Most Recent Qtr</th>
-		<td class="qm_detail">
-			<span ng-show="q.mostRecentQuarterDate == null" class="null">&#8212;</span>
-			<span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate | date:'MM/dd/yyyy' }}</span>
-		</td>			
-	</tr>	
-	<tr>
-		<th class="qm_header">Return On Equity</th>
-		<td class="qm_detail">
-			<span ng-show="q.returnOnEquity == null" class="null">&#8212;</span>
-			<span ng-show="q.returnOnEquity != null" ng-class="q.returnOnEquity < 0 ? 'negative' : ''">{{ q.returnOnEquity | number:2 }}%</span>
-		</td>	
+    <div class="col-md-4">
+        <span class="qm_header">Current Ratio</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.currentRatio == null" class="null">&#8212;</span>
+            <span ng-show="q.currentRatio != null" ng-class="q.currentRatio >= 1.5 ? 'positive' : ''">{{ q.currentRatio | number:2 }}</span>
+        </span>
+    </div>
+</div>
 
-		<th class="qm_header">Operating Margin</th>
-		<td class="qm_detail">
-			<span ng-show="q.operatingMargin == null" class="null">&#8212;</span>
-			<span ng-show="q.operatingMargin != null" ng-class="q.operatingMargin < 0 ? 'negative' : ''">{{ q.operatingMargin | number:2 }}%</span>
-		</td>
-		
-		<th class="qm_header">Fiscal Year End</th>
-		<td class="qm_detail">
-			<span ng-show="q.fiscalYearEndDate == null" class="null">&#8212;</span>
-			<span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate | date:'MMM yyyy' }}</span>
-		</td>		
-	</tr>	
-</table>
+<div class="row">
+    <div class="col-md-4">
+        <span class="qm_header">Total Cash/Share</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.totalCashPerShare == null" class="null">&#8212;</span>
+            <span ng-show="q.totalCashPerShare != null">{{ q.totalCashPerShare | quoteNumber }}</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Total Debt/Equity</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.totalDebtOverEquity == null" class="null">&#8212;</span>
+            <span ng-show="q.totalDebtOverEquity != null">{{ q.totalDebtOverEquity | number:2 }}</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Book Value/Share</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.bookValuePerShare == null" class="null">&#8212;</span>
+            <span ng-show="q.bookValuePerShare != null"
+                ng-class="q.bookValuePerShare < 0 ? 'negative' : ''">{{ q.bookValuePerShare | quoteNumber }}</span>
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <span class="qm_header">Return On Assets</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.returnOnAssets == null" class="null">&#8212;</span>
+            <span ng-show="q.returnOnAssets != null" ng-class="q.returnOnAssets < 0 ? 'negative' : ''">{{ q.returnOnAssets | number:2 }}%</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Profit Margin</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.profitMargin == null" class="null">&#8212;</span>
+            <span ng-show="q.profitMargin != null" ng-class="q.profitMargin < 0 ? 'negative' : ''">{{  q.profitMargin | number:2 }}%</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Most Recent Qtr</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.mostRecentQuarterDate == null" class="null">&#8212;</span>
+            <span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate | date:'MM/dd/yyyy' }}</span>
+        </span>
+    </div>
+</div>	
+
+<div class="row">
+    <div class="col-md-4">
+        <span class="qm_header">Return On Equity</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.returnOnEquity == null" class="null">&#8212;</span>
+            <span ng-show="q.returnOnEquity != null" ng-class="q.returnOnEquity < 0 ? 'negative' : ''">{{ q.returnOnEquity | number:2 }}%</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Operating Margin</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.operatingMargin == null" class="null">&#8212;</span>
+            <span ng-show="q.operatingMargin != null" ng-class="q.operatingMargin < 0 ? 'negative' : ''">{{ q.operatingMargin | number:2 }}%</span>
+        </span>
+    </div>
+
+    <div class="col-md-4">
+        <span class="qm_header">Fiscal Year End</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.fiscalYearEndDate == null" class="null">&#8212;</span>
+            <span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate | date:'MMM yyyy' }}</span>
+        </span>
+    </div>
+</div>	

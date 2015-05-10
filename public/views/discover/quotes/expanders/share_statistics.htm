@@ -1,66 +1,91 @@
-<table style="width: 100%; border-collapse: separate">		
-	<tr>
-		<th class="qm_header">Shares Outstanding</th>
-		<td class="qm_detail">
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Shares Outstanding</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.sharesOutstanding == null" class="null">&#8212;</span>
 			<span ng-show="q.sharesOutstanding != null">{{ q.sharesOutstanding | number | bigNumber }}</span>
-		</td>		
-		
-		<th class="qm_header">Avg Volume <span class="small">(10 days)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Avg Volume <span class="small">(10 days)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.avgVolume10Day == null" class="null">&#8212;</span>
 			<span ng-show="q.avgVolume10Day != null">{{ q.avgVolume10Day | number | bigNumber }}</span>
-		</td>		
-			
-		<th class="qm_header">% Held by Insiders</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">% Held by Insiders</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.pctHeldByInsiders == null" class="null">&#8212;</span>
 			<span ng-show="q.pctHeldByInsiders != null">{{ q.pctHeldByInsiders | number:2 }}%</span>
-		</td>				
-	</tr>
-	<tr>
-		<th class="qm_header">Shares Float</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Shares Float</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.sharesFloat == null" class="null">&#8212;</span>
 			<span ng-show="q.sharesFloat != null">{{ q.sharesFloat | number | bigNumber }}</span>
-		</td>
-		
-		<th class="qm_header">Avg Volume <span class="small">(3 mos)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Avg Volume <span class="small">(3 mos)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.avgVolume3Month == null" class="null">&#8212;</span>
 			<span ng-show="q.avgVolume3Month != null">{{ q.avgVolume3Month | number | bigNumber }}</span>
-		</td>			
-		
-		<th class="qm_header">% Held by Institutions</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">% Held by Institutions</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.pctHeldByInstitutions == null" class="null">&#8212;</span>
 			<span ng-show="q.pctHeldByInstitutions != null">{{ q.pctHeldByInstitutions | number:2  }}%</span>
-		</td>							
-	</tr>
-	<tr>
-		<th class="qm_header">Shares Short</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Shares Short</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.sharesShort == null" class="null">&#8212;</span>
 			<span ng-show="q.sharesShort != null">{{ q.sharesShort | number | bigNumber }}</span>
-		</td>
+		</span>
+	</div>
 
-		<th class="qm_header">Short Ratio</th>
-		<td class="qm_detail">
+	<div class="col-md-4">
+		<span class="qm_header">Short Ratio</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.shortRatio == null" class="null">&#8212;</span>
-			<span ng-show="q.shortRatio != null">{{ q.shortRatio | number:2 }}</span>	
-		</td>				
-	</tr>
-	<tr>
-		<th class="qm_header">Shares Short <span class="small">(prior month)</span></th>
-		<td class="qm_detail">
+			<span ng-show="q.shortRatio != null">{{ q.shortRatio | number:2 }}</span>
+		</span>
+	</div>
+
+	<div class="col-md-4">&nbsp;</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Shares Short <span class="small">(prior month)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.sharesShortPriorMonth == null" class="null">&#8212;</span>
 			<span ng-show="q.sharesShortPriorMonth != null">{{ q.sharesShortPriorMonth | number | bigNumber }}</span>
-		</td>
-		
-				<th class="qm_header">Shares % of Float</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Shares % of Float</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.shortPctOfFloat == null" class="null">&#8212;</span>
 			<span ng-show="q.shortPctOfFloat != null">{{ q.shortPctOfFloat | number:2 }}%</span>
-		</td>
-	</tr>
-</table>
+		</span>
+	</div>
+
+	<div class="col-md-4">&nbsp;</div>
+</div>

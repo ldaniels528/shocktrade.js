@@ -25,6 +25,7 @@
                 .when('/research', {templateUrl: '/assets/views/research/index.htm'})
                 .when('/search', {templateUrl: '/assets/views/play/search/search.htm'})
                 .when('/statistics', {templateUrl: '/assets/views/statistics/statistics.htm'})
+                .when('/test', {templateUrl: '/assets/views/test.htm'})
                 .otherwise({redirectTo: '/search'});
         }]);
 

@@ -1,5 +1,5 @@
-<div class="sector_industry bottom">
-	<div style="display: inline; float: left">
+<div class="row sector_industry bottom">
+	<div class="col-md-8">
 		<!-- Market Image -->
 		<img ng-if="q.active" ng-src="/assets/images/objects/market.png">
 		<span ng-if="!q.active"
@@ -60,6 +60,11 @@
 			popover-trigger="mouseenter"
 			ng-click="popupNewOrderDialog(q.symbol)">
 	</div>
-	<br style="clear: both">
+	<div class="col-md-4">
+        <span ng-class="usMarketsOpen === null ? 'mks_loading' : (usMarketsOpen ? 'mks_open' : 'mks_closed')">
+            <img ng-show="usMarketsOpen === null" src="/assets/images/status/loading.gif">
+            {{ usMarketsOpen === null ? 'Checking Market Status...' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
+        </span>
+	</div>
 </div>
 	

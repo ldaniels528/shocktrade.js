@@ -26,13 +26,11 @@ a:active  { cursor: pointer; text-decoration: none; }
 }
 
 .st_nav_selected {
-    color: #1090ff;
+    color: #2f96b4;
 }
 
 div.st_nav_bar {
-    border: 1px solid #bbbbbb;
     border-radius: 4px 4px 4px 4px;
-    background: #cccccc;
     padding: 4px 4px 4px 4px;
     height: auto
 }
@@ -56,7 +54,7 @@ body {
 
 .header {
 	font-weight: bold;
-	color: #1090ff;
+	color: #2f96b4;
 }
 
 table {
@@ -69,7 +67,7 @@ table td, table th
 }
 
 .emphasis {
-	color: #1090ff
+	color: #2f96b4
 }
 
 img.profile_pic {
@@ -103,11 +101,11 @@ img.st_rounded {
 }
 
 .even {
-	background-color: #d0eeff
+
 }
 
 .odd {
-	background-color: #ffffff
+    background-color: #d0eeff
 }
 
 .padding-left-16 {
@@ -173,11 +171,6 @@ ul.error {
 .restricted {
 	color: #ff6600; 
 	font-weight: bold
-}
-
-span.small {
- 	color: #8080ff;
- 	font-size: 8pt
 }
 
 .bold {

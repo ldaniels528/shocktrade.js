@@ -1,9 +1,9 @@
 .sector_industry {
-	display: block; 
-	border: 1px solid #ccddee;
-	border-radius: 5px 5px 5px 5px;
-	background: #ddeeff;
-	 
+	display: block;
+	border: 1px solid #dddddd;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #eeeeee;
+
 	width: 100%; 	
 	height: auto;
 	padding-top: 2px;

@@ -28,6 +28,7 @@
             // setup filtered quotes & trading history
             $scope.filterQuotes = [];
             $scope.tradingHistory = null;
+            $scope.selectedTradingHistory = null;
 
             // define the Quote module expanders
             $scope.expanders = [{
@@ -281,7 +282,7 @@
                         $scope.stopLoading();
                         toaster.pop('error', 'Error!', "Error loading quote " + symbol);
                     });
-            }
+            };
 
             $scope.loadTradingHistory = function (symbol, callback) {
                 QuoteService.getTradingHistory(symbol).then(
@@ -310,6 +311,18 @@
 
             $scope.tradingActive = function (time) {
                 return (new Date()).getTime();
+            };
+
+            $scope.selectTradingHistory = function(t) {
+                $scope.selectedTradingHistory = t;
+            };
+
+            $scope.hasSelectedTradingHistory = function() {
+                return $scope.selectedTradingHistory != null;
+            };
+
+            $scope.isSelectedTradingHistory = function(t) {
+                return $scope.selectedTradingHistory === t;
             };
 
             // maintain the appropriate aspect ratio for the application

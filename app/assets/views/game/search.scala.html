@@ -82,7 +82,7 @@
 
                 <div ng-repeat="c in searchResults" class="row clickable"
                     ng-click="selectContest(c)"
-                    ng-class="selectedContest.OID() === c.OID() ? 'selected' : (!isSplitScreen() ? ($index % 2 == 0 ? 'contest_even' : 'contest_odd') : '')">
+                    ng-class="($index % 2 == 0 ? 'contest_even' : 'contest_odd') + (selectedContest.OID() === c.OID() ? ' selected' : '')">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <span ng-if="c.status === 'ACTIVE'">
                             <img ng-src="{{ getStatusIcon(c) }}">

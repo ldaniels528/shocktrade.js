@@ -1,82 +1,107 @@
-<table style="width: 100%; border-collapse: separate">		
-	<tr>
-		<th class="qm_header">Enterprise Value</th>
-		<td class="qm_detail">
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Enterprise Value</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.enterpriseValue == null" class="null">&#8212;</span>
 			<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | number | bigNumber }}</span>
-		</td>			
-		
-		<th class="qm_header">P/E <span class="small">(Trailing)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">P/E <span class="small">(Trailing)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.trailingPE == null" class="null">&#8212;</span>
-			<span ng-show="q.trailingPE != null">{{ q.trailingPE | number:2 }}</span>	
-		</td>		
-		
-		<th class="qm_header">Price/Sales</th>
-		<td class="qm_detail">
+			<span ng-show="q.trailingPE != null">{{ q.trailingPE | number:2 }}</span>
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Price/Sales</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.priceOverSales == null" class="null">&#8212;</span>
 			<span ng-show="q.priceOverSales != null">{{ q.priceOverSales | number:2 }}</span>
-		</td>			
-	</tr>
-	<tr>
-		<th class="qm_header">Enterprise Value/EBITDA</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Enterprise Value/EBITDA</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.enterpriseValueOverEBITDA == null" class="null">&#8212;</span>
 			<span ng-show="q.enterpriseValueOverEBITDA != null" ng-class="q.enterpriseValueOverEBITDA < 0 ? 'negative' : ''">{{ q.enterpriseValueOverEBITDA | number:2 }}</span>
-		</td>
-			
-		<th class="qm_header">P/E <span class="small">(Forward)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">P/E <span class="small">(Forward)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.forwardPE == null" class="null">&#8212;</span>
 			<span ng-show="q.forwardPE != null">{{ q.forwardPE | number:2 }}</span>
-		</td>					
-		
-		<th class="qm_header">Price/Book Value</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Price/Book Value</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.priceOverBookValue == null" class="null">&#8212;</span>
 			<span ng-show="q.priceOverBookValue != null">{{ q.priceOverBookValue | number:2 }}</span>
-		</td>							
-	</tr>
-	<tr>
-		<th class="qm_header">Enterprise Value/Revenue</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Enterprise Value/Revenue</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.enterpriseValueOverRevenue == null" class="null">&#8212;</span>
 			<span ng-show="q.enterpriseValueOverRevenue != null">{{ q.enterpriseValueOverRevenue | number:2 }}</span>
-		</td>	
-		
-		<th class="qm_header">PEG Ratio</th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">PEG Ratio</span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.pegRatio == null" class="null">&#8212;</span>
 			<span ng-show="q.pegRatio != null">{{ q.pegRatio | number:2 }}</span>
-		</td>	
-		
-		<th class="qm_header">Cash Flow <span class="small">(Operating)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Cash Flow <span class="small">(Operating)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.operatingCashFlow == null" class="null">&#8212;</span>
 			<span ng-show="q.operatingCashFlow != null" ng-class="q.operatingCashFlow < 0 ? 'negative' : ''">
 				{{ q.operatingCashFlow | number | bigNumber }}
 			</span>
-		</td>							
-	</tr>
-	<tr>
-		<th class="qm_header">Market Cap <span class="small">(intraday)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_header">Market Cap <span class="small">(intraday)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.marketCapIntraday == null" class="null">&#8212;</span>
 			<span ng-show="q.marketCapIntraday != null" ng-class="q.marketCapIntraday < 0 ? 'negative' : ''">
 				{{ q.marketCapIntraday | number | bigNumber }}
-			</span>		
-		</td>			
-		
-		<th class="qm_header">PEG Ratio <span class="small">(5-yr exp)</span></th>
-		<td class="qm_detail">
+			</span>
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">PEG Ratio <span class="small">(5-yr exp)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.pegRatio5YearExp == null" class="null">&#8212;</span>
 			<span ng-show="q.pegRatio5YearExp != null">{{ q.pegRatio5YearExp | number:2 }}</span>
-		</td>	
-		
-		<th class="qm_header">Cash Flow <span class="small">(Levered Free)</span></th>
-		<td class="qm_detail">
+		</span>
+	</div>
+
+	<div class="col-md-4">
+		<span class="qm_header">Cash Flow <span class="small">(Levered Free)</span></span>
+		<span class="qm_detail pull-right">
 			<span ng-show="q.leveredFreeCashFlow == null" class="null">&#8212;</span>
 			<span ng-show="q.leveredFreeCashFlow != null" ng-class="q.leveredFreeCashFlow < 0 ? 'negative' : ''">{{ q.leveredFreeCashFlow | number | bigNumber }}</span>
-		</td>			
-	</tr>
-</table>
+		</span>
+	</div>
+</div>

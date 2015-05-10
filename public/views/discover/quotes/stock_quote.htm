@@ -1,79 +1,100 @@
-<div style="display: block; width: 100%">
-	<table style="width: 100%; border-collapse: separate">
-		<tr>
-			<th class="qm_header">Last Sale 
-				<img ng-src="/assets/images/status/{{ isLoading() ? 'loading.gif' : 'refresh.png' }}" 
-					title="Refresh" 
-					ng-click="loadQuote(ticker)"
-					class="clickable"></th>
-			<td class="qm_detail">{{ q.lastTrade | quoteNumber }}</td>
-			
-			<th colspan="2">
-				<div style="display: inline" class="qm_header">Change / %</div>
-				<div ng-if="q.change" style="display: inline; float: right" class="plain">
-					<span ng-class="q.change < 0 ? 'negative' : ''">{{ q.change | quoteNumber }}</span> 
-					<changeArrow value="{{ q.changePct }}" />
-					<span ng-class="q.change < 0 ? 'negative' : 'positive'">{{ q.changePct | quoteChange }}%</span>
-				</div>
-			</th>
-			
-			<th colspan="2">
-				<div style="display: inline" class="qm_header">Updated</div>
-				<div style="display: inline; float: right" class="plain">
-					<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
-					<span ng-hide="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
-				</div>
-			</th>	
-		</tr>
-		
-		<tr>
-			<th class="qm_header">Prev Close</th>
-			<td class="qm_detail">{{ q.prevClose | quoteNumber }}</td>
-			
-			<th class="qm_header">Open</th>
-			<td class="qm_detail">{{ q.open | quoteNumber }}</td>
-			
-			<th class="qm_header">Ask</th>
-			<td class="qm_detail">
-				<nobr>{{ q.ask | quoteNumber }} <span ng-show="q.ask && q.askSize"> x {{ q.askSize }}</span></nobr>
-			</td>						
-		</tr>	
-		
-		<tr>
-			<th class="qm_header">Volume</th>
-			<td class="qm_detail">{{ q.volume | number | bigNumber }}</td>
-			
-			<th class="qm_header">Close</th>
-			<td class="qm_detail">{{ q.close | quoteNumber }}</td>	
-			
-			<th class="qm_header">Bid</th>
-			<td class="qm_detail">
-				<nobr>{{ q.bid | quoteNumber }} <span ng-show="q.bid && q.bidSize"> x {{ q.bidSize }}</span></nobr>
-			</td>											
-		</tr>								
-		
-		<tr>
-			<th class="qm_header">Avg Volume <span class="small">(10-day)</span></th>
-			<td class="qm_detail">{{ q.avgVolume10Day | number | bigNumber }}</td>
-						
-			<th class="qm_header">Day's High</th>
-			<td class="qm_detail">{{ q.high | quoteNumber }}</td>													
-
-			<th class="qm_header">Spread</th>
-			<td class="qm_detail">
-				<span ng-show="q.spread">{{ q.spread | number:2 }}%</span>
-			</td>					
-		</tr>	
-								
-		<tr>
-			<th class="qm_header">Market Cap</th>
-			<td class="qm_detail">{{ q.marketCap | number | bigNumber }}</td>
-			
-			<th class="qm_header">Day's Low</th>
-			<td class="qm_detail">{{ q.low | quoteNumber }}</td>
-			
-			<th class="qm_header">Target <span class="small">(1-Year)</span></th>
-			<td class="qm_detail">{{ q.target1Y  | quoteNumber }}</td>												
-		</tr>																																																						
-	</table>
+<div class="row">
+	<div class="col-md-4">
+        <span class="qm_header">Last Sale</span>
+		<img ng-src="/assets/images/status/{{ isLoading() ? 'loading.gif' : 'refresh.png' }}"
+			title="Refresh"
+			ng-click="loadQuote(ticker)"
+			class="clickable">
+        <span class="qm_detail pull-right">{{ q.lastTrade | quoteNumber }}</span>
+	</div>
+	<div class="col-md-4">
+		<span class="qm_header">Change / %</span>
+		<span ng-if="q.change" class="plain pull-right">
+			<span ng-class="q.change < 0 ? 'negative' : ''">{{ q.change | quoteNumber }}</span>
+			<changeArrow value="{{ q.changePct }}" />
+			<span ng-class="q.change < 0 ? 'negative' : 'positive'">{{ q.changePct | quoteChange }}%</span>
+		</span>
+	</div>
+	<div class="col-md-4">
+		<span class="qm_header">Updated</span>
+		<span class="plain pull-right">
+			<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+			<span ng-hide="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+		</span>
+	</div>
 </div>
+
+<div class="row">
+	<div class="col-md-4">
+        <span class="qm_header">Prev Close</span>
+	    <span class="qm_detail pull-right">{{ q.prevClose | quoteNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Open</span>
+	    <span class="qm_detail pull-right">{{ q.open | quoteNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Ask</span>
+        <span class="qm_detail pull-right">
+            <nobr>{{ q.ask | quoteNumber }} <span ng-show="q.ask && q.askSize"> x {{ q.askSize }}</span></nobr>
+        </span>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+        <span class="qm_header">Volume</span>
+	    <span class="qm_detail pull-right">{{ q.volume | number | bigNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Close</span>
+	    <span class="qm_detail pull-right">{{ q.close | quoteNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Bid</span>
+        <span class="qm_detail pull-right">
+            <nobr>{{ q.bid | quoteNumber }} <span ng-show="q.bid && q.bidSize"> x {{ q.bidSize }}</span></nobr>
+        </span>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+        <span class="qm_header">Avg Vol</span> <span class="small">(10-day)</span>
+	    <span class="qm_detail pull-right">{{ q.avgVolume10Day | number | bigNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Day's High</span>
+	    <span class="qm_detail pull-right">{{ q.high | quoteNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Spread</span>
+        <span class="qm_detail pull-right">
+            <span ng-show="q.spread">{{ q.spread | number:2 }}%</span>
+        </span>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+        <span class="qm_header">Market Cap</span>
+	    <span class="qm_detail pull-right">{{ q.marketCap | number | bigNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Day's Low</span>
+	    <span class="qm_detail pull-right">{{ q.low | quoteNumber }}</span>
+    </div>
+
+	<div class="col-md-4">
+        <span class="qm_header">Target</span> <span class="small">(1-Year)</span>
+	    <span class="qm_detail pull-right">{{ q.target1Y | quoteNumber }}</span>
+    </div>
+</div>
+

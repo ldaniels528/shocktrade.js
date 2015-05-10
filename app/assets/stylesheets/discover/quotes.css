@@ -2,23 +2,28 @@
 	border: 1px solid #ccccbb;
 	border-radius: 4px 4px 4px 4px;
 	background-color: #fffaee;
-	color: #20538D;
+	color: #2f96b4;
 	font-weight: bold;
 	padding: 2px 2px 2px 2px;
+}
+
+div.chart_header_outer {
+	display: block;
+	width: 100%;
+	border: 1px solid #1f86a4
+}
+
+div.chart_header {
+	display: block;
+	text-align: center;
+	border: 1px solid #1f86a4;
+	background-color: #2f96b4;
+	color: white
 }
 
 img.chart {
 	vertical-align: top;
 	max-width: 100%;
-}
-
-.market_status {
-	border: 1px solid #bbbbbb;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #eeeeee;
-	color: black;
-	width: 100%;
-	height: 24px;
 }
 
 .quote_control_panel {
@@ -46,15 +51,6 @@ img.chart {
 	padding: 10px
 }
 
-.run_button {
-    background-color: #00ee00;
-    border: solid 1px #00aa00;
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-}
-
 .quote_button {
     background-color: #ff8000;
 	font-weight: bold;
@@ -62,16 +58,6 @@ img.chart {
 	color: white;	
 	cursor: pointer;
 }
- 
-.trade_button {
-    background:url('/assets/images/objects/order.png') no-repeat;
-    background-color: #ff8000;
-    border: solid 1px #cc6000;
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-} 
  
 div.filterContainer {
 	clear: both;
@@ -81,7 +67,7 @@ div.filterContainer {
 }
 
 .qm {
-	text-size: 8pt;
+	font-size: 10pt;
 }
  
 .holdingsContainer {
@@ -124,19 +110,22 @@ div.filterContainer {
 }
 
 .qm_header {
-	width: 23%;
-	padding-left: 15px
+	color: #0000a0;
+	font-weight: bold;
 }
 
 .qm_detail {
-	width: 10%;
 	text-align: right
 }
 
 .qm_label {
-	padding-left: 15px;
 	font-weight: bold;
 	color: #0000a0
+}
+
+span.small {
+	color: #0000a0;
+	font-size: 8pt
 }
 
 .qm_value {

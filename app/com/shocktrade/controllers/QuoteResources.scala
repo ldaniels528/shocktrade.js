@@ -375,7 +375,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
 
     // convert to historical quotes (in JSON)
     val quotes = transformHistoricalQuotes(tradingHistory)
-    Ok(JsArray(quotes))
+    Ok(JsArray(quotes.take(30)))
   }
 
   /**
