@@ -1,0 +1,6 @@
+<tabset>
+    <tab ng-repeat="tab in quoteTabs" active="tab.active" select="changeQuoteTab($index)">
+        <tab-heading>{{ tab.name }}</tab-heading>
+        <div ng-include src="tab.path"></div>
+    </tab>
+</tabset>

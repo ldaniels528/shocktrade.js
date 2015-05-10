@@ -30,6 +30,29 @@
             $scope.tradingHistory = null;
             $scope.selectedTradingHistory = null;
 
+            // define the filter tabs
+            $scope.quoteTabs = [{
+                name: "News",
+                path: "/assets/views/news/news_index.htm",
+                active: false
+            }, {
+                name: "Charts",
+                path: "/assets/views/discover/quotes/stock_chart.htm",
+                active: false
+            }, {
+                name: "Filters",
+                path: "/assets/views/discover/quotes/filters.htm",
+                active: false
+            }];
+            $scope.quoteTabs[0].active = true;
+
+            $scope.changeQuoteTab = function(tabIndex) {
+                angular.forEach($scope.quoteTabs, function(tab) {
+                    tab.active = false;
+                });
+                $scope.quoteTabs[tabIndex].active = true;
+            };
+
             // define the Quote module expanders
             $scope.expanders = [{
                 title: "Performance & Risk",
@@ -365,6 +388,10 @@
                     HeldSecurities.init(id);
                 }
             });
+
+            ///////////////////////////////////////////////////////////////////////////
+            //          Initialization
+            ///////////////////////////////////////////////////////////////////////////
 
             // load the symbol
             (function () {

@@ -14,48 +14,47 @@
 	vertical-align: bottom
 }
 
-span.sector_H {
+.sector_cart {
+	font-size: 12pt;
+}
+
+.sector_H {
  	color: #00a0d0;	
  	font-weight: bold;
 }
  
-span.industry_H {
+.industry_H {
  	color: #20b090;
  	font-weight: bold;
 }
 
-span.sub_industry_H {
+.sub_industry_H {
  	color: #8080aa;
  	font-weight: bold;
 }
  
-span.exchange_H {
+.exchange_H {
 	color: #0000d0;
 	font-weight: bold;
 }
 
-span.company_H {
+.company_H {
 	color: black;
 	font-weight: bold;
 }
 
-span.sector {
+.sector {
 	color: #008080;
 }
 
-span.industry {
+.industry {
 	color: #800000;
 }
 
-span.companyName {
+.companyName {
 	color: black;
 	font-weight: bold;
 	text-decoration: underline;
-}
-
-span.NasdaqGS {
-	font-weight: normal;
-	color: #0044ff;
 }
  
 a.sectorLink:link    { cursor: pointer; text-decoration: none; }

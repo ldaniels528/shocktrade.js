@@ -2,14 +2,14 @@
 	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
     <div class="row">
         <div class="col-md-offset-9 col-md-3">
-            <button class="btn btn-default new_order pull-right"
+            <button class="btn btn-default new_order bold pull-right"
                     ng-click="popupNewOrderDialog()"
                     title="Create a new order">
-                <img class="middle" src="/assets/images/buttons/cart_add.png"> New
+                <i class="fa fa-cart-plus"></i> New
             </button>
         </div>
     </div>
-    <tabset>
+    <tabset style="margin-bottom: 10px">
         <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked(contest)" select="tab.init(contest)">
             <tab-heading>
                 <img ng-src="{{ tab.imageURL }}"> {{ tab.name }}

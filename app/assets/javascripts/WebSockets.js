@@ -74,12 +74,12 @@
 
             socket.onopen = function (event) {
                 connected = true;
-                toaster.pop('info', 'Online Status', 'You are connected to ShockTrade');
+                //toaster.pop('info', 'Online Status', 'You are connected to ShockTrade');
             };
 
             socket.onclose = function (event) {
                 connected = false;
-                toaster.pop('warning', 'Online Status', 'Lost connection to server');
+                //toaster.pop('warning', 'Online Status', 'Lost connection to server');
 
                 $timeout(function () {
                     connect();

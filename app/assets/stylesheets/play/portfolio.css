@@ -22,14 +22,15 @@
 }
 
 button.new_order {
-    background-color: #00ff00;
+	border: solid 1px #ee7000;
+    background-color: #ff8000;
     font-size: 11pt;
     border-radius: 4px;
 }
 
 button.sell_button {
     background-color: #ff8000;
-    border: solid 1px #cc6000;
+    border: solid 1px #ee7000;
 	font-weight: bold;
 	text-align: right;
 	color: white;	

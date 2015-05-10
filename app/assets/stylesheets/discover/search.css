@@ -170,7 +170,6 @@ div.research {
 
 #searchResults {
 	clear: both;
-	background-color: #ffffff;
 	border: 1px solid #aaaaaa; 
 	overflow: auto;	
 	
@@ -180,7 +179,6 @@ div.research {
 
 table.results {
 	border-collapse: collapse;
-	background-color: #ffffff;
 	width: 100%; 
 }
 

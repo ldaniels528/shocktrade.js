@@ -21,8 +21,16 @@ a:active  { cursor: pointer; text-decoration: none; }
 	color: #3a5795;
 }
 
+legend {
+    border-bottom: 1px solid #cccccc;
+}
+
 .nav_icon {
     font-size: 24px;
+}
+
+.st_control {
+    color: #ff8000;
 }
 
 .st_nav_selected {

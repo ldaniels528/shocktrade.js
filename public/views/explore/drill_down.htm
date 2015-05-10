@@ -1,13 +1,10 @@
-<div ng-init="sortDesc = false; sortField = 'label'; refreshTree()" style="width: 100%">
-	<div style="width: 100%">
-        <div ng-include src="'/assets/views/partial/market_status.htm'"></div>
+<div ng-controller="DrillDownController" ng-init="sortField = 'label'; refreshTree()" style="width: 100%">
+	<div>
+        <div ng-controller="DiscoverController" ng-include src="'/assets/views/discover/sector_industry.htm'"></div>
 		<div style="display: block">
 			<div class="drill_down_title">
 				<img src="/assets/images/objects/overview.png"> 
-				Assets by Sector
-				<img ng-click="sortDesc = !sortDesc" 
-					class="clickable"
-					ng-src="/assets/images/buttons/{{ sortDesc ? 'arrow_down' : 'arrow_up' }}.gif">
+				Assets by Sector <i class="fa fa-sort{{ sortDesc == null ? '' : (sortDesc ? '-desc' : '-asc') }} clickable" ng-click="sortDesc = !sortDesc"></i>
 				
 				<!-- ordering: label/total -->
 				<span style="float: right; padding-right: 5px" class="clickable" ng-click="sortField = (sortField === 'label') ? 'total' : 'label'">
@@ -43,7 +40,7 @@
 						<div style="display: block; padding-left: 20px" 
 							ng-if="subIndustry.expanded && subIndustry.quotes.length > 0">
 							<!--  heading -->
-							<div class="sector_industry bottom">
+							<div>
 								<img ng-src="/assets/images/objects/market.png">
 								<span class="sector_H">{{ sector.label }}</span> 
 								<img src="/assets/images/buttons/arrow-next.png" class="middle"> 

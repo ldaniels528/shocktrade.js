@@ -1,10 +1,10 @@
 <div style="width: 100%">
-	<div id="NewsBlock" style="display: block; width: 100%" ng-repeat="channel in channels">
+	<div ng-repeat="channel in channels">
 		<div class="news_provider">
 			<div style="display: inline; float: left">
 				<span style="color: white">{{ channel.items.length || 0 }} stories</span>
 			</div>
-			<div style="display: inline; float: right">
+			<div class="pull-right" style="display: inline">
 				<select 
 					ng-model="selection.feed" 
 					ng-options="source.OID() as source.name for source in newsSources"
@@ -22,12 +22,6 @@
 				</a>
 			</div>
 			<br style="clear: both">
-		</div>
-		<div style="display: block; background-color: #eeeeee; border: 1px solid #cccccc; border-radius: 4px 4px 4px 4px; margin-bottom: 4px">
-			<img src="/assets/images/objects/headlines.png">
-			<a href="{{channel.link}}" target="newWindow">
-				<span style="color: #000080" class="news_title">{{ channel.title }}</span>
-			</a>
 		</div>
 		
 		<div class="newsContainer">	 

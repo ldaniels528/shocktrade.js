@@ -91,7 +91,7 @@
             };
 
             $scope.expandOrCollapseSubIndustry = function (sector, industry, subIndustry, callback) {
-                if (!subIndustry.expanded) {
+                if (subIndustry && !subIndustry.expanded) {
                     subIndustry.loading = true;
                     QuoteService.loadIndustryQuotes(sector.label, industry.label, subIndustry ? subIndustry.label : null).then(
                         function (response) {
@@ -109,7 +109,7 @@
                         });
                 }
                 else {
-                    subIndustry.expanded = false;
+                    if(subIndustry) subIndustry.expanded = false;
                 }
             };
 

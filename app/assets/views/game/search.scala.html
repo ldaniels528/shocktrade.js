@@ -66,7 +66,8 @@
                     <button class="btn btn-default new_game"
                         ng-hide="isSplitScreen()"
                         ng-disabled="!MySession.authenticated"
-                        ng-click="popupNewGameDialog()"> New Game
+                        ng-click="popupNewGameDialog()">
+                        <i class="fa fa-plus-circle"></i> New Game
                     </button>
                 </div>
                 <br style="clear: both">
@@ -121,11 +122,11 @@
     <!-- Game Lobby -->
     <div ng-show="isSplitScreen()" class="col-md-8">
         <fieldset class="contest" ng-show="selectedContest.participants">
-            <legend class="contest"><span class="game_title">{{selectedContest.name}}</span>
-                <img class="clickable pull-right"
+            <legend class="contest">
+                <i class="fa fa-chevron-circle-left st_control clickable"
                     ng-click="toggleSplitScreen()"
-                    title="Return to results"
-                    src="/assets/images/buttons/back-24.png">
+                    title="Return to results"></i>
+                <span class="game_title">{{selectedContest.name}}</span>
             </legend>
             <div class="row contest_lobby contest_colors">
                 <div class="col-md-12" style="background: #e0e0e0; border-radius: 6px; padding: 4px">

@@ -20,7 +20,7 @@
                 .when('/explore', {templateUrl: '/assets/views/explore/drill_down.htm', controller: 'DrillDownController'})
                 .when('/portfolio', {templateUrl: '/assets/views/play/lobby/lobby.htm'})
                 .when('/lounge', {templateUrl: '/assets/views/play/lounge/lounge.htm'})
-                .when('/news', {templateUrl: '/assets/views/news/index.htm', controller: 'NewsController'})
+                .when('/news', {templateUrl: '/assets/views/news/news_index.htm', controller: 'NewsController'})
                 .when('/perks', {templateUrl: '/assets/views/perks/perks.htm'})
                 .when('/research', {templateUrl: '/assets/views/research/index.htm'})
                 .when('/search', {templateUrl: '/assets/views/play/search/search.htm'})
@@ -67,7 +67,7 @@
             }
         }, {
             "name": "Play",
-            "icon_class": "fa-home",
+            "icon_class": "fa-gamepad",
             "tool_tip": "Play the game",
             "url": "/portfolio",
             "isVisible": function(c) {
@@ -75,17 +75,9 @@
             }
         }, {
             "name": "Discover",
-            "icon_class": "fa-table",
-            "tool_tip": "Stock Quotes and Research",
-            "url": "/discover",
-            "isVisible": function(c) {
-                return true;
-            }
-        }, {
-            "name": "News",
             "icon_class": "fa-newspaper-o",
-            "tool_tip": "Stocks News",
-            "url": "/news",
+            "tool_tip": "Stock Quotes, News and Research",
+            "url": "/discover",
             "isVisible": function(c) {
                 return true;
             }

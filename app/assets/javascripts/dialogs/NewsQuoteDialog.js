@@ -45,7 +45,6 @@
             $scope.quote = {};
 
             $scope.init = function (symbol) {
-                var scope = angular.element($("#NewsBlock")).scope();
                 ContestService.orderQuote(symbol).then(
                     function (data) {
                         $scope.quote = data;

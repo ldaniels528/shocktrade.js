@@ -333,7 +333,7 @@
             };
 
             $scope.isSplitScreen = function () {
-                return $scope.splitScreen && $scope.selectedContest != null;
+                return $scope.splitScreen && ($scope.selectedContest != null);
             };
 
             $scope.selectContest = function (contest) {
@@ -420,11 +420,14 @@
             function placeName(n) {
                 switch (n) {
                     case 1:
-                        return "1st";
+                    case 21:
+                        return n + "st";
                     case 2:
-                        return "2nd";
+                    case 22:
+                        return n + "nd";
                     case 3:
-                        return "3rd";
+                    case 23:
+                        return n + "rd";
                     default:
                         return n + "th";
                 }

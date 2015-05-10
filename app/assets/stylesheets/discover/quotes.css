@@ -7,6 +7,10 @@
 	padding: 2px 2px 2px 2px;
 }
 
+.symbol_input_text_field {
+	background-color: #ffffcc;
+}
+
 div.chart_header_outer {
 	display: block;
 	width: 100%;
@@ -26,29 +30,32 @@ img.chart {
 	max-width: 100%;
 }
 
+div.fund_summary {
+
+}
+
 .quote_control_panel {
-	border: 1px solid #cccccc;
-	border-radius: 5px 5px 5px 5px;
 	background-color: #eeeeee;
+	border: 1px solid #dddddd;
+	border-radius: 4px 4px 4px 4px;
 	color: #000080;
 	font-weight: bold;
 }
 
 .quote_title {
 	background-color: #eeeeee; 
-	border: 1px solid #cccccc;
-	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #dddddd;
+	border-radius: 4px 4px 4px 4px;
 	padding: 2px 2px 2px 2px;
 	color: #000080;
 	font-weight: bold
 }
 
 .quote_sub_title {
-	width: 100%; 
-	border: 1px solid #cccccc; 
-	background-color: #eeeeee; 
-	border-radius: 6px 6px 6px 6px; 
-	padding: 10px
+	background-color: #eeeeee;
+	border: 1px solid #dddddd;
+	border-radius: 6px 6px 6px 6px;
+	padding: 10px;
 }
 
 .quote_button {
@@ -129,5 +136,5 @@ span.small {
 }
 
 .qm_value {
-	float: right
+
 }

@@ -1,5 +1,5 @@
 <div class="row sector_industry bottom">
-	<div class="col-md-8">
+	<div class="col-md-10">
 		<!-- Market Image -->
 		<img ng-if="q.active" ng-src="/assets/images/objects/market.png">
 		<span ng-if="!q.active"
@@ -10,57 +10,56 @@
 		</span>
 		
 		<!-- Sector -->
-		<span ng-show="q.sector && (q.sector != 'N/A')">
-			<span class="sector_H">{{ q.sector }}</span>	
+		<span ng-show="q.sector && (q.sector !== 'N/A')">
+			<a class="sector_H" ng-href="#/explore">{{ q.sector }}</a>
 			<img ng-show="q.sector" src="/assets/images/buttons/arrow-next.png" class="middle">
 		</span>
 		
 		<!-- Industry -->
-		<span ng-show="q.industry && (q.industry != 'N/A')">
-			<span class="industry_H">{{ q.industry }}</span> 
+		<span ng-show="q.industry && (q.industry !== 'N/A')">
+			<a class="industry_H" ng-href="#/explore">{{ q.industry }}</a>
 			<img ng-show="q.industry" src="/assets/images/buttons/arrow-next.png" class="middle">
 		</span>
 		
 		<!-- Sub-Industry -->
-		<span ng-show="q.subIndustry && (q.subIndustry != 'N/A')">
-			<span class="sub_industry_H">{{ q.subIndustry }}</span> 
+		<span ng-show="q.subIndustry && (q.subIndustry !== 'N/A')">
+			<a class="sub_industry_H" ng-href="#/explore">{{ q.subIndustry }}</a>
 			<img ng-show="q.subIndustry" src="/assets/images/buttons/arrow-next.png" class="middle">
 		</span>		
 		
 		<!-- Exchange -->
-		<span ng-class="q.exchange + ' bold'">{{ q.exchange }}</span>
+		<a ng-class="q.exchange + ' bold'" ng-href="#/explore">{{ q.exchange }}</a>
 		
 		<!-- Company Name -->
 		<span ng-show="q.name">
 			<img ng-show="q.exchange" src="/assets/images/buttons/arrow-next.png" class="middle">
-			<span class="company_H">{{ q.name }}</span>
+			<a class="company_H" ng-href="#/explore">{{ q.name }}</a>
 		</span>
 		
 		<!--  Symbol -->
 		<span ng-show="q.symbol">
-			(<span ng-class="q.exchange + ' bold'">{{ q.symbol }}</span>)
+			(<a ng-class="q.exchange + ' bold'" ng-href="#/explore">{{ q.symbol }}</a>)
 		</span>
 		
 		<!-- Favorite -->
 		<span ng-hide="q.active && isFavorite(q.symbol)">
 			<a href="" ng-click="addFavoriteSymbol(q.symbol)">
-				<img
-					class="clickable"
-					popover="Add to Favorites" 
-					popover-trigger="mouseenter"  
+				<img class="clickable"
+					popover="Add to Favorites"
+					popover-trigger="mouseenter"
 					src="/assets/images/objects/favorite-add.png">
 			</a>
 		</span>
 				
 		<!-- Trade button -->
-		<img ng-show="q.active && MySession.isAuthorized()" 
-			src="/assets/images/buttons/cart-add16.png" 
-			class="clickable middle"
-			popover="Buy or Sell this security" 
-			popover-trigger="mouseenter"
-			ng-click="popupNewOrderDialog(q.symbol)">
+		<i class="fa fa-cart-plus clickable sector_cart st_control"
+		   ng-show="contest && q.active && MySession.isAuthorized()"
+		   ng-click="popupNewOrderDialog(q.symbol)"
+		   popover="Buy or Sell this security"
+		   popover-trigger="mouseenter"></i>
+
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-2">
         <span ng-class="usMarketsOpen === null ? 'mks_loading' : (usMarketsOpen ? 'mks_open' : 'mks_closed')">
             <img ng-show="usMarketsOpen === null" src="/assets/images/status/loading.gif">
             {{ usMarketsOpen === null ? 'Checking Market Status...' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
