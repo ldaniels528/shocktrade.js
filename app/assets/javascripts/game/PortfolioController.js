@@ -314,6 +314,22 @@
             });
 
             /**
+             * Listen for contest update events
+             */
+            $scope.$on("orders_updated", function (event, contest) {
+                $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
+                reset();
+            });
+
+            /**
+             * Listen for contest update events
+             */
+            $scope.$on("positions_updated", function (event, contest) {
+                $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
+                reset();
+            });
+
+            /**
              * Watch for contest change events
              */
             $scope.$watch(MySession.contest, function () {

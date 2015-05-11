@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.actor._
 import akka.routing.RoundRobinPool
-import com.shocktrade.models.contest.Contest
+import com.shocktrade.models.contest.{Contest, Participant}
 import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS, _}
@@ -87,9 +87,23 @@ object WebSockets {
     def toJsonMessage = JS("action" -> "contest_updated", "data" -> contest)
   }
 
-  case class ContestMessagesUpdated(c: Contest) extends WsRelayMessage {
+  case class MessagesUpdated(c: Contest) extends WsRelayMessage {
 
-    def toJsonMessage = JS("action" -> "contest_messages_updated", "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
+    def toJsonMessage = JS("action" -> "messages_updated", "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
+  }
+
+  case class OrdersUpdated(c: Contest, p: Participant) extends WsRelayMessage {
+
+    def toJsonMessage = JS(
+      "action" -> "orders_updated",
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "orders" -> p.orders, "orderHistory" -> p.orderHistory))
+  }
+
+  case class PositionsUpdated(c: Contest, p: Participant) extends WsRelayMessage {
+
+    def toJsonMessage = JS(
+      "action" -> "positions_updated",
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "positions" -> p.positions))
   }
 
   case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {

@@ -27,7 +27,9 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+          for {c <- contest_?; p <- c.participants.find(_.id == playerId)} {
+            WebSockets ! OrdersUpdated(c, p)
+          }
         case Failure(e) => mySender ! e
       }
 
@@ -45,7 +47,7 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.createMessage(contestId, message) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestMessagesUpdated(_))
+          contest_?.foreach(WebSockets ! MessagesUpdated(_))
         case Failure(e) => mySender ! e
       }
 
@@ -54,7 +56,9 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.createOrder(contestId, playerId, order) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          contest_?.foreach(WebSockets ! ContestUpdated(_))
+          for {c <- contest_?; p <- c.participants.find(_.id == playerId)} {
+            WebSockets ! OrdersUpdated(c, p)
+          }
         case Failure(e) => mySender ! e
       }
 

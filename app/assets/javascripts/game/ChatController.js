@@ -72,7 +72,7 @@
             /**
              * Listen for contest message update events
              */
-            $scope.$on("contest_messages_updated", function(event, contest) {
+            $scope.$on("messages_updated", function(event, contest) {
                 if($scope.contest && ($scope.contest.OID() == contest.OID())) {
                     $log.info("[Chat] Messages for '" + contest.name + "' updated");
                     $scope.contest.messages = contest.messages;
