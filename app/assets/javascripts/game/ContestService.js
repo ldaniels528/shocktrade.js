@@ -60,9 +60,7 @@
         };
 
         service.getContestsByPlayerID = function (playerId) {
-            return $http.get('/api/contests/player/' + playerId).then(function (response) {
-                return response.data;
-            });
+            return $http.get('/api/contests/player/' + playerId);
         };
 
         service.getEnrichedOrders = function (contestId, playerId) {

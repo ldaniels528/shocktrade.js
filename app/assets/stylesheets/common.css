@@ -108,8 +108,17 @@ img.st_rounded {
 	color: #ff8800;
 }
 
-.yellow {
-	background-color: #ffff00
+.wrapper input[type="text"] {
+    position: relative;
+}
+
+input { font-family: 'FontAwesome'; } /* This is for the placeholder */
+
+.wrapper:before {
+    font-family: 'FontAwesome';
+    position: relative;
+    left: -5px;
+    content: "\f007";
 }
 
 .even {

@@ -2,9 +2,13 @@
 
 <div ng-controller="PortfolioController" class="row">
     <div ng-hide="contest">
-        <span class="warning" style="font-size: 14pt">
+        <span class="warning" style="font-size: 12pt; margin-bottom: 20px">
             Oops! No Game Selected. Click <a ng-click="changePlayTab(0)">here</a> to return to Search.
+            <p ng-show="getMyContests().length">Or chose one the games below: </p>
         </span>
+
+        <!-- My Games -->
+        <div ng-include src="'/assets/views/play/my_contests.htm'"></div>
     </div>
 
     <div ng-if="contest" class="play_container">

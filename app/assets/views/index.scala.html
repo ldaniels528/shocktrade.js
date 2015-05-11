@@ -45,14 +45,10 @@
                     <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
                     <span ng-show="MySession.authenticated" class="title_color clickable" ng-click="logout()">Sign Out</span>
                     <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">- {{ MySession.fbProfile.name }}</span>
+                    <span ng-hide="MySession.authenticated" class="clickable" ng-click="login($event)">Sign-In</span>
                 </span>
             </div>
         </div>
-	
-		<!-- alerts -->
-		<div ng-class="col-md-9" ng-hide="MySession.authenticated" class="spectator_bar">
-			Come join the fun! <a class="links" href="" ng-click="login($event)">Sign-in</a>.
-		</div>
 
         <toaster-container toaster-options="{'position-class': 'toast-container','time-out': 3000, 'close-button':true}">
         </toaster-container>

@@ -12,9 +12,9 @@
             $scope.selectedContest = null;
 
             // setup contest variables
-            $scope.myContests = [];
+            $scope.myContests = null;
             $scope.searchResults = [];
-            $scope.searchTerm = null;
+            $scope.searchTerm = "";
             $scope.participant = {};
             $scope.splitScreen = false;
 
@@ -40,7 +40,7 @@
                 InvitePlayerDialog.popup($scope, participant);
             };
 
-            $scope.enterGame = function(contest) {
+            $scope.enterGame = function (contest) {
                 $scope.contest = contest;
                 MySession.setContest(contest);
                 $scope.changePlayTab(1);
@@ -101,11 +101,32 @@
             };
 
             $scope.getMyContests = function () {
-                var term = $scope.searchTerm;
-                if (!term || term.trim() === "") return $scope.myContests;
+                var userID = MySession.getUserID();
+                if (userID == null) return [];
+                else if ($scope.myContests === null || $scope.myContests === undefined) {
+                    $scope.myContests = [];
+                    $log.info("getMyContests: contests need loading - userID = " + userID);
+                    ContestService.getContestsByPlayerID(userID)
+                        .success(function (contests) {
+                            $log.info("Loaded " + contests.length + " contest(s)");
+                            $scope.myContests = contests;
+                        })
+                        .error(function (response) {
+                            $log.error("Failed to load 'My Contests'");
+                            $timeout(function () {
+                                $scope.myContests = null;
+                            }, 15000);
+                        });
+                }
+
+                return $scope.myContests;
+            };
+
+            $scope.getSearchResults = function (searchTerm) {
+                var term = (searchTerm || "").trim().toLowerCase();
+                if (term.length === 0) return $scope.searchResults;
                 else {
-                    term = term.toLowerCase();
-                    return $scope.myContests.filter(function (c) {
+                    return $scope.searchResults.filter(function (c) {
                         return c.name.toLowerCase().indexOf(term) != -1;
                     });
                 }
@@ -143,14 +164,13 @@
             $scope.loadContestsByPlayerID = function (playerId) {
                 if (playerId) {
                     $scope.startLoading();
-                    $scope.message = "";
                     ContestService.getContestsByPlayerID(playerId)
-                        .then(function (contests) {
+                        .success(function (contests) {
                             $scope.myContests = contests;
                             $scope.stopLoading();
-                        },
-                        function (err) {
-                            $scope.message = "Failed to load My Contests";
+                        })
+                        .error(function (response) {
+                            $log.error("Failed to load My Contests - " + response.error);
                             $scope.stopLoading();
                         });
                 }
@@ -200,7 +220,7 @@
                         "facebookID": MySession.fbUserID
                     }
                 }).success(function (contest) {
-                    if(!contest) {
+                    if (!contest) {
                         toaster.pop('error', 'Error!', "Failed to join game");
                         $log.error("Returned contest was null")
                     }
@@ -220,12 +240,12 @@
                     }, 500);
 
                 }).error(function (err) {
-                        toaster.pop('error', 'Error!', "Failed to join contest");
-                        $log.error("An error occurred while joining the contest");
-                        $timeout(function () {
-                            contest.joining = false;
-                        }, 500);
-                    });
+                    toaster.pop('error', 'Error!', "Failed to join contest");
+                    $log.error("An error occurred while joining the contest");
+                    $timeout(function () {
+                        contest.joining = false;
+                    }, 500);
+                });
             };
 
             $scope.joinedParticipant = function (contest, userProfile) {
@@ -279,8 +299,9 @@
             };
 
             $scope.changePlayTab = function (tabIndex) {
-                $log.info("Changing location to " + $scope.playTabs[tabIndex].url);
-                $location.path($scope.playTabs[tabIndex].url);
+                var tab = $scope.playTabs[tabIndex];
+                $log.info("Changing location to " + tab.url);
+                $location.path(tab.url);
                 $scope.tabIndex = tabIndex;
                 return true;
             };
@@ -602,9 +623,9 @@
                     $scope.contest = contest;
                     MySession.setContest(contest);
                     /*
-                    if(oldContest) {
-                        $scope.contest.rankings = oldContest.rankings;
-                    }*/
+                     if(oldContest) {
+                     $scope.contest.rankings = oldContest.rankings;
+                     }*/
                 }
                 if ($scope.selectedContest && (contest.OID() === $scope.selectedContest.OID())) {
                     $scope.selectedContest = contest;
@@ -616,7 +637,7 @@
              */
             $scope.$on("profile_updated", function (event, profile) {
                 $log.info("User Profile updated");
-                if(MySession.getUserID() == profile.OID()) {
+                if (MySession.getUserID() == profile.OID()) {
                     MySession.userProfile.netWorth = profile.netWorth;
                     //type, title, body, timeout, bodyOutputType, clickHandler
                     toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
@@ -636,9 +657,10 @@
                 }
             });
 
-            $scope.$watch("searchOptions", function () {
-                $scope.contestSearch($scope.searchOptions);
-            }, true);
+            // perform the initial search
+            $scope.contestSearch({
+                available: true
+            });
 
         }]);
 })();

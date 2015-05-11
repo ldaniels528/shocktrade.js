@@ -1,7 +1,0 @@
-<tabset>
-	<tab ng-repeat="tab in playTabs" active="tab.active" select="changePlayTab($index)">
-		<tab-heading ng-show="tab.isVisible(contest)">
-			<img ng-src="{{ tab.imageURL }}"> {{ tab.name }}
-		</tab-heading>
-	</tab>
-</tabset>

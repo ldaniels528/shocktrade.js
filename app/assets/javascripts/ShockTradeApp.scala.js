@@ -107,6 +107,14 @@
             }
         }];
 
+        $rootScope.changePlayTab = function (tabIndex) {
+            var tab = $rootScope.playTabs[tabIndex];
+            $log.info("Changing location to " + tab.url);
+            $location.path(tab.url);
+            $rootScope.tabIndex = tabIndex;
+            return true;
+        };
+
         $rootScope.abs = function (value) {
             return !value ? value : ((value < 0) ? -value : value);
         };

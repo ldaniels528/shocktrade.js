@@ -1,0 +1,65 @@
+<fieldset class="contest">
+    <legend class="contest">Search for Games</legend>
+    <div class="row">
+        <input class="col-md-7 symbol_input_text_field" type="text" ng-model="searchTerm" placeholder="&#xf002; Filter by Game Title">
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.activeOnly">
+            <i class="fa fa-heartbeat"></i> Active
+        </div>
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.perksAllowed">
+            <i class="fa fa-gift"></i> Perks
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.available">
+            <i class="fa fa-globe"></i> Joinable
+        </div>
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.botsAllowed">
+            <i class="fa fa-android"></i> Robots
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.friendsOnly">
+            <i class="fa fa-users"></i> My Friends
+        </div>
+        <div class="col-md-6">
+            <input type="checkbox" ng-model="searchOptions.levelCapAllowed">
+            <i class="fa fa-user-times"></i> Level Cap (by Rank)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <select ng-show="searchOptions.friendsOnly"
+                    ng-model="searchOptions.friend"
+                    style="margin-left: 16px">
+                <option value="">-- None --</option>
+                <option ng-repeat="friend in getRegisteredFriends()" value="{{ friend.id }}">{{ friend.name }}</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <select ng-show="searchOptions.levelCapAllowed"
+                    ng-controller="RewardsController"
+                    ng-model="searchOptions.levelCap"
+                    style="margin-left: 16px">
+                <option value="">-- None --</option>
+                <option ng-repeat="level in levels"
+                        style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
+                        value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-6 col-md-6">
+            <button class="btn btn-default new_game" ng-click="contestSearch(searchOptions)">
+                <i class="fa fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+
+</fieldset>

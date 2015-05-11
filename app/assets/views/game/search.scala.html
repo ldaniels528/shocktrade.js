@@ -1,89 +1,30 @@
 <div class="row">
-    <!-- Game Filtering Options -->
-    <div ng-hide="isSplitScreen()" class="col-md-12">
-        <fieldset class="contest">
-            <legend class="contest">Search for Games</legend>
-            <div class="row">
-                <div class="col-md-3">
-                    <input type="checkbox" ng-model="searchOptions.activeOnly">
-                    <i class="fa fa-heartbeat"></i> Active
-                </div>
-                <div class="col-md-4">
-                    <input type="checkbox" ng-model="searchOptions.perksAllowed">
-                    <i class="fa fa-gift"></i> Perks
-                </div>
-                <div class="col-md-5">
-                    <input type="checkbox" ng-model="searchOptions.botsAllowed">
-                    <i class="fa fa-android"></i> Robots
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <input type="checkbox" ng-model="searchOptions.available">
-                    <i class="fa fa-globe"></i> Joinable
-                </div>
-                <div class="col-md-4">
-                    <input type="checkbox" ng-model="searchOptions.friendsOnly">
-                    <i class="fa fa-users"></i> My Friends
-                </div>
-                <div class="col-md-5">
-                    <input type="checkbox" ng-model="searchOptions.levelCapAllowed">
-                    <i class="fa fa-user-times"></i> Level Cap (by Rank)
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">&nbsp;</div>
-                <div class="col-md-4">
-                    <select ng-show="searchOptions.friendsOnly"
-                    ng-model="searchOptions.friend"
-                    style="margin-left: 16px">
-                        <option value="">-- None --</option>
-                        <option ng-repeat="friend in getRegisteredFriends()" value="{{ friend.id }}">{{ friend.name }}</option>
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <select ng-show="searchOptions.levelCapAllowed"
-                    ng-controller="RewardsController"
-                    ng-model="searchOptions.levelCap"
-                    style="margin-left: 16px">
-                        <option value="">-- None --</option>
-                        <option ng-repeat="level in levels"
-                        style="background-image:url(/assets/images/objects/friend_delete.png); background-repeat: no-repeat; text-indent: 16px"
-                        value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
-                    </select>
-                </div>
-            </div>
-        </fieldset>
+    <div ng-hide="isSplitScreen()" style="margin-bottom: 20px">
+        <!-- Game Filtering Options -->
+        <div class="col-md-6" ng-include src="'/assets/views/play/game_filters.htm'"></div>
+
+        <!-- My Games -->
+        <div class="col-md-6" ng-include src="'/assets/views/play/my_contests.htm'"></div>
     </div>
 
     <!-- Search Results -->
     <div ng-class="{'col-md-4':(isSplitScreen()), 'col-md-12':(!isSplitScreen())}">
         <fieldset class="contest">
             <legend class="contest">
-                Search Results ({{ getAvailableCount() }}/{{ searchResults.length || 0 }})
-
-                <div class="pull-right">
-                    <button class="btn btn-default new_game"
-                        ng-hide="isSplitScreen()"
-                        ng-disabled="!MySession.authenticated"
-                        ng-click="popupNewGameDialog()">
-                        <i class="fa fa-plus-circle"></i> New Game
-                    </button>
-                </div>
-                <br style="clear: both">
+                Search Results ({{ getSearchResults(searchTerm).length || 0 }})
             </legend>
             <div class="availGamesContainer">
                 <div class="row">
-                    <div class="col-md-4 header left padding-left-16">Game Name</div>
+                    <div class="col-md-4 header left padding-left-16">Game Title</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header center">Started</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header right">Buy In</div>
+                    <div ng-hide="isSplitScreen()" class="col-md-2 header center">Expires</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header right">Players</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
                 </div>
 
-                <div ng-repeat="c in searchResults" class="row clickable"
+                <div ng-repeat="c in getSearchResults(searchTerm)" class="row clickable"
                     ng-click="selectContest(c)"
-                    ng-class="($index % 2 == 0 ? 'contest_even' : 'contest_odd') + (selectedContest.OID() === c.OID() ? ' selected' : '')">
+                    ng-class="selectedContest.OID() === c.OID() ? 'selected' : ''">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <span ng-if="c.status === 'ACTIVE'">
                             <img ng-src="{{ getStatusIcon(c) }}">
@@ -96,10 +37,9 @@
                         <span ng-show="c.startTime">{{ c.startTime | date:'MM-dd-yyyy' }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2">
-                        <span ng-class="c.status === 'ACTIVE' ? '' : 'null'" class="pull-right">
-                            $ {{ c.startingBalance | number }}
-                        </span>
+                    <div ng-hide="isSplitScreen()" class="col-md-2 center">
+                        <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
+                        <span ng-hide="c.expirationTime">&#8212;</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 right">
                         <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} / {{ maxPlayers }}</span>

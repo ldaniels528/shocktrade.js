@@ -1,11 +1,14 @@
 <div class="pull-left st_nav_bar contest_colors">
     <ul class="nav nav-tabs nav-stacked">
         <li class="st_nav_bar" ng-repeat="tab in playTabs">
-            <i ng-class="'fa ' + tab.icon_class + ' nav_icon' + (tab.hover ? ' st_control' : (tabIndex == $index ? ' st_nav_selected' : '')) + (tab.isVisible(contest) ? ' clickable' : ' null')"
+            <i ng-show="tab.isVisible(contest)" ng-class="'fa ' + tab.icon_class + ' nav_icon clickable' + (tab.hover ? ' st_control' : (tabIndex == $index ? ' st_nav_selected' : ''))"
                title="{{ tab.tool_tip }}"
                ng-click="changePlayTab($index)"
                ng-mouseenter="tab.hover = true"
                ng-mouseleave="tab.hover = false"></i>
+
+            <i ng-hide="tab.isVisible(contest)" ng-class="'fa ' + tab.icon_class + ' nav_icon null'"
+               title="{{ tab.tool_tip }}"></i>
         </li>
     </ul>
 </div>

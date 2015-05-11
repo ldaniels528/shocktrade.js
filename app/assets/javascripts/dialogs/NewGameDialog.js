@@ -61,12 +61,12 @@
      * New Game Dialog Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewGameDialogCtrl', ['$rootScope', '$scope', '$http', '$log', '$modalInstance', 'ContestService',
-        function ($rootScope, $scope, $http, $log, $modalInstance, ContestService) {
+    app.controller('NewGameDialogCtrl', ['$rootScope', '$scope', '$http', '$log', '$modalInstance', 'ContestService', 'MySession',
+        function ($rootScope, $scope, $http, $log, $modalInstance, ContestService, MySession) {
             $scope.durations = [
-                {label: "1 Week", value:7},
-                {label: "2 Weeks", value:14},
-                {label: "1 Month", value:30},
+                {label: "1 Week", value: 7},
+                {label: "2 Weeks", value: 14},
+                {label: "1 Month", value: 30}
             ];
             $scope.startingBalances = [
                 1000, 2500, 5000, 10000, 25000, 50000, 100000
@@ -105,6 +105,9 @@
 
             function isValidForm() {
                 $scope.errors = [];
+                if(!MySession.authenticated) {
+                    $scope.errors.push("You must login to create games");
+                }
                 if(! $scope.form.name || $scope.form.name.trim().length == 0) {
                     $scope.errors.push("Game Title is required");
                 }
