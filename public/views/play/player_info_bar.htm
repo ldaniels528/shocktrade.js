@@ -1,14 +1,29 @@
 <div class="row player_info_bar contest_colors">
 	<div class="col-md-4">
-        <img ng-show="WebSockets.isConnected()" src="/assets/images/status/greenlight.png">
-        <img ng-hide="WebSockets.isConnected()" src="/assets/images/status/offlight.png">
-        <avatar id="{{ MySession.fbUserID }}" style="margin-top: 2px; width: 32px; height: 32px" />
-        <span style="font-size: 14pt; vertical-align: middle">
-            Net Worth: <span class="positive">$ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}</span>
-        </span>
+        <div class="pull-left" style="display: inline">
+            <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 32px; height: 32px" />
+        </div>
+        <div class="pull-left" style="display: inline">
+            <div>
+                <img ng-show="WebSockets.isConnected()" ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png">
+                <span ng-hide="contest" class="null">[inactive]</span>
+                <span ng-if="contest">
+                    <span ng-class="'rank_' + getRankingByFBID(contest, MySession.fbUserID).rank">{{ getRankingByFBID(contest, MySession.fbUserID).rank }} Place</span>
+                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '1st'" src="/assets/images/contests/gold.png">
+                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '2nd'" src="/assets/images/contests/silver.png">
+                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '3rd'" src="/assets/images/contests/bronze.png">
+                </span>
+            </div>
+            <div>
+                <span class="positive">
+                    $ {{ (MySession.userProfile.netWorth || 0.00) | number:2 }}
+                </span>
+            </div>
+        </div>
+        <br style="clear: both">
     </div>
     <div class="col-md-4">
-        <span ng-show="contest.OID()" style="font-size: 14pt; vertical-align: middle">
+        <span ng-show="contest" style="font-size: 14pt; vertical-align: middle">
             Playing <span class="game_title">{{contest.name}}</span>
         </span>
     </div>

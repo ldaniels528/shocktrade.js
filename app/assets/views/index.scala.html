@@ -55,12 +55,14 @@
 
         <!-- main view -->
         <div ng-controller="GameController">
-            <div ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+			<div ng-controller="PortfolioController">
+				<div ng-if="MySession.authenticated" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
 
-            <div class="row" style="margin-top: 20px">
-                <div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
-                <div class="col-md-11 pull-left" ng-view ng-cloak></div>
-            </div>
+				<div class="row" style="margin-top: 20px">
+					<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
+					<div class="col-md-11 pull-left" ng-view ng-cloak></div>
+				</div>
+			</div>
             <div style="display: none" id="fb-root"></div>
         </div>
 	</div>

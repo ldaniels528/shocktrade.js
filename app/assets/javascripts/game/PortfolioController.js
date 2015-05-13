@@ -7,6 +7,7 @@
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
 
+            $scope.participant = null;
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
             $scope.selectedPosition = null;
@@ -73,21 +74,28 @@
                 return $scope.participant;
             };
 
-            $scope.getRankings = function(contest) {
-                if(!contest) return [];
-                else if(!contest.rankings) {
+            $scope.getRankings = function (contest) {
+                if (!contest) return [];
+                else if (!contest.rankings) {
                     contest.rankings = [];
                     $log.info("Loading rankings....");
                     ContestService.getRankings(contest.OID())
-                        .success(function(rankings) {
+                        .success(function (rankings) {
                             contest.rankings = rankings;
                         })
-                        .error(function(response) {
+                        .error(function (response) {
                             toaster.pop('error', 'Error!', "Error loading play rankings");
                             $log.error(response.error)
                         });
                 }
                 return contest.rankings;
+            };
+
+            $scope.getRankingByFBID = function (contest, facebookID) {
+                for(var n = 0; n < (contest.rankings || []).length; n++) {
+                    if(contest.rankings[n].facebookID === facebookID) return contest.rankings[n];
+                }
+                return null;
             };
 
             function enrichParticipant(contest, participant) {
