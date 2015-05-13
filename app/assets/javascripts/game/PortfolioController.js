@@ -17,7 +17,7 @@
 
             $scope.portfolioTabs = [{
                 "name": "Chat",
-                "imageURL": "/assets/images/objects/chat.png",
+                "icon": "fa-comment-o",
                 "path": "/assets/views/play/portfolio/chat.htm",
                 "active": false,
                 "init": function (contest) {
@@ -28,7 +28,7 @@
                 }
             }, {
                 "name": "Positions",
-                "imageURL": "/assets/images/objects/position.png",
+                "icon": "fa-list-alt",
                 "path": "/assets/views/play/portfolio/positions.htm",
                 "active": false,
                 "init": function (contest) {
@@ -39,7 +39,7 @@
                 }
             }, {
                 "name": "Open Orders",
-                "imageURL": "/assets/images/objects/portfolio_query.png",
+                "icon": "fa-folder-open-o",
                 "path": "/assets/views/play/portfolio/orders_active.htm",
                 "active": false,
                 "init": function (contest) {
@@ -50,7 +50,7 @@
                 }
             }, {
                 "name": "Closed Orders",
-                "imageURL": "/assets/images/objects/portfolio_header.png",
+                "icon": "fa-folder-o",
                 "path": "/assets/views/play/portfolio/orders_closed.htm",
                 "active": false,
                 "init": function (contest) {

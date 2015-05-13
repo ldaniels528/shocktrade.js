@@ -30,22 +30,6 @@
             $scope.tradingHistory = null;
             $scope.selectedTradingHistory = null;
 
-            // define the filter tabs
-            $scope.quoteTabs = [{
-                name: "News",
-                path: "/assets/views/news/news_index.htm",
-                active: false
-            }, {
-                name: "Charts",
-                path: "/assets/views/discover/quotes/stock_chart.htm",
-                active: false
-            }, {
-                name: "Filters",
-                path: "/assets/views/discover/quotes/filters.htm",
-                active: false
-            }];
-            $scope.quoteTabs[0].active = true;
-
             $scope.changeQuoteTab = function(tabIndex) {
                 angular.forEach($scope.quoteTabs, function(tab) {
                     tab.active = false;
@@ -57,11 +41,7 @@
             $scope.expanders = [{
                 title: "Performance & Risk",
                 url: "/assets/views/discover/quotes/expanders/price_performance.htm",
-                icon: function (q) {
-                    return q && ((q.change52Week || 0) < 0)
-                        ? "/assets/images/objects/marketLoss.png"
-                        : "/assets/images/objects/marketGain.png";
-                },
+                icon: "fa-line-chart",
                 expanded: false,
                 visible: function (q) {
                     return q.high52Week || q.low52Week || q.change52Week || q.movingAverage50Day ||
@@ -70,9 +50,7 @@
             }, {
                 title: "Income Statement",
                 url: "/assets/views/discover/quotes/expanders/income_statement.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/financials.gif";
-                },
+                icon: "fa-money",
                 expanded: false,
                 visible: function (q) {
                     return q.revenue || q.revenuePerShare || q.revenueGrowthQuarterly || q.grossProfit ||
@@ -81,9 +59,7 @@
             }, {
                 title: "Balance Sheet",
                 url: "/assets/views/discover/quotes/expanders/balanace_sheet.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/balance.png";
-                },
+                icon: "fa-calculator",
                 expanded: false,
                 visible: function (q) {
                     return q.totalCash || q.totalDebt || q.currentRatio || q.totalCashPerShare ||
@@ -94,9 +70,7 @@
             }, {
                 title: "Valuation Measures",
                 url: "/assets/views/discover/quotes/expanders/valuation_measures.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/measure.gif";
-                },
+                icon: "fa-gears",
                 expanded: false,
                 visible: function (q) {
                     return q.enterpriseValue || q.trailingPE || q.forwardPE || q.pegRatio || q.priceOverSales ||
@@ -106,9 +80,7 @@
             }, {
                 title: "Share Statistics",
                 url: "/assets/views/discover/quotes/expanders/share_statistics.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/statistics.png";
-                },
+                icon: "fa-bar-chart",
                 expanded: false,
                 visible: function (q) {
                     return q.avgVolume3Month || q.avgVolume10Day || q.sharesOutstanding || q.sharesFloat ||
@@ -118,9 +90,7 @@
             }, {
                 title: "Dividends & Splits",
                 url: "/assets/views/discover/quotes/expanders/dividends_splits.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/scissors.png";
-                },
+                icon: "fa-cut",
                 expanded: false,
                 visible: function (q) {
                     return q.forwardAnnualDividendRate || q.forwardAnnualDividendYield ||
@@ -130,9 +100,7 @@
             }, {
                 title: "Historical Quotes",
                 url: "/assets/views/discover/quotes/trading_history.htm",
-                icon: function (q) {
-                    return "/assets/images/objects/marketHistory.png";
-                },
+                icon: "fa-calendar",
                 expanded: false,
                 loading: false,
                 onExpand: function (callback) {

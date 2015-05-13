@@ -4,18 +4,15 @@
     /**
      * Game Play Controller
      */
-    app.controller('GameController', ['$rootScope', '$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'InvitePlayerDialog', 'NewGameDialog', 'NewOrderDialog', 'QuoteService',
-        function ($rootScope, $scope, $location, $log, $timeout, toaster, MySession, ContestService, InvitePlayerDialog, NewGameDialog, NewOrderDialog, QuoteService) {
+    app.controller('GameController', ['$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
+        function ($scope, $location, $log, $timeout, toaster, MySession, ContestService, QuoteService) {
 
-            // setup the current contest
+            // setup the public variables
             $scope.contest = null;
-            $scope.selectedContest = null;
-
-            // setup contest variables
             $scope.myContests = null;
             $scope.searchResults = [];
             $scope.searchTerm = "";
-            $scope.participant = {};
+            $scope.selectedContest = null;
             $scope.splitScreen = false;
 
             // search variables
@@ -27,17 +24,6 @@
                 levelCapAllowed: false,
                 perksAllowed: false,
                 robotsAllowed: false
-            };
-
-            // setup UI variables
-            $scope.statusBar = "";
-
-            $scope.popupNewGameDialog = function () {
-                NewGameDialog.popup({});
-            };
-
-            $scope.popupInvitePlayerDialog = function (participant) {
-                InvitePlayerDialog.popup($scope, participant);
             };
 
             $scope.enterGame = function (contest) {
@@ -126,6 +112,7 @@
                 var term = (searchTerm || "").trim().toLowerCase();
                 if (term.length === 0) return $scope.searchResults;
                 else {
+                    // $log.info("searchTerm = " + searchTerm);
                     return $scope.searchResults.filter(function (c) {
                         return c.name.toLowerCase().indexOf(term) != -1;
                     });
@@ -543,12 +530,13 @@
                         }
 
                         // capture the rankings for the current player
-                        if ($scope.participant) {
+                        var participant = findPlayerByName(contest, playerName);
+                        if (participant) {
                             for (var n = 0; n < contest.rankings.length; n++) {
                                 var ranking = contest.rankings[n];
                                 if (ranking.name === playerName) {
-                                    $scope.participant.gainLoss = ranking.gainLoss;
-                                    $scope.participant.rank = ranking.rank;
+                                    participant.gainLoss = ranking.gainLoss;
+                                    participant.rank = ranking.rank;
                                 }
                             }
                         }
@@ -649,7 +637,7 @@
             //////////////////////////////////////////////////////////////////////
 
             // watch for changes to the player's profile
-            $scope.$watch("MySession.userProfile", function (oldVal, newVal) {
+            $scope.$watch("MySession.userProfile", function (newVal) {
                 var playerName = MySession.getUserName();
                 if (playerName !== 'Spectator') {
                     // load the player's games
@@ -658,9 +646,7 @@
             });
 
             // perform the initial search
-            $scope.contestSearch({
-                available: true
-            });
+            $scope.contestSearch($scope.searchOptions);
 
         }]);
 })();

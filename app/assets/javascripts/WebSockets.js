@@ -18,9 +18,13 @@
         if (window.WebSocket) {
             connect();
         } else {
-            alert("Your browser does not support Web Sockets.");
+            toaster.pop("Your browser does not support Web Sockets.");
         }
 
+        /**
+         * Indicates whether a connection is established
+         * @returns {boolean}
+         */
         service.isConnected = function () {
             return connected;
         };
@@ -28,9 +32,8 @@
         /**
          * Transmits the message to the server via web-socket
          * @param message the given message
-         * @param scope the given scope
          */
-        service.send = function (message, scope) {
+        service.send = function (message) {
             if (!window.WebSocket) {
                 toaster.pop('error', 'Online Status', 'Web socket closed');
                 return false;

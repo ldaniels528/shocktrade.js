@@ -1,6 +1,7 @@
 .contest_colors {
-	border: 1px solid #bbbbbb;
-	background-color: #cccccc;
+	border: 1px solid #d4d4d4;
+	border-radius: 4px 4px 4px 4px;
+	background-color: #dddddd;
 }
 
 .contest_lobby {
@@ -18,7 +19,6 @@
 }
 
 .player_info_bar {
-	border-radius: 5px 5px 5px 5px;
 	padding: 3px 3px 3px 3px;
 	margin-left: 3px;
 	margin-right: 3px;
@@ -158,7 +158,7 @@ div.myAwardsContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 200px;
+	height: 550px;
 }
 
 div.myPerksContainer {

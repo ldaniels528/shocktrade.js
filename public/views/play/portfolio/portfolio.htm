@@ -2,7 +2,7 @@
 	<div ng-include src="'/assets/views/play/portfolio/summary.htm'" style="margin-bottom: 10px"></div>
     <div class="row">
         <div class="col-md-offset-9 col-md-3">
-            <button class="btn btn-default new_order bold pull-right"
+            <button class="btn btn-default sell_button bold pull-right"
                     ng-click="popupNewOrderDialog()"
                     title="Create a new order">
                 <i class="fa fa-cart-plus"></i> New
@@ -12,7 +12,8 @@
     <tabset style="margin-bottom: 10px">
         <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked(contest)" select="tab.init(contest)">
             <tab-heading>
-                <img ng-src="{{ tab.imageURL }}"> {{ tab.name }}
+                <i ng-show="tab.icon" class="fa" ng-class="tab.icon"></i>
+                <img ng-hide="tab.icon" ng-src="{{ tab.imageURL }}"> {{ tab.name }}
             </tab-heading>
             <div class="portfolio_tab" ng-include src="tab.path"></div>
         </tab>

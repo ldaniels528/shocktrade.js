@@ -1,4 +1,4 @@
-<div style="width: 100%">
+<div>
 	<div ng-repeat="channel in channels">
 		<div class="news_provider">
 			<div style="display: inline; float: left">
@@ -10,16 +10,17 @@
 					ng-options="source.OID() as source.name for source in newsSources"
 					ng-change="getNewsFeed(selection.feed)">
 				</select>
-				<a href="" ng-click="view = 'list'">
-					<img ng-class="view != 'list' ? 'clickable' : ''" 
-						src="/assets/images/discover/news/list-24.png" 
-						popover="List view" popover-trigger="mouseenter">
-				</a>				
-				<a href="" ng-click="view = 'grid'">
-					<img ng-class="view != 'grid' ? 'clickable' : ''" 
-						src="/assets/images/discover/news/grid-24.png" 
-						popover="Grid view" popover-trigger="mouseenter">
-				</a>
+				<i class="fa fa-bars clickable white"
+				   ng-click="view = 'list'"
+				   ng-class="view != 'list' ? 'clickable' : ''"
+				   popover="List view"
+				   popover-trigger="mouseenter"></i>
+
+				<i class="fa fa-th clickable white"
+				   ng-click="view = 'grid'"
+				   ng-class="view != 'grid' ? 'clickable' : ''"
+				   popover="Grid view"
+				   popover-trigger="mouseenter"></i>
 			</div>
 			<br style="clear: both">
 		</div>

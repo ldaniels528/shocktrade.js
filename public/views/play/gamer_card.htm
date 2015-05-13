@@ -1,5 +1,5 @@
-<div ng-controller="GameController" style="width: 100%; height: 100%; border: 1px solid #888888; background-color: #ffffee; border-radius: 5px 5px 5px 5px">
-	<div style="width: 100%; background-color: #004080; color: #ffffee; text-align: center">{{ userProfile.name }}</div>
+<div ng-controller="GameController" class="contest_colors">
+	<div style="background-color: #004080; color: #ffffee; text-align: center">{{ userProfile.name }}</div>
 	<div style="display:block; width: 100%; background-color: #ccddff">
 		<country profile="{{ MySession.profile }}" />
 		<span style="vertical-align: middle; font-weight: bold; color: #000088">Level {{ userProfile.level }} - {{ levels[userProfile.level || 0].description }}</span>
@@ -17,11 +17,11 @@
 				</tr>				
 				<tr>
 					<th class="small">Experience</th> 
-					<td class="small">{{ userProfile.totalXP || 0 | number }}</td>
+					<td class="small">{{ (userProfile.totalXP || 0) | number }}</td>
 				</tr>
 				<tr>
 					<th class="small">Next Level</th> 
-					<td class="small">{{ userProfile.nextLevelXP || 0 | number }}</td>
+					<td class="small">{{ (userProfile.nextLevelXP || 0) | number }}</td>
 				</tr>	
 				<tr>
 					<th class="small">Friends</th> 

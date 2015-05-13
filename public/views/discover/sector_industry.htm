@@ -1,7 +1,7 @@
-<div class="row sector_industry bottom">
+<div class="row sector_industry">
 	<div class="col-md-10">
 		<!-- Market Image -->
-		<img ng-if="q.active" ng-src="/assets/images/objects/market.png">
+		<i ng-if="q.active" class="fa fa-globe st_text_color"></i>
 		<span ng-if="!q.active"
 			popover="Asset is inactive" 
 			popover-trigger="mouseenter"
@@ -41,16 +41,19 @@
 			(<a ng-class="q.exchange + ' bold'" ng-href="#/explore">{{ q.symbol }}</a>)
 		</span>
 		
-		<!-- Favorite -->
-		<span ng-hide="q.active && isFavorite(q.symbol)">
-			<a href="" ng-click="addFavoriteSymbol(q.symbol)">
-				<img class="clickable"
-					popover="Add to Favorites"
-					popover-trigger="mouseenter"
-					src="/assets/images/objects/favorite-add.png">
-			</a>
-		</span>
-				
+		<!-- Favorite / Un-Favorite -->
+        <i class="fa fa-heart-o clickable heart"
+            popover="Add to Favorites"
+            popover-trigger="mouseenter"
+            ng-show="q.active && !isFavorite(q.symbol)"
+            ng-click="addFavoriteSymbol(q.symbol)"></i>
+
+        <i class="fa fa-heart clickable heart"
+           popover="Remove from Favorites"
+           popover-trigger="mouseenter"
+           ng-show="q.active && isFavorite(q.symbol)"
+           ng-click="removeFavoriteSymbol(q.symbol)"></i>
+
 		<!-- Trade button -->
 		<i class="fa fa-cart-plus clickable sector_cart st_control"
 		   ng-show="contest && q.active && MySession.isAuthorized()"
@@ -62,7 +65,7 @@
 	<div class="col-md-2">
         <span ng-class="usMarketsOpen === null ? 'mks_loading' : (usMarketsOpen ? 'mks_open' : 'mks_closed')">
             <img ng-show="usMarketsOpen === null" src="/assets/images/status/loading.gif">
-            {{ usMarketsOpen === null ? 'Checking Market Status...' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
+            {{ usMarketsOpen === null ? 'US Markets ....' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
         </span>
 	</div>
 </div>

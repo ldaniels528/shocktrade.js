@@ -16,7 +16,6 @@
 
         <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
             <div class="col-md-7">
-                <img ng-src="{{ getStatusIcon(c) }}">
                 <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
                 {{ c.name }}
             </div>
@@ -39,7 +38,7 @@
 <div class="pull-right">
     <button class="btn btn-default new_game"
             ng-hide="isSplitScreen()"
-            ng-click="popupNewGameDialog()">
+            ng-click="newGamePopup()">
         <i class="fa fa-plus-circle"></i> New
     </button>
 </div>

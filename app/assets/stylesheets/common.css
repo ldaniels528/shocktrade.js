@@ -6,10 +6,6 @@
  	/* font-family: "Times New Roman", Times, serif; */ 
  	font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
 }
-
-.clickable {
-	cursor: pointer;	
-}
  
 a { cursor: pointer; }
 a:link    { cursor: pointer; text-decoration: none; }
@@ -17,8 +13,25 @@ a:visited { cursor: pointer; text-decoration: none; }
 a:hover   { cursor: pointer; text-decoration: none; }
 a:active  { cursor: pointer; text-decoration: none; }
 
+.clickable {
+	cursor: pointer;
+}
+
+.expander {
+    color: #000088;
+    font-weight: bold;
+}
+
+.white {
+    color: #ffffff;
+}
+
 .fb {
 	color: #3a5795;
+}
+
+.heart {
+	color: #ff0000;
 }
 
 legend {
@@ -41,10 +54,12 @@ legend {
     color: #2f96b4;
 }
 
+.st_blue {
+	color: #1166ff;
+}
+
 div.st_nav_bar {
-    border-radius: 4px 4px 4px 4px;
-    padding: 4px 4px 4px 4px;
-    height: auto
+    padding: 4px;
 }
 
 li.st_nav_bar {
@@ -54,7 +69,7 @@ li.st_nav_bar {
 
 body {
 	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
-	background: #dddddd;
+	background: #eeeeee;
 	min-width: 1024px;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -136,7 +151,7 @@ input { font-family: 'FontAwesome'; } /* This is for the placeholder */
 th {
 	vertical-align: top;
 	text-align: left;
-	color: #0000aa
+	color: #000088
 }
 
 td {

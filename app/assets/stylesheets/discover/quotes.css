@@ -34,27 +34,13 @@ div.fund_summary {
 
 }
 
-.quote_control_panel {
-	background-color: #eeeeee;
-	border: 1px solid #dddddd;
-	border-radius: 4px 4px 4px 4px;
-	color: #000080;
-	font-weight: bold;
-}
-
 .quote_title {
-	background-color: #eeeeee; 
-	border: 1px solid #dddddd;
-	border-radius: 4px 4px 4px 4px;
 	padding: 2px 2px 2px 2px;
-	color: #000080;
+	color: #000088;
 	font-weight: bold
 }
 
 .quote_sub_title {
-	background-color: #eeeeee;
-	border: 1px solid #dddddd;
-	border-radius: 6px 6px 6px 6px;
 	padding: 10px;
 }
 

@@ -155,17 +155,17 @@
 
         function determineTableIndex() {
             var path = $location.path();
-            if(path.indexOf("/awards") != -1) return 4;
+            if(path.indexOf("/awards") != -1) return 3;
             else if(path.indexOf("/connect") != -1) return 0;
             else if(path.indexOf("/discover") != -1) return 2;
             else if(path.indexOf("/explore") != -1) return 2;
             else if(path.indexOf("/portfolio") != -1) return 1;
             else if(path.indexOf("/lounge") != -1) return 1;
             else if(path.indexOf("/news") != -1) return 3;
-            else if(path.indexOf("/perks") != -1) return 5;
+            else if(path.indexOf("/perks") != -1) return 4;
             else if(path.indexOf("/research") != -1) return 2;
             else if(path.indexOf("/search") != -1) return 0;
-            else if(path.indexOf("/statistics") != -1) return 0;
+            else if(path.indexOf("/statistics") != -1) return 5;
             else return 0;
         }
 

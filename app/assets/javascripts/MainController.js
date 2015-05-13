@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
-        function ($scope, $http, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'NewGameDialog', 'ProfileService', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, NewGameDialog, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
 
@@ -41,17 +41,17 @@
                 }, 500);
             };
 
-            $scope.isOnline = function(player) {
+            $scope.isOnline = function (player) {
                 var playerID = player.facebookID;
                 var state = onlinePlayers[playerID];
-                if(!state) {
+                if (!state) {
                     state = {connected: false};
                     onlinePlayers[playerID] = state;
                     $http.get("/api/online/" + playerID)
-                        .success(function(newState) {
+                        .success(function (newState) {
                             onlinePlayers[playerID] = newState;
                         })
-                        .error(function(err) {
+                        .error(function (err) {
                             $log.error("Error retrieving online state for user " + playerID);
                         });
 
@@ -136,26 +136,33 @@
                     function (err) {
                         toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
                         $scope.signUpPopup(fbUserID, MySession.fbProfile);
-                    }
-                );
+                    });
             };
 
             function loadFacebookFriends() {
                 Facebook.getTaggableFriends().then(
                     function (response) {
-                        // $log.info("FaceBook friends = " + angular.toJson(response.data, true));
-                        MySession.fbFriends = response.data.sort(function (a, b) {
+                        var friends = response.data;
+                        MySession.fbFriends = friends.sort(function (a, b) {
                             if (a.name < b.name) return -1;
                             else if (a.name > b.name) return 1;
                             else return 0;
                         });
                     },
                     function (err) {
-                        toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends - " + err.data);
+                        toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends");
                     });
             }
 
-            $scope.signUpPopup = function(fbUserID, fbProfile) {
+            $scope.newGamePopup = function () {
+                NewGameDialog.popup({});
+            };
+
+            $scope.invitePlayerPopup = function (participant) {
+                InvitePlayerDialog.popup($scope, participant);
+            };
+
+            $scope.signUpPopup = function (fbUserID, fbProfile) {
                 SignUpDialog.popup(fbUserID, fbProfile);
             };
 
@@ -206,7 +213,7 @@
                 });
             }
 
-            $scope.$on("user_status_changed", function(event, newState) {
+            $scope.$on("user_status_changed", function (event, newState) {
                 $log.info("user_status_changed: newState = " + angular.toJson(newState));
             });
 

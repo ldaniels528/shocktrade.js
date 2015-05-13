@@ -4,7 +4,7 @@
         <div class="col-md-6" ng-include src="'/assets/views/play/game_filters.htm'"></div>
 
         <!-- My Games -->
-        <div class="col-md-6" ng-include src="'/assets/views/play/my_contests.htm'"></div>
+        <div class="col-md-6 contest_colors" style="padding-bottom: 4px" ng-include src="'/assets/views/play/my_contests.htm'"></div>
     </div>
 
     <!-- Search Results -->
@@ -13,6 +13,14 @@
             <legend class="contest">
                 Search Results ({{ getSearchResults(searchTerm).length || 0 }})
             </legend>
+            <div class="row">
+                <input class="symbol_input_text_field"
+                        ng-class="{'col-md-11':(isSplitScreen()), 'col-md-4':(!isSplitScreen())}"
+                        style="border-radius: 4px 4px 4px 4px"
+                        type="text"
+                        ng-model="searchTerm"
+                        placeholder="&#xf002; Filter by Game Title">
+            </div>
             <div class="availGamesContainer">
                 <div class="row">
                     <div class="col-md-4 header left padding-left-16">Game Title</div>
@@ -26,9 +34,6 @@
                     ng-click="selectContest(c)"
                     ng-class="selectedContest.OID() === c.OID() ? 'selected' : ''">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <span ng-if="c.status === 'ACTIVE'">
-                            <img ng-src="{{ getStatusIcon(c) }}">
-                        </span>
                         <img ng-hide="c.status === 'ACTIVE'" src="/assets/images/status/offlight.png">
                         <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
                         {{ c.name }}
@@ -75,7 +80,7 @@
                             <avatar ng-show="p" id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
                             <img class="no_picture_gang clickable"
                                 ng-hide="p"
-                                ng-click="popupInvitePlayerDialog(findPlayerByID(selectedContest, MySession.getUserID()))"
+                                ng-click="invitePlayerPopup(findPlayerByID(selectedContest, MySession.getUserID()))"
                                 title="invite a friend"
                                 src="/assets/images/play/unknown-53.jpg">
                         </span>
@@ -95,19 +100,18 @@
 
                 <div class="col-md-3">Status</div>
                 <div class="col-md-5">
-                    <img ng-show="selectedContest" ng-src="{{ getStatusIcon(selectedContest) }}">
                     <span ng-class="getStatusClass(selectedContest)">{{ selectedContest.status }}</span>
                 </div>
                 <div class="col-md-4">
-                    <input type="checkbox" ng-model="selectedContest.friendsOnly" disabled>
-                    <i class="fa fa-users"></i> Friends-Only
+                    <input id="friendsOnly" type="checkbox" ng-model="selectedContest.friendsOnly" disabled>
+                    <i class="fa fa-users"></i> <label for="friendsOnly">Friends-Only</label>
                 </div>
 
                 <div class="col-md-3">Created</div>
                 <div class="col-md-5">{{ selectedContest.creationTime | date:'MM/dd/yyyy hh:mma' }}</div>
                 <div class="col-md-4">
-                    <input type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
-                    <i class="fa fa-gift"></i> Perks Allowed
+                    <input id="perksAllowed" type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
+                    <i class="fa fa-gift"></i> <label for="perksAllowed">Perks Allowed</label>
                 </div>
 
                 <div class="col-md-3">Started</div>
@@ -116,8 +120,8 @@
                     <span ng-hide="selectedContest.startTime" class="null">Not Started</span>
                 </div>
                 <div class="col-md-4">
-                    <input type="checkbox" ng-model="selectedContest.invitationOnly" disabled>
-                    <i class="fa fa-lock"></i> Invitation-Only
+                    <input id="invitationOnly" type="checkbox" ng-model="selectedContest.invitationOnly" disabled>
+                    <i class="fa fa-lock"></i> <label for="invitationOnly">Invitation-Only</label>
                 </div>
 
                 <div class="col-md-3">Ends</div>
@@ -126,8 +130,8 @@
                     <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
                 </div>
                 <div class="col-md-4">
-                    <input type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
-                    <i class="fa fa-android"></i> Robots Allowed
+                    <input id="robotsAllowed" type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
+                    <i class="fa fa-android"></i> <label for="robotsAllowed">Robots Allowed</label>
                 </div>
 
                 <div class="col-md-3">Buy-In Cost</div>
@@ -147,32 +151,36 @@
                     <button class="btn btn-default enter_game"
                         ng-disabled="!isParticipant(selectedContest)"
                         ng-click="enterGame(selectedContest)">
-                        <img src="/assets/images/objects/enter.png"> Enter
+                        <i class="fa fa-arrow-circle-right"></i> Enter
                     </button>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-default start_game"
                         ng-show="isContestOwner(selectedContest) && !selectedContest.startTime"
                         ng-click="startContest(selectedContest)">
-                        <img ng-src="/assets/images/{{ selectedContest.starting ? 'status/loading.gif' : 'objects/play.png' }}"> Start
+                        <i ng-hide="selectedContest.starting" class="fa fa-youtube-play"></i>
+                        <img ng-show="selectedContest.starting" src="/assets/images/status/loading.gif"> Start
                     </button>
                     <button class="btn btn-default join_game"
                         ng-disabled="!MySession.authenticated"
                         ng-show="isJoinable(selectedContest)"
                         ng-click="joinContest(selectedContest)">
-                        <img ng-src="/assets/images/{{ selectedContest.joining ? 'status/loading.gif' : 'objects/friend.png' }}"> Join
+                        <i ng-hide="selectedContest.joining" class="fa fa-user"></i>
+                        <img ng-show="selectedContest.joining" src="/assets/images/status/loading.gif"> Join
                     </button>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-default delete_game"
                         ng-show="isDeletable(selectedContest)"
                         ng-click="deleteContest(selectedContest)">
-                        <img ng-src="/assets/images/{{ selectedContest.deleting ? 'status/loading.gif' : 'buttons/remove.png' }}"> Delete
+                        <i ng-hide="selectedContest.deleting" class="fa fa-warning"></i>
+                        <img ng-show="selectedContest.deleting" src="/assets/images/status/loading.gif"> Delete
                     </button>
                     <button class="btn btn-default quit_game"
                         ng-show="!isContestOwner(selectedContest) && isParticipant(selectedContest)"
                         ng-click="quitContest(selectedContest)">
-                        <img ng-src="/assets/images/{{ selectedContest.quitting ? 'status/loading.gif' : 'objects/alert.png' }}"> Quit
+                        <i ng-hide="selectedContest.quitting" class="fa fa-warning"></i>
+                        <img ng-show="selectedContest.quitting" src="/assets/images/status/loading.gif"> Quit
                     </button>
                 </div>
                 <div class="col-md-6">&nbsp;</div>
@@ -180,5 +188,3 @@
         </fieldset>
     </div>
 </div>
-
-
