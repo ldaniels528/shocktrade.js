@@ -9,15 +9,126 @@
         function ($scope, $http, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, NewGameDialog, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
-
-            // setup the market clock
-            $scope.marketClock = (new Date()).toTimeString();
+            $scope.loading = false;
 
             // setup main-specific variables
             $scope.admin = false;
 
             // mapping of online players
             var onlinePlayers = {};
+
+            // setup the tabs
+            $scope.tabIndex = determineTableIndex();
+            $scope.playTabs = [{
+                "name": "Search",
+                "icon_class": "fa-search",
+                "tool_tip": "Search for games",
+                "url": "/search",
+                "isVisible": function(c) {
+                    return true;
+                }
+            }, {
+                "name": "Play",
+                "icon_class": "fa-gamepad",
+                "tool_tip": "Play the game",
+                "url": "/dashboard",
+                "isVisible": function(c) {
+                    return c != null;
+                }
+            }, {
+                "name": "Discover",
+                "icon_class": "fa-newspaper-o",
+                "tool_tip": "Stock Quotes, News and Research",
+                "url": "/discover",
+                "isVisible": function(c) {
+                    return true;
+                }
+            }, {
+                "name": "My Awards",
+                "icon_class": "fa-trophy",
+                "tool_tip": "My Awards",
+                "url": "/awards",
+                "isVisible": function(c) {
+                    return true;
+                }
+            }, {
+                "name": "My Perks",
+                "icon_class": "fa-gift",
+                "tool_tip": "My Perks",
+                "url": "/perks",
+                "isVisible": function(c) {
+                    return true;
+                }
+            }, {
+                "name": "My Statistics",
+                "icon_class": "fa-bar-chart",
+                "tool_tip": "My Statistics",
+                "url": "/statistics",
+                "isVisible": function(c) {
+                    return true;
+                }
+            }];
+
+            $scope.changePlayTab = function (tabIndex) {
+                var tab = $scope.playTabs[tabIndex];
+                $log.info("Changing location to " + tab.url);
+                $location.path(tab.url);
+                $scope.tabIndex = tabIndex;
+                return true;
+            };
+
+            $scope.abs = function (value) {
+                return !value ? value : ((value < 0) ? -value : value);
+            };
+
+            $scope.clone = function(obj) {
+                // Handle the 3 simple types, and null or undefined
+                if (null == obj || "object" != typeof obj) return obj;
+
+                // Handle Date
+                else if (obj instanceof Date) {
+                    var copy = new Date();
+                    copy.setTime(obj.getTime());
+                    return copy;
+                }
+
+                // Handle Array
+                else if (obj instanceof Array) {
+                    var copy = [];
+                    for (var i = 0, len = obj.length; i < len; i++) {
+                        copy[i] = $scope.clone(obj[i]);
+                    }
+                    return copy;
+                }
+
+                // Handle Object
+                else if (obj instanceof Object) {
+                    var copy = {};
+                    for (var attr in obj) {
+                        if (obj.hasOwnProperty(attr)) copy[attr] = $scope.clone(obj[attr]);
+                    }
+                    return copy;
+                }
+
+                else {
+                    throw new Error("Unable to copy object! Its type isn't supported.");
+                }
+            };
+
+            function determineTableIndex() {
+                var path = $location.path();
+                if(path.indexOf("/awards") != -1) return 3;
+                else if(path.indexOf("/connect") != -1) return 0;
+                else if(path.indexOf("/discover") != -1) return 2;
+                else if(path.indexOf("/explore") != -1) return 2;
+                else if(path.indexOf("/dashboard") != -1) return 1;
+                else if(path.indexOf("/news") != -1) return 3;
+                else if(path.indexOf("/perks") != -1) return 4;
+                else if(path.indexOf("/research") != -1) return 2;
+                else if(path.indexOf("/search") != -1) return 0;
+                else if(path.indexOf("/statistics") != -1) return 5;
+                else return 0;
+            }
 
             $scope.isLoading = function () {
                 return $scope._loading;
@@ -57,19 +168,6 @@
 
                 }
                 return state && state.connected;
-            };
-
-            /**
-             * Initializes the application
-             */
-            $scope.appInit = function () {
-                // setup market status w/updates
-                $interval(function () {
-                    $scope.marketClock = (new Date()).toTimeString();
-                }, 1000);
-
-                // setup the market status updates
-                setupMarketStatusUpdates();
             };
 
             $scope.range = function (n) {
@@ -186,32 +284,6 @@
                 else if (FavoriteSymbols.isFavorite(symbol)) return "favorite_small.png";
                 else return "transparent12.png";
             };
-
-            function setupMarketStatusUpdates() {
-                $scope.usMarketsOpen = null;
-                $log.info("Retrieving market status...");
-                MarketStatus.getMarketStatus(function (response) {
-                    // retrieve the delay in milliseconds from the server
-                    var delay = response.delay;
-                    if (delay < 0) {
-                        delay = response.end - response.sysTime;
-                        if (delay <= 300000) {
-                            delay = 300000; // 5 minutes
-                        }
-                    }
-
-                    // set the market status
-                    $log.info("US Markets are " + (response.active ? 'Open' : 'Closed') + "; Waiting for " + delay + " msec until next trading start...");
-                    setTimeout(function () {
-                        $scope.usMarketsOpen = response.active;
-                    }, 750);
-
-                    // wait for the delay, then call recursively
-                    setTimeout(function () {
-                        setupMarketStatusUpdates();
-                    }, delay);
-                });
-            }
 
             $scope.$on("user_status_changed", function (event, newState) {
                 $log.info("user_status_changed: newState = " + angular.toJson(newState));

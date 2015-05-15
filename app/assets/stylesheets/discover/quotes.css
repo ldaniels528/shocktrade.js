@@ -2,7 +2,7 @@
 	border: 1px solid #ccccbb;
 	border-radius: 4px 4px 4px 4px;
 	background-color: #fffaee;
-	color: #2f96b4;
+	color: #000088;
 	font-weight: bold;
 	padding: 2px 2px 2px 2px;
 }
@@ -21,7 +21,7 @@ div.chart_header {
 	display: block;
 	text-align: center;
 	border: 1px solid #1f86a4;
-	background-color: #2f96b4;
+	background-color: #337ab7;
 	color: white
 }
 
@@ -103,7 +103,7 @@ div.filterContainer {
 }
 
 .qm_header {
-	color: #0000a0;
+	color: #000088;
 	font-weight: bold;
 }
 
@@ -113,11 +113,11 @@ div.filterContainer {
 
 .qm_label {
 	font-weight: bold;
-	color: #0000a0
+	color: #000088
 }
 
 span.small {
-	color: #0000a0;
+	color: #2e6da4;
 	font-size: 8pt
 }
 

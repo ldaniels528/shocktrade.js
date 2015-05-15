@@ -11,7 +11,8 @@
             // setup a private loading variable
             $scope.loading = false;
 
-            // setup the quote page
+            // setup the public variables
+            $scope.marketClock = (new Date()).toTimeString();
             $scope.ticker = null;
             $scope.q = {active: true};
 
@@ -29,13 +30,6 @@
             $scope.filterQuotes = [];
             $scope.tradingHistory = null;
             $scope.selectedTradingHistory = null;
-
-            $scope.changeQuoteTab = function(tabIndex) {
-                angular.forEach($scope.quoteTabs, function(tab) {
-                    tab.active = false;
-                });
-                $scope.quoteTabs[tabIndex].active = true;
-            };
 
             // define the Quote module expanders
             $scope.expanders = [{
@@ -115,6 +109,19 @@
                     .then(function (response) {
                         return response.data;
                     });
+            };
+
+            /**
+             * Initializes the module
+             */
+            $scope.init = function () {
+                // setup market status w/updates
+                $interval(function () {
+                    $scope.marketClock = (new Date()).toTimeString();
+                }, 1000);
+
+                // setup the market status updates
+                setupMarketStatusUpdates();
             };
 
             $scope.popupNewOrderDialog = function (symbol) {
@@ -356,6 +363,32 @@
                     HeldSecurities.init(id);
                 }
             });
+
+            function setupMarketStatusUpdates() {
+                $scope.usMarketsOpen = null;
+                $log.info("Retrieving market status...");
+                MarketStatus.getMarketStatus(function (response) {
+                    // retrieve the delay in milliseconds from the server
+                    var delay = response.delay;
+                    if (delay < 0) {
+                        delay = response.end - response.sysTime;
+                        if (delay <= 300000) {
+                            delay = 300000; // 5 minutes
+                        }
+                    }
+
+                    // set the market status
+                    $log.info("US Markets are " + (response.active ? 'Open' : 'Closed') + "; Waiting for " + delay + " msec until next trading start...");
+                    setTimeout(function () {
+                        $scope.usMarketsOpen = response.active;
+                    }, 750);
+
+                    // wait for the delay, then call recursively
+                    setTimeout(function () {
+                        setupMarketStatusUpdates();
+                    }, delay);
+                });
+            }
 
             ///////////////////////////////////////////////////////////////////////////
             //          Initialization

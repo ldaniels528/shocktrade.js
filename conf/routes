@@ -5,7 +5,6 @@
 # Home page
 GET           /                                                    com.shocktrade.controllers.Application.index
 GET           /websocket                                           com.shocktrade.controllers.Application.webSocket
-GET           /assets/javascripts/app.min.js                       com.shocktrade.controllers.Application.ngApp
 GET           /assets/javascripts/Facebook.js                      com.shocktrade.controllers.Application.facebook
 
 # Charts
@@ -17,8 +16,8 @@ GET           /api/charts/stock/:symbol/:size/:range               com.shocktrad
 GET           /api/charts/ratings/:symbol                          com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
 
 # Contests
-GET           /assets/views/play/lobby/lobby.htm                   com.shocktrade.controllers.ContestResources.lobby
-GET           /assets/views/play/search/search.htm                 com.shocktrade.controllers.ContestResources.search
+GET           /assets/views/play/dashboard.htm                     com.shocktrade.controllers.ContestResources.dashboard
+GET           /assets/views/play/search.htm                        com.shocktrade.controllers.ContestResources.search
 GET           /assets/javascripts/game/GameController.js           com.shocktrade.controllers.ContestResources.gameController
 
 PUT           /api/contest                                         com.shocktrade.controllers.ContestResources.createContest
@@ -115,6 +114,6 @@ GET           /api/tradingClock/status/:lastUpdate                 com.shocktrad
 GET           /api/tradingClock/delayUntilStart                    com.shocktrade.controllers.TradingResources.delayUntilTradingStart
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                                        controllers.Assets.at(path="/public", file)
+GET           /assets/*file                                        controllers.Assets.versioned(path="/public", file: Asset)
 GET           /webjars/*file                                       controllers.WebJarAssets.at(file)
 

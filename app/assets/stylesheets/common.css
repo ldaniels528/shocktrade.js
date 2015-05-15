@@ -17,9 +17,16 @@ a:active  { cursor: pointer; text-decoration: none; }
 	cursor: pointer;
 }
 
+.st_bkg_color {
+	color: #337ab7;
+}
+
+.st_brd_color {
+	color: #2e6da4;
+}
+
 .expander {
-    color: #000088;
-    font-weight: bold;
+    color: #0000aa;
 }
 
 .white {
@@ -47,11 +54,11 @@ legend {
 }
 
 .st_nav_selected {
-    color: #2f96b4;
+    color: #337ab7;
 }
 
 .st_text_color {
-    color: #2f96b4;
+    color: #337ab7;
 }
 
 .st_blue {
@@ -69,7 +76,7 @@ li.st_nav_bar {
 
 body {
 	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
-	background: #eeeeee;
+	background: #f0f0f0;
 	min-width: 1024px;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -81,7 +88,7 @@ body {
 
 .header {
 	font-weight: bold;
-	color: #2f96b4;
+	color: #337ab7;
 }
 
 table {
@@ -94,7 +101,7 @@ table td, table th
 }
 
 .emphasis {
-	color: #2f96b4
+	color: #337ab7
 }
 
 img.profile_pic {

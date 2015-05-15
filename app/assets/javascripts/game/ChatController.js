@@ -2,7 +2,7 @@
     var app = angular.module('shocktrade');
 
     /**
-     * Play Lounge/Chat Controller
+     * Chat Controller
      * @author lawrence.daniels@gmail.com
      */
     app.controller('ChatController', ['$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService',

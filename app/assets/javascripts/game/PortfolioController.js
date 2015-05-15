@@ -99,27 +99,29 @@
             };
 
             function enrichParticipant(contest, participant) {
-                // enrich the orders
-                ContestService.getEnrichedOrders(contest.OID(), participant.OID())
-                    .success(function (response) {
-                        var enrichedOrders = response;
-                        $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
-                        participant.orders = enrichedOrders;
-                    })
-                    .error(function (err) {
-                        toaster.pop('error', 'Error!', "Error loading enriched orders");
-                    });
+                if(contest && participant) {
+                    // enrich the orders
+                    ContestService.getEnrichedOrders(contest.OID(), participant.OID())
+                        .success(function (response) {
+                            var enrichedOrders = response;
+                            $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
+                            participant.orders = enrichedOrders;
+                        })
+                        .error(function (err) {
+                            toaster.pop('error', 'Error!', "Error loading enriched orders");
+                        });
 
-                // enrich the positions
-                ContestService.getEnrichedPositions(contest.OID(), participant.OID())
-                    .success(function (response) {
-                        var enrichedPositions = response;
-                        $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
-                        participant.positions = enrichedPositions;
-                    })
-                    .error(function (err) {
-                        toaster.pop('error', 'Error!', "Error loading enriched positions");
-                    });
+                    // enrich the positions
+                    ContestService.getEnrichedPositions(contest.OID(), participant.OID())
+                        .success(function (response) {
+                            var enrichedPositions = response;
+                            $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
+                            participant.positions = enrichedPositions;
+                        })
+                        .error(function (err) {
+                            toaster.pop('error', 'Error!', "Error loading enriched positions");
+                        });
+                }
             }
 
             /////////////////////////////////////////////////////////////////////

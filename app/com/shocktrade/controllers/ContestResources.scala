@@ -50,12 +50,12 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
     Ok(assets.javascripts.game.js.GameController())
   }
 
-  def lobby = Action {
-    Ok(assets.views.html.game.lobby())
+  def dashboard = Action {
+    Ok(assets.views.html.game.dashboard())
   }
 
   def search = Action {
-    Ok(assets.views.html.game.search())
+    Ok(assets.views.html.game.search(Contest.MaxPlayers))
   }
 
   ////////////////////////////////////////////////////////////////////////////

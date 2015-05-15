@@ -1,3 +1,5 @@
+@(maxPlayers: Int)
+
 <div class="row">
     <div ng-hide="isSplitScreen()" style="margin-bottom: 20px">
         <!-- Game Filtering Options -->
@@ -26,7 +28,7 @@
                     <div class="col-md-4 header left padding-left-16">Game Title</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header center">Started</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header center">Expires</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header right">Players</div>
+                    <div ng-hide="isSplitScreen()" class="col-md-2 header center">Players</div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
                 </div>
 
@@ -46,8 +48,8 @@
                         <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
                         <span ng-hide="c.expirationTime">&#8212;</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 right">
-                        <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }} / {{ maxPlayers }}</span>
+                    <div ng-hide="isSplitScreen()" class="col-md-2 center">
+                        <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2">
                         <span class="pull-right">
@@ -100,7 +102,7 @@
 
                 <div class="col-md-3">Status</div>
                 <div class="col-md-5">
-                    <span ng-class="getStatusClass(selectedContest)">{{ selectedContest.status }}</span>
+                    <span ng-class="getStatusClass(selectedContest, parseInt('@maxPlayers'))">{{ selectedContest.status }}</span>
                 </div>
                 <div class="col-md-4">
                     <input id="friendsOnly" type="checkbox" ng-model="selectedContest.friendsOnly" disabled>

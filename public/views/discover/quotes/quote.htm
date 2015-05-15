@@ -30,7 +30,7 @@
 		<div class="quote_title contest_colors" ng-if="!module.visible || module.visible(q)">
 			<i class="fa clickable expander" ng-class="module.expanded ? 'fa-minus-square-o' : 'fa-plus-square-o'"
 			   ng-click="expandSection(module)"></i>
-			<i class="fa st_text_color bold" ng-class="module.icon"></i>
+			<i class="fa bold" ng-class="module.icon"></i>
 			{{ module.title }}
 			<img ng-show="module.loading" src="/assets/images/status/loading.gif">
 		</div>

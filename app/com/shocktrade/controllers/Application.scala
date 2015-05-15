@@ -1,7 +1,6 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.actors.WebSocketHandler
-import com.shocktrade.models.contest.Contest
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json.JsValue
@@ -40,14 +39,6 @@ object Application extends Controller with MongoController {
         "522523074535098" // unknown, so local dev
     }
     Ok(assets.javascripts.js.Facebook(appId))
-  }
-
-  /**
-   * Angular application main
-   * @return
-   */
-  def ngApp = Action {
-    Ok(assets.javascripts.js.ShockTradeApp(Contest.MaxPlayers))
   }
 
   /**

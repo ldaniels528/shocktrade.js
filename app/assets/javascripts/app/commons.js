@@ -4,6 +4,11 @@
  */
 (function () {
 
+    Object.prototype.OID = function() {
+        var self = this;
+        return self._id ? self._id.$oid : null;
+    };
+
     /**
      * Indicates whether the host string ends with the given suffix
      * @param suffix the given suffix string

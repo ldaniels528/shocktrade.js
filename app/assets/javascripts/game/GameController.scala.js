@@ -4,8 +4,8 @@
     /**
      * Game Play Controller
      */
-    app.controller('GameController', ['$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
-        function ($scope, $location, $log, $timeout, toaster, MySession, ContestService, QuoteService) {
+    app.controller('GameController', ['$scope', '$location', '$log',  '$routeParams','$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
+        function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService, QuoteService) {
 
             // setup the public variables
             $scope.contest = null;
@@ -26,10 +26,16 @@
                 robotsAllowed: false
             };
 
+            ///////////////////////////////////////////////////////////////////////////
+            //          Functions
+            ///////////////////////////////////////////////////////////////////////////
+
             $scope.enterGame = function (contest) {
                 $scope.contest = contest;
                 MySession.setContest(contest);
-                $scope.changePlayTab(1);
+                $location.path("/dashboard/" + contest.OID());
+                //$scope.changePlayTab(1);
+                // TODO switch back if not working
             };
 
             $scope.getAvailableCount = function () {
@@ -53,22 +59,22 @@
                 return slots;
             };
 
-            $scope.getStatusIcon = function (c) {
+            $scope.getStatusIcon = function (c, maxPlayers) {
                 if (c && c.invitationOnly) return "/assets/images/objects/locked.png";
                 else {
                     var playerCount = ((c && c.participants) || []).length;
-                    if (playerCount + 1 < $scope.maxPlayers) return "/assets/images/status/greenlight.png";
-                    else if (playerCount + 1 === $scope.maxPlayers) return "/assets/images/status/yellowlight.gif";
-                    else if (playerCount >= $scope.maxPlayers) return "/assets/images/status/redlight.png";
+                    if (playerCount + 1 < maxPlayers) return "/assets/images/status/greenlight.png";
+                    else if (playerCount + 1 === maxPlayers) return "/assets/images/status/yellowlight.gif";
+                    else if (playerCount >= maxPlayers) return "/assets/images/status/redlight.png";
                     else return "/assets/images/status/offlight.png";
                 }
             };
 
-            $scope.getStatusClass = function (c) {
+            $scope.getStatusClass = function (c, maxPlayers) {
                 var playerCount = ((c && c.participants) || []).length;
-                if (playerCount + 1 < $scope.maxPlayers) return "positive";
-                else if (playerCount + 1 === $scope.maxPlayers) return "warning";
-                else if (playerCount >= $scope.maxPlayers) return "negative";
+                if (playerCount + 1 < maxPlayers) return "positive";
+                else if (playerCount + 1 === maxPlayers) return "warning";
+                else if (playerCount >= maxPlayers) return "negative";
                 else return "null";
             };
 
@@ -120,32 +126,15 @@
             };
 
             $scope.loadContest = function (contestId) {
-                if (contestId) {
-                    // load the contest
-                    ContestService.getContestByID(contestId)
-                        .success(function (contest) {
-                            $scope.contest = contest;
-                            MySession.setContest(contest);
-
-                            // cache the player's name
-                            var playerName = MySession.getUserName();
-
-                            // find participant that represents the player
-                            var participant = $scope.findPlayerByID(contest, MySession.getUserID());
-
-                            // load the enriched participant
-                            updateWithRankings(playerName, contest);
-
-                            // load the pricing for the participant's position
-                            if (participant) {
-                                updateWithPricing(participant);
-                            }
-                        })
-                        .error(function (xhr, status, error) {
-                            $log.error("Error selecting feed: " + error.status);
-                            toaster.pop('error', 'Error!', xhr.error);
-                        });
-                }
+                // load the contest
+                ContestService.getContestByID(contestId)
+                    .success(function (contest) {
+                        $scope.switchToContest(contest);
+                    })
+                    .error(function (xhr, status, error) {
+                        $log.error("Error selecting feed: " + xhr.error);
+                        toaster.pop('error', 'Error!', "Error loading game");
+                    });
             };
 
             $scope.loadContestsByPlayerID = function (playerId) {
@@ -350,6 +339,27 @@
                 $scope.splitScreen = true;
 
                 enrichContest(contest);
+            };
+
+            $scope.switchToContest = function (contest) {
+                $scope.contest = contest;
+                MySession.setContest(contest);
+
+                // cache the player's name
+                var playerName = MySession.getUserName();
+
+                // find participant that represents the player
+                var participant = $scope.findPlayerByID(contest, MySession.getUserID());
+
+                // load the enriched participant
+                if(!contest.rankings) {
+                    updateWithRankings(playerName, contest);
+                }
+
+                // load the pricing for the participant's position
+                if (participant) {
+                    updateWithPricing(participant);
+                }
             };
 
             $scope.isMedalist = function (rank) {
@@ -644,6 +654,10 @@
                     $scope.loadContestsByPlayerID(MySession.getUserID());
                 }
             });
+
+            ///////////////////////////////////////////////////////////////////////////
+            //          Initialization
+            ///////////////////////////////////////////////////////////////////////////
 
             // perform the initial search
             $scope.contestSearch($scope.searchOptions);

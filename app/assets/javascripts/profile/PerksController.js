@@ -3,6 +3,7 @@
 
     /**
      * Perks Controller
+     * @author lawrence.daniels@gmail.com
      */
     app.controller('PerksController', ['$scope', '$http', 'MySession', function ($scope, $http, MySession) {
             $scope.message = null;

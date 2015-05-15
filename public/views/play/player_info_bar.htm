@@ -6,7 +6,7 @@
         <div class="pull-left" style="display: inline">
             <div>
                 <img ng-show="WebSockets.isConnected()" ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png">
-                <span ng-hide="contest" class="null">[inactive]</span>
+                <span ng-hide="contest" class="null">[no game selected]</span>
                 <span ng-if="contest">
                     <span ng-class="'rank_' + getRankingByFBID(contest, MySession.fbUserID).rank">{{ getRankingByFBID(contest, MySession.fbUserID).rank }} Place</span>
                     <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '1st'" src="/assets/images/contests/gold.png">

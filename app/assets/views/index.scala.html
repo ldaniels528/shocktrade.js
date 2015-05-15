@@ -10,35 +10,37 @@
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media="screen">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.css"))' type="text/css" rel="stylesheet" media="screen">
 
-	<link href='@routes.Assets.at("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/key_statistics.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/news.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/quotes.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/search.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/sector_industry.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/discover/trading_history.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/drill_down.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/awards.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/lounge.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/perks.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/play.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/portfolio.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/lobby.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/play/statistics.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/main.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
-	<link href='@routes.Assets.at("images/favicon.png")' type="image/png" rel="shortcut icon">
+	<link href='@routes.Assets.versioned("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/exchanges.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/key_statistics.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/news.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/quotes.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/search.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/sector_industry.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/discover/trading_history.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/drill_down.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/awards.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/chat.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/perks.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/play.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/portfolio.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/lobby.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/play/statistics.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/main.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
+	<link href='@routes.Assets.versioned("images/favicon.png")' type="image/png" rel="shortcut icon">
 </head>
 
-<body class="page-body" ng-controller="MainController" ng-init="appInit()" ng-cloak>
+<body class="page-body" ng-controller="MainController" ng-cloak>
 	<div id="ShockTradeMain">
         <!-- title bar -->
         <div class="row">
             <div class="col-md-3">
-                <span class="title">ShockTrade</span>
+                <span class="st_title_bar">
+                    <span class="st_title_1">Sho<span class="st_title_2">ckTr<span class="st_title_3">ade</span></span></span>
+                </span>
             </div>
             <div class="col-md-offset-5 col-md-4">
                 <span class="title_color pull-right" style="margin-right: 20px">
@@ -56,7 +58,7 @@
         <!-- main view -->
         <div ng-controller="GameController">
 			<div ng-controller="PortfolioController">
-				<div ng-if="MySession.authenticated" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+				<div ng-if="MySession.fbUserID" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
 
 				<div class="row" style="margin-top: 20px">
 					<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
@@ -79,47 +81,58 @@
     <script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
 
 	<!-- local JS libraries -->
-	<script src='@routes.Assets.at("javascripts/app.min.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/directives.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/commons.js")' type="text/javascript"></script>
-	
+	<script src='@routes.Assets.versioned("javascripts/AppMain.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/commons.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/AgeDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/AvatarDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/ChangeArrowDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/CompileDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/CountryDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/directives/NewsDirective.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/app/filters/BigNumberFilter.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/app/filters/ElapsedFilter.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/app/filters/EscapeFilter.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/app/filters/QuoteChangeFilter.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/app/filters/QuoteNumberFilter.js")' type="text/javascript"></script>
+
 	<!-- Controllers and Services -->
-    <script src='@routes.Assets.at("javascripts/Facebook.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/MainController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/MySession.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/WebSockets.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/connect/ConnectController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/connect/ConnectService.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/DiscoverController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/discover/DrillDownController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/FavoriteSymbols.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/HeldSecurities.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/MarketStatus.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/QuoteService.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/discover/RecentSymbols.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/discover/ResearchController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/game/ChatController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/game/ContestService.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/game/GameController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/game/PortfolioController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/news/NewsController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/news/NewsService.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/news/NewsSymbols.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/profile/AwardsController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/profile/PerksController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/profile/PreferencesController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.at("javascripts/profile/ProfileService.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/profile/RewardsController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/profile/StatisticsController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/Facebook.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/MainController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/MySession.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/WebSockets.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/connect/ConnectController.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/connect/ConnectService.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/DiscoverController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/discover/DrillDownController.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/FavoriteSymbols.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/HeldSecurities.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/MarketStatus.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/QuoteService.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/RecentSymbols.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/discover/ResearchController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/game/ChatController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/game/ContestService.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/game/DashboardController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/game/GameController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/game/PortfolioController.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/news/NewsController.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/news/NewsService.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/news/NewsSymbols.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/AwardsController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/PerksController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/PreferencesController.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/profile/ProfileService.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/RewardsController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/StatisticsController.js")' type="text/javascript"></script>
 
     <!-- Dialogs -->
-    <script src='@routes.Assets.at("javascripts/dialogs/ComposeMessageDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/ConditionDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/InvitePlayerDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/NewGameDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/NewOrderDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/NewsQuoteDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.at("javascripts/dialogs/SignupDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/ComposeMessageDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/ConditionDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/InvitePlayerDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/NewGameDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/NewOrderDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/NewsQuoteDialog.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dialogs/SignupDialog.js")' type="text/javascript"></script>
 
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -44,15 +44,30 @@ img.logo {
  * 							Title Bar Styles									 *
  *********************************************************************************/
 
-.title {
-	color: #2f96b4;
-	font-size: 24px;
+.st_title_bar {
+	font-size: 26px;
+    font-weight: bold;
 	vertical-align: top;
 	margin-left: 5px;
 }
 
 .title_color {
-	color: #2f96b4;
+	color: #337ab7;
+}
+
+.st_title_2 {
+    font-family: Impact, fantasy;
+    color: #ff8800;
+}
+
+.st_title_3 {
+    font-family: Impact, fantasy;
+    color: #00aa88;
+}
+
+.st_title_1 {
+    font-family: Impact, fantasy;
+    color: #337ab7;
 }
 
 .spectator_message {
