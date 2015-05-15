@@ -1,7 +1,10 @@
-@(appId: String)
-
 (function () {
     var app = angular.module('shocktrade');
+
+    /**
+     * Facebook Service
+     * @author lawrence.daniels@gmail.com
+     */
     app.factory('Facebook', function ($log, $q) {
         var service = {
             "version": "v2.3",
@@ -175,7 +178,7 @@
 window.fbAsyncInit = function () {
     // initialize the Facebook SDK
     FB.init({
-        appId: '@appId',
+        appId: getAppId(),
         status: true,
         xfbml: true
     });
@@ -213,5 +216,22 @@ window.fbAsyncInit = function () {
             }
         }
     });
+
+    /**
+     * Returns the Facebook application ID based on the running host
+     * @returns {*}
+     */
+    function getAppId() {
+        switch(location.hostname) {
+            case "localhost": return "522523074535098"; // local dev
+            case "shocktrade.biz": return "616941558381179";
+            case "shocktrade.com": return "364507947024983";
+            case "shocktrade.net": return "616569495084446";
+            default:
+                console.log("Unrecognized hostname '" + location.hostname + "'");
+                return "522523074535098"; // unknown, so local dev
+        }
+    }
+
 };
 

@@ -1,7 +1,6 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.actors.WebSocketHandler
-import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._
@@ -18,27 +17,6 @@ object Application extends Controller with MongoController {
    */
   def index = Action {
     Ok(assets.views.html.index())
-  }
-
-  /**
-   * Returns a JavaScript file containing the appropriate Facebook App ID
-   * .com '364507947024983'
-   * .net '616569495084446'
-   * .biz '616941558381179'
-   * DEV '522523074535098'
-   */
-  def facebook = Action { request =>
-    // determine the appropriate Facebook ID
-    val appId = request.host.toLowerCase match {
-      case s if s.contains("localhost") => "522523074535098" // local dev
-      case s if s.contains("shocktrade.biz") => "616941558381179" // shocktrade.biz
-      case s if s.contains("shocktrade.com") => "364507947024983" // shocktrade.com
-      case s if s.contains("shocktrade.net") => "616569495084446" // shocktrade.net
-      case host =>
-        Logger.info(s"Did not recognize host - $host")
-        "522523074535098" // unknown, so local dev
-    }
-    Ok(assets.javascripts.js.Facebook(appId))
   }
 
   /**
