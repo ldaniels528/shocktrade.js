@@ -21,27 +21,29 @@
             };
 
             $scope.sendChatMessage = function (messageText) {
-                // build the message blob
-                var message = {
-                    text: messageText,
-                    //"recipient": null,
-                    "sender": {
-                        "_id": MySession.userProfile._id,
-                        "name": MySession.getUserName(),
-                        "facebookID": MySession.fbUserID
-                    }
-                };
+                if(messageText && messageText.trim().length) {
+                    // build the message blob
+                    var message = {
+                        text: messageText,
+                        //"recipient": null,
+                        "sender": {
+                            "_id": MySession.userProfile._id,
+                            "name": MySession.getUserName(),
+                            "facebookID": MySession.fbUserID
+                        }
+                    };
 
-                // transmit the message
-                $log.info("Transmitting message " + angular.toJson(message));
-                ContestService
-                    .sendChatMessage($scope.contest.OID(), message).then(
+                    // transmit the message
+                    $log.info("Transmitting message " + angular.toJson(message));
+                    ContestService
+                        .sendChatMessage($scope.contest.OID(), message).then(
                         function (response) {
                             $scope.chatMessage = "";
                         },
                         function (response) {
-                            toaster.pop('error', 'Error!', "Failed to send message (" + response.message + ")");
+                            toaster.pop('error', 'Error!', "Failed to send message");
                         });
+                }
             };
 
             $scope.emoticons = [
