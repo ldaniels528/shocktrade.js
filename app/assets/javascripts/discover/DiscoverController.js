@@ -5,8 +5,8 @@
      * Discover Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DiscoverController', ['$scope', '$cookieStore', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols', 'HeldSecurities', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
-        function ($scope, $cookieStore, $log, $routeParams, $timeout, toaster, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
+    app.controller('DiscoverController', ['$scope', '$cookieStore', '$interval', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
+        function ($scope, $cookieStore, $interval, $log, $routeParams, $timeout, toaster, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
 
             // setup a private loading variable
             $scope.loading = false;
