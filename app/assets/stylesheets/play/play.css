@@ -193,6 +193,11 @@ div.play_container {
 	/*	height: 450px;*/
 }
 
+.rankings_header {
+	background-color: #f0f0f0;
+	font-size: 12pt;
+}
+
 div.rankings_container {
 	clear: both;
 	overflow: auto;
@@ -238,69 +243,6 @@ div.leaderboardContainer {
 	overflow: auto;	
 	width: auto;
 	height: 190px;
-}
-
-button.enter_game {
-	background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.start_game {
-	background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.new_game {
-	background-color: #ff8000;
-	color: #ffffff;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.cancel_button {
-	background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.create_new {
-    background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.join_game {
-	background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.quit_game {
-    background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.delete_game {
-	background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
-}
-
-button.search_game {
-    background-color: #ff8000;
-	color: #000000;
-	border-radius: 4px;
-	font-weight: bold;
 }
 
 .block_full {

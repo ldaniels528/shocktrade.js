@@ -43,14 +43,6 @@ div.fund_summary {
 .quote_sub_title {
 	padding: 10px;
 }
-
-.quote_button {
-    background-color: #ff8000;
-	font-weight: bold;
-	text-align: right;
-	color: white;	
-	cursor: pointer;
-}
  
 div.filterContainer {
 	clear: both;

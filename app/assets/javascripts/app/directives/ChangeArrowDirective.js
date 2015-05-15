@@ -12,11 +12,11 @@
             scope: { value:'@value' },
             transclude: true,
             replace: false,
-            template: '<img ng-src="{{ icon }}" class="middle" />',
+            template: '<i ng-class="icon"></i>',
             link: function(scope, element, attrs) {
                 scope.$watch( "value", function() {
                     var changeVal = ( scope.value || 0 );
-                    scope.icon = "/assets/images/status/" + (changeVal >= 0 ? "stock_up.gif" : "stock_down.gif");
+                    scope.icon = changeVal >= 0 ? "fa fa-arrow-up positive" : "fa fa-arrow-down negative";
                 });
             }
         };

@@ -150,20 +150,20 @@
             </div>
             <div class="row" style="margin-top: 5px">
                 <div class="col-md-2">
-                    <button class="btn btn-default enter_game"
+                    <button class="btn btn-default st_button"
                         ng-disabled="!isParticipant(selectedContest)"
                         ng-click="enterGame(selectedContest)">
                         <i class="fa fa-arrow-circle-right"></i> Enter
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-default start_game"
+                    <button class="btn btn-default st_button"
                         ng-show="isContestOwner(selectedContest) && !selectedContest.startTime"
                         ng-click="startContest(selectedContest)">
                         <i ng-hide="selectedContest.starting" class="fa fa-youtube-play"></i>
                         <img ng-show="selectedContest.starting" src="/assets/images/status/loading.gif"> Start
                     </button>
-                    <button class="btn btn-default join_game"
+                    <button class="btn btn-default st_button"
                         ng-disabled="!MySession.authenticated"
                         ng-show="isJoinable(selectedContest)"
                         ng-click="joinContest(selectedContest)">
@@ -172,13 +172,13 @@
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-default delete_game"
+                    <button class="btn btn-default st_button"
                         ng-show="isDeletable(selectedContest)"
                         ng-click="deleteContest(selectedContest)">
                         <i ng-hide="selectedContest.deleting" class="fa fa-warning"></i>
                         <img ng-show="selectedContest.deleting" src="/assets/images/status/loading.gif"> Delete
                     </button>
-                    <button class="btn btn-default quit_game"
+                    <button class="btn btn-default st_button"
                         ng-show="!isContestOwner(selectedContest) && isParticipant(selectedContest)"
                         ng-click="quitContest(selectedContest)">
                         <i ng-hide="selectedContest.quitting" class="fa fa-warning"></i>

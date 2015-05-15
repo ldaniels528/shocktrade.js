@@ -4,16 +4,17 @@
 	<div class="col-md-3 bold right" ng-hide="isPositionSelected()">Market Price</div>
 	<div class="col-md-3 bold right" ng-hide="isPositionSelected()">Shares</div>
 
-    <div class="col-md-8 bold" ng-show="isPositionSelected()">
+    <div class="col-md-7 bold" ng-show="isPositionSelected()">
         <span ng-class="getExchangeClass(selectedPosition.exchange)"
               ng-click="loadQuote(selectedPosition.symbol, true)"
               class="clickable">{{ selectedPosition.companyName }}</span>
     </div>
-    <div class="col-md-1" ng-show="isPositionSelected()">
-        <img class="clickable pull-right"
-             ng-click="toggleSelectedPosition()"
-             title="Return to results"
-             src="/assets/images/buttons/back-24.png">
+    <div class="col-md-2" ng-show="isPositionSelected()">
+        <span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedPosition()">
+            <i class="fa fa-chevron-circle-left st_control"
+                 title="Return to results"
+                 src="/assets/images/buttons/back-24.png"></i> Back
+        </span>
     </div>
 </div>
 
@@ -35,10 +36,17 @@
                 </span>
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">
-                $ {{ p.pricePaid | number:2 }}
+                $ {{ p.pricePaid | quoteNumber }}
+                <span ng-if="p.gainLossPct != null">
+                    <changearrow value="{{ p.gainLossPct }}"/>
+                    <span ng-class="p.gainLossPct < 0 ? 'negative' : 'positive'">
+                        {{ abs(p.gainLossPct) | number:2 }}%
+                    </span>
+                </span>
+            </span>
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">
-                <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | number:2 }}</span>
+                <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | quoteNumber }}</span>
                 <span ng-hide="p.lastTrade" class="right null">Unavailable</span>
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">
@@ -58,7 +66,18 @@
         </div>
 
         <div class="col-md-4 bold">Price Paid</div>
-        <div class="col-md-8">$ {{ selectedPosition.pricePaid | number:2 }}</div>
+        <div class="col-md-8">$ {{ selectedPosition.pricePaid | quoteNumber }}</div>
+
+        <div class="col-md-4 bold">Market Price</div>
+        <span class="col-md-8" ng-show="selectedPosition.lastTrade">
+            $ {{ selectedPosition.lastTrade | quoteNumber }}
+            <span ng-if="selectedPosition.gainLossPct != null">
+                <changearrow value="{{ selectedPosition.gainLossPct }}"/>
+                <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
+                    {{ abs(selectedPosition.gainLossPct) | number:2 }}%
+                </span>
+            </span>
+        </span>
 
         <div class="col-md-4 bold">Shares Owned</div>
         <div class="col-md-8">{{ selectedPosition.quantity | number }}</div>
@@ -70,15 +89,7 @@
         <div class="col-md-8">$ {{ selectedPosition.cost | number:2 }}</div>
 
         <div class="col-md-4 bold">Estimated Value</div>
-        <div class="col-md-8">
-            $ {{ selectedPosition.netValue | number:2 }}
-                <span ng-if="selectedPosition.gainLossPct != null">
-                    <changearrow value="{{ selectedPosition.gainLossPct }}"/>
-                    <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
-                        {{ selectedPosition.gainLossPct | number:2 }}%
-                    </span>
-                </span>
-        </div>
+        <div class="col-md-8">$ {{ selectedPosition.netValue | number:2 }}</div>
 
         <div class="col-md-offset-4 col-md-8">
             <button class="btn btn-default sell_button"

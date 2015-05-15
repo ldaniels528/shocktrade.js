@@ -49,6 +49,10 @@ legend {
     font-size: 24px;
 }
 
+.st_heading {
+	font-size: 14pt;
+}
+
 .st_control {
     color: #ff8000;
 }
@@ -167,6 +171,33 @@ td {
 }
 
 /*********************************************************************************
+ * 							Button Definitions									 *
+ *********************************************************************************/
+
+.st_button {
+	background-color: #ff8000;
+	border-radius: 4px;
+	font-weight: bold;
+	color: white;
+	cursor: pointer;
+}
+
+.st_cond_button {
+	background-color: #ff8000;
+	border-radius: 4px;
+	font-weight: bold;
+	color: black;
+	cursor: pointer;
+}
+
+.cancel_button {
+	background-color: #ff8000;
+	border-radius: 4px;
+	color: white;
+	font-weight: bold;
+}
+
+/*********************************************************************************
  * 							Global Text Definitions								 *
  *********************************************************************************/
 
@@ -213,10 +244,6 @@ ul.error {
 
 .restricted {
 	color: #ff6600; 
-	font-weight: bold
-}
-
-.bold {
 	font-weight: bold
 }
 

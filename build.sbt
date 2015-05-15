@@ -21,9 +21,7 @@ val akkaVersion = "2.3.9"
 
 val playVersion = "2.3.8" //2.4.0-M3"
 
-libraryDependencies ++= Seq(
-  cache, filters, ws
-)
+libraryDependencies ++= Seq(cache, filters, ws)
 
 // Shocktrade/ldaniels528 dependencies
 libraryDependencies ++= Seq(

@@ -4,7 +4,7 @@
     <div ng-hide="contest" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
 
     <div ng-if="contest" class="play_container">
-        <div class="col-md-3">
+        <div ng-show="isRankingsShown(contest)" class="col-md-3">
             <div class="rankings_container">
                 <div class="rank_cell" ng-repeat="p in getRankings(contest) track by $index">
                     <div class="pull-left" style="display: inline">
@@ -27,7 +27,7 @@
                             <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
                                 <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}" />
                                 <span ng-if="(p.gainLoss || 0) == 0" class="null">&#8212;</span>
-                                <span ng-if="p.gainLoss > 0">+</span>{{ p.gainLoss | number:2 }}%
+                                <span ng-if="p.gainLoss > 0"></span>{{ abs(p.gainLoss) | number:2 }}%
                             </span>
                         </div>
                     </div>
@@ -36,6 +36,14 @@
             </div>
         </div>
 
-        <div class="col-md-9" ng-include src="'/assets/views/play/portfolio/portfolio.htm'"></div>
+        <div ng-class="isRankingsShown(contest) ? 'col-md-9' : 'col-md-12'">
+            <div class="rankings_header">
+                <i ng-show="isRankingsShown(contest)" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown(contest)"></i>
+                <i ng-hide="isRankingsShown(contest)" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown(contest)"></i>
+                <span class="st_bkg_color">{{ isRankingsShown(contest) ? 'Hide' : 'Show'}} Player Rankings</span>
+            </div>
+
+            <div ng-include src="'/assets/views/play/portfolio/portfolio.htm'"></div>
+        </div>
     </div>
 </div>

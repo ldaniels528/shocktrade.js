@@ -80,6 +80,9 @@ POST          /api/online                                          com.shocktrad
 PUT           /api/online/:userID                                  com.shocktrade.controllers.OnlineStatusResources.setIsOnline(userID)
 DELETE        /api/online/:userID                                  com.shocktrade.controllers.OnlineStatusResources.setIsOffline(userID)
 
+# Perks
+GET           /api/perks                                           com.shocktrade.controllers.ProfileResources.getAllPerks
+
 # Profile Quotes
 PUT           /api/profile/:id/exchange/:exchange                  com.shocktrade.controllers.QuoteResources.addExchange(id, exchange)
 DELETE        /api/profile/:id/exchange/:exchange                  com.shocktrade.controllers.QuoteResources.removeExchange(id, exchange)
@@ -91,7 +94,7 @@ GET           /api/profile/:id/explore/quotes                      com.shocktrad
 POST          /api/profile/:id/quotes/filter/full                  com.shocktrade.controllers.QuoteResources.filterFullQuotes(id)
 POST          /api/profile/:id/quotes/filter/mini                  com.shocktrade.controllers.QuoteResources.filterMiniQuotes(id)
 
-# Profiles
+# Profile Users
 POST          /api/profile/create                                  com.shocktrade.controllers.ProfileResources.createProfile
 PUT           /api/profile/:id/favorite/:symbol                    com.shocktrade.controllers.ProfileResources.addFavoriteSymbol(id, symbol)
 DELETE        /api/profile/:id/favorite/:symbol                    com.shocktrade.controllers.ProfileResources.removeFavoriteSymbol(id, symbol)

@@ -179,32 +179,28 @@ object ProfileResources extends Controller with MongoController with MongoExtras
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
       case Some(perkCodes) =>
+        // create the perk code to cost mapping
+        val perkCodeCostMapping = Map(UserProfiles.findAllPerks map (p => (p.code, p.cost)): _*)
+
         // compute the total cost of the perks
-        val totalCost = (perkCodes flatMap PERKS.get).sum
+        val totalCost = (perkCodes flatMap perkCodeCostMapping.get).sum
 
         // find and modify the profile with the perks
-        val outcome = UserProfiles.purchasePerks(userId.toBSID, perkCodes, totalCost)
-        outcome.map(_.map(Json.toJson(_))).transform({
-          case Some(js) => Ok(js \ "perks")
-          case None => Ok(JsNull)
-        },
-        e => throw e)
+        UserProfiles.purchasePerks(userId.toBSID, perkCodes, totalCost) map {
+          case Some(profile) =>
+            val js = Json.toJson(profile)
+            Ok(JS("perks" -> (js \ "perks")) ++ JS("netWorth" -> (js \ "netWorth")))
+          case None =>
+            Ok(JS("error" -> "Perks could not be purchased"))
+        } recover {
+          case e => Ok(JS("error" -> "Perks could not be purchased"))
+        }
       case _ =>
         Future.successful(BadRequest("JSON array of Perk codes expected"))
     }
   }
 
-  val PERKS = Map(
-    "CREATOR" -> 3,
-    "PRCHEMNT" -> 3,
-    "PRFCTIMG" -> 4,
-    "CMPDDALY" -> 5,
-    "FEEWAIVR" -> 5,
-    "MARGIN" -> 6,
-    "SAVGLOAN" -> 6,
-    "LOANSHRK" -> 7,
-    "MUTFUNDS" -> 10,
-    "RISKMGMT" -> 12)
+  def getAllPerks = Action(Ok(Json.toJson(UserProfiles.findAllPerks)))
 
   case class ProfileForm(userName: String,
                          facebookID: String,

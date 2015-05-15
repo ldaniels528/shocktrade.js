@@ -74,6 +74,14 @@
                 return $scope.participant;
             };
 
+            $scope.isRankingsShown = function (contest) {
+                return !contest.rankingsHidden;
+            };
+
+            $scope.toggleRankingsShown = function (contest) {
+                contest.rankingsHidden = !contest.rankingsHidden;
+            };
+
             $scope.getRankings = function (contest) {
                 if (!contest) return [];
                 else if (!contest.rankings) {
@@ -92,14 +100,19 @@
             };
 
             $scope.getRankingByFBID = function (contest, facebookID) {
-                for(var n = 0; n < (contest.rankings || []).length; n++) {
-                    if(contest.rankings[n].facebookID === facebookID) return contest.rankings[n];
+                if (!contest.myRanking) {
+                    for (var n = 0; n < (contest.rankings || []).length; n++) {
+                        if (contest.rankings[n].facebookID === facebookID) {
+                            contest.myRanking = contest.rankings[n];
+                            return contest.myRanking;
+                        }
+                    }
                 }
-                return null;
+                return contest.myRanking;
             };
 
             function enrichParticipant(contest, participant) {
-                if(contest && participant) {
+                if (contest && participant) {
                     // enrich the orders
                     ContestService.getEnrichedOrders(contest.OID(), participant.OID())
                         .success(function (response) {
@@ -125,21 +138,12 @@
             }
 
             /////////////////////////////////////////////////////////////////////
-            //          Order Functions
+            //          Selected Active Order Functions
             /////////////////////////////////////////////////////////////////////
 
             $scope.getActiveOrders = function (contest) {
                 var participant = $scope.getParticipant(contest);
                 return participant ? (participant.orders || []) : [];
-            };
-
-            $scope.getClosedOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.orderHistory || []) : [];
-            };
-
-            $scope.popupNewOrderDialog = function () {
-                NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
             };
 
             $scope.isOrderSelected = function () {
@@ -154,12 +158,25 @@
                 $scope.selectedOrder = null;
             };
 
+            $scope.popupNewOrderDialog = function () {
+                NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Selected Closed Order Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getClosedOrders = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.orderHistory || []) : [];
+            };
+
             $scope.isClosedOrderSelected = function () {
                 return $scope.selectedClosedOrder != null;
             };
 
-            $scope.selectClosedOrder = function (order) {
-                $scope.selectedClosedOrder = order;
+            $scope.selectClosedOrder = function (closeOrder) {
+                $scope.selectedClosedOrder = closeOrder;
             };
 
             $scope.toggleSelectedClosedOrder = function () {
