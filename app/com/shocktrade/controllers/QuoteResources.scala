@@ -2,11 +2,13 @@ package com.shocktrade.controllers
 
 import java.util.Date
 
+import com.shocktrade.models.profile.Filter
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
 import org.joda.time.DateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.Reads._
 import play.api.libs.json._
@@ -17,9 +19,8 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api._
 import reactivemongo.bson.{BSONDocument => B, _}
 import reactivemongo.core.commands.GetLastError
-import com.shocktrade.models.profile.Filter
+
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 /**
  * Quote REST Resources
@@ -464,28 +465,9 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   }
 
   def findQuotesBySymbols(symbols: Seq[String]): Future[Seq[Quote]] = {
-    val results =
-      mcQ.find(JS("symbol" -> JS("$in" -> symbols)), JS("symbol" -> 1, "exchange" -> 1, "industry" -> 1, "sector" -> 1, "lastTrade" -> 1))
-        .cursor[JsObject]
-        .collect[Seq]()
-
-    results map {
-      _ flatMap { json =>
-        Try {
-          val symbol = (json \ "symbol").asOpt[String]
-          val exchange = (json \ "exchange").asOpt[String]
-          val sector = (json \ "sector").asOpt[String]
-          val industry = (json \ "industry").asOpt[String]
-          val lastTrade = (json \ "lastTrade").asOpt[Double]
-          Quote(symbol, exchange, sector, industry, lastTrade)
-        } match {
-          case Success(quote) => Some(quote)
-          case Failure(e) =>
-            // e.printStackTrace()
-            None
-        }
-      }
-    }
+    mcQ.find(JS("symbol" -> JS("$in" -> symbols)), JS("symbol" -> 1, "exchange" -> 1, "industry" -> 1, "sector" -> 1, "lastTrade" -> 1))
+      .cursor[Quote]
+      .collect[Seq]()
   }
 
   /**
@@ -533,10 +515,29 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     } map (f => Map(f: _*))
   }
 
-  case class Quote(symbol: Option[String],
-                   exchange: Option[String],
+  implicit val quoteReads: Reads[Quote] = (
+    (__ \ "symbol").read[String] and
+      (__ \ "exchange").readNullable[String] and
+      (__ \ "sector").readNullable[String] and
+      (__ \ "industry").readNullable[String] and
+      (__ \ "lastTrade").readNullable[Double])(Quote.apply _)
+
+  case class Quote(symbol: String,
+                   market: Option[String],
                    sector: Option[String],
                    industry: Option[String],
-                   lastTrade: Option[Double])
+                   lastTrade: Option[Double]) {
+
+    def exchange: Option[String] = {
+      market map(_.toUpperCase) map {
+        case s if s.startsWith("NASD") => "NASDAQ"
+        case s if s.startsWith("NMS") => "NASDAQ"
+        case s if s.startsWith("OTC") => "OTCBB"
+        case s if s == "PNK" => "OTCBB"
+        case other => other
+      }
+    }
+
+  }
 
 }

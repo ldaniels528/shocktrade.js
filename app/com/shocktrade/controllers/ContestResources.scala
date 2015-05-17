@@ -352,7 +352,7 @@ object ContestResources extends Controller with ErrorHandler {
       _ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes
-      mapping = Map(quotes map (q => (q.symbol.orNull, q)): _*)
+      mapping = Map(quotes map (q => (q.symbol, q)): _*)
 
       // get the participants' net worth and P&L
       totalWorths = participants map (asRanking(startingBalance, mapping, _))

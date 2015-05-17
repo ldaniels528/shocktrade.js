@@ -16,6 +16,7 @@ import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 /**
  * Chart Resources
@@ -68,6 +69,8 @@ object ChartResources extends Controller with MongoController {
 
   def getExposureByIndustry(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.industry)
 
+  def getExposureByMarket(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.market)
+
   def getExposureBySector(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.sector)
 
   def getExposureBySecurities(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.symbol)
@@ -88,7 +91,7 @@ object ChartResources extends Controller with MongoController {
       quotes <- QuoteResources.findQuotesBySymbols(quantities map (_._1))
 
       // create the mapping of symbols to quotes
-      mappingQ = Map(quotes map (q => (q.symbol.getOrElse(""), q)): _*)
+      mappingQ = Map(quotes map (q => (q.symbol, q)): _*)
 
       // generate the value of each position
       posData = quantities flatMap {
@@ -96,23 +99,29 @@ object ChartResources extends Controller with MongoController {
           for {
             q <- mappingQ.get(symbol)
             exchange <- q.exchange
+            market <- q.market
             lastTrade <- q.lastTrade
             sector <- q.sector
             industry <- q.industry
-          } yield Position(symbol, exchange, sector, industry, lastTrade * qty)
+          } yield Position(symbol, exchange, market, sector, industry, lastTrade * qty)
       }
 
       // group the data
-      groupedData = posData.groupBy(fx).foldLeft[List[(String, Double)]](List("Cash" -> participant.fundsAvailable.toDouble)) {
+      groupedData = ("Cash" -> participant.fundsAvailable.toDouble) :: posData.groupBy(fx).foldLeft[List[(String, Double)]](Nil) {
         case (list, (label, somePositions)) => (label, somePositions.map(_.value).sum) :: list
       }
 
+      total = groupedData map (_._2) sum
+
       // produce the chart data
-      values = groupedData map { case (k, v) => JS("label" -> k, "value" -> v) }
+      values = groupedData map { case (k, v) =>
+        val pct = 100d * (v / total)
+        JS("label" -> f"$k ($pct%.1f%%)", "value" -> pct)
+      }
 
     } yield Ok(JsArray(values))
   }
 
-  case class Position(symbol: String, exchange: String, sector: String, industry: String, value: Double)
+  case class Position(symbol: String, exchange: String, market: String, sector: String, industry: String, value: Double)
 
 }

@@ -47,7 +47,8 @@ button.sell_button {
 }
 
 .chart_area {
-	border: 1px solid #888888;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
 }
 
 .profitable {

@@ -10,59 +10,131 @@
 
         /**
          * Generates a pie chart graph
-         * @param w the given graph width
-         * @param h the given graph height
-         * @param r the given graph radius
-         * @param data the given data array
+         * @param width the given graph width
+         * @param height the given graph height
+         * @param chartData the given chart data array
          * @param elemId the ID of given element to populate (e.g. "#my_Graph")
          */
-        service.pieChart = function (w, h, r, data, elemId) {
-            // use the builtin range of colors
-            var color = d3.scale.category20c();
+        service.pieChart = function(width, height, chartData, elemId) {
+            var svg = d3.select(elemId).append("svg").append("g");
+            svg.append("g").attr("class", "slices");
+            svg.append("g").attr("class", "labels");
+            svg.append("g").attr("class", "lines");
 
-            var vis = d3.select(elemId)
-                .append("svg:svg")              //create the SVG element inside the <body>
-                .data([data])                   //associate our data with the document
-                .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-                .attr("height", h)
-                .append("svg:g")                //make a group to hold our pie chart
-                .attr("transform", "translate(" + r + "," + r + ")");    //move the center of the pie chart from 0, 0 to radius, radius
+            var w = $(elemId).outerWidth(false);
+            var h = $(elemId).outerHeight();
+            $log.info(elemId + ": width = " + w + ", height = " + h);
 
-            // this will create <path> elements for us using arc data
-            var arc = d3.svg.arc().outerRadius(r);
+            var radius = Math.min(width, height) * 0.40;
 
-            // this will create arc data for us given a list of values
-            var pie = d3.layout.pie().value(function (d) {
-                return d.value;
-            });
+            var pie = d3.layout.pie()
+                .sort(null)
+                .value(function(d) {
+                    return d.value;
+                });
 
-            // we must tell it out to access the value of each element in our data array
-            var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-                .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
-                .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-                .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-                .attr("class", "slice");    //allow us to style things in the slices (like text)
+            var arc = d3.svg.arc()
+                .outerRadius(radius * 0.8)
+                .innerRadius(radius * 0.4);
 
-            // set the color for each slice to be chosen from the color function defined below
-            // this creates the actual SVG path using the associated data (pie) with the arc drawing function
-            arcs.append("svg:path")
-                .attr("fill", function (d, i) {
-                    return color(i);
-                })
-                .attr("d", arc);
+            var outerArc = d3.svg.arc()
+                .innerRadius(radius * 0.9)
+                .outerRadius(radius * 0.9);
 
-            arcs.append("svg:text")                                     //add a label to each slice
-                .attr("transform", function (d) {                    //set the label's origin to the center of the arc
-                    //we have to make sure to set these before calling arc.centroid
-                    d.innerRadius = 0;
-                    d.outerRadius = r;
-                    return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
-                })
-                .attr("text-anchor", "middle")                          //center the text on it's origin
-                .text(function (d, i) {
-                    return data[i].label;
-                });        //get the label from our original data array
+            svg.attr("transform", "translate(" + width * 0.50 + "," + height * 0.40 + ")");
+
+            var key = function(d){ return d.data.label; };
+
+            var color = d3.scale.ordinal()
+                .domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
+                .range(["#ff8888", "#88ffff", "#8888ff", "#ff8800", "#00ff00", "#88ffaa", "#ff88ff"]);
+
+            generatePieChart(svg, chartData, key, pie, radius, arc, outerArc, color, this);
         };
+
+        function generatePieChart(svg, data, key, pie, radius, arc, outerArc, color, self) {
+            makeSlices(svg, data, key, pie, arc, color, self);
+            makeText(svg, data, key, pie, arc, radius, outerArc, self);
+            makePolyLines(svg, data, key, pie, arc, radius, outerArc, self);
+        }
+
+        function makeSlices(svg, data, key, pie, arc, color, self) {
+            var slice = svg.select(".slices").selectAll("path.slice").data(pie(data), key);
+            slice.enter()
+                .insert("path")
+                .style("fill", function(d) { return color(d.data.label); })
+                .attr("class", "slice");
+
+            slice
+                .transition().duration(1000)
+                .attrTween("d", function(d) {
+                    self._current = self._current || d;
+                    var interpolate = d3.interpolate(self._current, d);
+                    self._current = interpolate(0);
+                    return function(t) {
+                        return arc(interpolate(t));
+                    };
+                });
+
+            slice.exit().remove();
+        }
+
+        function makeText(svg, data, key, pie, arc, radius, outerArc, self) {
+            var text = svg.select(".labels").selectAll("text").data(pie(data), key);
+            text.enter()
+                .append("text")
+                .attr("dy", ".35em")
+                .text(function(d) {
+                    return d.data.label;
+                });
+
+            text.transition().duration(1000)
+                .attrTween("transform", function(d) {
+                    self._current = self._current || d;
+                    var interpolate = d3.interpolate(self._current, d);
+                    self._current = interpolate(0);
+                    return function(t) {
+                        var d2 = interpolate(t);
+                        var pos = outerArc.centroid(d2);
+                        pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                        return "translate("+ pos +")";
+                    };
+                })
+                .styleTween("text-anchor", function(d){
+                    self._current = self._current || d;
+                    var interpolate = d3.interpolate(self._current, d);
+                    self._current = interpolate(0);
+                    return function(t) {
+                        var d2 = interpolate(t);
+                        return midAngle(d2) < Math.PI ? "start":"end";
+                    };
+                });
+
+            text.exit().remove();
+        }
+
+        function makePolyLines(svg, data, key, pie, arc, radius, outerArc, self) {
+            var polyLine = svg.select(".lines").selectAll("polyline").data(pie(data), key);
+            polyLine.enter().append("polyline");
+            polyLine.transition().duration(1000)
+                .attrTween("points", function(d){
+                    self._current = self._current || d;
+                    var interpolate = d3.interpolate(self._current, d);
+                    self._current = interpolate(0);
+                    return function(t) {
+                        var d2 = interpolate(t);
+                        var pos = outerArc.centroid(d2);
+                        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+                        return [arc.centroid(d2), outerArc.centroid(d2), pos];
+                    };
+                });
+
+            polyLine.exit().remove();
+        }
+
+        function midAngle(d){
+            return d.startAngle + (d.endAngle - d.startAngle)/2;
+        }
 
         return service;
     });

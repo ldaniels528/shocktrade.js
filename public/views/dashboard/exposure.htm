@@ -1,15 +1,33 @@
-<div ng-controller="ExposureController">
-    <div>
-        Exposure Type:
-        <select ng-model="exposure">
-            <option value="sector">Sectors</option>
-            <option value="industry">Industries</option>
-            <option value="exchange">Exchanges</option>
-            <option value="securities">Securities</option>
+<div class="row" ng-controller="ExposureController">
+    <div class="col-md-12" style="padding-bottom: 4px">
+        <select class="form-control" ng-model="exposure" ng-options="e.label for e in exposures">
         </select>
     </div>
-	<div id="exposure_chart"  class="chart_area"></div>
-    <span ng-if="exposure && contest && MySession.getUserID()">
-        {{ exposureBySector(contest, exposure, MySession.getUserID(), "#exposure_chart") }}
-    </span>
+
+    <div class="col-md-12">
+        <div id="exposure_exchange" class="chart_area" ng-show="exposure.value === 'exchange'"></div>
+        <span ng-if="exposure && contest && MySession.getUserID()">
+            {{ exposurePieChart(contest, 'exchange', MySession.getUserID(), "#exposure_exchange") }}
+        </span>
+
+        <div id="exposure_industry" class="chart_area" ng-show="exposure.value === 'industry'"></div>
+        <span ng-if="exposure && contest && MySession.getUserID()">
+            {{ exposurePieChart(contest, 'industry', MySession.getUserID(), "#exposure_industry") }}
+        </span>
+
+        <div id="exposure_market" class="chart_area" ng-show="exposure.value === 'market'"></div>
+        <span ng-if="exposure && contest && MySession.getUserID()">
+            {{ exposurePieChart(contest, 'market', MySession.getUserID(), "#exposure_market") }}
+        </span>
+
+        <div id="exposure_securities" class="chart_area" ng-show="exposure.value === 'securities'"></div>
+        <span ng-if="exposure && contest && MySession.getUserID()">
+            {{ exposurePieChart(contest, 'securities', MySession.getUserID(), "#exposure_securities") }}
+        </span>
+
+        <div id="exposure_sector" class="chart_area" ng-show="exposure.value === 'sector'"></div>
+        <span ng-if="exposure && contest && MySession.getUserID()">
+            {{ exposurePieChart(contest, 'sector', MySession.getUserID(), "#exposure_sector") }}
+        </span>
+    </div>
 </div>
