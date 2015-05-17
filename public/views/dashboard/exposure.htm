@@ -1,10 +1,15 @@
-<div style="display: block; width: 99%">
-	Exposure Type:	
-	<select ng-model="selection.exposure" ng-change="getExposureChart('exposure_chart')">
-		<option value="sector">Sectors</option>
-		<option value="industry">Industries</option>
-		<option value="exchange">Exchanges</option>
-		<option value="securities">Securities</option>
-	</select>		
+<div ng-controller="ExposureController">
+    <div>
+        Exposure Type:
+        <select ng-model="exposure">
+            <option value="sector">Sectors</option>
+            <option value="industry">Industries</option>
+            <option value="exchange">Exchanges</option>
+            <option value="securities">Securities</option>
+        </select>
+    </div>
+	<div id="exposure_chart"  class="chart_area"></div>
+    <span ng-if="exposure && contest && MySession.getUserID()">
+        {{ exposureBySector(contest, exposure, MySession.getUserID(), "#exposure_chart") }}
+    </span>
 </div>
-<div id="exposure_chart" class="chart_area"></div>

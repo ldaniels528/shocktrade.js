@@ -13,7 +13,7 @@
 		</div>		
 		<div class="contactsContainer">
 			<span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
-				<img src="/assets/images/status/alert.gif"> You have no friends 
+				<i class="fa fa-warning warning"></i> You have no friends
 				<img src="/assets/images/smilies/icon_cry.gif">
 			</span>
 			<table>	
@@ -56,7 +56,7 @@
 		
 		<div class="updatesContainer">
 			<span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="myUpdates.length == 0" class="notice">
-				<img src="/assets/images/status/alert.gif"> You have no messages 
+				<i class="fa fa-warning warning"></i> You have no messages
 			</span>
 			<table style="width: 100%">
 				<tr ng-repeat="u in myUpdates" ng-class="myUpdate == u ? 'notif_highlight' : ($index % 2 == 0 ? 'even' : 'odd')">

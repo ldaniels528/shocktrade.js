@@ -21,7 +21,7 @@
 
 <div class="row ordersContainer">
 	<div class="col-md-offset-1 col-md-11" ng-show="getClosedOrders(contest).length === 0">
-		<img src="/assets/images/status/alert.gif">
+        <i class="fa fa-warning warning"></i>
 		<span class="warning">No closed orders found</span>
 	</div>
 
@@ -43,6 +43,9 @@
 
 	<!-- Expanded Section -->
 	<div ng-if="isClosedOrderSelected()" class="col-md-9">
+        <div class="col-md-4 bold">Order #</div>
+        <div class="col-md-8">{{ selectedClosedOrder.OID() }}</div>
+
 		<div class="col-md-4 bold">Order Type</div>
 		<div class="col-md-8">{{ selectedClosedOrder.orderType }}</div>
 

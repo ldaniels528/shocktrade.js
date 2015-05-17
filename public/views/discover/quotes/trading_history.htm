@@ -52,7 +52,7 @@
 <!-- list view -->
 <div class="histContainer" ng-hide="hasSelectedTradingHistory()">
     <div class="row" ng-if="tradingHistory.length == 0" class="notice odd">
-        <img src="/assets/images/status/alert.gif"> No trading history records available
+        <i class="fa fa-warning warning"></i> No trading history records available
     </div>
     <div class="row clickable" ng-class-even="'even'" ng-class-odd="'odd'" ng-repeat="t in tradingHistory"
          ng-click="selectTradingHistory(t)">

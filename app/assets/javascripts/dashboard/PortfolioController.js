@@ -71,6 +71,17 @@
                 "isLocked": function (contest) {
                     return contest.status !== 'ACTIVE';
                 }
+            }, {
+                "name": "Exposure",
+                "icon": "fa-pie-chart",
+                "path": "/assets/views/dashboard/exposure.htm",
+                "active": false,
+                "init": function (contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function (contest) {
+                    return contest.status !== 'ACTIVE';
+                }
             }];
 
             /////////////////////////////////////////////////////////////////////

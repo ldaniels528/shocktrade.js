@@ -21,7 +21,7 @@
 
 <div class="ordersContainer">
 	<div class="col-md-offset-1 col-md-11" ng-show="getActiveOrders(contest).length === 0">
-		<img src="/assets/images/status/alert.gif">
+		<i class="fa fa-warning warning"></i>
 		<span class="warning">No active orders found</span>
 	</div>
 
@@ -46,6 +46,9 @@
 
 	<!-- Expanded Section -->
 	<div ng-if="isOrderSelected()" class="col-md-9">
+        <div class="col-md-4 bold">Order #</div>
+        <div class="col-md-8">{{ selectedOrder.OID() }}</div>
+
         <div class="col-md-4 bold">Order Type</div>
         <div class="col-md-8">{{ selectedOrder.orderType }}</div>
 

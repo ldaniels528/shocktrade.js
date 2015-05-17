@@ -1,5 +1,9 @@
 package com.shocktrade.controllers
 
+import akka.util.Timeout
+import com.ldaniels528.commons.helpers.OptionHelper._
+import com.shocktrade.server.trading.Contests
+import com.shocktrade.util.BSONHelper._
 import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
@@ -8,16 +12,16 @@ import play.api.libs.ws.WS
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 /**
  * Chart Resources
  * @author lawrence.daniels@gmail.com
  */
 object ChartResources extends Controller with MongoController with MongoExtras {
-  lazy val mcA: JSONCollection = db.collection[JSONCollection]("Avatars")
-  lazy val mcC: JSONCollection = db.collection[JSONCollection]("Contests")
   lazy val mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
 
   def getAnalystRatings(symbol: String) = Action.async {
@@ -60,38 +64,25 @@ object ChartResources extends Controller with MongoController with MongoExtras {
     }
   }
 
-  def getExposureByExchange(id: String, userName: String) = getExposureByXXX(id, userName, _.exchange)
+  def getExposureByExchange(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.exchange)
 
-  def getExposureByIndustry(id: String, userName: String) = getExposureByXXX(id, userName, _.industry)
+  def getExposureByIndustry(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.industry)
 
-  def getExposureBySector(id: String, userName: String) = getExposureByXXX(id, userName, _.sector)
+  def getExposureBySector(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.sector)
 
-  def getExposureBySecurities(id: String, userName: String) = getExposureByXXX(id, userName, _.symbol)
+  def getExposureBySecurities(contestId: String, userName: String) = getExposureByXXX(contestId.toBSID, userName.toBSID, _.symbol)
 
-  private def getExposureByXXX(id: String, userName: String, fx: Position => String) = Action.async {
+  private def getExposureByXXX(contestId: BSONObjectID, userId: BSONObjectID, fx: Position => String) = Action.async {
+    implicit val timeout: Timeout = 10.seconds
     for {
     // lookup the contest by ID
-      contest <- mcC.findOneOpt(id) map (_.getOrElse(die("Game not found")))
+      contest <- Contests.findContestByID(contestId)() map (_ orDie "Game not found")
 
       // lookup the participant
-      participant = contest \ "participants" match {
-        case JsArray(value) =>
-          value find (p => (p \ "name").asOpt[String] == Some(userName)) getOrElse die(s"Player '$userName' not found")
-        case _ => die(s"Player '$userName' not found")
-      }
-
-      // get the available funds
-      fundsAvailable = (participant \ "fundsAvailable").asOpt[Double].map(v => trunc(v, 2)) getOrElse 0d
-
-      // lookup the participant's positions
-      positions = participant \ "positions" match {
-        case JsArray(somePositions) => somePositions
-        case _ => Seq.empty
-      }
+      participant = contest.participants.find (_.id == userId) orDie s"Player '$userId' not found"
 
       // get the symbol & quantities for each position
-      quantities = positions flatMap (pos =>
-        for {symbol <- (pos \ "symbol").asOpt[String]; qty <- (pos \ "quantity").asOpt[Double]} yield (symbol, qty))
+      quantities = participant.positions map (pos => (pos.symbol, pos.quantity))
 
       // query the symbols for the current market price
       quotes <- QuoteResources.findQuotesBySymbols(quantities map (_._1))
@@ -100,7 +91,7 @@ object ChartResources extends Controller with MongoController with MongoExtras {
       mappingQ = Map(quotes map (q => (q.symbol.getOrElse(""), q)): _*)
 
       // generate the value of each position
-      posdata = quantities flatMap {
+      posData = quantities flatMap {
         case (symbol, qty) =>
           for {
             q <- mappingQ.get(symbol)
@@ -112,12 +103,15 @@ object ChartResources extends Controller with MongoController with MongoExtras {
       }
 
       // group the data
-      groupeddata = posdata.groupBy(fx).foldLeft[List[(String, Double)]](List("Cash" -> fundsAvailable)) {
+      groupedData = posData.groupBy(fx).foldLeft[List[(String, Double)]](List("Cash" -> participant.fundsAvailable.toDouble)) {
         case (list, (label, somePositions)) => (label, somePositions.map(_.value).sum) :: list
       }
 
+      total = groupedData.map(_._2).sum
+      percentages = groupedData map { case (label, value) => (label, 100 * (value / total))}
+
       // produce the chart data
-      values = groupeddata map { case (k, v) => JS("title" -> k, "value" -> v) }
+      values = percentages map { case (k, v) => JS("label" -> k, "value" -> v) }
 
     } yield Ok(JsArray(values))
   }
