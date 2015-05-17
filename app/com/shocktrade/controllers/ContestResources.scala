@@ -26,14 +26,14 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.postfixOps
+import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 
 /**
  * Contest Resources
  * @author lawrence.daniels@gmail.com
  */
-object ContestResources extends Controller with MongoExtras with ErrorHandler {
+object ContestResources extends Controller with ErrorHandler {
   private val tabular = new Tabular()
   private val DisplayColumns = Seq(
     "name", "creator", "startTime", "expirationTime", "startingBalance", "status",
@@ -439,6 +439,8 @@ object ContestResources extends Controller with MongoExtras with ErrorHandler {
       case n => s"${n}th"
     }
   }
+
+  implicit def Option2Boolean[T](option: Option[T]): Boolean = option.isDefined
 
   case class ContestCreateForm(name: String,
                                playerId: String,

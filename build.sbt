@@ -48,7 +48,6 @@ libraryDependencies ++= Seq(
 
 // Web Jar dependencies
 libraryDependencies ++= Seq(
-//	"org.webjars" % "amcharts" % "3.13.1",
 	"org.webjars" % "angularjs" % "1.3.15",
   "org.webjars" % "angularjs-toaster" % "0.4.8",
 //	"org.webjars" % "angular-file-upload" % "1.6.12",

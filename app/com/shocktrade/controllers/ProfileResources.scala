@@ -12,7 +12,7 @@ import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson._
+import reactivemongo.bson.BSONObjectID
 import reactivemongo.core.commands.GetLastError
 
 import scala.concurrent.Future
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success, Try}
  * User Profile Resources
  * @author lawrence.daniels@gmail.com
  */
-object ProfileResources extends Controller with MongoController with MongoExtras with ErrorHandler {
+object ProfileResources extends Controller with MongoController with ErrorHandler {
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
 
@@ -159,7 +159,7 @@ object ProfileResources extends Controller with MongoController with MongoExtras
     request.body.asText match {
       case Some(msg) if msg.startsWith("[") && msg.endsWith("]") =>
         val messageIDs = msg.drop(1).dropRight(1).split(",").map(s => s.drop(1).dropRight(1)).toSeq
-        val task = Future.sequence(messageIDs map (id => mcU.delete(id)))
+        val task = Future.sequence(messageIDs map (id => mcU.remove(JS("_id" -> BSONObjectID(id)))))
         task map (r => Ok(""))
       case _ =>
         System.out.println(s"request = ${request.body.asText}")

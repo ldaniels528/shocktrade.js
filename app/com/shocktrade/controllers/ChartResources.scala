@@ -21,7 +21,7 @@ import scala.concurrent.duration._
  * Chart Resources
  * @author lawrence.daniels@gmail.com
  */
-object ChartResources extends Controller with MongoController with MongoExtras {
+object ChartResources extends Controller with MongoController {
   lazy val mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
 
   def getAnalystRatings(symbol: String) = Action.async {
@@ -79,7 +79,7 @@ object ChartResources extends Controller with MongoController with MongoExtras {
       contest <- Contests.findContestByID(contestId)() map (_ orDie "Game not found")
 
       // lookup the participant
-      participant = contest.participants.find (_.id == userId) orDie s"Player '$userId' not found"
+      participant = contest.participants.find(_.id == userId) orDie s"Player '$userId' not found"
 
       // get the symbol & quantities for each position
       quantities = participant.positions map (pos => (pos.symbol, pos.quantity))
@@ -107,21 +107,10 @@ object ChartResources extends Controller with MongoController with MongoExtras {
         case (list, (label, somePositions)) => (label, somePositions.map(_.value).sum) :: list
       }
 
-      total = groupedData.map(_._2).sum
-      percentages = groupedData map { case (label, value) => (label, 100 * (value / total))}
-
       // produce the chart data
-      values = percentages map { case (k, v) => JS("label" -> k, "value" -> v) }
+      values = groupedData map { case (k, v) => JS("label" -> k, "value" -> v) }
 
     } yield Ok(JsArray(values))
-  }
-
-  /**
-   * Truncates the given double to the given precision
-   */
-  private def trunc(value: Double, precision: Int): Double = {
-    val s = math pow(10, precision)
-    (math floor value * s) / s
   }
 
   case class Position(symbol: String, exchange: String, sector: String, industry: String, value: Double)
