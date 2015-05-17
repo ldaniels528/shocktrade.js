@@ -19,7 +19,7 @@
             $scope.portfolioTabs = [{
                 "name": "Chat",
                 "icon": "fa-comment-o",
-                "path": "/assets/views/play/portfolio/chat.htm",
+                "path": "/assets/views/dashboard/chat.htm",
                 "active": false,
                 "init": function (contest) {
                     // TODO enrich orders here
@@ -30,7 +30,7 @@
             }, {
                 "name": "Positions",
                 "icon": "fa-list-alt",
-                "path": "/assets/views/play/portfolio/positions.htm",
+                "path": "/assets/views/dashboard/positions.htm",
                 "active": false,
                 "init": function (contest) {
                     // TODO enrich positions here
@@ -41,7 +41,7 @@
             }, {
                 "name": "Open Orders",
                 "icon": "fa-folder-open-o",
-                "path": "/assets/views/play/portfolio/orders_active.htm",
+                "path": "/assets/views/dashboard/orders_active.htm",
                 "active": false,
                 "init": function (contest) {
                     // TODO enrich orders here
@@ -52,7 +52,18 @@
             }, {
                 "name": "Closed Orders",
                 "icon": "fa-folder-o",
-                "path": "/assets/views/play/portfolio/orders_closed.htm",
+                "path": "/assets/views/dashboard/orders_closed.htm",
+                "active": false,
+                "init": function (contest) {
+                    // TODO enrich orders here
+                },
+                "isLocked": function (contest) {
+                    return contest.status !== 'ACTIVE';
+                }
+            }, {
+                "name": "Performance",
+                "icon": "fa-bar-chart-o",
+                "path": "/assets/views/dashboard/performance.htm",
                 "active": false,
                 "init": function (contest) {
                     // TODO enrich orders here
@@ -183,6 +194,47 @@
                 $scope.selectedClosedOrder = null;
             };
 
+            $scope.orderCost = function (o) {
+                return o.price * o.quantity + o.commission;
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Performance Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.getPerformances = function (contest) {
+                var participant = $scope.getParticipant(contest);
+                return participant ? (participant.performance || []) : [];
+            };
+
+            $scope.isPerformanceSelected = function () {
+                return $scope.selectedPerformance != null;
+            };
+
+            $scope.selectPerformance = function (performance) {
+                $scope.selectedPerformance = performance;
+            };
+
+            $scope.toggleSelectedPerformance = function () {
+                $scope.selectedPerformance = null;
+            };
+
+            $scope.cost = function (tx) {
+                return tx.pricePaid * tx.quantity + tx.commissions;
+            };
+
+            $scope.soldValue = function (tx) {
+                return tx.priceSold * tx.quantity;
+            };
+
+            $scope.proceeds = function (tx) {
+                return $scope.soldValue(tx) - $scope.cost(tx);
+            };
+
+            $scope.gainLoss = function (tx) {
+                return 100.0 * ($scope.proceeds(tx) / $scope.cost(tx));
+            };
+
             /////////////////////////////////////////////////////////////////////
             //          Position Functions
             /////////////////////////////////////////////////////////////////////
@@ -191,7 +243,6 @@
                 var participant = $scope.getParticipant(contest);
                 return participant ? (participant.positions || []) : [];
             };
-
 
             $scope.isPositionSelected = function () {
                 return $scope.selectedPosition != null;

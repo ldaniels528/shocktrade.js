@@ -33,7 +33,8 @@ legend.contest {
 }
 
 .game_title {
-	color: #1090ff;
+	color: #337ab7;
+    font-weight: bold;
 }
 
 img.avatar {

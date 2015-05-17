@@ -28,12 +28,11 @@
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isClosedOrderSelected()), 'col-md-3':(isClosedOrderSelected())}">
 		<div class="col-md-12 clickable" ng-repeat="o in getClosedOrders(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
-			 ng-class="selectedClosedOrder.OID() === o.OID() ? 'selected' : ''"
 			 ng-click="selectClosedOrder(o)">
 			<div class="col-md-3">
-                <span class="clickable"
-					  ng-class="getExchangeClass(o.exchange)"
-					  ng-click="loadQuote(o.symbol, true)">{{ o.symbol }}</span>
+                <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">
+                    <span ng-class="selectedClosedOrder.OID() === o.OID() ? 'underlined' : ''">{{ o.symbol }}</span>
+                </span>
 			</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 left">{{ o.orderType }}</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">$ {{ o.price | quoteNumber }}</div>
@@ -50,9 +49,9 @@
 		<div class="col-md-4 bold">Creation Time</div>
 		<div class="col-md-8">{{ selectedClosedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
 
-		<div class="col-md-4 bold">Expiration Time</div>
-		<div ng-show="selectedClosedOrder.expirationTime" class="col-md-8">{{ selectedClosedOrder.expirationTime | quoteNumber }}</div>
-		<div ng-hide="selectedClosedOrder.expirationTime" class="col-md-8 null">NONE</div>
+		<div class="col-md-4 bold">Executed Time</div>
+		<div ng-show="selectedClosedOrder.processedTime" class="col-md-8">{{ selectedClosedOrder.processedTime | date:'MM/dd hh:mma' }}</div>
+		<div ng-hide="selectedClosedOrder.processedTime" class="col-md-8 null">NONE</div>
 
 		<div class="col-md-4 bold">Exchange</div>
 		<div class="col-md-8">
@@ -64,5 +63,11 @@
 
 		<div class="col-md-4 bold">Quantity</div>
 		<div class="col-md-8">{{ selectedClosedOrder.quantity | number }}</div>
+
+        <div class="col-md-4 bold">Commission</div>
+        <div class="col-md-8">$ {{ selectedClosedOrder.commission | number:2 }}</div>
+
+        <div class="col-md-4 bold">Total Cost</div>
+        <div class="col-md-8">$ {{ orderCost(selectedClosedOrder) | number:2 }}</div>
 	</div>
 </div>
