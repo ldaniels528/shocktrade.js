@@ -1,17 +1,12 @@
 <div ng-controller="ChatController" ng-if="MySession.getUserID() && contest.OID()">
     <div class="chat_messages">
-        <div ng-repeat="message in getMessages(contest)" class="chat_message">
-            <avatar id="{{ message.sender.facebookID }}" style="width: 20px; height: 20px; margin: 3px" />
-            <span class="bold" style="color: {{ message.color }}">{{ message.sender.name }}</span>
-            [<span class="st_bkg_color">{{ message.sentTime | elapsed }} ago</span>]
-            {{ message.text }}
-        </div>
+        <div ng-bind-html="getMessages(contest)"></div>
     </div>
 
     <div>
         <table style="width: 95%; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 5px">
             <tr>
-                <td ng-repeat="emoticon in emoticons">
+                <td ng-repeat="emoticon in getEmoticons()">
                     <a href="" ng-click="addSmiley(emoticon)" title="{{ emoticon.tooltip }}">
                         <img class="emoticon" ng-src="/assets/images/smilies/{{ emoticon.uri }}">
                     </a>
