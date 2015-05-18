@@ -41,7 +41,7 @@
             <div ng-hide="isPerformanceSelected()" class="col-md-2 right">
                 <span ng-class="gainLoss(p) < 0 ? 'negative' : ''">{{ gainLoss(p) | number:1 }}%</span>
             </div>
-			<div ng-hide="isPerformanceSelected()" class="col-md-2 left">{{ p.soldDate | elapsed }} ago</div>
+			<div ng-hide="isPerformanceSelected()" class="col-md-2 left">{{ p.soldDate | elapsed }}</div>
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.quantity | number }}</div>
 		</div>
 	</div>

@@ -7,9 +7,9 @@
      */
     app.controller('ChatController', ['$scope', '$location', '$log', '$sce', '$timeout', 'toaster', 'MySession', 'ContestService',
         function ($scope, $location, $log, $sce, $timeout, toaster, MySession, ContestService) {
-            var units = [ "min", "hour", "day", "month", "year" ];
 
             $scope.chatMessage = "";
+            var lastUpdateTime = 0;
             var lastMessageCount = 0;
             var cachedHtml = "";
 
@@ -35,8 +35,10 @@
              * @returns {String}
              */
             $scope.getMessages = function (contest) {
-                if(contest.messages.length === lastMessageCount) return cachedHtml;
+                if((contest.messages.length === lastMessageCount) && (Date.now() - lastUpdateTime) < 15) return cachedHtml;
                 else {
+                    var startTime = Date.now();
+
                     // capture the new number of lines
                     lastMessageCount = contest.messages.length;
 
@@ -60,9 +62,11 @@
                         });
                         html += '<img src="http://graph.facebook.com/' + msg.sender.facebookID + '/picture" class="chat_icon">' +
                             '<span class="bold" style="color: ' + msg.color + '">' + msg.sender.name + '</span>&nbsp;' +
-                            '[<span class="st_bkg_color">' + toTime(msg.sentTime) + ' ago</span>] &nbsp;' + text + "<br>";
+                            '[<span class="st_bkg_color">' + msg.sentTime.toDuration() + '</span>] &nbsp;' + text + "<br>";
                     });
 
+                    $log.info("Generated HTML in " + (Date.now() - startTime) + " msec(s)");
+                    lastUpdateTime = Date.now();
                     cachedHtml = $sce.trustAsHtml(html);
                     return cachedHtml;
                 }
@@ -95,18 +99,6 @@
                         });
                 }
             };
-
-            function toTime(time) {
-                if(time == null) return null;
-                var age = Math.abs((new Date()).getTime() - time) / 60000;
-                var unit = 0;
-                if(age >= 60) { age /= 60; unit++; } // minutes -> hours
-                if(age >= 24) { age /= 24; unit++; } // hours -> days
-                if(age >= 30) { age /= 30; unit++; } // days -> months
-                if(age >= 12) { age /= 12; unit++; } // months -> years
-                age = age.toFixed(0);
-                return age + " " + units[unit] + ( age != 1 ? "s" : "" );
-            }
 
             var emoticons = [
                 {"symbol": ":-))", "uri": "icon_mrgreen.gif", "tooltip": "Big Grin"},

@@ -41,7 +41,7 @@
                         {{ c.name }}
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-show="c.startTime">{{ c.startTime | date:'MM-dd-yyyy' }}</span>
+                        <span ng-show="c.startTime">{{ c.startTime | elapsed }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
