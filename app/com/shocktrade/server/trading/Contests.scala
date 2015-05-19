@@ -18,6 +18,7 @@ import reactivemongo.bson.BSONObjectID
 import reactivemongo.core.commands.LastError
 
 import scala.collection.concurrent.TrieMap
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
@@ -96,6 +97,12 @@ object Contests {
     }
   }
 
+  /**
+   * Retrieves all of the system-defined perks
+   * @return a promise of a sequence of perks
+   */
+  def findAllPerks(id: BSONObjectID) = ContestDAO.findAllPerks(id)
+
   def findContestByID(id: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
     (contestActor(id) ? FindContestByID(id, fields)) map {
       case e: Exception => throw new IllegalStateException(e)
@@ -153,6 +160,21 @@ object Contests {
     } catch {
       case e: Exception =>
         Logger.error("Error processing orders", e)
+    }
+  }
+
+  /**
+   * Purchases the passed perks
+   * @param id the [[BSONObjectID contest ID]] which represents the contest
+   * @param playerId the [[BSONObjectID player ID]] which represents the player whom is purchasing the perks
+   * @param perkCodes the given perk codes
+   * @param totalCost the total cost of the perks
+   * @return a promise of an option of a contest
+   */
+  def purchasePerks(id: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double): Future[Option[Contest]] = {
+    (contestActor(id) ? PurchasePerks(id, playerId, perkCodes, totalCost)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
     }
   }
 

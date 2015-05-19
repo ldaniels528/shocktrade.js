@@ -48,7 +48,7 @@
          * @returns {*}
          */
         service.getUserID = function () {
-            return service.userProfile.OID();
+            return service.userProfile ? service.userProfile.OID() : null;
         };
 
         service.getUserName = function () {

@@ -26,13 +26,15 @@
             var lastExposure = null;
 
             $scope.exposurePieChart = function (contest, exposure, userID, elemId) {
+                // define the mapping key
+                var key = exposure + "/" + contest.OID();
+
                 // graph a pie chart
-                if (!cache[exposure]) {
-                    cache[exposure] = true;
-                    $log.info("Loading exposure data for " + exposure + " into " + elemId);
+                if (!cache[key]) {
+                    cache[key] = true;
 
                     lastExposure = exposure;
-                    $http.get("/api/charts/exposure/" + exposure + "/" + contest.OID() + "/" + userID)
+                    $http.get("/api/charts/exposure/" + key + "/" + userID)
                         .success(function (data) {
                             GraphService.pieChart(800, 400, data, elemId);
                         })

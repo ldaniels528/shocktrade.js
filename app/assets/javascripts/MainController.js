@@ -57,7 +57,7 @@
                 "tool_tip": "My Perks",
                 "url": "/perks",
                 "isVisible": function(c) {
-                    return true;
+                    return c != null;
                 }
             }, {
                 "name": "My Statistics",

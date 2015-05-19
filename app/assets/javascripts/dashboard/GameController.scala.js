@@ -4,7 +4,7 @@
     /**
      * Game Play Controller
      */
-    app.controller('GameController', ['$scope', '$location', '$log',  '$routeParams','$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
+    app.controller('GameController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
         function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService, QuoteService) {
 
             // setup the public variables
@@ -25,6 +25,9 @@
                 perksAllowed: false,
                 robotsAllowed: false
             };
+
+            // private variables
+            var totalInvestment = 0.0;
 
             ///////////////////////////////////////////////////////////////////////////
             //          Functions
@@ -57,6 +60,38 @@
                     }
                 }
                 return slots;
+            };
+
+            $scope.getTotalInvestment = function (playerId) {
+                // lookup the player
+                var player = ContestService.findPlayerByID(contest, playerId);
+                if (player && !player.totalInvestment && !player.loadingTotalInvestment) {
+                    player.loadingTotalInvestment = true;
+
+                    // set a timeout so that loading doesn't persist
+                    $timeout(function () {
+                        player.totalInvestment = 0.00;
+                    }, 10000);
+
+                    ContestService.getTotalInvestment(playerId)
+                        .success(function (totalInvestment) {
+                            player.totalInvestment = totalInvestment;
+                            player.loadingTotalInvestment = false;
+                        })
+                        .error(function (response) {
+                            toaster.pop('error', 'Error loading total investment', null);
+                            player.totalInvestmentAttempts += 1;
+
+                            // attempt to load the totalInvestment up to 3 times
+                            if(player.totalInvestmentAttempts < 3) {
+                                $timeout(function () {
+                                    player.loadingTotalInvestment = false;
+                                }, 5000);
+                            }
+                        });
+                }
+
+                return player ? player.totalInvestment : null;
             };
 
             $scope.getStatusIcon = function (c, maxPlayers) {
@@ -162,7 +197,7 @@
 
             $scope.isParticipant = function (contest) {
                 var id = MySession.getUserID();
-                return id && $scope.findPlayerByID(contest, id) != null;
+                return id && ContestService.findPlayerByID(contest, id) != null;
             };
 
             $scope.deleteContest = function (contest) {
@@ -293,7 +328,7 @@
             };
 
             $scope.containsPlayer = function (contest, userProfile) {
-                return userProfile.id && $scope.findPlayerByID(contest, userProfile.id) != null;
+                return userProfile.id && ContestService.findPlayerByID(contest, userProfile.OID()) != null;
             };
 
             $scope.contestStatusClass = function (contest) {
@@ -349,10 +384,10 @@
                 var playerName = MySession.getUserName();
 
                 // find participant that represents the player
-                var participant = $scope.findPlayerByID(contest, MySession.getUserID());
+                var participant = ContestService.findPlayerByID(contest, MySession.getUserID());
 
                 // load the enriched participant
-                if(!contest.rankings) {
+                if (!contest.rankings) {
                     updateWithRankings(playerName, contest);
                 }
 
@@ -410,17 +445,6 @@
                     updateWithRankings(MySession.getUserName(), contest);
                 }
             }
-
-            $scope.findPlayerByID = function (contest, playerId) {
-                var participants = contest ? contest.participants : [];
-                for (var n = 0; n < participants.length; n++) {
-                    var participant = participants[n];
-                    if (participant.OID() == playerId) {
-                        return participant;
-                    }
-                }
-                return null;
-            };
 
             function isContestSelected(contestId) {
                 return ($scope.contest && $scope.contest.OID() === contestId);
@@ -631,7 +655,7 @@
             });
 
             /**
-             * Listen for contest update events
+             * Listen for profile update events
              */
             $scope.$on("profile_updated", function (event, profile) {
                 $log.info("User Profile updated");
@@ -639,6 +663,19 @@
                     MySession.userProfile.netWorth = profile.netWorth;
                     //type, title, body, timeout, bodyOutputType, clickHandler
                     toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
+                }
+            });
+
+            /**
+             * Listen for player perk update events
+             */
+            $scope.$on("perks_updated", function (event, contestInfo) {
+                if ($scope.contest && (contestInfo.OID() === $scope.contest.OID())) {
+                    var player = ContestService.findPlayerByID($scope.contest, contestInfo.player.OID());
+                    if (player) {
+                        $log.info("Updating perks for player " + contestInfo.player.name);
+                        player.perks = contestInfo.perks;
+                    }
                 }
             });
 

@@ -3,17 +3,17 @@ package com.shocktrade.server.trading
 import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.controllers.Application._
+import com.shocktrade.controllers.ProfileResources._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}
+import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands.{FindAndModify, LastError, Update}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Contest Data Access Object
@@ -240,6 +240,91 @@ object ContestDAO {
   }
 
   /////////////////////////////////////////////////////////////////////////////////
+  //        Perks
+  /////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Retrieves all of the system-defined perks
+   * @return a promise of a sequence of perks
+   */
+  def findAllPerks(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Perk]] = {
+    mc.find(BS("_id" -> contestId)).cursor[Contest].headOption map {
+      case None => Nil
+      case Some(contest) =>
+        val startingBalance = contest.startingBalance.toDouble
+        Seq(
+          Perk(
+            code = "PRCHEMNT",
+            name = "Purchase Eminent",
+            cost = startingBalance * 0.025d,
+            description = "Gives the player the ability to create SELL orders for securities not yet owned"
+          ),
+          Perk(
+            code = "PRFCTIMG",
+            name = "Perfect Timing",
+            cost = startingBalance * 0.025d,
+            description = "Gives the player the ability to create BUY orders for more than cash currently available"
+          ),
+          Perk(
+            code = "CMPDDALY",
+            name = "Compounded Daily",
+            cost = startingBalance * 0.05d,
+            description = "Gives the player the ability to earn interest on cash not currently invested"
+          ),
+          Perk(
+            code = "FEEWAIVR",
+            name = "Fee Waiver",
+            cost = startingBalance * 0.05d,
+            description = "Reduces the commissions the player pays for buying or selling securities"
+          ),
+          Perk(
+            code = "MARGIN",
+            name = "Rational People think at the Margin",
+            cost = startingBalance * 0.10d,
+            description = "Gives the player the ability to use margin accounts"
+          ),
+          Perk(
+            code = "SAVGLOAN",
+            name = "Savings and Loans",
+            cost = startingBalance * 0.10d,
+            description = "Gives the player the ability to borrow money"
+          ),
+          Perk(
+            code = "LOANSHRK",
+            name = "Loan Shark",
+            cost = startingBalance * 0.15d,
+            description = "Gives the player the ability to loan other players money at any interest rate"
+          ),
+          Perk(
+            code = "MUTFUNDS",
+            name = "The Feeling's Mutual",
+            cost = startingBalance * 0.15d,
+            description = "Gives the player the ability to create and use mutual funds"
+          ),
+          Perk(
+            code = "RISKMGMT",
+            name = "Risk Management",
+            cost = startingBalance * 0.15d,
+            description = "Gives the player the ability to trade options"
+          ))
+    }
+  }
+
+  /**
+   * Purchases the passed perks
+   * @param contestId the [[BSONObjectID contest ID]] which represents the contest
+   * @param playerId the [[BSONObjectID player ID]] which represents the player whom is purchasing the perks
+   * @param perkCodes the given perk codes
+   * @param totalCost the total cost of the perks
+   * @return a promise of an option of a contest
+   */
+  def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double)(implicit ec: ExecutionContext) = {
+    val q = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "fundsAvailable" -> BS("$gte" -> totalCost))))
+    val u = BS("$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)), "$inc" -> BS("participants.$.fundsAvailable" -> -totalCost))
+    db.command(FindAndModify("Contests", q, Update(u, fetchNewObject = true), upsert = false, sort = None)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
   //        Positions
   /////////////////////////////////////////////////////////////////////////////////
 
@@ -338,7 +423,7 @@ object ContestDAO {
           // create the order history record
           "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
       )
-    }  andThen {
+    } andThen {
       case Success(outcome) => outcome
       case Failure(e) =>
         failOrder(c, wo, e.getMessage, asOfDate)

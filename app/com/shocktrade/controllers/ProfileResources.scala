@@ -1,7 +1,6 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}
-import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
@@ -170,37 +169,6 @@ object ProfileResources extends Controller with MongoController with ErrorHandle
   def getNotifications(userName: String, limit: Int) = Action.async {
     mcU.find(JS("userName" -> userName)).cursor[JsObject].collect[Seq](limit) map (o => Ok(JsArray(o)))
   }
-
-  /**
-   * Facilitates the purchase of perks
-   * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
-   */
-  def purchasePerks(userId: String) = Action.async { request =>
-    // get the perks from the request body
-    request.body.asJson map (_.as[Seq[String]]) match {
-      case Some(perkCodes) =>
-        // create the perk code to cost mapping
-        val perkCodeCostMapping = Map(UserProfiles.findAllPerks map (p => (p.code, p.cost)): _*)
-
-        // compute the total cost of the perks
-        val totalCost = (perkCodes flatMap perkCodeCostMapping.get).sum
-
-        // find and modify the profile with the perks
-        UserProfiles.purchasePerks(userId.toBSID, perkCodes, totalCost) map {
-          case Some(profile) =>
-            val js = Json.toJson(profile)
-            Ok(JS("perks" -> (js \ "perks")) ++ JS("netWorth" -> (js \ "netWorth")))
-          case None =>
-            Ok(JS("error" -> "Perks could not be purchased"))
-        } recover {
-          case e => Ok(JS("error" -> "Perks could not be purchased"))
-        }
-      case _ =>
-        Future.successful(BadRequest("JSON array of Perk codes expected"))
-    }
-  }
-
-  def getAllPerks = Action(Ok(Json.toJson(UserProfiles.findAllPerks)))
 
   case class ProfileForm(userName: String,
                          facebookID: String,

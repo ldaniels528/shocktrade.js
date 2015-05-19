@@ -55,6 +55,14 @@
             return $http.get("/api/contest/" + contestId + "/player/" + playerId);
         };
 
+        service.getCashAvailable = function (contest, playerId) {
+            if(contest) {
+                var player = service.findPlayerByID(contest, playerId);
+                return player ? player.fundsAvailable : 0.00;
+            }
+            return 0.00;
+        };
+
         service.getRankings = function (contestId) {
             return $http.get("/api/contest/" + contestId + "/rankings");
         };
@@ -69,6 +77,25 @@
 
         service.getEnrichedPositions = function (contestId, playerId) {
             return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
+        };
+
+        /////////////////////////////////////////////////////////////////////////////
+        //			Participants
+        /////////////////////////////////////////////////////////////////////////////
+
+        service.getTotalInvestment = function (playerId) {
+            return $http.get('/api/contests/player/' + playerId + '/totalInvestment');
+        };
+
+        service.findPlayerByID = function (contest, playerId) {
+            var participants = contest ? (contest.participants || []) : [];
+            for (var n = 0; n < participants.length; n++) {
+                var participant = participants[n];
+                if (participant.OID() === playerId) {
+                    return participant;
+                }
+            }
+            return null;
         };
 
         /////////////////////////////////////////////////////////////////////////////

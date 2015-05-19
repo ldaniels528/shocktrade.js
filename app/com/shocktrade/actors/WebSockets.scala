@@ -68,58 +68,55 @@ object WebSockets {
    * Base trait for all Web Socket Replay Messages
    */
   trait WsRelayMessage {
-
     def toJsonMessage: JsObject
   }
 
   case class ContestCreated(contest: Contest) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "contest_created", "data" -> contest)
   }
 
   case class ContestDeleted(id: BSONObjectID) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "contest_deleted", "data" -> JS("id" -> id.stringify))
   }
 
   case class ContestUpdated(contest: Contest) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "contest_updated", "data" -> contest)
   }
 
   case class MessagesUpdated(c: Contest) extends WsRelayMessage {
-
-    def toJsonMessage = JS("action" -> "messages_updated", "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
+    def toJsonMessage = JS(
+      "action" -> "messages_updated",
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
   }
 
   case class OrdersUpdated(c: Contest, p: Participant) extends WsRelayMessage {
-
     def toJsonMessage = JS(
       "action" -> "orders_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "orders" -> p.orders, "orderHistory" -> p.orderHistory))
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "orders" -> p.orders, "orderHistory" -> p.orderHistory))
+  }
+
+  case class PerksUpdated(c: Contest, p: Participant) extends WsRelayMessage {
+    def toJsonMessage = JS(
+      "action" -> "perks_updated",
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "perks" -> p.perks))
   }
 
   case class PositionsUpdated(c: Contest, p: Participant) extends WsRelayMessage {
-
     def toJsonMessage = JS(
       "action" -> "positions_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "positions" -> p.positions))
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "positions" -> p.positions))
   }
 
   case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "quote_updated", "data" -> quote)
   }
 
   case class UserProfileUpdated(profile: UserProfile) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "profile_updated", "data" -> profile)
   }
 
   case class UserStateChanged(userID: String, connected: Boolean) extends WsRelayMessage {
-
     def toJsonMessage = JS("action" -> "user_status_changed", "data" -> JS("userID" -> userID, "connected" -> connected))
   }
-
 
 }

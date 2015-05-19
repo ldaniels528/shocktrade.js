@@ -33,9 +33,13 @@ GET           /api/contest/:id/player/:playerId                      com.shocktr
 DELETE        /api/contest/:id/player/:playerId                      com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
 
 GET           /api/contest/:id/orders/:playerId                      com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
+GET           /api/contest/:id/perks                                 com.shocktrade.controllers.ContestResources.getAllPerks(id)
+GET           /api/contest/:id/perks/:playerId                       com.shocktrade.controllers.ContestResources.getPlayerPerks(id, playerId)
+PUT           /api/contest/:id/perks/:playerId                       com.shocktrade.controllers.ContestResources.purchasePerks(id, playerId)
 GET           /api/contest/:id/positions/:playerId                   com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
 
 GET           /api/contests/player/:playerId                         com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
+GET           /api/contests/player/:playerId/totalInvestment         com.shocktrade.controllers.ContestResources.getTotalInvestment(playerId)
 POST          /api/contests/search                                   com.shocktrade.controllers.ContestResources.contestSearch
 
 # Orders
@@ -81,9 +85,6 @@ POST          /api/online                                            com.shocktr
 PUT           /api/online/:userID                                    com.shocktrade.controllers.OnlineStatusResources.setIsOnline(userID)
 DELETE        /api/online/:userID                                    com.shocktrade.controllers.OnlineStatusResources.setIsOffline(userID)
 
-# Perks
-GET           /api/perks                                             com.shocktrade.controllers.ProfileResources.getAllPerks
-
 # Profile Quotes
 PUT           /api/profile/:id/exchange/:exchange                    com.shocktrade.controllers.QuoteResources.addExchange(id, exchange)
 DELETE        /api/profile/:id/exchange/:exchange                    com.shocktrade.controllers.QuoteResources.removeExchange(id, exchange)
@@ -99,7 +100,6 @@ POST          /api/profile/:id/quotes/filter/mini                    com.shocktr
 POST          /api/profile/create                                    com.shocktrade.controllers.ProfileResources.createProfile
 PUT           /api/profile/:id/favorite/:symbol                      com.shocktrade.controllers.ProfileResources.addFavoriteSymbol(id, symbol)
 DELETE        /api/profile/:id/favorite/:symbol                      com.shocktrade.controllers.ProfileResources.removeFavoriteSymbol(id, symbol)
-PUT           /api/profile/:id/perks/purchase                        com.shocktrade.controllers.ProfileResources.purchasePerks(id)
 PUT           /api/profile/:id/recent/:symbol                        com.shocktrade.controllers.ProfileResources.addRecentSymbol(id, symbol)
 DELETE        /api/profile/:id/recent/:symbol                        com.shocktrade.controllers.ProfileResources.removeRecentSymbol(id, symbol)
 GET           /api/profile/facebook/:fbid                            com.shocktrade.controllers.ProfileResources.findProfileByFacebookID(fbid)

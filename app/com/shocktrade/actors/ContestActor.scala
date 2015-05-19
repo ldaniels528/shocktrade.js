@@ -27,7 +27,7 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          for {c <- contest_?; p <- c.participants.find(_.id == playerId)} {
+          for (c <- contest_?; p <- c.participants.find(_.id == playerId)) {
             WebSockets ! OrdersUpdated(c, p)
           }
         case Failure(e) => mySender ! e
@@ -56,7 +56,7 @@ class ContestActor extends Actor with ActorLogging {
       ContestDAO.createOrder(contestId, playerId, order) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          for {c <- contest_?; p <- c.participants.find(_.id == playerId)} {
+          for (c <- contest_?; p <- c.participants.find(_.id == playerId)) {
             WebSockets ! OrdersUpdated(c, p)
           }
         case Failure(e) => mySender ! e
@@ -117,6 +117,17 @@ class ContestActor extends Actor with ActorLogging {
 
     case ProcessOrders(contest, asOfDate) =>
       processOrders(contest, asOfDate)
+
+    case PurchasePerks(contestId, playerId, perkCodes, totalCost) =>
+      val mySender = sender()
+      ContestDAO.purchasePerks(contestId, playerId, perkCodes, totalCost) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          for (c <- contest_?; p <- c.participants.find(_.id == playerId)) {
+            WebSockets ! PerksUpdated(c, p)
+          }
+        case Failure(e) => mySender ! e
+      }
 
     case QuitContest(contestId, playerId) =>
       val mySender = sender()
@@ -187,6 +198,8 @@ object ContestActor {
   case class FindOrderByID(contestId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String])
 
   case class JoinContest(contestId: BSONObjectID, participant: Participant)
+
+  case class PurchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double)
 
   case class ProcessOrders(contest: Contest, asOfDate: DateTime)
 

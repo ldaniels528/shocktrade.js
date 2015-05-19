@@ -5,9 +5,9 @@
      * Perks Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PerksController', ['$scope', '$http', '$log', 'toaster', 'MySession', 'PerksService',
-        function ($scope, $http, $log, toaster, MySession, PerksService) {
-            var perks = null;
+    app.controller('PerksController', ['$scope', '$http', '$log', 'toaster', 'ContestService', 'MySession', 'PerksService',
+        function ($scope, $http, $log, toaster, ContestService, MySession, PerksService) {
+            var perks = [];
 
             $scope.countOwnedPerks = function () {
                 var count = 0;
@@ -17,8 +17,8 @@
                 return count;
             };
 
-            $scope.getCashAvailable = function () {
-                return MySession.getNetWorth();
+            $scope.getCashAvailable = function (contest) {
+                return ContestService.getCashAvailable(contest, MySession.getUserID());
             };
 
             $scope.getPerks = function () {
@@ -44,18 +44,26 @@
                 return false;
             };
 
-            $scope.purchasePerks = function () {
+            $scope.purchasePerks = function (contest) {
                 // build the list of perks to purchase
                 var perkCodes = getSelectedPerkCodes();
                 $log.info("purchasePerks = " + JSON.stringify(perkCodes, null, '\t'));
 
+                if (!contest) {
+                    toaster.pop('error', "No game selected", null);
+                    return;
+                }
+
                 // send the purchase order
-                PerksService.purchasePerks(perkCodes)
+                PerksService.purchasePerks(contest.OID(), MySession.getUserID(), perkCodes)
                     .success(function (response) {
-                        toaster.pop('success', perkCodes.length + " Perk(s) purchased", null);
-                        MySession.userProfile.perks = response.perks;
-                        MySession.userProfile.netWorth = response.netWorth;
-                        $scope.setupPerks();
+                        if (response.error) {
+                            toaster.pop('error', response.error, null);
+                        }
+                        else {
+                            toaster.pop('success', perkCodes.length + " Perk(s) purchased", null);
+                            $scope.setupPerks();
+                        }
 
                     }).error(function (data, status, headers, config) {
                         toaster.pop('error', "Failed to purchase " + perkCodes.length + " Perk(s)", null);
@@ -63,35 +71,36 @@
                     });
             };
 
-            $scope.getPerkCostClass = function (perk) {
-                if (perk.selected || $scope.getCashAvailable() >= perk.cost) return 'positive';
-                else if ($scope.getCashAvailable() < perk.cost) return 'negative';
+            $scope.getPerkCostClass = function (contest, perk) {
+                if (perk.selected || $scope.getCashAvailable(contest) >= perk.cost) return 'positive';
+                else if ($scope.getCashAvailable(contest) < perk.cost) return 'negative';
                 else return 'null';
             };
 
-            $scope.getPerkNameClass = function (perk) {
-                return ( perk.selected || $scope.getCashAvailable() >= perk.cost ) ? 'st_bkg_color' : 'null';
+            $scope.getPerkNameClass = function (contest, perk) {
+                return ( perk.selected || $scope.getCashAvailable(contest) >= perk.cost ) ? 'st_bkg_color' : 'null';
             };
 
-            $scope.getPerkDescClass = function (perk) {
-                return ( perk.selected || $scope.getCashAvailable() >= perk.cost ) ? '' : 'null';
+            $scope.getPerkDescClass = function (contest, perk) {
+                return ( perk.selected || $scope.getCashAvailable(contest) >= perk.cost ) ? '' : 'null';
             };
 
-            $scope.loadPerks = function () {
-                PerksService.getPerks()
+            $scope.loadPerks = function (contest) {
+                PerksService.getPerks(contest.OID())
                     .success(function (allPerks) {
                         perks = allPerks;
-                        $scope.setupPerks();
+                        $scope.setupPerks(contest);
                     })
                     .error(function (error) {
                         toaster.pop('error', 'Error loading perks', null);
                     });
             };
 
-            $scope.setupPerks = function () {
+            $scope.setupPerks = function (contest) {
                 // create a mapping of the user's perks
                 var myPerks = {};
-                var userOwnedPerks = MySession.userProfile.perks || [];
+                var player = ContestService.findPlayerByID(contest, MySession.getUserID());
+                var userOwnedPerks = player ? (player.perks || []) : [];
 
                 // all perks the user owns should be set
                 angular.forEach(userOwnedPerks, function (perk) {
@@ -123,16 +132,9 @@
             //          Watch Events
             ///////////////////////////////////////////////////////////////////////////
 
-            //watch for changes to the player's perks
-            $scope.$watch("MySession.userProfile.perks", function () {
+            $scope.$on("perks_updated", function (event, contestInfo) {
                 $scope.setupPerks();
             });
-
-            ///////////////////////////////////////////////////////////////////////////
-            //          Initialization
-            ///////////////////////////////////////////////////////////////////////////
-
-            $scope.loadPerks();
 
         }]);
 

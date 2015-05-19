@@ -1,24 +1,32 @@
-<fieldset ng-controller="PerksController" ng-init="loadPerks()">
-	<legend>My Perks <span class="perk_sub_text">({{ countOwnedPerks() }} Owned)</span></legend>
-    <div>
-        <span class="st_heading bold st_bkg_color">Total Purchase Cost:
-            <span ng-class="getTotalCost() <= getCashAvailable() ? 'positive' : 'negative'">
-                $ {{ getTotalCost() | number:2 }}
+<div ng-hide="contest" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
+<div ng-if="contest">
+    <fieldset ng-init="loadPerks(contest)">
+        <legend>My Perks <span class="perk_sub_text">({{ countOwnedPerks() }} Owned)</span></legend>
+        <div>
+            <span class="st_heading bold st_bkg_color">Total Purchase Cost:
+                <span ng-class="getTotalCost() <= getCashAvailable(contest) ? 'positive' : 'negative'">
+                    $ {{ getTotalCost() | number:2 }}
+                </span> / {{(getCashAvailable(contest) || 0.00) | number:2 }}
             </span>
-        </span>
-        <button class="btn btn-default st_button"
-                ng-show="perksSelected() && (getTotalCost() <= getCashAvailable())"
-                ng-click="purchasePerks()">
-            <i class="fa fa-cart-plus"></i> Buy
-        </button>
-    </div>
-    <div class="perks_container">
-        <div class="perk_padding" ng-repeat="perk in getPerks() track by $index">
-            <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && getCashAvailable() < perk.cost)">
-            <img ng-src="/assets/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
-            <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
-            <span ng-hide="perk.owned">(<span ng-class="getPerkCostClass(perk)">${{ perk.cost | number }}</span>):</span>
-            <span ng-class="getPerkDescClass(perk)">{{ perk.description }}</span>
+            <button class="btn btn-default st_button"
+                    ng-show="perksSelected() && (getTotalCost() <= getCashAvailable(contest))"
+                    ng-click="purchasePerks(contest)">
+                <i class="fa fa-cart-plus"></i> Buy
+            </button>
+            <span ng-hide="getTotalCost() <= getCashAvailable(contest)">
+                &#8212;
+                <i class="fa fa-warning st_control"></i>
+                <span class="st_heading error">Insufficient funds</span>
+            </span>
         </div>
-    </div>
-</fieldset>
+        <div class="perks_container">
+            <div class="perk_padding" ng-repeat="perk in getPerks() track by $index">
+                <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && getCashAvailable(contest) < perk.cost)">
+                <img ng-src="/assets/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
+                <span ng-class="getPerkNameClass(contest, perk)" class="bold">{{ perk.name }}</span> &#8212;
+                <span ng-hide="perk.owned">(<span ng-class="getPerkCostClass(contest, perk)">${{ perk.cost | number }}</span>):</span>
+                <span ng-class="getPerkDescClass(contest, perk)">{{ perk.description }}</span>
+            </div>
+        </div>
+    </fieldset>
+</div>

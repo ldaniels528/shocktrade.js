@@ -31,12 +31,6 @@ object UserProfiles {
   }
 
   /**
-   * Retrieves all of the system-defined perks
-   * @return a promise of a sequence of perks
-   */
-  def findAllPerks = Perk.allPerks
-
-  /**
    * Retrieves a user profile by the user's name
    * @param name the given user name (e.g. "ldaniels528")
    * @return a promise of an option of a user profile            
@@ -54,17 +48,5 @@ object UserProfiles {
     mc.find(BS("facebookID" -> fbId)).one[UserProfile]
   }
 
-  /**
-   * Purchases the passed perks
-   * @param userId the user the perks are being purchased by
-   * @param perkCodes the given perk codes
-   * @param totalCost the total cost of the perks
-   * @return a promise of an option of a user profile
-   */
-  def purchasePerks(userId: BSONObjectID, perkCodes: Seq[String], totalCost: Double): Future[Option[UserProfile]] = {
-    val q = BS("_id" -> userId, "netWorth" -> BS("$gte" -> totalCost))
-    val u = BS("$addToSet" -> BS("perks" -> BS("$each" -> perkCodes)), "$inc" -> BS("netWorth" -> -totalCost))
-    db.command(FindAndModify("Players", q, Update(u, fetchNewObject = true), upsert = false, sort = None)) map (_ flatMap (_.seeAsOpt[UserProfile]))
-  }
 
 }

@@ -10,21 +10,23 @@
 
         /**
          * Retrieves the complete list of perks
-         * @returns {HttpPromise}
+         * @returns {*}
          */
-        service.getPerks = function () {
-            return $http.get("/api/perks");
+        service.getPerks = function (contestId) {
+            return $http.get("/api/contest/" + contestId + "/perks");
         };
 
         /**
          * Attempts to purchase the given perk codes
+         * @param contestId the given contest ID
+         * @param playerId the given player ID
          * @param perkCodes the given perk codes to purchase
          * @returns {*}
          */
-        service.purchasePerks = function (perkCodes) {
+        service.purchasePerks = function (contestId, playerId, perkCodes) {
             return $http({
                 method: 'PUT',
-                url: "/api/profile/" + MySession.getUserID() + "/perks/purchase",
+                url: "/api/contest/" + contestId + "/perks/" + playerId,
                 data: angular.toJson(perkCodes)
             });
         };

@@ -21,10 +21,13 @@
             svg.append("g").attr("class", "labels");
             svg.append("g").attr("class", "lines");
 
+            /*
             var w = $(elemId).outerWidth(false);
             var h = $(elemId).outerHeight();
             $log.info(elemId + ": width = " + w + ", height = " + h);
+            */
 
+            // compute the radius
             var radius = Math.min(width, height) * 0.40;
 
             var pie = d3.layout.pie()

@@ -27,7 +27,6 @@ case class UserProfile(id: BSONObjectID = BSONObjectID.generate,
                        favorites: List[String] = Nil,
                        filters: List[Filter] = Nil,
                        friends: List[String] = Nil,
-                       perks: List[String] = Nil,
                        recentSymbols: List[String] = Nil,
                        country: Option[String] = None,
                        lastLoginTime: Option[Date] = None)
@@ -51,7 +50,6 @@ object UserProfile {
       (__ \ "favorites").read[List[String]] and
       (__ \ "filters").read[List[Filter]] and
       (__ \ "friends").read[List[String]] and
-      (__ \ "perks").read[List[String]] and
       (__ \ "recentSymbols").read[List[String]] and
       (__ \ "country").readNullable[String] and
       (__ \ "lastLoginTime").readNullable[Date])(UserProfile.apply _)
@@ -69,7 +67,6 @@ object UserProfile {
       (__ \ "favorites").write[List[String]] and
       (__ \ "filters").write[List[Filter]] and
       (__ \ "friends").write[List[String]] and
-      (__ \ "perks").write[List[String]] and
       (__ \ "recentSymbols").write[List[String]] and
       (__ \ "country").writeNullable[String] and
       (__ \ "lastLoginTime").writeNullable[Date])(unlift(UserProfile.unapply))
@@ -88,7 +85,6 @@ object UserProfile {
       doc.getAs[List[String]]("favorites").getOrElse(Nil),
       Nil, //doc.getAs[List[Filter]]("filters").getOrElse(Nil),
       doc.getAs[List[String]]("friends").getOrElse(Nil),
-      doc.getAs[List[String]]("perks").getOrElse(Nil),
       doc.getAs[List[String]]("recentSymbols").getOrElse(Nil),
       doc.getAs[String]("country"),
       doc.getAs[Date]("lastLoginTime")
@@ -114,7 +110,6 @@ object UserProfile {
       "favorites" -> userProfile.favorites,
       "filters" -> userProfile.filters,
       "friends" -> userProfile.friends,
-      "perks" -> userProfile.perks,
       "recentSymbols" -> userProfile.recentSymbols,
       "country" -> userProfile.country,
       "lastLoginTime" -> userProfile.lastLoginTime

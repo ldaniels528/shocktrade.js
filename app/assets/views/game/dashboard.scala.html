@@ -2,7 +2,6 @@
 
 <div class="row">
     <div ng-hide="contest" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
-
     <div ng-if="contest" class="play_container">
         <div ng-show="isRankingsShown(contest)" class="col-md-3">
             <div class="rankings_container">
@@ -40,7 +39,9 @@
             <div class="rankings_header">
                 <i ng-show="isRankingsShown(contest)" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown(contest)"></i>
                 <i ng-hide="isRankingsShown(contest)" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown(contest)"></i>
-                <span class="st_bkg_color">{{ isRankingsShown(contest) ? 'Hide' : 'Show'}} Player Rankings</span>
+                <span class="st_bkg_color clickable" ng-click="toggleRankingsShown(contest)">
+                    {{ isRankingsShown(contest) ? 'Hide' : 'Show'}} Player Rankings
+                </span>
             </div>
 
             <div ng-include src="'/assets/views/dashboard/portfolio.htm'"></div>

@@ -21,6 +21,7 @@ case class Participant(id: BSONObjectID = BSONObjectID.generate,
                        lastTradeTime: Option[Date] = None,
                        orders: List[Order] = Nil,
                        orderHistory: List[ClosedOrder] = Nil,
+                       perks: List[String] = Nil,
                        positions: List[Position] = Nil,
                        performance: List[Performance] = Nil)
 
@@ -39,6 +40,7 @@ object Participant {
       (__ \ "lastTradeTime").readNullable[Date] and
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
       (__ \ "orderHistory").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
+      (__ \ "perks").read[List[String]] and
       (__ \ "positions").readNullable[List[Position]].map(_.getOrElse(Nil)) and
       (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)))(Participant.apply _)
 
@@ -51,6 +53,7 @@ object Participant {
       (__ \ "lastTradeTime").writeNullable[Date] and
       (__ \ "orders").write[List[Order]] and
       (__ \ "orderHistory").write[List[ClosedOrder]] and
+      (__ \ "perks").write[List[String]] and
       (__ \ "positions").write[List[Position]] and
       (__ \ "performance").write[List[Performance]])(unlift(Participant.unapply))
 
@@ -64,6 +67,7 @@ object Participant {
       doc.getAs[Date]("lastTradeTime"),
       doc.getAs[List[Order]]("orders").getOrElse(Nil),
       doc.getAs[List[ClosedOrder]]("orderHistory").getOrElse(Nil),
+      doc.getAs[List[String]]("perks").getOrElse(Nil),
       doc.getAs[List[Position]]("positions").getOrElse(Nil),
       doc.getAs[List[Performance]]("performance").getOrElse(Nil)
     )
@@ -79,6 +83,7 @@ object Participant {
       "lastTradeTime" -> participant.lastTradeTime,
       "orders" -> participant.orders,
       "orderHistory" -> participant.orderHistory,
+      "perks" -> participant.perks,
       "positions" -> participant.positions,
       "performance" -> participant.performance
     )

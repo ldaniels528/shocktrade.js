@@ -8,17 +8,27 @@
     app.controller('ChatController', ['$scope', '$location', '$log', '$sce', '$timeout', 'toaster', 'MySession', 'ContestService',
         function ($scope, $location, $log, $sce, $timeout, toaster, MySession, ContestService) {
 
+            // public variables
             $scope.chatMessage = "";
+
+            // private variables
             var lastUpdateTime = 0;
             var lastMessageCount = 0;
             var cachedHtml = "";
+
+            // color-based variables
+            var colorIndex = 0;
+            var colorMap = {};
+            var COLORS = [
+                "#0088ff", "#ff00ff", "#008888", "#2200ff"
+            ];
 
             /**
              * Adds a smiley (emoticon) to the text input component
              * @param emoticon the given emoticon
              */
             $scope.addSmiley = function (emoticon) {
-                $scope.chatMessage += emoticon.symbol;
+                $scope.chatMessage += " " + emoticon.symbol;
             };
 
             /**
@@ -37,7 +47,7 @@
             $scope.getMessages = function (contest) {
                 if((contest.messages.length === lastMessageCount) && (Date.now() - lastUpdateTime) < 15) return cachedHtml;
                 else {
-                    var startTime = Date.now();
+                    //var startTime = Date.now();
 
                     // capture the new number of lines
                     lastMessageCount = contest.messages.length;
@@ -50,6 +60,7 @@
 
                     // build an HTML string with emoticons
                     var html = "";
+                    colorIndex = 0;
                     messages.forEach(function (msg) {
                         var text = msg.text;
                         angular.forEach(emoticons, function (emo) {
@@ -61,16 +72,23 @@
                             }
                         });
                         html += '<img src="http://graph.facebook.com/' + msg.sender.facebookID + '/picture" class="chat_icon">' +
-                            '<span class="bold" style="color: ' + msg.color + '">' + msg.sender.name + '</span>&nbsp;' +
+                            '<span class="bold" style="color: ' + colorOf(msg.sender.name) + '">' + msg.sender.name + '</span>&nbsp;' +
                             '[<span class="st_bkg_color">' + msg.sentTime.toDuration() + '</span>] &nbsp;' + text + "<br>";
                     });
 
-                    $log.info("Generated HTML in " + (Date.now() - startTime) + " msec(s)");
+                    //$log.info("Generated HTML in " + (Date.now() - startTime) + " msec(s)");
                     lastUpdateTime = Date.now();
                     cachedHtml = $sce.trustAsHtml(html);
                     return cachedHtml;
                 }
             };
+
+            function colorOf(name) {
+                if(!colorMap[name]) {
+                    colorMap[name] = COLORS[colorIndex++ % COLORS.length];
+                }
+                return colorMap[name];
+            }
 
             /**
              * Sends a chat message to the server

@@ -266,9 +266,34 @@ object ContestResources extends Controller with ErrorHandler {
   }
 
   def getHeldSecurities(playerId: String) = Action.async {
-    Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map { contests =>
-      contests.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
+    Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map {
+      _.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
     } map (symbols => Ok(JsArray(symbols.distinct.map(JsString)))) recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
+  def getTotalInvestment(playerId: String) = Action.async {
+    val outcome = for {
+      // calculate the symbol-quantity tuples
+      quantities <- Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map (
+        _.flatMap(_.participants.flatMap(_.positions.map(p => (p.symbol, p.quantity)))))
+
+      // load the quotes for all order symbols
+      symbols = quantities.map(_._1)
+      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
+
+      // build a mapping of symbol to last trade
+      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
+
+      // compute the total net worth
+      netWorth = (quantities flatMap { case (symbol, quantity) => quotes.get(symbol).map(_.lastTrade * quantity) }).sum
+
+    } yield netWorth
+
+    outcome map { netWorth =>
+      Ok(JS("netWorth" -> netWorth))
+    } recover {
       case e: Exception => Ok(createError(e))
     }
   }
@@ -318,6 +343,69 @@ object ContestResources extends Controller with ErrorHandler {
       case None => Ok(createError("No qualifying contest found"))
     } recover {
       case e: Exception => Ok(createError(e))
+    }
+  }
+
+  def getAllPerks(id: String) = Action.async {
+    Contests.findAllPerks(id.toBSID) map (perks => Ok(Json.toJson(perks)))
+  }
+
+  def getPlayerPerks(id: String, playerId: String) = Action.async {
+    // retrieve the participant
+    val result = for {
+      contest_? <- Contests.findContestByID(id.toBSID)()
+      participant_? = for {
+        contest <- contest_?
+        participant <- contest.participants.find(_.id.stringify == playerId)
+      } yield participant
+    } yield participant_?
+
+    result map {
+      case Some(participant) =>
+        val js = Json.toJson(participant)
+        Ok(JS("perks" -> (js \ "perks")) ++ JS("fundsAvailable" -> (js \ "fundsAvailable")))
+      case None =>
+        Ok(JS("error" -> "Perks could not be retrieved"))
+    } recover {
+      case e =>
+        Logger.error("Perks could not be retrieved", e)
+        Ok(JS("error" -> "Perks could not be retrieved"))
+    }
+  }
+
+  /**
+   * Facilitates the purchase of perks
+   * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
+   */
+  def purchasePerks(id: String, playerId: String) = Action.async { request =>
+    // get the perks from the request body
+    request.body.asJson map (_.as[Seq[String]]) match {
+      case Some(perkCodes) =>
+        val result = for {
+        // retrieve the perks
+          perks <- Contests.findAllPerks(id.toBSID)
+
+          // create the perk code to cost mapping
+          perkCodeCostMapping = Map(perks map (p => (p.code, p.cost)): _*)
+
+          // compute the total cost of the perks
+          totalCost = (perkCodes flatMap perkCodeCostMapping.get).sum
+
+          // perform the purchase
+          contest_? <- Contests.purchasePerks(id.toBSID, playerId.toBSID, perkCodes, totalCost)
+        } yield contest_?
+
+        result.map {
+          case Some(contest) =>
+            val js = Json.toJson(contest)
+            Ok(JS("perks" -> (js \ "perks")) ++ JS("fundsAvailable" -> (js \ "fundsAvailable")))
+          case None =>
+            Ok(JS("error" -> "Perks could not be purchased"))
+        } recover {
+          case e => Ok(JS("error" -> "Perks could not be purchased"))
+        }
+      case _ =>
+        Future.successful(BadRequest("JSON array of Perk codes expected"))
     }
   }
 

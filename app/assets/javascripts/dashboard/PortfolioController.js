@@ -7,7 +7,6 @@
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
 
-            $scope.participant = null;
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
             $scope.selectedPosition = null;
@@ -89,11 +88,11 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getParticipant = function (contest) {
-                if ($scope.participant == null) {
-                    $scope.participant = $scope.findPlayerByID(contest, MySession.getUserID());
-                    enrichParticipant(contest, $scope.participant);
+                var participant = ContestService.findPlayerByID(contest, MySession.getUserID());
+                if (participant) {
+                    enrichParticipant(contest, participant);
+                    return participant;
                 }
-                return $scope.participant;
             };
 
             $scope.isRankingsShown = function (contest) {
@@ -276,8 +275,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getCashAvailable = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.fundsAvailable || 0) : 0;
+                return ContestService.getCashAvailable(contest, MySession.getUserID());
             };
 
             $scope.asOfDate = function (contest) {
@@ -388,7 +386,6 @@
             //////////////////////////////////////////////////////////////////////
 
             function reset() {
-                $scope.participant = null;
                 $scope.selectedClosedOrder = null;
                 $scope.selectedOrder = null;
                 $scope.selectedPosition = null;
