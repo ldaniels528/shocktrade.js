@@ -5,7 +5,7 @@
      * My Session Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('MySession', function ($log, $timeout, toaster, ContestService) {
+    app.factory('MySession', function ($rootScope, $log, $timeout, toaster, ContestService) {
         var service = {
             contest: null
         };
@@ -57,13 +57,17 @@
                 service.totalInvestmentStatus = "LOADING";
 
                 // load the total investment
-                loadTotalInvestment();
+                service.loadTotalInvestment();
             }
 
             return service.isTotalInvestmentLoaded() ? service.totalInvestment : null;
         };
 
-        function loadTotalInvestment() {
+        service.reloadTotalInvestment = function () {
+            service.totalInvestmentStatus = null;
+        };
+
+        service.loadTotalInvestment = function () {
             // set a timeout so that loading doesn't persist
             $timeout(function () {
                 if (!service.isTotalInvestmentLoaded()) {
@@ -83,19 +87,9 @@
                 .error(function (response) {
                     toaster.pop('error', 'Error loading total investment', null);
                     service.totalInvestmentStatus = "FAILED";
-                    $log.error("Total failed");
-                    service.totalInvestmentAttempts += 1;
-
-                    // attempt to load the totalInvestment up to 3 times
-                    if (service.totalInvestmentAttempts < 3) {
-                        $timeout(function () {
-                            $log.info("Requeuing total investment call...");
-                            service.totalInvestmentStatus = null;
-                            loadTotalInvestment();
-                        }, 5000);
-                    }
+                    $log.error("Total investment call failed");
                 });
-        }
+        };
 
         /**
          * Returns the user ID for the current user
@@ -187,6 +181,36 @@
                 }]
             }
         }
+
+
+        ////////////////////////////////////////////////////////////
+        //          Watch Events
+        ////////////////////////////////////////////////////////////
+
+        /**
+         * Listen for contest update events
+         */
+        $rootScope.$on("contest_updated", function (event, contest) {
+            $log.info("[MySession] Contest '" + contest.name + "' updated");
+        });
+
+        /**
+         * Listen for contest update events
+         */
+        $rootScope.$on("orders_updated", function (event, contest) {
+            $log.info("[MySession] Orders for Contest '" + contest.name + "' updated");
+        });
+
+        /**
+         * Listen for contest update events
+         */
+        $rootScope.$on("positions_updated", function (event, contest) {
+            $log.info("[MySession] Positions for Contest '" + contest.name + "' updated");
+        });
+
+        ////////////////////////////////////////////////////////////
+        //          Initialization
+        ////////////////////////////////////////////////////////////
 
         (function () {
             // initialize the values as a logged-out user

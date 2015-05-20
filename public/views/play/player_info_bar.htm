@@ -15,7 +15,7 @@
                     <span ng-class="getRankingByFBID(contest, MySession.fbUserID).gainLoss >= 0 ? 'positive' : 'negative'">
                         <changearrow ng-hide="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" value="{{ getRankingByFBID(contest, MySession.fbUserID).gainLoss }}" />
                         <span ng-show="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" class="null">&#8212;</span>
-                        {{ getRankingByFBID(contest, MySession.fbUserID).gainLoss | number:2 }}%
+                        {{ abs(getRankingByFBID(contest, MySession.fbUserID).gainLoss) | number:2 }}%
                     </span>
                 </span>
             </div>
@@ -26,13 +26,16 @@
                 <span ng-hide="MySession.isTotalInvestmentLoaded()"
                       ng-switch="MySession.totalInvestmentStatus">
                     <span ng-switch-when="LOADING">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <img src="/assets/images/status/loading.gif">
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
+                        <img src="/assets/images/status/loading.gif">
                     </span>
                     <span ng-switch-when="FAILED">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <i class="fa fa-warning st_control"></i>
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
+                        <i title="reload" ng-click="MySession.reloadTotalInvestment()" class="fa fa-warning st_control clickable"></i>
                     </span>
                     <span ng-switch-when="TIMEOUT">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <i class="fa fa-clock-o st_control"></i>
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
+                        <i title="reload" ng-click="MySession.reloadTotalInvestment()" class="fa fa-clock-o st_control clickable"></i>
                     </span>
                 </span>
             </div>

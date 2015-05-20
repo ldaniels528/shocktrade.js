@@ -260,13 +260,10 @@
             };
 
             $scope.getTotalInvestment = function (contest) {
-                var participant = getParticipant(contest);
                 var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.positions, function (p) {
-                        total += p.netValue;
-                    });
-                }
+                angular.forEach($scope.getPositions(), function (p) {
+                    total += p.netValue;
+                });
                 return total;
             };
 
