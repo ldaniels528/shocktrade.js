@@ -124,7 +124,17 @@ object ContestResources extends Controller with ErrorHandler {
   def createContest = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[ContestCreateForm])) match {
       case Success(Some(form)) =>
-        Contests.createContest(makeContest(form)) map (lastError => Ok(JS("result" -> lastError.message))) recover {
+        val outcome = for {
+        // deduct the buy-in cost from the profile
+          profile <- UserProfiles.deductFunds(form.playerId.toBSID, form.startingBalance) map (_ orDie "Insufficient funds")
+
+          // create the contest
+          lastError <- Contests.createContest(makeContest(form))
+        } yield lastError
+
+        outcome map { lastError =>
+          Ok(JS("result" -> lastError.message))
+        } recover {
           case e: Exception => Ok(createError(e))
         }
       case Success(None) =>
@@ -275,7 +285,7 @@ object ContestResources extends Controller with ErrorHandler {
 
   def getTotalInvestment(playerId: String) = Action.async {
     val outcome = for {
-      // calculate the symbol-quantity tuples
+    // calculate the symbol-quantity tuples
       quantities <- Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map (
         _.flatMap(_.participants.flatMap(_.positions.map(p => (p.symbol, p.quantity)))))
 
