@@ -27,7 +27,10 @@
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isClosedOrderSelected()), 'col-md-3':(isClosedOrderSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="o in getClosedOrders(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
+		<div class="col-md-12 clickable" ng-repeat="o in getClosedOrders(contest) track by $index"
+			 ng-class-even="'contest_even'"
+			 ng-class-odd="'contest_odd'"
+			 ng-class="selectedClosedOrder.OID() === o.OID() ? 'selected' : ''"
 			 ng-click="selectClosedOrder(o)">
 			<div class="col-md-3">
                 <span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">

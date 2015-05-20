@@ -28,7 +28,9 @@
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isPerformanceSelected()), 'col-md-3':(isPerformanceSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="p in getPerformances(contest)" ng-class-even="'contest_even'" ng-class-odd="'contest_odd'"
+		<div class="col-md-12 clickable" ng-repeat="p in getPerformances(contest) track by $index"
+			 ng-class-even="'contest_even'"
+			 ng-class-odd="'contest_odd'"
 			 ng-class="selectedPerformance.OID() === p.OID() ? 'selected' : ''"
 			 ng-click="selectPerformance(p)">
 			<div class="col-md-2">
