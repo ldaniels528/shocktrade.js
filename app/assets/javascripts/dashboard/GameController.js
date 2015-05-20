@@ -3,6 +3,7 @@
 
     /**
      * Game Play Controller
+     * @author lawrence.daniels@gmail.com
      */
     app.controller('GameController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
         function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService, QuoteService) {
@@ -33,10 +34,27 @@
             //          Functions
             ///////////////////////////////////////////////////////////////////////////
 
+            $scope.contestSearch = function (searchOptions) {
+                $scope.startLoading();
+
+                ContestService.findContests(searchOptions).then(
+                    function (contests) {
+                        $scope.searchResults = contests;
+                        $scope.stopLoading();
+                    },
+                    function (err) {
+                        toaster.pop('error', 'Error!', "Failed to execute Contest Search");
+                        $scope.stopLoading();
+                    });
+            };
+
             $scope.enterGame = function (contest) {
                 $scope.contest = contest;
+                $scope.$broadcast("contest_updated", contest);
+
                 MySession.setContest(contest);
                 $location.path("/dashboard/" + contest.OID());
+                $scope.tabIndex = 1;
                 //$scope.changePlayTab(1);
                 // TODO switch back if not working
             };
@@ -62,38 +80,6 @@
                 return slots;
             };
 
-            $scope.getTotalInvestment = function (playerId) {
-                // lookup the player
-                var player = ContestService.findPlayerByID(contest, playerId);
-                if (player && !player.totalInvestment && !player.loadingTotalInvestment) {
-                    player.loadingTotalInvestment = true;
-
-                    // set a timeout so that loading doesn't persist
-                    $timeout(function () {
-                        player.totalInvestment = 0.00;
-                    }, 10000);
-
-                    ContestService.getTotalInvestment(playerId)
-                        .success(function (totalInvestment) {
-                            player.totalInvestment = totalInvestment;
-                            player.loadingTotalInvestment = false;
-                        })
-                        .error(function (response) {
-                            toaster.pop('error', 'Error loading total investment', null);
-                            player.totalInvestmentAttempts += 1;
-
-                            // attempt to load the totalInvestment up to 3 times
-                            if(player.totalInvestmentAttempts < 3) {
-                                $timeout(function () {
-                                    player.loadingTotalInvestment = false;
-                                }, 5000);
-                            }
-                        });
-                }
-
-                return player ? player.totalInvestment : null;
-            };
-
             $scope.getStatusIcon = function (c, maxPlayers) {
                 if (c && c.invitationOnly) return "/assets/images/objects/locked.png";
                 else {
@@ -111,20 +97,6 @@
                 else if (playerCount + 1 === maxPlayers) return "warning";
                 else if (playerCount >= maxPlayers) return "negative";
                 else return "null";
-            };
-
-            $scope.contestSearch = function (searchOptions) {
-                $scope.startLoading();
-
-                ContestService.findContests(searchOptions).then(
-                    function (contests) {
-                        $scope.searchResults = contests;
-                        $scope.stopLoading();
-                    },
-                    function (err) {
-                        toaster.pop('error', 'Error!', "Failed to execute Contest Search");
-                        $scope.stopLoading();
-                    });
             };
 
             $scope.getMyContests = function () {

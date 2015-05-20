@@ -5,12 +5,12 @@
      * My Session Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('MySession', function ($log) {
+    app.factory('MySession', function ($log, $timeout, toaster, ContestService) {
         var service = {
             contest: null
         };
 
-        service.deduct = function(amount) {
+        service.deduct = function (amount) {
             $log.info("Deducting " + amount + " from " + service.userProfile.netWorth);
             service.userProfile.netWorth -= amount;
         };
@@ -42,6 +42,60 @@
         service.getNetWorth = function () {
             return service.userProfile.netWorth || 0;
         };
+
+        service.getTotalCashAvailable = function () {
+            return service.userProfile ? service.userProfile.netWorth : 0.00;
+        };
+
+        service.isTotalInvestmentLoaded = function () {
+            return service.totalInvestment !== null && service.totalInvestment !== undefined;
+        };
+
+        service.getTotalInvestment = function () {
+            // lookup the player
+            if (!service.isTotalInvestmentLoaded() && !service.totalInvestmentStatus) {
+                service.totalInvestmentStatus = "LOADING";
+
+                // load the total investment
+                loadTotalInvestment();
+            }
+
+            return service.isTotalInvestmentLoaded() ? service.totalInvestment : null;
+        };
+
+        function loadTotalInvestment() {
+            // set a timeout so that loading doesn't persist
+            $timeout(function () {
+                if (!service.isTotalInvestmentLoaded()) {
+                    $log.error("Total investment call timed out");
+                    service.totalInvestmentStatus = "TIMEOUT";
+                }
+            }, 20000);
+
+            // retrieve the total investment
+            $log.info("Loading Total investment...");
+            ContestService.getTotalInvestment(service.getUserID())
+                .success(function (response) {
+                    service.totalInvestment = response.netWorth;
+                    service.totalInvestmentStatus = "LOADED";
+                    $log.info("Total investment loaded");
+                })
+                .error(function (response) {
+                    toaster.pop('error', 'Error loading total investment', null);
+                    service.totalInvestmentStatus = "FAILED";
+                    $log.error("Total failed");
+                    service.totalInvestmentAttempts += 1;
+
+                    // attempt to load the totalInvestment up to 3 times
+                    if (service.totalInvestmentAttempts < 3) {
+                        $timeout(function () {
+                            $log.info("Requeuing total investment call...");
+                            service.totalInvestmentStatus = null;
+                            loadTotalInvestment();
+                        }, 5000);
+                    }
+                });
+        }
 
         /**
          * Returns the user ID for the current user

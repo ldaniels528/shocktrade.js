@@ -3,9 +3,15 @@
 
     /**
      * Portfolio Controller
+     * @author lawrence.daniels@gmail.com
      */
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
+
+            var positions = [];
+            var orders = [];
+            var orderHistory = [];
+            var performance = [];
 
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
@@ -87,14 +93,6 @@
             //          Participant Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getParticipant = function (contest) {
-                var participant = ContestService.findPlayerByID(contest, MySession.getUserID());
-                if (participant) {
-                    enrichParticipant(contest, participant);
-                    return participant;
-                }
-            };
-
             $scope.isRankingsShown = function (contest) {
                 return !contest.rankingsHidden;
             };
@@ -132,39 +130,12 @@
                 return contest.myRanking;
             };
 
-            function enrichParticipant(contest, participant) {
-                if (contest && participant) {
-                    // enrich the orders
-                    ContestService.getEnrichedOrders(contest.OID(), participant.OID())
-                        .success(function (response) {
-                            var enrichedOrders = response;
-                            $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
-                            participant.orders = enrichedOrders;
-                        })
-                        .error(function (err) {
-                            toaster.pop('error', 'Error!', "Error loading enriched orders");
-                        });
-
-                    // enrich the positions
-                    ContestService.getEnrichedPositions(contest.OID(), participant.OID())
-                        .success(function (response) {
-                            var enrichedPositions = response;
-                            $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
-                            participant.positions = enrichedPositions;
-                        })
-                        .error(function (err) {
-                            toaster.pop('error', 'Error!', "Error loading enriched positions");
-                        });
-                }
-            }
-
             /////////////////////////////////////////////////////////////////////
             //          Selected Active Order Functions
             /////////////////////////////////////////////////////////////////////
 
             $scope.getActiveOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.orders || []) : [];
+                return orders;
             };
 
             $scope.isOrderSelected = function () {
@@ -188,8 +159,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getClosedOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.orderHistory || []) : [];
+                return orderHistory;
             };
 
             $scope.isClosedOrderSelected = function () {
@@ -213,8 +183,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getPerformances = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.performance || []) : [];
+                return performance;
             };
 
             $scope.isPerformanceSelected = function () {
@@ -250,8 +219,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getPositions = function (contest) {
-                var participant = $scope.getParticipant(contest);
-                return participant ? (participant.positions || []) : [];
+                return positions;
             };
 
             $scope.isPositionSelected = function () {
@@ -279,7 +247,7 @@
             };
 
             $scope.asOfDate = function (contest) {
-                var participant = $scope.getParticipant(contest);
+                var participant = getParticipant(contest);
                 return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
             };
 
@@ -292,7 +260,7 @@
             };
 
             $scope.getTotalInvestment = function (contest) {
-                var participant = $scope.getParticipant(contest);
+                var participant = getParticipant(contest);
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.positions, function (p) {
@@ -303,7 +271,7 @@
             };
 
             $scope.getTotalBuyOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
+                var participant = getParticipant(contest);
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -316,7 +284,7 @@
             };
 
             $scope.getTotalSellOrders = function (contest) {
-                var participant = $scope.getParticipant(contest);
+                var participant = getParticipant(contest);
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -337,66 +305,113 @@
             };
 
             /////////////////////////////////////////////////////////////////////
-            //          Chart Functions
+            //          Private Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getExposureChart = function (target) {
-                $scope.getChart(MySession.getContestID(), MySession.getUserName(), $scope.selection.exposure, target);
-            };
+            function getParticipant(contest) {
+                return ContestService.findPlayerByID(contest, MySession.getUserID());
+            }
 
-            $scope.getPerformanceChart = function (target) {
-                $scope.getChart(MySession.getContestID(), MySession.getUserName(), $scope.selection.performance, target);
-            };
+            function contestUpdated(contest) {
+                if (contest) {
+                    ordersUpdated(contest);
+                    positionsUpdated(contest);
+                    performanceUpdated(contest);
+                }
+            }
 
-            $scope.getChart = function (contestId, participantName, chartName, target) {
-                if ((contestId && contestId != "") && (participantName && participantName != "")) {
-                    // load the chart representing the securities
-                    ContestService.getChart(contestId, participantName, chartName).then(
-                        function (exposureData) {
-                            // create the chart title & sub-title
-                            var subTitle = chartName.capitalize();
-                            var title = (chartName == "gains" || chartName == "losses") ? "Performance " + subTitle : subTitle + " Exposure";
+            function ordersUpdated(contest) {
+                if (contest) {
+                    $scope.selectedOrder = null;
+                    $scope.selectedClosedOrder = null;
+                    var participant = getParticipant(contest);
+                    if (participant) {
+                        orders = participant ? participant.orders : [];
+                        orderHistory = participant ? participant.orderHistory : [];
+                        enrichOrders(contest, participant);
+                    }
+                }
+            }
 
-                            // construct the chart
-                            var exposure = new AmCharts.AmPieChart();
-                            exposure.colors = ["#00dd00", "#ff00ff", "#00ffff", "#885500", "#0044ff", "#888800"];
-                            exposure.addTitle(title, 12);
-                            exposure.dataProvider = exposureData;
-                            exposure.titleField = "title";
-                            exposure.valueField = "value";
-                            exposure.sequencedAnimation = true;
-                            exposure.startEffect = "elastic";
-                            exposure.startDuration = 2;
-                            exposure.innerRadius = "30%";
-                            exposure.labelRadius = 15;
+            function positionsUpdated(contest) {
+                if(contest) {
+                    $scope.selectedPosition = null;
+                    var participant = getParticipant(contest);
+                    if (participant) {
+                        positions = participant ? participant.positions : [];
+                        enrichPositions(contest, participant);
+                    }
+                }
+            }
 
-                            // 3D chart
-                            exposure.depth3D = 10;
-                            exposure.angle = 15;
-                            exposure.write(target);
-                        },
-                        function (err) {
-                            $log.info("Error: " + angular.toJson(err));
+            function performanceUpdated(contest) {
+                if(contest) {
+                    $scope.selectedPerformance = null;
+                    var participant = getParticipant(contest);
+                    if (participant) {
+                        performance = participant ? participant.performance : [];
+                    }
+                }
+            }
+
+            function enrichOrders(contest, participant) {
+                // enrich the orders
+                if (!participant.enrichedOrders) {
+                    participant.enrichedOrders = true;
+                    ContestService.getEnrichedOrders(contest.OID(), participant.OID())
+                        .success(function (enrichedOrders) {
+                            $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
+                            orders = enrichedOrders;
+                        })
+                        .error(function (err) {
+                            toaster.pop('error', 'Error!', "Error loading enriched orders");
                         });
                 }
-            };
+            }
 
-            //////////////////////////////////////////////////////////////////////
-            //              Watch Event Listeners
-            //////////////////////////////////////////////////////////////////////
+            function enrichPositions(contest, participant) {
+                // enrich the positions
+                if (!participant.enrichedPositions) {
+                    participant.enrichedPositions = true;
+                    ContestService.getEnrichedPositions(contest.OID(), participant.OID())
+                        .success(function (enrichedPositions) {
+                            $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
+                            positions = enrichedPositions;
+                        })
+                        .error(function (err) {
+                            toaster.pop('error', 'Error!', "Error loading enriched positions");
+                        });
+                }
+            }
+
+            function enrichParticipant(contest, participant) {
+                if (contest && participant) {
+
+                    // enrich the orders
+                    enrichOrders(contest, participant);
+
+                    // enrich the positions
+                    enrichPositions(contest, participant);
+                }
+            }
 
             function reset() {
                 $scope.selectedClosedOrder = null;
                 $scope.selectedOrder = null;
                 $scope.selectedPosition = null;
+                $scope.selectedPerformance = null;
             }
+
+            //////////////////////////////////////////////////////////////////////
+            //              Watch Event Listeners
+            //////////////////////////////////////////////////////////////////////
 
             /**
              * Listen for contest update events
              */
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("[Portfolio] Contest '" + contest.name + "' updated");
-                reset();
+                contestUpdated(contest);
             });
 
             /**
@@ -404,7 +419,7 @@
              */
             $scope.$on("orders_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
-                reset();
+                ordersUpdated(contest);
             });
 
             /**
@@ -412,14 +427,14 @@
              */
             $scope.$on("positions_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
-                reset();
+                positionsUpdated(contest);
             });
 
             /**
              * Watch for contest change events
              */
             $scope.$watch(MySession.contest, function () {
-                reset();
+                contestUpdated(MySession.contest);
             }, true);
 
         }]);

@@ -13,18 +13,27 @@
                     <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '2nd'" src="/assets/images/contests/silver.png">
                     <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '3rd'" src="/assets/images/contests/bronze.png">
                     <span ng-class="getRankingByFBID(contest, MySession.fbUserID).gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) == 0" value="{{ getRankingByFBID(contest, MySession.fbUserID).gainLoss }}" />
-                        <span ng-if="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) == 0" class="null">&#8212;</span>
-                        <span ng-if="getRankingByFBID(contest, MySession.fbUserID).gainLoss > 0"></span>{{ getRankingByFBID(contest, MySession.fbUserID).gainLoss | number:2 }}%
+                        <changearrow ng-hide="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" value="{{ getRankingByFBID(contest, MySession.fbUserID).gainLoss }}" />
+                        <span ng-show="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" class="null">&#8212;</span>
+                        {{ getRankingByFBID(contest, MySession.fbUserID).gainLoss | number:2 }}%
                     </span>
                 </span>
             </div>
-            <div>
-                <span class="positive" ng-show="getTotalInvestment(contest)">
-                    $ {{ (MySession.userProfile.netWorth || 0.00) + getTotalInvestment(contest) | number:2 }}
+            <div class="positive">
+                <span ng-show="MySession.isTotalInvestmentLoaded()">
+                    $ {{ MySession.getTotalCashAvailable() + MySession.getTotalInvestment() | number:2 }}
                 </span>
-                <span ng-hide="getTotalInvestment(contest)">
-                    <img src="/assets/images/status/loading.gif"> Loading ...
+                <span ng-hide="MySession.isTotalInvestmentLoaded()"
+                      ng-switch="MySession.totalInvestmentStatus">
+                    <span ng-switch-when="LOADING">
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <img src="/assets/images/status/loading.gif">
+                    </span>
+                    <span ng-switch-when="FAILED">
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <i class="fa fa-warning st_control"></i>
+                    </span>
+                    <span ng-switch-when="TIMEOUT">
+                        $ {{ MySession.getTotalCashAvailable() | number:2 }} <i class="fa fa-clock-o st_control"></i>
+                    </span>
                 </span>
             </div>
         </div>

@@ -102,7 +102,7 @@ class ContestActor extends Actor with ActorLogging {
     case FindOrderByID(contestId, orderId, fields) =>
       val mySender = sender()
       ContestDAO.findOrderByID(contestId, orderId) onComplete {
-        case Success(contests) => mySender ! contests.headOption
+        case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
 

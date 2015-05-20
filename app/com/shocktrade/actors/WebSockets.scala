@@ -8,7 +8,7 @@ import com.shocktrade.models.contest.{Contest, Participant}
 import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS, _}
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsArray, JsObject, JsValue}
 import play.libs.Akka
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.BSONObjectID
@@ -92,19 +92,22 @@ object WebSockets {
   case class OrdersUpdated(c: Contest, p: Participant) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "orders_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "orders" -> p.orders, "orderHistory" -> p.orderHistory))
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "orders" -> p.orders, "orderHistory" -> p.orderHistory))))
+    )
   }
 
   case class PerksUpdated(c: Contest, p: Participant) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "perks_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "perks" -> p.perks))
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "perks" -> p.perks))))
+    )
   }
 
   case class PositionsUpdated(c: Contest, p: Participant) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "positions_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "player" -> JS("_id" -> p.id, "name" -> p.name), "positions" -> p.positions))
+      "data" -> JS("name" -> c.name, "_id" -> c.id, "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "positions" -> p.positions))))
+    )
   }
 
   case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {

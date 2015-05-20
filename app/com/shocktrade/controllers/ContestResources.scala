@@ -46,10 +46,6 @@ object ContestResources extends Controller with ErrorHandler {
   //     Views & JavaScript
   ////////////////////////////////////////////////////////////////////////////
 
-  def gameController = Action {
-    Ok(assets.javascripts.dashboard.js.GameController())
-  }
-
   def dashboard = Action {
     Ok(assets.views.html.game.dashboard())
   }
