@@ -17,6 +17,8 @@ class ConcurrentCache[K, V](defaultTTL: Duration) {
 
   def get(key: K): Option[V] = cache.get(key) flatMap (_.get)
 
+  def getOrElseUpdate(key: K, op: => V): Option[V] = cache.getOrElseUpdate(key, Wrapper(op, defaultTTL.toMillis)).get
+
   def put(key: K, value: V, ttl: Duration = defaultTTL) = cache(key) = Wrapper(value, ttl.toMillis)
 
   def update(key: K, value: V) = put(key, value)

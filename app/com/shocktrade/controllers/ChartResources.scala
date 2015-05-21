@@ -4,6 +4,7 @@ import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.server.trading.Contests
 import com.shocktrade.util.BSONHelper._
+import com.shocktrade.util.ConcurrentCache
 import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
@@ -23,10 +24,12 @@ import scala.language.postfixOps
  * @author lawrence.daniels@gmail.com
  */
 object ChartResources extends Controller with MongoController {
+  private val analystCharts = ConcurrentCache[String, Future[Result]](3.days)
+  private val stockCharts = ConcurrentCache[String, Future[Result]](15.minutes)
   lazy val mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
 
   def getAnalystRatings(symbol: String) = Action.async {
-    getImageBinary(s"http://www.barchart.com/stocks/ratingsimg.php?sym=$symbol")
+    analystCharts.getOrElseUpdate(symbol, getImageBinary(s"http://www.barchart.com/stocks/ratingsimg.php?sym=$symbol")).get
   }
 
   def getStockChart(symbol: String, size: String, range: String) = Action.async { request =>
@@ -41,7 +44,7 @@ object ChartResources extends Controller with MongoController {
     }
 
     // return the image to the client
-    getImageBinary(chartURL)
+    stockCharts.getOrElseUpdate(chartURL, getImageBinary(chartURL)).get
   }
 
   private def getImageBinary(chartURL: String): Future[Result] = {
