@@ -136,8 +136,18 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getActiveOrders = function () {
-                enrichOrders(MySession.participant);
+                enrichOrders(MySession.getParticipant());
                 return MySession.getOrders();
+            };
+
+            $scope.cancelOrder = function (contestId, playerId, orderId) {
+                ContestService.deleteOrder(contestId, playerId, orderId)
+                    .success(function (participant) {
+                        updateWithPricing(participant);
+                    })
+                    .error(function (err) {
+                        toaster.pop('error', 'Error!', "Failed to cancel order");
+                    });
             };
 
             $scope.isOrderSelected = function () {
@@ -221,7 +231,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getPositions = function () {
-                enrichPositions(MySession.participant);
+                enrichPositions(MySession.getParticipant());
                 return MySession.getPositions();
             };
 
@@ -246,7 +256,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.asOfDate = function () {
-                var participant = MySession.participant;
+                var participant = MySession.getParticipant();
                 return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
             };
 
@@ -267,7 +277,7 @@
             };
 
             $scope.getTotalBuyOrders = function () {
-                var participant = MySession.participant;
+                var participant = MySession.getParticipant();
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -280,7 +290,7 @@
             };
 
             $scope.getTotalSellOrders = function () {
-                var participant = MySession.participant;
+                var participant = MySession.getParticipant();
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -305,11 +315,11 @@
             /////////////////////////////////////////////////////////////////////
 
             function enrichOrders(participant) {
-                if (!participant.enrichedOrders) {
+                if (participant && !participant.enrichedOrders) {
                     participant.enrichedOrders = true;
                     ContestService.getEnrichedOrders(MySession.getContestID(), participant.OID())
                         .success(function (enrichedOrders) {
-                            MySession.participant.orders = enrichedOrders;
+                            MySession.getParticipant().orders = enrichedOrders;
                         })
                         .error(function (err) {
                             toaster.pop('error', 'Error!', "Error loading enriched orders");
@@ -318,11 +328,11 @@
             }
 
             function enrichPositions(participant) {
-                if (!participant.enrichedPositions) {
+                if (participant && !participant.enrichedPositions) {
                     participant.enrichedPositions = true;
                     ContestService.getEnrichedPositions(MySession.getContestID(), participant.OID())
                         .success(function (enrichedPositions) {
-                            MySession.participant.positions = enrichedPositions;
+                            MySession.getParticipant().positions = enrichedPositions;
                         })
                         .error(function (err) {
                             toaster.pop('error', 'Error!', "Error loading enriched positions");
@@ -344,26 +354,23 @@
             //              Watch Event Listeners
             //////////////////////////////////////////////////////////////////////
 
-            /**
-             * Listen for contest update events
-             */
+            $scope.$on("contest_selected", function (event, contest) {
+                $log.info("[Portfolio] Contest '" + contest.name + "' selected");
+                resetOrders();
+                resetPositions();
+            });
+
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("[Portfolio] Contest '" + contest.name + "' updated");
                 resetOrders();
                 resetPositions();
             });
 
-            /**
-             * Listen for contest update events
-             */
             $scope.$on("orders_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
                 resetOrders();
             });
 
-            /**
-             * Listen for contest update events
-             */
             $scope.$on("positions_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
                 resetPositions();

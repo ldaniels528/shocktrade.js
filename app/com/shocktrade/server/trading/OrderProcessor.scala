@@ -8,7 +8,7 @@ import com.shocktrade.models.contest.{Contest, OrderType, PriceType}
 import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService
 import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService.{GfGetPricesRequest, GfPriceQuote}
 import com.shocktrade.services.util.DateUtil._
-import com.shocktrade.util.{DateUtil, ConcurrentCache}
+import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
 import play.api.Logger
 import reactivemongo.bson.BSONObjectID
@@ -37,6 +37,7 @@ object OrderProcessor {
 
     // perform the claiming process
     val results = {
+      /*
       // if claiming has never occurred, serially execute each
       if (c.processedTime.isEmpty) processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
 
@@ -48,12 +49,12 @@ object OrderProcessor {
 
       // otherwise nothing happens
       else Future.successful(Nil)
+      */
 
-      /*
       for {
         task1 <- processOrders(c, asOfDate, isDaysClose = false)
         task2 <- processOrders(c, asOfDate, isDaysClose = true)
-      } yield task1 ++ task2*/
+      } yield task1 ++ task2
     }
 
     // gather the outcomes
@@ -152,13 +153,29 @@ object OrderProcessor {
   private def isEligible(c: Contest, wo: WorkOrder, q: StockQuote) = {
     // is it a valid claim?
     val requiredVolume = wo.quantity + (if (wo.orderTime < getTradeStartTime) 0L else wo.volumeAtOrderTime)
-    val goodTimeAndVolume = (wo.orderTime <= q.tradeDateTime) && (q.totalVolume >= requiredVolume)
-    val goodPrice = wo.price map (limit => if (wo.orderType == OrderType.BUY) limit >= q.price else limit <= q.price)
+    val goodTimeAndVolume = isEligibleTimeAndVolume(c, wo, q, requiredVolume)
+    val goodPrice = isEligiblePrice(c, wo, q)
 
     // if the requied volume is satified, and
     // the price type is either not LIMIT or the price is satisfied, then claim it
     info(c, s"::isEligible => ${q.symbol} requiredVolume = $requiredVolume, goodTimeAndVolume = $goodTimeAndVolume, goodPrice = $goodPrice")
-    goodTimeAndVolume && (wo.priceType != PriceType.LIMIT || goodPrice.contains(true))
+    goodTimeAndVolume && goodPrice
+  }
+
+  private def isEligibleTimeAndVolume(c: Contest, wo: WorkOrder, q: StockQuote, requiredVolume: Long): Boolean = {
+    (wo.orderTime <= q.tradeDateTime) && (q.totalVolume >= requiredVolume)
+  }
+
+  private def isEligiblePrice(c: Contest, wo: WorkOrder, q: StockQuote): Boolean  = {
+    wo.priceType match {
+      case PriceType.MARKET => true
+      case PriceType.MARKET_ON_CLOSE => true
+      case PriceType.LIMIT => wo.price exists (limit => if (wo.orderType == OrderType.BUY) limit >= q.price else limit <= q.price)
+      case PriceType.STOP_LIMIT => wo.price exists (limit => if (wo.orderType == OrderType.BUY) limit >= q.price else limit <= q.price) // TODO
+      case priceType =>
+        error(c, s"Unhandled price type - $priceType")
+        false
+    }
   }
 
   private def getEligibleStockQuotes(c: Contest, orders: Seq[WorkOrder], asOfDate: Date): Seq[StockQuote] = {

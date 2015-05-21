@@ -199,7 +199,7 @@ object ContestResources extends Controller with ErrorHandler {
     Order(
       symbol = form.symbol,
       exchange = form.exchange,
-      creationTime = new DateTime().minusDays(3).toDate, // TODO for testing new Date()
+      creationTime = new DateTime().toDate, // TODO for testing new Date()
       expirationTime = None, // TODO set once orderTerm is implemented
       orderType = form.orderType,
       price = form.limitPrice,
@@ -611,7 +611,7 @@ object ContestResources extends Controller with ErrorHandler {
                        limitPrice: BigDecimal,
                        orderType: OrderType,
                        priceType: PriceType,
-                       //orderTerm: OrderTerm,
+                       //orderTerm: Option[OrderTerm],
                        quantity: Int,
                        volumeAtOrderTime: Long,
                        emailNotify: Boolean)

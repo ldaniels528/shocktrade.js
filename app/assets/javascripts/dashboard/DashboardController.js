@@ -8,6 +8,8 @@
     app.controller('DashboardController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService',
         function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService) {
 
+            var loadingContest = false;
+
             ///////////////////////////////////////////////////////////////////////////
             //          Initialization
             ///////////////////////////////////////////////////////////////////////////
@@ -16,16 +18,21 @@
                 // was the contest ID passed?
                 var contestId = $routeParams.contestId;
                 if (contestId) {
-                    $log.info("Looking for Contest # " + contestId);
-                    if ($scope.searchResults && $scope.searchResults.length) {
-                        angular.toJson($scope.searchResults, function (c) {
-                            if (c.OID() === contestId) {
-                                $scope.switchToContest(c);
-                            }
-                        });
-                    }
-                    else {
-                        $scope.loadContest(contestId);
+                    // if the current contest is not the chosen contest ...
+                    if (MySession.getContestID() !== contestId && !loadingContest) {
+                        loadingContest = true;
+                        $log.info("Loading contest " + contestId + "...");
+
+                        ContestService.getContestByID(contestId)
+                            .success(function (contest) {
+                                MySession.setContest(contest);
+                                loadingContest = false;
+                            })
+                            .error(function (xhr, status, error) {
+                                loadingContest = false;
+                                $log.error("Error selecting feed: " + xhr.error);
+                                toaster.pop('error', 'Error!', "Error loading game");
+                            });
                     }
                 }
             })();

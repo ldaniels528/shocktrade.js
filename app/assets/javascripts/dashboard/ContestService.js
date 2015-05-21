@@ -41,14 +41,18 @@
         ///////////////////////////////////////////////////////////////
 
         service.findContests = function (searchOptions) {
-            return $http({method: 'POST', url: '/api/contests/search', data: angular.toJson(searchOptions)})
-                .then(function (response) {
-                    return response.data;
-                });
+            if(!searchOptions) throw "SearchOptions is null or undefined";
+            else {
+                return $http({method: 'POST', url: '/api/contests/search', data: angular.toJson(searchOptions)})
+                    .then(function (response) {
+                        return response.data;
+                    });
+            }
         };
 
         service.getContestByID = function (contestId) {
-            return $http.get("/api/contest/" + contestId);
+            if(!contestId) throw "Contest ID is null or undefined";
+            else return $http.get("/api/contest/" + contestId);
         };
 
         service.getParticipantByID = function (contestId, playerId) {
@@ -64,19 +68,25 @@
         };
 
         service.getRankings = function (contestId) {
-            return $http.get("/api/contest/" + contestId + "/rankings");
+            if(!contestId) throw "Contest ID is null or undefined";
+            else return $http.get("/api/contest/" + contestId + "/rankings");
         };
 
         service.getContestsByPlayerID = function (playerId) {
-            return $http.get('/api/contests/player/' + playerId);
+            if(!playerId) throw "Player ID is null or undefined";
+            else return $http.get('/api/contests/player/' + playerId);
         };
 
         service.getEnrichedOrders = function (contestId, playerId) {
-            return $http.get('/api/contest/' + contestId + '/orders/' + playerId);
+            if(!contestId) throw "Contest ID is null or undefined";
+            else if(!playerId) throw "Player ID is null or undefined";
+            else return $http.get('/api/contest/' + contestId + '/orders/' + playerId);
         };
 
         service.getEnrichedPositions = function (contestId, playerId) {
-            return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
+            if(!contestId) throw "Contest ID is null or undefined";
+            else if(!playerId) throw "Player ID is null or undefined";
+            else return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
         };
 
         /////////////////////////////////////////////////////////////////////////////
@@ -84,7 +94,8 @@
         /////////////////////////////////////////////////////////////////////////////
 
         service.getTotalInvestment = function (playerId) {
-            return $http.get('/api/contests/player/' + playerId + '/totalInvestment');
+            if(!playerId) throw "Player ID is null or undefined";
+            else return $http.get('/api/contests/player/' + playerId + '/totalInvestment');
         };
 
         service.findPlayerByID = function (contest, playerId) {

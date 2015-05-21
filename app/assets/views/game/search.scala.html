@@ -1,6 +1,6 @@
 @(maxPlayers: Int)
 
-<div class="row">
+<div class="row" ng-controller="GameSearchController" ng-init="contestSearch(searchOptions)">
     <div ng-hide="isSplitScreen()" style="margin-bottom: 20px">
         <!-- Game Filtering Options -->
         <div class="col-md-6" ng-include src="'/assets/views/play/game_filters.htm'"></div>

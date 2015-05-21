@@ -67,6 +67,9 @@
 		<div class="col-md-4 bold">Price</div>
 		<div class="col-md-8">$ {{ selectedClosedOrder.price | quoteNumber }}</div>
 
+		<div class="col-md-4 bold">Price Type</div>
+		<div class="col-md-8">{{ selectedClosedOrder.priceType }}</div>
+
 		<div class="col-md-4 bold">Quantity</div>
 		<div class="col-md-8">{{ selectedClosedOrder.quantity | number }}</div>
 

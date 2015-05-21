@@ -102,7 +102,7 @@
                 var myPerks = {};
 
                 // all perks the user owns should be set
-                angular.forEach(MySession.participant.perks, function (perk) {
+                angular.forEach(MySession.getPerks(), function (perk) {
                     myPerks[perk] = true;
                 });
 

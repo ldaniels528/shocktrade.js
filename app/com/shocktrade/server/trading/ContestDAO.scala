@@ -63,6 +63,10 @@ object ContestDAO {
     )).cursor[Contest]
   }
 
+  def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String])(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
+    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[T].headOption
+  }
+
   def findContestByID(contestId: BSONObjectID, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].headOption
   }

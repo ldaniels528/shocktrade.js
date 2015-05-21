@@ -140,60 +140,80 @@
         };
 
         service.getContest = function () {
-            return service.contest;
+            return service.contest || {};
         };
 
         service.getContestID = function () {
-            return service.contest.OID();
+            return service.getContest().OID();
         };
 
         service.getContestStatus = function () {
-            return service.contest.status;
+            return service.getContest().status;
         };
 
         service.setContest = function (contest) {
-            if (!contest) service.resetContest();
+            if (contest === null || contest === undefined) service.resetContest();
             else {
                 service.contest = contest;
-                service.participant = getParticipant(contest);
+                service.participant = null;
+                $log.info("MySession: participant = " + angular.toJson(service.getParticipant(), true));
+
+                $rootScope.$emit("contest_selected", contest);
             }
         };
 
         service.getFundsAvailable = function () {
-            return service.participant.fundsAvailable || 0.00;
+            return service.getParticipant().fundsAvailable || 0.00;
         };
 
         service.setMessages = function (messages) {
-            service.contest.messages = messages;
+            service.getContest().messages = messages;
         };
 
         service.getMessages = function () {
-            return service.contest.messages;
+            return service.getContest().messages;
         };
 
         service.getOrders = function () {
-            return service.participant.orders;
+            return service.getParticipant().orders;
         };
 
         service.getOrderHistory = function () {
-            return service.participant.orderHistory;
+            return service.getParticipant().orderHistory;
+        };
+
+        service.getParticipant = function () {
+            if(!service.participant) {
+                service.participant = lookupParticipant(service.getContest(), service.getUserID());
+            }
+            return service.participant || {};
         };
 
         service.getPerformance = function () {
-            return service.participant.performance;
+            return service.getParticipant().performance;
+        };
+
+        service.getPerks = function () {
+            return service.getParticipant().perks;
         };
 
         service.getPositions = function () {
-            return service.participant.positions;
+            return service.getParticipant().positions;
         };
 
         service.resetContest = function () {
-            service.contest = {};
-            service.participant = {};
+            service.contest = null;
+            service.participant = null;
         };
 
-        function getParticipant(contest) {
-            return ContestService.findPlayerByID(contest, service.getUserID()) || {};
+        function lookupParticipant(contest, playerId) {
+            var participants = contest ? contest.participants : [];
+            for (var n = 0; n < participants.length; n++) {
+                if (participants[n].OID() === playerId) {
+                    return participants[n];
+                }
+            }
+            return null;
         }
 
         ////////////////////////////////////////////////////////////
@@ -206,37 +226,40 @@
                 service.contest.messages = contest.messages;
             }
 
-            // lookup our participant
-            var participant = getParticipant(contest);
+            // lookup our local participant
+            var myParticipant = service.getParticipant();
+
+            // now lookup the contest's version of our participant
+            var participant = lookupParticipant(contest);
             if (participant) {
                 // update funds available (if present)
                 if (participant.fundsAvailable !== undefined) {
-                    service.participant.fundsAvailable = participant.fundsAvailable;
+                    myParticipant.fundsAvailable = participant.fundsAvailable;
                 }
 
                 // update the orders (if present)
                 if (participant.orders) {
-                    service.participant.orders = participant.orders;
+                    myParticipant.orders = participant.orders;
                 }
 
                 // update the order history (if present)
                 if (participant.orderHistory) {
-                    service.participant.orderHistory = participant.orderHistory;
+                    myParticipant.orderHistory = participant.orderHistory;
                 }
 
                 // update the perks (if present)
                 if (participant.perks) {
-                    service.participant.perks = participant.perks;
+                    myParticipant.perks = participant.perks;
                 }
 
                 // update the positions (if present)
                 if (participant.positions) {
-                    service.participant.positions = participant.positions;
+                    myParticipant.positions = participant.positions;
                 }
 
                 // update the performance (if present)
                 if (participant.performance) {
-                    service.participant.performance = participant.performance;
+                    myParticipant.performance = participant.performance;
                 }
             }
         }
@@ -270,6 +293,14 @@
         $rootScope.$on("positions_updated", function (event, contest) {
             $log.info("[MySession] Positions for Contest '" + contest.name + "' updated");
             updateContestDelta(contest);
+        });
+
+        $rootScope.$on("profile_updated", function (event, profile) {
+            $log.info("[MySession] User Profile for " + profile.name + " updated");
+            if (service.getUserID() === profile.OID()) {
+                service.userProfile.netWorth = profile.netWorth;
+                toaster.pop('success', 'Your Wallet', '<ul><li>Your wallet now has $' + profile.netWorth + '</li></ul>', 5000, 'trustedHtml');
+            }
         });
 
         ////////////////////////////////////////////////////////////

@@ -67,8 +67,17 @@
 			<span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.exchange }}</span>
 		</div>
 
+        <div class="col-md-4 bold">Last Sale</div>
+        <div class="col-md-8">
+            <span ng-show="selectedOrder.lastTrade">$ {{ selectedOrder.lastTrade | quoteNumber }}</span>
+            <span ng-hide="selectedOrder.lastTrade" class="null">Not Available</span>
+        </div>
+
 		<div class="col-md-4 bold">Price</div>
 		<div class="col-md-8">$ {{ selectedOrder.price | quoteNumber }}</div>
+
+		<div class="col-md-4 bold">Price Type</div>
+		<div class="col-md-8">{{ selectedOrder.priceType }}</div>
 
 		<div class="col-md-4 bold">Quantity</div>
 		<div class="col-md-8">{{ selectedOrder.quantity | number }}</div>
