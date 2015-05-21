@@ -19,7 +19,7 @@
                     </span>
                 </span>
             </div>
-            <div class="positive">
+            <div class="positive" ng-if="MySession.getUserID()">
                 <span ng-show="MySession.isTotalInvestmentLoaded()">
                     $ {{ MySession.getTotalCashAvailable() + MySession.getTotalInvestment() | number:2 }}
                 </span>
