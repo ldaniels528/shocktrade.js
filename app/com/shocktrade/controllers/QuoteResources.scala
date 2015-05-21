@@ -529,10 +529,11 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
                    lastTrade: Option[Double]) {
 
     def exchange: Option[String] = {
-      market map(_.toUpperCase) map {
-        case s if s.startsWith("NASD") => "NASDAQ"
-        case s if s.startsWith("NMS") => "NASDAQ"
+      market map (_.toUpperCase) map {
+        case s if s.startsWith("NASD") || s.startsWith("NCM") || s.startsWith("NMS") => "NASDAQ"
+        case s if s.startsWith("NYS") || s.startsWith("NYQ") => "NYSE"
         case s if s.startsWith("OTC") => "OTCBB"
+        case s if s.startsWith("OTHER") => "OTCBB"
         case s if s == "PNK" => "OTCBB"
         case other => other
       }
