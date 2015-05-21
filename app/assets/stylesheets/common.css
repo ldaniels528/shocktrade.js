@@ -53,6 +53,10 @@ legend {
 	font-size: 14pt;
 }
 
+.st_sub_heading {
+	font-size: 12pt;
+}
+
 .st_control {
     color: #ff8000;
 }

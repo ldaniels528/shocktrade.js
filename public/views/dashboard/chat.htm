@@ -1,6 +1,6 @@
-<div ng-controller="ChatController" ng-if="MySession.getUserID() && contest.OID()">
+<div ng-controller="ChatController" ng-if="MySession.getUserID() && MySession.getContestID()">
     <div class="chat_messages">
-        <div ng-bind-html="getMessages(contest)"></div>
+        <div ng-bind-html="getMessages()"></div>
     </div>
 
     <div>
@@ -16,12 +16,12 @@
     </div>
     <div class="block_full">
 		<textarea ng-model="chatMessage" class="chat_text_area"
-                  ng-disabled="contest.status == 'CLOSED'"></textarea>
+                  ng-disabled="MySession.getContestStatus() === 'CLOSED'"></textarea>
     </div>
     <div class="row">
         <div class="col-md-6">
             <button class="btn btn-default st_button"
-                    ng-disabled="contest.status == 'CLOSED'"
+                    ng-disabled="MySession.getContestStatus() === 'CLOSED'"
                     ng-click="sendChatMessage(chatMessage)">
                 <i class="fa fa-paper-plane"></i> Send
             </button>

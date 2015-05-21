@@ -20,11 +20,9 @@
                 .when('/dashboard', {templateUrl: '/assets/views/play/dashboard.htm', controller: 'DashboardController'})
                 .when('/dashboard/:contestId', {templateUrl: '/assets/views/play/dashboard.htm', controller: 'DashboardController'})
                 .when('/news', {templateUrl: '/assets/views/news/news_index.htm', controller: 'NewsController'})
-                .when('/perks', {templateUrl: '/assets/views/perks/perks.htm', controller: 'PerksController'})
                 .when('/research', {templateUrl: '/assets/views/research/index.htm'})
                 .when('/search', {templateUrl: '/assets/views/play/search.htm'})
                 .when('/statistics', {templateUrl: '/assets/views/statistics/statistics.htm'})
-                .when('/test', {templateUrl: '/assets/views/test.htm'})
                 .otherwise({redirectTo: '/search'});
         }]);
 

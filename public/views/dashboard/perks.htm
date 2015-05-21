@@ -1,0 +1,31 @@
+<div>
+    <div ng-show="MySession.contestIsEmpty()" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
+    <div ng-if="!MySession.contestIsEmpty()" ng-controller="PerksController" ng-init="loadPerks()">
+        <div>
+            <span class="st_sub_heading bold st_bkg_color">Total Purchase Cost:
+                <span ng-class="hasSufficientFunds() ? 'positive' : 'negative'">
+                    $ {{ getTotalCost() | number:2 }}
+                </span> / {{ MySession.getFundsAvailable() | number:2 }}
+            </span>
+            <button class="btn btn-default st_button"
+                    ng-show="perksSelected() && (hasSufficientFunds())"
+                    ng-click="purchasePerks()">
+                <i class="fa fa-cart-plus"></i> Buy
+            </button>
+            <span ng-hide="hasSufficientFunds()">
+                &#8212;
+                <i class="fa fa-warning st_control"></i>
+                <span class="st_heading error">Insufficient funds</span>
+            </span>
+        </div>
+        <div class="perks_container">
+            <div class="perk_padding" ng-repeat="perk in getPerks() track by $index">
+                <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && MySession.getFundsAvailable() < perk.cost)">
+                <img ng-src="/assets/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
+                <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
+                <span ng-hide="perk.owned">(<span ng-class="getPerkCostClass(perk)">${{ perk.cost | number }}</span>):</span>
+                <span ng-class="getPerkDescClass(perk)">{{ perk.description }}</span>
+            </div>
+        </div>
+    </div>
+</div>

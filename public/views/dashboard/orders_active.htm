@@ -20,14 +20,14 @@
 </div>
 
 <div class="ordersContainer">
-	<div class="col-md-offset-1 col-md-11" ng-show="getActiveOrders(contest).length === 0">
+	<div class="col-md-offset-1 col-md-11" ng-show="getActiveOrders().length === 0">
 		<i class="fa fa-warning warning"></i>
 		<span class="warning">No active orders found</span>
 	</div>
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isOrderSelected()), 'col-md-3':(isOrderSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders(contest) track by $index"
+		<div class="col-md-12 clickable" ng-repeat="o in getActiveOrders() track by $index"
 			 ng-class-even="'contest_even'"
 			 ng-class-odd="'contest_odd'"
 			 ng-class="selectedOrder.OID() === o.OID() ? 'selected' : ''"
@@ -74,11 +74,11 @@
 		<div class="col-md-8">{{ selectedOrder.quantity | number }}</div>
 
         <div class="col-md-4 bold">Estimated Cost</div>
-        <div class="col-md-8">{{ selectedOrder.quantity | number }}</div>
+        <div class="col-md-8">$ {{ orderCost(selectedOrder) | number:2 }}</div>
 
 		<div class="col-md-offset-4 col-md-8">
 			<button class="btn btn-default cancel_button"
-					ng-click="cancelOrder(contest.OID(), participant.OID(), selectedOrder.OID())">
+					ng-click="cancelOrder(MySession.getContestID(), MySession.getUserID(), selectedOrder.OID())">
                 <i class="fa fa-warning"></i> Cancel
 			</button>
 		</div>

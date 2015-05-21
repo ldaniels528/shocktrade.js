@@ -8,7 +8,6 @@
     app.controller('DashboardController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService',
         function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService) {
 
-
             ///////////////////////////////////////////////////////////////////////////
             //          Initialization
             ///////////////////////////////////////////////////////////////////////////

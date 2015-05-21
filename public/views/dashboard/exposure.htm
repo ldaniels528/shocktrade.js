@@ -6,28 +6,28 @@
 
     <div class="col-md-12">
         <div id="exposure_exchange" class="chart_area" ng-show="exposure.value === 'exchange'"></div>
-        <span ng-if="exposure && contest && MySession.getUserID()">
-            {{ exposurePieChart(contest, 'exchange', MySession.getUserID(), "#exposure_exchange") }}
+        <span ng-if="exposure && MySession.getUserID()">
+            {{ exposurePieChart(MySession.getContest(), 'exchange', MySession.getUserID(), "#exposure_exchange") }}
         </span>
 
         <div id="exposure_industry" class="chart_area" ng-show="exposure.value === 'industry'"></div>
-        <span ng-if="exposure && contest && MySession.getUserID()">
-            {{ exposurePieChart(contest, 'industry', MySession.getUserID(), "#exposure_industry") }}
+        <span ng-if="exposure && MySession.getUserID()">
+            {{ exposurePieChart(MySession.getContest(), 'industry', MySession.getUserID(), "#exposure_industry") }}
         </span>
 
         <div id="exposure_market" class="chart_area" ng-show="exposure.value === 'market'"></div>
-        <span ng-if="exposure && contest && MySession.getUserID()">
-            {{ exposurePieChart(contest, 'market', MySession.getUserID(), "#exposure_market") }}
+        <span ng-if="exposure && MySession.getUserID()">
+            {{ exposurePieChart(MySession.getContest(), 'market', MySession.getUserID(), "#exposure_market") }}
         </span>
 
         <div id="exposure_securities" class="chart_area" ng-show="exposure.value === 'securities'"></div>
-        <span ng-if="exposure && contest && MySession.getUserID()">
-            {{ exposurePieChart(contest, 'securities', MySession.getUserID(), "#exposure_securities") }}
+        <span ng-if="exposure && MySession.getUserID()">
+            {{ exposurePieChart(MySession.getContest(), 'securities', MySession.getUserID(), "#exposure_securities") }}
         </span>
 
         <div id="exposure_sector" class="chart_area" ng-show="exposure.value === 'sector'"></div>
-        <span ng-if="exposure && contest && MySession.getUserID()">
-            {{ exposurePieChart(contest, 'sector', MySession.getUserID(), "#exposure_sector") }}
+        <span ng-if="exposure && MySession.getUserID()">
+            {{ exposurePieChart(MySession.getContest(), 'sector', MySession.getUserID(), "#exposure_sector") }}
         </span>
     </div>
 </div>

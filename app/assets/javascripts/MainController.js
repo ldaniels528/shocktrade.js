@@ -24,23 +24,23 @@
                 "icon_class": "fa-search",
                 "tool_tip": "Search for games",
                 "url": "/search",
-                "isVisible": function(c) {
+                "isVisible": function() {
                     return true;
                 }
             }, {
                 "name": "Play",
                 "icon_class": "fa-gamepad",
-                "tool_tip": "Play the game",
+                "tool_tip": "Main game dashboard",
                 "url": "/dashboard",
-                "isVisible": function(c) {
-                    return c != null;
+                "isVisible": function() {
+                    return !MySession.contestIsEmpty();
                 }
             }, {
                 "name": "Discover",
                 "icon_class": "fa-newspaper-o",
                 "tool_tip": "Stock Quotes, News and Research",
                 "url": "/discover",
-                "isVisible": function(c) {
+                "isVisible": function() {
                     return true;
                 }
             }, {
@@ -48,23 +48,15 @@
                 "icon_class": "fa-trophy",
                 "tool_tip": "My Awards",
                 "url": "/awards",
-                "isVisible": function(c) {
+                "isVisible": function() {
                     return true;
-                }
-            }, {
-                "name": "My Perks",
-                "icon_class": "fa-gift",
-                "tool_tip": "My Perks",
-                "url": "/perks",
-                "isVisible": function(c) {
-                    return c != null;
                 }
             }, {
                 "name": "My Statistics",
                 "icon_class": "fa-bar-chart",
                 "tool_tip": "My Statistics",
                 "url": "/statistics",
-                "isVisible": function(c) {
+                "isVisible": function() {
                     return true;
                 }
             }];

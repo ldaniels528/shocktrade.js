@@ -20,14 +20,14 @@
 </div>
 
 <div class="positionsContainer">
-    <div class="col-md-offset-1 col-md-11" ng-show="getPositions(contest).length === 0">
+    <div class="col-md-offset-1 col-md-11" ng-show="getPositions().length === 0">
         <i class="fa fa-warning warning"></i>
         <span class="warning">No positions found</span>
     </div>
 
     <!-- Data Rows -->
     <div ng-class="{'col-md-12':(!isPositionSelected()), 'col-md-2':(isPositionSelected())}" class="clickable">
-        <div class="col-md-12 clickable" ng-repeat="p in getPositions(contest) track by $index"
+        <div class="col-md-12 clickable" ng-repeat="p in getPositions() track by $index"
              ng-class-even="'contest_even'"
              ng-class-odd="'contest_odd'"
              ng-click="selectPosition(p)">

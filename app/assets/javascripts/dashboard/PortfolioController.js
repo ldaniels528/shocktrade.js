@@ -8,84 +8,81 @@
     app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
         function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
 
-            var positions = [];
-            var orders = [];
-            var orderHistory = [];
-            var performance = [];
-
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
             $scope.selectedPosition = null;
-            $scope.selection = {
-                exposure: "sector",
-                performance: "gains"
-            };
 
             $scope.portfolioTabs = [{
                 "name": "Chat",
                 "icon": "fa-comment-o",
                 "path": "/assets/views/dashboard/chat.htm",
                 "active": false,
-                "init": function (contest) {
-                    // TODO enrich orders here
+                "init": function () {
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
+                }
+            }, {
+                "name": "Perks",
+                "icon": "fa-gift",
+                "path": "/assets/views/dashboard/perks.htm",
+                "active": false,
+                "init": function () {
+                },
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }, {
                 "name": "Positions",
                 "icon": "fa-list-alt",
                 "path": "/assets/views/dashboard/positions.htm",
                 "active": false,
-                "init": function (contest) {
+                "init": function () {
                     // TODO enrich positions here
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }, {
                 "name": "Open Orders",
                 "icon": "fa-folder-open-o",
                 "path": "/assets/views/dashboard/orders_active.htm",
                 "active": false,
-                "init": function (contest) {
+                "init": function () {
                     // TODO enrich orders here
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }, {
                 "name": "Closed Orders",
                 "icon": "fa-folder-o",
                 "path": "/assets/views/dashboard/orders_closed.htm",
                 "active": false,
-                "init": function (contest) {
-                    // TODO enrich orders here
+                "init": function () {
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }, {
                 "name": "Performance",
                 "icon": "fa-bar-chart-o",
                 "path": "/assets/views/dashboard/performance.htm",
                 "active": false,
-                "init": function (contest) {
-                    // TODO enrich orders here
+                "init": function () {
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }, {
                 "name": "Exposure",
                 "icon": "fa-pie-chart",
                 "path": "/assets/views/dashboard/exposure.htm",
                 "active": false,
-                "init": function (contest) {
-                    // TODO enrich orders here
+                "init": function () {
                 },
-                "isLocked": function (contest) {
-                    return contest.status !== 'ACTIVE';
+                "isLocked": function () {
+                    return MySession.getContestStatus() !== 'ACTIVE';
                 }
             }];
 
@@ -93,15 +90,17 @@
             //          Participant Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.isRankingsShown = function (contest) {
-                return !contest.rankingsHidden;
+            $scope.isRankingsShown = function () {
+                return !MySession.getContest().rankingsHidden;
             };
 
-            $scope.toggleRankingsShown = function (contest) {
+            $scope.toggleRankingsShown = function () {
+                var contest = MySession.getContest();
                 contest.rankingsHidden = !contest.rankingsHidden;
             };
 
-            $scope.getRankings = function (contest) {
+            $scope.getRankings = function () {
+                var contest = MySession.getContest();
                 if (!contest) return [];
                 else if (!contest.rankings) {
                     contest.rankings = [];
@@ -118,7 +117,9 @@
                 return contest.rankings;
             };
 
-            $scope.getRankingByFBID = function (contest, facebookID) {
+            $scope.getRankingByFBID = function () {
+                var contest = MySession.getContest();
+                var facebookID = MySession.fbUserID;
                 if (!contest.myRanking) {
                     for (var n = 0; n < (contest.rankings || []).length; n++) {
                         if (contest.rankings[n].facebookID === facebookID) {
@@ -134,8 +135,9 @@
             //          Selected Active Order Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getActiveOrders = function (contest) {
-                return orders;
+            $scope.getActiveOrders = function () {
+                enrichOrders(MySession.participant);
+                return MySession.getOrders();
             };
 
             $scope.isOrderSelected = function () {
@@ -158,8 +160,8 @@
             //          Selected Closed Order Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getClosedOrders = function (contest) {
-                return orderHistory;
+            $scope.getClosedOrders = function () {
+                return MySession.getOrderHistory();
             };
 
             $scope.isClosedOrderSelected = function () {
@@ -182,8 +184,8 @@
             //          Performance Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getPerformances = function (contest) {
-                return performance;
+            $scope.getPerformances = function () {
+                return MySession.getPerformance();
             };
 
             $scope.isPerformanceSelected = function () {
@@ -218,8 +220,9 @@
             //          Position Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getPositions = function (contest) {
-                return positions;
+            $scope.getPositions = function () {
+                enrichPositions(MySession.participant);
+                return MySession.getPositions();
             };
 
             $scope.isPositionSelected = function () {
@@ -242,24 +245,20 @@
             //          Summary Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getCashAvailable = function (contest) {
-                return ContestService.getCashAvailable(contest, MySession.getUserID());
-            };
-
-            $scope.asOfDate = function (contest) {
-                var participant = getParticipant(contest);
+            $scope.asOfDate = function () {
+                var participant = MySession.participant;
                 return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
             };
 
-            $scope.getTotalOrders = function (contest) {
-                return $scope.getTotalBuyOrders(contest) + $scope.getTotalSellOrders(contest);
+            $scope.getTotalOrders = function () {
+                return $scope.getTotalBuyOrders() + $scope.getTotalSellOrders();
             };
 
-            $scope.getTotalEquity = function (contest) {
-                return $scope.getTotalInvestment(contest) + $scope.getCashAvailable(contest);
+            $scope.getTotalEquity = function () {
+                return $scope.getTotalInvestment() + MySession.getFundsAvailable();
             };
 
-            $scope.getTotalInvestment = function (contest) {
+            $scope.getTotalInvestment = function () {
                 var total = 0;
                 angular.forEach($scope.getPositions(), function (p) {
                     total += p.netValue;
@@ -267,8 +266,8 @@
                 return total;
             };
 
-            $scope.getTotalBuyOrders = function (contest) {
-                var participant = getParticipant(contest);
+            $scope.getTotalBuyOrders = function () {
+                var participant = MySession.participant;
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -280,8 +279,8 @@
                 return total;
             };
 
-            $scope.getTotalSellOrders = function (contest) {
-                var participant = getParticipant(contest);
+            $scope.getTotalSellOrders = function () {
+                var participant = MySession.participant;
                 var total = 0;
                 if (participant != null) {
                     angular.forEach(participant.orders, function (o) {
@@ -305,60 +304,12 @@
             //          Private Functions
             /////////////////////////////////////////////////////////////////////
 
-            function getParticipant(contest) {
-                return ContestService.findPlayerByID(contest, MySession.getUserID());
-            }
-
-            function contestUpdated(contest) {
-                if (contest) {
-                    ordersUpdated(contest);
-                    positionsUpdated(contest);
-                    performanceUpdated(contest);
-                }
-            }
-
-            function ordersUpdated(contest) {
-                if (contest) {
-                    $scope.selectedOrder = null;
-                    $scope.selectedClosedOrder = null;
-                    var participant = getParticipant(contest);
-                    if (participant) {
-                        orders = participant ? participant.orders : [];
-                        orderHistory = participant ? participant.orderHistory : [];
-                        enrichOrders(contest, participant);
-                    }
-                }
-            }
-
-            function positionsUpdated(contest) {
-                if(contest) {
-                    $scope.selectedPosition = null;
-                    var participant = getParticipant(contest);
-                    if (participant) {
-                        positions = participant ? participant.positions : [];
-                        enrichPositions(contest, participant);
-                    }
-                }
-            }
-
-            function performanceUpdated(contest) {
-                if(contest) {
-                    $scope.selectedPerformance = null;
-                    var participant = getParticipant(contest);
-                    if (participant) {
-                        performance = participant ? participant.performance : [];
-                    }
-                }
-            }
-
-            function enrichOrders(contest, participant) {
-                // enrich the orders
+            function enrichOrders(participant) {
                 if (!participant.enrichedOrders) {
                     participant.enrichedOrders = true;
-                    ContestService.getEnrichedOrders(contest.OID(), participant.OID())
+                    ContestService.getEnrichedOrders(MySession.getContestID(), participant.OID())
                         .success(function (enrichedOrders) {
-                            $log.info("Loaded enriched orders " + angular.toJson(enrichedOrders));
-                            orders = enrichedOrders;
+                            MySession.participant.orders = enrichedOrders;
                         })
                         .error(function (err) {
                             toaster.pop('error', 'Error!', "Error loading enriched orders");
@@ -366,14 +317,12 @@
                 }
             }
 
-            function enrichPositions(contest, participant) {
-                // enrich the positions
+            function enrichPositions(participant) {
                 if (!participant.enrichedPositions) {
                     participant.enrichedPositions = true;
-                    ContestService.getEnrichedPositions(contest.OID(), participant.OID())
+                    ContestService.getEnrichedPositions(MySession.getContestID(), participant.OID())
                         .success(function (enrichedPositions) {
-                            $log.info("Loaded enriched positions " + angular.toJson(enrichedPositions));
-                            positions = enrichedPositions;
+                            MySession.participant.positions = enrichedPositions;
                         })
                         .error(function (err) {
                             toaster.pop('error', 'Error!', "Error loading enriched positions");
@@ -381,20 +330,12 @@
                 }
             }
 
-            function enrichParticipant(contest, participant) {
-                if (contest && participant) {
-
-                    // enrich the orders
-                    enrichOrders(contest, participant);
-
-                    // enrich the positions
-                    enrichPositions(contest, participant);
-                }
+            function resetOrders() {
+                $scope.selectedOrder = null;
+                $scope.selectedClosedOrder = null;
             }
 
-            function reset() {
-                $scope.selectedClosedOrder = null;
-                $scope.selectedOrder = null;
+            function resetPositions() {
                 $scope.selectedPosition = null;
                 $scope.selectedPerformance = null;
             }
@@ -408,7 +349,8 @@
              */
             $scope.$on("contest_updated", function (event, contest) {
                 $log.info("[Portfolio] Contest '" + contest.name + "' updated");
-                contestUpdated(contest);
+                resetOrders();
+                resetPositions();
             });
 
             /**
@@ -416,7 +358,7 @@
              */
             $scope.$on("orders_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
-                ordersUpdated(contest);
+                resetOrders();
             });
 
             /**
@@ -424,15 +366,8 @@
              */
             $scope.$on("positions_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
-                positionsUpdated(contest);
+                resetPositions();
             });
-
-            /**
-             * Watch for contest change events
-             */
-            $scope.$watch(MySession.contest, function () {
-                contestUpdated(MySession.contest);
-            }, true);
 
         }]);
 

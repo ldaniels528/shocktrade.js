@@ -6,14 +6,41 @@
      * @author lawrence.daniels@gmail.com
      */
     app.factory('MySession', function ($rootScope, $log, $timeout, toaster, ContestService) {
-        var service = {
-            contest: null
+        var service = {};
+
+        /////////////////////////////////////////////////////////////////////
+        //          Authentication & Authorization Functions
+        /////////////////////////////////////////////////////////////////////
+
+        /**
+         * Returns the user ID for the current user's ID
+         * @returns {*}
+         */
+        service.getUserID = function () {
+            return service.userProfile ? service.userProfile.OID() : null;
         };
 
-        service.deduct = function (amount) {
-            $log.info("Deducting " + amount + " from " + service.userProfile.netWorth);
-            service.userProfile.netWorth -= amount;
+        /**
+         * Returns the user ID for the current user's name
+         * @returns {*}
+         */
+        service.getUserName = function () {
+            return service.userProfile.name;
         };
+
+        /**
+         * Creates a default 'Spectator' user profile
+         * @returns {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
+         */
+        function createSpectatorProfile() {
+            return {
+                name: "Spectator",
+                country: "us",
+                level: 1,
+                lastSymbol: "MSFT",
+                friends: []
+            }
+        }
 
         /**
          * Indicates whether the given user is an administrator
@@ -31,12 +58,25 @@
             return service.getUserID() != null;
         };
 
-        service.getContestID = function () {
-            return service.contest ? service.contest.OID() : null;
+        /**
+         * Logout function
+         */
+        service.logout = function () {
+            service.authenticated = false;
+            service.fbAuthenticated = false;
+            service.fbUserID = null;
+            service.fbFriends = [];
+            service.fbProfile = {};
+            service.userProfile = createSpectatorProfile();
         };
 
-        service.setContest = function (contest) {
-            service.contest = contest;
+        /////////////////////////////////////////////////////////////////////
+        //          NetWorth Functions
+        /////////////////////////////////////////////////////////////////////
+
+        service.deduct = function (amount) {
+            $log.info("Deducting " + amount + " from " + service.userProfile.netWorth);
+            service.userProfile.netWorth -= amount;
         };
 
         service.getNetWorth = function () {
@@ -45,10 +85,6 @@
 
         service.getTotalCashAvailable = function () {
             return service.userProfile ? service.userProfile.netWorth : 0.00;
-        };
-
-        service.isTotalInvestmentLoaded = function () {
-            return service.totalInvestment !== null && service.totalInvestment !== undefined;
         };
 
         service.getTotalInvestment = function () {
@@ -61,6 +97,10 @@
             }
 
             return service.isTotalInvestmentLoaded() ? service.totalInvestment : null;
+        };
+
+        service.isTotalInvestmentLoaded = function () {
+            return service.totalInvestment !== null && service.totalInvestment !== undefined;
         };
 
         service.reloadTotalInvestment = function () {
@@ -91,121 +131,145 @@
                 });
         };
 
-        /**
-         * Returns the user ID for the current user
-         * @returns {*}
-         */
-        service.getUserID = function () {
-            return service.userProfile ? service.userProfile.OID() : null;
+        /////////////////////////////////////////////////////////////////////
+        //          Contest Functions
+        /////////////////////////////////////////////////////////////////////
+
+        service.contestIsEmpty = function () {
+            return service.getContestID() === null;
         };
 
-        service.getUserName = function () {
-            return service.userProfile.name;
+        service.getContest = function () {
+            return service.contest;
         };
 
-        /**
-         * Logout function
-         */
-        service.logout = function () {
-            service.authenticated = false;
-            service.fbAuthenticated = false;
-            service.fbUserID = null;
-            service.fbFriends = [];
-            service.fbProfile = {};
-            service.userProfile = createSpectatorProfile();
+        service.getContestID = function () {
+            return service.contest.OID();
         };
 
-        /**
-         * Creates a default 'Spectator' user profile
-         * @returns {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
-         */
-        function createSpectatorProfile() {
-            return {
-                name: "Spectator",
-                country: "us",
-                level: 1,
-                lastSymbol: "MSFT",
-                friends: [],
-                filters: [{
-                    "_id": {"$oid": "5383e53bb90bd6654e3175ad"},
-                    name: "Most Active",
-                    sortField: "VOLUME",
-                    ascending: false,
-                    maxResults: 25,
-                    conditions: [{
-                        field: "VOLUME",
-                        operator: ">=",
-                        value: 1000000
-                    }],
-                    headers: ["Symbol", "Last", "Change %", "Volume"],
-                    columns: ["symbol", "lastTrade", "changePct", "volume"]
-                }, {
-                    "_id": {"$oid": "5249eb7ae4b08a1467688d05"},
-                    name: "Top Gains",
-                    sortField: "CHANGE",
-                    ascending: false,
-                    maxResults: 25,
-                    conditions: [{
-                        field: "CHANGE",
-                        operator: ">=",
-                        value: 25
-                    }],
-                    headers: ["Symbol", "Last", "Change %", "Volume"],
-                    columns: ["symbol", "lastTrade", "changePct", "volume"]
-                }, {
-                    "_id": {"$oid": "5383e32fb90bd6654e3175ab"},
-                    name: "Top Losses",
-                    sortField: "CHANGE",
-                    ascending: true,
-                    maxResults: 25,
-                    conditions: [{
-                        field: "CHANGE",
-                        operator: "<",
-                        value: 0
-                    }],
-                    headers: ["Symbol", "Last", "Change %", "Volume"],
-                    columns: ["symbol", "lastTrade", "changePct", "volume"]
-                }, {
-                    "_id": {"$oid": "5383e3acb90bd6654e3175ac"},
-                    name: "Top Spread",
-                    sortField: "SPREAD",
-                    ascending: true,
-                    maxResults: 25,
-                    conditions: [{
-                        field: "SPREAD",
-                        operator: ">=",
-                        value: 25
-                    }],
-                    headers: ["Symbol", "Last", "Spread %", "Change %", "Volume"],
-                    columns: ["symbol", "lastTrade", "spread", "changePct", "volume"]
-                }]
+        service.getContestStatus = function () {
+            return service.contest.status;
+        };
+
+        service.setContest = function (contest) {
+            if (!contest) service.resetContest();
+            else {
+                service.contest = contest;
+                service.participant = getParticipant(contest);
             }
-        }
+        };
 
+        service.getFundsAvailable = function () {
+            return service.participant.fundsAvailable || 0.00;
+        };
+
+        service.setMessages = function (messages) {
+            service.contest.messages = messages;
+        };
+
+        service.getMessages = function () {
+            return service.contest.messages;
+        };
+
+        service.getOrders = function () {
+            return service.participant.orders;
+        };
+
+        service.getOrderHistory = function () {
+            return service.participant.orderHistory;
+        };
+
+        service.getPerformance = function () {
+            return service.participant.performance;
+        };
+
+        service.getPositions = function () {
+            return service.participant.positions;
+        };
+
+        service.resetContest = function () {
+            service.contest = {};
+            service.participant = {};
+        };
+
+        function getParticipant(contest) {
+            return ContestService.findPlayerByID(contest, service.getUserID()) || {};
+        }
 
         ////////////////////////////////////////////////////////////
         //          Watch Events
         ////////////////////////////////////////////////////////////
 
-        /**
-         * Listen for contest update events
-         */
+        function updateContestDelta(contest) {
+            // update the messages (if present)
+            if (contest.messages) {
+                service.contest.messages = contest.messages;
+            }
+
+            // lookup our participant
+            var participant = getParticipant(contest);
+            if (participant) {
+                // update funds available (if present)
+                if (participant.fundsAvailable !== undefined) {
+                    service.participant.fundsAvailable = participant.fundsAvailable;
+                }
+
+                // update the orders (if present)
+                if (participant.orders) {
+                    service.participant.orders = participant.orders;
+                }
+
+                // update the order history (if present)
+                if (participant.orderHistory) {
+                    service.participant.orderHistory = participant.orderHistory;
+                }
+
+                // update the perks (if present)
+                if (participant.perks) {
+                    service.participant.perks = participant.perks;
+                }
+
+                // update the positions (if present)
+                if (participant.positions) {
+                    service.participant.positions = participant.positions;
+                }
+
+                // update the performance (if present)
+                if (participant.performance) {
+                    service.participant.performance = participant.performance;
+                }
+            }
+        }
+
+        $rootScope.$on("contest_deleted", function (event, contest) {
+            if (service.getContestID() === contest.OID()) {
+                service.resetContest();
+            }
+        });
+
         $rootScope.$on("contest_updated", function (event, contest) {
             $log.info("[MySession] Contest '" + contest.name + "' updated");
+            service.contest = contest;
         });
 
-        /**
-         * Listen for contest update events
-         */
+        $rootScope.$on("messages_updated", function (event, contest) {
+            $log.info("[MySession] Messages for Contest '" + contest.name + "' updated");
+            updateContestDelta(contest);
+        });
+
         $rootScope.$on("orders_updated", function (event, contest) {
             $log.info("[MySession] Orders for Contest '" + contest.name + "' updated");
+            updateContestDelta(contest);
         });
 
-        /**
-         * Listen for contest update events
-         */
+        $rootScope.$on("perks_updated", function (event, contest) {
+            $log.info("[MySession] Perks for Contest '" + contest.name + "' updated");
+            updateContestDelta(contest);
+        });
+
         $rootScope.$on("positions_updated", function (event, contest) {
             $log.info("[MySession] Positions for Contest '" + contest.name + "' updated");
+            updateContestDelta(contest);
         });
 
         ////////////////////////////////////////////////////////////
@@ -213,6 +277,9 @@
         ////////////////////////////////////////////////////////////
 
         (function () {
+            // make sure we're starting fresh
+            service.resetContest();
+
             // initialize the values as a logged-out user
             service.logout();
         })();

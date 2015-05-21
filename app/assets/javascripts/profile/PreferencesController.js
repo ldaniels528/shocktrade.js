@@ -4,8 +4,8 @@
     /**
      * Preferences Controller
      */
-    app.controller('PreferencesController', ['$scope', '$cookieStore', '$http', '$log', '$modal', '$timeout', 'toaster', 'MySession', 'ProfileService', 'QuoteService',
-        function ($scope, $cookieStore, $http, $log, $modal, $timeout, toaster, MySession, ProfileService, QuoteService) {
+    app.controller('PreferencesController', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'toaster', 'MySession', 'ProfileService', 'QuoteService',
+        function ($scope, $cookieStore, $http, $log, $timeout, toaster, MySession, ProfileService, QuoteService) {
 
             // exchange loading variable
             $scope.updatingExchanges = false;

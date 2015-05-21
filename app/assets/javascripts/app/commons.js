@@ -3,24 +3,34 @@
  * @author lawrence.daniels@gmail.com
  */
 (function () {
-    var units = [ "sec", "min", "hour", "day", "month", "year" ];
+    var units = ["msec", "sec", "min", "hour", "day", "month", "year"];
+    var factors = [1000, 60, 60, 24, 30, 12];
 
-    Number.prototype.toDuration = function () {
-        var duration = this;
-        var unit = 0;
+    window.toDuration = function (time) {
+        var duration = time && time.$date ? time.$date : time;
+        if(duration === null || duration === undefined) return null;
+
+        // compute the time delta
+        var delta = Date.now() - duration;
 
         // compute the age
-        var age = Math.abs(Date.now() - duration) / 1000;
-        if(age >= 60) { age /= 60; unit++; } // seconds -> minutes
-        if(age >= 60) { age /= 60; unit++; } // minutes -> hours
-        if(age >= 24) { age /= 24; unit++; } // hours -> days
-        if(age >= 30) { age /= 30; unit++; } // days -> months
-        if(age >= 12) { age /= 12; unit++; } // months -> years
+        var unit = 0;
+        var age = Math.abs(delta);
+        while(age >= factors[unit]) {
+            age /= factors[unit];
+            unit++;
+        }
+
+        // make the age and unit names more readable
         age = age.toFixed(0);
-        return age + " " + units[unit] + ( age != 1 ? "s" : "" ) + " ago";
+        var unitName = units[unit] + ( age != 1 ? "s" : "" );
+
+        return delta >= 0
+            ? age + " " + unitName + " ago"
+            : "in " + age + " " + unitName;
     };
 
-    Object.prototype.OID = function() {
+    Object.prototype.OID = function () {
         var self = this;
         return self._id ? self._id.$oid : null;
     };

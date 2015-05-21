@@ -21,14 +21,14 @@
 </div>
 
 <div class="row ordersContainer">
-	<div class="col-md-offset-1 col-md-11" ng-show="getPerformances(contest).length === 0">
+	<div class="col-md-offset-1 col-md-11" ng-show="getPerformances().length === 0">
         <i class="fa fa-warning warning"></i>
 		<span class="warning">No closed orders found</span>
 	</div>
 
 	<!-- Data Rows -->
 	<div ng-class="{'col-md-12':(!isPerformanceSelected()), 'col-md-3':(isPerformanceSelected())}">
-		<div class="col-md-12 clickable" ng-repeat="p in getPerformances(contest) track by $index"
+		<div class="col-md-12 clickable" ng-repeat="p in getPerformances() track by $index"
 			 ng-class-even="'contest_even'"
 			 ng-class-odd="'contest_odd'"
 			 ng-class="selectedPerformance.OID() === p.OID() ? 'selected' : ''"

@@ -638,19 +638,6 @@
                 }
             });
 
-            /**
-             * Listen for player perk update events
-             */
-            $scope.$on("perks_updated", function (event, contestInfo) {
-                if ($scope.contest && (contestInfo.OID() === $scope.contest.OID())) {
-                    var player = ContestService.findPlayerByID($scope.contest, contestInfo.player.OID());
-                    if (player) {
-                        $log.info("Updating perks for player " + contestInfo.player.name);
-                        player.perks = contestInfo.perks;
-                    }
-                }
-            });
-
             //////////////////////////////////////////////////////////////////////
             //              Watch Event Listeners
             //////////////////////////////////////////////////////////////////////

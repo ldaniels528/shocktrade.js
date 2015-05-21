@@ -4,24 +4,24 @@
 			<tr>
 				<td class="alabel">Cash Available:</td>
 				<td class="afunds">
-					<span class="fundsAvailable">{{ getCashAvailable(contest) | number:2 }}</span>
+					<span class="fundsAvailable">{{ MySession.getFundsAvailable() | number:2 }}</span>
 				</td>
 				<td>
 					<span style="font-size: 9pt">
-						&nbsp; (as of {{ asOfDate(contest) | date:'MM/dd hh:mma' }})
+						&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
 					</span>
 				</td>
 			</tr>
 			<tr>
 				<td class="alabel">Investments:</td>
 				<td class="afunds">
-					<span class="totalInvestment">{{ getTotalInvestment(contest) | number:2 }}</span>
+					<span class="totalInvestment">{{ getTotalInvestment() | number:2 }}</span>
 				</td>
 			</tr>
 			<tr>
 				<td class="alabel">Total Equity:</td>
 				<td class="afunds">
-					<span class="fundsAvailable">{{ getTotalEquity(contest) | number:2 }}</span>
+					<span class="fundsAvailable">{{ getTotalEquity() | number:2 }}</span>
 				</td>
 			</tr>
 		</table>
@@ -30,21 +30,21 @@
 		<table style="width: 100%">
 			<tr>
 				<td class="alabel">Pending Orders:</td>
-				<td class="afunds"><span class="fundsAvailable">{{ getTotalOrders(contest) | number:2 }}</span></td>
+				<td class="afunds"><span class="fundsAvailable">{{ getTotalOrders() | number:2 }}</span></td>
 			</tr>
 			<tr>
 				<!-- Pending Orders (BUY) -->
 				<td class="alabel">&nbsp; BUY Orders:</td>
 				<td class="afunds">
-					<span ng-class="getTotalBuyOrders(contest) > getCashAvailable(contest) ? 'profitable' : 'unprofitable'">
-						{{ getTotalBuyOrders(contest) | number:2 }}
+					<span ng-class="getTotalBuyOrders() > MySession.getFundsAvailable() ? 'profitable' : 'unprofitable'">
+						{{ getTotalBuyOrders() | number:2 }}
 					</span>
 				</td>
 			</tr>
 			<tr>
 				<!-- Pending Orders (SELL) -->
 				<td class="alabel">&nbsp; SELL Orders:</td>
-				<td class="afunds"><span class="fundsAvailable">{{ getTotalSellOrders(contest) | number:2 }}</span></td>
+				<td class="afunds"><span class="fundsAvailable">{{ getTotalSellOrders() | number:2 }}</span></td>
 			</tr>
 		</table>
 	</div>

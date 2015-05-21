@@ -41,21 +41,22 @@
 
             /**
              * Returns chat messages sorted by time
-             * @param contest the given contest
              * @returns {String}
              */
-            $scope.getMessages = function (contest) {
-                if((contest.messages.length === lastMessageCount) && (Date.now() - lastUpdateTime) < 15) return cachedHtml;
+            $scope.getMessages = function () {
+                if((MySession.getMessages().length === lastMessageCount) && (Date.now() - lastUpdateTime) < 15) return cachedHtml;
                 else {
                     //var startTime = Date.now();
 
                     // capture the new number of lines
-                    lastMessageCount = contest.messages.length;
+                    lastMessageCount = MySession.getMessages().length;
 
                     // sort the messages by time
-                    var messages = contest.messages
+                    var messages = MySession.getMessages()
                         .sort(function (a, b) {
-                            return b.sentTime - a.sentTime;
+                            var timeA = a.sentTime.$date ? a.sentTime.$date : a.sentTime;
+                            var timeB = b.sentTime.$date ? b.sentTime.$date : b.sentTime;
+                            return timeB  - timeA;
                         });
 
                     // build an HTML string with emoticons
@@ -73,7 +74,7 @@
                         });
                         html += '<img src="http://graph.facebook.com/' + msg.sender.facebookID + '/picture" class="chat_icon">' +
                             '<span class="bold" style="color: ' + colorOf(msg.sender.name) + '">' + msg.sender.name + '</span>&nbsp;' +
-                            '[<span class="st_bkg_color">' + msg.sentTime.toDuration() + '</span>] &nbsp;' + text + "<br>";
+                            '[<span class="st_bkg_color">' + toDuration(msg.sentTime) + '</span>] &nbsp;' + text + "<br>";
                     });
 
                     //$log.info("Generated HTML in " + (Date.now() - startTime) + " msec(s)");
@@ -108,9 +109,10 @@
                     };
 
                     // transmit the message
-                    ContestService.sendChatMessage($scope.contest.OID(), message)
-                        .success(function (response) {
+                    ContestService.sendChatMessage(MySession.getContestID(), message)
+                        .success(function (messages) {
                             $scope.chatMessage = "";
+                            MySession.setMessages(messages);
                         })
                         .error(function (response) {
                             toaster.pop('error', 'Error!', "Failed to send message");
@@ -119,7 +121,7 @@
             };
 
             var emoticons = [
-                {"symbol": ":-))", "uri": "icon_mrgreen.gif", "tooltip": "Big Grin"},
+                {"symbol": ":-@", "uri": "icon_mrgreen.gif", "tooltip": "Big Grin"},
                 {"symbol": ":-)", "uri": "icon_smile.gif", "tooltip": "Smile"},
                 {"symbol": ";-)", "uri": "icon_wink.gif", "tooltip": "Wink"},
                 {"symbol": ":-D", "uri": "icon_biggrin.gif", "tooltip": "Big Smile"},
@@ -138,20 +140,6 @@
                 {"symbol": "(!)", "uri": "icon_exclaim.gif", "tooltip": "Exclamation"},
                 {"symbol": "(?)", "uri": "icon_question.gif", "tooltip": "Question"},
                 {"symbol": "=>", "uri": "icon_arrow.gif", "tooltip": "Arrow"}];
-
-            //////////////////////////////////////////////////////////////////////
-            //              Broadcast Event Listeners
-            //////////////////////////////////////////////////////////////////////
-
-            /**
-             * Listen for contest message update events
-             */
-            $scope.$on("messages_updated", function (event, contest) {
-                if ($scope.contest && ($scope.contest.OID() === contest.OID())) {
-                    $log.info("[Chat] Messages for '" + contest.name + "' updated");
-                    $scope.contest.messages = contest.messages;
-                }
-            });
 
         }]);
 

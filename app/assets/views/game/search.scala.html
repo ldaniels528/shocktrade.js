@@ -70,10 +70,10 @@
     <div ng-show="isSplitScreen()" class="col-md-8">
         <fieldset class="contest" ng-show="selectedContest.participants">
             <legend class="contest">
-                <i class="fa fa-chevron-circle-left st_control clickable"
-                    ng-click="toggleSplitScreen()"
-                    title="Return to results"></i>
-                <span class="game_title">{{selectedContest.name}}</span>
+                <span class="game_title clickable" ng-click="toggleSplitScreen()">
+                    <i class="fa fa-chevron-circle-left st_control" title="Return to results"></i>
+                    {{selectedContest.name}}
+                </span>
             </legend>
             <div class="row contest_lobby contest_colors">
                 <div class="col-md-12" style="background: #e0e0e0; border-radius: 6px; padding: 4px">

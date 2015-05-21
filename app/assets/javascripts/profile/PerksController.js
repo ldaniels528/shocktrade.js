@@ -17,8 +17,8 @@
                 return count;
             };
 
-            $scope.getCashAvailable = function (contest) {
-                return ContestService.getCashAvailable(contest, MySession.getUserID());
+            $scope.hasSufficientFunds = function () {
+                return $scope.getTotalCost() <= MySession.getFundsAvailable();
             };
 
             $scope.getPerks = function () {
@@ -44,12 +44,13 @@
                 return false;
             };
 
-            $scope.purchasePerks = function (contest) {
+            $scope.purchasePerks = function () {
                 // build the list of perks to purchase
                 var perkCodes = getSelectedPerkCodes();
                 $log.info("purchasePerks = " + JSON.stringify(perkCodes, null, '\t'));
 
-                if (!contest) {
+                var contest = MySession.contest;
+                if (!contest || !contest.OID()) {
                     toaster.pop('error', "No game selected", null);
                     return;
                 }
@@ -71,39 +72,37 @@
                     });
             };
 
-            $scope.getPerkCostClass = function (contest, perk) {
-                if (perk.selected || $scope.getCashAvailable(contest) >= perk.cost) return 'positive';
-                else if ($scope.getCashAvailable(contest) < perk.cost) return 'negative';
+            $scope.getPerkCostClass = function (perk) {
+                if (perk.selected || MySession.getFundsAvailable() >= perk.cost) return 'positive';
+                else if (MySession.getFundsAvailable() < perk.cost) return 'negative';
                 else return 'null';
             };
 
-            $scope.getPerkNameClass = function (contest, perk) {
-                return ( perk.selected || $scope.getCashAvailable(contest) >= perk.cost ) ? 'st_bkg_color' : 'null';
+            $scope.getPerkNameClass = function (perk) {
+                return ( perk.selected || MySession.getFundsAvailable() >= perk.cost ) ? 'st_bkg_color' : 'null';
             };
 
-            $scope.getPerkDescClass = function (contest, perk) {
-                return ( perk.selected || $scope.getCashAvailable(contest) >= perk.cost ) ? '' : 'null';
+            $scope.getPerkDescClass = function (perk) {
+                return ( perk.selected || MySession.getFundsAvailable() >= perk.cost ) ? '' : 'null';
             };
 
-            $scope.loadPerks = function (contest) {
-                PerksService.getPerks(contest.OID())
+            $scope.loadPerks = function () {
+                PerksService.getPerks(MySession.getContestID())
                     .success(function (allPerks) {
                         perks = allPerks;
-                        $scope.setupPerks(contest);
+                        $scope.setupPerks();
                     })
                     .error(function (error) {
                         toaster.pop('error', 'Error loading perks', null);
                     });
             };
 
-            $scope.setupPerks = function (contest) {
+            $scope.setupPerks = function () {
                 // create a mapping of the user's perks
                 var myPerks = {};
-                var player = ContestService.findPlayerByID(contest, MySession.getUserID());
-                var userOwnedPerks = player ? (player.perks || []) : [];
 
                 // all perks the user owns should be set
-                angular.forEach(userOwnedPerks, function (perk) {
+                angular.forEach(MySession.participant.perks, function (perk) {
                     myPerks[perk] = true;
                 });
 
@@ -112,6 +111,8 @@
                     perk.owned = myPerks[perk.code] || false;
                     perk.selected = perk.owned;
                 });
+
+                return myPerks;
             };
 
             ///////////////////////////////////////////////////////////////////////////
@@ -132,7 +133,7 @@
             //          Watch Events
             ///////////////////////////////////////////////////////////////////////////
 
-            $scope.$on("perks_updated", function (event, contestInfo) {
+            $scope.$on("perks_updated", function (event, contest) {
                 $scope.setupPerks();
             });
 
