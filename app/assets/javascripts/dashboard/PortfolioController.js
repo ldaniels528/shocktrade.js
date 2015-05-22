@@ -20,7 +20,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return MySession.getContestStatus() !== 'ACTIVE';
+                    return false;
                 }
             }, {
                 "name": "Perks",
@@ -30,7 +30,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return MySession.getContestStatus() !== 'ACTIVE';
+                    return false;
                 }
             }, {
                 "name": "Positions",
@@ -62,7 +62,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return true;
+                    return false;
                 }
             }, {
                 "name": "Performance",
@@ -72,7 +72,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return true;
+                    return false;
                 }
             }, {
                 "name": "Exposure",

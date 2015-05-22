@@ -127,14 +127,15 @@
                     <i class="fa fa-lock"></i> <label for="invitationOnly">Invitation-Only</label>
                 </div>
 
-                <div class="col-md-3">Ends</div>
-                <div class="col-md-5">
+                <div class="col-md-3" ng-show="selectedContest.status === 'ACTIVE'">Ends</div>
+                <div class="col-md-5" ng-show="selectedContest.status === 'ACTIVE'">
                     <span ng-show="selectedContest.expirationTime">
-                        <span ng-show="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
-                        <span ng-show="selectedContest.status === 'CLOSED'" class="st_control">CLOSED</span>
+                        <span >{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
                     </span>
                     <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
                 </div>
+                <div class="col-md-8" ng-hide="selectedContest.status === 'ACTIVE'"></div>
+
                 <div class="col-md-4">
                     <input id="robotsAllowed" type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
                     <i class="fa fa-android"></i> <label for="robotsAllowed">Robots Allowed</label>

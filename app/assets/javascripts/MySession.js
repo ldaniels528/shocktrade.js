@@ -165,7 +165,9 @@
         };
 
         service.setMessages = function (messages) {
-            service.getContest().messages = messages;
+            if(service.contest) {
+                service.contest.messages = messages;
+            }
         };
 
         service.getMessages = function () {
@@ -185,8 +187,8 @@
         };
 
         service.getParticipant = function () {
-            if(!service.participant) {
-                service.participant = lookupParticipant(service.getContest(), service.getUserID());
+            if(service.contest && !service.participant) {
+                service.participant = lookupParticipant(service.contest, service.getUserID());
             }
             return service.participant || {};
         };
@@ -274,7 +276,9 @@
 
         $rootScope.$on("contest_updated", function (event, contest) {
             $log.info("[MySession] Contest '" + contest.name + "' updated");
-            service.contest = contest;
+            if(!service.contest || service.getContestID() === contest.OID()) {
+                service.contest = contest;
+            }
         });
 
         $rootScope.$on("messages_updated", function (event, contest) {

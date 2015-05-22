@@ -95,11 +95,16 @@
             };
 
             $scope.getStatusClass = function (c, maxPlayers) {
-                var playerCount = ((c && c.participants) || []).length;
-                if (playerCount + 1 < maxPlayers) return "positive";
-                else if (playerCount + 1 === maxPlayers) return "warning";
-                else if (playerCount >= maxPlayers) return "negative";
-                else return "null";
+                if(!c) return null;
+                else {
+                    var playerCount = ((c && c.participants) || []).length;
+                    if (playerCount + 1 < maxPlayers) return "positive";
+                    else if (playerCount + 1 === maxPlayers) return "warning";
+                    else if (playerCount >= maxPlayers) return "negative";
+                    else if (c.status === 'ACTIVE') return 'positive';
+                    else if (c.status === 'CLOSED') return 'negative';
+                    else return "null";
+                }
             };
 
             ///////////////////////////////////////////////////////////////////////////
