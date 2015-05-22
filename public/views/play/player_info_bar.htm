@@ -6,16 +6,16 @@
         <div class="pull-left" style="display: inline">
             <div>
                 <img ng-show="WebSockets.isConnected()" ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png">
-                <span ng-hide="contest" class="null">[no game selected]</span>
-                <span ng-if="contest">
-                    <span ng-class="'rank_' + getRankingByFBID(contest, MySession.fbUserID).rank">{{ getRankingByFBID(contest, MySession.fbUserID).rank }}</span>
-                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '1st'" src="/assets/images/contests/gold.png">
-                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '2nd'" src="/assets/images/contests/silver.png">
-                    <img ng-if="contest.status === 'CLOSED' && getRankingByFBID(contest, MySession.fbUserID).rank === '3rd'" src="/assets/images/contests/bronze.png">
-                    <span ng-class="getRankingByFBID(contest, MySession.fbUserID).gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" value="{{ getRankingByFBID(contest, MySession.fbUserID).gainLoss }}" />
-                        <span ng-show="(getRankingByFBID(contest, MySession.fbUserID).gainLoss || 0) === 0" class="null">&#8212;</span>
-                        {{ abs(getRankingByFBID(contest, MySession.fbUserID).gainLoss) | number:2 }}%
+                <span ng-show="MySession.contestIsEmpty()" class="null">[no game selected]</span>
+                <span ng-if="! MySession.contestIsEmpty()">
+                    <span ng-class="'rank_' + getBarRanking().rank">{{ getBarRanking().rank }}</span>
+                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '1st'" src="/assets/images/contests/gold.png">
+                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '2nd'" src="/assets/images/contests/silver.png">
+                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '3rd'" src="/assets/images/contests/bronze.png">
+                    <span ng-class="getBarRanking().gainLoss >= 0 ? 'positive' : 'negative'">
+                        <changearrow ng-hide="(getBarRanking().gainLoss || 0) === 0" value="{{ getBarRanking().gainLoss }}" />
+                        <span ng-show="(getBarRanking().gainLoss || 0) === 0" class="null">&#8212;</span>
+                        {{ abs(getBarRanking().gainLoss) | number:2 }}%
                     </span>
                 </span>
             </div>

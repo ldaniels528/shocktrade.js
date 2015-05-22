@@ -111,6 +111,47 @@
             return null;
         };
 
+        service.findPlayerByName = function (contest, playerName) {
+            var participants = contest ? (contest.participants || []) : [];
+            for (var n = 0; n < participants.length; n++) {
+                var participant = participants[n];
+                if (participant.name === playerName) {
+                    return participant;
+                }
+            }
+            return null;
+        };
+
+        service.getPlayerRankings = function (contest, playerName) {
+            if (!contest || !contest.name) return [];
+            else {
+                // if the rankings have never been loaded ...
+                if (contest.rankings === undefined) {
+                    contest.rankings = {};
+                    $log.info("Loading Contest Rankings for '" + contest.name + "'...");
+                    service.getRankings(contest.OID())
+                        .success(function (participants) {
+                            contest.rankings.participants = participants;
+                            if (participants.length) {
+                                contest.rankings.leader = participants[0];
+                                contest.rankings.player = playerName ? service.findPlayerByName(contest.rankings, playerName) : null;
+                            }
+                        })
+                        .error(function (response) {
+                            toaster.pop('error', 'Error!', "Error loading play rankings");
+                            $log.error(response.error)
+                        });
+                }
+
+                // if the rankings were loaded, but the player is not set
+                else if(playerName && contest.rankings.player == null) {
+                    contest.rankings.player = playerName ? service.findPlayerByName(contest.rankings, playerName) : null;
+                }
+
+                return contest.rankings;
+            }
+        };
+
         /////////////////////////////////////////////////////////////////////////////
         //			Miscellaneous
         /////////////////////////////////////////////////////////////////////////////

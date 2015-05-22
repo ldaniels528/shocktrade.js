@@ -102,37 +102,8 @@
             $scope.getRankings = function () {
                 if (MySession.contestIsEmpty()) return [];
                 else {
-                    var contest = MySession.getContest();
-                    if (!contest.rankings) {
-                        contest.rankings = [];
-                        $log.info("Loading rankings....");
-                        ContestService.getRankings(contest.OID())
-                            .success(function (rankings) {
-                                contest.rankings = rankings;
-                            })
-                            .error(function (response) {
-                                toaster.pop('error', 'Error!', "Error loading play rankings");
-                                $log.error(response.error)
-                            });
-                    }
-                    return contest.rankings;
-                }
-            };
-
-            $scope.getRankingByFBID = function () {
-                if(MySession.contestIsEmpty()) return {};
-                else {
-                    var contest = MySession.getContest();
-                    var facebookID = MySession.fbUserID;
-                    if (!contest.myRanking) {
-                        for (var n = 0; n < (contest.rankings || []).length; n++) {
-                            if (contest.rankings[n].facebookID === facebookID) {
-                                contest.myRanking = contest.rankings[n];
-                                return contest.myRanking;
-                            }
-                        }
-                    }
-                    return contest.myRanking;
+                    var rankings = ContestService.getPlayerRankings(MySession.getContest(), MySession.getUserName());
+                    return rankings.participants;
                 }
             };
 
@@ -320,7 +291,7 @@
             /////////////////////////////////////////////////////////////////////
 
             function enrichOrders(participant) {
-                if(! MySession.participantIsEmpty()) {
+                if (!MySession.participantIsEmpty()) {
                     if (!participant.enrichedOrders) {
                         participant.enrichedOrders = true;
                         ContestService.getEnrichedOrders(MySession.getContestID(), participant.OID())
@@ -335,7 +306,7 @@
             }
 
             function enrichPositions(participant) {
-                if(! MySession.participantIsEmpty()) {
+                if (!MySession.participantIsEmpty()) {
                     if (!participant.enrichedPositions) {
                         participant.enrichedPositions = true;
                         ContestService.getEnrichedPositions(MySession.getContestID(), participant.OID())

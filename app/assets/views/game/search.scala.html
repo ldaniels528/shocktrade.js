@@ -32,15 +32,14 @@
                     <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
                 </div>
 
-                <div ng-repeat="c in getSearchResults(searchTerm)" class="row clickable"
-                    ng-click="selectContest(c)"
-                    ng-class="selectedContest.OID() === c.OID() ? 'selected' : (c.status === 'ACTIVE' ? '' : 'null')">
+                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable"
+                    ng-click="selectContest(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
-                        {{ c.name }}
+                        <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-show="c.startTime" ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.startTime | elapsed }}</span>
+                        <span ng-show="c.startTime" ng-class="getSelectionClass(c)">{{ c.startTime | elapsed }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
@@ -48,10 +47,10 @@
                             <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
                             <span ng-hide="c.expirationTime">&#8212;</span>
                         </span>
-                        <span class="st_control" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
+                        <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>
+                        <span ng-class="getSelectionClass(c)">{{ c.participants.length || 0 }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2">
                         <span class="pull-right">
@@ -91,14 +90,14 @@
                     </div>
                 </div>
 
-                <div ng-hide="selectedContest.leader" class="col-md-12">&nbsp;</div>
-                <div ng-show="selectedContest.leader" class="col-md-3">Leader</div>
-                <div ng-show="selectedContest.leader" class="col-md-9">
-                    <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.leader.rank) }}">
-                    <avatar id="{{ selectedContest.leader.facebookID }}" style="width: 20px; height: 20px" />
-                    <span ng-class="'rank_' + selectedContest.leader.rank">{{ selectedContest.leader.rank }}</span>
-                    <span ng-class="selectedContest.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow value="{{ selectedContest.leader.gainLoss }}" /> {{ selectedContest.leader.gainLoss | number:2 }}%
+                <div ng-hide="selectedContest.rankings.leader" class="col-md-12">&nbsp;</div>
+                <div ng-show="selectedContest.rankings.leader" class="col-md-3">Leader</div>
+                <div ng-show="selectedContest.rankings.leader" class="col-md-9">
+                    <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.rankings.leader.rank) }}">
+                    <avatar id="{{ selectedContest.rankings.leader.facebookID }}" style="width: 20px; height: 20px" />
+                    <span ng-class="'rank_' + selectedContest.rankings.leader.rank">{{ selectedContest.rankings.leader.rank }}</span>
+                    <span ng-class="selectedContest.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+                        <changearrow value="{{ selectedContest.rankings.leader.gainLoss }}" /> {{ selectedContest.rankings.leader.gainLoss | number:2 }}%
                     </span>
                 </div>
 
@@ -130,7 +129,10 @@
 
                 <div class="col-md-3">Ends</div>
                 <div class="col-md-5">
-                    <span ng-show="selectedContest.expirationTime">{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
+                    <span ng-show="selectedContest.expirationTime">
+                        <span ng-show="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
+                        <span ng-show="selectedContest.status === 'CLOSED'" class="st_control">CLOSED</span>
+                    </span>
                     <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
                 </div>
                 <div class="col-md-4">

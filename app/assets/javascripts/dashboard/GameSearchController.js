@@ -128,6 +128,14 @@
                 return $scope.myContests;
             };
 
+            $scope.getMyRankings = function (contest) {
+                if (!contest) return {};
+                else {
+                    var rankings = ContestService.getPlayerRankings(contest, MySession.getUserName());
+                    return rankings.player;
+                }
+            };
+
             ///////////////////////////////////////////////////////////////////////////
             //          Contest Selection Functions
             ///////////////////////////////////////////////////////////////////////////
@@ -141,61 +149,17 @@
                 $scope.selectedContest = contest;
                 $scope.splitScreen = true;
 
-                enrichContest(contest);
+                if (!contest.rankings) {
+                    ContestService.getPlayerRankings(contest, MySession.getUserName());
+                }
             };
 
             $scope.toggleSplitScreen = function () {
                 $scope.splitScreen = false;
             };
 
-            function enrichContest(contest) {
-                if (!contest.rankings) {
-                    updateWithRankings(MySession.getUserName(), contest);
-                }
-            }
-
             function isContestSelected(contestId) {
                 return $scope.selectedContest && ($scope.selectedContest.OID() === contestId);
-            }
-
-            /**
-             * Updates the contest with participant rankings
-             */
-            function updateWithRankings(playerName, contest) {
-                ContestService.getRankings(contest.OID()).then(
-                    function (response) {
-                        contest.rankings = response.data;
-                        if (contest.rankings.length) {
-                            contest.leader = contest.rankings[0];
-                        }
-
-                        // capture the rankings for the current player
-                        var participant = findPlayerByName(contest, playerName);
-                        if (participant) {
-                            for (var n = 0; n < contest.rankings.length; n++) {
-                                var ranking = contest.rankings[n];
-                                if (ranking.name === playerName) {
-                                    participant.gainLoss = ranking.gainLoss;
-                                    participant.rank = ranking.rank;
-                                }
-                            }
-                        }
-                    },
-                    function (err) {
-                        toaster.pop('error', "An error occurred loading rankings", null);
-                        $log.error("An error occurred loading rankings")
-                    });
-            }
-
-            function findPlayerByName(contest, playerName) {
-                var participants = contest.participants;
-                for (var n = 0; n < participants.length; n++) {
-                    var participant = participants[n];
-                    if (participant.name === playerName) {
-                        return participant;
-                    }
-                }
-                return null;
             }
 
             ///////////////////////////////////////////////////////////////////////////
@@ -326,6 +290,14 @@
                             contest.starting = false;
                         }, 500);
                     });
+            };
+
+            //////////////////////////////////////////////////////////////////////
+            //              Style/CSS Functions
+            //////////////////////////////////////////////////////////////////////
+
+            $scope.getSelectionClass = function (c) {
+                return $scope.selectedContest && ($scope.selectedContest.OID() === c.OID()) ? 'selected' : (c.status === 'ACTIVE' ? '' : 'null')
             };
 
             //////////////////////////////////////////////////////////////////////

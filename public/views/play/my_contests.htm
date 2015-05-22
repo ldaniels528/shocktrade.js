@@ -9,18 +9,28 @@
         </div>
 
         <div class="row" ng-show="getMyContests().length">
-            <div class="col-md-7 header left padding-left-16">Game Title</div>
-            <div class="col-md-2 header center">Players</div>
+            <div class="col-md-6 header left padding-left-16">Game Title</div>
+            <div class="col-md-3 header center">Ranking</div>
             <div class="col-md-3 header right">Game Features</div>
         </div>
 
         <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
                 {{ c.name }}
             </div>
-            <div class="col-md-2 center">
-                <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>
+            <div class="col-md-3 center">
+                <span ng-show="getMyRankings(c)">
+                    <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
+                    <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
+                        <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}" />
+                        <span ng-show="(getMyRankings(c).gainLoss || 0) === 0" class="null">&#8212;</span>
+                        {{ abs(getMyRankings(c).gainLoss) | number:2 }}%
+                    </span>
+                </span>
+                <span ng-hide="getMyRankings(c)" class="null">
+                    <img src="/assets/images/status/loading.gif"> Loading...
+                </span>
             </div>
             <div class="col-md-3">
                 <span class="pull-right">

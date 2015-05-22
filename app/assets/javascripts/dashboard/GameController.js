@@ -25,21 +25,6 @@
                 // TODO switch back if not working
             };
 
-            $scope.loadContestsByPlayerID = function (playerId) {
-                if (playerId) {
-                    $scope.startLoading();
-                    ContestService.getContestsByPlayerID(playerId)
-                        .success(function (contests) {
-                            $scope.myContests = contests;
-                            $scope.stopLoading();
-                        })
-                        .error(function (response) {
-                            $log.error("Failed to load My Contests - " + response.error);
-                            $scope.stopLoading();
-                        });
-                }
-            };
-
             $scope.changePlayTab = function (tabIndex) {
                 var tab = $scope.playTabs[tabIndex];
                 $log.info("Changing location to " + tab.url);
@@ -58,16 +43,6 @@
                 $scope.playTabs[tabIndex].active = true;
             };
 
-            $scope.changeArrow = function (change) {
-                return change < 0 ? "stock_down.gif" : ( change > 0 ? "stock_up.gif" : "transparent.png" );
-            };
-
-            $scope.changeContest = function (contest) {
-                $log.info("Changing contest to " + contest.OID());
-                $scope.contest = contest;
-                MySession.contest = contest;
-            };
-
             /**
              * Returns the contacts matching the given search term
              */
@@ -80,22 +55,11 @@
                 return fbFriends.slice(0, 20);
             };
 
-            $scope.switchToContest = function (contest) {
-                $scope.contest = contest;
-                MySession.setContest(contest);
-
-                // find participant that represents the player
-                var participant = ContestService.findPlayerByID(contest, MySession.getUserID());
-
-                // load the enriched participant
-                var playerName = MySession.getUserName();
-                if (!contest.rankings) {
-                    updateWithRankings(playerName, contest);
-                }
-
-                // load the pricing for the participant's position
-                if (participant) {
-                    updateWithPricing(participant);
+            $scope.getBarRanking = function () {
+                if (MySession.contestIsEmpty() || !MySession.getUserName()) return null;
+                else {
+                    var rankings = ContestService.getPlayerRankings(MySession.getContest(), MySession.getUserName());
+                    return rankings.player;
                 }
             };
 
@@ -142,33 +106,6 @@
                     default:
                         return n + "th";
                 }
-            }
-
-            function loadLeaderRankings(contests) {
-                angular.forEach(contests, function (contest) {
-                    ContestService.getRankings(contest.OID()).then(function (response) {
-                        $log.info("Loading rankings for contest " + contest.OID() + "...");
-                        var rankings = response.data;
-                        contest.rankings = rankings;
-                        if (rankings.length) {
-                            contest.leader = rankings[0];
-                        }
-                    });
-                });
-            }
-
-            function loadPlayerRankings(contests, playerName) {
-                angular.forEach(contests, function (contest) {
-                    // is the player in the contest?
-                    if ($scope.containsPlayer(contest.participants, playerName)) {
-                        $log.info("Loading rankings for contest " + contest.OID() + " for player " + playerName + "...");
-                        ContestService.getRankings(contest.OID()).then(function (response) {
-                            var rankings = response.data;
-                            contest.rankings = rankings;
-                            contest.leader = findPlayerByName(rankings, playerName);
-                        });
-                    }
-                });
             }
 
             /**

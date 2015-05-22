@@ -156,8 +156,6 @@
             else {
                 service.contest = contest;
                 service.participant = null;
-                $log.info("MySession: participant = " + angular.toJson(service.getParticipant(), true));
-
                 $rootScope.$emit("contest_selected", contest);
             }
         };
