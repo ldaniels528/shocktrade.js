@@ -1,6 +1,7 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}
+import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
@@ -66,10 +67,22 @@ object ProfileResources extends Controller with MongoController with ErrorHandle
 
         // db.Players.update({_id:"51a308ac50c70a97d375a6b2", {$set:{exchangesToExclude:["AMEX", "NASDAQ", "NYSE"]}})
         mcP.update(
-          JS("_id" -> BSONObjectID(params.id)),
+          JS("_id" -> params.id.toBSID),
           JS("$set" -> JS("exchanges" -> JsArray(params.exchanges map (Json.toJson(_))))),
           new GetLastError(),
           upsert = false, multi = false) map (r => Ok(r.errMsg getOrElse ""))
+      case _ =>
+        Future.successful(BadRequest("JSON object expected"))
+    }
+  }
+
+  def deductFunds(id: String) = Action.async { implicit request =>
+    request.body.asJson flatMap(_.asOpt[WalletForm]) match {
+      case Some(form) =>
+        UserProfiles.deductFunds(id.toBSID, form.adjustment) map {
+          case Some(profile) => Ok(Json.toJson(profile))
+          case None => BadRequest("wallet adjustment failed")
+        }
       case _ =>
         Future.successful(BadRequest("JSON object expected"))
     }
@@ -170,23 +183,27 @@ object ProfileResources extends Controller with MongoController with ErrorHandle
     mcU.find(JS("userName" -> userName)).cursor[JsObject].collect[Seq](limit) map (o => Ok(JsArray(o)))
   }
 
-  case class ProfileForm(userName: String,
-                         facebookID: String,
-                         email: Option[String])
-
-  implicit val profileFormReads: Reads[ProfileForm] = (
-    (__ \ "userName").read[String] and
-      (__ \ "facebookID").read[String] and
-      (__ \ "email").readNullable[String])(ProfileForm.apply _)
-
-  class FieldException(val field: String) extends RuntimeException(s"Required field '$field' is missing")
-
   def toExchangeUpdate(js: JsValue): ExchangeUpdate = {
     val id = (js \ "id").asOpt[String].getOrElse(throw new FieldException("id"))
     val exchanges = (js \ "exchanges").asOpt[Array[String]].getOrElse(throw new FieldException("exchanges"))
     ExchangeUpdate(id, exchanges)
   }
 
+  class FieldException(val field: String) extends RuntimeException(s"Required field '$field' is missing")
+
+  case class ProfileForm(userName: String, facebookID: String, email: Option[String])
+
+  implicit val profileFormReads: Reads[ProfileForm] = (
+    (__ \ "userName").read[String] and
+      (__ \ "facebookID").read[String] and
+      (__ \ "email").readNullable[String])(ProfileForm.apply _)
+
   case class ExchangeUpdate(id: String, exchanges: Seq[String])
+
+  case class WalletForm(authCode: String, adjustment: BigDecimal)
+
+  implicit val walletFormReads: Reads[WalletForm] = (
+    (__ \ "authCode").read[String] and
+      (__ \ "adjustment").read[BigDecimal])(WalletForm.apply _)
 
 }

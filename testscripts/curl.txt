@@ -6,6 +6,14 @@ curl -X PUT -H "Content-Type: application/json" -d \
 '{"emailNotify":true,"symbol":"AMD","limitPrice":4.01,"quantity":"1000","orderType":"BUY","priceType":"LIMIT","orderTerm":"GOOD_FOR_7_DAYS","contestId":"532d248e4cb15ab024a83417","playerId":"51a308ac50c70a97d375a6b2"}' \
 http://localhost:9000/api/orders/create
 
+# Wallet
+
+curl -X POST -H "Content-Type: application/json" -d '{ "authCode":"BZASXS", "adjustment":-25000 }' \
+http://localhost:9000/api/profile/555a30123c00000c0125e9b2/wallet
+
+# Contest Quit
+
+curl -X DELETE http://localhost:9000/api/contest/554d0292dc093588031ad654/player/554fe61e2c0000ae0063bb03
 
 # Participants
 
