@@ -1,20 +1,21 @@
 package com.shocktrade.server.trading
 
+import java.text.SimpleDateFormat
 import java.util.Date
 
 import com.ldaniels528.tabular.Tabular
 import com.ldaniels528.tabular.formatters.FormatHandler
-import com.shocktrade.models.contest.{Contest, OrderType, PriceType}
-import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService
-import com.shocktrade.services.googlefinance.GoogleFinanceGetPricesService.{GfGetPricesRequest, GfPriceQuote}
+import com.shocktrade.models.contest.{Commissions, Contest, OrderType, PriceType}
 import com.shocktrade.services.util.DateUtil._
+import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
+import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
 import play.api.Logger
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.language.postfixOps
 
 /**
@@ -24,9 +25,7 @@ import scala.language.postfixOps
 object OrderProcessor {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
-  private val quoteCache = ConcurrentCache[String, Seq[GfPriceQuote]](2.hours)
-
-  def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
+  private val quoteCache = ConcurrentCache[String, Seq[YFIntraDayQuote]](2.hours)
 
   /**
    * Processes the given contest
@@ -37,7 +36,6 @@ object OrderProcessor {
 
     // perform the claiming process
     val results = {
-      /*
       // if claiming has never occurred, serially execute each
       if (c.processedTime.isEmpty) processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
 
@@ -49,12 +47,12 @@ object OrderProcessor {
 
       // otherwise nothing happens
       else Future.successful(Nil)
-      */
 
+      /*
       for {
         task1 <- processOrders(c, asOfDate, isDaysClose = false)
         task2 <- processOrders(c, asOfDate, isDaysClose = true)
-      } yield task1 ++ task2
+      } yield task1 ++ task2*/
     }
 
     // gather the outcomes
@@ -70,6 +68,11 @@ object OrderProcessor {
 
     } yield (claimOutcomes, closeOrders, updatedCount)
 
+    // is this contest expired?
+    if (c.expirationTime.exists(expTime => tradingClose >= expTime)) {
+      closedExpiredContest(c, asOfDate)
+    }
+
     // if successful, display the summary,
     // and return the update count
     allOutcomes map {
@@ -78,6 +81,90 @@ object OrderProcessor {
         updatedCount
     }
   }
+
+  def closedExpiredContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    Logger.info(s"Closing contest '${c.name}' ...")
+
+    val outcome = for {
+      closeOrders <- closeAllOpenOrders(c)
+      prices <- priceAllHeldSecurities(c)
+      sellOff <- liquidateAllHeldSecurities(c, prices, asOfDate)
+      closedContest_? <- ContestDAO.closeContest(c)
+    } yield sellOff
+
+    // display the results
+    outcome.map { sellOff =>
+      Logger.info(s"Contest '${c.name}' is closed.")
+      tabular.transform(sellOff) foreach (info(c, _))
+    }
+
+    // wait for this result
+    Await.result(outcome, 15.minutes)
+  }
+
+  private def closeAllOpenOrders(c: Contest)(implicit ec: ExecutionContext) = {
+    info(c, "[1] Close all active orders")
+    Future.sequence(c.participants.flatMap(participant => participant.orders map (order => ContestDAO.closeOrder(c.id, participant.id, order.id))))
+  }
+
+  private def priceAllHeldSecurities(c: Contest)(implicit ec: ExecutionContext) = {
+    info(c, "[2] Price all currently held securities")
+    val parameters = YFStockQuoteService.getParams("symbol", "exchange", "lastTrade", "tradeDate")
+    val tickers = c.participants.flatMap(_.positions.map(_.symbol)).distinct
+    Future.sequence(tickers.sliding(32, 32) map { symbols =>
+      val quotes = YFStockQuoteService.getQuotes(symbols, parameters)
+      quotes.map(_ map (q => Pricing(q.symbol, q.exchange, q.lastTrade, q.tradeDate)))
+    } toSeq) map (_.flatten)
+  }
+
+  private def liquidateAllHeldSecurities(c: Contest, prices: Seq[Pricing], asOfDate: Date)(implicit ec: ExecutionContext) = {
+    info(c, "[3] Liquidate all currently held securities")
+
+    // build the mapping of all prices
+    val quotes = Map(prices.map(q => (q.symbol, q)): _*)
+    //tabular.transform(prices) foreach (info(c, _))
+
+    // sell-off all positions
+    Future.sequence(c.participants flatMap { participant =>
+      participant.positions map { pos =>
+        // create a fake work-order
+        val workOrder = WorkOrder(
+          id = pos.id,
+          playerId = participant.id,
+          symbol = pos.symbol,
+          exchange = pos.exchange,
+          orderTime = asOfDate,
+          expirationTime = None,
+          orderType = OrderType.SELL,
+          price = for {q <- quotes.get(pos.symbol); p <- q.lastTrade} yield p,
+          priceType = PriceType.MARKET,
+          quantity = pos.quantity,
+          commission = Commissions.forMarket,
+          emailNotify = true,
+          volumeAtOrderTime = 0
+        )
+
+        // create a fake claim
+        val claim = Claim(
+          symbol = pos.symbol,
+          exchange = pos.exchange,
+          price = pos.pricePaid,
+          quantity = pos.quantity,
+          commission = Commissions.forMarket,
+          purchaseTime = asOfDate,
+          workOrder = workOrder)
+
+        // liquidate the asset
+        ContestDAO.reducePosition(c, claim, asOfDate) map { update =>
+          Liquidation(participant.name, pos.symbol, pos.pricePaid, pos.quantity, workOrder.price, update)
+        }
+      }
+    })
+  }
+
+  case class Pricing(symbol: String, exchange: Option[String], lastTrade: Option[Double], tradeDate: Option[Date])
+
+  case class Liquidation(player: String, symbol: String, pricePaid: BigDecimal, quantity: Int, marketPrice: Option[BigDecimal], update: Int = 0)
 
   /**
    * Processes the given orders
@@ -89,21 +176,24 @@ object OrderProcessor {
     val openOrders = ContestDAO.getOpenWorkOrders(c, asOfDate)
     val orders = if (isDaysClose) openOrders else openOrders.filterNot(_.priceType == PriceType.MARKET_ON_CLOSE)
 
-    info(c, s"${orders.size} eligible order(s) found")
-    tabular.transform(orders) foreach (info(c, _))
+    if (orders.nonEmpty) {
+      info(c, s"${orders.size} eligible order(s) found")
+      tabular.transform(orders) foreach (info(c, _))
 
-    // get the common asset quotes
-    val quotes = getEligibleStockQuotes(c, orders, asOfDate)
+      // get the common asset quotes
+      val quotes = getEligibleStockQuotes(c, orders, asOfDate)
 
-    // process the market close orders
-    val eligibleClaims = orders flatMap (processOrder(c, _, asOfDate, quotes))
+      // process the market close orders
+      val eligibleClaims = orders flatMap (processOrder(c, _, asOfDate, quotes))
 
-    // display the eligible claims
-    info(c, s"Attempting fulfillment on ${eligibleClaims.size} eligible claim(s)")
-    tabular.transform(eligibleClaims) foreach (info(c, _))
+      // display the eligible claims
+      info(c, s"Attempting fulfillment on ${eligibleClaims.size} eligible claim(s)")
+      tabular.transform(eligibleClaims) foreach (info(c, _))
 
-    // update positions for processed orders
-    processClaims(c, asOfDate, eligibleClaims)
+      // update positions for processed orders
+      processClaims(c, asOfDate, eligibleClaims)
+    }
+    else Future.successful(Nil)
   }
 
   private def processOrder(c: Contest, wo: WorkOrder, asOfDate: Date, quoteMap: Seq[StockQuote]): Option[Claim] = {
@@ -150,37 +240,50 @@ object OrderProcessor {
     }
   }
 
-  private def isEligible(c: Contest, wo: WorkOrder, q: StockQuote) = {
+  private def isEligible(c: Contest, wo: WorkOrder, q: StockQuote): Boolean = {
+    def isOk(state: Boolean) = if (state) "Ok" else "Bad"
+
     // is it a valid claim?
-    val requiredVolume = wo.quantity + (if (wo.orderTime < getTradeStartTime) 0L else wo.volumeAtOrderTime)
-    val goodTimeAndVolume = isEligibleTimeAndVolume(c, wo, q, requiredVolume)
-    val goodPrice = isEligiblePrice(c, wo, q)
+    val (isGoodTime, time) = isEligibleTime(c, wo, q)
+    val (isGoodVolume, volume) = isEligibleVolume(c, wo, q)
+    val (isGoodPrice, price) = isEligiblePrice(c, wo, q)
 
-    // if the requied volume is satified, and
+    // if the required volume is satisfied, and
     // the price type is either not LIMIT or the price is satisfied, then claim it
-    info(c, s"::isEligible => ${q.symbol} requiredVolume = $requiredVolume, goodTimeAndVolume = $goodTimeAndVolume, goodPrice = $goodPrice")
-    goodTimeAndVolume && goodPrice
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    info(c, f"[${sdf.format(new Date)}] symbol ${q.symbol}, price $price%.04f [${isOk(isGoodPrice)}], volume: $volume [${isOk(isGoodVolume)}] time ${sdf.format(time)} [${isOk(isGoodTime)} - order: ${sdf.format(wo.orderTime)}]")
+
+    isGoodTime && isGoodVolume && isGoodPrice
   }
 
-  private def isEligibleTimeAndVolume(c: Contest, wo: WorkOrder, q: StockQuote, requiredVolume: Long): Boolean = {
-    (wo.orderTime <= q.tradeDateTime) && (q.totalVolume >= requiredVolume)
+  private def isEligibleTime(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Date) = {
+    (wo.orderTime <= q.tradeDateTime, q.tradeDateTime)
   }
 
-  private def isEligiblePrice(c: Contest, wo: WorkOrder, q: StockQuote): Boolean  = {
+  private def isEligibleVolume(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Long) = {
+    (q.totalVolume >= wo.quantity, wo.quantity)
+  }
+
+  private def isEligiblePrice(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Double) = {
     wo.priceType match {
-      case PriceType.MARKET => true
-      case PriceType.MARKET_ON_CLOSE => true
-      case PriceType.LIMIT => wo.price exists (limit => if (wo.orderType == OrderType.BUY) limit >= q.price else limit <= q.price)
-      case PriceType.STOP_LIMIT => wo.price exists (limit => if (wo.orderType == OrderType.BUY) limit >= q.price else limit <= q.price) // TODO
+      case PriceType.MARKET => (q.price > 0, q.price)
+      case PriceType.MARKET_ON_CLOSE => (q.price > 0, q.price)
+      case PriceType.LIMIT =>
+        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderType.BUY && limit >= q.price) || (limit <= q.price)))
+        (isGood, q.price)
+      case PriceType.STOP_LIMIT =>
+        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderType.BUY && limit >= q.price) || (limit <= q.price))) // TODO
+        (isGood, q.price)
       case priceType =>
         error(c, s"Unhandled price type - $priceType")
-        false
+        (false, q.price)
     }
   }
 
   private def getEligibleStockQuotes(c: Contest, orders: Seq[WorkOrder], asOfDate: Date): Seq[StockQuote] = {
     // get the distinct set of symbols we need
     val symbols = orders.map(_.symbol).distinct
+    info(c, s"Retrieving quotes for symbols: ${symbols.mkString(",")}")
 
     // attempt to retrieve as many quotes from cache as we can
     val cachedQuotes = Map((for {
@@ -192,7 +295,7 @@ object OrderProcessor {
 
     // retrieve all remaining pricing quotes from the service
     val svcQuotes = Map(symbols.filterNot(cachedQuotes.contains) map { symbol =>
-      (symbol, GoogleFinanceGetPricesService.getQuotes(GfGetPricesRequest(symbol, intervalInSecs = 5, periodInDays = 1)))
+      (symbol, YFIntraDayQuotesService.getQuotes(symbol))
     }: _*)
 
     info(c, s"${svcQuotes.size} quote(s) retrieved from the service layer")
@@ -208,13 +311,15 @@ object OrderProcessor {
     val stockQuotes = (orders flatMap { o =>
       quotes.get(o.symbol) map { prices =>
         val totalVolume = prices.map(_.volume).sum
-        prices map (p => StockQuote(o.symbol, o.exchange, p.close, p.time, p.volume, totalVolume))
+        prices map (p => StockQuote(o.symbol, o.exchange, p.close, p.timestamp, p.volume, totalVolume))
       }
     }).flatten
 
     // display the stock quotes
     stockQuotes
   }
+
+  private def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
 
   private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 

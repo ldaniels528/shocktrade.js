@@ -34,6 +34,16 @@ object ContestDAO {
    */
   def createContest(c: Contest)(implicit ec: ExecutionContext): Future[LastError] = mc.insert(c)
 
+  def closeContest(c: Contest)(implicit ec: ExecutionContext) = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> c.id),
+      modify = new Update(BS(
+        "$set" -> BS("status" -> ContestStatus.CLOSED)),
+        fetchNewObject = true),
+      upsert = false))
+  }
+
   /**
    * Deletes a contest by ID
    * @param contestId the given contest ID
@@ -58,8 +68,8 @@ object ContestDAO {
     mc.find(BS(
       "status" -> ContestStatus.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
-      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))),
-      "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
+      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false))))//,
+     // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
     )).cursor[Contest]
   }
 

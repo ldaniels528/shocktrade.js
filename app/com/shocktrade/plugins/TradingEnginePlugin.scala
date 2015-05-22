@@ -26,7 +26,7 @@ class TradingEnginePlugin(app: Application) extends Plugin {
       Contests.start()
 
       // start the trading robots
-      TradingRobots.start()
+      //TradingRobots.start()
     }
   }
 
