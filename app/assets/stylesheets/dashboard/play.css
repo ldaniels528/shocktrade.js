@@ -10,6 +10,17 @@
 	margin-top: 5px;
 }
 
+.contest_lobby_gallery {
+	background: #e0e0e0;
+	border-radius: 6px;
+	padding: 4px
+}
+
+.contest_winners {
+    border-radius: 6px;
+    background: #e0e0e0;
+}
+
 .contest_even {
 
 }

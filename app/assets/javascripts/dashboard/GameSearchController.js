@@ -95,7 +95,7 @@
             };
 
             $scope.getStatusClass = function (c, maxPlayers) {
-                if(!c) return null;
+                if (!c) return null;
                 else {
                     var playerCount = ((c && c.participants) || []).length;
                     if (playerCount + 1 < maxPlayers) return "positive";
@@ -207,7 +207,7 @@
             };
 
             $scope.isJoinable = function (contest) {
-                return contest && !contest.invitationOnly && !$scope.isContestOwner(contest) && !$scope.isParticipant(contest);
+                return MySession.authenticated && contest && !contest.invitationOnly && !$scope.isContestOwner(contest) && !$scope.isParticipant(contest);
             };
 
             $scope.joinContest = function (contest) {

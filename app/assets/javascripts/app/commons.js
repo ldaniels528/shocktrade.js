@@ -3,15 +3,15 @@
  * @author lawrence.daniels@gmail.com
  */
 (function () {
-    var units = ["msec", "sec", "min", "hour", "day", "month", "year"];
-    var factors = [1000, 60, 60, 24, 30, 12];
+    var units = ["sec", "min", "hour", "day", "month", "year"];
+    var factors = [60, 60, 24, 30, 12];
 
     window.toDuration = function (time) {
         var duration = time && time.$date ? time.$date : time;
         if(duration === null || duration === undefined) return null;
 
         // compute the time delta
-        var delta = Date.now() - duration;
+        var delta = (Date.now() - duration) / 1000;
 
         // compute the age
         var unit = 0;
