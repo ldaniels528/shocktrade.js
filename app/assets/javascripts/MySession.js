@@ -136,7 +136,7 @@
         /////////////////////////////////////////////////////////////////////
 
         service.contestIsEmpty = function () {
-            return service.getContestID() === null;
+            return service.contest === null || service.getContestID() === null;
         };
 
         service.getContest = function () {
@@ -180,6 +180,10 @@
 
         service.getOrderHistory = function () {
             return service.getParticipant().orderHistory;
+        };
+
+        service.participantIsEmpty = function () {
+            return service.participant === null;
         };
 
         service.getParticipant = function () {

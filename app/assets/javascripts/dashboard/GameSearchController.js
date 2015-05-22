@@ -17,8 +17,8 @@
 
             // search variables
             $scope.searchOptions = {
-                activeOnly: true,
-                available: true,
+                activeOnly: false,
+                available: false,
                 friendsOnly: false,
                 levelCap: "1",
                 levelCapAllowed: false,

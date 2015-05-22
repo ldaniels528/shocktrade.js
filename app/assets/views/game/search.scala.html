@@ -34,19 +34,21 @@
 
                 <div ng-repeat="c in getSearchResults(searchTerm)" class="row clickable"
                     ng-click="selectContest(c)"
-                    ng-class="selectedContest.OID() === c.OID() ? 'selected' : ''">
+                    ng-class="selectedContest.OID() === c.OID() ? 'selected' : (c.status === 'ACTIVE' ? '' : 'null')">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <img ng-hide="c.status === 'ACTIVE'" src="/assets/images/status/offlight.png">
                         <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
                         {{ c.name }}
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-show="c.startTime">{{ c.startTime | elapsed }}</span>
+                        <span ng-show="c.startTime" ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.startTime | elapsed }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
-                        <span ng-hide="c.expirationTime">&#8212;</span>
+                        <span ng-show="c.status === 'ACTIVE'">
+                            <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
+                            <span ng-hide="c.expirationTime">&#8212;</span>
+                        </span>
+                        <span class="st_control" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
                         <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>

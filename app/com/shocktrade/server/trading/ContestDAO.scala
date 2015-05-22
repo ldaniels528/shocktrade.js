@@ -41,7 +41,7 @@ object ContestDAO {
       modify = new Update(BS(
         "$set" -> BS("status" -> ContestStatus.CLOSED)),
         fetchNewObject = true),
-      upsert = false))
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
   /**
@@ -68,8 +68,8 @@ object ContestDAO {
     mc.find(BS(
       "status" -> ContestStatus.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
-      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false))))//,
-     // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
+      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))) //,
+      // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
     )).cursor[Contest]
   }
 

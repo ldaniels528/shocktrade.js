@@ -3,9 +3,11 @@ package com.shocktrade.server.trading
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.ldaniels528.tabular.formatters.FormatHandler
 import com.shocktrade.models.contest.{Commissions, Contest, OrderType, PriceType}
+import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
 import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}
@@ -15,7 +17,7 @@ import play.api.Logger
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 /**
@@ -89,17 +91,15 @@ object OrderProcessor {
       closeOrders <- closeAllOpenOrders(c)
       prices <- priceAllHeldSecurities(c)
       sellOff <- liquidateAllHeldSecurities(c, prices, asOfDate)
-      closedContest_? <- ContestDAO.closeContest(c)
-    } yield sellOff
+      closedContest <- ContestDAO.closeContest(c) map (_ orDie "Contest could not be closed")
+      refunds <- refundTheProceedsToParticipants(closedContest)
+    } yield (sellOff, closedContest)
 
     // display the results
-    outcome.map { sellOff =>
+    outcome.map { case (sellOff, _) =>
       Logger.info(s"Contest '${c.name}' is closed.")
       tabular.transform(sellOff) foreach (info(c, _))
     }
-
-    // wait for this result
-    Await.result(outcome, 15.minutes)
   }
 
   private def closeAllOpenOrders(c: Contest)(implicit ec: ExecutionContext) = {
@@ -159,6 +159,12 @@ object OrderProcessor {
           Liquidation(participant.name, pos.symbol, pos.pricePaid, pos.quantity, workOrder.price, update)
         }
       }
+    })
+  }
+
+  private def refundTheProceedsToParticipants(c: Contest)(implicit ec: ExecutionContext) = {
+    Future.sequence(c.participants map { participant =>
+      UserProfiles.deductFunds(participant.id, -participant.fundsAvailable)
     })
   }
 

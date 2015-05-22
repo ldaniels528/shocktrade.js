@@ -51,12 +51,14 @@
         };
 
         service.getContestByID = function (contestId) {
-            if(!contestId) throw "Contest ID is null or undefined";
+            if(!contestId) throw "getContestByID: Contest ID is null or undefined";
             else return $http.get("/api/contest/" + contestId);
         };
 
         service.getParticipantByID = function (contestId, playerId) {
-            return $http.get("/api/contest/" + contestId + "/player/" + playerId);
+            if(!contestId) throw "getParticipantByID: Contest ID is null or undefined";
+            else if(!playerId) throw "getParticipantByID: Player ID is null or undefined";
+            else return $http.get("/api/contest/" + contestId + "/player/" + playerId);
         };
 
         service.getCashAvailable = function (contest, playerId) {
@@ -68,24 +70,24 @@
         };
 
         service.getRankings = function (contestId) {
-            if(!contestId) throw "Contest ID is null or undefined";
+            if(!contestId) throw "getRankings: Contest ID is null or undefined";
             else return $http.get("/api/contest/" + contestId + "/rankings");
         };
 
         service.getContestsByPlayerID = function (playerId) {
-            if(!playerId) throw "Player ID is null or undefined";
+            if(!playerId) throw "getContestsByPlayerID: Player ID is null or undefined";
             else return $http.get('/api/contests/player/' + playerId);
         };
 
         service.getEnrichedOrders = function (contestId, playerId) {
-            if(!contestId) throw "Contest ID is null or undefined";
-            else if(!playerId) throw "Player ID is null or undefined";
+            if(!contestId) throw "getEnrichedOrders: Contest ID is null or undefined";
+            else if(!playerId) throw "getEnrichedOrders: Player ID is null or undefined";
             else return $http.get('/api/contest/' + contestId + '/orders/' + playerId);
         };
 
         service.getEnrichedPositions = function (contestId, playerId) {
-            if(!contestId) throw "Contest ID is null or undefined";
-            else if(!playerId) throw "Player ID is null or undefined";
+            if(!contestId) throw "getEnrichedPositions: Contest ID is null or undefined";
+            else if(!playerId) throw "getEnrichedPositions: Player ID is null or undefined";
             else return $http.get('/api/contest/' + contestId + '/positions/' + playerId);
         };
 
@@ -94,7 +96,7 @@
         /////////////////////////////////////////////////////////////////////////////
 
         service.getTotalInvestment = function (playerId) {
-            if(!playerId) throw "Player ID is null or undefined";
+            if(!playerId) throw "getTotalInvestment: Player ID is null or undefined";
             else return $http.get('/api/contests/player/' + playerId + '/totalInvestment');
         };
 

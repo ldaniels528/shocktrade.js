@@ -5,8 +5,8 @@
      * Portfolio Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PortfolioController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
-        function ($scope, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
+    app.controller('PortfolioController', ['$scope', '$cookieStore', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
+        function ($scope, $cookieStore, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
 
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;
@@ -62,7 +62,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return MySession.getContestStatus() !== 'ACTIVE';
+                    return true;
                 }
             }, {
                 "name": "Performance",
@@ -72,7 +72,7 @@
                 "init": function () {
                 },
                 "isLocked": function () {
-                    return MySession.getContestStatus() !== 'ACTIVE';
+                    return true;
                 }
             }, {
                 "name": "Exposure",
@@ -100,35 +100,40 @@
             };
 
             $scope.getRankings = function () {
-                var contest = MySession.getContest();
-                if (!contest) return [];
-                else if (!contest.rankings) {
-                    contest.rankings = [];
-                    $log.info("Loading rankings....");
-                    ContestService.getRankings(contest.OID())
-                        .success(function (rankings) {
-                            contest.rankings = rankings;
-                        })
-                        .error(function (response) {
-                            toaster.pop('error', 'Error!', "Error loading play rankings");
-                            $log.error(response.error)
-                        });
+                if (MySession.contestIsEmpty()) return [];
+                else {
+                    var contest = MySession.getContest();
+                    if (!contest.rankings) {
+                        contest.rankings = [];
+                        $log.info("Loading rankings....");
+                        ContestService.getRankings(contest.OID())
+                            .success(function (rankings) {
+                                contest.rankings = rankings;
+                            })
+                            .error(function (response) {
+                                toaster.pop('error', 'Error!', "Error loading play rankings");
+                                $log.error(response.error)
+                            });
+                    }
+                    return contest.rankings;
                 }
-                return contest.rankings;
             };
 
             $scope.getRankingByFBID = function () {
-                var contest = MySession.getContest();
-                var facebookID = MySession.fbUserID;
-                if (!contest.myRanking) {
-                    for (var n = 0; n < (contest.rankings || []).length; n++) {
-                        if (contest.rankings[n].facebookID === facebookID) {
-                            contest.myRanking = contest.rankings[n];
-                            return contest.myRanking;
+                if(MySession.contestIsEmpty()) return {};
+                else {
+                    var contest = MySession.getContest();
+                    var facebookID = MySession.fbUserID;
+                    if (!contest.myRanking) {
+                        for (var n = 0; n < (contest.rankings || []).length; n++) {
+                            if (contest.rankings[n].facebookID === facebookID) {
+                                contest.myRanking = contest.rankings[n];
+                                return contest.myRanking;
+                            }
                         }
                     }
+                    return contest.myRanking;
                 }
-                return contest.myRanking;
             };
 
             /////////////////////////////////////////////////////////////////////
@@ -257,7 +262,7 @@
 
             $scope.asOfDate = function () {
                 var participant = MySession.getParticipant();
-                return participant && participant.lastTradeTime ? participant.lastTradeTime : new Date();
+                return participant.lastTradeTime || new Date();
             };
 
             $scope.getTotalOrders = function () {
@@ -315,28 +320,32 @@
             /////////////////////////////////////////////////////////////////////
 
             function enrichOrders(participant) {
-                if (participant && !participant.enrichedOrders) {
-                    participant.enrichedOrders = true;
-                    ContestService.getEnrichedOrders(MySession.getContestID(), participant.OID())
-                        .success(function (enrichedOrders) {
-                            MySession.getParticipant().orders = enrichedOrders;
-                        })
-                        .error(function (err) {
-                            toaster.pop('error', 'Error!', "Error loading enriched orders");
-                        });
+                if(! MySession.participantIsEmpty()) {
+                    if (!participant.enrichedOrders) {
+                        participant.enrichedOrders = true;
+                        ContestService.getEnrichedOrders(MySession.getContestID(), participant.OID())
+                            .success(function (enrichedOrders) {
+                                MySession.getParticipant().orders = enrichedOrders;
+                            })
+                            .error(function (err) {
+                                toaster.pop('error', 'Error!', "Error loading enriched orders");
+                            });
+                    }
                 }
             }
 
             function enrichPositions(participant) {
-                if (participant && !participant.enrichedPositions) {
-                    participant.enrichedPositions = true;
-                    ContestService.getEnrichedPositions(MySession.getContestID(), participant.OID())
-                        .success(function (enrichedPositions) {
-                            MySession.getParticipant().positions = enrichedPositions;
-                        })
-                        .error(function (err) {
-                            toaster.pop('error', 'Error!', "Error loading enriched positions");
-                        });
+                if(! MySession.participantIsEmpty()) {
+                    if (!participant.enrichedPositions) {
+                        participant.enrichedPositions = true;
+                        ContestService.getEnrichedPositions(MySession.getContestID(), participant.OID())
+                            .success(function (enrichedPositions) {
+                                MySession.getParticipant().positions = enrichedPositions;
+                            })
+                            .error(function (err) {
+                                toaster.pop('error', 'Error!', "Error loading enriched positions");
+                            });
+                    }
                 }
             }
 
