@@ -268,6 +268,12 @@ object ContestDAO {
         val startingBalance = contest.startingBalance.toDouble
         Seq(
           Perk(
+            code = "FEEWAIVR",
+            name = "Fee Waiver",
+            cost = 100.00,
+            description = "Reduces the commissions the player pays for buying or selling securities"
+          ),
+          Perk(
             code = "PRCHEMNT",
             name = "Purchase Eminent",
             cost = startingBalance * 0.025d,
@@ -284,12 +290,6 @@ object ContestDAO {
             name = "Compounded Daily",
             cost = startingBalance * 0.05d,
             description = "Gives the player the ability to earn interest on cash not currently invested"
-          ),
-          Perk(
-            code = "FEEWAIVR",
-            name = "Fee Waiver",
-            cost = startingBalance * 0.05d,
-            description = "Reduces the commissions the player pays for buying or selling securities"
           ),
           Perk(
             code = "MARGIN",
