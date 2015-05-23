@@ -1,154 +1,47 @@
 /*********************************************************************************
  * 							Exchange-specific colors							 *
  *********************************************************************************/
- 
-.cube {
-	display: inline; 
-	border-radius: 4px 4px 4px 4px;
-	width: 16px; 
-	height: 16px;
-	margin-left: 10px;
-}
 
-.exchange_legend {
-	display: block; 
-	background-color: #eeeeee; 
-	border: 1px solid #888888; 
-	border-radius: 5px 5px 5px 5px; 
-	padding: 2px 2px 2px 2px; 
-	margin-top: 2px; 
-	margin-bottom: 2px;
-	vertical-align: middle;
-}
-
-div.AMEX {
-	background-color: #888800;
-}
-
-span.AMEX {
-	font-weight: normal;
+.AMEX {
 	color: #888800;
 }
 
-div.BATS {
-	background-color: #885500;
+.ASE {
+	color: #6688ff;
 }
 
-span.BATS {
-	font-weight: normal;
+.BATS {
 	color: #885500;
 }
 
-div.CCY {
-	background-color: #888800;
+.CCY {
+	color: #8888ff;
 }
 
-span.CCY {
-	font-weight: normal;
-	color: #888800;
-}
-
-div.LSE {
-	background-color: #88aa88;
-}
-
-span.LSE {
-	font-weight: normal;
+.LSE {
 	color: #88aa88;
 }
 
-div.NASDAQ {
-	background-color: #0044ff;
-}
-
-span.NasdaqGS {
-	font-weight: normal;
+.NASDAQ {
 	color: #0044ff;
 }
 
-span.NASDAQ {
-	font-weight: normal;
-	color: #0044ff;
-}
-
-span.NASDAQNM {
-	font-weight: normal;
-	color: #0044ff;
-}
-
-div.NCM {
-	background-color: #8044ff;
-}
-
-span.NCM {
-	font-weight: normal;
-	color: #8044ff;
-}
-
-div.NGM {
-	background-color: #608890;
-}
-
-span.NGM {
-	font-weight: normal;
-	color: #608890;
-}
-
-div.NIKKEI {
-	background-color: #ff4450;
-}
-
-span.NIKKEI {
-	font-weight: normal;
-	color: #ff4450;
-}
-
-div.NYSE {
-	background-color: #008800;
-}
-
-span.NYSE {
-	font-weight: normal;
+.NYSE {
 	color: #008800;
 }
 
-div.OTCBB {
-	background-color: magenta;
-}
- 
-span.OTCBB {
-	font-weight: normal;
+.OTCBB {
 	color: magenta;
 }
 
-span.OTHER_OTC {
-	font-weight: normal;
+.OTHER_OTC {
 	color: #880088;
 }
 
-div.PCX {
-	background-color: #404088;
+.PCX {
+	color: #77aa88;
 }
 
-span.PCX {
-	font-weight: normal;
-	color: #404088;
-}
-
-div.TORONTO {
-	background-color: #7f7fff;
-}
-
-span.TORONTO {
-	font-weight: normal;
-	color: #7f7fff;
-}
-
-div.TSE {
-	background-color: #ff8840;
-}
-
-span.TSE {
-	font-weight: normal;
+.TSE {
 	color: #ff8840;
 }

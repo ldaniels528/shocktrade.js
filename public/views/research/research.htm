@@ -1,121 +1,174 @@
-<div style="display: block; width: 100%">
-	<div ng-include src="'/assets/views/partial/market_status.htm'"></div>
-	<div style="display: block; width: 100%; padding: 2px" class="block_lite_blue">
-		<div style="display: inline; float: left; width: 50%">
-			<span style="font-weight: bold; color: #0000aa">Filter:</span>
-			<select ng-model="selection.filterId" ng-change="updateFilter(selection.filterId)">
-				<option ng-repeat="filter in MySession.userProfile.filters" value="{{ filter.OID() }}">{{ filter.name }}</option>
-			</select>
-			<img ng-hide="isLoading()" class="middle clickable" ng-click="search()" src="/assets/images/objects/refresh.png">
-			<img ng-show="isLoading()" class="middle" src="/assets/images/status/loading.gif">		
-		</div>
-		<div style="display: inline; float: left; width: 30%">
-			<span style="font-weight: bold; color: #0000aa">Max Results:</span>
-			<select ng-model="selection.maxResults" class="input-small" ng-change="search()">
-				<option ng-repeat="size in maxResultsSet" value="{{ size }}">{{ size }}</option>
-			</select>
-		</div>
-		<div style="display: inline; float: right; width: 20%">
-			<span class="action_bar">
-				<img class="action_button" 
-					src="/assets/images/objects/filter_add.gif" 
-					popover="Add a new filter" popover-trigger="mouseenter">
-				<img class="action_button" 
-					ng-click="conditionDialogPopup()"				
-					src="/assets/images/objects/filter_edit.png" 
-					popover="Edit this filter" popover-trigger="mouseenter">
-				<img class="action_button" 
-					src="/assets/images/objects/filter_delete.png" 
-					popover="Delete this filter" popover-trigger="mouseenter">
-			</span>
-		</div>
-		<br style="clear: both">
-	</div>
-	
-	<div style="display: block">
-		<div style="display: block; width: 100%; background-color: #eeeeee; border: 1px solid #cccccc; border-radius: 4px 4px 4px 4px; padding-left: 5px">
-			<span ng-repeat="exchange in exchangeSets" class="{{ exchange.id }}" style="margin-right: 15px">
-				<nobr>
-					<input type="checkbox" ng-model="exchange.selected"> 
-					<label for="exchange.selected">{{ exchange.id }}</label>
-					({{ counts[exchange.id] || 0 }})
-				</nobr>
-			</span>
-		</div>
-	</div>
-	
-	<span ng-show="message != ''" class="error"><i class="fa fa-warning warning"></i> {{ message }}</span>
-	
-	<div>
+<div>
+    <!-- Filtering Options -->
+    <div class="col-md-12">
+        <fieldset>
+            <legend>Stock Screener</legend>
+
+            <form class="form-horizontal">
+                <!-- Exchanges -->
+                <div class="col-md-12 rs_exchange_block">
+                    <span ng-repeat="(exchange, selected) in exchangeSets" style="margin-right: 15px">
+                        <nobr>
+                            <input id="xchg_selected" type="checkbox" ng-model="exchangeSets[exchange]" ng-click="filterExchanges()">
+                            <label ng-class="exchange" for="xchg_selected">{{ exchange }}</label>
+                            ({{ exchangeCounts[exchange] || 0 }})
+                        </nobr>
+                    </span>
+                </div>
+
+                <!-- Share Price -->
+                <div class="col-md-6">
+                    <div class="col-md-4 rs_label">Share Price</div>
+                    <div class="form-group-sm col-md-4">
+                        <label for="priceMin">Min</label>
+                        <select id="priceMin" class="form-control" ng-model="searchOptions.priceMin" ng-options="'$' + p for p in priceRanges">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                    <div class="form-group-sm col-md-4">
+                        <label for="priceMax">Max</label>
+                        <select id="priceMax" class="form-control" ng-model="searchOptions.priceMax" ng-options="'$' + p for p in priceRanges.slice(1, priceRanges.length)">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Volume -->
+                <div class="col-md-6">
+                    <div class="col-md-4 rs_label">Volume</div>
+                    <div class="form-group-sm col-md-4">
+                        <label for="volumeMin">Min</label>
+                        <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v for v in volumeRanges">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                    <div class="form-group-sm col-md-4">
+                        <label for="volumeMax">Max</label>
+                        <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v for v in volumeRanges.slice(1, volumeRanges.length)">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Change (%) -->
+                <div class="col-md-6">
+                    <div class="col-md-4 rs_label">Change (%)</div>
+                    <div class="col-md-4">
+                        <label for="changeMin">Min</label>
+                        <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in percentages">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="changeMax">Max</label>
+                        <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in percentages">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Spread -->
+                <div class="col-md-6">
+                    <div class="col-md-4 rs_label">Spread (%)</div>
+                    <div class="col-md-4">
+                        <label for="spreadMin">Min</label>
+                        <select id="spreadMin" class="form-control" ng-model="searchOptions.spreadMin" ng-options="p + '%' for p in percentages">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="spreadMax">Max</label>
+                        <select id="spreadMax" class="form-control" ng-model="searchOptions.spreadMax" ng-options="p + '%' for p in percentages">
+                            <option value="">ANY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <button class="btn st_button" ng-click="quoteSearch(searchOptions)">
+                        <i ng-hide="loading" class="fa fa-search"></i>
+                        <img ng-show="loading" ng-disabled="loading" src="/assets/images/status/loading.gif">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+
+    <!-- Search Results -->
+	<div class="col-md-12" style="margin-top: 20px">
 		<fieldset>
-			<legend>Search Results (<span ng-class="getSearchResultClass(count)">{{ count }}</span>)</legend>
+			<legend>Search Results (<span ng-class="getSearchResultClass(getSearchResultsCount())">{{ getSearchResultsCount() }}</span>)</legend>
+
+            <!-- Search Results -->
 			<table class="results">
 				<tr>
 					<th class="results">
 						<a href="" ng-click="sortBy = 'symbol'; reverse = !reverse">Symbol</a>
-						<img ng-show="sortBy == 'symbol' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'symbol' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'symbol'" src="/assets/images/status/transparent12.png">
+                        <i ng-show="sortBy !== 'symbol'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'symbol' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'symbol' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'lastTrade' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'lastTrade' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'lastTrade'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'lastTrade'; reverse = !reverse">Last</a>
+                        <a href="" ng-click="sortBy = 'lastTrade'; reverse = !reverse">Last</a>
+                        <i ng-show="sortBy !== 'lastTrade'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'lastTrade' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'lastTrade' && !reverse" class="fa fa-sort-down"></i>
+
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'open' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'open' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'open'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'open'; reverse = !reverse">Open</a>
+                        <a href="" ng-click="sortBy = 'open'; reverse = !reverse">Open</a>
+                        <i ng-show="sortBy !== 'open'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'open' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'open' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'close' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'close' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'close'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'close'; reverse = !reverse">Close</a>
+                        <a href="" ng-click="sortBy = 'close'; reverse = !reverse">Close</a>
+                        <i ng-show="sortBy !== 'close'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'close' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'close' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'changePct' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'changePct' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'changePct'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'changePct'; reverse = !reverse">Chg %</a>
+                        <a href="" ng-click="sortBy = 'changePct'; reverse = !reverse">Chg %</a>
+                        <i ng-show="sortBy !== 'changePct'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'changePct' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'changePct' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'low' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'low' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'low'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'low'; reverse = !reverse">Low</a>
+                        <a href="" ng-click="sortBy = 'low'; reverse = !reverse">Low</a>
+                        <i ng-show="sortBy !== 'low'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'low' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'low' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'high' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'high' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'high'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'high'; reverse = !reverse">High</a>
+                        <a href="" ng-click="sortBy = 'high'; reverse = !reverse">High</a>
+                        <i ng-show="sortBy !== 'high'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'high' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'high' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-						<img ng-show="sortBy == 'spread' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'spread' && !reverse" src="/assets/images/buttons/sort_desc.gif">	
-						<img ng-show="sortBy != 'spread'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'spread'; reverse = !reverse">Spread %</a>
+                        <a href="" ng-click="sortBy = 'spread'; reverse = !reverse">Spread %</a>
+                        <i ng-show="sortBy !== 'spread'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'spread' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'spread' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_bignum">
-						<img ng-show="sortBy == 'volume' && reverse" src="/assets/images/buttons/sort_asc.gif">
-						<img ng-show="sortBy == 'volume' && !reverse" src="/assets/images/buttons/sort_desc.gif">
-						<img ng-show="sortBy != 'volume'" src="/assets/images/status/transparent12.png">
-						<a href="" ng-click="sortBy = 'volume'; reverse = !reverse">Volume</a>
+                        <a href="" ng-click="sortBy = 'volume'; reverse = !reverse">Volume</a>
+                        <i ng-show="sortBy !== 'volume'" class="fa fa-sort"></i>
+						<i ng-show="sortBy === 'volume' && reverse" class="fa fa-sort-up"></i>
+						<i ng-show="sortBy === 'volume' && !reverse" class="fa fa-sort-down"></i>
 					</th>
 				</tr>
 			</table>
 			<div id="searchResults">
-				<span ng-hide="count > 0" class="notice">No matches found</span>
+				<span ng-hide="getSearchResultsCount()" class="notice">No matches found</span>
 				<table class="results">
-					<tr ng-repeat="quote in filteredSearchResults | orderBy: (reverse ? '-' : '') + sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
+					<tr ng-repeat="quote in getSearchResults() | orderBy: (reverse ? '-' : '') + sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
 						<td class="results">
 							<a class="links" ng-href="#/discover/{{ quote.symbol }}">
 								<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(row) }}">
 								<span ng-class="quote.exchange"
-									popover="{{ quote.name }}" 
+									popover="{{ quote.name }}"
 									popover-placement="right"
 									popover-trigger="mouseenter">{{ quote.symbol }}</span>
 							</a>
@@ -123,40 +176,40 @@
 						<td class="results_num">
 							<span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
 							<span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
-						</td>					
+						</td>
 						<td class="results_num">
 							<span ng-show="quote.open != null">{{ quote.open | quoteNumber }}</span>
 							<span ng-show="quote.open == null" class="null center">&#8212;</span>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.close != null">{{ quote.close | quoteNumber }}</span>
-							<span ng-show="quote.close == null" class="null center">&#8212;</span>														
+							<span ng-show="quote.close == null" class="null center">&#8212;</span>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | number:1 }}</span>
-							<span ng-show="quote.changePct == null" class="null center">&#8212;</span>		
-							<changeArrow value="{{ quote.changePct }}">								
+							<span ng-show="quote.changePct == null" class="null center">&#8212;</span>
+							<changeArrow value="{{ quote.changePct }}"></changeArrow>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>
-							<span ng-show="quote.low == null" class="null center">&#8212;</span>															
+							<span ng-show="quote.low == null" class="null center">&#8212;</span>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.high != null">{{ quote.high | quoteNumber }}</span>
-							<span ng-show="quote.high == null" class="null center">&#8212;</span>														
+							<span ng-show="quote.high == null" class="null center">&#8212;</span>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.spread != null" ng-class="quote.spread > 50 ? 'positive' : ''">{{ quote.spread | number:2 }}</span>
-							<span ng-show="quote.spread == null" class="null center">&#8212;</span>														
+							<span ng-show="quote.spread == null" class="null center">&#8212;</span>
 						</td>
 						<td class="results_bignum">
 							<span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
-							<span ng-show="quote.volume == null" class="null center">&#8212;</span>													
-						</td>					
+							<span ng-show="quote.volume == null" class="null center">&#8212;</span>
+						</td>
 					</tr>
 				</table>
-			</div>	
-		</fieldset>	
+			</div>
+		</fieldset>
 	</div>
 </div>
 	

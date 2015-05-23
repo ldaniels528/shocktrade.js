@@ -77,6 +77,9 @@ GET           /api/quotes/riskLevel/:symbol                         com.shocktra
 GET           /api/quotes/symbol/:symbol                            com.shocktrade.controllers.QuoteResources.getQuote(symbol)
 GET           /api/quotes/tradingHistory/:symbol                    com.shocktrade.controllers.QuoteResources.getTradingHistory(symbol)
 
+# Research
+POST          /api/research/search                                  com.shocktrade.controllers.ResearchController.quoteSearch
+
 # Online Status
 GET           /api/online/:userID                                   com.shocktrade.controllers.OnlineStatusResources.getStatus(userID)
 POST          /api/online                                           com.shocktrade.controllers.OnlineStatusResources.getGroupStatus
