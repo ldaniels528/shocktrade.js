@@ -1,0 +1,65 @@
+<script type="text/ng-template" id="margin_acct_dialog.htm">
+    <div class="modal-header st_modal_header">
+        <h4>Margin Account</h4>
+    </div>
+    <div class="modal-body" ng-init="showDetails = false; init()">
+        <div class="row">
+            <div class="col-md-5 bold">Funds Deposited</div>
+            <div class="col-md-7">$ {{ getDepositedFunds() | number:2 }}</div>
+
+            <div class="col-md-5 bold">Initial /  Maintenance Margins</div>
+            <div class="col-md-7"> {{ getInitialMargin() * 100 | number }}% / {{ getMaintenanceMargin() * 100 | number }}%</div>
+
+            <div class="col-md-5 bold">Effective Buying Power</div>
+            <div class="col-md-7">$ {{ getBuyingPower() | number:2 }}</div>
+
+            <div class="col-md-5 bold">Investment Value</div>
+            <div class="col-md-7 st_blue">$ {{ getInvestmentValue() | number:2 }}</div>
+
+            <div class="col-md-5 bold">Margin Funds Available</div>
+            <div class="col-md-7">
+                <span ng-show="getNetMarginFundsAvailable() >= 0" class="positive">$ {{ getNetMarginFundsAvailable() | number:2 }}</span>
+                <span ng-hide="getNetMarginFundsAvailable() >= 0" class="negative">$ {{ getNetMarginFundsAvailable() | number:2 }}</span>
+            </div>
+
+            <div ng-show="getNetMarginFundsAvailable() < 0">
+                <div class="col-md-5 bold">Minimum Cash Deposit</div>
+                <div class="col-md-7 st_orange">$ {{ getMinimumDepositAmount() | number:2 }}</div>
+            </div>
+
+            <div class="col-md-5 bold">Status</div>
+            <div class="col-md-7">
+                <span ng-show="getNetMarginFundsAvailable() < 0" class="st_orange">Margin Call</span>
+                <span ng-hide="getNetMarginFundsAvailable() < 0" class="st_green">Good Standing</span>
+            </div>
+
+            <div class="col-md-12 form-group" style="margin-top: 10px">
+                <label for="action">Action</label>
+                <select id="action" class="form-control" ng-model="action" ng-options="a.label for a in actions"></select>
+            </div>
+
+            <div class="col-md-12 form-group">
+                <label for="amount">Amount</label>
+                <input class="form-control" id="amount" type="text" ng-model="amount">
+            </div>
+
+            <div class="col-md-12" style="margin-top: 15px">
+                What is a <a ng-click="showDetails = !showDetails">Margin Account</a>? <span ng-show="showDetails">
+                A margin account is an account offered by brokerages that allows investors to borrow money to buy securities.
+                An investor might put down 50% of the value of a purchase and borrow the rest from the broker. The broker
+                charges the investor interest for the right to borrow money and uses the securities as collateral.
+                (see <a target="newwindow" href="http://www.investopedia.com/terms/m/marginaccount.asp">Investopedia</a>).</span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="accept()">
+                <img ng-show="processing" src="/assets/images/status/loading.gif"> Accept
+            </button>
+            <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</script>

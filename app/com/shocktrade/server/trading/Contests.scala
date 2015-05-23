@@ -8,6 +8,7 @@ import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import com.shocktrade.actors.ContestActor
 import com.shocktrade.actors.ContestActor._
+import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
@@ -171,7 +172,7 @@ object Contests {
    * @param totalCost the total cost of the perks
    * @return a promise of an option of a contest
    */
-  def purchasePerks(id: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double): Future[Option[Contest]] = {
+  def purchasePerks(id: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double): Future[Option[Contest]] = {
     (contestActor(id) ? PurchasePerks(id, playerId, perkCodes, totalCost)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]

@@ -77,27 +77,6 @@
             }];
 
             /////////////////////////////////////////////////////////////////////
-            //          Participant Functions
-            /////////////////////////////////////////////////////////////////////
-
-            $scope.isRankingsShown = function () {
-                return !MySession.getContest().rankingsHidden;
-            };
-
-            $scope.toggleRankingsShown = function () {
-                var contest = MySession.getContest();
-                contest.rankingsHidden = !contest.rankingsHidden;
-            };
-
-            $scope.getRankings = function () {
-                if (MySession.contestIsEmpty()) return [];
-                else {
-                    var rankings = ContestService.getPlayerRankings(MySession.getContest(), MySession.getUserName());
-                    return rankings.participants;
-                }
-            };
-
-            /////////////////////////////////////////////////////////////////////
             //          Selected Active Order Functions
             /////////////////////////////////////////////////////////////////////
 
@@ -108,8 +87,8 @@
 
             $scope.cancelOrder = function (contestId, playerId, orderId) {
                 ContestService.deleteOrder(contestId, playerId, orderId)
-                    .success(function (participant) {
-                        updateWithPricing(participant);
+                    .success(function (contest) {
+                        MySession.setContest(contest);
                     })
                     .error(function (err) {
                         toaster.pop('error', 'Error!', "Failed to cancel order");

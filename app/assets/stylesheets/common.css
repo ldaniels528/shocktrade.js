@@ -29,10 +29,6 @@ body {
 	color: #2e6da4;
 }
 
-.expander {
-    color: #0000aa;
-}
-
 .white {
     color: #ffffff;
 }
@@ -74,7 +70,15 @@ legend {
 }
 
 .st_blue {
-	color: #1166ff;
+	color: #337ab7;
+}
+
+.st_orange {
+    color: #ff8000;
+}
+
+.st_green {
+    color: #00aa88;
 }
 
 div.st_nav_bar {
@@ -139,7 +143,7 @@ img.st_rounded {
 
 .selected {
 	font-weight: bold;
-	color: #ff8800;
+	color: #ff8000;
 }
 
 .wrapper input[type="text"] {
@@ -215,7 +219,7 @@ span.error {
 }
 
 ul.error {
-	list-style-image: url("/assets/images/status/redlight.gif");
+	list-style-image: url("/assets/images/status/redlight.png");
 }
 
 .error_bar {	

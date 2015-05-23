@@ -5,6 +5,7 @@ import java.util.Date
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.actors.ContestActor._
 import com.shocktrade.actors.WebSockets._
+import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest.{Contest, _}
 import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
 import com.shocktrade.util.DateUtil._
@@ -199,7 +200,7 @@ object ContestActor {
 
   case class JoinContest(contestId: BSONObjectID, participant: Participant)
 
-  case class PurchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double)
+  case class PurchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double)
 
   case class ProcessOrders(contest: Contest, asOfDate: DateTime)
 

@@ -3,8 +3,8 @@ package com.shocktrade.server.trading
 import java.util.Date
 
 import com.shocktrade.models.contest.ClosedOrder
-import com.shocktrade.models.contest.OrderType._
-import com.shocktrade.models.contest.PriceType._
+import com.shocktrade.models.contest.OrderTypes._
+import com.shocktrade.models.contest.PriceTypes._
 import reactivemongo.bson.BSONObjectID
 
 /**

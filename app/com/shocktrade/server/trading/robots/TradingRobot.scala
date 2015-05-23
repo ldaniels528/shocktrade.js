@@ -120,13 +120,13 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       price <- stock.price
       quantity <- stock.quantity
       volume <- stock.volume
-      priceType = PriceType.LIMIT
+      priceType = PriceTypes.LIMIT
     } yield {
       Order(symbol = stock.symbol,
         exchange = exchange,
         creationTime = new Date(),
         expirationTime = Some(new DateTime().plusDays(3).toDate),
-        orderType = OrderType.BUY,
+        orderType = OrderTypes.BUY,
         price = price,
         priceType = priceType,
         quantity = quantity,
@@ -180,7 +180,7 @@ object TradingRobot {
   implicit class ContestExtension(val c: Contest) extends AnyVal {
 
     def isEligible: Boolean = {
-      c.status == ContestStatus.ACTIVE && c.startTime.exists(_.before(new Date())) && c.expirationTime.exists(_.after(new Date()))
+      c.status == ContestStatuses.ACTIVE && c.startTime.exists(_.before(new Date())) && c.expirationTime.exists(_.after(new Date()))
     }
   }
 

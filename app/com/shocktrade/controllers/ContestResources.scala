@@ -8,8 +8,9 @@ import com.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.QuoteResources.Quote
-import com.shocktrade.models.contest.OrderType.OrderType
-import com.shocktrade.models.contest.PriceType.PriceType
+import com.shocktrade.models.contest.OrderTypes.OrderType
+import com.shocktrade.models.contest.PerkTypes.PerkType
+import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
@@ -195,14 +196,14 @@ object ContestResources extends Controller with ErrorHandler {
     Order(
       symbol = form.symbol,
       exchange = form.exchange,
-      creationTime = new DateTime().toDate, // TODO for testing new Date()
+      creationTime = new Date(),
       expirationTime = None, // TODO set once orderTerm is implemented
       orderType = form.orderType,
       price = form.limitPrice,
       priceType = form.priceType,
       processedTime = None,
       quantity = form.quantity,
-      commission = 9.99,
+      commission = Commissions.getCommission(form.priceType, form.perks.getOrElse(Nil)),
       emailNotify = form.emailNotify,
       volumeAtOrderTime = form.volumeAtOrderTime
     )
@@ -364,8 +365,7 @@ object ContestResources extends Controller with ErrorHandler {
 
     result map {
       case Some(participant) =>
-        val js = Json.toJson(participant)
-        Ok(JS("perks" -> (js \ "perks")) ++ JS("fundsAvailable" -> (js \ "fundsAvailable")))
+        Ok(JS("perks" -> participant.perks, "fundsAvailable" -> participant.fundsAvailable))
       case None =>
         Ok(JS("error" -> "Perks could not be retrieved"))
     } recover {
@@ -382,7 +382,8 @@ object ContestResources extends Controller with ErrorHandler {
   def purchasePerks(id: String, playerId: String) = Action.async { request =>
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
-      case Some(perkCodes) =>
+      case Some(perkCodeNames) =>
+        val perkCodes = perkCodeNames.map(PerkTypes.withName)
         val result = for {
         // retrieve the perks
           perks <- Contests.findAllPerks(id.toBSID)
@@ -422,7 +423,6 @@ object ContestResources extends Controller with ErrorHandler {
     } yield JsArray(rankedPlayers map { case (place, p) =>
       JS("name" -> p.name,
         "facebookID" -> p.facebookID,
-        "score" -> p.score,
         "totalEquity" -> p.totalEquity,
         "gainLoss" -> p.gainLoss_%,
         "rank" -> placeName(place))
@@ -518,7 +518,7 @@ object ContestResources extends Controller with ErrorHandler {
 
     val totalEquity = p.fundsAvailable + investment
     val gainLoss_% = ((totalEquity - startingBalance) / startingBalance) * 100d
-    Ranking(p.name, p.facebookId, p.score, totalEquity, gainLoss_%)
+    Ranking(p.name, p.facebookId, totalEquity, gainLoss_%)
   }
 
   private def placeName(place: Int) = {
@@ -608,6 +608,7 @@ object ContestResources extends Controller with ErrorHandler {
                        orderType: OrderType,
                        priceType: PriceType,
                        //orderTerm: Option[OrderTerm],
+                       perks: Option[Seq[PerkType]],
                        quantity: Int,
                        volumeAtOrderTime: Long,
                        emailNotify: Boolean)
@@ -618,6 +619,7 @@ object ContestResources extends Controller with ErrorHandler {
       (__ \ "limitPrice").read[BigDecimal] and
       (__ \ "orderType").read[OrderType] and
       (__ \ "priceType").read[PriceType] and
+      (__ \ "perks").readNullable[Seq[PerkType]] and
       (__ \ "quantity").read[Int] and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
@@ -629,6 +631,6 @@ object ContestResources extends Controller with ErrorHandler {
       (__ \ "symbol").read[String] and
       (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
 
-  case class Ranking(name: String, facebookID: String, score: Int, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
+  case class Ranking(name: String, facebookID: String, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 
 }

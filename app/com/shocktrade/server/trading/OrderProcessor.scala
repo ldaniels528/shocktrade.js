@@ -6,7 +6,7 @@ import java.util.Date
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.ldaniels528.tabular.formatters.FormatHandler
-import com.shocktrade.models.contest.{Commissions, Contest, OrderType, PriceType}
+import com.shocktrade.models.contest.{Commissions, Contest, OrderTypes, PriceTypes}
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
@@ -135,11 +135,11 @@ object OrderProcessor {
           exchange = pos.exchange,
           orderTime = asOfDate,
           expirationTime = None,
-          orderType = OrderType.SELL,
+          orderType = OrderTypes.SELL,
           price = for {q <- quotes.get(pos.symbol); p <- q.lastTrade} yield p,
-          priceType = PriceType.MARKET,
+          priceType = PriceTypes.MARKET,
           quantity = pos.quantity,
-          commission = Commissions.forMarket,
+          commission = Commissions.getCommission(PriceTypes.MARKET),
           emailNotify = true,
           volumeAtOrderTime = 0
         )
@@ -150,7 +150,7 @@ object OrderProcessor {
           exchange = pos.exchange,
           price = pos.pricePaid,
           quantity = pos.quantity,
-          commission = Commissions.forMarket,
+          commission = Commissions.getCommission(PriceTypes.MARKET),
           purchaseTime = asOfDate,
           workOrder = workOrder)
 
@@ -180,7 +180,7 @@ object OrderProcessor {
 
     // if it's day's close, grab all orders; otherwise, all non-Market Close orders
     val openOrders = ContestDAO.getOpenWorkOrders(c, asOfDate)
-    val orders = if (isDaysClose) openOrders else openOrders.filterNot(_.priceType == PriceType.MARKET_ON_CLOSE)
+    val orders = if (isDaysClose) openOrders else openOrders.filterNot(_.priceType == PriceTypes.MARKET_ON_CLOSE)
 
     if (orders.nonEmpty) {
       info(c, s"${orders.size} eligible order(s) found")
@@ -217,10 +217,10 @@ object OrderProcessor {
       for {
       // perform the BUY or SELL
         outcome <- claim.workOrder.orderType match {
-          case OrderType.BUY =>
+          case OrderTypes.BUY =>
             info(c, s"[${claim.workOrder.playerId.stringify}] Increasing position of ${claim.symbol} x ${claim.quantity}")
             ContestDAO.increasePosition(c, claim, asOfDate)
-          case OrderType.SELL =>
+          case OrderTypes.SELL =>
             info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
             ContestDAO.reducePosition(c, claim, asOfDate)
           case orderType =>
@@ -272,13 +272,13 @@ object OrderProcessor {
 
   private def isEligiblePrice(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Double) = {
     wo.priceType match {
-      case PriceType.MARKET => (q.price > 0, q.price)
-      case PriceType.MARKET_ON_CLOSE => (q.price > 0, q.price)
-      case PriceType.LIMIT =>
-        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderType.BUY && limit >= q.price) || (limit <= q.price)))
+      case PriceTypes.MARKET => (q.price > 0, q.price)
+      case PriceTypes.MARKET_ON_CLOSE => (q.price > 0, q.price)
+      case PriceTypes.LIMIT =>
+        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderTypes.BUY && limit >= q.price) || (limit <= q.price)))
         (isGood, q.price)
-      case PriceType.STOP_LIMIT =>
-        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderType.BUY && limit >= q.price) || (limit <= q.price))) // TODO
+      case PriceTypes.STOP_LIMIT =>
+        val isGood = wo.price exists (limit => (q.price > 0) && ((wo.orderType == OrderTypes.BUY && limit >= q.price) || (limit <= q.price))) // TODO
         (isGood, q.price)
       case priceType =>
         error(c, s"Unhandled price type - $priceType")

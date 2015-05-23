@@ -156,7 +156,20 @@
         };
 
         service.setContest = function (contest) {
+            // if null or undefined, just reset the contest
             if (contest === null || contest === undefined) service.resetContest();
+
+            // if the contest contained an error, show it
+            else if(contest.error) {
+                toaster.pop('error', contest.error, null);
+            }
+
+            // is it a delta?
+            else if(contest.type === 'delta') {
+                updateContestDelta(contest);
+            }
+
+            // otherwise, digest the full contest
             else {
                 service.contest = contest;
                 service.participant = null;
@@ -210,7 +223,15 @@
         };
 
         service.getPerks = function () {
-            return service.getParticipant().perks;
+            return service.getParticipant().perks || [];
+        };
+
+        service.hasPerk = function(perkCode) {
+            var perks = service.getPerks();
+            for(var n = 0; n < perks.length; n++) {
+                if(perks[n] === perkCode) return true;
+            }
+            return false;
         };
 
         service.getPositions = function () {
@@ -250,31 +271,37 @@
             if (participant) {
                 // update funds available (if present)
                 if (participant.fundsAvailable !== undefined) {
+                    $log.info(contest.name + ": Updating fundsAvailable for " + participant.name);
                     myParticipant.fundsAvailable = participant.fundsAvailable;
                 }
 
                 // update the orders (if present)
                 if (participant.orders) {
+                    $log.info(contest.name + ": Updating orders for " + participant.name);
                     myParticipant.orders = participant.orders;
                 }
 
                 // update the order history (if present)
                 if (participant.orderHistory) {
+                    $log.info(contest.name + ": Updating orderHistory for " + participant.name);
                     myParticipant.orderHistory = participant.orderHistory;
                 }
 
                 // update the perks (if present)
                 if (participant.perks) {
+                    $log.info(contest.name + ": Updating perks for " + participant.name);
                     myParticipant.perks = participant.perks;
                 }
 
                 // update the positions (if present)
                 if (participant.positions) {
+                    $log.info(contest.name + ": Updating positions for " + participant.name);
                     myParticipant.positions = participant.positions;
                 }
 
                 // update the performance (if present)
                 if (participant.performance) {
+                    $log.info(contest.name + ": Updating performance for " + participant.name);
                     myParticipant.performance = participant.performance;
                 }
             }
@@ -289,28 +316,29 @@
         $rootScope.$on("contest_updated", function (event, contest) {
             $log.info("[MySession] Contest '" + contest.name + "' updated");
             if(!service.contest || service.getContestID() === contest.OID()) {
-                service.contest = contest;
+                service.setContest(contest);
             }
         });
 
         $rootScope.$on("messages_updated", function (event, contest) {
             $log.info("[MySession] Messages for Contest '" + contest.name + "' updated");
-            updateContestDelta(contest);
+            service.setContest(contest);
         });
 
         $rootScope.$on("orders_updated", function (event, contest) {
             $log.info("[MySession] Orders for Contest '" + contest.name + "' updated");
-            updateContestDelta(contest);
+            service.setContest(contest);
         });
 
         $rootScope.$on("perks_updated", function (event, contest) {
             $log.info("[MySession] Perks for Contest '" + contest.name + "' updated");
-            updateContestDelta(contest);
+            service.setContest(contest);
         });
 
         $rootScope.$on("positions_updated", function (event, contest) {
             $log.info("[MySession] Positions for Contest '" + contest.name + "' updated");
-            updateContestDelta(contest);
+            $log.info("contest  = " + angular.toJson(contest, true));
+            service.setContest(contest);
         });
 
         $rootScope.$on("profile_updated", function (event, profile) {

@@ -2,8 +2,8 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
-import com.shocktrade.models.contest.ContestStatus._
-import com.shocktrade.models.contest.OrderType.OrderType
+import com.shocktrade.models.contest.ContestStatuses._
+import com.shocktrade.models.contest.OrderTypes.OrderType
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._

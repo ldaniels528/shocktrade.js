@@ -1,6 +1,6 @@
 package com.shocktrade.models.profile
 
-import com.shocktrade.models.profile.TimeFrame.TimeFrame
+import com.shocktrade.models.profile.TimeFrames.TimeFrame
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, Writes, __}

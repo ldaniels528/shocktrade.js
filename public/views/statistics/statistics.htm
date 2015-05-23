@@ -2,7 +2,7 @@
 	<div style="display: block; width: 100%" class="statsContainer">
 		<div class="stats_row_left">
 			<fieldset>
-				<legend><img src="/assets/images/objects/friend.png"> Level and Rank</legend>
+				<legend><i class="fa fa-user"></i> Level and Rank</legend>
 				<table style="width: 100%">
 					<tr>
 						<th style="width: 50%">Experience-points (XP):</th>
@@ -24,7 +24,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<legend><img src="/assets/images/links/joystick.png"> Games Statistics</legend>
+				<legend><i class="fa fa-gamepad"></i> Games Statistics</legend>
 				<table style="width: 100%">
 					<tr>
 						<th style="width: 50%">Games created:</th>
@@ -54,7 +54,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<legend><img src="/assets/images/objects/financials.gif"> Portfolio Growth</legend>
+				<legend><i class="fa fa-money"></i> Portfolio Growth</legend>
 				<table style="width: 100%">
 					<tr>
 						<th style="width: 50%">Net Cash gains (losses):</th>
@@ -77,7 +77,7 @@
 		</div>
 		<div class="stats_row_right">
 			<fieldset>
-				<legend><img src="/assets/images/objects/gift.png"> Awards & Perks</legend>
+				<legend><i class="fa fa-gift"></i> Awards & Perks</legend>
 				<table style="width: 100%">		
 					<tr>
 						<th style="width: 50%">Awards earned:</th>
@@ -99,7 +99,7 @@
 			</fieldset>
 					
 			<fieldset>
-				<legend><img src="/assets/images/objects/competition.gif"> Competitive Statistics</legend>	
+				<legend><i class="fa fa-flag-checkered"></i> Competitive Statistics</legend>
 				<table style="width: 100%">
 					<tr>
 						<th style="width: 50%">Trophies earned:</th>
@@ -107,7 +107,7 @@
 							{{ userProfile.trophiesGold + userProfile.trophiesSilver + userProfile.trophiesBronze || 0 }} &#8212; 
 							<img src="/assets/images/contests/gold.png"> x {{ userProfile.trophiesGold || 0 }}&nbsp;
 							<img src="/assets/images/contests/silver.png"> x {{ userProfile.trophiesSilver || 0 }}&nbsp;
-							<img src="/assets/images/contests/bronze.png">x  {{ userProfile.trophiesBronze || 0 }}&nbsp;
+							<img src="/assets/images/contests/bronze.png"> x {{ userProfile.trophiesBronze || 0 }}&nbsp;
 						</td>
 					</tr>	
 					<tr>
@@ -133,7 +133,7 @@
 			</fieldset>	
 			
 			<fieldset>
-				<legend><img src="/assets/images/objects/friend_header.gif"> Social</legend>
+				<legend><i class="fa fa-facebook-official"></i> Social</legend>
 				<table style="width: 100%">	
 					<tr>
 						<th style="width: 50%">Social Networks:</th>
@@ -149,11 +149,11 @@
 					</tr>						
 					<tr>
 						<th>Likes:</th>
-						<td>{{ userProfile.thumbsUp || 0 }} <img src="/assets/images/status/thumbs_up.png"></td>
+						<td>{{ userProfile.thumbsUp || 0 }} <i class="fa fa-thumbs-o-up"></i></td>
 					</tr>	
 					<tr>
 						<th>Dislikes:</th>
-						<td>{{ userProfile.thumbsDown || 0 }} <img src="/assets/images/status/thumbs_down.png"></td>
+						<td>{{ userProfile.thumbsDown || 0 }} <i class="fa fa-thumbs-o-down"></i></td>
 					</tr>					
 				</table>
 			</fieldset>			

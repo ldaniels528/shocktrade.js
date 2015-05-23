@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-init="accountType = false">
     <div ng-show="MySession.contestIsEmpty()" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
     <div ng-if="!MySession.contestIsEmpty()" class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
@@ -36,8 +36,13 @@
             <div class="rankings_header">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
-                <span class="st_bkg_color clickable" ng-click="toggleRankingsShown()">
+                <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
+                </span>
+
+                <span ng-show="MySession.hasPerk('MARGIN')" class="clickable pull-right" ng-click="accountType = !accountType">
+                    <span class="st_blue bold">{{ accountType ? 'Margin' : 'Cash' }} Account</span>
+                    <i ng-class="accountType ? 'fa-toggle-on' : 'fa-toggle-off'" class="fa  st_control"></i>
                 </span>
             </div>
 

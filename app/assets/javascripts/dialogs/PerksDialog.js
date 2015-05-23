@@ -11,14 +11,14 @@
         /**
          * Perks Modal Dialog
          */
-        service.popup = function () {
+        service.popup = function (params) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'PerksDialogController',
                 templateUrl: 'perks_dialog.htm',
                 resolve: {
                     params: function () {
-                        return {}
+                        return params;
                     }
                 }
             });
@@ -72,6 +72,7 @@
     app.controller('PerksDialogController', ['$scope', '$http', '$log', '$modalInstance', 'toaster', 'MySession', 'PerksDialog',
         function ($scope, $http, $log, $modalInstance, toaster, MySession, PerksDialog) {
             var perks = [];
+            var myFunds = 0;
             var myPerks = [];
 
             $scope.cancel = function () {
@@ -160,6 +161,7 @@
                 // load my perks
                 PerksDialog.getMyPerks()
                     .success(function (response) {
+                        myFunds = response.fundsAvailable;
                         myPerks = response.perks;
                         $scope.setupPerks();
                     })

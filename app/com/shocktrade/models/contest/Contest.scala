@@ -2,7 +2,7 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
-import com.shocktrade.models.contest.ContestStatus.ContestStatus
+import com.shocktrade.models.contest.ContestStatuses.ContestStatus
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
@@ -27,7 +27,7 @@ case class Contest(id: BSONObjectID = BSONObjectID.generate,
                    startingBalance: BigDecimal,
                    messages: List[Message] = Nil,
                    participants: List[Participant] = Nil,
-                   status: ContestStatus = ContestStatus.ACTIVE,
+                   status: ContestStatus = ContestStatuses.ACTIVE,
                    friendsOnly: Boolean = false,
                    invitationOnly: Boolean = false,
                    levelCap: Option[Int] = None,

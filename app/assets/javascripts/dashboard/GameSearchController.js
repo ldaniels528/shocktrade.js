@@ -338,6 +338,10 @@
                 if (index != -1) {
                     searchResults.splice(index, 1);
                 }
+
+                if($scope.selectedContest && $scope.selectedContest.OID() === contestId) {
+                    $scope.selectedContest = null;
+                }
             }
 
             /**

@@ -50,7 +50,7 @@
 
             var color = d3.scale.ordinal()
                 .domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
-                .range(["#ff8888", "#88ffff", "#8888ff", "#ff8800", "#00ff00", "#88ffaa", "#ff88ff"]);
+                .range(["#ff8888", "#88ffff", "#8888ff", "#ff8000", "#00ff00", "#88ffaa", "#ff88ff"]);
 
             generatePieChart(svg, chartData, key, pie, radius, arc, outerArc, color, this);
         };

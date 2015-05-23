@@ -4,6 +4,7 @@ import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.ProfileResources._
+import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
@@ -39,7 +40,7 @@ object ContestDAO {
       collection = "Contests",
       query = BS("_id" -> c.id),
       modify = new Update(BS(
-        "$set" -> BS("status" -> ContestStatus.CLOSED)),
+        "$set" -> BS("status" -> ContestStatuses.CLOSED)),
         fetchNewObject = true),
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
@@ -66,7 +67,7 @@ object ContestDAO {
    */
   def getActiveContests(asOfDate: Date, lastProcessedTime: Date)(implicit ec: ExecutionContext) = {
     mc.find(BS(
-      "status" -> ContestStatus.ACTIVE,
+      "status" -> ContestStatuses.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
       "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))) //,
       // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
@@ -86,11 +87,11 @@ object ContestDAO {
   }
 
   def findContestsByPlayerName(playerName: String)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatus.ACTIVE)).cursor[Contest].collect[Seq]()
+    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatuses.ACTIVE)).cursor[Contest].collect[Seq]()
   }
 
   def findContestsByPlayerID(playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatus.ACTIVE)).cursor[Contest].collect[Seq]()
+    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatuses.ACTIVE)).cursor[Contest].collect[Seq]()
   }
 
   def joinContest(contestId: BSONObjectID, participant: Participant)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
@@ -125,7 +126,7 @@ object ContestDAO {
   private def createQuery(so: SearchOptions) = {
     var q = BS()
     so.activeOnly.foreach { isSet =>
-      if (isSet) q = q ++ BS("status" -> ContestStatus.ACTIVE)
+      if (isSet) q = q ++ BS("status" -> ContestStatuses.ACTIVE)
     }
     so.available.foreach { isSet =>
       if (isSet) q = q ++ BS("playerCount" -> BS("$lt" -> Contest.MaxPlayers))
@@ -268,58 +269,28 @@ object ContestDAO {
         val startingBalance = contest.startingBalance.toDouble
         Seq(
           Perk(
-            code = "FEEWAIVR",
+            code = PerkTypes.FEEWAIVR,
             name = "Fee Waiver",
             cost = 100.00,
             description = "Reduces the commissions the player pays for buying or selling securities"
           ),
           Perk(
-            code = "PRCHEMNT",
-            name = "Purchase Eminent",
-            cost = startingBalance * 0.025d,
-            description = "Gives the player the ability to create SELL orders for securities not yet owned"
-          ),
-          Perk(
-            code = "PRFCTIMG",
+            code = PerkTypes.PRFCTIMG,
             name = "Perfect Timing",
-            cost = startingBalance * 0.025d,
+            cost = startingBalance * 0.004d,
             description = "Gives the player the ability to create BUY orders for more than cash currently available"
           ),
           Perk(
-            code = "CMPDDALY",
-            name = "Compounded Daily",
-            cost = startingBalance * 0.05d,
-            description = "Gives the player the ability to earn interest on cash not currently invested"
+            code = PerkTypes.PRCHEMNT,
+            name = "Purchase Eminent",
+            cost = startingBalance * 0.004d,
+            description = "Gives the player the ability to create SELL orders for securities not yet owned"
           ),
           Perk(
-            code = "MARGIN",
+            code = PerkTypes.MARGIN,
             name = "Rational People think at the Margin",
-            cost = startingBalance * 0.10d,
+            cost = startingBalance * 0.01d,
             description = "Gives the player the ability to use margin accounts"
-          ),
-          Perk(
-            code = "SAVGLOAN",
-            name = "Savings and Loans",
-            cost = startingBalance * 0.10d,
-            description = "Gives the player the ability to borrow money"
-          ),
-          Perk(
-            code = "LOANSHRK",
-            name = "Loan Shark",
-            cost = startingBalance * 0.15d,
-            description = "Gives the player the ability to loan other players money at any interest rate"
-          ),
-          Perk(
-            code = "MUTFUNDS",
-            name = "The Feeling's Mutual",
-            cost = startingBalance * 0.15d,
-            description = "Gives the player the ability to create and use mutual funds"
-          ),
-          Perk(
-            code = "RISKMGMT",
-            name = "Risk Management",
-            cost = startingBalance * 0.15d,
-            description = "Gives the player the ability to trade options"
           ))
     }
   }
@@ -332,7 +303,7 @@ object ContestDAO {
    * @param totalCost the total cost of the perks
    * @return a promise of an option of a contest
    */
-  def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[String], totalCost: Double)(implicit ec: ExecutionContext) = {
+  def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double)(implicit ec: ExecutionContext) = {
     val q = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "fundsAvailable" -> BS("$gte" -> totalCost))))
     val u = BS("$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)), "$inc" -> BS("participants.$.fundsAvailable" -> -totalCost))
     db.command(FindAndModify("Contests", q, Update(u, fetchNewObject = true), upsert = false, sort = None)) map (_ flatMap (_.seeAsOpt[Contest]))

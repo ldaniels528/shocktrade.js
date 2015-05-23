@@ -2,8 +2,8 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
-import com.shocktrade.models.contest.OrderType._
-import com.shocktrade.models.contest.PriceType._
+import com.shocktrade.models.contest.OrderTypes._
+import com.shocktrade.models.contest.PriceTypes._
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
@@ -15,7 +15,7 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
  * Represents a closed stock order
  * @author lawrence.daniels@gmail.com
  */
-case class ClosedOrder(id: BSONObjectID,
+case class ClosedOrder(id: BSONObjectID = BSONObjectID.generate,
                        symbol: String,
                        exchange: String,
                        orderTime: Date,
@@ -54,7 +54,7 @@ object ClosedOrder {
     (__ \ "_id").write[BSONObjectID] and
       (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
-      (__ \ "creationTime").write[Date] and
+      (__ \ "orderTime").write[Date] and
       (__ \ "expirationTime").writeNullable[Date] and
       (__ \ "processedTime").write[Date] and
       (__ \ "orderType").write[OrderType] and

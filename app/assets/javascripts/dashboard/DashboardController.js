@@ -5,11 +5,40 @@
      * Dashboard Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DashboardController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MySession', 'PerksDialog',
-        function ($scope, $location, $log, $routeParams, $timeout, toaster, ContestService, MySession, PerksDialog) {
+    app.controller('DashboardController', ['$scope', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MarginAccountDialog', 'MySession', 'PerksDialog',
+        function ($scope, $log, $routeParams, $timeout, toaster, ContestService, MarginAccountDialog, MySession, PerksDialog) {
+
+            /////////////////////////////////////////////////////////////////////
+            //          Pop-up Dialog Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.marginAccountDialog = function() {
+                MarginAccountDialog.popup({});
+            };
 
             $scope.perksDialog = function () {
                 PerksDialog.popup({});
+            };
+
+            /////////////////////////////////////////////////////////////////////
+            //          Participant Functions
+            /////////////////////////////////////////////////////////////////////
+
+            $scope.isRankingsShown = function () {
+                return !MySession.getContest().rankingsHidden;
+            };
+
+            $scope.toggleRankingsShown = function () {
+                var contest = MySession.getContest();
+                contest.rankingsHidden = !contest.rankingsHidden;
+            };
+
+            $scope.getRankings = function () {
+                if (MySession.contestIsEmpty()) return [];
+                else {
+                    var rankings = ContestService.getPlayerRankings(MySession.getContest(), MySession.getUserName());
+                    return rankings.participants;
+                }
             };
 
             ///////////////////////////////////////////////////////////////////////////

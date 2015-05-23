@@ -25,7 +25,6 @@ case class UserProfile(id: BSONObjectID = BSONObjectID.generate,
                        totalXP: Int = 0,
                        awards: List[String] = Nil,
                        favorites: List[String] = Nil,
-                       filters: List[Filter] = Nil,
                        friends: List[String] = Nil,
                        recentSymbols: List[String] = Nil,
                        country: Option[String] = None,
@@ -48,7 +47,6 @@ object UserProfile {
       (__ \ "totalXP").read[Int] and
       (__ \ "awards").read[List[String]] and
       (__ \ "favorites").read[List[String]] and
-      (__ \ "filters").read[List[Filter]] and
       (__ \ "friends").read[List[String]] and
       (__ \ "recentSymbols").read[List[String]] and
       (__ \ "country").readNullable[String] and
@@ -65,7 +63,6 @@ object UserProfile {
       (__ \ "totalXP").write[Int] and
       (__ \ "awards").write[List[String]] and
       (__ \ "favorites").write[List[String]] and
-      (__ \ "filters").write[List[Filter]] and
       (__ \ "friends").write[List[String]] and
       (__ \ "recentSymbols").write[List[String]] and
       (__ \ "country").writeNullable[String] and
@@ -83,7 +80,6 @@ object UserProfile {
       doc.getAs[Int]("totalXP").getOrElse(0),
       doc.getAs[List[String]]("awards").getOrElse(Nil),
       doc.getAs[List[String]]("favorites").getOrElse(Nil),
-      Nil, //doc.getAs[List[Filter]]("filters").getOrElse(Nil),
       doc.getAs[List[String]]("friends").getOrElse(Nil),
       doc.getAs[List[String]]("recentSymbols").getOrElse(Nil),
       doc.getAs[String]("country"),
@@ -108,7 +104,6 @@ object UserProfile {
       "totalXP" -> userProfile.totalXP,
       "awards" -> userProfile.awards,
       "favorites" -> userProfile.favorites,
-      "filters" -> userProfile.filters,
       "friends" -> userProfile.friends,
       "recentSymbols" -> userProfile.recentSymbols,
       "country" -> userProfile.country,

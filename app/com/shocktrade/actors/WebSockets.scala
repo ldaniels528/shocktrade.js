@@ -86,13 +86,14 @@ object WebSockets {
   case class MessagesUpdated(c: Contest) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "messages_updated",
-      "data" -> JS("name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
+      "data" -> JS("type" -> "delta", "name" -> c.name, "_id" -> c.id, "messages" -> c.messages))
   }
 
   case class OrdersUpdated(c: Contest, p: Participant) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "orders_updated",
       "data" -> JS(
+        "type" -> "delta",
         "name" -> c.name, "_id" -> c.id,
         "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "orders" -> p.orders, "orderHistory" -> p.orderHistory)))
       ))
@@ -102,6 +103,7 @@ object WebSockets {
     def toJsonMessage = JS(
       "action" -> "perks_updated",
       "data" -> JS(
+        "type" -> "delta",
         "name" -> c.name, "_id" -> c.id,
         "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "perks" -> p.perks)))
       ))
@@ -111,9 +113,10 @@ object WebSockets {
     def toJsonMessage = JS(
       "action" -> "positions_updated",
       "data" -> JS(
+        "type" -> "delta",
         "name" -> c.name, "_id" -> c.id,
-        "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "positions" -> p.positions)))
-      ))
+        "participants" -> Seq(p))
+    )
   }
 
   case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {

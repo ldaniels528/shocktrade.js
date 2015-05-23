@@ -16,7 +16,7 @@
 </div>
 
 <div class="advisory" ng-show="q.advisory">
-	<img ng-src="/assets/images/status/{{ q.advisoryType == 'INFO' ? 'info' : 'alert' }}.gif"> {{ q.advisory }}
+	<i ng-class="q.advisoryType == 'INFO' ? 'fa fa-info-circle st_blue' : 'fa fa-warning st_orange'"></i> {{ q.advisory }}
 </div>
 
 <div ng-include src="'/assets/views/discover/quotes/stock_quote.htm'"></div>
@@ -28,9 +28,9 @@
 <div ng-if="q.assetType === 'Common Stock'" style="margin-top: 5px">
 	<div ng-repeat="module in expanders">
 		<div class="quote_title contest_colors" ng-if="!module.visible || module.visible(q)">
-			<i class="fa clickable expander" ng-class="module.expanded ? 'fa-minus-square-o' : 'fa-plus-square-o'"
+			<i class="fa clickable st_orange bold" ng-class="module.expanded ? 'fa-minus-square' : 'fa-plus-square'"
 			   ng-click="expandSection(module)"></i>
-			<i class="fa bold" ng-class="module.icon"></i>
+			<i class="fa st_green bold" ng-class="module.icon"></i>
 			{{ module.title }}
 			<img ng-show="module.loading" src="/assets/images/status/loading.gif">
 		</div>

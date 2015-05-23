@@ -1,10 +1,12 @@
 .advisory {
 	border: 1px solid #ccccbb;
 	border-radius: 4px 4px 4px 4px;
-	background-color: #fffaee;
+	background-color: #e0e0e0;
 	color: #000088;
 	font-weight: bold;
 	padding: 2px 2px 2px 2px;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 .symbol_input_text_field {

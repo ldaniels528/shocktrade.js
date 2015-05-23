@@ -332,18 +332,8 @@
                 FavoriteSymbols.setSymbols(MySession.userProfile.favorites);
                 RecentSymbols.setSymbols(MySession.userProfile.recentSymbols);
 
-                // setup the filters
-                var filters = MySession.userProfile.filters;
-                $scope.filterQuotes = [];
-                for (var n = 0; n < filters.length; n++) {
-                    var clonedFilter = $scope.clone(filters[n]);
-                    clonedFilter.rows = [];
-                    clonedFilter.maxResults = 10;
-                    $scope.filterQuotes.push(clonedFilter);
-                }
-
                 // load the held securities
-                var id = MySession.userProfile.OID();
+                var id = MySession.getUserID();
                 if (id) {
                     HeldSecurities.init(id);
                 }

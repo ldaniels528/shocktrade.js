@@ -45,9 +45,6 @@
                        typeahead-template-url="symbol_lookup.htm"
                        typeahead-loading="loading"
                        typeahead-on-select="orderQuote(form.symbol)">
-                <img ng-click="orderQuote(form.symbol)"
-                     ng-src="/assets/images/{{ loading ? 'status/loading.gif' : 'buttons/search.png' }}"
-                     style="cursor: pointer; vertical-align: middle">
             </div>
             <div class="col-md-4">
                 <input class="form-control yellow" ng-model="form.limitPrice" type="text" placeholder="Price">
@@ -57,7 +54,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style="border-bottom: 1px solid #dddddd; padding-bottom: 5px; margin-top: 10px">
                 <span class="bold">{{ quote.name }}</span>
                 <span ng-show="quote.exchange">(<span ng-class="quote.exchange">{{ quote.exchange }}</span>)</span>
                 <span ng-hide="quote.name">&nbsp;</span>
@@ -65,7 +62,12 @@
                 <span ng-show="quote.changePct > 0">&#8212;</span>
                 <span ng-show="quote.changePct" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>
                 <changearrow value="{{ quote.changePct }}" style="vertical-align: bottom" />
-                <hr>
+
+
+                <button class="btn st_button pull-right" ng-click="orderQuote(form.symbol)">
+                    <img src="/assets/images/status/loading.gif" ng-show="loading">
+                    <i class="fa fa-search clickable"  ng-hide="loading"></i> Quote
+                </button>
             </div>
         </div>
         <div class="row">
