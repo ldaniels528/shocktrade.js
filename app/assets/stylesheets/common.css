@@ -13,6 +13,10 @@ a:visited { cursor: pointer; text-decoration: none; }
 a:hover   { cursor: pointer; text-decoration: none; }
 a:active  { cursor: pointer; text-decoration: none; }
 
+body {
+	min-width: 1024px;
+}
+
 .clickable {
 	cursor: pointer;
 }

@@ -275,13 +275,13 @@
 
             $scope.getPreferenceIcon = function (q) {
                 // fail-safe
-                if (!q || !q.symbol) return "transparent12.png";
+                if (!q || !q.symbol) return "";
 
                 // check for favorite and held securities
                 var symbol = q.symbol;
-                if (HeldSecurities.isHeld(symbol)) return "star.png";
-                else if (FavoriteSymbols.isFavorite(symbol)) return "favorite_small.png";
-                else return "transparent12.png";
+                if (HeldSecurities.isHeld(symbol)) return "fa fa-star";
+                else if (FavoriteSymbols.isFavorite(symbol)) return "fa fa-heart";
+                else return "";
             };
 
             $scope.$on("user_status_changed", function (event, newState) {

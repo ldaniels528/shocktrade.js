@@ -323,21 +323,6 @@
                 return $scope.selectedTradingHistory === t;
             };
 
-            // maintain the appropriate aspect ratio for the application
-            var lastWindowUpdate = 0;
-            var mainWidthPctValue = '55%';
-            $scope.mainWidthPct = function () {
-                var now = (new Date()).getTime();
-                if (now - lastWindowUpdate >= 1000) {
-                    lastWindowUpdate = now;
-                    var width = $('body').innerWidth() - 20;
-                    var adjWidth = ((1.0 - 459.0 / width) * 100.0).toFixed(0);
-                    mainWidthPctValue = adjWidth + "%";
-                    //console.log("pct = " + pct + ", adjWidth = " + adjWidth);
-                }
-                return mainWidthPctValue;
-            };
-
             // watch for changes to the player's profile
             $scope.$watch("MySession.userProfile", function () {
                 if (!MySession.userProfile.favorites) MySession.userProfile.favorites = ['AAPL'];

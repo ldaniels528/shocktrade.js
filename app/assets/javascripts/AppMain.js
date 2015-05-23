@@ -21,8 +21,8 @@
                 .when('/dashboard/:contestId', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/news', {templateUrl: '/assets/views/news/news_index.htm', controller: 'NewsController'})
                 .when('/research', {templateUrl: '/assets/views/research/research.htm', controller: 'ResearchController'})
-                .when('/search', {templateUrl: '/assets/views/play/search.htm'})
-                .when('/statistics', {templateUrl: '/assets/views/statistics/statistics.htm'})
+                .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
+                .when('/statistics', {templateUrl: '/assets/views/statistics/statistics.htm', controller: 'StatisticsController'})
                 .otherwise({redirectTo: '/search'});
         }]);
 

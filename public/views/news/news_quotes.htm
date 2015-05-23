@@ -23,7 +23,7 @@
 						<tbody ng-repeat="quote in NewsSymbols.getQuotes()" >
 							<tr ng-class-odd="'odd'" ng-class-even="'even'">
 								<td class="qm" style="width: 22%; text-align: left">
-									<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(quote) }}">
+									<i ng-class="getPreferenceIcon(quote)"></i>
 									<a ng-href="#/discover/{{ quote.symbol }}">
 										<span ng-class="quote.exchange" 
 											popover="{{ quote.name }}" 

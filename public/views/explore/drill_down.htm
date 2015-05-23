@@ -64,7 +64,7 @@
 								<tr ng-repeat="quote in subIndustry.quotes | orderBy:'symbol'" ng-class="quote.symbol === selectedSymbol() ? 'selected' : ($index % 2 ? 'odd' : 'even')">
 									<td class="results">
 										<a class="links" ng-href="#/discover/{{ quote.symbol }}">
-											<img class="middle" ng-src="/assets/images/status/{{ getPreferenceIcon(row) }}">
+											<i ng-class="getPreferenceIcon(row)"></i>
 											<span ng-class="quote.exchange"
 												popover="{{ quote.name }}" 
 												popover-placement="right"

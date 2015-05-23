@@ -20,7 +20,7 @@ import scala.util.{Failure, Success, Try}
 object ResearchController extends Controller {
   lazy val mcQ = db.collection[JSONCollection]("Stocks")
   private val fields = JS(
-    "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "open" -> 1, "close" -> 1,
+    "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "prevClose" -> 1, "open" -> 1,
     "changePct" -> 1, "low" -> 1, "high" -> 1, "spread" -> 1, "volume" -> 1
   )
 

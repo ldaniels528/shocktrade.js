@@ -79,6 +79,9 @@
                         $scope.filterExchanges();
                         //$scope.loading = false;
 
+                        // save the search options
+                        $cookieStore.put("screener_searchOptions", $scope.searchOptions);
+
                     }).error(function (data, status, headers, config) {
                         $log.error("Quote Search Failed - json => " + angular.toJson(searchOptions));
                         toaster.pop('error', 'Failed to execute search', null);
@@ -106,23 +109,37 @@
             ///////////////////////////////////////////////////////////////////////////
 
             function normalizeExchange(market) {
-                if (market.indexOf("ASE") == 0) return market;
-                else if (market.indexOf("NAS") == 0) return "NASDAQ";
-                else if (market.indexOf("NCM") == 0) return "NASDAQ";
-                else if (market.indexOf("NGM") == 0) return "NASDAQ";
-                else if (market.indexOf("NMS") == 0) return "NASDAQ";
-                else if (market.indexOf("NYQ") == 0) return "NYSE";
-                else if (market.indexOf("NYS") == 0) return "NYSE";
-                else if (market.indexOf("OBB") == 0) return "OTCBB";
-                else if (market.indexOf("OTC") == 0) return "OTCBB";
-                else if (market.indexOf("OTHER") == 0) return "OTHER_OTC";
-                else if (market.indexOf("PCX") == 0) return market;
-                else if (market.indexOf("PNK") == 0) return "OTCBB";
+                var s = market.toUpperCase();
+                if (s.indexOf("ASE") == 0) return s;
+                else if (s.indexOf("NAS") == 0) return "NASDAQ";
+                else if (s.indexOf("NCM") == 0) return "NASDAQ";
+                else if (s.indexOf("NGM") == 0) return "NASDAQ";
+                else if (s.indexOf("NMS") == 0) return "NASDAQ";
+                else if (s.indexOf("NYQ") == 0) return "NYSE";
+                else if (s.indexOf("NYS") == 0) return "NYSE";
+                else if (s.indexOf("OBB") == 0) return "OTCBB";
+                else if (s.indexOf("OTC") == 0) return "OTCBB";
+                else if (s.indexOf("OTHER") == 0) return "OTHER_OTC";
+                else if (s.indexOf("PCX") == 0) return s;
+                else if (s.indexOf("PNK") == 0) return "OTCBB";
                 else {
-                    $log.warn("exchange = " + market);
-                    return market;
+                    $log.warn("exchange = " + s);
+                    return s;
                 }
             }
+
+            ///////////////////////////////////////////////////////////////////////////
+            //          Initialization
+            ///////////////////////////////////////////////////////////////////////////
+
+            (function() {
+                // retrieve the search options cookie
+                var options = $cookieStore.get("screener_searchOptions");
+                if(options) {
+                    console.log("Retrieved search options from cookie: " + angular.toJson(options));
+                    $scope.searchOptions = options;
+                }
+            })();
 
         }]);
 

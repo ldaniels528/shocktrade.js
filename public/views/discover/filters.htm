@@ -26,8 +26,7 @@
 					<td style="text-align: {{ columnAlign(column) }}" ng-repeat="column in filter.columns">	
 						<a ng-if="column === 'symbol'" href="#/discover/{{ row[column] }}">
 							<span ng-class="rowClass(column, row)" popover="{{ row['name'] }}" popover-trigger="mouseenter">
-								<img ng-src="/assets/images/status/{{ getPreferenceIcon(row) }}">
-								{{ row[column] }}
+								<i ng-src="getPreferenceIcon(row)"></i> {{ row[column] }}
 							</span>
 						</a>
 						<span ng-if="column === 'volume'">{{ row[column] | number | bigNumber }}</span>
