@@ -1,16 +1,23 @@
 <div>
 	<div ng-include src="'/assets/views/dashboard/summary.htm'" style="margin-bottom: 10px"></div>
     <div class="row">
-        <div class="col-md-offset-9 col-md-3">
+        <div class="col-md-12">
+            <button class="btn btn-default sell_button bold"
+                    ng-click="perksDialog()"
+                    ng-hide="MySession.getContestStatus() === 'CLOSED'"
+                    title="Create a new order">
+                <i class="fa fa-cart-plus"></i> Perks
+            </button>
+
             <button class="btn btn-default sell_button bold pull-right"
                     ng-click="popupNewOrderDialog()"
                     ng-hide="MySession.getContestStatus() === 'CLOSED'"
                     title="Create a new order">
-                <i class="fa fa-cart-plus"></i> New
+                <i class="fa fa-cart-plus"></i> Order
             </button>
         </div>
     </div>
-    <tabset style="margin-bottom: 10px">
+    <tabset style="margin-top: 10px; margin-bottom: 10px">
         <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked()" select="tab.init()">
             <tab-heading>
                 <i ng-show="tab.icon" class="fa" ng-class="tab.icon"></i>

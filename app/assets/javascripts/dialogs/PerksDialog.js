@@ -2,12 +2,81 @@
     var app = angular.module('shocktrade');
 
     /**
-     * Perks Controller
+     * Perks Dialog Service
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PerksController', ['$scope', '$http', '$log', 'toaster', 'ContestService', 'MySession', 'PerksService',
-        function ($scope, $http, $log, toaster, ContestService, MySession, PerksService) {
+    app.factory('PerksDialog', function ($http, $log, $modal, MySession) {
+        var service = {};
+
+        /**
+         * Perks Modal Dialog
+         */
+        service.popup = function () {
+            // create an instance of the dialog
+            var $modalInstance = $modal.open({
+                controller: 'PerksDialogController',
+                templateUrl: 'perks_dialog.htm',
+                resolve: {
+                    params: function () {
+                        return {}
+                    }
+                }
+            });
+
+            $modalInstance.result.then(function (result) {
+                $log.info("result = " + angular.toJson(result));
+
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
+        /**
+         * Retrieves the complete list of perks
+         * @returns {*}
+         */
+        service.getPerks = function () {
+            return $http.get("/api/contest/" + MySession.getContestID() + "/perks");
+        };
+
+        /**
+         * Retrieves the complete list of perks
+         * @returns {*}
+         */
+        service.getMyPerks = function () {
+            return $http.get("/api/contest/" + MySession.getContestID() + "/perks/" + MySession.getUserID());
+        };
+
+        /**
+         * Attempts to purchase the given perk codes
+         * @param contestId the given contest ID
+         * @param playerId the given player ID
+         * @param perkCodes the given perk codes to purchase
+         * @returns {*}
+         */
+        service.purchasePerks = function (contestId, playerId, perkCodes) {
+            return $http({
+                method: 'PUT',
+                url: "/api/contest/" + contestId + "/perks/" + playerId,
+                data: angular.toJson(perkCodes)
+            });
+        };
+
+        return service;
+    });
+
+    /**
+     * Perks Dialog Controller
+     * @author lawrence.daniels@gmail.com
+     */
+    app.controller('PerksDialogController', ['$scope', '$http', '$log', '$modalInstance', 'toaster', 'MySession', 'PerksDialog',
+        function ($scope, $http, $log, $modalInstance, toaster, MySession, PerksDialog) {
             var perks = [];
+            var myPerks = [];
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
 
             $scope.countOwnedPerks = function () {
                 var count = 0;
@@ -45,25 +114,26 @@
             };
 
             $scope.purchasePerks = function () {
-                // build the list of perks to purchase
-                var perkCodes = getSelectedPerkCodes();
-                $log.info("purchasePerks = " + JSON.stringify(perkCodes, null, '\t'));
-
-                var contest = MySession.contest;
-                if (!contest || !contest.OID()) {
+                // the contest must be defined
+                if (MySession.contestIsEmpty()) {
                     toaster.pop('error', "No game selected", null);
                     return;
                 }
 
+                // build the list of perks to purchase
+                var perkCodes = getSelectedPerkCodes();
+                var totalCost = getSelectedPerksCost();
+
                 // send the purchase order
-                PerksService.purchasePerks(contest.OID(), MySession.getUserID(), perkCodes)
+                PerksDialog.purchasePerks(MySession.getContestID(), MySession.getUserID(), perkCodes, totalCost)
                     .success(function (response) {
                         if (response.error) {
                             toaster.pop('error', response.error, null);
                         }
                         else {
                             toaster.pop('success', perkCodes.length + " Perk(s) purchased", null);
-                            $scope.setupPerks();
+                            MySession.deductFundsAvailable(totalCost);
+                            $modalInstance.close(response);
                         }
 
                     }).error(function (data, status, headers, config) {
@@ -87,9 +157,21 @@
             };
 
             $scope.loadPerks = function () {
-                PerksService.getPerks(MySession.getContestID())
-                    .success(function (allPerks) {
-                        perks = allPerks;
+                // load my perks
+                PerksDialog.getMyPerks()
+                    .success(function (response) {
+                        myPerks = response.perks;
+                        $scope.setupPerks();
+                    })
+                    .error(function (error) {
+                        toaster.pop('error', 'Error loading perks', null);
+                    });
+
+
+                // load all contest perks
+                PerksDialog.getPerks()
+                    .success(function (loadedPerks) {
+                        perks = loadedPerks;
                         $scope.setupPerks();
                     })
                     .error(function (error) {
@@ -99,20 +181,20 @@
 
             $scope.setupPerks = function () {
                 // create a mapping of the user's perks
-                var myPerks = {};
+                var ownedPerks = {};
 
                 // all perks the user owns should be set
-                angular.forEach(MySession.getPerks(), function (perk) {
-                    myPerks[perk] = true;
+                angular.forEach(myPerks, function (perk) {
+                    ownedPerks[perk] = true;
                 });
 
                 // setup the ownership for the perks
                 angular.forEach(perks, function (perk) {
-                    perk.owned = myPerks[perk.code] || false;
+                    perk.owned = ownedPerks[perk.code] !== undefined;
                     perk.selected = perk.owned;
                 });
 
-                return myPerks;
+                return ownedPerks;
             };
 
             ///////////////////////////////////////////////////////////////////////////
@@ -129,13 +211,15 @@
                 return perkCodes;
             }
 
-            ///////////////////////////////////////////////////////////////////////////
-            //          Watch Events
-            ///////////////////////////////////////////////////////////////////////////
-
-            $scope.$on("perks_updated", function (event, contest) {
-                $scope.setupPerks();
-            });
+            function getSelectedPerksCost() {
+                var totalCost = 0.00;
+                for (var n = 0; n < perks.length; n++) {
+                    if (perks[n].selected && !perks[n].owned) {
+                        totalCost += perks[n].cost;
+                    }
+                }
+                return totalCost;
+            }
 
         }]);
 

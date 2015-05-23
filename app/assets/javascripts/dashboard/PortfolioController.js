@@ -23,16 +23,6 @@
                     return false;
                 }
             }, {
-                "name": "Perks",
-                "icon": "fa-gift",
-                "path": "/assets/views/dashboard/perks.htm",
-                "active": false,
-                "init": function () {
-                },
-                "isLocked": function () {
-                    return false;
-                }
-            }, {
                 "name": "Positions",
                 "icon": "fa-list-alt",
                 "path": "/assets/views/dashboard/positions.htm",

@@ -147,6 +147,10 @@
             return service.getContest().OID();
         };
 
+        service.getContestName = function() {
+            return service.getContest().name;
+        };
+
         service.getContestStatus = function () {
             return service.getContest().status;
         };
@@ -162,6 +166,14 @@
 
         service.getFundsAvailable = function () {
             return service.getParticipant().fundsAvailable || 0.00;
+        };
+
+        service.deductFundsAvailable = function (amount) {
+            var participant = service.getParticipant();
+            if(participant) {
+                $log.info("Deducting funds: " + amount + " from " + participant.fundsAvailable);
+                participant.fundsAvailable -= amount;
+            }
         };
 
         service.setMessages = function (messages) {

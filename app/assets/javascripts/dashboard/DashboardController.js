@@ -5,8 +5,12 @@
      * Dashboard Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DashboardController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService',
-        function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService) {
+    app.controller('DashboardController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MySession', 'PerksDialog',
+        function ($scope, $location, $log, $routeParams, $timeout, toaster, ContestService, MySession, PerksDialog) {
+
+            $scope.perksDialog = function () {
+                PerksDialog.popup({});
+            };
 
             ///////////////////////////////////////////////////////////////////////////
             //          Initialization
