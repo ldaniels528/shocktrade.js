@@ -16,7 +16,6 @@ GET           /api/charts/stock/:symbol/:size/:range                com.shocktra
 GET           /api/charts/ratings/:symbol                           com.shocktrade.controllers.ChartResources.getAnalystRatings(symbol)
 
 # Contests
-GET           /assets/views/play/dashboard.htm                      com.shocktrade.controllers.ContestResources.dashboard
 GET           /assets/views/play/search.htm                         com.shocktrade.controllers.ContestResources.search
 
 PUT           /api/contest                                          com.shocktrade.controllers.ContestResources.createContest

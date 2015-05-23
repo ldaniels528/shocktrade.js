@@ -1,5 +1,3 @@
-@import com.shocktrade.models.contest.ContestStatus
-
 <div class="row">
     <div ng-show="MySession.contestIsEmpty()" ng-include src="'/assets/views/play/no_contest_selected.htm'"></div>
     <div ng-if="!MySession.contestIsEmpty()" class="play_container">
@@ -7,24 +5,23 @@
             <div class="rankings_container">
                 <div class="rank_cell" ng-repeat="p in getRankings() track by $index">
                     <div class="pull-left" style="display: inline">
-                        <avatar id="{{ p.facebookID }}" style="margin: 3px; width: 45px; height: 45px" />
+                        <avatar id="{{ p.facebookID }}" style="margin: 3px; width: 45px; height: 45px"></avatar>
                     </div>
                     <div class="pull-left" style="display: inline">
                         <div>
-                            <img ng-show="isOnline(p)" src="/assets/images/status/greenlight.png">
-                            <img ng-hide="isOnline(p)" src="/assets/images/status/offlight.png">
-
+                            <img ng-src="/assets/images/status/{{ isOnline(p) ? 'greenlight' : 'offlight' }}.png">
                             <span ng-class="'rank_' + p.rank">{{ p.rank }}</span>
-                            <img ng-if="MySession.getContestStatus() === '@{ContestStatus.CLOSED}' && p.rank === '1st'" src="/assets/images/contests/gold.png">
-                            <img ng-if="MySession.getContestStatus() === '@{ContestStatus.CLOSED}' && p.rank === '2nd'" src="/assets/images/contests/silver.png">
-                            <img ng-if="MySession.getContestStatus() === '@{ContestStatus.CLOSED}' && p.rank === '3rd'" src="/assets/images/contests/bronze.png">
+                            <img ng-if="MySession.getContestStatus() === 'CLOSED' && p.rank === '1st'" src="/assets/images/contests/gold.png">
+                            <img ng-if="MySession.getContestStatus() === 'CLOSED' && p.rank === '2nd'" src="/assets/images/contests/silver.png">
+                            <img ng-if="MySession.getContestStatus() === 'CLOSED' && p.rank === '3rd'" src="/assets/images/contests/bronze.png">
                             <span class="null">&#8212;</span>
                             <span class="st_text_color" ng-click="showGamerCard(p.name)">{{ p.name }}</span>
                         </div>
                         <div>
-                            <span class="positive">$ {{ p.totalEquity | number:2 }}</span>
+                            <span ng-show="p.facebookID === MySession.fbUserID" class="positive">$ {{ MySession.getFundsAvailable() | number:2 }}</span>
+                            <span ng-hide="p.facebookID === MySession.fbUserID" class="positive">$ {{ p.totalEquity | number:2 }}</span>
                             <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
-                                <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}" />
+                                <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}"></changearrow>
                                 <span ng-if="(p.gainLoss || 0) == 0" class="null">&#8212;</span>
                                 {{ abs(p.gainLoss) | number:2 }}%
                             </span>

@@ -43,8 +43,8 @@
         <br style="clear: both">
     </div>
     <div class="col-md-4">
-        <span ng-show="contest" style="font-size: 14pt; vertical-align: middle">
-            Playing <span class="game_title">{{contest.name}}</span>
+        <span ng-hide="MySession.contestIsEmpty()" style="font-size: 14pt; vertical-align: middle">
+            Playing <span class="game_title">{{MySession.getContestName()}}</span>
         </span>
     </div>
     <div class="col-md-4" ng-controller="AwardsController" ng-init="setupAwards()">

@@ -46,10 +46,6 @@ object ContestResources extends Controller with ErrorHandler {
   //     Views & JavaScript
   ////////////////////////////////////////////////////////////////////////////
 
-  def dashboard = Action {
-    Ok(assets.views.html.game.dashboard())
-  }
-
   def search = Action {
     Ok(assets.views.html.game.search(Contest.MaxPlayers))
   }

@@ -1,12 +1,12 @@
 <div ng-controller="GameController" class="contest_colors">
-	<div style="background-color: #004080; color: #ffffee; text-align: center">{{ userProfile.name }}</div>
+	<div style="background-color: #004080; color: #ffffee; text-align: center">{{ MySession.getUserName() }}</div>
 	<div style="display:block; width: 100%; background-color: #ccddff">
-		<country profile="{{ MySession.profile }}" />
+		<country profile="{{ MySession.profile }}"></country>
 		<span style="vertical-align: middle; font-weight: bold; color: #000088">Level {{ userProfile.level }} - {{ levels[userProfile.level || 0].description }}</span>
 	</div>
 	<div style="display: block; width: 100%">
 		<div style="display: inline; float: left; width: 75px">
-			<avatar id="{{ MySession.fbUserID }}" style="width: 75px; height: 75px; margin: 3px" />
+			<avatar id="{{ MySession.fbUserID }}" style="width: 75px; height: 75px; margin: 3px"></avatar>
 		</div>
 		<div style="display:inline; float: right; width: 155px">
 			<table style="width: 100%">			

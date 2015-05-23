@@ -9,7 +9,7 @@
      * New Order Dialog Singleton
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('NewOrderDialog', function ($http, $log, $modal, $q) {
+    app.factory('NewOrderDialog', function ($http, $log, $modal) {
         var service = {};
 
         /**
