@@ -1,0 +1,9 @@
+<tabset style="margin-top: 10px; margin-bottom: 10px">
+    <tab ng-repeat="tab in portfolioTabs" active="tab.active" disabled="tab.isLocked()" select="tab.init()">
+        <tab-heading>
+            <i ng-show="tab.icon" class="fa" ng-class="tab.icon"></i>
+            <img ng-hide="tab.icon" ng-src="{{ tab.imageURL }}"> {{ tab.name }}
+        </tab-heading>
+        <div class="portfolio_tab" ng-include src="tab.path"></div>
+    </tab>
+</tabset>

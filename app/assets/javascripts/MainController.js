@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'NewGameDialog', 'ProfileService', 'SignUpDialog',
-        function ($scope, $http, $interval, $location, $log, $timeout, toaster, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, NewGameDialog, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'NewGameDialog', 'ProfileService', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, NewGameDialog, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
             $scope.loading = false;
@@ -17,102 +17,38 @@
             // mapping of online players
             var onlinePlayers = {};
 
-            // setup the tabs
-            $scope.tabIndex = determineTableIndex();
-            $scope.playTabs = [{
-                "name": "Search",
-                "icon_class": "fa-search",
-                "tool_tip": "Search for games",
-                "url": "/search",
-                "isVisible": function() {
-                    return true;
-                }
-            }, {
-                "name": "Play",
-                "icon_class": "fa-gamepad",
-                "tool_tip": "Main game dashboard",
-                "url": "/dashboard",
-                "isVisible": function() {
-                    return !MySession.contestIsEmpty();
-                }
-            }, {
-                "name": "Discover",
-                "icon_class": "fa-newspaper-o",
-                "tool_tip": "Stock News and Quotes",
-                "url": "/discover",
-                "isVisible": function() {
-                    return true;
-                }
-            },{
-                "name": "Research",
-                "icon_class": "fa-table",
-                "tool_tip": "Stock Research",
-                "url": "/research",
-                "isVisible": function() {
-                    return true;
-                }
-            }, {
-                "name": "My Awards",
-                "icon_class": "fa-trophy",
-                "tool_tip": "My Awards",
-                "url": "/awards",
-                "isVisible": function() {
-                    return true;
-                }
-            }, {
-                "name": "My Statistics",
-                "icon_class": "fa-bar-chart",
-                "tool_tip": "My Statistics",
-                "url": "/statistics",
-                "isVisible": function() {
-                    return true;
-                }
-            }];
-
-            $scope.changePlayTab = function (tabIndex) {
-                var tab = $scope.playTabs[tabIndex];
-                $log.info("Changing location to " + tab.url);
-                $location.path(tab.url);
-                $scope.tabIndex = tabIndex;
-                return true;
-            };
+            ///////////////////////////////////////////////////////////////////////////
+            //          Public Functions
+            ///////////////////////////////////////////////////////////////////////////
 
             $scope.abs = function (value) {
                 return !value ? value : ((value < 0) ? -value : value);
             };
 
-            $scope.clone = function(obj) {
-                // Handle the 3 simple types, and null or undefined
-                if (null == obj || "object" != typeof obj) return obj;
+            /**
+             * Returns the contacts matching the given search term
+             */
+            $scope.getRegisteredFriends = function () {
+                return MySession.fbFriends.slice(0, 20);
+            };
 
-                // Handle Date
-                else if (obj instanceof Date) {
-                    var copy = new Date();
-                    copy.setTime(obj.getTime());
-                    return copy;
-                }
-
-                // Handle Array
-                else if (obj instanceof Array) {
-                    var copy = [];
-                    for (var i = 0, len = obj.length; i < len; i++) {
-                        copy[i] = $scope.clone(obj[i]);
-                    }
-                    return copy;
-                }
-
-                // Handle Object
-                else if (obj instanceof Object) {
-                    var copy = {};
-                    for (var attr in obj) {
-                        if (obj.hasOwnProperty(attr)) copy[attr] = $scope.clone(obj[attr]);
-                    }
-                    return copy;
-                }
-
+            $scope.getBarRanking = function () {
+                if (MySession.contestIsEmpty() || !MySession.getUserName()) return null;
                 else {
-                    throw new Error("Unable to copy object! Its type isn't supported.");
+                    var rankings = ContestService.getPlayerRankings(MySession.getContest(), MySession.getUserName());
+                    return rankings.player;
                 }
+            };
+
+            $scope.changePlayTab = function (tabIndex) {
+                var tab = $scope.playTabs[tabIndex];
+                $log.info("Changing location to " + tab.url);
+                $location.path(tab.url);
+                return true;
+            };
+
+            $scope.getTabIndex = function () {
+                return determineTableIndex();
             };
 
             function determineTableIndex() {
@@ -283,6 +219,93 @@
                 else if (FavoriteSymbols.isFavorite(symbol)) return "fa fa-heart";
                 else return "";
             };
+
+            //////////////////////////////////////////////////////////////////////
+            //              Data Graphs
+            //////////////////////////////////////////////////////////////////////
+
+            // setup the tabs
+            $scope.playTabs = [{
+                "name": "Search",
+                "icon_class": "fa-search",
+                "tool_tip": "Search for games",
+                "url": "/search",
+                "isVisible": function() {
+                    return true;
+                }
+            }, {
+                "name": "Play",
+                "icon_class": "fa-gamepad",
+                "tool_tip": "Main game dashboard",
+                "url": "/dashboard",
+                "isVisible": function() {
+                    return !MySession.contestIsEmpty();
+                }
+            }, {
+                "name": "Discover",
+                "icon_class": "fa-newspaper-o",
+                "tool_tip": "Stock News and Quotes",
+                "url": "/discover",
+                "isVisible": function() {
+                    return true;
+                }
+            },{
+                "name": "Research",
+                "icon_class": "fa-table",
+                "tool_tip": "Stock Research",
+                "url": "/research",
+                "isVisible": function() {
+                    return true;
+                }
+            }, {
+                "name": "My Awards",
+                "icon_class": "fa-trophy",
+                "tool_tip": "My Awards",
+                "url": "/awards",
+                "isVisible": function() {
+                    return true;
+                }
+            }, {
+                "name": "My Statistics",
+                "icon_class": "fa-bar-chart",
+                "tool_tip": "My Statistics",
+                "url": "/statistics",
+                "isVisible": function() {
+                    return true;
+                }
+            }];
+
+            // define the levels
+            $scope.levels = [
+                {"number": 1, "nextLevelXP": 1000, "description": "Private"},
+                {"number": 2, "nextLevelXP": 2000, "description": "Private 1st Class"},
+                {"number": 3, "nextLevelXP": 4000, "description": "Corporal"},
+                {"number": 4, "nextLevelXP": 8000, "description": "First Corporal"},
+                {"number": 5, "nextLevelXP": 16000, "description": "Sergeant"},
+                {"number": 6, "nextLevelXP": 32000, "description": "Staff Sergeant"},
+                {"number": 7, "nextLevelXP": 64000, "description": "Gunnery Sergeant"},
+                {"number": 8, "nextLevelXP": 1280000, "description": "Master Sergeant"},
+                {"number": 9, "nextLevelXP": 256000, "description": "First Sergeant"},
+                {"number": 10, "nextLevelXP": 1024000, "description": "Sergeant Major"},
+                {"number": 11, "nextLevelXP": 2048000, "description": "Warrant Officer 3rd Class"},
+                {"number": 12, "nextLevelXP": 4096000, "description": "Warrant Officer 2nd Class"},
+                {"number": 13, "nextLevelXP": 4096000, "description": "Warrant Officer 1st Class"},
+                {"number": 14, "nextLevelXP": 8192000, "description": "Chief Warrant Officer"},
+                {"number": 15, "nextLevelXP": 8192000, "description": "Master Chief Warrant Officer"},
+                {"number": 16, "nextLevelXP": 16384000, "description": "Lieutenant"},
+                {"number": 17, "nextLevelXP": 32768000, "description": "First Lieutenant"},
+                {"number": 18, "nextLevelXP": 65536000, "description": "Captain"},
+                {"number": 19, "nextLevelXP": 131072000, "description": "Major"},
+                {"number": 20, "nextLevelXP": 262144000, "description": "Lieutenant Colonel"},
+                {"number": 21, "nextLevelXP": 524288000, "description": "Colonel"},
+                {"number": 22, "nextLevelXP": 524288000, "description": "Brigadier General"},
+                {"number": 23, "nextLevelXP": 524288000, "description": "Major General"},
+                {"number": 24, "nextLevelXP": 524288000, "description": "Lieutenant General"},
+                {"number": 25, "nextLevelXP": 524288000, "description": "General"}];
+
+            //////////////////////////////////////////////////////////////////////
+            //              Event Listeners
+            //////////////////////////////////////////////////////////////////////
 
             $scope.$on("user_status_changed", function (event, newState) {
                 $log.info("user_status_changed: newState = " + angular.toJson(newState));

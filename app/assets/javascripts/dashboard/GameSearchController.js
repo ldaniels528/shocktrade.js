@@ -30,6 +30,11 @@
             //          Public Functions
             ///////////////////////////////////////////////////////////////////////////
 
+            $scope.enterGame = function (contest) {
+                MySession.setContest(contest);
+                $location.path("/dashboard/" + contest.OID());
+            };
+
             $scope.getAvailableCount = function () {
                 var count = 0;
                 angular.forEach($scope.searchResults, function (r) {
@@ -104,6 +109,19 @@
                     else if (c.status === 'ACTIVE') return 'positive';
                     else if (c.status === 'CLOSED') return 'negative';
                     else return "null";
+                }
+            };
+
+            $scope.trophy = function (place) {
+                switch (place) {
+                    case '1st':
+                        return "contests/gold.png";
+                    case '2nd':
+                        return "contests/silver.png";
+                    case '3rd':
+                        return "contests/bronze.png";
+                    default:
+                        return "status/transparent.png";
                 }
             };
 

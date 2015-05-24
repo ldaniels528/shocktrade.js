@@ -8,6 +8,20 @@
     app.controller('DashboardController', ['$scope', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MarginAccountDialog', 'MySession', 'PerksDialog',
         function ($scope, $log, $routeParams, $timeout, toaster, ContestService, MarginAccountDialog, MySession, PerksDialog) {
 
+            var accountMode = false;
+
+            $scope.isCashAccount = function () {
+                return !accountMode;
+            };
+
+            $scope.isMarginAccount = function () {
+                return accountMode;
+            };
+
+            $scope.toggleAccountMode = function () {
+                accountMode = !accountMode;
+            };
+
             /////////////////////////////////////////////////////////////////////
             //          Pop-up Dialog Functions
             /////////////////////////////////////////////////////////////////////

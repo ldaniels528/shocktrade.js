@@ -29,6 +29,8 @@ object OrderProcessor {
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
   private val quoteCache = ConcurrentCache[String, Seq[YFIntraDayQuote]](2.hours)
 
+  private def isTradingActive(asOfDate: Date) = true //DateUtil.isTradingActive(asOfDate)
+
   /**
    * Processes the given contest
    */
@@ -324,8 +326,6 @@ object OrderProcessor {
     // display the stock quotes
     stockQuotes
   }
-
-  private def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
 
   private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 

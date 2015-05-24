@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold"
+                ng-click="perksDialog()"
+                ng-hide="MySession.getContestStatus() === 'CLOSED'"
+                title="Create a new order">
+            <i class="fa fa-gift"></i> Perks
+        </button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold"
+                ng-click="marginAccountDialog()"
+                ng-hide="MySession.getContestStatus() === 'CLOSED' || !MySession.hasPerk('MARGIN')"
+                title="Use your margin account">
+            <i class="fa fa-bank"></i> Margin
+        </button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold pull-right"
+                ng-click="popupNewOrderDialog()"
+                ng-hide="MySession.getContestStatus() === 'CLOSED'"
+                title="Create a new order">
+            <i class="fa fa-cart-plus"></i> Order
+        </button>
+    </div>
+</div>

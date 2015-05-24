@@ -57,10 +57,9 @@
         </toaster-container>
 
         <!-- main view -->
-        <div ng-controller="GameController">
-			<div ng-controller="PortfolioController">
+        <div>
+			<div>
 				<div ng-if="MySession.fbUserID" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
-
 				<div class="row" style="margin-top: 20px">
 					<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
 					<div class="col-md-11 pull-left" ng-view ng-cloak></div>
@@ -103,13 +102,14 @@
     <script src='@routes.Assets.versioned("javascripts/WebSockets.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/connect/ConnectController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/connect/ConnectService.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dashboard/CashAccountController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/ChatController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/ContestService.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/DashboardController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/ExposureController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/dashboard/GameController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/dashboard/GameSearchController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/GraphService.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/dashboard/MarginAccountController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/PortfolioController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/DiscoverController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/discover/DrillDownController.js")' type="text/javascript"></script>

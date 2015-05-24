@@ -95,6 +95,10 @@
                     });
             };
 
+            $scope.isMarketOrder = function (order) {
+                return order.priceType == 'MARKET' || order.priceType == 'MARKET_ON_CLOSE';
+            };
+
             $scope.isOrderSelected = function () {
                 return $scope.selectedOrder != null;
             };
@@ -194,61 +198,6 @@
 
             $scope.toggleSelectedPosition = function () {
                 $scope.selectedPosition = null;
-            };
-
-            /////////////////////////////////////////////////////////////////////
-            //          Summary Functions
-            /////////////////////////////////////////////////////////////////////
-
-            $scope.asOfDate = function () {
-                var participant = MySession.getParticipant();
-                return participant.lastTradeTime || new Date();
-            };
-
-            $scope.getTotalOrders = function () {
-                return $scope.getTotalBuyOrders() + $scope.getTotalSellOrders();
-            };
-
-            $scope.getTotalEquity = function () {
-                return $scope.getTotalInvestment() + MySession.getFundsAvailable();
-            };
-
-            $scope.getTotalInvestment = function () {
-                var total = 0;
-                angular.forEach($scope.getPositions(), function (p) {
-                    total += p.netValue;
-                });
-                return total;
-            };
-
-            $scope.getTotalBuyOrders = function () {
-                var participant = MySession.getParticipant();
-                var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.orders, function (o) {
-                        if (o.orderType == 'BUY') {
-                            total += o.price * o.quantity + o.commission;
-                        }
-                    });
-                }
-                return total;
-            };
-
-            $scope.getTotalSellOrders = function () {
-                var participant = MySession.getParticipant();
-                var total = 0;
-                if (participant != null) {
-                    angular.forEach(participant.orders, function (o) {
-                        if (o.orderType == 'SELL') {
-                            total += o.price * o.quantity + o.commission;
-                        }
-                    });
-                }
-                return total;
-            };
-
-            $scope.isMarketOrder = function (order) {
-                return order.priceType == 'MARKET' || order.priceType == 'MARKET_ON_CLOSE';
             };
 
             $scope.tradingStart = function () {

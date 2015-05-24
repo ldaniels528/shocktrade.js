@@ -196,7 +196,7 @@ object ContestResources extends Controller with ErrorHandler {
     Order(
       symbol = form.symbol,
       exchange = form.exchange,
-      creationTime = new Date(),
+      creationTime = new DateTime().minusDays(3).toDate, // TODO for testing only
       expirationTime = None, // TODO set once orderTerm is implemented
       orderType = form.orderType,
       price = form.limitPrice,
