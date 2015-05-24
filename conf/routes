@@ -21,20 +21,19 @@ GET           /assets/views/play/search.htm                         com.shocktra
 PUT           /api/contest                                          com.shocktrade.controllers.ContestResources.createContest
 GET           /api/contest/:id                                      com.shocktrade.controllers.ContestResources.getContestByID(id)
 DELETE        /api/contest/:id                                      com.shocktrade.controllers.ContestResources.deleteContestByID(id)
-GET           /api/contest/:id/start                                com.shocktrade.controllers.ContestResources.startContest(id)
-
-GET           /api/contest/:id/rankings                             com.shocktrade.controllers.ContestResources.getContestRankings(id)
 PUT           /api/contest/:id/chat                                 com.shocktrade.controllers.ContestResources.createChatMessage(id)
-
+PUT           /api/contest/:id/margin/:playerId                     com.shocktrade.controllers.ContestResources.createMarginAccount(id, playerId)
+POST          /api/contest/:id/margin/:playerId                     com.shocktrade.controllers.ContestResources.adjustMarginAccountFunds(id, playerId)
+GET           /api/contest/:id/orders/:playerId                     com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
+GET           /api/contest/:id/perks                                com.shocktrade.controllers.ContestResources.getAvailablePerks(id)
+GET           /api/contest/:id/perks/:playerId                      com.shocktrade.controllers.ContestResources.getPlayerPerks(id, playerId)
+PUT           /api/contest/:id/perks/:playerId                      com.shocktrade.controllers.ContestResources.purchasePerks(id, playerId)
 PUT           /api/contest/:id/player                               com.shocktrade.controllers.ContestResources.joinContest(id)
 GET           /api/contest/:id/player/:playerId                     com.shocktrade.controllers.ContestResources.getContestParticipant(id, playerId)
 DELETE        /api/contest/:id/player/:playerId                     com.shocktrade.controllers.ContestResources.quitContest(id, playerId)
-
-GET           /api/contest/:id/orders/:playerId                     com.shocktrade.controllers.ContestResources.getEnrichedOrders(id, playerId)
-GET           /api/contest/:id/perks                                com.shocktrade.controllers.ContestResources.getAllPerks(id)
-GET           /api/contest/:id/perks/:playerId                      com.shocktrade.controllers.ContestResources.getPlayerPerks(id, playerId)
-PUT           /api/contest/:id/perks/:playerId                      com.shocktrade.controllers.ContestResources.purchasePerks(id, playerId)
 GET           /api/contest/:id/positions/:playerId                  com.shocktrade.controllers.ContestResources.getEnrichedPositions(id, playerId)
+GET           /api/contest/:id/rankings                             com.shocktrade.controllers.ContestResources.getContestRankings(id)
+GET           /api/contest/:id/start                                com.shocktrade.controllers.ContestResources.startContest(id)
 
 GET           /api/contests/player/:playerId                        com.shocktrade.controllers.ContestResources.getContestsByPlayerID(playerId)
 GET           /api/contests/player/:playerId/totalInvestment        com.shocktrade.controllers.ContestResources.getTotalInvestment(playerId)

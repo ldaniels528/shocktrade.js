@@ -1,0 +1,45 @@
+<script type="text/ng-template" id="margin_acct_dialog.htm">
+    <div class="modal-header st_modal_header">
+        <h4>Margin Account: Funds Transfer</h4>
+    </div>
+    <div class="modal-body" ng-init="init()">
+        <div class="row">
+            <div class="col-md-5 bold">Margin Account Balance</div>
+            <div class="col-md-7">$ {{ MySession.getMarginAccount().depositedFunds | number:2 }}</div>
+
+            <div class="col-md-5 bold">Funds Available for Deposit</div>
+            <div class="col-md-7">
+                <span class="st_green">$ {{ MySession.getFundsAvailable() | number:2 }}</span>
+            </div>
+
+            <div class="col-md-12 form-group" style="margin-top: 10px">
+                <label for="action">Action</label>
+                <select id="action" class="form-control" ng-model="form.action" ng-options="a for a in actions"></select>
+            </div>
+
+            <div class="col-md-12 form-group">
+                <label for="amount">Amount</label>
+                <input class="form-control" id="amount" type="number" ng-model="form.amount" ng-disabled="!form.action">
+            </div>
+        </div>
+
+        <!-- error messages -->
+        <div class="row" ng-show="messages">
+            <ul class="error">
+                <li class="error" ng-repeat="message in messages">
+                    <span class="error">{{message}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="accept(form)">
+                <img ng-show="processing" src="/assets/images/status/loading.gif"> Execute
+            </button>
+            <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</script>

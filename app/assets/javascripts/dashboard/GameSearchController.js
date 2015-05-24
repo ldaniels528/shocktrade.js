@@ -5,11 +5,11 @@
      * Game Search Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('GameSearchController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'MySession', 'ContestService', 'QuoteService',
-        function ($scope, $location, $log, $routeParams, $timeout, toaster, MySession, ContestService, QuoteService) {
+    app.controller('GameSearchController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MySession', 'NewGameDialog',
+        function ($scope, $location, $log, $routeParams, $timeout, toaster, ContestService, MySession, NewGameDialog) {
 
             // public variables
-            $scope.myContests = null;
+            $scope.myContests = [];
             $scope.searchResults = [];
             $scope.searchTerm = "";
             $scope.selectedContest = null;
@@ -29,6 +29,10 @@
             ///////////////////////////////////////////////////////////////////////////
             //          Public Functions
             ///////////////////////////////////////////////////////////////////////////
+
+            $scope.initGames = function () {
+                $scope.contestSearch($scope.searchOptions);
+            };
 
             $scope.enterGame = function (contest) {
                 MySession.setContest(contest);
@@ -130,24 +134,6 @@
             ///////////////////////////////////////////////////////////////////////////
 
             $scope.getMyContests = function () {
-                var userID = MySession.getUserID();
-                if (userID == null) return [];
-                else if ($scope.myContests === null || $scope.myContests === undefined) {
-                    $scope.myContests = [];
-                    $log.info("getMyContests: contests need loading - userID = " + userID);
-                    ContestService.getContestsByPlayerID(userID)
-                        .success(function (contests) {
-                            $log.info("Loaded " + contests.length + " contest(s)");
-                            $scope.myContests = contests;
-                        })
-                        .error(function (response) {
-                            $log.error("Failed to load 'My Contests'");
-                            $timeout(function () {
-                                $scope.myContests = null;
-                            }, 15000);
-                        });
-                }
-
                 return $scope.myContests;
             };
 
@@ -158,6 +144,35 @@
                     return rankings.player;
                 }
             };
+
+            $scope.newGamePopup = function () {
+                NewGameDialog.popup({
+                    "success": function (contest) {
+                        $scope.myContests.push(contest);
+                    },
+                    "error": function(err) {
+                        toaster.pop('error', 'Failed to create game', null);
+                    }
+                });
+            };
+
+            function loadMyContests() {
+                var userID = MySession.getUserID();
+                if (!userID) return [];
+                else {
+                    $scope.myContests = [];
+
+                    $log.info("Loading 'My Contests'...");
+                    ContestService.getContestsByPlayerID(userID)
+                        .success(function (contests) {
+                            $log.info("Loaded " + contests.length + " contest(s)");
+                            $scope.myContests = contests;
+                        })
+                        .error(function (response) {
+                            toaster.pop('error', "Failed to load 'My Contests'", null)
+                        });
+                }
+            }
 
             ///////////////////////////////////////////////////////////////////////////
             //          Contest Selection Functions
@@ -208,9 +223,12 @@
 
             $scope.deleteContest = function (contest) {
                 contest.deleting = true;
+                $log.info("Deleting contest " + contest.name + "...");
                 ContestService.deleteContest(contest.OID())
                     .success(function (response) {
-                        removeContestFromList(contest.OID());
+                        //removeContestFromList(contest.OID());
+                        $scope.contestSearch($scope.searchOptions);
+
                         $timeout(function () {
                             contest.deleting = false;
                         }, 500);
@@ -354,13 +372,18 @@
             function removeContestFromList(searchResults, contestId) {
                 var index = indexOfContest(contestId);
                 if (index != -1) {
+                    $log.info("Removed contest " + contestId + " from the list...");
                     searchResults.splice(index, 1);
                 }
 
-                if($scope.selectedContest && $scope.selectedContest.OID() === contestId) {
+                if ($scope.selectedContest && $scope.selectedContest.OID() === contestId) {
                     $scope.selectedContest = null;
                 }
             }
+
+            ///////////////////////////////////////////////////////////////////////////
+            //          Event Listeners
+            ///////////////////////////////////////////////////////////////////////////
 
             /**
              * Listen for contest creation events
@@ -368,9 +391,8 @@
             $scope.$on("contest_created", function (event, contest) {
                 $log.info("New contest created '" + contest.name + "'");
                 $scope.searchResults.push(contest);
-
-                // TODO no duplicates allowed
-                // TODO conditionally add the contest to My Contests
+                loadMyContests();
+                MySession.refresh();
             });
 
             /**
@@ -378,15 +400,10 @@
              */
             $scope.$on("contest_deleted", function (event, contest) {
                 $log.info("Contest '" + contest.name + "' deleted");
-                var contestId = contest.OID();
-
-                // remove the deleted contest from our search results
-                removeContestFromList($scope.searchResults, contestId);
-                removeContestFromList($scope.myContests, contestId);
-
-                if (isContestSelected(contestId)) {
-                    $scope.selectedContest = null;
-                }
+                $scope.selectedContest = null;
+                $scope.searchResults.push(contest);
+                loadMyContests();
+                MySession.refresh();
             });
 
             /**
@@ -404,6 +421,10 @@
                 if (isContestSelected(contestId)) {
                     $scope.selectedContest = contest;
                 }
+            });
+
+            $scope.$watch("MySession.userProfile._id", function () {
+                loadMyContests();
             });
 
         }]);

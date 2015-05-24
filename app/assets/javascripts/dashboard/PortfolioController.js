@@ -269,7 +269,7 @@
                 resetOrders();
             });
 
-            $scope.$on("positions_updated", function (event, contest) {
+            $scope.$on("participant_updated", function (event, contest) {
                 $log.info("[Portfolio] Orders for Contest '" + contest.name + "' updated");
                 resetPositions();
             });

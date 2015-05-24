@@ -81,6 +81,10 @@ legend {
     color: #00aa88;
 }
 
+.transparent {
+	color: #eeeeee;
+}
+
 div.st_nav_bar {
     padding: 4px;
 }

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" style="background: #dddddd; padding: 4px; border: 1px solid #cccccc; border-radius: 4px; margin: 15px">
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold"
                 ng-click="perksDialog()"
@@ -8,11 +8,11 @@
         </button>
     </div>
     <div class="col-md-4">
-        <button class="btn btn-default sell_button bold"
+        <button class="btn btn-default sell_button bold pull-right"
                 ng-click="marginAccountDialog()"
-                ng-hide="MySession.getContestStatus() === 'CLOSED' || !MySession.hasPerk('MARGIN')"
+                ng-hide="!isMarginAccount() || MySession.getContestStatus() === 'CLOSED' || !MySession.hasPerk('MARGIN')"
                 title="Use your margin account">
-            <i class="fa fa-bank"></i> Margin
+            <i class="fa fa-sign-out"></i> Margin
         </button>
     </div>
     <div class="col-md-4">

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     var app = angular.module('shocktrade');
 
     /**
@@ -7,39 +7,43 @@
      */
     app.controller('MarginAccountController', ['$scope', '$log', 'toaster', 'MySession',
         function ($scope, $log, toaster, MySession) {
-
-            $scope.depositedFunds = 10000.00;
-            $scope.initialMargin = 0.50;
-            $scope.maintenanceMargin = 0.30;
-            $scope.investedAmount = 12000.00;
+            
             $scope.investmentValue = 15000.00;
 
             $scope.actions = [{
                 label: "Deposit Funds",
                 value: "DEPOSIT"
-            },{
+            }, {
                 label: "Withdraw Funds",
                 value: "WITHDRAW"
             }];
 
             $scope.init = function () {
+                $log.info("margin = " + angular.toJson(MySession.getMarginAccount(), true));
+            };
 
+            $scope.getAsOfDate = function () {
+                return MySession.getMarginAccount().asOfDate;
             };
 
             $scope.getBuyingPower = function () {
-                return $scope.depositedFunds / $scope.initialMargin;
+                return $scope.getDepositedFunds() / $scope.getInitialMargin();
             };
 
             $scope.getDepositedFunds = function () {
-                return $scope.depositedFunds;
+                return MySession.getMarginAccount().depositedFunds || 0;
             };
 
-            $scope.getInitialMargin = function() {
-                return $scope.initialMargin;
+            $scope.getInterestRate = function () {
+                return MySession.getMarginAccount().interestRate;
             };
 
-            $scope.getInvestedAmount = function () {
-                return $scope.investedAmount;
+            $scope.getInitialMargin = function () {
+                return MySession.getMarginAccount().initialMargin;
+            };
+
+            $scope.getCashInvestedAmount = function () {
+                return MySession.getMarginAccount().cashInvestedAmount || 0;
             };
 
             $scope.getInvestmentValue = function () {
@@ -47,19 +51,19 @@
             };
 
             $scope.getMaintenanceMargin = function () {
-                return $scope.maintenanceMargin;
+                return MySession.getMarginAccount().maintenanceMargin;
             };
 
             $scope.getMarginFundsAvailable = function () {
-                return $scope.getBuyingPower() - $scope.investedAmount;
+                return $scope.getBuyingPower() - $scope.getCashInvestedAmount();
             };
 
             $scope.getNetMarginFundsAvailable = function () {
                 return $scope.getMarginFundsAvailable() - $scope.getMinimumDepositAmount();
             };
 
-            $scope.getMinimumDepositAmount = function() {
-                return ($scope.getBuyingPower() - $scope.getMarginFundsAvailable()) * $scope.maintenanceMargin;
+            $scope.getMinimumDepositAmount = function () {
+                return ($scope.getBuyingPower() - $scope.getMarginFundsAvailable()) * $scope.getMaintenanceMargin();
             };
 
         }]);

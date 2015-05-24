@@ -19,6 +19,7 @@ case class Participant(id: BSONObjectID = BSONObjectID.generate,
                        facebookId: String,
                        fundsAvailable: BigDecimal,
                        lastTradeTime: Option[Date] = None,
+                       marginAccount: Option[MarginAccount] = None,
                        orders: List[Order] = Nil,
                        orderHistory: List[ClosedOrder] = Nil,
                        perks: List[PerkType] = Nil,
@@ -37,6 +38,7 @@ object Participant {
       (__ \ "facebookID").read[String] and
       (__ \ "fundsAvailable").read[BigDecimal] and
       (__ \ "lastTradeTime").readNullable[Date] and
+      (__ \ "marginAccount").readNullable[MarginAccount] and
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
       (__ \ "orderHistory").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
       (__ \ "perks").read[List[PerkType]] and
@@ -49,6 +51,7 @@ object Participant {
       (__ \ "facebookID").write[String] and
       (__ \ "fundsAvailable").write[BigDecimal] and
       (__ \ "lastTradeTime").writeNullable[Date] and
+      (__ \ "marginAccount").writeNullable[MarginAccount] and
       (__ \ "orders").write[List[Order]] and
       (__ \ "orderHistory").write[List[ClosedOrder]] and
       (__ \ "perks").write[List[PerkType]] and
@@ -62,6 +65,7 @@ object Participant {
       doc.getAs[String]("facebookID").get,
       doc.getAs[BigDecimal]("fundsAvailable").get,
       doc.getAs[Date]("lastTradeTime"),
+      doc.getAs[MarginAccount]("marginAccount"),
       doc.getAs[List[Order]]("orders").getOrElse(Nil),
       doc.getAs[List[ClosedOrder]]("orderHistory").getOrElse(Nil),
       doc.getAs[List[PerkType]]("perks").getOrElse(Nil),
@@ -77,6 +81,7 @@ object Participant {
       "facebookID" -> participant.facebookId,
       "fundsAvailable" -> participant.fundsAvailable,
       "lastTradeTime" -> participant.lastTradeTime,
+      "marginAccount" -> participant.marginAccount,
       "orders" -> participant.orders,
       "orderHistory" -> participant.orderHistory,
       "perks" -> participant.perks,

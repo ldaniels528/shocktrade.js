@@ -145,6 +145,28 @@ object ContestDAO {
   }
 
   /////////////////////////////////////////////////////////////////////////////////
+  //        Margin Account
+  /////////////////////////////////////////////////////////////////////////////////
+
+  def updateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId, "participants._id" -> playerId),
+      modify = new Update(BS("$set" -> BS("participants.$.marginAccount" -> account)), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  def adjustMarginAccountFunds(contestId: BSONObjectID, playerId: BSONObjectID, deltaAmount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contestId, "participants._id" -> playerId),
+      modify = new Update(BS(
+        "$inc" -> BS("participants.$.fundsAvailable" -> -deltaAmount),
+        "$inc" -> BS("participants.$.marginAccount.depositedFunds" -> deltaAmount)), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////
   //        Messages
   /////////////////////////////////////////////////////////////////////////////////
 
@@ -262,7 +284,7 @@ object ContestDAO {
    * Retrieves all of the system-defined perks
    * @return a promise of a sequence of perks
    */
-  def findAllPerks(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Perk]] = {
+  def findAvailablePerks(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Perk]] = {
     mc.find(BS("_id" -> contestId)).cursor[Contest].headOption map {
       case None => Nil
       case Some(contest) =>

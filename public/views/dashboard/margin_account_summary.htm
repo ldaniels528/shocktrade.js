@@ -1,53 +1,48 @@
-<div style="display: block; width: 100%">
-    <div style="display: inline; float: left; width: 65%">
-        <table style="width: 100%">
-            <tr>
-                <td class="alabel">Cash Balance:</td>
-                <td class="afunds">
-                    <span class="fundsAvailable">{{ MySession.getFundsAvailable() | number:2 }}</span>
-                </td>
-                <td>
-					<span style="font-size: 9pt">
-						&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
-					</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="alabel">Investments:</td>
-                <td class="afunds">
-                    <span class="totalInvestment">{{ getTotalInvestment() | number:2 }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="alabel">Total Equity:</td>
-                <td class="afunds">
-                    <span class="fundsAvailable">{{ getTotalEquity() | number:2 }}</span>
-                </td>
-            </tr>
-        </table>
+<div class="row" ng-init="init()">
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <span class="alabel">Deposited Funds</span>
+			<span class="afunds pull-right clickable" ng-click="marginAccountDialog()">
+				<span class="fundsAvailable">{{ getDepositedFunds() | number:2 }}</span>
+			</span>
+			<span style="font-size: 9pt">
+				&nbsp; (as of {{ getAsOfDate() | date:'MM/dd hh:mma' }})
+			</span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Effective Buying Power</span>
+			<span class="afunds pull-right">
+				<span class="totalInvestment">{{ getBuyingPower() | number:2 }}</span>
+			</span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Funds Available</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getMarginFundsAvailable() | number:2 }}</span>
+			</span>
+        </div>
     </div>
-    <div style="display: inline; float: right; width: 35%">
-        <table style="width: 100%">
-            <tr>
-                <td class="alabel">Pending Orders:</td>
-                <td class="afunds"><span class="fundsAvailable">{{ getTotalOrders() | number:2 }}</span></td>
-            </tr>
-            <tr>
-                <!-- Pending Orders (BUY) -->
-                <td class="alabel">&nbsp; BUY Orders:</td>
-                <td class="afunds">
-					<span ng-class="getTotalBuyOrders() > MySession.getFundsAvailable() ? 'profitable' : 'unprofitable'">
-						{{ getTotalBuyOrders() | number:2 }}
-					</span>
-                </td>
-            </tr>
-            <tr>
-                <!-- Pending Orders (SELL) -->
-                <td class="alabel">&nbsp; SELL Orders:</td>
-                <td class="afunds"><span class="fundsAvailable">{{ getTotalSellOrders() | number:2 }}</span></td>
-            </tr>
-        </table>
-    </div>
-    <br style="clear: both">
-</div>
 
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <span class="alabel">Initial / Maintenance Margin</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ 100.0 * getInitialMargin() | number:1 }}%</span> /
+                <span class="st_green">{{ 100.0 * getMaintenanceMargin() | number:1 }}%</span>
+            </span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Interest Rate</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ 100.0 * getInterestRate() | number:1 }}%</span>
+            </span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Account Status</span>
+			<span class="afunds pull-right">
+                <span ng-show="getNetMarginFundsAvailable() < 0" class="st_orange">Margin Call</span>
+                <span ng-hide="getNetMarginFundsAvailable() < 0" class="st_green">Good Standing</span>
+            </span>
+        </div>
+    </div>
+</div>

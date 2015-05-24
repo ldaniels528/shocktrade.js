@@ -30,12 +30,11 @@
             $modalInstance.result.then(function (form) {
                 service.createNewGame(form).then(
                     function (response) {
-                        if (params.callback) params.callback(response);
+                        if (params.success) params.success(response);
                     },
                     function (err) {
-
-                    }
-                );
+                        if(params.error) params.error(err);
+                    });
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
@@ -99,19 +98,19 @@
                 }
             };
 
-            $scope.enforceInvitationOnly = function() {
+            $scope.enforceInvitationOnly = function () {
                 $scope.form.friendsOnly = false;
             };
 
             function isValidForm() {
                 $scope.errors = [];
-                if(!MySession.authenticated) {
+                if (!MySession.authenticated) {
                     $scope.errors.push("You must login to create games");
                 }
-                if(! $scope.form.name || $scope.form.name.trim().length == 0) {
+                if (!$scope.form.name || $scope.form.name.trim().length == 0) {
                     $scope.errors.push("Game Title is required");
                 }
-                if(! $scope.form.duration) {
+                if (!$scope.form.duration) {
                     $scope.errors.push("Game Duration is required");
                 }
                 return $scope.errors.length == 0;

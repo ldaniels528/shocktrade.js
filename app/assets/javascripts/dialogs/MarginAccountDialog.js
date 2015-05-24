@@ -28,10 +28,18 @@
             });
 
             modalInstance.result.then(function (response) {
-                $log.info("response = " + angular.toJson(response));
+                $log.info("MarginAccountDialog: response = " + angular.toJson(response));
+                if(params.success) {
+                    params.success(response);
+                }
+
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
+        };
+
+        service.adjustMarginFunds = function (contestId, playerId, form) {
+            return $http.post("/api/contest/" + contestId + "/margin/" + playerId, form);
         };
 
         return service;
@@ -41,71 +49,62 @@
      * Margin Account Dialog Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MarginAccountDialogController', ['$scope', '$log', '$modalInstance', 'MySession',
-        function ($scope, $log, $modalInstance, MySession) {
+    app.controller('MarginAccountDialogController', ['$scope', '$log', '$modalInstance', 'MarginAccountDialog', 'MySession',
+        function ($scope, $log, $modalInstance, MarginAccountDialog, MySession) {
 
-            $scope.depositedFunds = 10000.00;
-            $scope.initialMargin = 0.50;
-            $scope.maintenanceMargin = 0.30;
-            $scope.investedAmount = 12000.00;
-            $scope.investmentValue = 15000.00;
+            $scope.messages = [];
+            $scope.investedAmount = 0.00; // TODO get actual values for these
+            $scope.investmentValue = 0.00;
+            $scope.actions = [ "DEPOSIT", "WITHDRAW"];
 
-            $scope.actions = [{
-                label: "Deposit Funds",
-                value: "DEPOSIT"
-            },{
-                label: "Withdraw Funds",
-                value: "WITHDRAW"
-            }];
-
-            $scope.getBuyingPower = function () {
-                return $scope.depositedFunds / $scope.initialMargin;
-            };
-
-            $scope.getDepositedFunds = function () {
-                return $scope.depositedFunds;
-            };
-
-            $scope.getInitialMargin = function() {
-                return $scope.initialMargin;
-            };
-
-            $scope.getInvestedAmount = function () {
-                return $scope.investedAmount;
-            };
-
-            $scope.getInvestmentValue = function () {
-                return $scope.investmentValue;
-            };
-
-            $scope.getMaintenanceMargin = function () {
-                return $scope.maintenanceMargin;
-            };
-
-            $scope.getMarginFundsAvailable = function () {
-                return $scope.getBuyingPower() - $scope.investedAmount;
-            };
-
-            $scope.getNetMarginFundsAvailable = function () {
-                return $scope.getMarginFundsAvailable() - $scope.getMinimumDepositAmount();
-            };
-
-            $scope.getMinimumDepositAmount = function() {
-                  return ($scope.getBuyingPower() - $scope.getMarginFundsAvailable()) * $scope.maintenanceMargin;
+            $scope.form = {
+                "depositedFunds": MySession.getMarginAccount().depositedFunds,
+                "fundsAvailable": MySession.getFundsAvailable(),
+                "action": null,
+                "amount": null
             };
 
             $scope.init = function () {
-
+                // TODO compute the net value of the stock in the margin account
             };
 
-            $scope.accept = function () {
-                var result = [];
-                $modalInstance.close(result);
+            $scope.accept = function (form) {
+                if (isValidated(form)) {
+                    MarginAccountDialog.adjustMarginFunds(MySession.getContestID(), MySession.getUserID(), form)
+                        .success(function (response) {
+                            $modalInstance.close(response);
+                        })
+                        .error(function (err) {
+                            $scope.messages.push("Failed to deposit funds")
+                        });
+                }
             };
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
+
+            function isValidated(form) {
+                $scope.messages = [];
+
+                // make sure the action is defined
+                if (!form.action) {
+                    $scope.messages.push("Please select an Action");
+                }
+
+                // validate the amount
+                if (!form.amount) {
+                    $scope.messages.push("Please enter the desired amount");
+                }
+                else if (form.action === 'DEPOSIT' && form.amount > form.fundsAvailable) {
+                    $scope.messages.push("Insufficient funds in your cash account to complete the request")
+                }
+                else if (form.action === 'WITHDRAW' && form.amount > form.depositedFunds) {
+                    $scope.messages.push("Insufficient funds in your margin account to complete the request")
+                }
+
+                return $scope.messages.length === 0;
+            }
 
         }]);
 

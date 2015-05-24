@@ -1,53 +1,50 @@
-<div style="display: block; width: 100%">
-	<div style="display: inline; float: left; width: 65%">
-		<table style="width: 100%">
-			<tr>
-				<td class="alabel">Cash Available:</td>
-				<td class="afunds">
-					<span class="fundsAvailable">{{ MySession.getFundsAvailable() | number:2 }}</span>
-				</td>
-				<td>
-					<span style="font-size: 9pt">
-						&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td class="alabel">Investments:</td>
-				<td class="afunds">
-					<span class="totalInvestment">{{ getTotalInvestment() | number:2 }}</span>
-				</td>
-			</tr>
-			<tr>
-				<td class="alabel">Total Equity:</td>
-				<td class="afunds">
-					<span class="fundsAvailable">{{ getTotalEquity() | number:2 }}</span>
-				</td>
-			</tr>
-		</table>
+<div class="row">
+	<div class="col-md-6">
+		<div class="col-md-12">
+			<span class="alabel">Cash Available:</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ MySession.getFundsAvailable() | number:2 }}</span>
+			</span>
+			<span style="font-size: 9pt">
+				&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
+			</span>
+		</div>
+		<div class="col-md-12">
+			<span class="alabel">Investments:</span>
+			<span class="afunds pull-right">
+				<span class="totalInvestment">{{ getTotalInvestment() | number:2 }}</span>
+			</span>
+		</div>
+		<div class="col-md-12">
+			<span class="alabel">Total Equity:</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getTotalEquity() | number:2 }}</span>
+			</span>
+		</div>
 	</div>
-	<div style="display: inline; float: right; width: 35%">
-		<table style="width: 100%">
-			<tr>
-				<td class="alabel">Pending Orders:</td>
-				<td class="afunds"><span class="fundsAvailable">{{ getTotalOrders() | number:2 }}</span></td>
-			</tr>
-			<tr>
-				<!-- Pending Orders (BUY) -->
-				<td class="alabel">&nbsp; BUY Orders:</td>
-				<td class="afunds">
-					<span ng-class="getTotalBuyOrders() > MySession.getFundsAvailable() ? 'profitable' : 'unprofitable'">
-						{{ getTotalBuyOrders() | number:2 }}
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<!-- Pending Orders (SELL) -->
-				<td class="alabel">&nbsp; SELL Orders:</td>
-				<td class="afunds"><span class="fundsAvailable">{{ getTotalSellOrders() | number:2 }}</span></td>
-			</tr>
-		</table>
-	</div>
-	<br style="clear: both">
-</div>
 
+	<div class="col-md-6">
+		<div class="col-md-12">
+			<span class="alabel">Pending Orders:</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ getTotalOrders() | number:2 }}</span>
+            </span>
+		</div>
+		<div class="col-md-12">
+			<!-- Pending Orders (BUY) -->
+			<span class="alabel">&nbsp; BUY Orders:</span>
+			<span class="afunds pull-right">
+				<span ng-class="getTotalBuyOrders() > MySession.getFundsAvailable() ? 'profitable' : 'unprofitable'">
+					{{ getTotalBuyOrders() | number:2 }}
+				</span>
+			</span>
+		</div>
+		<div class="col-md-12">
+			<!-- Pending Orders (SELL) -->
+			<span class="alabel">&nbsp; SELL Orders:</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ getTotalSellOrders() | number:2 }}</span>
+            </span>
+		</div>
+	</div>
+</div>

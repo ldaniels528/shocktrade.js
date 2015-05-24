@@ -1,19 +1,27 @@
+# Create Profile
+
 curl -X POST -H "Content-Type: application/json" -d \
 '{ "userName":"ldaniels", "facebookID":"1796471892", "first":"Lawrence", "last":"Daniels", "email":"lawrence.daniels@gmail.com, "gender":"Male", "country":"us" }' \
 http://localhost:9000/api/profile/create
+
+# Create Order
 
 curl -X PUT -H "Content-Type: application/json" -d \
 '{"emailNotify":true,"symbol":"AMD","limitPrice":4.01,"quantity":"1000","orderType":"BUY","priceType":"LIMIT","orderTerm":"GOOD_FOR_7_DAYS","contestId":"532d248e4cb15ab024a83417","playerId":"51a308ac50c70a97d375a6b2"}' \
 http://localhost:9000/api/orders/create
 
-# Wallet
+# Contest Quit
+
+curl -X DELETE http://localhost:9000/api/contest/554d0292dc093588031ad654/player/554fe61e2c0000ae0063bb03
+
+# Deduct Funds from Wallet
 
 curl -X POST -H "Content-Type: application/json" -d '{ "authCode":"BZASXS", "adjustment":-25000 }' \
 http://localhost:9000/api/profile/555a30123c00000c0125e9b2/wallet
 
-# Contest Quit
+# Margin Account
 
-curl -X DELETE http://localhost:9000/api/contest/554d0292dc093588031ad654/player/554fe61e2c0000ae0063bb03
+curl -X PUT http://localhost:9000/api/contest/5561261c4af0dae309a1ca88/margin/51a308ac50c70a97d375a6b2
 
 # Participants
 

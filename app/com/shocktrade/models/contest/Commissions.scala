@@ -8,10 +8,10 @@ import com.shocktrade.models.contest.PriceTypes._
  * @author lawrence.daniels@gmail.com
  */
 object Commissions {
-  val NO_COMMISSION: BigDecimal = 0.00d
-  val LIMIT_COMMISSION: BigDecimal = 14.99
-  val MARKET_COMMISSION: BigDecimal = 9.99
-  val MARKET_AT_CLOSE_COMMISSION: BigDecimal = 7.99
+  val NO_COMMISSION: Double = 0.00
+  val LIMIT_COMMISSION: Double = 14.99
+  val MARKET_COMMISSION: Double = 9.99
+  val MARKET_AT_CLOSE_COMMISSION: Double = 7.99
 
   /**
    * Returns the commission cost for the given price type
@@ -19,7 +19,7 @@ object Commissions {
    * @param perks the given collection of perks owned by the player
    * @return the commission cost for the given price type
    */
-  def getCommission(priceType: PriceType, perks: Seq[PerkType] = Nil): BigDecimal = {
+  def getCommission(priceType: PriceType, perks: Seq[PerkType] = Nil): Double = {
     if (perks.contains(PerkTypes.FEEWAIVR)) NO_COMMISSION
     else priceType match {
       case MARKET => MARKET_COMMISSION

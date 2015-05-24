@@ -128,14 +128,12 @@
                 // send the purchase order
                 PerksDialog.purchasePerks(MySession.getContestID(), MySession.getUserID(), perkCodes, totalCost)
                     .success(function (response) {
-                        if (response.error) {
-                            toaster.pop('error', response.error, null);
-                        }
-                        else {
+                        if (!response.error) {
                             toaster.pop('success', perkCodes.length + " Perk(s) purchased", null);
-                            MySession.deductFundsAvailable(totalCost);
-                            $modalInstance.close(response);
                         }
+                        MySession.deductFundsAvailable(totalCost);
+                        MySession.setContest(response);
+                        $modalInstance.close(response);
 
                     }).error(function (data, status, headers, config) {
                         toaster.pop('error', "Failed to purchase " + perkCodes.length + " Perk(s)", null);

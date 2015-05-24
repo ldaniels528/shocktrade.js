@@ -27,7 +27,11 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.marginAccountDialog = function() {
-                MarginAccountDialog.popup({});
+                MarginAccountDialog.popup({
+                    "success": function(contest) {
+                        MySession.setContest(contest);
+                    }
+                });
             };
 
             $scope.perksDialog = function () {

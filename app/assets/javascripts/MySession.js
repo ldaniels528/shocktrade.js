@@ -5,7 +5,7 @@
      * My Session Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('MySession', function ($rootScope, $log, $timeout, toaster, ContestService) {
+    app.factory('MySession', function ($rootScope, $log, $timeout, toaster, ContestService, ProfileService) {
         var service = {};
 
         /////////////////////////////////////////////////////////////////////
@@ -27,20 +27,6 @@
         service.getUserName = function () {
             return service.userProfile.name;
         };
-
-        /**
-         * Creates a default 'Spectator' user profile
-         * @returns {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
-         */
-        function createSpectatorProfile() {
-            return {
-                name: "Spectator",
-                country: "us",
-                level: 1,
-                lastSymbol: "MSFT",
-                friends: []
-            }
-        }
 
         /**
          * Indicates whether the given user is an administrator
@@ -69,6 +55,28 @@
             service.fbProfile = {};
             service.userProfile = createSpectatorProfile();
         };
+
+        service.refresh = function () {
+            if (service.fbUserID !== null) {
+                ProfileService.getProfileByFacebookID(service.fbUserID)
+                    .then(function (profile) {
+                        service.userProfile.netWorth = profile.netWorth;
+                    });
+            }
+        };
+
+        /**
+         * Creates a default 'Spectator' user profile
+         * @returns {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
+         */
+        function createSpectatorProfile() {
+            return {
+                name: "Spectator",
+                country: "us",
+                level: 1,
+                lastSymbol: "MSFT"
+            }
+        }
 
         /////////////////////////////////////////////////////////////////////
         //          NetWorth Functions
@@ -147,7 +155,7 @@
             return service.getContest().OID();
         };
 
-        service.getContestName = function() {
+        service.getContestName = function () {
             return service.getContest().name;
         };
 
@@ -160,12 +168,12 @@
             if (contest === null || contest === undefined) service.resetContest();
 
             // if the contest contained an error, show it
-            else if(contest.error) {
+            else if (contest.error) {
                 toaster.pop('error', contest.error, null);
             }
 
             // is it a delta?
-            else if(contest.type === 'delta') {
+            else if (contest.type === 'delta') {
                 updateContestDelta(contest);
             }
 
@@ -183,14 +191,18 @@
 
         service.deductFundsAvailable = function (amount) {
             var participant = service.getParticipant();
-            if(participant) {
+            if (participant) {
                 $log.info("Deducting funds: " + amount + " from " + participant.fundsAvailable);
                 participant.fundsAvailable -= amount;
             }
         };
 
+        service.getMarginAccount = function () {
+            return service.getParticipant().marginAccount || {};
+        };
+
         service.setMessages = function (messages) {
-            if(service.contest) {
+            if (service.contest) {
                 service.contest.messages = messages;
             }
         };
@@ -212,7 +224,7 @@
         };
 
         service.getParticipant = function () {
-            if(service.contest && !service.participant) {
+            if (service.contest && !service.participant) {
                 service.participant = lookupParticipant(service.contest, service.getUserID());
             }
             return service.participant || {};
@@ -226,10 +238,10 @@
             return service.getParticipant().perks || [];
         };
 
-        service.hasPerk = function(perkCode) {
+        service.hasPerk = function (perkCode) {
             var perks = service.getPerks();
-            for(var n = 0; n < perks.length; n++) {
-                if(perks[n] === perkCode) return true;
+            for (var n = 0; n < perks.length; n++) {
+                if (perks[n] === perkCode) return true;
             }
             return false;
         };
@@ -275,6 +287,12 @@
                     myParticipant.fundsAvailable = participant.fundsAvailable;
                 }
 
+                // update the margin account (if present)
+                if (participant.marginAccount) {
+                    $log.info(contest.name + ": Updating margin account for " + participant.name);
+                    myParticipant.marginAccount = participant.marginAccount;
+                }
+
                 // update the orders (if present)
                 if (participant.orders) {
                     $log.info(contest.name + ": Updating orders for " + participant.name);
@@ -315,7 +333,7 @@
 
         $rootScope.$on("contest_updated", function (event, contest) {
             $log.info("[MySession] Contest '" + contest.name + "' updated");
-            if(!service.contest || service.getContestID() === contest.OID()) {
+            if (!service.contest || service.getContestID() === contest.OID()) {
                 service.setContest(contest);
             }
         });
@@ -335,8 +353,8 @@
             service.setContest(contest);
         });
 
-        $rootScope.$on("positions_updated", function (event, contest) {
-            $log.info("[MySession] Positions for Contest '" + contest.name + "' updated");
+        $rootScope.$on("participant_updated", function (event, contest) {
+            $log.info("[MySession] Participant for Contest '" + contest.name + "' updated");
             $log.info("contest  = " + angular.toJson(contest, true));
             service.setContest(contest);
         });

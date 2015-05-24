@@ -99,6 +99,16 @@ object WebSockets {
       ))
   }
 
+  case class ParticipantUpdated(c: Contest, p: Participant) extends WsRelayMessage {
+    def toJsonMessage = JS(
+      "action" -> "participant_updated",
+      "data" -> JS(
+        "type" -> "delta",
+        "name" -> c.name, "_id" -> c.id,
+        "participants" -> Seq(p))
+    )
+  }
+
   case class PerksUpdated(c: Contest, p: Participant) extends WsRelayMessage {
     def toJsonMessage = JS(
       "action" -> "perks_updated",
@@ -107,16 +117,6 @@ object WebSockets {
         "name" -> c.name, "_id" -> c.id,
         "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "perks" -> p.perks)))
       ))
-  }
-
-  case class PositionsUpdated(c: Contest, p: Participant) extends WsRelayMessage {
-    def toJsonMessage = JS(
-      "action" -> "positions_updated",
-      "data" -> JS(
-        "type" -> "delta",
-        "name" -> c.name, "_id" -> c.id,
-        "participants" -> Seq(p))
-    )
   }
 
   case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {

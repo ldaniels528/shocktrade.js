@@ -42,12 +42,12 @@
 
                 <span ng-show="MySession.hasPerk('MARGIN')" class="clickable pull-right" ng-click="toggleAccountMode()">
                     <span class="st_blue bold" title="Switch account type">{{ isMarginAccount() ? 'Margin' : 'Cash' }} Account</span>
-                    <i ng-class="isMarginAccount() ? 'fa-toggle-on' : 'fa-toggle-off'" class="fa st_blue"></i>
+                    <i ng-class="isMarginAccount() ? 'fa-toggle-on' : 'fa-toggle-off'" class="fa fa-lg st_blue"></i>
                 </span>
             </div>
 
             <div ng-show="isCashAccount()" ng-include src="'/assets/views/dashboard/cash_account.htm'"></div>
-            <div ng-show="isMarginAccount()" ng-include src="'/assets/views/dashboard/margin_account.htm'"></div>
+            <div ng-if="isMarginAccount()" ng-include src="'/assets/views/dashboard/margin_account.htm'"></div>
         </div>
     </div>
 </div>

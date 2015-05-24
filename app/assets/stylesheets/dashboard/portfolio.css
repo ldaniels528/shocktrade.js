@@ -1,10 +1,9 @@
 .alabel {
-	width: 25%;
+	font-weight: bold;
 }
 
 .afunds {
 	text-align: right;
-	width: 25%
 }	  	
 
 .info {

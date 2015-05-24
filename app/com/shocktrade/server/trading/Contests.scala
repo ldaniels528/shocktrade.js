@@ -102,7 +102,7 @@ object Contests {
    * Retrieves all of the system-defined perks
    * @return a promise of a sequence of perks
    */
-  def findAllPerks(id: BSONObjectID) = ContestDAO.findAllPerks(id)
+  def findAvailablePerks(id: BSONObjectID) = ContestDAO.findAvailablePerks(id)
 
   def findContestByID(id: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
     (contestActor(id) ? FindContestByID(id, fields)) map {
@@ -188,6 +188,20 @@ object Contests {
 
   def startContest(id: BSONObjectID, startTime: Date)(implicit timeout: Timeout) = {
     (contestActor(id) ? StartContest(id, startTime)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
+  }
+
+  def updateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? UpdateMarginAccount(contestId, playerId, account)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
+    }
+  }
+
+  def updateMarginAccountFunds(contestId: BSONObjectID, playerId: BSONObjectID, deltaAmount: Double)(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? AdjustMarginAccountFunds(contestId, playerId, deltaAmount)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]
     }

@@ -7,10 +7,8 @@ import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
+import com.shocktrade.controllers.ContestForms._
 import com.shocktrade.controllers.QuoteResources.Quote
-import com.shocktrade.models.contest.OrderTypes.OrderType
-import com.shocktrade.models.contest.PerkTypes.PerkType
-import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
@@ -19,9 +17,7 @@ import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -120,13 +116,14 @@ object ContestResources extends Controller with ErrorHandler {
         val outcome = for {
         // deduct the buy-in cost from the profile
           profile <- UserProfiles.deductFunds(form.playerId.toBSID, form.startingBalance) map (_ orDie "Insufficient funds")
+          newContest = makeContest(form)
 
           // create the contest
-          lastError <- Contests.createContest(makeContest(form))
-        } yield lastError
+          lastError <- Contests.createContest(newContest)
+        } yield (newContest, lastError)
 
-        outcome map { lastError =>
-          Ok(JS("result" -> lastError.message))
+        outcome map { case (newContest, lastError) =>
+          Ok(Json.toJson(newContest))
         } recover {
           case e: Exception => Ok(createError(e))
         }
@@ -138,11 +135,55 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def deleteContestByID(id: String) = Action.async {
-    Contests.deleteContestByID(id.toBSID) map { lastError =>
+  def deleteContestByID(contestId: String) = Action.async {
+    val outcome = for {
+    // retrieve the contest
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+
+      // update each participant
+      updatedParticipants <- Future.sequence(contest.participants map { participant =>
+        UserProfiles.deductFunds(participant.id, -participant.fundsAvailable) map (_ orDie "Failed to refund game cash")
+      })
+
+      // delete the contest
+      lastError <- Contests.deleteContestByID(contestId.toBSID)
+    } yield lastError
+
+    outcome map { lastError =>
       Ok(if (lastError.inError) JS("error" -> lastError.message) else JS())
     } recover {
       case e: Exception => Ok(createError(e))
+    }
+  }
+
+  def createMarginAccount(contestId: String, playerId: String) = Action.async {
+    Contests.updateMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount(depositedFunds = 0.0)) map {
+      case Some(contest) => Ok(Json.toJson(contest))
+      case None => Ok(JS("error" -> "Game not found"))
+    } recover {
+      case e: Exception => Ok(createError(e))
+    }
+  }
+
+  def adjustMarginAccountFunds(contestId: String, playerId: String) = Action.async { implicit request =>
+    Try(request.body.asJson.map(_.as[MarginFundsForm])) match {
+      case Success(Some(form)) =>
+        // determine the amount to deposit/withdraw
+        val deltaAmount = if(form.action == "DEPOSIT") form.amount else -form.amount
+
+        // perform the atomic update
+        Contests.updateMarginAccountFunds(contestId.toBSID, playerId.toBSID, deltaAmount) map {
+          case Some(contest) => Ok(Json.toJson(contest))
+          case None => Ok(JS("error" -> "Game or player not found"))
+        } recover {
+          case e: Exception => Ok(createError(e))
+        }
+      case Success(None) =>
+        Logger.error(s"adjustMarginAccountFunds: Bad request -> json = ${request.body.asJson.orNull}")
+        Future.successful(BadRequest("JSON body expected"))
+      case Failure(e) =>
+        Logger.error(s"adjustMarginAccountFunds: Internal server error -> json = ${request.body.asJson.orNull}", e)
+        Future.successful(InternalServerError(e.getMessage))
     }
   }
 
@@ -209,27 +250,27 @@ object ContestResources extends Controller with ErrorHandler {
     )
   }
 
-  def getContestByID(id: String) = Action.async {
-    Contests.findContestByID(id.toBSID)() map {
+  def getContestByID(contestId: String) = Action.async {
+    Contests.findContestByID(contestId.toBSID)() map {
       case Some(contest) => Ok(Json.toJson(contest))
-      case None => Ok(createError(s"Contest $id not found"))
+      case None => Ok(createError(s"Contest $contestId not found"))
     } recover {
       case e: Exception => Ok(createError(e))
     }
   }
 
-  def getContestRankings(id: String) = Action.async {
+  def getContestRankings(contestId: String) = Action.async {
     (for {
-      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie s"Contest $contestId not found")
       rankings <- produceRankings(contest)
     } yield rankings) map (Ok(_)) recover {
       case e: Exception => Ok(createError(e))
     }
   }
 
-  def getContestParticipant(id: String, playerId: String) = Action.async {
+  def getContestParticipant(contestId: String, playerId: String) = Action.async {
     (for {
-      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie s"Contest $id not found")
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie s"Contest $contestId not found")
       player = contest.participants.find(_.id == playerId) orDie s"Player $playerId not found"
       enrichedPlayer <- enrichPositions(player)
     } yield enrichedPlayer).map(p => Ok(JsArray(Seq(p)))) recover {
@@ -244,9 +285,9 @@ object ContestResources extends Controller with ErrorHandler {
     Contests.findContestsByPlayerID(playerId.toBSID)(DisplayColumns: _*) map (contests => Ok(Json.toJson(contests)))
   }
 
-  def getEnrichedOrders(id: String, playerId: String) = Action.async {
+  def getEnrichedOrders(contestId: String, playerId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
       player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
       enriched <- enrichOrders(player)
     } yield enriched \ "orders"
@@ -256,9 +297,9 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def getEnrichedPositions(id: String, playerId: String) = Action.async {
+  def getEnrichedPositions(contestId: String, playerId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
       player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
       enriched <- enrichPositions(player)
     } yield enriched \ "positions"
@@ -301,14 +342,14 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def joinContest(id: String) = Action.async { implicit request =>
+  def joinContest(contestId: String) = Action.async { implicit request =>
     Try(request.body.asJson map (_.as[JoinContestForm])) match {
       case Success(Some(js)) =>
         (for {
-          startingBalance <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
+          startingBalance <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
           participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = startingBalance)
           userProfile <- UserProfiles.deductFunds(participant.id, startingBalance) map (_ orDie "Insufficient funds")
-          contest <- Contests.joinContest(id.toBSID, participant)
+          contest <- Contests.joinContest(contestId.toBSID, participant)
         } yield (userProfile, contest)) map { case (userProfile, contest_?) =>
           WebSockets ! UserProfileUpdated(userProfile)
           Ok(Json.toJson(contest_?))
@@ -323,12 +364,12 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def quitContest(id: String, playerId: String) = Action.async { implicit request =>
+  def quitContest(contestId: String, playerId: String) = Action.async { implicit request =>
     (for {
-      c <- Contests.findContestByID(id.toBSID)() map (_ orDie "Contest not found")
+      c <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
       p = c.participants.find(_.id.stringify == playerId) orDie "Player not found"
       u <- UserProfiles.deductFunds(playerId.toBSID, -p.fundsAvailable)
-      updatedContest <- Contests.quitContest(id.toBSID, playerId.toBSID)
+      updatedContest <- Contests.quitContest(contestId.toBSID, playerId.toBSID)
     } yield (u, updatedContest)) map { case (profile_?, contest_?) =>
       profile_?.foreach(WebSockets ! UserProfileUpdated(_))
       contest_? match {
@@ -340,8 +381,8 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def startContest(id: String) = Action.async {
-    Contests.startContest(id.toBSID, startTime = new Date()) map {
+  def startContest(contestId: String) = Action.async {
+    Contests.startContest(contestId.toBSID, startTime = new Date()) map {
       case Some(contest) => Ok(Json.toJson(contest))
       case None => Ok(createError("No qualifying contest found"))
     } recover {
@@ -349,8 +390,8 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  def getAllPerks(id: String) = Action.async {
-    Contests.findAllPerks(id.toBSID) map (perks => Ok(Json.toJson(perks)))
+  def getAvailablePerks(contestId: String) = Action.async {
+    Contests.findAvailablePerks(contestId.toBSID) map (perks => Ok(Json.toJson(perks)))
   }
 
   def getPlayerPerks(id: String, playerId: String) = Action.async {
@@ -379,14 +420,14 @@ object ContestResources extends Controller with ErrorHandler {
    * Facilitates the purchase of perks
    * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
    */
-  def purchasePerks(id: String, playerId: String) = Action.async { request =>
+  def purchasePerks(contestId: String, playerId: String) = Action.async { request =>
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
       case Some(perkCodeNames) =>
         val perkCodes = perkCodeNames.map(PerkTypes.withName)
         val result = for {
         // retrieve the perks
-          perks <- Contests.findAllPerks(id.toBSID)
+          perks <- Contests.findAvailablePerks(contestId.toBSID)
 
           // create the perk code to cost mapping
           perkCodeCostMapping = Map(perks map (p => (p.code, p.cost)): _*)
@@ -395,13 +436,20 @@ object ContestResources extends Controller with ErrorHandler {
           totalCost = (perkCodes flatMap perkCodeCostMapping.get).sum
 
           // perform the purchase
-          contest_? <- Contests.purchasePerks(id.toBSID, playerId.toBSID, perkCodes, totalCost)
-        } yield contest_?
+          perks_? <- Contests.purchasePerks(contestId.toBSID, playerId.toBSID, perkCodes, totalCost)
+
+          // was a margin account purchased?
+          margin_? <- {
+            if (perkCodes.contains(PerkTypes.MARGIN))
+              Contests.updateMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount(depositedFunds = 0.00))
+            else Future.successful(None)
+          }
+
+        } yield margin_? ?? perks_?
 
         result.map {
           case Some(contest) =>
-            val js = Json.toJson(contest)
-            Ok(JS("perks" -> (js \ "perks")) ++ JS("fundsAvailable" -> (js \ "fundsAvailable")))
+            Ok(Json.toJson(contest))
           case None =>
             Ok(JS("error" -> "Perks could not be purchased"))
         } recover {
@@ -531,106 +579,5 @@ object ContestResources extends Controller with ErrorHandler {
   }
 
   implicit def Option2Boolean[T](option: Option[T]): Boolean = option.isDefined
-
-  case class ContestCreateForm(name: String,
-                               playerId: String,
-                               playerName: String,
-                               facebookId: String,
-                               startingBalance: BigDecimal,
-                               startAutomatically: Option[Boolean],
-                               duration: Int,
-                               friendsOnly: Option[Boolean],
-                               invitationOnly: Option[Boolean],
-                               levelCapAllowed: Option[Boolean],
-                               levelCap: Option[String],
-                               perksAllowed: Option[Boolean],
-                               robotsAllowed: Option[Boolean])
-
-  implicit val contestFormReads: Reads[ContestCreateForm] = (
-    (__ \ "name").read[String] and
-      (__ \ "player" \ "id").read[String] and
-      (__ \ "player" \ "name").read[String] and
-      (__ \ "player" \ "facebookID").read[String] and
-      (__ \ "startingBalance").read[BigDecimal] and
-      (__ \ "startAutomatically").readNullable[Boolean] and
-      (__ \ "duration" \ "value").read[Int] and
-      (__ \ "friendsOnly").readNullable[Boolean] and
-      (__ \ "invitationOnly").readNullable[Boolean] and
-      (__ \ "levelCapAllowed").readNullable[Boolean] and
-      (__ \ "levelCap").readNullable[String] and
-      (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "robotsAllowed").readNullable[Boolean])(ContestCreateForm.apply _)
-
-  /**
-   * {"activeOnly":true,"available":false,"perksAllowed":false,"levelCap":"1","levelCapAllowed":true,"friendsOnly":true,"restrictionUsed":true}
-   */
-  case class ContestSearchForm(activeOnly: Option[Boolean],
-                               available: Option[Boolean],
-                               friendsOnly: Option[Boolean],
-                               invitationOnly: Option[Boolean],
-                               levelCap: Option[String],
-                               levelCapAllowed: Option[Boolean],
-                               perksAllowed: Option[Boolean],
-                               robotsAllowed: Option[Boolean])
-
-  implicit val contestSearchFormReads: Reads[ContestSearchForm] = (
-    (__ \ "activeOnly").readNullable[Boolean] and
-      (__ \ "available").readNullable[Boolean] and
-      (__ \ "friendsOnly").readNullable[Boolean] and
-      (__ \ "invitationOnly").readNullable[Boolean] and
-      (__ \ "levelCap").readNullable[String] and
-      (__ \ "levelCapAllowed").readNullable[Boolean] and
-      (__ \ "perksAllowed").readNullable[Boolean] and
-      (__ \ "robotsAllowed").readNullable[Boolean])(ContestSearchForm.apply _)
-
-  case class JoinContestForm(playerId: String, playerName: String, facebookId: String)
-
-  implicit val joinContestFormReads: Reads[JoinContestForm] = (
-    (__ \ "player" \ "id").read[String] and
-      (__ \ "player" \ "name").read[String] and
-      (__ \ "player" \ "facebookID").read[String])(JoinContestForm.apply _)
-
-  case class MessageForm(sender: PlayerRef, recipient: Option[PlayerRef], text: String)
-
-  implicit val messageFormReads: Reads[MessageForm] = (
-    (__ \ "sender").read[PlayerRef] and
-      (__ \ "recipient").readNullable[PlayerRef] and
-      (__ \ "text").read[String])(MessageForm.apply _)
-
-  /**
-   * contestId = 553aa9f15dd0bcf00087f6ea, playerId = 51a308ac50c70a97d375a6b2,
-   * form = {"emailNotify":true,"symbol":"AMD","limitPrice":2.3,"exchange":"NasdaqCM","volumeAtOrderTime":15001242,"orderType":"BUY",
-   * "priceType":"MARKET","orderTerm":"GOOD_FOR_7_DAYS","quantity":"1000"}
-   */
-  case class OrderForm(symbol: String,
-                       exchange: String,
-                       limitPrice: BigDecimal,
-                       orderType: OrderType,
-                       priceType: PriceType,
-                       //orderTerm: Option[OrderTerm],
-                       perks: Option[Seq[PerkType]],
-                       quantity: Int,
-                       volumeAtOrderTime: Long,
-                       emailNotify: Boolean)
-
-  implicit val orderFormReads: Reads[OrderForm] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "exchange").read[String] and
-      (__ \ "limitPrice").read[BigDecimal] and
-      (__ \ "orderType").read[OrderType] and
-      (__ \ "priceType").read[PriceType] and
-      (__ \ "perks").readNullable[Seq[PerkType]] and
-      (__ \ "quantity").read[Int] and
-      (__ \ "volumeAtOrderTime").read[Long] and
-      (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
-
-  case class QuoteSnapshot(name: String, symbol: String, lastTrade: Double)
-
-  implicit val quoteSnapshotReads: Reads[QuoteSnapshot] = (
-    (__ \ "name").read[String] and
-      (__ \ "symbol").read[String] and
-      (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
-
-  case class Ranking(name: String, facebookID: String, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 
 }

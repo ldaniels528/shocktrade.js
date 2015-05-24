@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'NewGameDialog', 'ProfileService', 'SignUpDialog',
-        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, NewGameDialog, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
             $scope.loading = false;
@@ -186,10 +186,6 @@
                         toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends");
                     });
             }
-
-            $scope.newGamePopup = function () {
-                NewGameDialog.popup({});
-            };
 
             $scope.invitePlayerPopup = function (participant) {
                 InvitePlayerDialog.popup($scope, participant);

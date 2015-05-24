@@ -2,6 +2,7 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
 import com.shocktrade.util.BSONHelper._
@@ -27,7 +28,8 @@ case class ClosedOrder(id: BSONObjectID = BSONObjectID.generate,
                        quantity: Int,
                        commission: BigDecimal,
                        volumeAtOrderTime: Long,
-                       message: String)
+                       message: String,
+                       accountType: AccountType = AccountTypes.CASH)
 
 /**
  * Closed Order Singleton
@@ -48,7 +50,8 @@ object ClosedOrder {
       (__ \ "quantity").read[Int] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "volumeAtOrderTime").read[Long] and
-      (__ \ "message").read[String])(ClosedOrder.apply _)
+      (__ \ "message").read[String] and
+      (__ \ "accountType").read[AccountType])(ClosedOrder.apply _)
 
   implicit val closedOrderWrites: Writes[ClosedOrder] = (
     (__ \ "_id").write[BSONObjectID] and
@@ -63,7 +66,8 @@ object ClosedOrder {
       (__ \ "quantity").write[Int] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "volumeAtOrderTime").write[Long] and
-      (__ \ "message").write[String])(unlift(ClosedOrder.unapply))
+      (__ \ "message").write[String] and
+      (__ \ "accountType").write[AccountType])(unlift(ClosedOrder.unapply))
 
   implicit object ClosedOrderReader extends BSONDocumentReader[ClosedOrder] {
     def read(doc: BSONDocument) = ClosedOrder(
@@ -79,7 +83,8 @@ object ClosedOrder {
       doc.getAs[Int]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Long]("volumeAtOrderTime").get,
-      doc.getAs[String]("message").get
+      doc.getAs[String]("message").get,
+      doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)
     )
   }
 
@@ -97,7 +102,8 @@ object ClosedOrder {
       "quantity" -> order.quantity,
       "commission" -> order.commission,
       "volumeAtOrderTime" -> order.volumeAtOrderTime,
-      "message" -> order.message
+      "message" -> order.message,
+      "accountType" -> order.accountType
     )
   }
 
