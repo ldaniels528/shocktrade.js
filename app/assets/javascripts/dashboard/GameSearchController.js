@@ -256,7 +256,7 @@
                         $scope.contest = contest;
                         MySession.setContest(contest);
                         //MySession.deduct(contest.startingBalance);
-                        updateWithRankings(MySession.getUserName(), contest)
+                        //updateWithRankings(MySession.getUserName(), contest)
                     }
 
                     $timeout(function () {
