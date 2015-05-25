@@ -5,6 +5,7 @@ import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.controllers.QuoteFiltering
 import com.shocktrade.controllers.QuoteResources._
 import com.shocktrade.models.profile.Filter
+import com.shocktrade.models.quote.QuoteFilter
 import play.api.libs.json.Json.{obj => JS, _}
 import play.api.libs.json.{Json, JsArray, JsObject}
 import play.modules.reactivemongo.json.collection.JSONCollection
@@ -20,7 +21,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
-  private lazy val mcQ = db.collection[JSONCollection]("Stocks")
+  private lazy val mcJS = db.collection[JSONCollection]("Stocks")
+  private lazy val mcBS = db.collection[BSONCollection]("Stocks")
 
   import context.dispatcher
 
@@ -51,10 +53,10 @@ class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
       unhandled(message)
   }
 
-  private def findQuotes(filter: Filter)(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
-    val query = createQueryJs(filter)
+  private def findQuotes(filter: QuoteFilter)(implicit ec: ExecutionContext): Future[Seq[JsObject]] = {
+    val query = filter.makeQuery
     log.info(s"findQuotes: query = $query}")
-    mcQ.find(query, JS()).cursor[JsObject].collect[Seq]()
+    mcJS.find(query, JS()).cursor[JsObject].collect[Seq]()
   }
 
   /**
@@ -65,7 +67,7 @@ class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
    */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     // db.Stocks.find({$or:[{symbol:"GFOOE"}, {"changes.symbol":{$in:["GFOOE"]}}]})
-    mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))), limitFields)
+    mcJS.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))), limitFields)
       .cursor[JsObject]
       .collect[Seq](1) map (_.headOption)
   }
@@ -78,13 +80,13 @@ class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
    */
   private def loadFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
     // db.Stocks.find({$or:[{symbol:"GFOOE"}, {"changes.symbol":{$in:["GFOOE"]}}]})
-    mcQ.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))))
+    mcJS.find(JS("$or" -> JsArray(Seq(JS("symbol" -> symbol), JS("changes.symbol" -> JS("$in" -> Seq(symbol)))))))
       .cursor[JsObject]
       .collect[Seq](1) map (_.headOption)
   }
 
   private def loadQuotes(symbols: Seq[String])(implicit ec: ExecutionContext): Future[JsArray] = {
-    mcQ.find(JS("symbol" -> JS("$in" -> symbols)), limitFields).cursor[JsObject].collect[Seq]() map JsArray
+    mcJS.find(JS("symbol" -> JS("$in" -> symbols)), limitFields).cursor[JsObject].collect[Seq]() map JsArray
   }
 
   /**
@@ -95,7 +97,7 @@ class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
    */
   private def saveQuote(symbol: String, quote: JsObject): Future[LastError] = {
     log.info(s"Saving quote for $symbol...")
-    mcQ.update(selector = JS("symbol" -> symbol), update = JS("$set" -> quote), upsert = true)
+    mcJS.update(selector = JS("symbol" -> symbol), update = JS("$set" -> quote), upsert = true)
   }
 
 }

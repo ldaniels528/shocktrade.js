@@ -1,6 +1,6 @@
 package com.shocktrade.actors
 
-import com.shocktrade.models.profile.Filter
+import com.shocktrade.models.quote.QuoteFilter
 import play.api.libs.json.JsObject
 
 /**
@@ -9,7 +9,7 @@ import play.api.libs.json.JsObject
  */
 object QuoteMessages {
 
-  case class FindQuotes(filter: Filter)
+  case class FindQuotes(filter: QuoteFilter)
 
   case class GetQuote(symbol: String)
 

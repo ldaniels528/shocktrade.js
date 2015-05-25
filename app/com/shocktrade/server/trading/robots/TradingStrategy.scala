@@ -1,6 +1,6 @@
 package com.shocktrade.server.trading.robots
 
-import com.shocktrade.models.profile.Filter
+import com.shocktrade.models.quote.QuoteFilter
 
 /**
  * Represents a generic trading strategy
@@ -10,8 +10,8 @@ trait TradingStrategy {
 
   /**
    * Returns a filter which provides rules for identifying appropriate investment opportunities
-   * @return the [[Filter filter]]
+   * @return the [[QuoteFilter filter]]
    */
-  def getFilter: Filter
+  def getFilter: QuoteFilter
 
 }

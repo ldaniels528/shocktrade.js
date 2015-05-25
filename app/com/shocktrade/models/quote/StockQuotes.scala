@@ -9,7 +9,6 @@ import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.actors.WebSockets.QuoteUpdated
 import com.shocktrade.actors.{DBaseQuoteActor, RealTimeQuoteActor, WebSockets}
 import com.shocktrade.controllers.QuoteResources._
-import com.shocktrade.models.profile.Filter
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
@@ -52,7 +51,7 @@ object StockQuotes {
     }
   }
 
-  def findQuotes(filter: Filter): Future[Seq[JsObject]] = {
+  def findQuotes(filter: QuoteFilter): Future[Seq[JsObject]] = {
     (mongoReader ? FindQuotes(filter)) map {
       case e: Throwable => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Seq[JsObject]]

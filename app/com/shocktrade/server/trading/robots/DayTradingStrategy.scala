@@ -1,6 +1,7 @@
 package com.shocktrade.server.trading.robots
 
-import com.shocktrade.models.profile.{Condition, Filter, WrappedValue}
+import com.ldaniels528.commons.helpers.OptionHelper.Risky._
+import com.shocktrade.models.quote.QuoteFilter
 
 /**
  * Day-Trading Strategy
@@ -8,13 +9,11 @@ import com.shocktrade.models.profile.{Condition, Filter, WrappedValue}
  */
 object DayTradingStrategy extends TradingStrategy {
 
-  override def getFilter: Filter = {
-    Filter(
-      name = "Day-Trading Filter",
-      dataSource = "Robot",
-      conditions = List(
-        Condition(field = "lastTrade", operator = "<=", value = WrappedValue(1.0d)),
-        Condition(field = "volume", operator = ">=", value = WrappedValue(500000))
-      ))
-  }
+  override def getFilter = QuoteFilter(
+    priceMax = 1.0d,
+    spreadMin = 25d,
+    changeMax = -25d,
+    volumeMin = 500000L
+  )
+
 }

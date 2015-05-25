@@ -7,6 +7,7 @@ import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.commons.helpers.StringHelper._
 import com.ldaniels528.tabular.Tabular
+import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
@@ -14,6 +15,7 @@ import com.shocktrade.server.trading.Contests
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
 import org.joda.time.DateTime
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
@@ -28,9 +30,6 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 
   import context.dispatcher
 
-  // pre-load my profile
-  lazy val profile_? = UserProfiles.findProfileByName(name)
-
   override def receive = {
     case Invest => invest()
 
@@ -43,10 +42,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     Try {
       for {
       // lookup my user profile
-        profile <- profile_? map (_ orDie s"The user profile for robot $name could not be found")
+        profile <- UserProfiles.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
 
         // lookup the quotes using our trading strategy
-        // db.Stocks.find({lastTrade:{$lte : 1.0}, volume:{$gte : 500000}})
         jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
 
         // first let's retrieve the contests I've involved in ...
@@ -63,16 +61,22 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
             contest.participants.find(_.name == name) foreach { participant =>
               log.info(s"$name: Looking for investment opportunities for ${contest.name}...")
 
+              // always purchase the 'Fee Waiver' Perk
+              ensurePerk(contest, participant, PerkTypes.FEEWAIVR)
+
               // compute the funds available (subtract what we already have on order)
               val totalBuyOrdersCost = participant.orders.map(_.cost).sum
               val cashAvailable = participant.fundsAvailable - totalBuyOrdersCost
               log.info(f"$name: I've got $$$cashAvailable%.2f to spend ($$${participant.fundsAvailable}%.2f cash and $$$totalBuyOrdersCost%.2f in orders)...")
-              if (cashAvailable < 500) {
+              if (cashAvailable > 500) {
                 // let's filter the quotes retrieved for the strategy including the ones we've ordered or already own
                 val orderedSymbols = participant.orders.map(_.symbol)
                 val ownedSymbols = participant.positions.map(_.symbol)
                 val orderedOrOwned = (orderedSymbols ++ ownedSymbols).distinct
-                val quotes = filterQuotes(jsQuotes map (_.as[CompleteQuote])) filterNot (q => orderedOrOwned.contains(q.symbol))
+
+                //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
+
+                val quotes = jsQuotes map (_.as[CompleteQuote]) filterNot (q => orderedOrOwned.contains(q.symbol))
                 log.info(s"$name: Identified ${quotes.size} of ${jsQuotes.size} quote(s) for potential investment...")
 
                 // let's get $1000 worth of each
@@ -124,7 +128,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     } yield {
       Order(symbol = stock.symbol,
         exchange = exchange,
-        creationTime = new Date(),
+        creationTime = new DateTime().minusDays(4).toDate, // TODO remove this after testing
         expirationTime = Some(new DateTime().plusDays(3).toDate),
         orderType = OrderTypes.BUY,
         price = price,
@@ -135,13 +139,16 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     }
   }
 
-  private def filterQuotes(rawQuotes: Seq[CompleteQuote]) = {
-    rawQuotes filter { q =>
-      q.lastTrade.exists(_ > 0.0) && !q.isFinanciallyChallenged &&
-        q.isChangePercentLower(-0.25) &&
-        q.isSpreadIsGreater(0.30) &&
-        q.isWithinPercentOfLow(0.10)
-    } sortBy (_.spreadPct) reverse
+  private def ensurePerk(contest: Contest, participant: Participant, perkType: PerkType) = {
+    if (contest.perksAllowed && !participant.perks.contains(perkType)) Future.successful(None)
+    else {
+      log.info(s"$name: Attempting to purchase perk $perkType [${contest.name}}]...")
+      for {
+        perks <- Contests.findAvailablePerks(contest.id)
+        feeWaiverPerk = perks.find(_.code == perkType) orDie s"Perk $perkType not found"
+        updated <- Contests.purchasePerks(contest.id, participant.id, Seq(perkType), feeWaiverPerk.cost)
+      } yield updated
+    }
   }
 
 }
