@@ -2,9 +2,9 @@
     var app = angular.module('shocktrade');
 
     /**
-     * Elapsed Time filter
+     * Time-based Duration filter
      */
-    app.filter('elapsed', function() {
+    app.filter('duration', function() {
         return function (time) {
             return toDuration(time);
         };

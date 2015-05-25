@@ -27,7 +27,7 @@
 
         return delta >= 0
             ? age + " " + unitName + " ago"
-            : "in " + age + " " + unitName;
+            : age + " " + unitName + " from now";
     };
 
     Object.prototype.OID = function () {

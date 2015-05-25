@@ -39,7 +39,7 @@
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-show="c.startTime" ng-class="getSelectionClass(c)">{{ c.startTime | elapsed }}</span>
+                        <span ng-show="c.startTime" ng-class="getSelectionClass(c)">{{ c.startTime | duration }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
@@ -142,10 +142,7 @@
 
                 <!-- Contest Created -->
                 <div class="col-md-3">Created</div>
-                <div class="col-md-5">
-                    <span ng-show="MySession.authenticated">{{ selectedContest.creationTime | date:'MM/dd/yyyy hh:mma' }}</span>
-                    <span ng-hide="MySession.authenticated">{{ selectedContest.creationTime | elapsed }}</span>
-                </div>
+                <div class="col-md-5">{{ selectedContest.creationTime | duration }}</div>
                 <div class="col-md-4">
                     <input id="perksAllowed" type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
                     <i class="fa fa-gift"></i> <label for="perksAllowed">Perks Allowed</label>
@@ -154,7 +151,7 @@
                 <!-- Contest Started -->
                 <div class="col-md-3">Started</div>
                 <div class="col-md-5">
-                    <span ng-show="selectedContest.startTime">{{ selectedContest.startTime | elapsed }}</span>
+                    <span ng-show="selectedContest.startTime">{{ selectedContest.startTime | duration }}</span>
                     <span ng-hide="selectedContest.startTime" class="null">Not Started</span>
                 </div>
                 <div class="col-md-4">
@@ -166,10 +163,7 @@
                 <div class="col-md-3">{{ selectedContest.status === 'ACTIVE' ? 'Ends' : 'Ended' }}</div>
                 <div class="col-md-5">
                     <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
-                    <span ng-show="selectedContest.expirationTime">
-                        <span ng-show="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
-                        <span ng-hide="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | elapsed }}</span>
-                    </span>
+                    <span ng-show="selectedContest.expirationTime">{{ selectedContest.expirationTime | duration }}</span>
                 </div>
                 <div class="col-md-4">
                     <input id="robotsAllowed" type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>

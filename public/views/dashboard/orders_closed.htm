@@ -39,7 +39,7 @@
 			</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 left">{{ o.orderType }}</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">$ {{ o.price | quoteNumber }}</div>
-			<div ng-hide="isClosedOrderSelected()" class="col-md-3 left">{{ o.processedTime | elapsed }}</div>
+			<div ng-hide="isClosedOrderSelected()" class="col-md-3 left">{{ o.processedTime | duration }}</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">{{ o.quantity | number }}</div>
 		</div>
 	</div>
