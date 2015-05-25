@@ -4,7 +4,7 @@
                id="stockTicker" type="text" ng-model="ticker"
                placeholder="Enter Symbol or Company name"
                typeahead="quote as quote.symbol + ' - ' + quote.name for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
-               typeahead-template-url="symbol_lookup.htm"
+               typeahead-template-url="symbol_lookup_dialog.htm"
                typeahead-loading="loadingLocations"
                typeahead-on-select="loadQuote(ticker)"
                popover="Enter a Symbol or Business here"

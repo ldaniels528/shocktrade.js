@@ -18,7 +18,7 @@ import scala.util.{Failure, Success, Try}
  * @author lawrence.daniels@gmail.com
  */
 object ResearchController extends Controller {
-  lazy val mcQ = db.collection[JSONCollection]("Stocks")
+  private lazy val mcQ = db.collection[JSONCollection]("Stocks")
   private val fields = JS(
     "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "prevClose" -> 1, "open" -> 1,
     "changePct" -> 1, "low" -> 1, "high" -> 1, "spread" -> 1, "volume" -> 1
@@ -27,16 +27,29 @@ object ResearchController extends Controller {
   def quoteSearch = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[SearchForm])) match {
       case Success(Some(form)) =>
+        val maxResults = form.maxResults.map(r => if (r <= 250) r else 250).getOrElse(250)
         mcQ.find(form.makeQuery, fields)
-          .cursor[JsObject].collect[Seq](250) map (js => Ok(Json.toJson(js)))
+          .cursor[JsObject].collect[Seq](maxResults) map (js => Ok(Json.toJson(js)))
       case Success(None) =>
-        Logger.info(s"json = ${request.body.asJson.orNull}")
         Future.successful(BadRequest("Proper JSON body expected"))
       case Failure(e) =>
-        Logger.error(s"json = ${request.body.asJson.orNull}", e)
+        Logger.error(s"quoteSearch: json = ${request.body.asJson.orNull}", e)
         Future.successful(InternalServerError(e.getMessage))
     }
   }
+
+  implicit val searchFormReads: Reads[SearchForm] = (
+    (__ \ "changeMin").readNullable[Double] and
+      (__ \ "changeMax").readNullable[Double] and
+      (__ \ "spreadMin").readNullable[Double] and
+      (__ \ "spreadMax").readNullable[Double] and
+      (__ \ "marketCapMin").readNullable[Double] and
+      (__ \ "marketCapMax").readNullable[Double] and
+      (__ \ "priceMin").readNullable[Double] and
+      (__ \ "priceMax").readNullable[Double] and
+      (__ \ "volumeMin").readNullable[Long] and
+      (__ \ "volumeMax").readNullable[Long] and
+      (__ \ "maxResults").readNullable[Int])(SearchForm.apply _)
 
   case class SearchForm(changeMin: Option[Double],
                         changeMax: Option[Double],
@@ -48,7 +61,7 @@ object ResearchController extends Controller {
                         priceMax: Option[Double],
                         volumeMin: Option[Long],
                         volumeMax: Option[Long],
-                        maxResult: Option[Int]) {
+                        maxResults: Option[Int]) {
 
     def makeQuery = {
       var js = JS("active" -> true)
@@ -67,18 +80,5 @@ object ResearchController extends Controller {
     }
 
   }
-
-  implicit val searchFormReads: Reads[SearchForm] = (
-    (__ \ "changeMin").readNullable[Double] and
-      (__ \ "changeMax").readNullable[Double] and
-      (__ \ "spreadMin").readNullable[Double] and
-      (__ \ "spreadMax").readNullable[Double] and
-      (__ \ "marketCapMin").readNullable[Double] and
-      (__ \ "marketCapMax").readNullable[Double] and
-      (__ \ "priceMin").readNullable[Double] and
-      (__ \ "priceMax").readNullable[Double] and
-      (__ \ "volumeMin").readNullable[Long] and
-      (__ \ "volumeMax").readNullable[Long] and
-      (__ \ "maxResult").readNullable[Int])(SearchForm.apply _)
 
 }

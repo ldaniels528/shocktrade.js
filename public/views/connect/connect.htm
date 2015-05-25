@@ -1,8 +1,12 @@
-<div ng-controller="ConnectController" style="display: block; width: 100%; height: 550px">
+<div class="col-md-12 profile_bkg" ng-controller="ConnectController">
 	<!-- Contacts -->
-	<div style="display: inline; float: left; width: 24%; height: 100%; margin-top: 5px">
+	<div class="col-md-3">
 		<div style="display: block; margin-left: 5px">
-			<input type="text" style="width: 220px" ng-model="searchName" ng-change="contact = {}" placeholder="Search my friends...">
+			<input class="form-control"
+				   type="text"
+				   ng-model="searchName"
+				   ng-change="contact = {}"
+				   placeholder="Search my friends...">
 		</div>
 		<div ng-show="contact.id" style="width: 100%">
 			<!-- if ShockTrade user -->
@@ -13,8 +17,8 @@
 		</div>		
 		<div class="contactsContainer">
 			<span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
-				<i class="fa fa-warning warning"></i> You have no friends
-				<img src="/assets/images/smilies/icon_cry.gif">
+				<i class="fa fa-lg fa-frown-o st_orange"></i>
+                <span class="st_orange">You have no friends</span>
 			</span>
 			<table>	
 				<tr ng-repeat="friend in getContactList(searchName)">
@@ -30,59 +34,66 @@
 	</div>
 
 	<!-- Notifications -->
-	<div style="display: inline; float: right; width: 75%; height: 100%">
-		<input type="text" class="input-xxlarge" ng-model="messageSearch" placeholder="Search my messages ..." style="margin-top: 5px; margin-bottom: 5px; width: 500px">
-		<div id = "alert_placeholder"></div>
-		<div style="display: block; width: 100%; height: 24px; border: 1px solid #cccccc; background-color: #dddddd; border-radius: 4px;">
-			<table style="width: 100%">
-				<tr>
-					<td>
-						<input type="checkbox" ng-model="myState" ng-click="selectAll(!myState)" style="vertical-align: top"> All
-					</td>
-					<td>
-						<span>
-						<img ng-click="composeMessage()" src="/assets/images/buttons/new-mail24.png" title="Create new message" style="cursor: pointer"> &nbsp;
-						<img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
-						<img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
-						<img ng-click="loadMyUpdates(MySession.getUserName())" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
-						</span>
-					</td>
-					<td>
-						<span style="float: right; margin-right: 36px">{{ myUpdates.length }} message(s)</span>
-					</td>
-				</tr>
-			</table>
+	<div class="col-md-9">
+        <input type="text"
+               class="form-control"
+               ng-model="messageSearch"
+               placeholder="Search my messages ...">
+
+		<div class="message_list_area">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <input type="checkbox" ng-model="myState" ng-click="selectAll(!myState)" style="vertical-align: top"> All
+                </div>
+                <div class="col-md-6">
+                    <span>
+                    <img ng-click="composeMessage()" src="/assets/images/buttons/new-mail24.png" title="Create new message" style="cursor: pointer"> &nbsp;
+                    <img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
+                    <img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
+                    <img ng-click="loadMyUpdates(MySession.getUserName())" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <span>{{ myUpdates.length }} message(s)</span>
+                </div>
+            </div>
 		</div>
 		
 		<div class="updatesContainer">
-			<span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="myUpdates.length == 0" class="notice">
-				<i class="fa fa-warning warning"></i> You have no messages
+			<span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="myUpdates.length === 0" class="notice">
+				<i class="fa fa-lg fa-frown-o st_orange"></i>
+                <span class="st_orange">You have no messages</span>
 			</span>
-			<table style="width: 100%">
-				<tr ng-repeat="u in myUpdates" ng-class="myUpdate == u ? 'notif_highlight' : ($index % 2 == 0 ? 'even' : 'odd')">
-					<td style="width: 30%">
-						<input type="checkbox" ng-model="u.selected">
-						<avatar id="{{ u.sender.facebookID }}" style="width: 16px; height: 16px" />
-						<span ng-show="u.sender">{{ u.sender.name }}</span>
-						<span ng-hide="u.sender" style="color: #ff00ff">ShockTrade</span>
-					</td>
-					<td style="width: 55%">
-						<i ng-show="u.eventType == 'ALERT'" class="fa fa-warning warning"></i>
-						<img ng-show="u.eventType == 'MAIL'" src="/assets/images/objects/mail.png">
-						<img ng-show="u.eventType == 'CHAT'" src="/assets/images/objects/chat.png">
-						<img ng-show="u.eventType == 'INVITE'" src="/assets/images/objects/sharing_header.png">				
-						<a href="" ng-click="selectUpdate(u)">{{ u.eventType == 'MAIL' ? u.title : u.description }}</a>
-					</td>
-					<td style="width: 15%">{{ (u.creationTime.$date || u.creationTime) | date:'MM/dd hh:mma' }}</td>
-				</tr>
-			</table>
+            <div class="col-md-12 clickable"
+                 ng-repeat="u in myUpdates track by $index"
+                 ng-click="selectUpdate(u)"
+                 ng-class="myUpdate === u ? 'notif_highlight' : ($index % 2 === 0 ? 'even' : 'odd')">
+                <div class="col-md-3">
+                    <input type="checkbox" ng-model="u.selected">
+                    <avatar id="{{ u.sender.facebookID }}" class="avatar-16"></avatar>
+                    <span ng-show="u.sender">{{ u.sender.name }}</span>
+                    <span ng-hide="u.sender" style="color: #ff00ff">ShockTrade</span>
+                </div>
+                <div class="col-md-6">
+                    <i ng-show="u.eventType == 'ALERT'" class="fa fa-warning warning"></i>
+                    <i ng-show="u.eventType == 'MAIL'" class="fa fa-envelope st_green"></i>
+                    <i ng-show="u.eventType == 'CHAT'" class="fa fa-comment st_green"></i>
+                    <i ng-show="u.eventType == 'INVITE'" class="fa fa-facebook-square fb_icon"></i>
+                    {{ u.eventType == 'MAIL' ? u.title : u.description }}
+                </div>
+                <div class="col-md-3">
+                    {{ (u.creationTime.$date || u.creationTime) | date:'MM/dd hh:mma' }}
+                </div>
+            </div>
 		</div>
 		
-		<div ng-show="myUpdate.description" class="previewPane" style="margin-top: 15px">
+		<div ng-show="myUpdate.description" class="col-md-12 previewPane" style="margin-top: 15px">
 			<div class="updateTitle">
-				<avatar id="{{ myUpdate.sender.facebookID }}" style="width: 24px; height: 24px" />
+				<avatar id="{{ myUpdate.sender.facebookID }}" class="avatar-24"></avatar>
 				{{ myUpdate.title }} 
-				<button style="float: right; margin-right: 20px">Reply</button>
+				<button class="btn st_button pull-right" style="margin-right: 20px">
+					<i class="fa fa-mail-reply-all"></i> Reply
+				</button>
 			</div>
 			<div>
 				<span style="font-weight: bold">From:</span> 
@@ -94,6 +105,4 @@
 			</div>
 		</div>
 	</div>
-	
-	<br style="clear: both">
 </div>

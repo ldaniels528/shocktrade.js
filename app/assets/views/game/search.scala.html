@@ -35,7 +35,7 @@
                 <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable"
                     ng-click="selectContest(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
+                        <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20"></avatar>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
@@ -76,11 +76,12 @@
                     {{selectedContest.name}}
                 </span>
             </legend>
+
             <div class="row contest_lobby contest_colors">
                 <div ng-class="selectedContest.status !== 'CLOSED' ? 'col-md-12' : 'col-md-9'" class="contest_lobby_gallery">
                     <div style="margin-left: auto; margin-right: auto" ng-repeat="row in [0,1,2]">
                         <span ng-repeat="p in getAvailableSlots(selectedContest, row) track by $index">
-                            <avatar ng-show="p" id="{{ p.facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
+                            <avatar ng-show="p" id="{{ p.facebookID }}" class="avatar-53"></avatar>
                             <img class="no_picture_gang clickable"
                                 ng-hide="p"
                                 ng-click="invitePlayerPopup(findPlayerByID(selectedContest, MySession.getUserID()))"
@@ -91,21 +92,27 @@
                 </div>
                 <div ng-if="selectedContest.status === 'CLOSED'" class="col-md-3 contest_winners">
                     <div class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[0].facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
+                        <avatar id="{{ selectedContest.rankings.participants[0].facebookID }}" class="avatar-53"></avatar>
                         <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.rankings.participants[0].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[0].rank">{{ selectedContest.rankings.participants[0].rank }}</span>
+                        <span ng-class="'rank_' + selectedContest.rankings.participants[0].rank">
+                            {{ selectedContest.rankings.participants[0].rank }}
+                        </span>
                     </div>
 
                     <div class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[1].facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
+                        <avatar id="{{ selectedContest.rankings.participants[1].facebookID }}" class="avatar-53"></avatar>
                         <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.rankings.participants[1].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[1].rank">{{ selectedContest.rankings.participants[1].rank }}</span>
+                        <span ng-class="'rank_' + selectedContest.rankings.participants[1].rank">
+                            {{ selectedContest.rankings.participants[1].rank }}
+                        </span>
                     </div>
 
                     <div class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[2].facebookID }}" style="width: 53px; height: 53px; margin: 2px 0px 2px 0px" />
+                        <avatar id="{{ selectedContest.rankings.participants[2].facebookID }}" class="avatar-53"></avatar>
                         <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.rankings.participants[2].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[2].rank">{{ selectedContest.rankings.participants[2].rank }}</span>
+                        <span ng-class="'rank_' + selectedContest.rankings.participants[2].rank">
+                            {{ selectedContest.rankings.participants[2].rank }}
+                        </span>
                     </div>
                 </div>
 
@@ -114,14 +121,16 @@
                     <div ng-show="selectedContest.rankings.leader" class="col-md-3">Leader</div>
                     <div ng-show="selectedContest.rankings.leader" class="col-md-9">
                         <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/assets/images/{{ trophy(selectedContest.rankings.leader.rank) }}">
-                        <avatar id="{{ selectedContest.rankings.leader.facebookID }}" style="width: 20px; height: 20px" />
+                        <avatar id="{{ selectedContest.rankings.leader.facebookID }}" class="avatar-20"></avatar>
                         <span ng-class="'rank_' + selectedContest.rankings.leader.rank">{{ selectedContest.rankings.leader.rank }}</span>
                         <span ng-class="selectedContest.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-                            <changearrow value="{{ selectedContest.rankings.leader.gainLoss }}" /> {{ selectedContest.rankings.leader.gainLoss | number:2 }}%
+                            <changearrow value="{{ selectedContest.rankings.leader.gainLoss }}"></changearrow>
+                            {{ selectedContest.rankings.leader.gainLoss | number:2 }}%
                         </span>
                     </div>
                 </div>
 
+                <!-- Contest Status -->
                 <div class="col-md-3">Status</div>
                 <div class="col-md-5">
                     <span ng-class="getStatusClass(selectedContest, parseInt('@maxPlayers'))">{{ selectedContest.status }}</span>
@@ -131,16 +140,21 @@
                     <i class="fa fa-users"></i> <label for="friendsOnly">Friends-Only</label>
                 </div>
 
+                <!-- Contest Created -->
                 <div class="col-md-3">Created</div>
-                <div class="col-md-5">{{ selectedContest.creationTime | date:'MM/dd/yyyy hh:mma' }}</div>
+                <div class="col-md-5">
+                    <span ng-show="MySession.authenticated">{{ selectedContest.creationTime | date:'MM/dd/yyyy hh:mma' }}</span>
+                    <span ng-hide="MySession.authenticated">{{ selectedContest.creationTime | elapsed }}</span>
+                </div>
                 <div class="col-md-4">
                     <input id="perksAllowed" type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
                     <i class="fa fa-gift"></i> <label for="perksAllowed">Perks Allowed</label>
                 </div>
 
+                <!-- Contest Started -->
                 <div class="col-md-3">Started</div>
                 <div class="col-md-5">
-                    <span ng-show="selectedContest.startTime">{{ selectedContest.startTime | date:'MM/dd/yyyy hh:mma' }}</span>
+                    <span ng-show="selectedContest.startTime">{{ selectedContest.startTime | elapsed }}</span>
                     <span ng-hide="selectedContest.startTime" class="null">Not Started</span>
                 </div>
                 <div class="col-md-4">
@@ -148,27 +162,29 @@
                     <i class="fa fa-lock"></i> <label for="invitationOnly">Invitation-Only</label>
                 </div>
 
-                <div class="col-md-3" ng-show="selectedContest.status === 'ACTIVE'">Ends</div>
-                <div class="col-md-5" ng-show="selectedContest.status === 'ACTIVE'">
-                    <span ng-show="selectedContest.expirationTime">
-                        <span >{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
-                    </span>
+                <!-- Contest Ended -->
+                <div class="col-md-3">{{ selectedContest.status === 'ACTIVE' ? 'Ends' : 'Ended' }}</div>
+                <div class="col-md-5">
                     <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
+                    <span ng-show="selectedContest.expirationTime">
+                        <span ng-show="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | date:'MM/dd/yyyy hh:mma' }}</span>
+                        <span ng-hide="selectedContest.status === 'ACTIVE'">{{ selectedContest.expirationTime | elapsed }}</span>
+                    </span>
                 </div>
-                <div class="col-md-8" ng-hide="selectedContest.status === 'ACTIVE'"></div>
-
                 <div class="col-md-4">
                     <input id="robotsAllowed" type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
                     <i class="fa fa-android"></i> <label for="robotsAllowed">Robots Allowed</label>
                 </div>
 
+                <!-- Contest Buy-In Cost -->
                 <div class="col-md-3">Buy-In Cost</div>
                 <div class="col-md-9">
                     <span ng-class="MySession.getNetWorth() >= selectedContest.startingBalance ? 'positive' : 'negative'">
-                        $ {{ selectedContest.startingBalance | number }}
+                        $ {{ selectedContest.startingBalance | number:2 }}
                     </span>
                 </div>
 
+                <!-- Contest Level Cap -->
                 <div class="col-md-3">Level Cap</div>
                 <div class="col-md-9">
                     {{ selectedContest.levelCap }} &#8212; {{ levels[selectedContest.levelCap].description }}

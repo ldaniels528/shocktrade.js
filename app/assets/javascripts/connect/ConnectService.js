@@ -35,16 +35,7 @@
         };
 
         service.getUserUpdates = function (userName, limit) {
-            var deferred = $q.defer();
-            $http({
-                method: 'GET',
-                url: '/api/updates/' + userName + '/' + limit
-            }).success(function (data, status, headers, config) {
-                deferred.resolve(data);
-            }).error(function (data, status, headers, config) {
-                deferred.reject("Error: " + symbol + "-" + data + "(" + status + ")");
-            });
-            return deferred.promise;
+            return $http.get('/api/updates/' + userName + '/' + limit);
         };
 
         service.identifyFacebookFriends = function (fbFriends) {

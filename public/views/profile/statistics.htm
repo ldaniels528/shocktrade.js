@@ -1,6 +1,7 @@
-<div ng-controller="StatisticsController">
-	<div style="display: block; width: 100%" class="statsContainer">
-		<div class="stats_row_left">
+<div class="profile_bkg" ng-controller="StatisticsController">
+	<div class="row">
+
+		<div class="col-md-6">
 			<fieldset>
 				<legend><i class="fa fa-user"></i> Level and Rank</legend>
 				<table style="width: 100%">
@@ -22,7 +23,9 @@
 					</tr>	
 				</table>
 			</fieldset>
-			
+		</div>
+
+		<div class="col-md-6">
 			<fieldset>
 				<legend><i class="fa fa-gamepad"></i> Games Statistics</legend>
 				<table style="width: 100%">
@@ -52,30 +55,33 @@
 					</tr>	
 				</table>
 			</fieldset>
-			
+		</div>
+
+		<div class="col-md-6">
 			<fieldset>
 				<legend><i class="fa fa-money"></i> Portfolio Growth</legend>
 				<table style="width: 100%">
 					<tr>
 						<th style="width: 50%">Net Cash gains (losses):</th>
 						<td style="width: 50%">
-							$ {{ userProfile.netCashEarned || 0 | number:2 }}
-							<img ng-show="MySession.userProfile.netCashEarned > 0" src="/assets/images/status/stock_up.gif">
-							<img ng-show="MySession.userProfile.netCashEarned < 0" src="/assets/images/status/stock_down.gif">
+							$ {{ (userProfile.netCashEarned || 0) | number:2 }}
+							<i ng-show="MySession.userProfile.netCashEarned > 0" class="fa fa-arrow-up positive"></i>
+							<i ng-show="MySession.userProfile.netCashEarned < 0" class="fa fa-arrow-down negative"></i>
 						</td>
 					</tr>			
 					<tr>
 						<th>Max Portfolio growth:</th>
-						<td>{{ userProfile.maxPctGrowth || 0 | number:1 }}%</td>
+						<td>{{ (userProfile.maxPctGrowth || 0) | number:1 }}%</td>
 					</tr>	
 					<tr>
 						<th>Max Portfolio loss:</th>
-						<td>{{ userProfile.maxPctLoss || 0 | number:1 }}%</td>
+						<td>{{ (userProfile.maxPctLoss || 0) | number:1 }}%</td>
 					</tr>	
 				</table>
 			</fieldset>
 		</div>
-		<div class="stats_row_right">
+
+		<div class="col-md-6">
 			<fieldset>
 				<legend><i class="fa fa-gift"></i> Awards & Perks</legend>
 				<table style="width: 100%">		
@@ -97,7 +103,9 @@
 					</tr>	
 				</table>
 			</fieldset>
-					
+		</div>
+
+		<div class="col-md-6">
 			<fieldset>
 				<legend><i class="fa fa-flag-checkered"></i> Competitive Statistics</legend>
 				<table style="width: 100%">
@@ -130,10 +138,12 @@
 						<td colspan="2">&nbsp;</td>
 					</tr>				
 				</table>
-			</fieldset>	
-			
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
 			<fieldset>
-				<legend><i class="fa fa-facebook-official"></i> Social</legend>
+				<legend><i class="fa fa-facebook-square"></i> Social</legend>
 				<table style="width: 100%">	
 					<tr>
 						<th style="width: 50%">Social Networks:</th>

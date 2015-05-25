@@ -42,7 +42,7 @@
                        type="text" ng-model="form.symbol"
                        placeholder="Enter Symbol or Company name"
                        typeahead="state as state.symbol + ' - ' + state.name for state in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
-                       typeahead-template-url="symbol_lookup.htm"
+                       typeahead-template-url="symbol_lookup_dialog.htm"
                        typeahead-loading="loading"
                        typeahead-on-select="orderQuote(form.symbol)">
             </div>

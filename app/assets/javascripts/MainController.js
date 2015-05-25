@@ -10,8 +10,6 @@
             // setup the loading mechanism
             $scope._loading = false;
             $scope.loading = false;
-
-            // setup main-specific variables
             $scope.admin = false;
 
             // mapping of online players
@@ -53,15 +51,14 @@
 
             function determineTableIndex() {
                 var path = $location.path();
-                if(path.indexOf("/awards") != -1) return 4;
-                else if(path.indexOf("/connect") != -1) return 1;
-                else if(path.indexOf("/discover") != -1) return 2;
-                else if(path.indexOf("/explore") != -1) return 2;
-                else if(path.indexOf("/dashboard") != -1) return 1;
-                else if(path.indexOf("/news") != -1) return 2;
-                else if(path.indexOf("/research") != -1) return 3;
-                else if(path.indexOf("/search") != -1) return 0;
-                else if(path.indexOf("/statistics") != -1) return 5;
+                if (path.indexOf("/connect") != -1) return 1;
+                else if (path.indexOf("/discover") != -1) return 2;
+                else if (path.indexOf("/explore") != -1) return 2;
+                else if (path.indexOf("/dashboard") != -1) return 1;
+                else if (path.indexOf("/news") != -1) return 2;
+                else if (path.indexOf("/research") != -1) return 3;
+                else if (path.indexOf("/search") != -1) return 0;
+                else if (path.indexOf("/profile") != -1) return 4;
                 else return 0;
             }
 
@@ -195,14 +192,35 @@
                 SignUpDialog.popup(fbUserID, fbProfile);
             };
 
-            $scope.getExchangeClass = function (exchange) {
-                if (exchange == null) return null;
+            //////////////////////////////////////////////////////////////////////
+            //              Quote-related Functions
+            //////////////////////////////////////////////////////////////////////
+
+            $scope.normalizeExchange = function (market) {
+                if(market == null) return null;
                 else {
-                    var name = exchange.toUpperCase();
-                    if (name.indexOf("NASD") != -1) return "NASDAQ";
-                    if (name.indexOf("OTC") != -1) return "OTCBB";
-                    else return name;
+                    var s = market.toUpperCase();
+                    if (s.indexOf("ASE") == 0) return s;
+                    else if (s.indexOf("NAS") == 0) return "NASDAQ";
+                    else if (s.indexOf("NCM") == 0) return "NASDAQ";
+                    else if (s.indexOf("NGM") == 0) return "NASDAQ";
+                    else if (s.indexOf("NMS") == 0) return "NASDAQ";
+                    else if (s.indexOf("NYQ") == 0) return "NYSE";
+                    else if (s.indexOf("NYS") == 0) return "NYSE";
+                    else if (s.indexOf("OBB") == 0) return "OTCBB";
+                    else if (s.indexOf("OTC") == 0) return "OTCBB";
+                    else if (s.indexOf("OTHER") == 0) return "OTHER_OTC";
+                    else if (s.indexOf("PCX") == 0) return s;
+                    else if (s.indexOf("PNK") == 0) return "OTCBB";
+                    else {
+                        $log.warn("exchange = " + s);
+                        return s;
+                    }
                 }
+            };
+
+            $scope.getExchangeClass = function (exchange) {
+                return $scope.normalizeExchange(exchange) + ' bold';
             };
 
             $scope.getPreferenceIcon = function (q) {
@@ -226,15 +244,15 @@
                 "icon_class": "fa-search",
                 "tool_tip": "Search for games",
                 "url": "/search",
-                "isVisible": function() {
+                "isVisible": function () {
                     return true;
                 }
             }, {
-                "name": "Play",
+                "name": "Dashboard",
                 "icon_class": "fa-gamepad",
                 "tool_tip": "Main game dashboard",
                 "url": "/dashboard",
-                "isVisible": function() {
+                "isVisible": function () {
                     return !MySession.contestIsEmpty();
                 }
             }, {
@@ -242,32 +260,24 @@
                 "icon_class": "fa-newspaper-o",
                 "tool_tip": "Stock News and Quotes",
                 "url": "/discover",
-                "isVisible": function() {
+                "isVisible": function () {
                     return true;
                 }
-            },{
+            }, {
                 "name": "Research",
                 "icon_class": "fa-table",
                 "tool_tip": "Stock Research",
                 "url": "/research",
-                "isVisible": function() {
+                "isVisible": function () {
                     return true;
                 }
             }, {
-                "name": "My Awards",
-                "icon_class": "fa-trophy",
-                "tool_tip": "My Awards",
-                "url": "/awards",
-                "isVisible": function() {
-                    return true;
-                }
-            }, {
-                "name": "My Statistics",
-                "icon_class": "fa-bar-chart",
-                "tool_tip": "My Statistics",
-                "url": "/statistics",
-                "isVisible": function() {
-                    return true;
+                "name": "My Profile",
+                "icon_class": "fa-user",
+                "tool_tip": "My Profile",
+                "url": "/profile",
+                "isVisible": function () {
+                    return MySession.authenticated;
                 }
             }];
 

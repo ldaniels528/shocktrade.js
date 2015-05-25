@@ -12,7 +12,7 @@
                     <tr ng-repeat="friend in MySession.fbFriends">
                         <td>
                             <input type="checkbox" ng-model="invites[$index]">
-                            <avatar object="{{ friend }}" style="width: 16px; height: 16px" />
+                            <avatar object="{{ friend }}" class="avatar-16"></avatar>
                             {{ friend.name }}
                         </td>
                     </tr>

@@ -52,7 +52,6 @@
             <div class="col-md-6">
                 <select class="form-control"
                         ng-model="form.levelCap"
-                        ng-controller="RewardsController"
                         ng-disabled="!form.levelCapAllowed">
                     <option value="">-- Level Cap --</option>
                     <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' +

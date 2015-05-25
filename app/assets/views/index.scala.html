@@ -45,10 +45,12 @@
             </div>
             <div class="col-md-offset-5 col-md-4">
                 <span class="title_color pull-right" style="margin-right: 20px">
-                    <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 24px; height: 24px"></avatar>
+                    <avatar ng-show="MySession.fbUserID" id="{{ MySession.fbUserID }}" class="avatar-24"></avatar>
+                    <span ng-hide="MySession.authenticated" class="clickable" ng-click="login($event)">
+                        <i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign In
+                    </span>
                     <span ng-show="MySession.authenticated" class="title_color clickable" ng-click="logout()">Sign Out</span>
-                    <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">- {{ MySession.fbProfile.name }}</span>
-                    <span ng-hide="MySession.authenticated" class="clickable" ng-click="login($event)">Sign-In</span>
+                    <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">&#8212; {{ MySession.fbProfile.name }}</span>
                 </span>
             </div>
         </div>
@@ -124,13 +126,12 @@
 	<script src='@routes.Assets.versioned("javascripts/news/NewsSymbols.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/profile/AwardsController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/profile/PreferencesController.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/profile/ProfileController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/profile/ProfileService.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/RewardsController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/profile/StatisticsController.js")' type="text/javascript"></script>
 
     <!-- Dialogs -->
     <script src='@routes.Assets.versioned("javascripts/dialogs/ComposeMessageDialog.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/dialogs/ConditionDialog.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dialogs/InvitePlayerDialog.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dialogs/MarginAccountDialog.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dialogs/NewGameDialog.js")' type="text/javascript"></script>
@@ -148,16 +149,14 @@
 	  ga('send', 'pageview');
 	</script>
 
-    <div ng-include src="'/assets/views/dialogs/condition_mgmt.htm'"></div>
-    <div ng-include src="'/assets/views/dialogs/filter_mgmt.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/invite_player.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/compose_message.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/invite_player_dialog.htm'"></div>
 	<div ng-include src="'/assets/views/dialogs/margin_funds_dialog.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/new_game.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/new_mail.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/new_order.htm'"></div>
-    <div ng-include src="'/assets/views/dialogs/news_quote.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/new_game_dialog.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/new_order_dialog.htm'"></div>
+    <div ng-include src="'/assets/views/dialogs/news_quote_dialog.htm'"></div>
 	<div ng-include src="'/assets/views/dialogs/perks_dialog.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/sign_up.htm'"></div>
-	<div ng-include src="'/assets/views/dialogs/symbol_lookup.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/sign_up_dialog.htm'"></div>
+	<div ng-include src="'/assets/views/dialogs/symbol_lookup_dialog.htm'"></div>
 </body>
 </html>

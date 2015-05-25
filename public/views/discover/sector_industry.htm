@@ -26,7 +26,7 @@
 		</span>		
 		
 		<!-- Exchange -->
-		<a ng-class="q.exchange + ' bold'" ng-href="#/explore">{{ q.exchange }}</a>
+		<a ng-class="getExchangeClass(q.exchange)" ng-href="#/explore">{{ normalizeExchange(q.exchange) }}</a>
 		
 		<!-- Company Name -->
 		<span ng-show="q.name">

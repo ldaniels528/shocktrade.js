@@ -16,7 +16,7 @@
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'SignUpController',
-                templateUrl: 'sign_up.htm',
+                templateUrl: 'sign_up_dialog.htm',
                 resolve: {
                     params: function () {
                         return {

@@ -15,7 +15,7 @@
         service.popup = function (params) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
-                templateUrl: 'new_mail.htm',
+                templateUrl: 'compose_message.htm',
                 controller: 'ComposeMessageDialogCtrl',
                 resolve: {
                     params: function () {

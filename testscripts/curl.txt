@@ -16,8 +16,8 @@ curl -X DELETE http://localhost:9000/api/contest/554d0292dc093588031ad654/player
 
 # Deduct Funds from Wallet
 
-curl -X POST -H "Content-Type: application/json" -d '{ "authCode":"BZASXS", "adjustment":-25000 }' \
-http://localhost:9000/api/profile/555a30123c00000c0125e9b2/wallet
+curl -X POST -H "Content-Type: application/json" -d '{ "authCode":"BZASXS", "adjustment":-125000 }' \
+http://localhost:9000/api/profile/51a308ac50c70a97d375a6b2/wallet
 
 # Margin Account
 

@@ -5,11 +5,11 @@
      * Connect Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('ConnectController', ['$scope', '$log', 'ComposeMessageDialog', 'ConnectService', 'MySession',
-        function ($scope, $log, ComposeMessageDialog, ConnectService, MySession) {
+    app.controller('ConnectController', ['$scope', '$log', 'toaster', 'ComposeMessageDialog', 'ConnectService', 'MySession',
+        function ($scope, $log, toaster, ComposeMessageDialog, ConnectService, MySession) {
             $scope.searchName = "";
             $scope.myUpdates = [];
-            $scope.myUpdate = {};
+            $scope.myUpdate = null;
             $scope.contact = {};
 
             /**
@@ -44,7 +44,7 @@
                     function (err) {
                         $scope.stopLoading();
                         console.log("Error: Connect -" + data + " (" + status + ")");
-                        $scope.message = "Failed to retrieve the user profile for contact " + $scope.contact.name;
+                        toaster.pop('error', 'Failed to retrieve the user profile for contact ' + $scope.contact.name, null);
                     }
                 );
             };
@@ -66,7 +66,7 @@
              */
             $scope.getContactList = function (searchTerm) {
                 var fbFriends = MySession.fbFriends;
-                if (searchTerm == "") return fbFriends.slice(0, 40);
+                if (!searchTerm && (searchTerm === "")) return fbFriends.slice(0, 40);
                 else {
                     var term = searchTerm.toLowerCase();
                     return fbFriends.filter(function (contact) {
@@ -81,25 +81,22 @@
             $scope.loadMyUpdates = function (userName) {
                 if (userName) {
                     $scope.startLoading();
-                    $scope.message = "";
 
-                    ConnectService
-                        .getUserUpdates(userName, 50).then(
-                        function (data) {
+                    ConnectService.getUserUpdates(userName, 50)
+                        .success(function (data) {
                             $scope.stopLoading();
                             $scope.myUpdates = data;
-                            if (!$scope.myUpdate.OID() && data.length > 0) {
-                                $scope.myUpdate = data[0];
-                            }
+                            $scope.myUpdate = null;
+
                             for (var n = 0; n < data.length; n++) {
                                 data[n].selected = false;
                             }
                             $scope.loading = false;
-                        },
-                        function (err) {
+                        })
+                        .error(function (err) {
                             $scope.stopLoading();
                             console.log("Error: Connect -" + data + " (" + status + ")");
-                            $scope.message = "Failed to load Connect";
+                            toaster.pop('error', "Failed to load Connect", null);
                             $scope.loading = false;
                         });
                 }
@@ -116,7 +113,11 @@
              * Composes a new message via pop-up dialog
              */
             $scope.composeMessage = function () {
-                ComposeMessageDialog.popup({});
+                ComposeMessageDialog.popup({
+                    "success": function() {
+                        $scope.loadMyUpdates(MySession.getUserName());
+                    }
+                });
             };
 
             /**
@@ -144,22 +145,14 @@
                         },
                         function (err) {
                             $scope.stopLoading();
-                            $scope.alertMessage(err.data);
+                            toaster.pop('error', 'Failed to delete message', null);
                         }
                     );
                 }
                 else {
                     $scope.stopLoading();
-                    $scope.alertMessage("No messages selected");
+                    toaster.pop('error', 'No message(s) selected', null);
                 }
-            };
-
-            $scope.alertMessage = function (message) {
-                $("#alert_placeholder").html(
-                    '<div class="alert">' +
-                    '<a class="close" data-dismiss="alert">x</a>' +
-                    '<span>' + message + '</span>' +
-                    '</div>');
             };
 
             /**

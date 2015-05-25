@@ -1,32 +1,32 @@
 db.RssFeeds.drop();
 db.RssFeeds.insert({
-	"name" : "NASDAQ Stocks News",
-	"url" : "http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks",
-	"priority" : 1
-});
-db.RssFeeds.insert({
-	"name" : "CBNC News",
-	"url" : "http://www.cnbc.com/id/100003114/device/rss/rss",
-	"priority" : 2
-});
-db.RssFeeds.insert({
 	"name" : "CNN Money: Markets",
 	"url" : "http://rss.cnn.com/rss/money_markets.rss",
-	"priority" : 3
+	"priority" : 1
 });
 db.RssFeeds.insert({
 	"name" : "CNN Money: Latest News",
 	"url" : "http://rss.cnn.com/rss/money_latest.rss",
-	"priority" : 4
+	"priority" : 2
+});
+db.RssFeeds.insert({
+	"name" : "CBNC News",
+	"url" : "http://www.cnbc.com/id/100003114/device/rss/rss",
+	"priority" : 3
 });
 db.RssFeeds.insert({
 	"name" : "MarketWatch: Real-time Headlines",
 	"url" : "http://feeds.marketwatch.com/marketwatch/realtimeheadlines/",
-	"priority" : 5
+	"priority" : 4
 });
 db.RssFeeds.insert({
 	"name" : "MarketWatch: Stocks to Watch",
 	"url" : "http://feeds.marketwatch.com/marketwatch/StockstoWatch/",
+	"priority" : 5
+});
+db.RssFeeds.insert({
+	"name" : "NASDAQ Stocks News",
+	"url" : "http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks",
 	"priority" : 6
 });
 

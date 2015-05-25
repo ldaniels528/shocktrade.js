@@ -19,10 +19,10 @@
                 .when('/explore', {templateUrl: '/assets/views/explore/drill_down.htm', controller: 'DrillDownController'})
                 .when('/dashboard', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/dashboard/:contestId', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
-                .when('/news', {templateUrl: '/assets/views/news/news_index.htm', controller: 'NewsController'})
+                .when('/news', {templateUrl: '/assets/views/news/news_center.htm', controller: 'NewsController'})
                 .when('/research', {templateUrl: '/assets/views/research/research.htm', controller: 'ResearchController'})
                 .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
-                .when('/statistics', {templateUrl: '/assets/views/statistics/statistics.htm', controller: 'StatisticsController'})
+                .when('/profile', {templateUrl: '/assets/views/profile/profile.htm', controller: 'ProfileController'})
                 .otherwise({redirectTo: '/search'});
         }]);
 

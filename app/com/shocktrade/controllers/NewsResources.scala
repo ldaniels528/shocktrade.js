@@ -21,8 +21,8 @@ import scala.concurrent.Future
  * @author lawrence.daniels@gmail.com
  */
 object NewsResources extends Controller with MongoController with ParsingCapabilities {
-  lazy val mcQ = db.collection[JSONCollection]("Stocks")
-  lazy val mcR = db.collection[JSONCollection]("RssFeeds")
+  private lazy val mcQ = db.collection[JSONCollection]("Stocks")
+  private lazy val mcR = db.collection[JSONCollection]("RssFeeds")
 
   /**
    * Returns the RSS feed for the given URL
@@ -177,8 +177,8 @@ object NewsResources extends Controller with MongoController with ParsingCapabil
   private def changeArrow(change: Double): String = {
     change match {
       case 0 => "&#8212;"
-      case n if n > 0 => """<img src="/assets/images/status/stock_up.gif">"""
-      case n if n < 0 => """<img src="/assets/images/status/stock_down.gif">"""
+      case n if n > 0 => """<i class="fa fa-arrow-up positive"></i>"""
+      case n if n < 0 => """<i class="fa fa-arrow-down negative"></i>"""
     }
   }
 

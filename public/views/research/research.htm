@@ -1,4 +1,4 @@
-<div>
+<div ng-init="quoteSearch(searchOptions)">
     <!-- Filtering Options -->
     <div class="col-md-12">
         <fieldset>
@@ -70,7 +70,7 @@
                 <!-- Spread -->
                 <div class="col-md-6">
                     <div class="col-md-4 rs_label">Spread (%)</div>
-                    <div class="col-md-4 form-group-sm ">
+                    <div class="col-md-4 form-group-sm">
                         <label for="spreadMin">Min</label>
                         <select id="spreadMin" class="form-control" ng-model="searchOptions.spreadMin" ng-options="p + '%' for p in percentages">
                             <option value="">ANY</option>
@@ -83,6 +83,17 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="col-md-6" style="margin-top: 5px">
+                    <div class="col-md-4 rs_label">Max Results</div>
+                    <div class="col-md-4 form-group-sm">
+                        <select id="maxResults" class="form-control"
+                                ng-model="searchOptions.maxResults"
+                                ng-options="r for r in maxResultsSet">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
 
                 <div class="col-md-12">
                     <button class="btn st_button" ng-click="quoteSearch(searchOptions)">
@@ -104,65 +115,65 @@
 			<table class="results">
 				<tr>
 					<th class="results">
-						<a href="" ng-click="sortBy = 'symbol'; reverse = !reverse">Symbol</a>
-                        <i ng-show="sortBy !== 'symbol'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'symbol' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'symbol' && !reverse" class="fa fa-sort-down"></i>
+						<a href="" ng-click="searchOptions.sortBy = 'symbol'; searchOptions.reverse = !searchOptions.reverse">Symbol</a>
+                        <i ng-show="searchOptions.sortBy !== 'symbol'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'symbol' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'symbol' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'lastTrade'; reverse = !reverse">Share Price</a>
-                        <i ng-show="sortBy !== 'lastTrade'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'lastTrade' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'lastTrade' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'lastTrade'; searchOptions.reverse = !searchOptions.reverse">Share Price</a>
+                        <i ng-show="searchOptions.sortBy !== 'lastTrade'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'lastTrade' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'lastTrade' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
                     <th class="results_num">
-                        <a href="" ng-click="sortBy = 'prevClose'; reverse = !reverse">Prev Close</a>
-                        <i ng-show="sortBy !== 'prevClose'" class="fa fa-sort"></i>
-                        <i ng-show="sortBy === 'prevClose' && reverse" class="fa fa-sort-up"></i>
-                        <i ng-show="sortBy === 'prevClose' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'prevClose'; searchOptions.reverse = !searchOptions.reverse">Prev Close</a>
+                        <i ng-show="searchOptions.sortBy !== 'prevClose'" class="fa fa-sort"></i>
+                        <i ng-show="searchOptions.sortBy === 'prevClose' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                        <i ng-show="searchOptions.sortBy === 'prevClose' && !searchOptions.reverse" class="fa fa-sort-down"></i>
                     </th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'open'; reverse = !reverse">Open</a>
-                        <i ng-show="sortBy !== 'open'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'open' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'open' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'open'; searchOptions.reverse = !searchOptions.reverse">Open</a>
+                        <i ng-show="searchOptions.sortBy !== 'open'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'open' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'open' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'changePct'; reverse = !reverse">Chg %</a>
-                        <i ng-show="sortBy !== 'changePct'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'changePct' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'changePct' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'changePct'; searchOptions.reverse = !searchOptions.reverse">Chg %</a>
+                        <i ng-show="searchOptions.sortBy !== 'changePct'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'changePct' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'changePct' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'low'; reverse = !reverse">Low</a>
-                        <i ng-show="sortBy !== 'low'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'low' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'low' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'low'; searchOptions.reverse = !searchOptions.reverse">Low</a>
+                        <i ng-show="searchOptions.sortBy !== 'low'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'low' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'low' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'high'; reverse = !reverse">High</a>
-                        <i ng-show="sortBy !== 'high'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'high' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'high' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'high'; searchOptions.reverse = !searchOptions.reverse">High</a>
+                        <i ng-show="searchOptions.sortBy !== 'high'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'high' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'high' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_num">
-                        <a href="" ng-click="sortBy = 'spread'; reverse = !reverse">Spread %</a>
-                        <i ng-show="sortBy !== 'spread'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'spread' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'spread' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'spread'; searchOptions.reverse = !searchOptions.reverse">Spread %</a>
+                        <i ng-show="searchOptions.sortBy !== 'spread'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'spread' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'spread' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 					<th class="results_bignum">
-                        <a href="" ng-click="sortBy = 'volume'; reverse = !reverse">Volume</a>
-                        <i ng-show="sortBy !== 'volume'" class="fa fa-sort"></i>
-						<i ng-show="sortBy === 'volume' && reverse" class="fa fa-sort-up"></i>
-						<i ng-show="sortBy === 'volume' && !reverse" class="fa fa-sort-down"></i>
+                        <a href="" ng-click="searchOptions.sortBy = 'volume'; searchOptions.reverse = !searchOptions.reverse">Volume</a>
+                        <i ng-show="searchOptions.sortBy !== 'volume'" class="fa fa-sort"></i>
+						<i ng-show="searchOptions.sortBy === 'volume' && searchOptions.reverse" class="fa fa-sort-up"></i>
+						<i ng-show="searchOptions.sortBy === 'volume' && !searchOptions.reverse" class="fa fa-sort-down"></i>
 					</th>
 				</tr>
 			</table>
 			<div id="searchResults">
 				<span ng-hide="getSearchResultsCount()" class="notice">No matches found</span>
 				<table class="results">
-					<tr ng-repeat="quote in getSearchResults() | orderBy: (reverse ? '-' : '') + sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
+					<tr ng-repeat="quote in getSearchResults() | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
 						<td class="results">
 							<a class="links" ng-href="#/discover/{{ quote.symbol }}">
 								<i ng-class="getPreferenceIcon(row)"></i>

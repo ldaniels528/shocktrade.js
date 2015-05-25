@@ -6,21 +6,25 @@
      */
     app.controller('ResearchController', ['$scope', '$cookieStore', '$http', '$log', '$timeout', 'toaster',
         function ($scope, $cookieStore, $http, $log, $timeout, toaster) {
-            $scope.searchOptions = {
-                maxResults: 250
-            };
+            var cookieName = "ShockTrade_Research_SearchOptions";
 
             // search reference data components
             $scope.filteredResults = [];
             $scope.searchResults = [];
             $scope.exchangeCounts = {};
-            $scope.sortBy = null;
-            $scope.reverse = false;
 
-            $scope.maxResultsSet = [25, 50, 100, 250];
+            // data collections
+            $scope.maxResultsSet = [10, 25, 50, 75, 100, 150, 200, 250];
             $scope.priceRanges = [0, 1, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100];
             $scope.volumeRanges = [0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000];
             $scope.percentages = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+
+            // the search, sort and filtering options
+            $scope.searchOptions = {
+                sortBy: null,
+                reverse: false,
+                maxResults: $scope.maxResultsSet[1]
+            };
 
             // search reference data components
             $scope.exchangeSets = {
@@ -56,13 +60,14 @@
 
                 // execute the search
                 $scope.loading = true;
+                $log.info("searchOptions = " + angular.toJson(searchOptions));
                 $http.post('/api/research/search', searchOptions)
                     .success(function (results) {
                         var exchanges = [];
                         angular.forEach(results, function (q) {
                             // normalize the exchange
                             q.market = q.exchange;
-                            q.exchange = normalizeExchange(q.exchange);
+                            q.exchange = $scope.normalizeExchange(q.exchange);
 
                             // count the quotes by exchange
                             if (!exchanges[q.exchange]) exchanges[q.exchange] = 1; else exchanges[q.exchange]++;
@@ -80,7 +85,7 @@
                         //$scope.loading = false;
 
                         // save the search options
-                        $cookieStore.put("screener_searchOptions", $scope.searchOptions);
+                        $cookieStore.put(cookieName, $scope.searchOptions);
 
                     }).error(function (data, status, headers, config) {
                         $log.error("Quote Search Failed - json => " + angular.toJson(searchOptions));
@@ -105,38 +110,14 @@
             };
 
             ///////////////////////////////////////////////////////////////////////////
-            //          Private Functions
-            ///////////////////////////////////////////////////////////////////////////
-
-            function normalizeExchange(market) {
-                var s = market.toUpperCase();
-                if (s.indexOf("ASE") == 0) return s;
-                else if (s.indexOf("NAS") == 0) return "NASDAQ";
-                else if (s.indexOf("NCM") == 0) return "NASDAQ";
-                else if (s.indexOf("NGM") == 0) return "NASDAQ";
-                else if (s.indexOf("NMS") == 0) return "NASDAQ";
-                else if (s.indexOf("NYQ") == 0) return "NYSE";
-                else if (s.indexOf("NYS") == 0) return "NYSE";
-                else if (s.indexOf("OBB") == 0) return "OTCBB";
-                else if (s.indexOf("OTC") == 0) return "OTCBB";
-                else if (s.indexOf("OTHER") == 0) return "OTHER_OTC";
-                else if (s.indexOf("PCX") == 0) return s;
-                else if (s.indexOf("PNK") == 0) return "OTCBB";
-                else {
-                    $log.warn("exchange = " + s);
-                    return s;
-                }
-            }
-
-            ///////////////////////////////////////////////////////////////////////////
             //          Initialization
             ///////////////////////////////////////////////////////////////////////////
 
-            (function() {
+            (function () {
                 // retrieve the search options cookie
-                var options = $cookieStore.get("screener_searchOptions");
-                if(options) {
-                    console.log("Retrieved search options from cookie: " + angular.toJson(options));
+                var options = $cookieStore.get(cookieName);
+                if (options) {
+                    console.log("Retrieved search options from cookie '" + cookieName + "': " + angular.toJson(options));
                     $scope.searchOptions = options;
                 }
             })();

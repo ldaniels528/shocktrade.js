@@ -92,17 +92,6 @@
                 else return "";
             };
 
-            $scope.getStatusIcon = function (c, maxPlayers) {
-                if (c && c.invitationOnly) return "/assets/images/objects/locked.png";
-                else {
-                    var playerCount = ((c && c.participants) || []).length;
-                    if (playerCount + 1 < maxPlayers) return "/assets/images/status/greenlight.png";
-                    else if (playerCount + 1 === maxPlayers) return "/assets/images/status/yellowlight.gif";
-                    else if (playerCount >= maxPlayers) return "/assets/images/status/redlight.png";
-                    else return "/assets/images/status/offlight.png";
-                }
-            };
-
             $scope.getStatusClass = function (c, maxPlayers) {
                 if (!c) return null;
                 else {

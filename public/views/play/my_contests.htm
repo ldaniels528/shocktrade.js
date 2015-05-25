@@ -16,7 +16,7 @@
 
         <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
             <div class="col-md-6">
-                <avatar id="{{ c.participants[0].facebookID }}" style="width: 20px; height: 20px" />
+                <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20" />
                 {{ c.name }}
             </div>
             <div class="col-md-3 center">

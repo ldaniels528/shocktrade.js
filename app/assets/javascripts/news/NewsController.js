@@ -11,52 +11,11 @@
             $scope.channels = [];
             $scope.selection = {};
             $scope.newsSources = [];
-
-            // define the view layout
             $scope.view = $cookieStore.get('NewsController_view') || 'list';
 
-            // define the news tabs
-            $scope.newsTabs = [{
-                "name": "News",
-                "imageURL": "/assets/images/objects/headlines.png",
-                "path": "/assets/views/news/news_center.htm",
-                "active": true
-            }, {
-                "name": "Search",
-                "imageURL": "/assets/images/buttons/search.png",
-                "path": "/assets/views/news/research.htm",
-                "active": false
-            }, {
-                "name": "Sectors",
-                "imageURL": "/assets/images/objects/sector.png",
-                "path": "/assets/views/news/drill_down.htm",
-                "active": false
-            }];
-
-            // set the current path
-            $scope.newsPath = $scope.newsTabs[0].path;
-
-            /**
-             * Changes the current tab
-             */
-            $scope.changeNewsTab = function (index, event) {
-                $scope.newsPath = $scope.newsTabs[index].path;
-                $cookieStore.put('news_path_index', index);
-            };
-
-            $scope.getNewsSources = function () {
-                $scope.startLoading();
-                NewsService.getSources().then(
-                    function (response) {
-                        $scope.newsSources = response.data;
-                        $scope.selection.feed = response.data[0].OID();
-                        $scope.getNewsFeed($scope.selection.feed);
-                        $scope.stopLoading();
-                    },
-                    function (err) {
-                        $scope.stopLoading();
-                    });
-            };
+            ///////////////////////////////////////////////////////////////////////////
+            //          Public Functions
+            ///////////////////////////////////////////////////////////////////////////
 
             $scope.getNewsFeed = function (feedId) {
                 $scope.startLoading();
@@ -72,13 +31,6 @@
             };
 
             /**
-             * Displays a quote in a pop-up dialog
-             */
-            $scope.loadNewsQuote = function (symbol) {
-                NewsQuoteDialog.popup({symbol: symbol});
-            };
-
-            /**
              * Return the appropriate class to create a diagonal grid
              */
             $scope.gridClass = function (index) {
@@ -87,9 +39,34 @@
                 return "news_tile" + cell;
             };
 
+            /**
+             * Displays a quote in a pop-up dialog
+             */
+            $scope.loadNewsQuote = function (symbol) {
+                NewsQuoteDialog.popup({symbol: symbol});
+            };
+
+            $scope.loadNewsSources = function () {
+                $scope.startLoading();
+                NewsService.getSources()
+                    .success(function (newsSources) {
+                        $scope.newsSources = newsSources;
+                        $scope.selection.feed = newsSources[0].OID();
+                        $scope.getNewsFeed($scope.selection.feed);
+                        $scope.stopLoading();
+                    })
+                    .error(function (err) {
+                        $scope.stopLoading();
+                    });
+            };
+
             $scope.trustMe = function (html) {
                 return $sce.trustAsHtml(html);
             };
+
+            ///////////////////////////////////////////////////////////////////////////
+            //          Private Functions
+            ///////////////////////////////////////////////////////////////////////////
 
             function enrichTickers(channels) {
                 for (var n = 0; n < channels.length; n++) {
@@ -150,12 +127,9 @@
 
             function changeArrow(q) {
                 var isNeg = (q.changePct < 0);
-                var chg = isNeg
-                    ? "<img src='/assets/images/status/stock_down.gif'>"
-                    : "<img src='/assets/images/status/stock_up.gif'>";
-
+                var icon = isNeg ? "fa fa-arrow-down" : "fa fa-arrow-up";
                 var num = q.changePct;
-                return chg + "<span class='" + (isNeg ? "negative" : "positive" ) + "'>" + num + "%</span>";
+                return "<span class='" + icon + (isNeg ? " negative" : " positive" ) + "'>" + num + "%</span>";
             }
 
             function replace(source, start, end, replacement) {
@@ -163,18 +137,6 @@
                 var s2 = source.substring(end, source.length);
                 return s1 + replacement + s2;
             }
-
-            // switch to the appropriate tab
-            (function () {
-                var index = $cookieStore.get('news_path_index');
-                if (index) {
-                    console.log("Setting index to " + index);
-                    $scope.changeNewsTab(index);
-                }
-            })();
-
-            // load the news sources
-            $scope.getNewsSources();
 
         }]);
 })();

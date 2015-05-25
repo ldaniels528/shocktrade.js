@@ -3,7 +3,6 @@
         <div ng-controller="DiscoverController" ng-include src="'/assets/views/discover/sector_industry.htm'"></div>
 		<div style="display: block">
 			<div class="drill_down_title">
-				<img src="/assets/images/objects/overview.png"> 
 				Assets by Sector <i class="fa fa-sort{{ sortDesc == null ? '' : (sortDesc ? '-desc' : '-asc') }} clickable" ng-click="sortDesc = !sortDesc"></i>
 				
 				<!-- ordering: label/total -->
@@ -13,27 +12,33 @@
 			</div>
 
 			<div style="display: block; padding-left: 10px" ng-repeat="sector in sectors | orderBy:((sortDesc ? '-' : '') + sortField)">
-				<img class="clickable" 
+				<img ng-show="sector.loading" class="clickable" src="/assets/images/status/loading.gif">
+				<i ng-hide="sector.loading" class="st_control clickable"
 					ng-click="expandOrCollapseSector(sector)"
-					ng-src="/assets/images/{{ sector.loading ? 'status/loading.gif' : (sector.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+					ng-class="sector.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square'">
+				</i>
 				<span class="sector_H">{{ sector.label }}</span> 
 				<span class="null center">(<span style="color: blue">{{ sector.total }}</span>)</span>
 			
 				<div style="display: block; padding-left: 20px"
 					ng-if="sector.expanded && sector.industries"  
 					ng-repeat="industry in sector.industries | orderBy:'label'">
-					<img class="clickable" 
-						ng-click="expandOrCollapseIndustry(sector, industry)"
-						ng-src="/assets/images/{{ industry.loading ? 'status/loading.gif' : (industry.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+					<img ng-show="industry.loading" src="/assets/images/status/loading.gif">
+					<i ng-hide="industry.loading" class="st_control clickable"
+					   ng-click="expandOrCollapseIndustry(sector, industry)"
+					   ng-class="industry.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square'">
+					</i>
 					<span class="industry_H">{{ industry.label }}</span> 				
-					<span class="null center">(<span style="color: blue">{{ industry.total }}</span>)</span>
+					<span class="null center">(<span class="st_blue">{{ industry.total }}</span>)</span>
 				
 					<div style="display: block; padding-left: 20px" 
 						ng-if="industry.expanded && industry.subIndustries.length > 0"
 						ng-repeat="subIndustry in industry.subIndustries | orderBy:'label'">
-						<img class="clickable" 
-							ng-click="expandOrCollapseSubIndustry(sector, industry, subIndustry)"
-							ng-src="/assets/images/{{ subIndustry.loading ? 'status/loading.gif' : (subIndustry.expanded ? 'buttons/collapse.png' : 'buttons/expand.png') }}">
+						<img ng-show="subIndustry.loading" src="/assets/images/status/loading.gif">
+						<i ng-hide="subIndustry.loading" class="st_control clickable"
+						   ng-click="expandOrCollapseSubIndustry(sector, industry, subIndustry)"
+						   ng-class="subIndustry.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square'">
+						</i>
 						<span class="sub_industry_H">{{ subIndustry.label }}</span> 
 						<span class="null center">(<span style="color: blue">{{ subIndustry.total }}</span>)</span>
 					
@@ -41,11 +46,11 @@
 							ng-if="subIndustry.expanded && subIndustry.quotes.length > 0">
 							<!--  heading -->
 							<div>
-								<img ng-src="/assets/images/objects/market.png">
+								<i class="fa fa-globe st_text_color"></i>
 								<span class="sector_H">{{ sector.label }}</span> 
-								<img src="/assets/images/buttons/arrow-next.png" class="middle"> 
+								<i class="fa fa-arrow-right st_control"></i>
 								<span class="industry_H">{{ industry.label }}</span>
-								<img src="/assets/images/buttons/arrow-next.png" class="middle"> 
+								<i class="fa fa-arrow-right st_control"></i>
 								<span class="sub_industry_H">{{ subIndustry.label }}</span>
 							</div>
 							

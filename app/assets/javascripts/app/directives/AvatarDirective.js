@@ -4,18 +4,16 @@
     /**
      * Avatar Directive
      * @author lawrence.daniels@gmail.com
-     * <avatar id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
+     * <avatar id="{{ p.fbUserID }}" class="avatar-24"/>
      */
     app.directive('avatar', ['$log', function($log) {
         return {
             restrict: 'E',
-            scope: { id:'@id', object:'@object', alt:'@alt', style:'@style' },
+            scope: { id:'@id', object:'@object', alt:'@alt', class:'@class', style:'@style' },
             transclude: true,
             replace: false,
-            template: '<img ng-src="{{ url }}" ng-class="myClass" style="{{ style }}" {{ extras }}>',
+            template: '<img ng-src="{{ url }}" ng-class="myClass" class="{{ class }}" style="{{ style }}">',
             link: function(scope, element, attrs) {
-                scope.extras = "";
-
                 function setURL(scope) {
                     if (scope.id) {
                         scope.url = "http://graph.facebook.com/" + scope.id + "/picture";

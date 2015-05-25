@@ -15,7 +15,7 @@
         service.popup = function (params) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
-                templateUrl: 'news_quote.htm',
+                templateUrl: 'news_quote_dialog.htm',
                 controller: 'NewsQuoteCtrl',
                 resolve: {
                     symbol: function () {

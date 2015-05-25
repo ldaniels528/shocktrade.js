@@ -1,7 +1,7 @@
 <div class="row player_info_bar contest_colors">
 	<div class="col-md-4">
         <div class="pull-left" style="display: inline">
-            <avatar id="{{ MySession.fbUserID }}" style="margin: 3px; width: 32px; height: 32px" />
+            <avatar id="{{ MySession.fbUserID }}" class="avatar-32"></avatar>
         </div>
         <div class="pull-left" style="display: inline">
             <div>
@@ -13,7 +13,7 @@
                     <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '2nd'" src="/assets/images/contests/silver.png">
                     <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '3rd'" src="/assets/images/contests/bronze.png">
                     <span ng-class="getBarRanking().gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(getBarRanking().gainLoss || 0) === 0" value="{{ getBarRanking().gainLoss }}" />
+                        <changearrow ng-hide="(getBarRanking().gainLoss || 0) === 0" value="{{ getBarRanking().gainLoss }}"></changearrow>
                         <span ng-show="(getBarRanking().gainLoss || 0) === 0" class="null">&#8212;</span>
                         {{ abs(getBarRanking().gainLoss) | number:2 }}%
                     </span>
