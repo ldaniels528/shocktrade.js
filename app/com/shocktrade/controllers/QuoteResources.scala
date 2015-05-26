@@ -2,7 +2,6 @@ package com.shocktrade.controllers
 
 import java.util.Date
 
-import com.shocktrade.models.profile.Filter
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
@@ -16,8 +15,7 @@ import play.api.mvc.{Controller, _}
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.api._
-import reactivemongo.bson.{BSONDocument => B, _}
+import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands.GetLastError
 
 import scala.concurrent.Future
@@ -26,7 +24,7 @@ import scala.concurrent.Future
  * Quote REST Resources
  * @author lawrence.daniels@gmail.com
  */
-object QuoteResources extends Controller with MongoController with ProfileFiltering with QuoteFiltering {
+object QuoteResources extends Controller with MongoController with ProfileFiltering {
   private lazy val naicsCodes = loadNaicsMappings()
   private lazy val sicCodes = loadSicsMappings()
   private val Stocks = "Stocks"
@@ -69,7 +67,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> B("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> BS("$ne" -> BSONNull))),
         GroupField("sector")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -83,7 +81,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> B("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> BS("$ne" -> BSONNull))),
         GroupField("industry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -97,7 +95,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(B("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> B("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> B("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> BS("$ne" -> BSONNull))),
         GroupField("subIndustry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -108,7 +106,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   def exploreQuotesBySubIndustry(userID: String, sector: String, industry: String, subIndustry: String) = Action.async {
     val results = for {
       exchanges <- findStockExchanges(Option(userID))
-      quotes <- mcQ.find(JS("active" -> true, "exchange" -> B("$in" -> exchanges), "assetType" -> JS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry), searchFields)
+      quotes <- mcQ.find(JS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> JS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry), searchFields)
         .cursor[JsObject]
         .collect[Seq]()
     } yield quotes
@@ -122,7 +120,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     // get the NAICS codes
       codes <- naicsCodes
       results <- db.command(new Aggregate(Stocks, Seq(
-        Match(B("active" -> true, "naicsNumber" -> B("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "naicsNumber" -> BS("$ne" -> BSONNull))),
         GroupField("naicsNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
         Json.toJson(bs) match {
           case jo: JsObject =>
@@ -141,7 +139,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     // get the SIC codes
       codes <- sicCodes
       results <- db.command(new Aggregate(Stocks, Seq(
-        Match(B("active" -> true, "sicNumber" -> B("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "sicNumber" -> BS("$ne" -> BSONNull))),
         GroupField("sicNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
         Json.toJson(bs) match {
           case jo: JsObject =>
@@ -157,7 +155,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     import reactivemongo.core.commands._
 
     db.command(new Aggregate(Stocks, Seq(
-      Match(B("active" -> true, "exchange" -> B("$ne" -> BSONNull), "assetType" -> B("$in" -> BSONArray("Common Stock", "ETF")))),
+      Match(BS("active" -> true, "exchange" -> BS("$ne" -> BSONNull), "assetType" -> BS("$in" -> BSONArray("Common Stock", "ETF")))),
       GroupField("exchange")("total" -> SumValue(1))))) map { results =>
       results.toSeq map (Json.toJson(_))
     } map (js => Ok(JsArray(js)))
@@ -188,34 +186,6 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     mcP.update(JS("_id" -> BSONObjectID(id)), JS("$pull" -> JS("exchanges" -> exchange)),
       new GetLastError, upsert = false, multi = false) map { r =>
       Ok(r.errMsg.getOrElse(""))
-    }
-  }
-
-  def filterMiniQuotes(userID: String) = showQuotesByFilter(userID, limitFields)
-
-  def filterFullQuotes(userID: String) = showQuotesByFilter(userID, searchFields)
-
-  def showQuotesByFilter(userID: String, fields: JsObject) = Action.async { implicit request =>
-    // attempt to retrieve the filter properties from the request
-    request.body.asJson map (_.as[Filter]) match {
-      case Some(filter) =>
-        val quotes = for {
-        // attempt to retrieve the player's exchanges
-          exchanges <- findStockExchanges(Option(userID))
-
-          maxResults = filter.maxResults.getOrElse(25)
-
-          // retrieve the quotes
-          quotes <- mcQ.find(createQueryJs(filter, exchanges), fields)
-            .sort(sortJs(filter))
-            .options(QueryOpts(batchSizeN = maxResults))
-            .cursor[JsObject]
-            .collect[Seq](maxResults)
-        } yield quotes
-
-        quotes map (js => Ok(JsArray(js)))
-      case None =>
-        Future.successful(Ok(JsArray()))
     }
   }
 
@@ -341,7 +311,10 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   }
 
   def getRealtimeQuote(symbol: String) = Action.async {
-    findRealtimeQuote(symbol) map (Ok(_))
+    StockQuotes.findRealTimeQuote(symbol) map {
+      case Some(js) => Ok(js)
+      case None => Ok(JS())
+    }
   }
 
   def getRiskLevel(symbol: String) = Action.async {
@@ -388,7 +361,7 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
       xchg <- Option(exchange)
       advisory <- Option(sym.last match {
         case 'A' => "Class A asset"
-        case 'B' => "Class B asset"
+        case 'B' => "Class BS asset"
         case 'C' => if (exchange == "NASDAQ") "Exception" else "Continuance"
         case 'D' => "New issue or reverse split"
         case 'E' => "Delinquent in required SEC filings"

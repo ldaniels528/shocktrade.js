@@ -2,15 +2,11 @@ package com.shocktrade.actors
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.actors.QuoteMessages._
-import com.shocktrade.controllers.QuoteFiltering
 import com.shocktrade.controllers.QuoteResources._
-import com.shocktrade.models.profile.Filter
 import com.shocktrade.models.quote.QuoteFilter
 import play.api.libs.json.Json.{obj => JS, _}
-import play.api.libs.json.{Json, JsArray, JsObject}
+import play.api.libs.json.{JsArray, JsObject}
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS}
 import reactivemongo.core.commands.LastError
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,9 +16,8 @@ import scala.util.{Failure, Success}
  * Database Stock Quote Actor
  * @author lawrence.daniels@gmail.com
  */
-class DBaseQuoteActor() extends Actor with ActorLogging with QuoteFiltering {
+class DBaseQuoteActor() extends Actor with ActorLogging {
   private lazy val mcJS = db.collection[JSONCollection]("Stocks")
-  private lazy val mcBS = db.collection[BSONCollection]("Stocks")
 
   import context.dispatcher
 
