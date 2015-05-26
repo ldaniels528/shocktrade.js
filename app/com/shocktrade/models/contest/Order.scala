@@ -28,6 +28,7 @@ case class Order(id: BSONObjectID = BSONObjectID.generate,
                  quantity: Int,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
+                 partialFulfillment: Boolean = false,
                  volumeAtOrderTime: Long,
                  accountType: AccountType = AccountTypes.CASH) {
 
@@ -54,6 +55,7 @@ object Order {
       (__ \ "quantity").read[Int] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "emailNotify").read[Boolean] and
+      (__ \ "partialFulfillment").read[Boolean] and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "accountType").read[AccountType])(Order.apply _)
 
@@ -70,6 +72,7 @@ object Order {
       (__ \ "quantity").write[Int] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "emailNotify").write[Boolean] and
+      (__ \ "partialFulfillment").write[Boolean] and
       (__ \ "volumeAtOrderTime").write[Long] and
       (__ \ "accountType").write[AccountType])(unlift(Order.unapply))
 
@@ -87,6 +90,7 @@ object Order {
       doc.getAs[Int]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Boolean]("emailNotify").get,
+      doc.getAs[Boolean]("partialFulfillment").getOrElse(false),
       doc.getAs[Long]("volumeAtOrderTime").get,
       doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)
     )
@@ -106,6 +110,7 @@ object Order {
       "quantity" -> order.quantity,
       "commission" -> order.commission,
       "emailNotify" -> order.emailNotify,
+      "partialFulfillment" -> order.partialFulfillment,
       "volumeAtOrderTime" -> order.volumeAtOrderTime,
       "accountType" -> order.accountType
     )

@@ -25,6 +25,7 @@
                     <option value="">Order Term?</option>
                     <option value="GOOD_FOR_DAY">Good For The Day</option>
                     <option value="GOOD_FOR_7_DAYS">Good For 7 Days</option>
+                    <option value="GOOD_FOR_14_DAYS">Good For 14 Days</option>
                     <option value="GOOD_FOR_30_DAYS">Good For 30 Days</option>
                     <option value="GOOD_FOR_60_DAYS">Good For 60 Days</option>
                     <option value="GOOD_UNTIL_CANCELED">Good Until Canceled</option>
@@ -122,7 +123,16 @@
             <div class="col-md-3 header" colspan="2">Total Cost</div>
             <div class="col-md-3"><span class="positive">$ {{ getTotal(form) | number:2 }}</span></div>
             <div class="col-md-6">
-                    <label class="pull-left"><input ng-model="form.emailNotify" type="checkbox"> Notify by Email</label>
+                <label class="pull-left">
+                    <input ng-model="form.emailNotify" type="checkbox"> Notify by Email
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-6 col-md-6">
+                <label class="pull-left">
+                    <input ng-model="form.partialFulfillment" type="checkbox"> Allow partial fulfillment
+                </label>
             </div>
         </div>
 

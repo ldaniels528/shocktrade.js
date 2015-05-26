@@ -11,7 +11,7 @@ import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
 import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}
-import com.shocktrade.util.{ConcurrentCache, DateUtil}
+import com.shocktrade.util.ConcurrentCache
 import org.joda.time.DateTime
 import play.api.Logger
 import reactivemongo.bson.BSONObjectID
@@ -28,8 +28,6 @@ object OrderProcessor {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
   private val quoteCache = ConcurrentCache[String, Seq[YFIntraDayQuote]](2.hours)
-
-  private def isTradingActive(asOfDate: Date) = true //DateUtil.isTradingActive(asOfDate)
 
   /**
    * Processes the given contest
@@ -143,6 +141,7 @@ object OrderProcessor {
           quantity = pos.quantity,
           commission = Commissions.getCommission(PriceTypes.MARKET),
           emailNotify = true,
+          partialFulfillment = false,
           volumeAtOrderTime = 0
         )
 
@@ -192,7 +191,7 @@ object OrderProcessor {
       val quotes = getEligibleStockQuotes(c, orders, asOfDate)
 
       // process the market close orders
-      val eligibleClaims = orders flatMap (processOrder(c, _, asOfDate, quotes))
+      val eligibleClaims = orders flatMap (getEligibleClaim(c, _, asOfDate, quotes))
 
       // display the eligible claims
       info(c, s"Attempting fulfillment on ${eligibleClaims.size} eligible claim(s)")
@@ -202,16 +201,6 @@ object OrderProcessor {
       processClaims(c, asOfDate, eligibleClaims)
     }
     else Future.successful(Nil)
-  }
-
-  private def processOrder(c: Contest, wo: WorkOrder, asOfDate: Date, quoteMap: Seq[StockQuote]): Option[Claim] = {
-    for {
-    // get the quotes for the order
-    // attempt to find an eligible quote w/price
-      quote <- quoteMap.find(q => q.symbol == wo.symbol && isEligible(c, wo, q))
-
-    // create the claim
-    } yield Claim(wo.symbol, wo.exchange, quote.price, wo.quantity, wo.commission, asOfDate, wo)
   }
 
   private def processClaims(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
@@ -248,20 +237,24 @@ object OrderProcessor {
     }
   }
 
-  private def isEligible(c: Contest, wo: WorkOrder, q: StockQuote): Boolean = {
+  private def getEligibleClaim(c: Contest, wo: WorkOrder, asOfDate: Date, quotes: Seq[StockQuote]): Option[Claim] = {
     def isOk(state: Boolean) = if (state) "Ok" else "Bad"
 
-    // is it a valid claim?
-    val (isGoodTime, time) = isEligibleTime(c, wo, q)
-    val (isGoodVolume, volume) = isEligibleVolume(c, wo, q)
-    val (isGoodPrice, price) = isEligiblePrice(c, wo, q)
+    quotes.foldLeft[Option[Claim]](None) { (result, q) =>
+      if (result.isEmpty) {
+        // is it a valid claim?
+        val (isGoodTime, time) = isEligibleTime(c, wo, q)
+        val (isGoodVolume, quantity) = isEligibleVolume(c, wo, q)
+        val (isGoodPrice, price) = isEligiblePrice(c, wo, q)
 
-    // if the required volume is satisfied, and
-    // the price type is either not LIMIT or the price is satisfied, then claim it
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    info(c, f"[${sdf.format(new Date)}] symbol ${q.symbol}, price $price%.04f [${isOk(isGoodPrice)}], volume: $volume [${isOk(isGoodVolume)}] time ${sdf.format(time)} [${isOk(isGoodTime)} - order: ${sdf.format(wo.orderTime)}]")
+        // if the required volume is satisfied, and
+        // the price type is either not LIMIT or the price is satisfied, then claim it
+        val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        info(c, f"[${sdf.format(new Date)}] symbol ${q.symbol}, price $price%.04f [${isOk(isGoodPrice)}], volume: $quantity [${isOk(isGoodVolume)}] time ${sdf.format(time)} [${isOk(isGoodTime)} - order: ${sdf.format(wo.orderTime)}]")
 
-    isGoodTime && isGoodVolume && isGoodPrice
+        if (isGoodTime && isGoodVolume && isGoodPrice) Some(Claim(wo.symbol, wo.exchange, price, quantity.toInt, wo.commission, time, wo)) else None
+      } else result
+    }
   }
 
   private def isEligibleTime(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Date) = {
@@ -269,7 +262,7 @@ object OrderProcessor {
   }
 
   private def isEligibleVolume(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Long) = {
-    (q.totalVolume >= wo.quantity, wo.quantity)
+    if (q.totalVolume >= wo.quantity) (true, wo.quantity) else (wo.partialFulfillment && q.totalVolume > 0, q.totalVolume)
   }
 
   private def isEligiblePrice(c: Contest, wo: WorkOrder, q: StockQuote): (Boolean, Double) = {
@@ -326,6 +319,8 @@ object OrderProcessor {
     // display the stock quotes
     stockQuotes
   }
+
+  private def isTradingActive(asOfDate: Date) = true // DateUtil.isTradingActive(asOfDate)
 
   private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 

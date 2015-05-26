@@ -1,5 +1,6 @@
 package com.shocktrade.controllers
 
+import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.OrderTypes.{OrderType, _}
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest.PlayerRef
@@ -11,10 +12,10 @@ import play.api.libs.json._
 import scala.language.{implicitConversions, postfixOps}
 
 /**
- * Contest Forms
+ * Contest Resource Forms
  * @author lawrence.daniels@gmail.com
  */
-object ContestForms {
+object ContestResourceForms {
 
   case class ContestCreateForm(name: String,
                                playerId: String,
@@ -96,23 +97,26 @@ object ContestForms {
                        exchange: String,
                        limitPrice: BigDecimal,
                        orderType: OrderType,
+                       orderTerm: OrderTerm,
                        priceType: PriceType,
-                       //orderTerm: Option[OrderTerm],
                        perks: Option[Seq[PerkType]],
                        quantity: Int,
                        volumeAtOrderTime: Long,
-                       emailNotify: Boolean)
+                       emailNotify: Option[Boolean],
+                       partialFulfillment: Option[Boolean])
 
   implicit val orderFormReads: Reads[OrderForm] = (
     (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
       (__ \ "limitPrice").read[BigDecimal] and
       (__ \ "orderType").read[OrderType] and
+      (__ \ "orderTerm").read[OrderTerm] and
       (__ \ "priceType").read[PriceType] and
       (__ \ "perks").readNullable[Seq[PerkType]] and
       (__ \ "quantity").read[Int] and
       (__ \ "volumeAtOrderTime").read[Long] and
-      (__ \ "emailNotify").read[Boolean])(OrderForm.apply _)
+      (__ \ "emailNotify").readNullable[Boolean] and
+      (__ \ "partialFulfillment").readNullable[Boolean])(OrderForm.apply _)
 
   case class QuoteSnapshot(name: String, symbol: String, lastTrade: Double)
 

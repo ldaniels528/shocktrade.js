@@ -13,8 +13,7 @@
 	<div class="col-md-2" ng-show="isClosedOrderSelected()">
 		 <span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedClosedOrder()">
             <i class="fa fa-chevron-circle-left st_control"
-			   title="Return to results"
-			   src="/assets/images/buttons/back-24.png"></i> Back
+			   title="Return to results"></i> Back
         </span>
 	</div>
 </div>
@@ -46,37 +45,48 @@
 
 	<!-- Expanded Section -->
 	<div ng-if="isClosedOrderSelected()" class="col-md-9">
-        <div class="col-md-4 bold">Order #</div>
-        <div class="col-md-8">{{ selectedClosedOrder.OID() }}</div>
-
-		<div class="col-md-4 bold">Order Type</div>
-		<div class="col-md-8">{{ selectedClosedOrder.orderType }}</div>
-
-		<div class="col-md-4 bold">Creation Time</div>
-		<div class="col-md-8">{{ selectedClosedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
-
-		<div class="col-md-4 bold">Executed Time</div>
-		<div ng-show="selectedClosedOrder.processedTime" class="col-md-8">{{ selectedClosedOrder.processedTime | date:'MM/dd hh:mma' }}</div>
-		<div ng-hide="selectedClosedOrder.processedTime" class="col-md-8 null">NONE</div>
-
-		<div class="col-md-4 bold">Exchange</div>
-		<div class="col-md-8">
-			<span ng-class="getExchangeClass(selectedClosedOrder.exchange)">{{ selectedClosedOrder.exchange }}</span>
+		<div class="row">
+			<div class="col-md-5 bold">Order #</div>
+			<div class="col-md-7">{{ selectedClosedOrder.OID() }}</div>
 		</div>
-
-		<div class="col-md-4 bold">Price</div>
-		<div class="col-md-8">$ {{ selectedClosedOrder.price | quoteNumber }}</div>
-
-		<div class="col-md-4 bold">Price Type</div>
-		<div class="col-md-8">{{ selectedClosedOrder.priceType }}</div>
-
-		<div class="col-md-4 bold">Quantity</div>
-		<div class="col-md-8">{{ selectedClosedOrder.quantity | number }}</div>
-
-        <div class="col-md-4 bold">Commission</div>
-        <div class="col-md-8">$ {{ selectedClosedOrder.commission | number:2 }}</div>
-
-        <div class="col-md-4 bold">Total Cost</div>
-        <div class="col-md-8">$ {{ orderCost(selectedClosedOrder) | number:2 }}</div>
+		<div class="row">
+			<div class="col-md-5 bold">Order Type</div>
+			<div class="col-md-7">{{ selectedClosedOrder.orderType }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Creation Time</div>
+			<div class="col-md-7">{{ selectedClosedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Executed Time</div>
+			<div ng-show="selectedClosedOrder.processedTime" class="col-md-7">{{ selectedClosedOrder.processedTime | date:'MM/dd hh:mma' }}</div>
+			<div ng-hide="selectedClosedOrder.processedTime" class="col-md-7 null">NONE</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Exchange</div>
+			<div class="col-md-7">
+				<span ng-class="getExchangeClass(selectedClosedOrder.exchange)">{{ selectedClosedOrder.exchange }}</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Price</div>
+			<div class="col-md-7">$ {{ selectedClosedOrder.price | quoteNumber }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Price Type</div>
+			<div class="col-md-7">{{ selectedClosedOrder.priceType }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Quantity</div>
+			<div class="col-md-7">{{ selectedClosedOrder.quantity | number }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Commission</div>
+			<div class="col-md-7">$ {{ selectedClosedOrder.commission | number:2 }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 bold">Total Cost</div>
+			<div class="col-md-7">$ {{ orderCost(selectedClosedOrder) | number:2 }}</div>
+		</div>
 	</div>
 </div>

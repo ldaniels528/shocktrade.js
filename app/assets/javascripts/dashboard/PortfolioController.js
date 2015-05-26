@@ -112,7 +112,10 @@
             };
 
             $scope.popupNewOrderDialog = function () {
-                NewOrderDialog.popup({symbol: QuoteService.lastSymbol});
+                var symbol = $cookieStore.get('symbol');
+                if (!symbol) symbol = QuoteService.lastSymbol;
+
+                NewOrderDialog.popup({"symbol": symbol});
             };
 
             /////////////////////////////////////////////////////////////////////

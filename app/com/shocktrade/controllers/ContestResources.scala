@@ -7,7 +7,7 @@ import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
-import com.shocktrade.controllers.ContestForms._
+import com.shocktrade.controllers.ContestResourceForms._
 import com.shocktrade.controllers.QuoteResources.Quote
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfiles
@@ -169,7 +169,7 @@ object ContestResources extends Controller with ErrorHandler {
     Try(request.body.asJson.map(_.as[MarginFundsForm])) match {
       case Success(Some(form)) =>
         // determine the amount to deposit/withdraw
-        val deltaAmount = if(form.action == "DEPOSIT") form.amount else -form.amount
+        val deltaAmount = if (form.action == "DEPOSIT") form.amount else -form.amount
 
         // perform the atomic update
         Contests.updateMarginAccountFunds(contestId.toBSID, playerId.toBSID, deltaAmount) map {
@@ -214,12 +214,12 @@ object ContestResources extends Controller with ErrorHandler {
    * Creates a new order
    * @param contestId the given contest ID
    * @param playerId the given player ID
-   * @return
+   * @return a [[Contest]] in JSON format
    */
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[OrderForm])) match {
       case Success(Some(form)) =>
-        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(form)) map {
+        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(playerId, form)) map {
           case Some(contest) => Ok(Json.toJson(contest))
           case None => Ok(createError(s"Contest $contestId not found"))
         } recover {
@@ -233,12 +233,12 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
-  private def makeOrder(form: OrderForm) = {
+  private def makeOrder(playerId: String, form: OrderForm) = {
     Order(
       symbol = form.symbol,
       exchange = form.exchange,
-      creationTime = new DateTime().minusDays(3).toDate, // TODO for testing only
-      expirationTime = None, // TODO set once orderTerm is implemented
+      creationTime = if (playerId == "51a308ac50c70a97d375a6b2") new DateTime().minusDays(4).toDate else new Date(), // TODO for testing only
+      expirationTime = form.orderTerm.toDate,
       orderType = form.orderType,
       price = form.limitPrice,
       priceType = form.priceType,
@@ -246,6 +246,7 @@ object ContestResources extends Controller with ErrorHandler {
       quantity = form.quantity,
       commission = Commissions.getCommission(form.priceType, form.perks.getOrElse(Nil)),
       emailNotify = form.emailNotify,
+      partialFulfillment = form.partialFulfillment,
       volumeAtOrderTime = form.volumeAtOrderTime
     )
   }

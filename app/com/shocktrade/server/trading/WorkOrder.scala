@@ -23,6 +23,7 @@ case class WorkOrder(id: BSONObjectID,
                      quantity: Int,
                      commission: BigDecimal,
                      emailNotify: Boolean,
+                     partialFulfillment: Boolean,
                      volumeAtOrderTime: Long) {
 
   def toClosedOrder(asOfDate: Date, message: String) = ClosedOrder(

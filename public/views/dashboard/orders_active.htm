@@ -6,15 +6,12 @@
 	<div class="col-md-3 bold right" ng-hide="isOrderSelected()">Shares</div>
 
 	<div class="col-md-7 bold" ng-show="isOrderSelected()">
-		<span ng-class="getExchangeClass(selectedOrder.exchange)">
-            {{ selectedOrder.companyName }}
-        </span>
+		<span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.companyName }}</span>
 	</div>
 	<div class="col-md-2" ng-show="isOrderSelected()">
 		<span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedOrder()">
             <i class="fa fa-chevron-circle-left st_control"
-			   title="Return to results"
-			   src="/assets/images/buttons/back-24.png"></i> Back
+			   title="Return to results"></i> Back
         </span>
 	</div>
 </div>
@@ -49,47 +46,67 @@
 
 	<!-- Expanded Section -->
 	<div ng-if="isOrderSelected()" class="col-md-9">
-        <div class="col-md-4 bold">Order #</div>
-        <div class="col-md-8">{{ selectedOrder.OID() }}</div>
-
-        <div class="col-md-4 bold">Order Type</div>
-        <div class="col-md-8">{{ selectedOrder.orderType }}</div>
-
-		<div class="col-md-4 bold">Creation Time</div>
-		<div class="col-md-8">{{ selectedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
-
-		<div class="col-md-4 bold">Expiration Time</div>
-		<div ng-show="selectedOrder.expirationTime" class="col-md-8">{{ selectedOrder.expirationTime | date:'MM/dd hh:mma' }}</div>
-        <div ng-hide="selectedOrder.expirationTime" class="col-md-8">Until Canceled</div>
-
-		<div class="col-md-4 bold">Exchange</div>
-		<div class="col-md-8">
-			<span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.exchange }}</span>
-		</div>
-
-        <div class="col-md-4 bold">Last Sale</div>
-        <div class="col-md-8">
-            <span ng-show="selectedOrder.lastTrade">$ {{ selectedOrder.lastTrade | quoteNumber }}</span>
-            <span ng-hide="selectedOrder.lastTrade" class="null">Not Available</span>
+        <div class="row">
+            <div class="col-md-5 bold">Order #</div>
+            <div class="col-md-7">{{ selectedOrder.OID() }}</div>
         </div>
-
-		<div class="col-md-4 bold">Price</div>
-		<div class="col-md-8">$ {{ selectedOrder.price | quoteNumber }}</div>
-
-		<div class="col-md-4 bold">Price Type</div>
-		<div class="col-md-8">{{ selectedOrder.priceType }}</div>
-
-		<div class="col-md-4 bold">Quantity</div>
-		<div class="col-md-8">{{ selectedOrder.quantity | number }}</div>
-
-        <div class="col-md-4 bold">Estimated Cost</div>
-        <div class="col-md-8">$ {{ orderCost(selectedOrder) | number:2 }}</div>
-
-		<div class="col-md-offset-4 col-md-8">
-			<button class="btn btn-default cancel_button"
-					ng-click="cancelOrder(MySession.getContestID(), MySession.getUserID(), selectedOrder.OID())">
-                <i class="fa fa-warning"></i> Cancel
-			</button>
-		</div>
+        <div class="row">
+            <div class="col-md-5 bold">Order Type</div>
+            <div class="col-md-7">{{ selectedOrder.orderType }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Creation Time</div>
+            <div class="col-md-7">{{ selectedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Expiration Time</div>
+            <div ng-show="selectedOrder.expirationTime" class="col-md-7">{{ selectedOrder.expirationTime | date:'MM/dd hh:mma' }}</div>
+            <div ng-hide="selectedOrder.expirationTime" class="col-md-7">Until Canceled</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Exchange</div>
+            <div class="col-md-7">
+                <span ng-class="getExchangeClass(selectedOrder.exchange)">{{ selectedOrder.exchange }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Last Sale</div>
+            <div class="col-md-7">
+                <span ng-show="selectedOrder.lastTrade">$ {{ selectedOrder.lastTrade | quoteNumber }}</span>
+                <span ng-hide="selectedOrder.lastTrade" class="null">Not Available</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Price</div>
+            <div class="col-md-7">$ {{ selectedOrder.price | quoteNumber }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Price Type</div>
+            <div class="col-md-7">{{ selectedOrder.priceType }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Quantity</div>
+            <div class="col-md-7">{{ selectedOrder.quantity | number }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Estimated Cost</div>
+            <div class="col-md-7">$ {{ orderCost(selectedOrder) | number:2 }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Allow Partial Fulfillment</div>
+            <div class="col-md-7">{{ selectedOrder.partialFulfillment ? "Yes" : "No" }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 bold">Notify By Email</div>
+            <div class="col-md-7">{{ selectedOrder.emailNotify ? "Yes" : "No" }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-5 col-md-7">
+                <button class="btn btn-default cancel_button"
+                        ng-click="cancelOrder(MySession.getContestID(), MySession.getUserID(), selectedOrder.OID())">
+                    <i class="fa fa-warning"></i> Cancel
+                </button>
+            </div>
+        </div>
 	</div>
 </div>
