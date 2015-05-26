@@ -25,11 +25,11 @@ case class ClosedOrder(id: BSONObjectID = BSONObjectID.generate,
                        orderType: OrderType,
                        price: Option[BigDecimal],
                        priceType: PriceType,
-                       quantity: Int,
+                       quantity: Long,
                        commission: BigDecimal,
                        volumeAtOrderTime: Long,
                        message: String,
-                       accountType: AccountType = AccountTypes.CASH)
+                       accountType: AccountType)
 
 /**
  * Closed Order Singleton
@@ -47,7 +47,7 @@ object ClosedOrder {
       (__ \ "orderType").read[OrderType] and
       (__ \ "price").readNullable[BigDecimal] and
       (__ \ "priceType").read[PriceType] and
-      (__ \ "quantity").read[Int] and
+      (__ \ "quantity").read[Long] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "message").read[String] and
@@ -63,7 +63,7 @@ object ClosedOrder {
       (__ \ "orderType").write[OrderType] and
       (__ \ "price").writeNullable[BigDecimal] and
       (__ \ "priceType").write[PriceType] and
-      (__ \ "quantity").write[Int] and
+      (__ \ "quantity").write[Long] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "volumeAtOrderTime").write[Long] and
       (__ \ "message").write[String] and
@@ -80,7 +80,7 @@ object ClosedOrder {
       doc.getAs[OrderType]("orderType").get,
       doc.getAs[BigDecimal]("price"),
       doc.getAs[PriceType]("priceType").get,
-      doc.getAs[Int]("quantity").get,
+      doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Long]("volumeAtOrderTime").get,
       doc.getAs[String]("message").get,

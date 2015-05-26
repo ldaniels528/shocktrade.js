@@ -1,7 +1,7 @@
 package com.shocktrade.controllers
 
 import java.util.Date
-
+import reactivemongo.core.commands._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
@@ -58,7 +58,20 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
       JS("symbol" -> 1, "name" -> 1, "exchange" -> 1, "assetType" -> 1))
       .sort(JS("symbol" -> 1))
       .cursor[JsObject]
-      .collect[Seq](maxResults) map (r => Ok(JsArray(r)))
+      .collect[Seq](maxResults) map { jsa =>
+      val enriched = jsa map (js => js ++ JS("icon" -> getIcon(js)))
+      Ok(JsArray(enriched))
+    }
+  }
+
+  private def getIcon(js: JsObject): String = {
+    val assetType = (js \ "assetType").asOpt[String]
+    assetType match {
+      case Some("Crypto-Currency") => "fa fa-bitcoin st_blue"
+      case Some("Currency") => "fa fa-dollar st_blue"
+      case Some("ETF") => "fa fa-stack-exchange st_blue"
+      case _ => "fa fa-globe st_blue"
+    }
   }
 
   def exploreSectors(userID: String) = Action.async {
@@ -133,7 +146,6 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   }
 
   def exploreSICSectors = Action.async {
-    import reactivemongo.core.commands._
 
     (for {
     // get the SIC codes
@@ -152,7 +164,6 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
   }
 
   def getExchangeCounts = Action.async {
-    import reactivemongo.core.commands._
 
     db.command(new Aggregate(Stocks, Seq(
       Match(BS("active" -> true, "exchange" -> BS("$ne" -> BSONNull), "assetType" -> BS("$in" -> BSONArray("Common Stock", "ETF")))),

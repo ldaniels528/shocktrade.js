@@ -18,7 +18,7 @@ case class Performance(id: BSONObjectID = BSONObjectID.generate,
                        exchange: String,
                        pricePaid: BigDecimal,
                        priceSold: BigDecimal,
-                       quantity: Int,
+                       quantity: Long,
                        commissions: BigDecimal,
                        purchasedDate: Date,
                        soldDate: Date)
@@ -35,7 +35,7 @@ object Performance {
       (__ \ "exchange").read[String] and
       (__ \ "pricePaid").read[BigDecimal] and
       (__ \ "priceSold").read[BigDecimal] and
-      (__ \ "quantity").read[Int] and
+      (__ \ "quantity").read[Long] and
       (__ \ "commissions").read[BigDecimal] and
       (__ \ "purchasedDate").read[Date] and
       (__ \ "soldDate").read[Date])(Performance.apply _)
@@ -46,7 +46,7 @@ object Performance {
       (__ \ "exchange").write[String] and
       (__ \ "pricePaid").write[BigDecimal] and
       (__ \ "priceSold").write[BigDecimal] and
-      (__ \ "quantity").write[Int] and
+      (__ \ "quantity").write[Long] and
       (__ \ "commissions").write[BigDecimal] and
       (__ \ "purchasedDate").write[Date] and
       (__ \ "soldDate").write[Date])(unlift(Performance.unapply))
@@ -58,7 +58,7 @@ object Performance {
       doc.getAs[String]("exchange").get,
       doc.getAs[BigDecimal]("pricePaid").get,
       doc.getAs[BigDecimal]("priceSold").get,
-      doc.getAs[Int]("quantity").get,
+      doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commissions").get,
       doc.getAs[Date]("purchasedDate").get,
       doc.getAs[Date]("soldDate").get

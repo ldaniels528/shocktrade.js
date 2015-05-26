@@ -185,6 +185,13 @@
             }
         };
 
+        /**
+         * Returns the combined total funds for both the cash and margin accounts
+         */
+        service.getCompleteFundsAvailable = function() {
+            return service.getFundsAvailable() + (service.getMarginAccount().depositedFunds || 0.00);
+        };
+
         service.getFundsAvailable = function () {
             return service.getParticipant().fundsAvailable || 0.00;
         };

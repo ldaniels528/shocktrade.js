@@ -16,7 +16,7 @@ case class MarginAccount(depositedFunds: Double,
                          asOfDate: Date = new Date(),
                          initialMargin: Double = 0.50,
                          maintenanceMargin: Double = 0.30,
-                         interestRate: Double = 0.10)
+                         interestRate: Double = 0.015)
 
 /**
  * Margin Account Singleton

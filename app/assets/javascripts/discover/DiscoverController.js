@@ -174,23 +174,6 @@
                 return (filter.name === "Favorites");
             };
 
-            $scope.getAssetIcon = function (quote) {
-                var q = quote || $scope.q;
-                if (q && q.assetType) {
-                    switch (q.assetType) {
-                        case 'Crypto-Currency' :
-                            return "/assets/images/asset_types/bitcoin.png";
-                        case 'Currency':
-                            return "/assets/images/asset_types/currency.png";
-                        case 'ETF':
-                            return "/assets/images/asset_types/etf.png";
-                        default:
-                            return "/assets/images/asset_types/stock.png";
-                    }
-                }
-                else return "/assets/images/status/transparent.png";
-            };
-
             $scope.getMatchedAssetIcon = function (q) {
                 //console.log("q = " + angular.toJson(q));
                 return "/assets/images/asset_types/stock.png";

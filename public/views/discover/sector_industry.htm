@@ -1,7 +1,7 @@
 <div class="row sector_industry">
 	<div class="col-md-12">
 		<!-- Market Image -->
-		<i ng-show="q.active" class="fa fa-globe st_text_color"></i>
+		<i ng-show="q.active" ng-class="getAssetIcon(q)"></i>
 		<i ng-show="!q.active" class="fa fa-warning warning"
 			popover="Asset is inactive" 
 			popover-trigger="mouseenter"
@@ -10,19 +10,19 @@
 		<!-- Sector -->
 		<span ng-show="q.sector && (q.sector !== 'N/A')">
 			<a class="sector_H" ng-href="#/explore">{{ q.sector }}</a>
-			<i ng-show="q.sector" class="fa fa-arrow-right st_control"></i>
+			<i ng-show="q.sector" class="fa fa-chevron-circle-right st_control"></i>
 		</span>
 		
 		<!-- Industry -->
 		<span ng-show="q.industry && (q.industry !== 'N/A')">
 			<a class="industry_H" ng-href="#/explore">{{ q.industry }}</a>
-			<i ng-show="q.industry" class="fa fa-arrow-right st_control"></i>
+			<i ng-show="q.industry" class="fa fa-chevron-circle-right st_control"></i>
 		</span>
 		
 		<!-- Sub-Industry -->
 		<span ng-show="q.subIndustry && (q.subIndustry !== 'N/A')">
 			<a class="sub_industry_H" ng-href="#/explore">{{ q.subIndustry }}</a>
-			<i ng-show="q.subIndustry" class="fa fa-arrow-right st_control"></i>
+			<i ng-show="q.subIndustry" class="fa fa-chevron-circle-right st_control"></i>
 		</span>		
 		
 		<!-- Exchange -->
@@ -30,7 +30,7 @@
 		
 		<!-- Company Name -->
 		<span ng-show="q.name">
-			<i ng-show="q.exchange" class="fa fa-arrow-right st_control"></i>
+			<i ng-show="q.exchange" class="fa fa-chevron-circle-right st_control"></i>
 			<a class="company_H" ng-href="#/explore">{{ q.name }}</a>
 		</span>
 		
@@ -55,7 +55,7 @@
 
 		<!-- Trade button -->
 		<i class="fa fa-cart-plus clickable sector_cart st_control"
-		   ng-show="contest && q.active && MySession.isAuthorized()"
+		   ng-show="!MySession.contestIsEmpty() && q.active"
 		   ng-click="popupNewOrderDialog(q.symbol)"
 		   popover="Buy or Sell this security"
 		   popover-trigger="mouseenter"></i>

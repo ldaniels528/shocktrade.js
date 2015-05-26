@@ -57,7 +57,8 @@
             $scope.form = {
                 emailNotify: true,
                 symbol: (params.symbol || "AAPL"),
-                quantity: params.quantity
+                quantity: params.quantity,
+                accountType: params.accountType
             };
             $scope.messages = [];
             $scope.quote = {symbol: $scope.form.symbol};

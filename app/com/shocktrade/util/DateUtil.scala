@@ -94,6 +94,18 @@ object DateUtil {
   }
 
   /**
+   * Returns midnight of the current day
+   * @return the { @link Date midnight date}
+   */
+  def getMidnightTime(date: Date): Date = {
+    val midnight = Calendar.getInstance()
+    midnight.setTime(date)
+    clearTime(midnight)
+    midnight.add(Calendar.DAY_OF_YEAR, 1)
+    midnight.getTime
+  }
+
+  /**
    * The time in milliseconds until the next trading day
    */
   def getDelayUntilTradingStartInMillis = getTradeStartTime.getTime - (new Date).getTime

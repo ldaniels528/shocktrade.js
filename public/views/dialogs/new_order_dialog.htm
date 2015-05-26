@@ -32,20 +32,28 @@
                 </select>
             </div>
         </div>
+        <div>
+            <span class="header">Symbol</span>
+            <input class="form-control symbol_input_text_field"
+                   type="text" ng-model="form.symbol"
+                   placeholder="Enter Symbol or Company name"
+                   typeahead="state as state.symbol + ' - ' + state.name for state in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
+                   typeahead-template-url="symbol_lookup_dialog.htm"
+                   typeahead-loading="loading"
+                   typeahead-on-select="orderQuote(form.symbol)">
+        </div>
         <div class="row">
-            <div class="col-md-4 header">Symbol</div>
+            <div class="col-md-4 header">Account</div>
             <div class="col-md-4 header">Your Price</div>
             <div class="col-md-4 header">Quantity</div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                <input class="form-control yellow"
-                       type="text" ng-model="form.symbol"
-                       placeholder="Enter Symbol or Company name"
-                       typeahead="state as state.symbol + ' - ' + state.name for state in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
-                       typeahead-template-url="symbol_lookup_dialog.htm"
-                       typeahead-loading="loading"
-                       typeahead-on-select="orderQuote(form.symbol)">
+                <input id="cashAccount" type="radio" ng-model="form.accountType" value="CASH">
+                <label for="cashAccount">Cash</label>
+
+                <input id="marginAccount" type="radio" ng-model="form.accountType" value="MARGIN">
+                <label for="marginAccount">Margin</label>
             </div>
             <div class="col-md-4">
                 <input class="form-control yellow" ng-model="form.limitPrice" type="text" placeholder="Price">
@@ -62,7 +70,7 @@
 
                 <span ng-show="quote.changePct > 0">&#8212;</span>
                 <span ng-show="quote.changePct" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>
-                <changearrow value="{{ quote.changePct }}" style="vertical-align: bottom" />
+                <changearrow ng-show="quote.changePct" value="{{ quote.changePct }}" style="vertical-align: bottom" />
 
 
                 <button class="btn st_button pull-right" ng-click="orderQuote(form.symbol)">

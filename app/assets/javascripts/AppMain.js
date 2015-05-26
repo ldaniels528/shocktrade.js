@@ -23,7 +23,7 @@
                 .when('/research', {templateUrl: '/assets/views/research/research.htm', controller: 'ResearchController'})
                 .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
                 .when('/profile', {templateUrl: '/assets/views/profile/profile.htm', controller: 'ProfileController'})
-                .otherwise({redirectTo: '/search'});
+                .otherwise({redirectTo: '/discover'});
         }]);
 
     /**

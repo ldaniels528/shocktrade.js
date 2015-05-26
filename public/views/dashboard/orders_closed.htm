@@ -55,11 +55,11 @@
 		</div>
 		<div class="row">
 			<div class="col-md-5 bold">Creation Time</div>
-			<div class="col-md-7">{{ selectedClosedOrder.creationTime | date:'MM/dd hh:mma' }}</div>
+			<div class="col-md-7">{{ selectedClosedOrder.orderTime | duration }}</div>
 		</div>
 		<div class="row">
 			<div class="col-md-5 bold">Executed Time</div>
-			<div ng-show="selectedClosedOrder.processedTime" class="col-md-7">{{ selectedClosedOrder.processedTime | date:'MM/dd hh:mma' }}</div>
+			<div ng-show="selectedClosedOrder.processedTime" class="col-md-7">{{ selectedClosedOrder.processedTime | duration }}</div>
 			<div ng-hide="selectedClosedOrder.processedTime" class="col-md-7 null">NONE</div>
 		</div>
 		<div class="row">

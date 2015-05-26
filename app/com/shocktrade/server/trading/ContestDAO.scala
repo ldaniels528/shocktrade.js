@@ -547,12 +547,10 @@ object ContestDAO {
               "participants.$.performance" -> claim.toPerformance(existingPos),
               "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))),
           upsert = false, multi = false) map { result =>
-          if (result.n > 0) {
-            commitUpdatedPosition(c, wo, reducedPosition)
-            result.n
-          } else {
+          commitUpdatedPosition(c, wo, reducedPosition)
+          if (result.n > 0) result.n
+          else
             throw new Exception(s"A qualifying position could not be found")
-          }
         }
 
       // if the update successful, perform phase 2 of the commit
@@ -584,6 +582,7 @@ object ContestDAO {
     WorkOrder(
       id = o.id,
       playerId = p.id,
+      accountType = o.accountType,
       symbol = o.symbol,
       exchange = o.exchange,
       orderTime = o.creationTime,

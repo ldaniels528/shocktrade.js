@@ -5,7 +5,7 @@
      * Quote Services
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('QuoteService', function ($rootScope, $http, $log, $q) {
+    app.factory('QuoteService', function ($rootScope, $http, $log) {
         var quotes = {};
         var tradingHistory = {};
         var service = {
@@ -43,31 +43,11 @@
             }
         };
 
-        service.filterSearch = function (filter) {
-            if ($rootScope.MySession.isAuthorized()) {
-                var id = $rootScope.MySession.getUserID();
-                return $http({
-                    method: 'POST',
-                    url: '/api/profile/' + id + '/quotes/filter/full',
-                    data: angular.toJson(filter)
-                })
-                    .then(function (response) {
-                        return setFavorites(response.data)
-                    })
-            }
-            else {
-                return $http({method: 'POST', url: '/api/quotes/filter/full', data: angular.toJson(filter)})
-                    .then(function (response) {
-                        return setFavorites(response.data)
-                    })
-            }
-        };
-
         service.loadStockQuoteList = function (symbols) {
             return $http({method: 'POST', url: '/api/quotes/list', data: angular.toJson(symbols)})
                 .then(function (response) {
                     return setFavorites(response.data)
-                })
+                });
         };
 
         service.loadStockQuote = function (symbol) {

@@ -40,6 +40,9 @@
                 "active": false,
                 "init": function () {
                     // TODO enrich orders here
+                    angular.forEach($scope.getActiveOrders(), function(o) {
+                        $log.info("portfolioTabs: order => " + angular.toJson(o));
+                    });
                 },
                 "isLocked": function () {
                     return MySession.getContestStatus() !== 'ACTIVE';
@@ -77,12 +80,15 @@
             }];
 
             /////////////////////////////////////////////////////////////////////
-            //          Selected Active Order Functions
+            //          Active Order Functions
             /////////////////////////////////////////////////////////////////////
 
             $scope.getActiveOrders = function () {
                 enrichOrders(MySession.getParticipant());
-                return MySession.getOrders();
+                var orders = MySession.getOrders() || [];
+                return orders.filter(function(o) {
+                    return o.accountType === $scope.getAccountType();
+                });
             };
 
             $scope.cancelOrder = function (contestId, playerId, orderId) {
@@ -100,7 +106,7 @@
             };
 
             $scope.isOrderSelected = function () {
-                return $scope.selectedOrder != null;
+                return $scope.getActiveOrders().length && $scope.selectedOrder != null;
             };
 
             $scope.selectOrder = function (order) {
@@ -111,19 +117,26 @@
                 $scope.selectedOrder = null;
             };
 
-            $scope.popupNewOrderDialog = function () {
+            $scope.popupNewOrderDialog = function (params) {
+                // were the parameters passed?
+                params = params || {};
+
                 var symbol = $cookieStore.get('symbol');
                 if (!symbol) symbol = QuoteService.lastSymbol;
+                params.symbol = symbol;
 
-                NewOrderDialog.popup({"symbol": symbol});
+                NewOrderDialog.popup(params);
             };
 
             /////////////////////////////////////////////////////////////////////
-            //          Selected Closed Order Functions
+            //          Closed Order Functions
             /////////////////////////////////////////////////////////////////////
 
             $scope.getClosedOrders = function () {
-                return MySession.getOrderHistory();
+                var closedOrders = MySession.getOrderHistory() || [];
+                return closedOrders.filter(function(o) {
+                    return $scope.getClosedOrders.length && o.accountType === $scope.getAccountType();
+                });
             };
 
             $scope.isClosedOrderSelected = function () {
@@ -147,11 +160,11 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getPerformances = function () {
-                return MySession.getPerformance();
+                return MySession.getPerformance() || [];
             };
 
             $scope.isPerformanceSelected = function () {
-                return $scope.selectedPerformance != null;
+                return $scope.getPerformances().length && $scope.selectedPerformance != null;
             };
 
             $scope.selectPerformance = function (performance) {
@@ -184,11 +197,14 @@
 
             $scope.getPositions = function () {
                 enrichPositions(MySession.getParticipant());
-                return MySession.getPositions();
+                var positions = MySession.getPositions() || [];
+                return positions.filter(function(p) {
+                    return p.accountType === $scope.getAccountType();
+                });
             };
 
             $scope.isPositionSelected = function () {
-                return $scope.selectedPosition != null;
+                return $scope.getPositions().length && $scope.selectedPosition != null;
             };
 
             $scope.selectPosition = function (position) {

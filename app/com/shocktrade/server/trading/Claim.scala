@@ -13,7 +13,7 @@ import scala.language.{implicitConversions, postfixOps}
 case class Claim(symbol: String,
                  exchange: String,
                  price: BigDecimal,
-                 quantity: Int,
+                 quantity: Long,
                  commission: BigDecimal,
                  purchaseTime: Date,
                  workOrder: WorkOrder) {
@@ -43,6 +43,7 @@ case class Claim(symbol: String,
   }
 
   def toPosition = Position(
+    accountType = workOrder.accountType,
     symbol = symbol,
     exchange = exchange,
     pricePaid = price,
@@ -60,6 +61,7 @@ case class Claim(symbol: String,
 
     // create the position
     Position(
+      accountType = existingPos.accountType,
       symbol = symbol,
       exchange = exchange,
       pricePaid = adjPrice,
@@ -77,6 +79,7 @@ case class Claim(symbol: String,
 
     // create the position
     Position(
+      accountType = existingPos.accountType,
       symbol = symbol,
       exchange = exchange,
       pricePaid = price,

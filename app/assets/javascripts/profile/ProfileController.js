@@ -7,17 +7,17 @@
      */
     app.controller('ProfileController', ['$scope', '$log', function ($scope, $log) {
         $scope.profileTabs = [{
-            "name": "Connect",
+            "name": "Share",
             "path": "/assets/views/connect/connect.htm",
             "icon": "fa fa-facebook-square"
         },{
-            "name": "Statistics",
-            "path": "/assets/views/profile/statistics.htm",
-            "icon": "fa fa-bar-chart"
-        }, {
-            "name": "Awards",
+            "name": "My Awards",
             "path": "/assets/views/profile/awards.htm",
             "icon": "fa fa-trophy"
+        }, {
+            "name": "My Statistics",
+            "path": "/assets/views/profile/statistics.htm",
+            "icon": "fa fa-bar-chart"
         }];
 
         $scope.initProfile = function () {

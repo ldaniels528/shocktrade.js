@@ -23,6 +23,47 @@
                 return !value ? value : ((value < 0) ? -value : value);
             };
 
+            $scope.getHtmlQuote = function (q) {
+                if(!q) return "";
+                else {
+                    var html = "<i class='" + $scope.getAssetIcon(q) + "'></i> " + q.symbol + ' - ' + q.name;
+                    console.log("html = " + html);
+                    return html;
+                }
+            };
+
+            $scope.getAssetCode = function (q) {
+                if (!q) return null;
+                else {
+                    switch (q.assetType) {
+                        case 'Crypto-Currency':
+                            return "&#xf15a;"; // fa-bitcoin
+                        case 'Currency':
+                            return "&#xf155;"; // fa-dollar
+                        case 'ETF':
+                            return "&#xf18d;"; // fa-stack-exchange
+                        default:
+                            return "&#xf0ac;"; // fa-globe
+                    }
+                }
+            };
+
+            $scope.getAssetIcon = function (q) {
+                if (!q || !q.assetType) return "fa fa-globe st_blue";
+                else {
+                    switch (q.assetType) {
+                        case 'Crypto-Currency':
+                            return "fa fa-bitcoin st_blue";
+                        case 'Currency':
+                            return "fa fa-dollar st_blue";
+                        case 'ETF':
+                            return "fa fa-stack-exchange st_blue";
+                        default:
+                            return "fa fa-globe st_blue";
+                    }
+                }
+            };
+
             /**
              * Returns the contacts matching the given search term
              */
@@ -197,10 +238,11 @@
             //////////////////////////////////////////////////////////////////////
 
             $scope.normalizeExchange = function (market) {
-                if(market == null) return null;
+                if (market == null) return null;
                 else {
                     var s = market.toUpperCase();
                     if (s.indexOf("ASE") == 0) return s;
+                    else if (s.indexOf("CCY") == 0) return s;
                     else if (s.indexOf("NAS") == 0) return "NASDAQ";
                     else if (s.indexOf("NCM") == 0) return "NASDAQ";
                     else if (s.indexOf("NGM") == 0) return "NASDAQ";

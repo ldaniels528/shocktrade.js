@@ -126,7 +126,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       volume <- stock.volume
       priceType = PriceTypes.LIMIT
     } yield {
-      Order(symbol = stock.symbol,
+      Order(
+        accountType = AccountTypes.CASH, // TODO robots can also buy on Margin ...
+        symbol = stock.symbol,
         exchange = exchange,
         creationTime = new DateTime().minusDays(4).toDate, // TODO remove this after testing
         expirationTime = Some(new DateTime().plusDays(3).toDate),

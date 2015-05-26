@@ -29,7 +29,7 @@
 
             modalInstance.result.then(function (response) {
                 $log.info("MarginAccountDialog: response = " + angular.toJson(response));
-                if(params.success) {
+                if (params.success) {
                     params.success(response);
                 }
 
@@ -55,7 +55,13 @@
             $scope.messages = [];
             $scope.investedAmount = 0.00; // TODO get actual values for these
             $scope.investmentValue = 0.00;
-            $scope.actions = [ "DEPOSIT", "WITHDRAW"];
+            $scope.actions = [{
+                label: "Cash to Margin Account",
+                action: "DEPOSIT"
+            }, {
+                label: "Margin Account to Cash",
+                action: "WITHDRAW"
+            }];
 
             $scope.form = {
                 "depositedFunds": MySession.getMarginAccount().depositedFunds,

@@ -22,13 +22,21 @@
                 accountMode = !accountMode;
             };
 
+            $scope.getAccountMode = function () {
+                return accountMode;
+            };
+
+            $scope.getAccountType = function () {
+                return $scope.isMarginAccount() ? "MARGIN" : "CASH";
+            };
+
             /////////////////////////////////////////////////////////////////////
             //          Pop-up Dialog Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.marginAccountDialog = function() {
+            $scope.marginAccountDialog = function () {
                 MarginAccountDialog.popup({
-                    "success": function(contest) {
+                    "success": function (contest) {
                         MySession.setContest(contest);
                     }
                 });

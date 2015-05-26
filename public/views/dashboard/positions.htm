@@ -61,7 +61,7 @@
     <div ng-if="isPositionSelected()" class="col-md-10">
         <div class="row">
             <div class="col-md-5 bold">Purchased Time</div>
-            <div class="col-md-7">{{ selectedPosition.processedTime | date:'MM/dd hh:mma' }}</div>
+            <div class="col-md-7">{{ selectedPosition.processedTime | duration }}</div>
         </div>
         <div class="row">
             <div class="col-md-5 bold">Exchange</div>
@@ -75,15 +75,7 @@
         </div>
         <div class="row">
             <div class="col-md-5 bold">Market Price</div>
-            <div class="col-md-7" ng-show="selectedPosition.lastTrade">
-                $ {{ selectedPosition.lastTrade | quoteNumber }}
-                <span ng-if="selectedPosition.gainLossPct != null">
-                    <changearrow value="{{ selectedPosition.gainLossPct }}"/>
-                    <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
-                        {{ abs(selectedPosition.gainLossPct) | number:2 }}%
-                    </span>
-                </span>
-            </div>
+            <div class="col-md-7" ng-show="selectedPosition.lastTrade">$ {{ selectedPosition.lastTrade | quoteNumber }}</div>
             <div class="col-md-7" ng-hide="selectedPosition.lastTrade">
                 <span class="null">Not Available</span>
             </div>
@@ -102,7 +94,15 @@
         </div>
         <div class="row">
             <div class="col-md-5 bold">Estimated Value</div>
-            <div class="col-md-7">$ {{ selectedPosition.netValue | number:2 }}</div>
+            <div class="col-md-7">
+                $ {{ selectedPosition.netValue | number:2 }}
+                <span ng-if="selectedPosition.gainLossPct != null">
+                    <changearrow value="{{ selectedPosition.gainLossPct }}"/>
+                    <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
+                        {{ abs(selectedPosition.gainLossPct) | number:2 }}%
+                    </span>
+                </span>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-offset-5 col-md-7">

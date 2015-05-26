@@ -9,7 +9,7 @@ import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestResourceForms._
 import com.shocktrade.controllers.QuoteResources.Quote
-import com.shocktrade.models.contest._
+import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.server.trading.Contests
@@ -235,6 +235,7 @@ object ContestResources extends Controller with ErrorHandler {
 
   private def makeOrder(playerId: String, form: OrderForm) = {
     Order(
+      accountType = form.accountType,
       symbol = form.symbol,
       exchange = form.exchange,
       creationTime = if (playerId == "51a308ac50c70a97d375a6b2") new DateTime().minusDays(4).toDate else new Date(), // TODO for testing only
@@ -469,13 +470,7 @@ object ContestResources extends Controller with ErrorHandler {
       // sort the participants by net-worth
       rankedPlayers = (1 to rankings.size).toSeq zip rankings.sortBy(-_.totalEquity)
 
-    } yield JsArray(rankedPlayers map { case (place, p) =>
-      JS("name" -> p.name,
-        "facebookID" -> p.facebookID,
-        "totalEquity" -> p.totalEquity,
-        "gainLoss" -> p.gainLoss_%,
-        "rank" -> placeName(place))
-    })
+    } yield JsArray(rankedPlayers map { case (place, p) => JS("rank" -> placeName(place)) ++ Json.toJson(p).asInstanceOf[JsObject] })
   }
 
   private def produceNetWorths(contest: Contest): Future[Seq[Ranking]] = {
@@ -487,8 +482,7 @@ object ContestResources extends Controller with ErrorHandler {
     for {
     // query the quotes for all symbols
       quotes <- QuoteResources.findQuotesBySymbols(allSymbols)
-
-      _ = tabular.transform(quotes) foreach (s => Logger.info(s))
+      //_ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes
       mapping = Map(quotes map (q => (q.symbol, q)): _*)
@@ -565,9 +559,10 @@ object ContestResources extends Controller with ErrorHandler {
       } yield lastTrade * p.quantity
     } sum
 
-    val totalEquity = p.fundsAvailable + investment
+    val marginFunds = p.marginAccount.map(_.depositedFunds).getOrElse(0.0d)
+    val totalEquity = p.fundsAvailable + investment + marginFunds
     val gainLoss_% = ((totalEquity - startingBalance) / startingBalance) * 100d
-    Ranking(p.name, p.facebookId, totalEquity, gainLoss_%)
+    Ranking(p.id, p.name, p.facebookId, totalEquity, gainLoss_%)
   }
 
   private def placeName(place: Int) = {

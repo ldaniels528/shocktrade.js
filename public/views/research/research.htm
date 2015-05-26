@@ -55,13 +55,13 @@
                     <div class="col-md-4 rs_label">Change (%)</div>
                     <div class="col-md-4 form-group-sm ">
                         <label for="changeMin">Min</label>
-                        <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in percentages">
+                        <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in changePercentages">
                             <option value="">ANY</option>
                         </select>
                     </div>
                     <div class="col-md-4 form-group-sm">
                         <label for="changeMax">Max</label>
-                        <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in percentages">
+                        <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in changePercentages">
                             <option value="">ANY</option>
                         </select>
                     </div>

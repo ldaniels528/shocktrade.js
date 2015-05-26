@@ -1,5 +1,6 @@
 package com.shocktrade.controllers
 
+import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.OrderTypes.{OrderType, _}
 import com.shocktrade.models.contest.PerkTypes.PerkType
@@ -7,7 +8,7 @@ import com.shocktrade.models.contest.PlayerRef
 import com.shocktrade.models.contest.PriceTypes.{PriceType, _}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json._
+import play.api.libs.json.{Reads, __}
 
 import scala.language.{implicitConversions, postfixOps}
 
@@ -85,7 +86,7 @@ object ContestResourceForms {
   case class MarginFundsForm(action: String, amount: Double)
 
   implicit val marginFundsFormReads: Reads[MarginFundsForm] = (
-    (__ \ "action").read[String] and
+    (__ \ "action" \ "action").read[String] and
       (__ \ "amount").read[Double])(MarginFundsForm.apply _)
 
   /**
@@ -103,7 +104,8 @@ object ContestResourceForms {
                        quantity: Int,
                        volumeAtOrderTime: Long,
                        emailNotify: Option[Boolean],
-                       partialFulfillment: Option[Boolean])
+                       partialFulfillment: Option[Boolean],
+                       accountType: AccountType)
 
   implicit val orderFormReads: Reads[OrderForm] = (
     (__ \ "symbol").read[String] and
@@ -116,7 +118,8 @@ object ContestResourceForms {
       (__ \ "quantity").read[Int] and
       (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").readNullable[Boolean] and
-      (__ \ "partialFulfillment").readNullable[Boolean])(OrderForm.apply _)
+      (__ \ "partialFulfillment").readNullable[Boolean] and
+      (__ \ "accountType").read[AccountType])(OrderForm.apply _)
 
   case class QuoteSnapshot(name: String, symbol: String, lastTrade: Double)
 
@@ -124,7 +127,5 @@ object ContestResourceForms {
     (__ \ "name").read[String] and
       (__ \ "symbol").read[String] and
       (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
-
-  case class Ranking(name: String, facebookID: String, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 
 }

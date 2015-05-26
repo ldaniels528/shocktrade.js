@@ -2,6 +2,7 @@ package com.shocktrade.server.trading
 
 import java.util.Date
 
+import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.ClosedOrder
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
@@ -20,14 +21,16 @@ case class WorkOrder(id: BSONObjectID,
                      orderType: OrderType,
                      price: Option[BigDecimal],
                      priceType: PriceType,
-                     quantity: Int,
+                     quantity: Long,
                      commission: BigDecimal,
                      emailNotify: Boolean,
                      partialFulfillment: Boolean,
-                     volumeAtOrderTime: Long) {
+                     volumeAtOrderTime: Long,
+                     accountType: AccountType) {
 
   def toClosedOrder(asOfDate: Date, message: String) = ClosedOrder(
     id = id,
+    accountType = accountType,
     symbol = symbol,
     exchange = exchange,
     orderTime = orderTime,

@@ -18,8 +18,7 @@
                             <span class="st_text_color" ng-click="showGamerCard(p.name)">{{ p.name }}</span>
                         </div>
                         <div>
-                            <span ng-show="p.facebookID === MySession.fbUserID" class="positive">$ {{ MySession.getFundsAvailable() | number:2 }}</span>
-                            <span ng-hide="p.facebookID === MySession.fbUserID" class="positive">$ {{ p.totalEquity | number:2 }}</span>
+                            <span class="positive">$ {{ p.totalEquity | number:2 }}</span>
                             <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
                                 <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}"></changearrow>
                                 <span ng-if="(p.gainLoss || 0) == 0" class="null">&#8212;</span>

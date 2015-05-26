@@ -25,12 +25,12 @@ case class Order(id: BSONObjectID = BSONObjectID.generate,
                  price: BigDecimal,
                  priceType: PriceType,
                  processedTime: Option[Date] = None,
-                 quantity: Int,
+                 quantity: Long,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
                  partialFulfillment: Boolean = false,
                  volumeAtOrderTime: Long,
-                 accountType: AccountType = AccountTypes.CASH) {
+                 accountType: AccountType) {
 
   def cost: BigDecimal = price * quantity + commission
 
@@ -52,7 +52,7 @@ object Order {
       (__ \ "price").read[BigDecimal] and
       (__ \ "priceType").read[PriceType] and
       (__ \ "processedTime").readNullable[Date] and
-      (__ \ "quantity").read[Int] and
+      (__ \ "quantity").read[Long] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "emailNotify").read[Boolean] and
       (__ \ "partialFulfillment").read[Boolean] and
@@ -69,7 +69,7 @@ object Order {
       (__ \ "price").write[BigDecimal] and
       (__ \ "priceType").write[PriceType] and
       (__ \ "processedTime").writeNullable[Date] and
-      (__ \ "quantity").write[Int] and
+      (__ \ "quantity").write[Long] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "emailNotify").write[Boolean] and
       (__ \ "partialFulfillment").write[Boolean] and
@@ -87,7 +87,7 @@ object Order {
       doc.getAs[BigDecimal]("price").get,
       doc.getAs[PriceType]("priceType").get,
       doc.getAs[Date]("processedTime"),
-      doc.getAs[Int]("quantity").get,
+      doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Boolean]("emailNotify").get,
       doc.getAs[Boolean]("partialFulfillment").getOrElse(false),

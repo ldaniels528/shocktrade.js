@@ -18,10 +18,10 @@ case class Position(id: BSONObjectID = BSONObjectID.generate,
                     symbol: String,
                     exchange: String,
                     pricePaid: BigDecimal,
-                    quantity: Int,
+                    quantity: Long,
                     commission: BigDecimal,
                     processedTime: Date,
-                    accountType: AccountType = AccountTypes.CASH) {
+                    accountType: AccountType) {
 
   /**
    * Returns the total cost of the position
@@ -42,7 +42,7 @@ object Position {
       (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
       (__ \ "pricePaid").read[BigDecimal] and
-      (__ \ "quantity").read[Int] and
+      (__ \ "quantity").read[Long] and
       (__ \ "commission").read[BigDecimal] and
       (__ \ "processedTime").read[Date] and
       (__ \ "accountType").read[AccountType])(Position.apply _)
@@ -52,7 +52,7 @@ object Position {
       (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
       (__ \ "pricePaid").write[BigDecimal] and
-      (__ \ "quantity").write[Int] and
+      (__ \ "quantity").write[Long] and
       (__ \ "commission").write[BigDecimal] and
       (__ \ "processedTime").write[Date] and
       (__ \ "accountType").write[AccountType])(unlift(Position.unapply))
@@ -63,7 +63,7 @@ object Position {
       doc.getAs[String]("symbol").get,
       doc.getAs[String]("exchange").get,
       doc.getAs[BigDecimal]("pricePaid").get,
-      doc.getAs[Int]("quantity").get,
+      doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Date]("processedTime").get,
       doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)

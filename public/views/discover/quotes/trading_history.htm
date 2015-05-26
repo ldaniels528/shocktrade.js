@@ -12,9 +12,10 @@
 <div ng-show="hasSelectedTradingHistory()">
     <div class="col-md-offset-3 col-md-3 header">Company</div>
     <div class="col-md-6">{{ q.name }}
-        <img class="clickable pull-right"
-             ng-click="selectTradingHistory(null)"
-             src="/assets/images/buttons/back-24.png">
+        <span ng-click="selectTradingHistory(null)" class="clickable pull-right">
+            <i class="fa fa-chevron-circle-left st_control"
+               title="Return to results"></i> Back
+        </span>
     </div>
 
     <div class="col-md-offset-3 col-md-3 header">Symbol</div>

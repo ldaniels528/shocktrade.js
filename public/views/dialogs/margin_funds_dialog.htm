@@ -1,20 +1,20 @@
 <script type="text/ng-template" id="margin_acct_dialog.htm">
     <div class="modal-header st_modal_header">
-        <h4>Margin Account: Funds Transfer</h4>
+        <h4>Margin Account</h4>
     </div>
     <div class="modal-body" ng-init="init()">
         <div class="row">
             <div class="col-md-5 bold">Margin Account Balance</div>
             <div class="col-md-7">$ {{ MySession.getMarginAccount().depositedFunds | number:2 }}</div>
 
-            <div class="col-md-5 bold">Funds Available for Deposit</div>
+            <div class="col-md-5 bold">Cash Available for Transfer</div>
             <div class="col-md-7">
                 <span class="st_green">$ {{ MySession.getFundsAvailable() | number:2 }}</span>
             </div>
 
             <div class="col-md-12 form-group" style="margin-top: 10px">
-                <label for="action">Action</label>
-                <select id="action" class="form-control" ng-model="form.action" ng-options="a for a in actions"></select>
+                <label for="action">Transfer Funds:</label>
+                <select id="action" class="form-control" ng-model="form.action" ng-options="a.label for a in actions"></select>
             </div>
 
             <div class="col-md-12 form-group">

@@ -2,6 +2,7 @@ package com.shocktrade.models.contest
 
 import java.util.Date
 
+import com.shocktrade.util.DateUtil
 import org.joda.time.DateTime
 import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
 import reactivemongo.bson.{BSONHandler, BSONString}
@@ -35,7 +36,7 @@ object OrderTerms extends Enumeration {
         case GOOD_FOR_60_DAYS => Some(60)
         case GOOD_UNTIL_CANCELED => None
       }
-      days_?.map(days => new DateTime().plusDays(days).toDate)
+      days_?.map(days => new DateTime().plusDays(days).toDate).map(DateUtil.getMidnightTime)
     }
 
   }
