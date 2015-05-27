@@ -53,18 +53,18 @@ case class Claim(symbol: String,
   )
 
   def toPositionIncrease(existingPos: Position) = {
-    // compute the adjusted quantity
+    val oldCost = existingPos.pricePaid * existingPos.quantity.toDouble
+    val newCost = price * quantity.toDouble
+    val totalCost = oldCost + newCost
     val totalQuantity = existingPos.quantity + quantity
-
-    // compute the adjusted price
-    val adjPrice = (price * quantity) + (existingPos.pricePaid * existingPos.quantity)
+    val newUnitPrice = totalCost / totalQuantity.toDouble
 
     // create the position
     Position(
       accountType = existingPos.accountType,
       symbol = symbol,
       exchange = exchange,
-      pricePaid = adjPrice,
+      pricePaid = newUnitPrice,
       quantity = totalQuantity,
       commission = commission,
       processedTime = purchaseTime
@@ -75,14 +75,12 @@ case class Claim(symbol: String,
     // compute the adjusted quantity
     val reducedQuantity = existingPos.quantity - quantity
 
-    // TODO perform a price adjustment?
-
     // create the position
     Position(
       accountType = existingPos.accountType,
       symbol = symbol,
       exchange = exchange,
-      pricePaid = price,
+      pricePaid = existingPos.pricePaid,
       quantity = reducedQuantity,
       commission = commission,
       processedTime = purchaseTime

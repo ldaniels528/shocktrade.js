@@ -4,6 +4,7 @@ import java.util.Date
 
 import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.ClosedOrder
+import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
 import reactivemongo.bson.BSONObjectID
@@ -17,7 +18,7 @@ case class WorkOrder(id: BSONObjectID,
                      symbol: String,
                      exchange: String,
                      orderTime: Date,
-                     expirationTime: Option[Date],
+                     orderTerm: OrderTerm,
                      orderType: OrderType,
                      price: Option[BigDecimal],
                      priceType: PriceType,
@@ -27,16 +28,18 @@ case class WorkOrder(id: BSONObjectID,
                      partialFulfillment: Boolean,
                      accountType: AccountType) {
 
+  def expirationTime: Option[Date] = orderTerm.toDate(orderTime)
+
   def toClosedOrder(asOfDate: Date, message: String) = ClosedOrder(
     id = id,
     accountType = accountType,
     symbol = symbol,
     exchange = exchange,
-    orderTime = orderTime,
-    expirationTime = expirationTime,
+    creationTime = orderTime,
+    orderTerm = orderTerm,
     processedTime = asOfDate,
     orderType = orderType,
-    price = price,
+    price = price getOrElse 0.00d,
     priceType = priceType,
     quantity = quantity,
     commission = commission,

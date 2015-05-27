@@ -3,6 +3,7 @@ package com.shocktrade.models.contest
 import java.util.Date
 
 import com.shocktrade.models.contest.AccountTypes._
+import com.shocktrade.models.contest.OrderTerms._
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
 import com.shocktrade.util.BSONHelper._
@@ -19,16 +20,22 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
 case class ClosedOrder(id: BSONObjectID = BSONObjectID.generate,
                        symbol: String,
                        exchange: String,
-                       orderTime: Date,
-                       expirationTime: Option[Date],
+                       creationTime: Date,
+                       orderTerm: OrderTerm,
                        processedTime: Date,
                        orderType: OrderType,
-                       price: Option[BigDecimal],
+                       price: BigDecimal,
                        priceType: PriceType,
                        quantity: Long,
                        commission: BigDecimal,
                        message: String,
-                       accountType: AccountType)
+                       accountType: AccountType) {
+
+  def cost: BigDecimal = price * quantity + commission
+
+  def expirationTime: Option[Date] = orderTerm.toDate(creationTime)
+
+}
 
 /**
  * Closed Order Singleton
@@ -40,11 +47,11 @@ object ClosedOrder {
     (__ \ "_id").read[BSONObjectID] and
       (__ \ "symbol").read[String] and
       (__ \ "exchange").read[String] and
-      (__ \ "orderTime").read[Date] and
-      (__ \ "expirationTime").readNullable[Date] and
+      (__ \ "creationTime").read[Date] and
+      (__ \ "orderTerm").read[OrderTerm] and
       (__ \ "processedTime").read[Date] and
       (__ \ "orderType").read[OrderType] and
-      (__ \ "price").readNullable[BigDecimal] and
+      (__ \ "price").read[BigDecimal] and
       (__ \ "priceType").read[PriceType] and
       (__ \ "quantity").read[Long] and
       (__ \ "commission").read[BigDecimal] and
@@ -55,11 +62,11 @@ object ClosedOrder {
     (__ \ "_id").write[BSONObjectID] and
       (__ \ "symbol").write[String] and
       (__ \ "exchange").write[String] and
-      (__ \ "orderTime").write[Date] and
-      (__ \ "expirationTime").writeNullable[Date] and
+      (__ \ "creationTime").write[Date] and
+      (__ \ "orderTerm").write[OrderTerm] and
       (__ \ "processedTime").write[Date] and
       (__ \ "orderType").write[OrderType] and
-      (__ \ "price").writeNullable[BigDecimal] and
+      (__ \ "price").write[BigDecimal] and
       (__ \ "priceType").write[PriceType] and
       (__ \ "quantity").write[Long] and
       (__ \ "commission").write[BigDecimal] and
@@ -71,16 +78,16 @@ object ClosedOrder {
       doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("symbol").get,
       doc.getAs[String]("exchange").get,
-      doc.getAs[Date]("orderTime").get,
-      doc.getAs[Date]("expirationTime"),
+      doc.getAs[Date]("creationTime").get,
+      doc.getAs[OrderTerm]("orderTerm").get,
       doc.getAs[Date]("processedTime").get,
       doc.getAs[OrderType]("orderType").get,
-      doc.getAs[BigDecimal]("price"),
+      doc.getAs[BigDecimal]("price").get,
       doc.getAs[PriceType]("priceType").get,
       doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[String]("message").get,
-      doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)
+      doc.getAs[AccountType]("accountType").get
     )
   }
 
@@ -89,8 +96,8 @@ object ClosedOrder {
       "_id" -> order.id,
       "symbol" -> order.symbol,
       "exchange" -> order.exchange,
-      "orderTime" -> order.orderTime,
-      "expirationTime" -> order.expirationTime,
+      "creationTime" -> order.creationTime,
+      "orderTerm" -> order.orderTerm,
       "processedTime" -> order.processedTime,
       "orderType" -> order.orderType,
       "price" -> order.price,

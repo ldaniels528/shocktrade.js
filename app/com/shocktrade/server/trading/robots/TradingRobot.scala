@@ -131,7 +131,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
         symbol = stock.symbol,
         exchange = exchange,
         creationTime = new DateTime().minusDays(4).toDate, // TODO remove this after testing
-        expirationTime = Some(new DateTime().plusDays(3).toDate),
+        orderTerm = OrderTerms.GOOD_FOR_3_DAYS,
         orderType = OrderTypes.BUY,
         price = price,
         priceType = priceType,

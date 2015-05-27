@@ -239,11 +239,10 @@ object ContestResources extends Controller with ErrorHandler {
       symbol = form.symbol,
       exchange = form.exchange,
       creationTime = if (playerId == "51a308ac50c70a97d375a6b2") new DateTime().minusDays(4).toDate else new Date(), // TODO for testing only
-      expirationTime = form.orderTerm.toDate,
+      orderTerm = form.orderTerm,
       orderType = form.orderType,
       price = form.limitPrice,
       priceType = form.priceType,
-      processedTime = None,
       quantity = form.quantity,
       commission = Commissions.getCommission(form.priceType, form.perks.getOrElse(Nil)),
       emailNotify = form.emailNotify,

@@ -15,6 +15,7 @@ object OrderTerms extends Enumeration {
   type OrderTerm = Value
 
   val GOOD_FOR_DAY = Value("GOOD_FOR_DAY")
+  val GOOD_FOR_3_DAYS = Value("GOOD_FOR_3_DAYS")
   val GOOD_FOR_7_DAYS = Value("GOOD_FOR_7_DAYS")
   val GOOD_FOR_14_DAYS = Value("GOOD_FOR_14_DAYS")
   val GOOD_FOR_30_DAYS = Value("GOOD_FOR_30_DAYS")
@@ -27,16 +28,17 @@ object OrderTerms extends Enumeration {
    */
   implicit class OrderTermExtensions(val orderTerm: OrderTerm) extends AnyVal {
 
-    def toDate: Option[Date] = {
+    def toDate(fromDate: Date = new Date): Option[Date] = {
       val days_? = orderTerm match {
         case GOOD_FOR_DAY => Some(1)
+        case GOOD_FOR_3_DAYS => Some(3)
         case GOOD_FOR_7_DAYS => Some(7)
         case GOOD_FOR_14_DAYS => Some(14)
         case GOOD_FOR_30_DAYS => Some(30)
         case GOOD_FOR_60_DAYS => Some(60)
         case GOOD_UNTIL_CANCELED => None
       }
-      days_?.map(days => new DateTime().plusDays(days).toDate).map(DateUtil.getMidnightTime)
+      days_?.map(days => new DateTime(fromDate).plusDays(days).toDate).map(DateUtil.getMidnightTime)
     }
 
   }

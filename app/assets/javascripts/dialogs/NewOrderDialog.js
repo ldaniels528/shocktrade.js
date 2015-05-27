@@ -58,7 +58,7 @@
                 emailNotify: true,
                 symbol: (params.symbol || "AAPL"),
                 quantity: params.quantity,
-                accountType: params.accountType
+                accountType: params.accountType ? params.accountType : "CASH"
             };
             $scope.messages = [];
             $scope.quote = {symbol: $scope.form.symbol};
@@ -115,9 +115,11 @@
                 $scope.messages = [];
 
                 // quantity must be numeric
-                if(form.quantity && angular.isString(form.quantity)) form.quantity = parseInt(form.quantity);
+                if (form.quantity && angular.isString(form.quantity)) form.quantity = parseInt(form.quantity);
 
                 // perform the validations
+                if (!form.accountType) $scope.messages.push("Please selected the account to use (Cash or Margin)");
+                if (form.accountType == 'MARGIN' && !MySession.hasMarginAccount()) $scope.messages.push("You do not have a Margin Account (must buy the Perk)");
                 if (!form.orderType) $scope.messages.push("No Order Type (BUY or SELL) specified");
                 if (!form.priceType) $scope.messages.push("No Pricing Method specified");
                 if (!form.orderTerm) $scope.messages.push("No Order Term specified");
@@ -152,13 +154,13 @@
             //          Initialization
             ///////////////////////////////////////////////////////////////////////////
 
-            (function() {
+            (function () {
                 // load the player's perks
                 PerksDialog.getMyPerks()
-                    .success(function(contest) {
+                    .success(function (contest) {
                         $scope.form.perks = contest.perks || [];
                     })
-                    .error(function() {
+                    .error(function () {
                         toaster.pop('error', 'Error retrieving perks', null)
                     })
             })();

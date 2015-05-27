@@ -8,20 +8,21 @@ import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
+import play.api.Logger
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands.{FindAndModify, LastError, Update}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 /**
  * Contest Data Access Object
  * @author lawrence.daniels@gmail.com
  */
 object ContestDAO {
-  private lazy val mc = db.collection[BSONCollection]("Contests")
+  private lazy implicit val mc = db.collection[BSONCollection]("Contests")
 
   /////////////////////////////////////////////////////////////////////////////////
   //        Contests
@@ -363,7 +364,7 @@ object ContestDAO {
   def increasePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     findPosition(c, claim, 0.0d) match {
       case Some(position) => increasePositionUpdate(c, claim, position, asOfDate)
-      case None => increasePositionCreate2(c, claim, asOfDate) map (_ => 1)
+      case None => increasePositionCreate(c, claim, asOfDate)
     }
   }
 
@@ -401,63 +402,9 @@ object ContestDAO {
           // create the order history record
           "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
       ),
-      upsert = false, multi = false) map (_.n)
-  }
-
-  private def increasePositionCreate2(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
-    val wo = claim.workOrder
-
-    // attempt to update the matching the record
-    performUpdate(
-      // find the matching the record
-      BS("_id" -> c.id) -> "Contest not found",
-      BS("participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> claim.cost)))) -> "Insufficient funds") {
-
-      BS(
-        // set the last update time
-        "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
-
-        // deduct funds
-        "$inc" -> BS("participants.$.fundsAvailable" -> -claim.cost),
-
-        // remove the order
-        "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id)),
-
-        "$addToSet" -> BS(
-          // create the new position
-          "participants.$.positions" -> claim.toPosition,
-
-          // create the order history record
-          "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
-      )
-    } andThen {
-      case Success(outcome) => outcome
-      case Failure(e) =>
-        failOrder(c, wo, e.getMessage, asOfDate)
-        throw new IllegalStateException(e)
-    }
-  }
-
-  private def performUpdate(comps: (BS, String)*)(update: BS)(implicit ec: ExecutionContext): Future[Seq[Int]] = {
-    // build the query document
-    val query = comps.foldLeft[BS](BS()) { case (obj, (e, msg)) => obj ++ e }
-
-    // attempt the update
-    for {
-      result <- mc.update(query, update, upsert = false, multi = false)
-      outcome <- if (result.n == 0) findFailedMatch(comps) else Future.successful(Seq(result.n))
-    } yield outcome
-  }
-
-  private def findFailedMatch(queryComps: Seq[(BS, String)])(implicit ec: ExecutionContext): Future[Seq[Int]] = {
-    Future.sequence {
-      queryComps.map { case (comp, message) =>
-        mc.find(comp, BS("_id" -> 1)).cursor[BS].headOption map {
-          case Some(rec) => 1
-          case None =>
-            throw new IllegalArgumentException(message)
-        }
-      }
+      upsert = false, multi = false) map { result =>
+      Logger.info(s"increasePositionCreate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
+      result.n
     }
   }
 
@@ -493,14 +440,15 @@ object ContestDAO {
 
         // add the new position (Phase 1) the order history records
         "$addToSet" -> BS(
-          "participants.$.positions_TEMP" -> increasedPos,
+          "participants.$.POSITIONS" -> increasedPos,
           "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))),
       upsert = false, multi = false) map { result =>
+      Logger.info(s"increasePositionUpdate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
+
       // if the update successful, perform phase 2 of the commit
-      if (result.n > 0) {
-        commitUpdatedPosition(c, wo, increasedPos)
-        result.n
-      }
+      commitUpdatedPosition(c, wo, increasedPos)
+
+      if (result.n > 0) result.n
       else throw new Exception(s"The position for ${claim.symbol} could not be updated (cost: ${claim.cost})")
     }
   }
@@ -543,11 +491,15 @@ object ContestDAO {
 
             // add the performance & order history records
             "$addToSet" -> BS(
-              "participants.$.positions_TEMP" -> reducedPosition,
+              "participants.$.POSITIONS" -> reducedPosition,
               "participants.$.performance" -> claim.toPerformance(existingPos),
               "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))),
           upsert = false, multi = false) map { result =>
+          Logger.info(s"reducePosition: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
+
+          // if the update successful, perform phase 2 of the commit
           commitUpdatedPosition(c, wo, reducedPosition)
+
           if (result.n > 0) result.n
           else
             throw new Exception(s"A qualifying position could not be found")
@@ -570,11 +522,9 @@ object ContestDAO {
    */
   private def commitUpdatedPosition(c: Contest, wo: WorkOrder, tmpPos: Position)(implicit ec: ExecutionContext) = {
     mc.update(
-      BS("_id" -> c.id,
-        "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId)),
-        "positions_TEMP" -> BS("$elemMatch" -> BS("_id" -> tmpPos.id))),
+      BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
 
-      BS("$pull" -> BS("participants.$.positions_TEMP" -> BS("_id" -> tmpPos.id))) ++
+      BS("$pull" -> BS("participants.$.POSITIONS" -> BS("_id" -> tmpPos.id))) ++
         (if (tmpPos.quantity > 0) BS("$addToSet" -> BS("participants.$.positions" -> tmpPos)) else BS()))
   }
 
@@ -586,7 +536,7 @@ object ContestDAO {
       symbol = o.symbol,
       exchange = o.exchange,
       orderTime = o.creationTime,
-      expirationTime = o.expirationTime,
+      orderTerm = o.orderTerm,
       orderType = o.orderType,
       price = Option(o.price),
       priceType = o.priceType,

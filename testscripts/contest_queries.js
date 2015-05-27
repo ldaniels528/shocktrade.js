@@ -1,3 +1,14 @@
+
+
+db.Contests.update(
+    {name:"Claiming Testing", "participants.name":"ldaniels"},
+    {
+        "$pull" : { "participants.$.positions_TEMP" : {} }
+    }
+);
+
+
+
 db.Contests.find({ "$or" : [ { "perksAllowed" : true }, { "perksAllowed" : { "$exists" : false } } ] }, { name : 1 } );
 
 db.Contests.find({ "perksAllowed" : true }, { name : 1 } );

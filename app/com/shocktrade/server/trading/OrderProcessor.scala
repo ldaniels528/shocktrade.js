@@ -5,7 +5,7 @@ import java.util.Date
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.ldaniels528.tabular.formatters.FormatHandler
-import com.shocktrade.models.contest.{Commissions, Contest, OrderTypes, PriceTypes}
+import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
@@ -134,7 +134,7 @@ object OrderProcessor {
           symbol = pos.symbol,
           exchange = pos.exchange,
           orderTime = asOfDate,
-          expirationTime = None,
+          orderTerm = OrderTerms.GOOD_FOR_DAY,
           orderType = OrderTypes.SELL,
           price = for {q <- quotes.get(pos.symbol); p <- q.lastTrade} yield p,
           priceType = PriceTypes.MARKET,
@@ -336,7 +336,7 @@ object OrderProcessor {
     stockQuotes
   }
 
-  private def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
+  private def isTradingActive(asOfDate: Date) = true // DateUtil.isTradingActive(asOfDate)
 
   private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 

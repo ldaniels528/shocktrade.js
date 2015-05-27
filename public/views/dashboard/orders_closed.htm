@@ -54,8 +54,12 @@
 			<div class="col-md-7">{{ selectedClosedOrder.orderType }}</div>
 		</div>
 		<div class="row">
+			<div class="col-md-5 bold">Order Term</div>
+			<div class="col-md-7">{{ selectedClosedOrder.orderTerm }}</div>
+		</div>
+		<div class="row">
 			<div class="col-md-5 bold">Creation Time</div>
-			<div class="col-md-7">{{ selectedClosedOrder.orderTime | duration }}</div>
+			<div class="col-md-7">{{ selectedClosedOrder.creationTime | duration }}</div>
 		</div>
 		<div class="row">
 			<div class="col-md-5 bold">Executed Time</div>

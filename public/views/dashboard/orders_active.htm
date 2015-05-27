@@ -55,13 +55,12 @@
             <div class="col-md-7">{{ selectedOrder.orderType }}</div>
         </div>
         <div class="row">
-            <div class="col-md-5 bold">Creation Time</div>
-            <div class="col-md-7">{{ selectedOrder.creationTime | duration }}</div>
+            <div class="col-md-5 bold">Order Term</div>
+            <div class="col-md-7">{{ selectedOrder.orderTerm }}</div>
         </div>
         <div class="row">
-            <div class="col-md-5 bold">Expiration Time</div>
-            <div ng-show="selectedOrder.expirationTime" class="col-md-7">{{ selectedOrder.expirationTime | duration }}</div>
-            <div ng-hide="selectedOrder.expirationTime" class="col-md-7">Until Canceled</div>
+            <div class="col-md-5 bold">Creation Time</div>
+            <div class="col-md-7">{{ selectedOrder.creationTime | duration }}</div>
         </div>
         <div class="row">
             <div class="col-md-5 bold">Exchange</div>

@@ -188,7 +188,7 @@
         /**
          * Returns the combined total funds for both the cash and margin accounts
          */
-        service.getCompleteFundsAvailable = function() {
+        service.getCompleteFundsAvailable = function () {
             return service.getFundsAvailable() + (service.getMarginAccount().depositedFunds || 0.00);
         };
 
@@ -202,6 +202,10 @@
                 $log.info("Deducting funds: " + amount + " from " + participant.fundsAvailable);
                 participant.fundsAvailable -= amount;
             }
+        };
+
+        service.hasMarginAccount = function () {
+            return service.getParticipant().marginAccount;
         };
 
         service.getMarginAccount = function () {
