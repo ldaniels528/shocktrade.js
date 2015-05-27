@@ -29,7 +29,6 @@ case class Order(id: BSONObjectID = BSONObjectID.generate,
                  commission: BigDecimal,
                  emailNotify: Boolean = false,
                  partialFulfillment: Boolean = false,
-                 volumeAtOrderTime: Long,
                  accountType: AccountType) {
 
   def cost: BigDecimal = price * quantity + commission
@@ -56,7 +55,6 @@ object Order {
       (__ \ "commission").read[BigDecimal] and
       (__ \ "emailNotify").read[Boolean] and
       (__ \ "partialFulfillment").read[Boolean] and
-      (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "accountType").read[AccountType])(Order.apply _)
 
   implicit val orderWrites: Writes[Order] = (
@@ -73,7 +71,6 @@ object Order {
       (__ \ "commission").write[BigDecimal] and
       (__ \ "emailNotify").write[Boolean] and
       (__ \ "partialFulfillment").write[Boolean] and
-      (__ \ "volumeAtOrderTime").write[Long] and
       (__ \ "accountType").write[AccountType])(unlift(Order.unapply))
 
   implicit object OrderReader extends BSONDocumentReader[Order] {
@@ -91,7 +88,6 @@ object Order {
       doc.getAs[BigDecimal]("commission").get,
       doc.getAs[Boolean]("emailNotify").get,
       doc.getAs[Boolean]("partialFulfillment").getOrElse(false),
-      doc.getAs[Long]("volumeAtOrderTime").get,
       doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)
     )
   }
@@ -111,7 +107,6 @@ object Order {
       "commission" -> order.commission,
       "emailNotify" -> order.emailNotify,
       "partialFulfillment" -> order.partialFulfillment,
-      "volumeAtOrderTime" -> order.volumeAtOrderTime,
       "accountType" -> order.accountType
     )
   }

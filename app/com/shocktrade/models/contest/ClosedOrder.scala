@@ -27,7 +27,6 @@ case class ClosedOrder(id: BSONObjectID = BSONObjectID.generate,
                        priceType: PriceType,
                        quantity: Long,
                        commission: BigDecimal,
-                       volumeAtOrderTime: Long,
                        message: String,
                        accountType: AccountType)
 
@@ -49,7 +48,6 @@ object ClosedOrder {
       (__ \ "priceType").read[PriceType] and
       (__ \ "quantity").read[Long] and
       (__ \ "commission").read[BigDecimal] and
-      (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "message").read[String] and
       (__ \ "accountType").read[AccountType])(ClosedOrder.apply _)
 
@@ -65,7 +63,6 @@ object ClosedOrder {
       (__ \ "priceType").write[PriceType] and
       (__ \ "quantity").write[Long] and
       (__ \ "commission").write[BigDecimal] and
-      (__ \ "volumeAtOrderTime").write[Long] and
       (__ \ "message").write[String] and
       (__ \ "accountType").write[AccountType])(unlift(ClosedOrder.unapply))
 
@@ -82,7 +79,6 @@ object ClosedOrder {
       doc.getAs[PriceType]("priceType").get,
       doc.getAs[Long]("quantity").get,
       doc.getAs[BigDecimal]("commission").get,
-      doc.getAs[Long]("volumeAtOrderTime").get,
       doc.getAs[String]("message").get,
       doc.getAs[AccountType]("accountType").getOrElse(AccountTypes.CASH)
     )
@@ -101,7 +97,6 @@ object ClosedOrder {
       "priceType" -> order.priceType,
       "quantity" -> order.quantity,
       "commission" -> order.commission,
-      "volumeAtOrderTime" -> order.volumeAtOrderTime,
       "message" -> order.message,
       "accountType" -> order.accountType
     )

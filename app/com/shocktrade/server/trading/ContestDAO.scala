@@ -592,7 +592,6 @@ object ContestDAO {
       priceType = o.priceType,
       quantity = o.quantity,
       commission = o.commission,
-      volumeAtOrderTime = o.volumeAtOrderTime,
       partialFulfillment = o.partialFulfillment,
       emailNotify = o.emailNotify
     )

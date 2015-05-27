@@ -97,7 +97,6 @@
                             $scope.form.symbol = quote.symbol;
                             $scope.form.limitPrice = quote.lastTrade;
                             $scope.form.exchange = quote.exchange;
-                            $scope.form.volumeAtOrderTime = quote.volume;
                         })
                         .error(function (err) {
                             $scope.messages.push("The order could not be processed (error code " + err.status + ")");

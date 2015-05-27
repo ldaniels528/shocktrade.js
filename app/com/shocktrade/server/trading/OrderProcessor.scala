@@ -141,8 +141,7 @@ object OrderProcessor {
           quantity = pos.quantity,
           commission = Commissions.getCommission(PriceTypes.MARKET),
           emailNotify = true,
-          partialFulfillment = false,
-          volumeAtOrderTime = 0
+          partialFulfillment = false
         )
 
         // create a fake claim

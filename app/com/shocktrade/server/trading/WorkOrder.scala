@@ -25,7 +25,6 @@ case class WorkOrder(id: BSONObjectID,
                      commission: BigDecimal,
                      emailNotify: Boolean,
                      partialFulfillment: Boolean,
-                     volumeAtOrderTime: Long,
                      accountType: AccountType) {
 
   def toClosedOrder(asOfDate: Date, message: String) = ClosedOrder(
@@ -41,7 +40,6 @@ case class WorkOrder(id: BSONObjectID,
     priceType = priceType,
     quantity = quantity,
     commission = commission,
-    volumeAtOrderTime = volumeAtOrderTime,
     message = message
   )
 

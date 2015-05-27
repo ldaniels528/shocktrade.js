@@ -136,8 +136,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
         price = price,
         priceType = priceType,
         quantity = quantity,
-        commission = Commissions.getCommission(priceType),
-        volumeAtOrderTime = volume)
+        commission = Commissions.getCommission(priceType))
     }
   }
 

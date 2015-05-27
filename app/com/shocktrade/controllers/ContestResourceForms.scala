@@ -102,7 +102,6 @@ object ContestResourceForms {
                        priceType: PriceType,
                        perks: Option[Seq[PerkType]],
                        quantity: Int,
-                       volumeAtOrderTime: Long,
                        emailNotify: Option[Boolean],
                        partialFulfillment: Option[Boolean],
                        accountType: AccountType)
@@ -116,7 +115,6 @@ object ContestResourceForms {
       (__ \ "priceType").read[PriceType] and
       (__ \ "perks").readNullable[Seq[PerkType]] and
       (__ \ "quantity").read[Int] and
-      (__ \ "volumeAtOrderTime").read[Long] and
       (__ \ "emailNotify").readNullable[Boolean] and
       (__ \ "partialFulfillment").readNullable[Boolean] and
       (__ \ "accountType").read[AccountType])(OrderForm.apply _)

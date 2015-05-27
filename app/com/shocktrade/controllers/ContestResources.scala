@@ -247,8 +247,7 @@ object ContestResources extends Controller with ErrorHandler {
       quantity = form.quantity,
       commission = Commissions.getCommission(form.priceType, form.perks.getOrElse(Nil)),
       emailNotify = form.emailNotify,
-      partialFulfillment = form.partialFulfillment,
-      volumeAtOrderTime = form.volumeAtOrderTime
+      partialFulfillment = form.partialFulfillment
     )
   }
 
