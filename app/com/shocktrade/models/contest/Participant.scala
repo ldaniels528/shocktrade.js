@@ -21,7 +21,7 @@ case class Participant(id: BSONObjectID = BSONObjectID.generate,
                        lastTradeTime: Option[Date] = None,
                        marginAccount: Option[MarginAccount] = None,
                        orders: List[Order] = Nil,
-                       orderHistory: List[ClosedOrder] = Nil,
+                       closedOrders: List[ClosedOrder] = Nil,
                        perks: List[PerkType] = Nil,
                        positions: List[Position] = Nil,
                        performance: List[Performance] = Nil)
@@ -40,7 +40,7 @@ object Participant {
       (__ \ "lastTradeTime").readNullable[Date] and
       (__ \ "marginAccount").readNullable[MarginAccount] and
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
-      (__ \ "orderHistory").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
+      (__ \ "closedOrders").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
       (__ \ "perks").read[List[PerkType]] and
       (__ \ "positions").readNullable[List[Position]].map(_.getOrElse(Nil)) and
       (__ \ "performance").readNullable[List[Performance]].map(_.getOrElse(Nil)))(Participant.apply _)
@@ -53,7 +53,7 @@ object Participant {
       (__ \ "lastTradeTime").writeNullable[Date] and
       (__ \ "marginAccount").writeNullable[MarginAccount] and
       (__ \ "orders").write[List[Order]] and
-      (__ \ "orderHistory").write[List[ClosedOrder]] and
+      (__ \ "closedOrders").write[List[ClosedOrder]] and
       (__ \ "perks").write[List[PerkType]] and
       (__ \ "positions").write[List[Position]] and
       (__ \ "performance").write[List[Performance]])(unlift(Participant.unapply))
@@ -67,7 +67,7 @@ object Participant {
       doc.getAs[Date]("lastTradeTime"),
       doc.getAs[MarginAccount]("marginAccount"),
       doc.getAs[List[Order]]("orders").getOrElse(Nil),
-      doc.getAs[List[ClosedOrder]]("orderHistory").getOrElse(Nil),
+      doc.getAs[List[ClosedOrder]]("closedOrders").getOrElse(Nil),
       doc.getAs[List[PerkType]]("perks").getOrElse(Nil),
       doc.getAs[List[Position]]("positions").getOrElse(Nil),
       doc.getAs[List[Performance]]("performance").getOrElse(Nil)
@@ -83,7 +83,7 @@ object Participant {
       "lastTradeTime" -> participant.lastTradeTime,
       "marginAccount" -> participant.marginAccount,
       "orders" -> participant.orders,
-      "orderHistory" -> participant.orderHistory,
+      "closedOrders" -> participant.closedOrders,
       "perks" -> participant.perks,
       "positions" -> participant.positions,
       "performance" -> participant.performance

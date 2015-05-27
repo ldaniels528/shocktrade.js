@@ -141,7 +141,8 @@ object OrderProcessor {
           quantity = pos.quantity,
           commission = Commissions.getCommission(PriceTypes.MARKET),
           emailNotify = true,
-          partialFulfillment = false
+          partialFulfillment = false,
+          marginAccount = participant.marginAccount
         )
 
         // create a fake claim
@@ -336,7 +337,7 @@ object OrderProcessor {
     stockQuotes
   }
 
-  private def isTradingActive(asOfDate: Date) = true // DateUtil.isTradingActive(asOfDate)
+  private def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)
 
   private def info(c: Contest, message: String) = Logger.info(s"${c.name}: $message")
 

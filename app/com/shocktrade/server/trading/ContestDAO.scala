@@ -206,7 +206,7 @@ object ContestDAO {
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> order.id)),
 
           // add the orders to the order history
-          "$addToSet" -> BS("participants.$.orderHistory" -> order.toClosedOrder(asOfDate, "Expired"))),
+          "$addToSet" -> BS("participants.$.closedOrders" -> order.toClosedOrder(asOfDate, "Expired"))),
         upsert = false, multi = false) map (_.n)
     }) map (_.sum)
   }
@@ -219,7 +219,7 @@ object ContestDAO {
         query = BS("_id" -> contestId, "participants._id" -> playerId),
         modify = new Update(BS(
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> orderId)),
-          "$addToSet" -> BS("participants.$.orderHistory" -> order)),
+          "$addToSet" -> BS("participants.$.closedOrders" -> order)),
           fetchNewObject = true),
         upsert = false))
     } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest]))
@@ -254,7 +254,7 @@ object ContestDAO {
         "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id)),
 
         // create the order history record
-        "$addToSet" -> BS("participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, message))),
+        "$addToSet" -> BS("participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, message))),
       upsert = false, multi = false) map (_.n)
   }
 
@@ -349,7 +349,7 @@ object ContestDAO {
       player <- contest.participants find (_.id == claim.workOrder.playerId)
 
       // is there an existing position?
-      position <- player.positions find (p => p.symbol == claim.symbol && p.quantity >= minimumQty)
+      position <- player.positions find (p => p.symbol == claim.symbol && p.quantity >= minimumQty && p.accountType == claim.workOrder.accountType)
     } yield position
   }
 
@@ -368,6 +368,28 @@ object ContestDAO {
     }
   }
 
+  private def fundingSource(wo: WorkOrder, amount: BigDecimal) = {
+    wo.accountType match {
+      case AccountTypes.CASH => BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> amount))
+      case AccountTypes.MARGIN =>
+        val initialMargin = wo.marginAccount.map(_.initialMargin).orDie("No margin account")
+        val cashPortion = amount * initialMargin
+        val marginPortion = amount * (1d - initialMargin)
+        BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> cashPortion), "marginAccount.depositedFunds" -> BS("$gte" -> marginPortion))
+    }
+  }
+
+  private def fundingTarget(wo: WorkOrder, amount: BigDecimal) = {
+    wo.accountType match {
+      case AccountTypes.CASH => BS("participants.$.fundsAvailable" -> -amount)
+      case AccountTypes.MARGIN =>
+        val initialMargin = wo.marginAccount.map(_.initialMargin).orDie("No margin account")
+        val cashPortion = amount * initialMargin
+        val marginPortion = amount * (1d - initialMargin)
+        BS("participants.$.fundsAvailable" -> cashPortion, "participants.$.marginAccount.depositedFunds" -> marginPortion)
+    }
+  }
+
   /**
    * Increases a position by creating a new position
    * @param c the given [[Contest contest]]
@@ -383,14 +405,14 @@ object ContestDAO {
     mc.update(
       // find the matching the record
       BS("_id" -> c.id,
-        "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> claim.cost)))),
+        "participants" -> BS("$elemMatch" -> fundingSource(wo, claim.cost))),
 
       BS(
         // set the last update time
         "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
 
         // deduct funds
-        "$inc" -> BS("participants.$.fundsAvailable" -> -claim.cost),
+        "$inc" -> fundingTarget(wo, -claim.cost),
 
         // remove the order
         "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id)),
@@ -400,7 +422,7 @@ object ContestDAO {
           "participants.$.positions" -> claim.toPosition,
 
           // create the order history record
-          "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))
+          "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
       ),
       upsert = false, multi = false) map { result =>
       Logger.info(s"increasePositionCreate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
@@ -425,7 +447,7 @@ object ContestDAO {
     mc.update(
       // find the matching the record
       BS("_id" -> c.id,
-        "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> claim.cost))),
+        "participants" -> BS("$elemMatch" -> fundingSource(wo, claim.cost)),
         "participants.positions" -> BS("$elemMatch" -> BS("_id" -> pos.id))),
 
       BS(
@@ -433,7 +455,7 @@ object ContestDAO {
         "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
 
         // deduct funds
-        "$inc" -> BS("participants.$.fundsAvailable" -> -claim.cost),
+        "$inc" -> fundingTarget(wo, -claim.cost),
 
         // remove the order and existing position
         "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id), "participants.$.positions" -> BS("_id" -> pos.id)),
@@ -441,7 +463,7 @@ object ContestDAO {
         // add the new position (Phase 1) the order history records
         "$addToSet" -> BS(
           "participants.$.POSITIONS" -> increasedPos,
-          "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))),
+          "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))),
       upsert = false, multi = false) map { result =>
       Logger.info(s"increasePositionUpdate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
 
@@ -482,7 +504,7 @@ object ContestDAO {
             "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
 
             // increase the funds
-            "$inc" -> BS("participants.$.fundsAvailable" -> claim.proceeds),
+            "$inc" -> fundingTarget(wo, claim.proceeds),
 
             // remove the order and existing position
             "$pull" -> BS(
@@ -493,7 +515,7 @@ object ContestDAO {
             "$addToSet" -> BS(
               "participants.$.POSITIONS" -> reducedPosition,
               "participants.$.performance" -> claim.toPerformance(existingPos),
-              "participants.$.orderHistory" -> wo.toClosedOrder(asOfDate, "Processed"))),
+              "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))),
           upsert = false, multi = false) map { result =>
           Logger.info(s"reducePosition: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
 
@@ -543,7 +565,8 @@ object ContestDAO {
       quantity = o.quantity,
       commission = o.commission,
       partialFulfillment = o.partialFulfillment,
-      emailNotify = o.emailNotify
+      emailNotify = o.emailNotify,
+      marginAccount = p.marginAccount
     )
   }
 

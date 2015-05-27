@@ -14,7 +14,7 @@ import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson._
 
 /**
- * Represents a stock purchase order
+ * Represents a stock order (buy or sell)
  * @author lawrence.daniels@gmail.com
  */
 case class Order(id: BSONObjectID = BSONObjectID.generate,

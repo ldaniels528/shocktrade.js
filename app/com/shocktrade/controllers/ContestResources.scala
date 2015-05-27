@@ -58,8 +58,8 @@ object ContestResources extends Controller with ErrorHandler {
    * @param orderId the given order ID
    */
   def cancelOrder(contestId: String, playerId: String, orderId: String) = Action.async {
-    // pull the order, add it to orderHistory, and return the participant
-    Contests.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)("participants.name", "participants.orders", "participants.orderHistory")
+    // pull the order, add it to closedOrders, and return the participant
+    Contests.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)("participants.name", "participants.orders", "participants.closedOrders")
       .map(_.orDie(s"Order $orderId could not be canceled"))
       .map(contest => Ok(Json.toJson(contest)))
       .recover { case e: Exception => Ok(createError(e)) }

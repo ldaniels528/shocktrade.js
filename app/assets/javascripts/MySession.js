@@ -226,8 +226,8 @@
             return service.getParticipant().orders;
         };
 
-        service.getOrderHistory = function () {
-            return service.getParticipant().orderHistory;
+        service.getClosedOrders = function () {
+            return service.getParticipant().closedOrders;
         };
 
         service.participantIsEmpty = function () {
@@ -311,9 +311,9 @@
                 }
 
                 // update the order history (if present)
-                if (participant.orderHistory) {
-                    $log.info(contest.name + ": Updating orderHistory for " + participant.name);
-                    myParticipant.orderHistory = participant.orderHistory;
+                if (participant.closedOrders) {
+                    $log.info(contest.name + ": Updating closed orders for " + participant.name);
+                    myParticipant.closedOrders = participant.closedOrders;
                 }
 
                 // update the perks (if present)

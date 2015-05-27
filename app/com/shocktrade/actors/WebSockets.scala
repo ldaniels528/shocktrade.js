@@ -95,7 +95,7 @@ object WebSockets {
       "data" -> JS(
         "type" -> "delta",
         "name" -> c.name, "_id" -> c.id,
-        "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "orders" -> p.orders, "orderHistory" -> p.orderHistory)))
+        "participants" -> JsArray(Seq(JS("_id" -> p.id, "name" -> p.name, "fundsAvailable" -> p.fundsAvailable, "orders" -> p.orders, "closedOrders" -> p.closedOrders)))
       ))
   }
 

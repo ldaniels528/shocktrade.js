@@ -3,10 +3,10 @@ package com.shocktrade.server.trading
 import java.util.Date
 
 import com.shocktrade.models.contest.AccountTypes._
-import com.shocktrade.models.contest.ClosedOrder
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
+import com.shocktrade.models.contest.{ClosedOrder, MarginAccount}
 import reactivemongo.bson.BSONObjectID
 
 /**
@@ -26,7 +26,8 @@ case class WorkOrder(id: BSONObjectID,
                      commission: BigDecimal,
                      emailNotify: Boolean,
                      partialFulfillment: Boolean,
-                     accountType: AccountType) {
+                     accountType: AccountType,
+                     marginAccount: Option[MarginAccount]) {
 
   def expirationTime: Option[Date] = orderTerm.toDate(orderTime)
 

@@ -133,14 +133,14 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.getClosedOrders = function () {
-                var closedOrders = MySession.getOrderHistory() || [];
+                var closedOrders = MySession.getClosedOrders() || [];
                 return closedOrders.filter(function(o) {
-                    return $scope.getClosedOrders.length && o.accountType === $scope.getAccountType();
+                    return o.accountType === $scope.getAccountType();
                 });
             };
 
             $scope.isClosedOrderSelected = function () {
-                return $scope.selectedClosedOrder != null;
+                return $scope.getClosedOrders().length && $scope.selectedClosedOrder != null;
             };
 
             $scope.selectClosedOrder = function (closeOrder) {

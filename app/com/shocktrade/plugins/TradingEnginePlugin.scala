@@ -17,14 +17,17 @@ class TradingEnginePlugin(app: Application) extends Plugin {
   override def onStart() = {
     Logger.info("Trading Engine Plugin starting...")
 
-    // TODO for now, only run it in DEV
-    if (Play.isDev(app)) {
+    // if production, start the Stock Quote Update and Trade Claiming processes
+    if (Play.isProd(app)) {
       // start the stock quote update process
       StockQuoteUpdateProcess.start()
 
       // start the trading engine
       Contests.start()
+    }
 
+    // if development, start the Trading Robots
+    if(Play.isDev(app)) {
       // start the trading robots
       TradingRobots.start()
     }

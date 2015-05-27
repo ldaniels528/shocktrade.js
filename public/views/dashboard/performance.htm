@@ -3,7 +3,7 @@
 	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Paid</div>
 	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Sold</div>
     <div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Gain/Loss</div>
-	<div class="col-md-2 bold left" ng-hide="isPerformanceSelected()">Executed Date</div>
+	<div class="col-md-2 bold left" ng-hide="isPerformanceSelected()">Executed</div>
 	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Shares</div>
 
 	<div class="col-md-7 bold" ng-show="isPerformanceSelected()">
@@ -40,7 +40,7 @@
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.pricePaid | quoteNumber }}</div>
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">$ {{ p.priceSold | quoteNumber }}</div>
             <div ng-hide="isPerformanceSelected()" class="col-md-2 right">
-                <span ng-class="gainLoss(p) < 0 ? 'negative' : ''">{{ gainLoss(p) | number:1 }}%</span>
+                <span ng-class="gainLoss(p) < 0 ? 'negative' : 'positive'">{{ gainLoss(p) | number:1 }}%</span>
             </div>
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 left">{{ p.soldDate | duration }}</div>
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.quantity | number }}</div>
@@ -50,10 +50,10 @@
 	<!-- Expanded Section -->
 	<div ng-if="isPerformanceSelected()" class="col-md-9">
 		<div class="col-md-4 bold">Purchased Date</div>
-		<div class="col-md-8">{{ selectedPerformance.purchasedDate | date:'MM/dd hh:mma' }}</div>
+		<div class="col-md-8">{{ selectedPerformance.purchasedDate | duration }}</div>
 
 		<div class="col-md-4 bold">Sold Date</div>
-		<div class="col-md-8">{{ selectedPerformance.soldDate | date:'MM/dd hh:mma' }}</div>
+		<div class="col-md-8">{{ selectedPerformance.soldDate | duration }}</div>
 
 		<div class="col-md-4 bold">Exchange</div>
 		<div class="col-md-8">
