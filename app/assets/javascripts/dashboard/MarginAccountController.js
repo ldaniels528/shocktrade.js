@@ -5,21 +5,28 @@
      * Margin Account Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MarginAccountController', ['$scope', '$log', 'toaster', 'MySession',
-        function ($scope, $log, toaster, MySession) {
-            
-            $scope.investmentValue = 15000.00;
+    app.controller('MarginAccountController', ['$scope', '$log', '$timeout', 'toaster', 'MySession', 'ContestService',
+        function ($scope, $log, $timeout, toaster, MySession, ContestService) {
 
-            $scope.actions = [{
-                label: "Deposit Funds",
-                value: "DEPOSIT"
-            }, {
-                label: "Withdraw Funds",
-                value: "WITHDRAW"
-            }];
+            var interestRate = 0.15;
+            var initialMargin = 0.50;
+            var maintenanceMargin = 0.25;
 
-            $scope.init = function () {
-                $log.info("margin = " + angular.toJson(MySession.getMarginAccount(), true));
+            var attemptsLeft = 3;
+            $scope.initMarginAccount = function () {
+                $scope.investmentMarketValue = $scope.getInvestmentCost();
+
+                // load the margin accounts market value
+                ContestService.getMarginMarketValue(MySession.getContestID(), MySession.getUserID())
+                    .success(function (contest) {
+                        $scope.investmentMarketValue = contest.marginMarketValue;
+                    })
+                    .error(function (err) {
+                        toaster.pop("error", "Failed to retrieve the Margin Account's market value", null);
+                        if(--attemptsLeft > 0) {
+                            $timeout($scope.initMarginAccount(), 15000);
+                        }
+                    })
             };
 
             $scope.getAsOfDate = function () {
@@ -27,43 +34,50 @@
             };
 
             $scope.getBuyingPower = function () {
-                return $scope.getDepositedFunds() / $scope.getInitialMargin();
+                return $scope.getCashFunds() / $scope.getInitialMargin();
             };
 
-            $scope.getDepositedFunds = function () {
-                return MySession.getMarginAccount().depositedFunds || 0;
+            $scope.getCashFunds = function () {
+                return MySession.getMarginAccount().cashFunds || 0;
             };
 
             $scope.getInterestRate = function () {
-                return MySession.getMarginAccount().interestRate;
+                return interestRate;
             };
 
             $scope.getInitialMargin = function () {
-                return MySession.getMarginAccount().initialMargin;
-            };
-
-            $scope.getCashInvestedAmount = function () {
-                return MySession.getMarginAccount().cashInvestedAmount || 0;
-            };
-
-            $scope.getInvestmentValue = function () {
-                return $scope.investmentValue;
+                return initialMargin;
             };
 
             $scope.getMaintenanceMargin = function () {
-                return MySession.getMarginAccount().maintenanceMargin;
+                return maintenanceMargin;
             };
 
-            $scope.getMarginFundsAvailable = function () {
-                return $scope.getBuyingPower() - $scope.getCashInvestedAmount();
+            $scope.getInvestmentCost = function () {
+                var positions = MySession.getPositions() || [];
+                var totalValue = 0.00;
+                angular.forEach(positions, function (p) {
+                    if (p.accountType === 'MARGIN') {
+                        totalValue += p.pricePaid * p.quantity;
+                    }
+                });
+                return totalValue;
             };
 
-            $scope.getNetMarginFundsAvailable = function () {
-                return $scope.getMarginFundsAvailable() - $scope.getMinimumDepositAmount();
+            $scope.getInvestmentMarketValue = function () {
+                return $scope.investmentMarketValue;
             };
 
-            $scope.getMinimumDepositAmount = function () {
-                return ($scope.getBuyingPower() - $scope.getMarginFundsAvailable()) * $scope.getMaintenanceMargin();
+            $scope.isAccountInGoodStanding = function () {
+                return $scope.getCashFunds() >= $scope.getMaintenanceMarginAmount();
+            };
+
+            $scope.getMaintenanceMarginAmount = function () {
+                return $scope.getInvestmentCost() * $scope.getMaintenanceMargin();
+            };
+
+            $scope.getMarginCallAmount = function() {
+                return $scope.getMaintenanceMarginAmount() - $scope.getCashFunds(); // TODO round to nearest penny
             };
 
         }]);

@@ -5,6 +5,7 @@ import java.util.Date
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import com.shocktrade.actors.ContestActor._
 import com.shocktrade.actors.WebSockets._
+import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest.{Contest, _}
 import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
@@ -48,9 +49,9 @@ object ContestActor {
 
   }
 
-  case class AdjustMarginAccountFunds(contestId: BSONObjectID, playerId: BSONObjectID, deltaAmount: Double) extends ContestAction {
+  case class TransferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
-      ContestDAO.adjustMarginAccountFunds(contestId, playerId, deltaAmount) onComplete {
+      ContestDAO.transferFundsBetweenAccounts(contestId, playerId, source, amount) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           for {
@@ -232,9 +233,9 @@ object ContestActor {
     }
   }
 
-  case class UpdateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestAction {
+  case class CreateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
-      ContestDAO.updateMarginAccount(contestId, playerId, account) onComplete {
+      ContestDAO.createMarginAccount(contestId, playerId, account) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           val outcome = for {

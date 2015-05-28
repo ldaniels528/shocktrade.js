@@ -20,6 +20,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json._
 import play.api.mvc._
+import play.modules.reactivemongo.json.BSONFormats._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -142,7 +143,7 @@ object ContestResources extends Controller with ErrorHandler {
 
       // update each participant
       updatedParticipants <- Future.sequence(contest.participants map { participant =>
-        UserProfiles.deductFunds(participant.id, -participant.fundsAvailable) map (_ orDie "Failed to refund game cash")
+        UserProfiles.deductFunds(participant.id, -participant.cashAccount.cashFunds) map (_ orDie "Failed to refund game cash")
       })
 
       // delete the contest
@@ -157,22 +158,19 @@ object ContestResources extends Controller with ErrorHandler {
   }
 
   def createMarginAccount(contestId: String, playerId: String) = Action.async {
-    Contests.updateMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount(depositedFunds = 0.0)) map {
+    Contests.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount()) map {
       case Some(contest) => Ok(Json.toJson(contest))
-      case None => Ok(JS("error" -> "Game not found"))
+      case None => Ok(JS("error" -> "Game or player not found"))
     } recover {
       case e: Exception => Ok(createError(e))
     }
   }
 
-  def adjustMarginAccountFunds(contestId: String, playerId: String) = Action.async { implicit request =>
-    Try(request.body.asJson.map(_.as[MarginFundsForm])) match {
+  def transferFundsBetweenAccounts(contestId: String, playerId: String) = Action.async { implicit request =>
+    Try(request.body.asJson.map(_.as[TransferFundsForm])) match {
       case Success(Some(form)) =>
-        // determine the amount to deposit/withdraw
-        val deltaAmount = if (form.action == "DEPOSIT") form.amount else -form.amount
-
         // perform the atomic update
-        Contests.updateMarginAccountFunds(contestId.toBSID, playerId.toBSID, deltaAmount) map {
+        Contests.transferFundsBetweenAccounts(contestId.toBSID, playerId.toBSID, form.source, form.amount) map {
           case Some(contest) => Ok(Json.toJson(contest))
           case None => Ok(JS("error" -> "Game or player not found"))
         } recover {
@@ -184,6 +182,32 @@ object ContestResources extends Controller with ErrorHandler {
       case Failure(e) =>
         Logger.error(s"adjustMarginAccountFunds: Internal server error -> json = ${request.body.asJson.orNull}", e)
         Future.successful(InternalServerError(e.getMessage))
+    }
+  }
+
+  def getMarginMarketValue(contestId: String, playerId: String) = Action.async {
+    val outcome = for {
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Game not found")
+      participant = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
+      positions = participant.positions.filter(_.accountType == AccountTypes.MARGIN)
+      marketValue <- computeMarketValue(positions)
+    } yield (contest, participant, marketValue)
+
+    outcome map { case (contest, participant, marketValue) =>
+      Ok(JS("name" -> contest.name, "_id" -> contest.id, "marginMarketValue" -> marketValue))
+    }
+  }
+
+  private def computeMarketValue(positions: Seq[Position]): Future[Double] = {
+    val symbols = positions.map(_.symbol).distinct
+    StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade", "close") map (_ flatMap (_.asOpt[MarketQuote])) map { quotes =>
+      val mapping = Map(quotes.map(q => (q.symbol, q)): _*)
+      (positions flatMap { pos =>
+        for {
+          quote <- mapping.get(pos.symbol)
+          value <- quote.lastTrade ?? quote.close ?? Option(pos.pricePaid.toDouble)
+        } yield value * pos.quantity
+      }).sum
     }
   }
 
@@ -206,7 +230,7 @@ object ContestResources extends Controller with ErrorHandler {
       perksAllowed = js.perksAllowed,
       robotsAllowed = js.robotsAllowed,
       messages = List(Message(sender = player, text = s"Welcome to ${js.name}")),
-      participants = List(Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = js.startingBalance))
+      participants = List(Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, cashAccount = CashAccount(cashFunds = js.startingBalance)))
     )
   }
 
@@ -347,7 +371,7 @@ object ContestResources extends Controller with ErrorHandler {
       case Success(Some(js)) =>
         (for {
           startingBalance <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
-          participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, fundsAvailable = startingBalance)
+          participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, CashAccount(cashFunds = startingBalance))
           userProfile <- UserProfiles.deductFunds(participant.id, startingBalance) map (_ orDie "Insufficient funds")
           contest <- Contests.joinContest(contestId.toBSID, participant)
         } yield (userProfile, contest)) map { case (userProfile, contest_?) =>
@@ -368,7 +392,7 @@ object ContestResources extends Controller with ErrorHandler {
     (for {
       c <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
       p = c.participants.find(_.id.stringify == playerId) orDie "Player not found"
-      u <- UserProfiles.deductFunds(playerId.toBSID, -p.fundsAvailable)
+      u <- UserProfiles.deductFunds(playerId.toBSID, -p.cashAccount.cashFunds)
       updatedContest <- Contests.quitContest(contestId.toBSID, playerId.toBSID)
     } yield (u, updatedContest)) map { case (profile_?, contest_?) =>
       profile_?.foreach(WebSockets ! UserProfileUpdated(_))
@@ -406,7 +430,7 @@ object ContestResources extends Controller with ErrorHandler {
 
     result map {
       case Some(participant) =>
-        Ok(JS("perks" -> participant.perks, "fundsAvailable" -> participant.fundsAvailable))
+        Ok(JS("perks" -> participant.perks, "fundsAvailable" -> participant.cashAccount.cashFunds))
       case None =>
         Ok(JS("error" -> "Perks could not be retrieved"))
     } recover {
@@ -441,7 +465,7 @@ object ContestResources extends Controller with ErrorHandler {
           // was a margin account purchased?
           margin_? <- {
             if (perkCodes.contains(PerkTypes.MARGIN))
-              Contests.updateMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount(depositedFunds = 0.00))
+              Contests.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount())
             else Future.successful(None)
           }
 
@@ -550,15 +574,23 @@ object ContestResources extends Controller with ErrorHandler {
   }
 
   private def asRanking(startingBalance: BigDecimal, mapping: Map[String, Quote], p: Participant) = {
-    val investment = p.positions flatMap { p =>
-      for {
-        quote <- mapping.get(p.symbol)
-        lastTrade <- quote.lastTrade
-      } yield lastTrade * p.quantity
-    } sum
 
-    val marginFunds = p.marginAccount.map(_.depositedFunds).getOrElse(0.0d)
-    val totalEquity = p.fundsAvailable + investment + marginFunds
+    def computeInvestment(positions: Seq[Position]) = {
+      positions flatMap { p =>
+        for {
+          quote <- mapping.get(p.symbol)
+          lastTrade <- quote.lastTrade ?? Some(p.pricePaid.toDouble)
+        } yield lastTrade * p.quantity
+      } sum
+    }
+
+    // compute the investment for all positions
+    val (cashPositions, marginPositions) = p.positions.partition(_.accountType == AccountTypes.CASH)
+    val investment = computeInvestment(cashPositions) + (computeInvestment(marginPositions) * MarginAccount.InitialMargin)
+
+    // add it all up and generate the ranking
+    val marginFunds = p.marginAccount.map(_.cashFunds).getOrElse(BigDecimal(0.0d))
+    val totalEquity = p.cashAccount.cashFunds + investment + marginFunds
     val gainLoss_% = ((totalEquity - startingBalance) / startingBalance) * 100d
     Ranking(p.id, p.name, p.facebookId, totalEquity, gainLoss_%)
   }

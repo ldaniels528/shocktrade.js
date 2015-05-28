@@ -8,6 +8,7 @@ import akka.routing.RoundRobinPool
 import akka.util.Timeout
 import com.shocktrade.actors.ContestActor
 import com.shocktrade.actors.ContestActor._
+import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.util.DateUtil._
@@ -74,6 +75,13 @@ object Contests {
     (contestActor(contest.id) ? CreateContest(contest)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[LastError]
+    }
+  }
+
+  def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? CreateMarginAccount(contestId, playerId, account)) map {
+      case e: Exception => throw new IllegalStateException(e)
+      case response => response.asInstanceOf[Option[Contest]]
     }
   }
 
@@ -193,15 +201,8 @@ object Contests {
     }
   }
 
-  def updateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? UpdateMarginAccount(contestId, playerId, account)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
-  }
-
-  def updateMarginAccountFunds(contestId: BSONObjectID, playerId: BSONObjectID, deltaAmount: Double)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? AdjustMarginAccountFunds(contestId, playerId, deltaAmount)) map {
+  def transferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double)(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? TransferFundsBetweenAccounts(contestId, playerId, source, amount)) map {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]
     }

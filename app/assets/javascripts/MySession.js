@@ -189,23 +189,27 @@
          * Returns the combined total funds for both the cash and margin accounts
          */
         service.getCompleteFundsAvailable = function () {
-            return service.getFundsAvailable() + (service.getMarginAccount().depositedFunds || 0.00);
+            return service.getFundsAvailable() + (service.getMarginAccount().cashFunds || 0.00);
         };
 
         service.getFundsAvailable = function () {
-            return service.getParticipant().fundsAvailable || 0.00;
+            return service.getCashAccount().cashFunds || 0.00;
         };
 
         service.deductFundsAvailable = function (amount) {
             var participant = service.getParticipant();
             if (participant) {
-                $log.info("Deducting funds: " + amount + " from " + participant.fundsAvailable);
-                participant.fundsAvailable -= amount;
+                $log.info("Deducting funds: " + amount + " from " + participant.cashAccount.cashFunds);
+                participant.cashAccount.cashFunds -= amount;
             }
         };
 
         service.hasMarginAccount = function () {
             return service.getParticipant().marginAccount;
+        };
+
+        service.getCashAccount = function () {
+            return service.getParticipant().cashAccount || {};
         };
 
         service.getMarginAccount = function () {
@@ -292,10 +296,10 @@
             // now lookup the contest's version of our participant
             var participant = lookupParticipant(contest);
             if (participant) {
-                // update funds available (if present)
-                if (participant.fundsAvailable !== undefined) {
-                    $log.info(contest.name + ": Updating fundsAvailable for " + participant.name);
-                    myParticipant.fundsAvailable = participant.fundsAvailable;
+                // update cash account (if present)
+                if (participant.cashAccount) {
+                    $log.info(contest.name + ": Updating cash account for " + participant.name);
+                    myParticipant.cashAccount = participant.cashAccount;
                 }
 
                 // update the margin account (if present)
@@ -316,6 +320,12 @@
                     myParticipant.closedOrders = participant.closedOrders;
                 }
 
+                // update the performance (if present)
+                if (participant.performance) {
+                    $log.info(contest.name + ": Updating performance for " + participant.name);
+                    myParticipant.performance = participant.performance;
+                }
+
                 // update the perks (if present)
                 if (participant.perks) {
                     $log.info(contest.name + ": Updating perks for " + participant.name);
@@ -326,12 +336,6 @@
                 if (participant.positions) {
                     $log.info(contest.name + ": Updating positions for " + participant.name);
                     myParticipant.positions = participant.positions;
-                }
-
-                // update the performance (if present)
-                if (participant.performance) {
-                    $log.info(contest.name + ": Updating performance for " + participant.name);
-                    myParticipant.performance = participant.performance;
                 }
             }
         }

@@ -1,9 +1,6 @@
 package com.shocktrade.models.contest
 
-import java.util.Date
-
 import com.shocktrade.models.contest.PerkTypes.PerkType
-import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{Reads, Writes, __}
@@ -17,8 +14,7 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter,
 case class Participant(id: BSONObjectID = BSONObjectID.generate,
                        name: String,
                        facebookId: String,
-                       fundsAvailable: BigDecimal,
-                       lastTradeTime: Option[Date] = None,
+                       cashAccount: CashAccount,
                        marginAccount: Option[MarginAccount] = None,
                        orders: List[Order] = Nil,
                        closedOrders: List[ClosedOrder] = Nil,
@@ -36,8 +32,7 @@ object Participant {
     (__ \ "_id").read[BSONObjectID] and
       (__ \ "name").read[String] and
       (__ \ "facebookID").read[String] and
-      (__ \ "fundsAvailable").read[BigDecimal] and
-      (__ \ "lastTradeTime").readNullable[Date] and
+      (__ \ "cashAccount").read[CashAccount] and
       (__ \ "marginAccount").readNullable[MarginAccount] and
       (__ \ "orders").readNullable[List[Order]].map(_.getOrElse(Nil)) and
       (__ \ "closedOrders").readNullable[List[ClosedOrder]].map(_.getOrElse(Nil)) and
@@ -49,8 +44,7 @@ object Participant {
     (__ \ "_id").write[BSONObjectID] and
       (__ \ "name").write[String] and
       (__ \ "facebookID").write[String] and
-      (__ \ "fundsAvailable").write[BigDecimal] and
-      (__ \ "lastTradeTime").writeNullable[Date] and
+      (__ \ "cashAccount").write[CashAccount] and
       (__ \ "marginAccount").writeNullable[MarginAccount] and
       (__ \ "orders").write[List[Order]] and
       (__ \ "closedOrders").write[List[ClosedOrder]] and
@@ -63,8 +57,7 @@ object Participant {
       doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("name").get,
       doc.getAs[String]("facebookID").get,
-      doc.getAs[BigDecimal]("fundsAvailable").get,
-      doc.getAs[Date]("lastTradeTime"),
+      doc.getAs[CashAccount]("cashAccount").get,
       doc.getAs[MarginAccount]("marginAccount"),
       doc.getAs[List[Order]]("orders").getOrElse(Nil),
       doc.getAs[List[ClosedOrder]]("closedOrders").getOrElse(Nil),
@@ -79,8 +72,7 @@ object Participant {
       "_id" -> participant.id,
       "name" -> participant.name,
       "facebookID" -> participant.facebookId,
-      "fundsAvailable" -> participant.fundsAvailable,
-      "lastTradeTime" -> participant.lastTradeTime,
+      "cashAccount" -> participant.cashAccount,
       "marginAccount" -> participant.marginAccount,
       "orders" -> participant.orders,
       "closedOrders" -> participant.closedOrders,

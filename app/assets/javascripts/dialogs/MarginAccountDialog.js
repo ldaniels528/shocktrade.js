@@ -56,15 +56,16 @@
             $scope.investedAmount = 0.00; // TODO get actual values for these
             $scope.investmentValue = 0.00;
             $scope.actions = [{
-                label: "Cash to Margin Account",
-                action: "DEPOSIT"
+                "label": "Cash to Margin Account",
+                "source": "CASH"
             }, {
-                label: "Margin Account to Cash",
-                action: "WITHDRAW"
+                "label": "Margin Account to Cash",
+                "source": "MARGIN"
             }];
 
             $scope.form = {
-                "depositedFunds": MySession.getMarginAccount().depositedFunds,
+                "cashFunds": MySession.getMarginAccount().cashFunds,
+                "initialMargin": MySession.getMarginAccount().initialMargin,
                 "fundsAvailable": MySession.getFundsAvailable(),
                 "action": null,
                 "amount": null
@@ -105,7 +106,7 @@
                 else if (form.action === 'DEPOSIT' && form.amount > form.fundsAvailable) {
                     $scope.messages.push("Insufficient funds in your cash account to complete the request")
                 }
-                else if (form.action === 'WITHDRAW' && form.amount > form.depositedFunds) {
+                else if (form.action === 'WITHDRAW' && form.amount > form.cashFunds) {
                     $scope.messages.push("Insufficient funds in your margin account to complete the request")
                 }
 

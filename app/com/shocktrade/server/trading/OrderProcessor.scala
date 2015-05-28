@@ -10,7 +10,7 @@ import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
 import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}
-import com.shocktrade.util.{DateUtil, ConcurrentCache}
+import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
 import play.api.Logger
 import reactivemongo.bson.BSONObjectID
@@ -38,22 +38,21 @@ object OrderProcessor {
     // perform the claiming process
     val results = {
       // if claiming has never occurred, serially execute each
-      if (c.processedTime.isEmpty) processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
+      if (c.processedTime.isEmpty) {
+        for {
+          claimsA <- processOrders(c, asOfDate, isDaysClose = false)
+          claimsB <- processOrders(c, asOfDate, isDaysClose = true)
+        } yield (claimsA ++ claimsB).distinct
+      }
 
       // was the last run while trading still active?
-      else if (c.processedTime.isEmpty || c.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
+      else if (c.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
 
       // if not, was there already an end-of-Trading Day-event?
       else if (c.lastMarketClose.isEmpty || c.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
 
       // otherwise nothing happens
       else Future.successful(Nil)
-
-      /*
-      for {
-        task1 <- processOrders(c, asOfDate, isDaysClose = false)
-        task2 <- processOrders(c, asOfDate, isDaysClose = true)
-      } yield task1 ++ task2*/
     }
 
     // gather the outcomes
@@ -165,7 +164,8 @@ object OrderProcessor {
 
   private def refundTheProceedsToParticipants(c: Contest)(implicit ec: ExecutionContext) = {
     Future.sequence(c.participants map { participant =>
-      UserProfiles.deductFunds(participant.id, -participant.fundsAvailable)
+      val totalCash = participant.cashAccount.cashFunds + participant.marginAccount.map(_.cashFunds).getOrElse(BigDecimal(0.0))
+      UserProfiles.deductFunds(participant.id, -totalCash)
     })
   }
 
@@ -238,12 +238,10 @@ object OrderProcessor {
   }
 
   private def getEligibleClaim(c: Contest, wo: WorkOrder, asOfDate: Date, quotes: Seq[WorkQuote]): Iterable[Claim] = {
-    def isOk(state: Boolean) = if (state) "Ok" else "Bad"
-
     // generate the list of potential claims
     val potentials = quotes.filter(_.symbol == wo.symbol).foldLeft[List[Claim]](Nil) { (list, q) =>
       // is it a valid claim?
-      val (isGoodTime, time) = isEligibleTime(c, wo, q)
+      val (isGoodTime, time) = isEligibleTime(c, wo, q, asOfDate)
       val (isGoodVolume, quantity) = isEligibleVolume(c, wo, q)
       val (isGoodPrice, price) = isEligiblePrice(c, wo, q)
 
@@ -253,7 +251,7 @@ object OrderProcessor {
         Claim(
           symbol = wo.symbol,
           exchange = wo.exchange,
-          price = q.price,
+          price = price,
           quantity = quantity,
           commission = wo.commission,
           purchaseTime = time,
@@ -269,8 +267,8 @@ object OrderProcessor {
     }
   }
 
-  private def isEligibleTime(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Date) = {
-    (wo.orderTime <= q.tradeDateTime, q.tradeDateTime)
+  private def isEligibleTime(c: Contest, wo: WorkOrder, q: WorkQuote, asOfDate: Date): (Boolean, Date) = {
+    (wo.orderTime <= q.tradeDateTime && (isTradingActive(asOfDate) || wo.priceType == PriceTypes.MARKET_ON_CLOSE), q.tradeDateTime)
   }
 
   private def isEligibleVolume(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Long) = {

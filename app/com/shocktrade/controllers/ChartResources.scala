@@ -110,7 +110,7 @@ object ChartResources extends Controller with MongoController {
       }
 
       // group the data
-      groupedData = ("Cash" -> participant.fundsAvailable.toDouble) :: posData.groupBy(fx).foldLeft[List[(String, Double)]](Nil) {
+      groupedData = ("Cash" -> participant.cashAccount.cashFunds.toDouble) :: posData.groupBy(fx).foldLeft[List[(String, Double)]](Nil) {
         case (list, (label, somePositions)) => (label, somePositions.map(_.value).sum) :: list
       }
 

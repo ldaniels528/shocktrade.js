@@ -11,54 +11,40 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
  * Represents a margin account
  * @author lawrence.daniels@gmail.com
  */
-case class MarginAccount(depositedFunds: Double,
-                         cashInvestedAmount: Double = 0.00,
-                         asOfDate: Date = new Date(),
-                         initialMargin: Double = 0.50,
-                         maintenanceMargin: Double = 0.30,
-                         interestRate: Double = 0.015)
+case class MarginAccount(cashFunds: BigDecimal = 0.00, borrowedFunds: BigDecimal = 0.00, asOfDate: Date = new Date())
 
 /**
  * Margin Account Singleton
  * @author lawrence.daniels@gmail.com
  */
 object MarginAccount {
+  val InitialMargin: BigDecimal = 0.50
+  val MaintenanceMargin: BigDecimal = 0.25
+  val InterestRate: BigDecimal = 0.015
 
   implicit val marginAccountReads: Reads[MarginAccount] = (
-    (__ \ "depositedFunds").read[Double] and
-      (__ \ "cashInvestedAmount").read[Double] and
-      (__ \ "asOfDate").read[Date] and
-      (__ \ "initialMargin").read[Double] and
-      (__ \ "maintenanceMargin").read[Double] and
-      (__ \ "interestRate").read[Double])(MarginAccount.apply _)
+    (__ \ "cashFunds").read[BigDecimal] and
+      (__ \ "borrowedFunds").read[BigDecimal] and
+      (__ \ "asOfDate").read[Date])(MarginAccount.apply _)
 
   implicit val marginAccountWrites: Writes[MarginAccount] = (
-    (__ \ "depositedFunds").write[Double] and
-      (__ \ "cashInvestedAmount").write[Double] and
-      (__ \ "asOfDate").write[Date] and
-      (__ \ "initialMargin").write[Double] and
-      (__ \ "maintenanceMargin").write[Double] and
-      (__ \ "interestRate").write[Double])(unlift(MarginAccount.unapply))
+    (__ \ "cashFunds").write[BigDecimal] and
+      (__ \ "borrowedFunds").write[BigDecimal] and
+      (__ \ "asOfDate").write[Date])(unlift(MarginAccount.unapply))
 
   implicit object MarginAccountReader extends BSONDocumentReader[MarginAccount] {
     def read(doc: BSONDocument) = MarginAccount(
-      doc.getAs[Double]("depositedFunds").get,
-      doc.getAs[Double]("cashInvestedAmount").get,
-      doc.getAs[Date]("asOfDate").get,
-      doc.getAs[Double]("initialMargin").get,
-      doc.getAs[Double]("maintenanceMargin").get,
-      doc.getAs[Double]("interestRate").get
+      doc.getAs[BigDecimal]("cashFunds").get,
+      doc.getAs[BigDecimal]("borrowedFunds").get,
+      doc.getAs[Date]("asOfDate").get
     )
   }
 
   implicit object MarginAccountWriter extends BSONDocumentWriter[MarginAccount] {
     def write(marginAccount: MarginAccount) = BSONDocument(
-      "depositedFunds" -> marginAccount.depositedFunds,
-      "cashInvestedAmount" -> marginAccount.cashInvestedAmount,
-      "asOfDate" -> marginAccount.asOfDate,
-      "initialMargin" -> marginAccount.initialMargin,
-      "maintenanceMargin" -> marginAccount.maintenanceMargin,
-      "interestRate" -> marginAccount.interestRate
+      "cashFunds" -> marginAccount.cashFunds,
+      "borrowedFunds" -> marginAccount.borrowedFunds,
+      "asOfDate" -> marginAccount.asOfDate
     )
   }
 

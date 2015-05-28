@@ -10,9 +10,9 @@
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold pull-right"
                 ng-click="marginAccountDialog()"
-                ng-hide="!isMarginAccount() || MySession.getContestStatus() === 'CLOSED' || !MySession.hasPerk('MARGIN')"
+                ng-hide="MySession.getContestStatus() === 'CLOSED' || !MySession.hasPerk('MARGIN')"
                 title="Use your margin account">
-            <i class="fa fa-sign-out"></i> Margin
+            <i class="fa fa-sign-out"></i> Transfers
         </button>
     </div>
     <div class="col-md-4">

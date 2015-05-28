@@ -159,6 +159,7 @@
                 // load my perks
                 PerksDialog.getMyPerks()
                     .success(function (response) {
+                        $log.info("loadPerks: response = " + angular.toJson(response));
                         myFunds = response.fundsAvailable;
                         myPerks = response.perks;
                         $scope.setupPerks();

@@ -66,8 +66,8 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 
               // compute the funds available (subtract what we already have on order)
               val totalBuyOrdersCost = participant.orders.map(_.cost).sum
-              val cashAvailable = participant.fundsAvailable - totalBuyOrdersCost
-              log.info(f"$name: I've got $$$cashAvailable%.2f to spend ($$${participant.fundsAvailable}%.2f cash and $$$totalBuyOrdersCost%.2f in orders)...")
+              val cashAvailable = participant.cashAccount.cashFunds - totalBuyOrdersCost
+              log.info(f"$name: I've got $$$cashAvailable%.2f to spend ($$${participant.cashAccount.cashFunds}%.2f cash and $$$totalBuyOrdersCost%.2f in orders)...")
               if (cashAvailable > 500) {
                 // let's filter the quotes retrieved for the strategy including the ones we've ordered or already own
                 val orderedSymbols = participant.orders.map(_.symbol)
@@ -113,7 +113,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       // if robots are allowed, and I have not already joined ...
       if (contest.robotsAllowed && !contest.participants.exists(_.id == u.id)) {
         log.info(s"$name: Joining '${contest.name}' ...")
-        Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, fundsAvailable = contest.startingBalance))
+        Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, cashAccount = CashAccount(cashFunds = contest.startingBalance)))
       }
     }
   }

@@ -4,6 +4,7 @@ import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.ProfileResources._
+import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
 import com.shocktrade.util.BSONHelper._
@@ -149,7 +150,7 @@ object ContestDAO {
   //        Margin Account
   /////////////////////////////////////////////////////////////////////////////////
 
-  def updateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+  def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     db.command(FindAndModify(
       collection = "Contests",
       query = BS("_id" -> contestId, "participants._id" -> playerId),
@@ -157,13 +158,23 @@ object ContestDAO {
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
-  def adjustMarginAccountFunds(contestId: BSONObjectID, playerId: BSONObjectID, deltaAmount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+  def transferFundsBetweenAccounts(contestId: BSONObjectID,
+                                   playerId: BSONObjectID,
+                                   source: AccountType,
+                                   amount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    val asOfDate = new Date()
+    val funds = if(source == AccountTypes.CASH) amount else -amount
+
     db.command(FindAndModify(
       collection = "Contests",
-      query = BS("_id" -> contestId, "participants._id" -> playerId),
+      query = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> fundingSource(playerId, source, amount))),
       modify = new Update(BS(
-        "$inc" -> BS("participants.$.fundsAvailable" -> -deltaAmount),
-        "$inc" -> BS("participants.$.marginAccount.depositedFunds" -> deltaAmount)), fetchNewObject = true),
+        "$set" -> BS(
+          "participants.$.cashAccount.asOfDate" -> asOfDate,
+          "participants.$.marginAccount.asOfDate" -> asOfDate),
+        "$inc" -> BS(
+          "participants.$.cashAccount.cashFunds" -> -funds,
+          "participants.$.marginAccount.cashFunds" -> funds)), fetchNewObject = true),
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
@@ -327,8 +338,12 @@ object ContestDAO {
    * @return a promise of an option of a contest
    */
   def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double)(implicit ec: ExecutionContext) = {
-    val q = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "fundsAvailable" -> BS("$gte" -> totalCost))))
-    val u = BS("$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)), "$inc" -> BS("participants.$.fundsAvailable" -> -totalCost))
+    val q = BS(
+      "_id" -> contestId,
+      "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> totalCost))))
+    val u = BS(
+      "$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)),
+      "$inc" -> BS("participants.$.cashAccount.cashFunds" -> -totalCost))
     db.command(FindAndModify("Contests", q, Update(u, fetchNewObject = true), upsert = false, sort = None)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
@@ -368,25 +383,30 @@ object ContestDAO {
     }
   }
 
-  private def fundingSource(wo: WorkOrder, amount: BigDecimal) = {
-    wo.accountType match {
-      case AccountTypes.CASH => BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> amount))
-      case AccountTypes.MARGIN =>
-        val initialMargin = wo.marginAccount.map(_.initialMargin).orDie("No margin account")
-        val cashPortion = amount * initialMargin
-        val marginPortion = amount * (1d - initialMargin)
-        BS("_id" -> wo.playerId, "fundsAvailable" -> BS("$gte" -> cashPortion), "marginAccount.depositedFunds" -> BS("$gte" -> marginPortion))
+  private def marginCashPortion(amount: BigDecimal) = amount * MarginAccount.InitialMargin
+
+  private def marginCreditPortion(amount: BigDecimal) = amount * (1d - MarginAccount.InitialMargin)
+
+  private def fundingSource(playerId: BSONObjectID, accountType: AccountType, amount: BigDecimal) = {
+    accountType match {
+      case AccountTypes.CASH => BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> amount))
+      case AccountTypes.MARGIN => BS("_id" -> playerId, "marginAccount.cashFunds" -> BS("$gte" -> marginCashPortion(amount)))
     }
   }
 
   private def fundingTarget(wo: WorkOrder, amount: BigDecimal) = {
     wo.accountType match {
-      case AccountTypes.CASH => BS("participants.$.fundsAvailable" -> -amount)
+      case AccountTypes.CASH => BS("participants.$.cashAccount.cashFunds" -> amount)
       case AccountTypes.MARGIN =>
-        val initialMargin = wo.marginAccount.map(_.initialMargin).orDie("No margin account")
-        val cashPortion = amount * initialMargin
-        val marginPortion = amount * (1d - initialMargin)
-        BS("participants.$.fundsAvailable" -> cashPortion, "participants.$.marginAccount.depositedFunds" -> marginPortion)
+        BS("participants.$.marginAccount.cashFunds" -> marginCashPortion(amount),
+          "participants.$.marginAccount.borrowedFunds" -> -marginCreditPortion(amount))
+    }
+  }
+
+  private def fundingAsOfDate(wo: WorkOrder, asOfDate: Date) = {
+    wo.accountType match {
+      case AccountTypes.CASH => BS("participants.$.cashAccount.asOfDate" -> asOfDate)
+      case AccountTypes.MARGIN => BS("participants.$.marginAccount.asOfDate" -> asOfDate)
     }
   }
 
@@ -399,17 +419,17 @@ object ContestDAO {
    * @return a promise of the number of positions updated
    */
   private def increasePositionCreate(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    // cache the work order
     val wo = claim.workOrder
 
     // attempt to update the matching the record
     mc.update(
       // find the matching the record
-      BS("_id" -> c.id,
-        "participants" -> BS("$elemMatch" -> fundingSource(wo, claim.cost))),
+      BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost))),
 
       BS(
-        // set the last update time
-        "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
+        // set the effective date
+        "$set" -> fundingAsOfDate(wo, asOfDate),
 
         // deduct funds
         "$inc" -> fundingTarget(wo, -claim.cost),
@@ -442,20 +462,25 @@ object ContestDAO {
     // create the increased position
     val increasedPos = claim.toPositionIncrease(pos)
 
-    // perform the update
+    // cache the work order
     val wo = claim.workOrder
+
+    // perform the update
     mc.update(
       // find the matching the record
       BS("_id" -> c.id,
-        "participants" -> BS("$elemMatch" -> fundingSource(wo, claim.cost)),
+        "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost)),
         "participants.positions" -> BS("$elemMatch" -> BS("_id" -> pos.id))),
 
       BS(
-        // set the last update time
-        "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
+        // set the effective date
+        "$set" -> fundingAsOfDate(wo, asOfDate),
 
         // deduct funds
         "$inc" -> fundingTarget(wo, -claim.cost),
+
+        // set the "As Of" date
+        "$set" -> fundingAsOfDate(wo, asOfDate),
 
         // remove the order and existing position
         "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id), "participants.$.positions" -> BS("_id" -> pos.id)),
@@ -463,7 +488,8 @@ object ContestDAO {
         // add the new position (Phase 1) the order history records
         "$addToSet" -> BS(
           "participants.$.POSITIONS" -> increasedPos,
-          "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))),
+          "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
+      ),
       upsert = false, multi = false) map { result =>
       Logger.info(s"increasePositionUpdate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
 
@@ -484,6 +510,9 @@ object ContestDAO {
    * @return a promise of the number of positions updated
    */
   def reducePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    // cache the work order
+    val wo = claim.workOrder
+
     // lookup the existing position
     findPosition(c, claim, claim.quantity) match {
       case Some(existingPos) =>
@@ -491,7 +520,6 @@ object ContestDAO {
         val reducedPosition = claim.toPositionDecrease(existingPos)
 
         // perform the atomic update
-        val wo = claim.workOrder
         mc.update(
           // find the matching the record
           BS("_id" -> c.id,
@@ -499,9 +527,9 @@ object ContestDAO {
             "participants.positions" -> BS("$elemMatch" -> BS("_id" -> existingPos.id,
               "symbol" -> claim.symbol, "quantity" -> BS("$gte" -> claim.quantity)))),
 
-          // set the last update time
           BS(
-            "$set" -> BS("lastUpdatedTime" -> new Date(), "participants.$.lastTradeTime" -> new Date()),
+            // set the effective date
+            "$set" -> fundingAsOfDate(wo, asOfDate),
 
             // increase the funds
             "$inc" -> fundingTarget(wo, claim.proceeds),
@@ -515,7 +543,8 @@ object ContestDAO {
             "$addToSet" -> BS(
               "participants.$.POSITIONS" -> reducedPosition,
               "participants.$.performance" -> claim.toPerformance(existingPos),
-              "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))),
+              "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
+          ),
           upsert = false, multi = false) map { result =>
           Logger.info(s"reducePosition: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
 
