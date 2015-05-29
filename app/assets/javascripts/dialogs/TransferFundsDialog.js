@@ -1,25 +1,25 @@
 /**
- * Margin Account Dialog Service and Controller
+ * Transfer Funds Dialog Service and Controller
  * @author lawrence.daniels@gmail.com
  */
 (function () {
     var app = angular.module('shocktrade');
 
     /**
-     * Margin Account Dialog Singleton
+     * Transfer Funds Dialog Singleton
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('MarginAccountDialog', function ($http, $log, $modal) {
+    app.factory('TransferFundsDialog', function ($http, $log, $modal) {
         var service = {};
 
         /**
-         * Margin Account pop-up dialog
+         * Transfer Funds pop-up dialog
          */
         service.popup = function (params) {
 
             var modalInstance = $modal.open({
-                templateUrl: 'margin_acct_dialog.htm',
-                controller: 'MarginAccountDialogController',
+                templateUrl: 'transfer_funds_dialog.htm',
+                controller: 'TransferFundsDialogController',
                 resolve: {
                     params: function () {
                         return params;
@@ -28,7 +28,7 @@
             });
 
             modalInstance.result.then(function (response) {
-                $log.info("MarginAccountDialog: response = " + angular.toJson(response));
+                $log.info("TransferFundsDialog: response = " + angular.toJson(response));
                 if (params.success) {
                     params.success(response);
                 }
@@ -38,7 +38,7 @@
             });
         };
 
-        service.adjustMarginFunds = function (contestId, playerId, form) {
+        service.transferFunds = function (contestId, playerId, form) {
             return $http.post("/api/contest/" + contestId + "/margin/" + playerId, form);
         };
 
@@ -46,20 +46,20 @@
     });
 
     /**
-     * Margin Account Dialog Controller
+     * Transfer Funds Dialog Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MarginAccountDialogController', ['$scope', '$log', '$modalInstance', 'MarginAccountDialog', 'MySession',
-        function ($scope, $log, $modalInstance, MarginAccountDialog, MySession) {
+    app.controller('TransferFundsDialogController', ['$scope', '$log', '$modalInstance', 'TransferFundsDialog', 'MySession',
+        function ($scope, $log, $modalInstance, TransferFundsDialog, MySession) {
 
             $scope.messages = [];
             $scope.investedAmount = 0.00; // TODO get actual values for these
             $scope.investmentValue = 0.00;
             $scope.actions = [{
-                "label": "Cash to Margin Account",
+                "label": "Cash to Transfer Funds",
                 "source": "CASH"
             }, {
-                "label": "Margin Account to Cash",
+                "label": "Transfer Funds to Cash",
                 "source": "MARGIN"
             }];
 
@@ -77,7 +77,7 @@
 
             $scope.accept = function (form) {
                 if (isValidated(form)) {
-                    MarginAccountDialog.adjustMarginFunds(MySession.getContestID(), MySession.getUserID(), form)
+                    TransferFundsDialog.transferFunds(MySession.getContestID(), MySession.getUserID(), form)
                         .success(function (response) {
                             $modalInstance.close(response);
                         })

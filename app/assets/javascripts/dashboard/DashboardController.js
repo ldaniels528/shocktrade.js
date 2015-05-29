@@ -5,8 +5,8 @@
      * Dashboard Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DashboardController', ['$scope', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MarginAccountDialog', 'MySession', 'PerksDialog',
-        function ($scope, $log, $routeParams, $timeout, toaster, ContestService, MarginAccountDialog, MySession, PerksDialog) {
+    app.controller('DashboardController', ['$scope', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'TransferFundsDialog', 'MySession', 'PerksDialog',
+        function ($scope, $log, $routeParams, $timeout, toaster, ContestService, TransferFundsDialog, MySession, PerksDialog) {
 
             var accountMode = false;
 
@@ -35,7 +35,7 @@
             /////////////////////////////////////////////////////////////////////
 
             $scope.marginAccountDialog = function () {
-                MarginAccountDialog.popup({
+                TransferFundsDialog.popup({
                     "success": function (contest) {
                         MySession.setContest(contest);
                     }
