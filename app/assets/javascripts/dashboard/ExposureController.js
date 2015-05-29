@@ -5,10 +5,11 @@
      * Exposure Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('ExposureController', ['$scope', '$http', '$log', '$timeout', 'toaster', 'GraphService',
-        function ($scope, $http, $log, $timeout, toaster, GraphService) {
+    app.controller('ExposureController', ['$scope', '$http', '$log', '$timeout', 'toaster', 'MySession',
+        function ($scope, $http, $log, $timeout, toaster, MySession) {
 
-            var cache = {};
+            $scope.chartData = [];
+            var colors = ["#00ff00", "#88ffff", "#8888ff", "#ff8000", "#88ffaa", "#ff88ff", "#ff8888"];
 
             // public variables
             $scope.exposures = [{
@@ -22,26 +23,48 @@
             }, {
                 "value": "securities", "label": "Securities Exposure"
             }];
-            $scope.exposure = $scope.exposures[1];
-            var lastExposure = null;
+            $scope.exposure = $scope.exposures[$scope.exposures.length - 1];
 
-            $scope.exposurePieChart = function (contest, exposure, userID, elemId) {
-                // define the mapping key
-                var key = exposure + "/" + contest.OID();
-
-                // graph a pie chart
-                if (!cache[key]) {
-                    cache[key] = true;
-
-                    lastExposure = exposure;
-                    $http.get("/api/charts/exposure/" + key + "/" + userID)
-                        .success(function (data) {
-                            GraphService.pieChart(800, 400, data, elemId);
-                        })
-                        .error(function (err) {
-                            $log.error("Failed to load exposure data")
-                        });
+            /**
+             * Initializes the view by displaying an initial chart
+             */
+            $scope.init = function () {
+                if(MySession.getUserID()) {
+                    $scope.exposurePieChart(MySession.getContest(), $scope.exposure.value, MySession.getUserID());
                 }
+                else {
+                    $timeout(function() {
+                        $scope.init();
+                    }, 1000);
+                }
+            };
+
+            $scope.exposurePieChart = function (contest, exposure, userID) {
+                $http.get("/api/charts/exposure/" + exposure + "/" + contest.OID() + "/" + userID)
+                    .success(function (data) {
+                        $scope.chartData = data;
+                    })
+                    .error(function (err) {
+                        $log.error("Failed to load " + exposure.label + " data")
+                    });
+            };
+
+            $scope.colorFunction = function() {
+                return function(d, i) {
+                    return colors[i % colors.length];
+                };
+            };
+
+            $scope.xFunction = function(){
+                return function(d) {
+                    return d.label;
+                };
+            };
+
+            $scope.yFunction = function(){
+                return function(d) {
+                    return d.value;
+                };
             };
 
         }]);

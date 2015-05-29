@@ -3,7 +3,7 @@
     /**
      * ShockTrade Angular.js Application
      */
-    var app = angular.module('shocktrade', ['ngAnimate', 'ngCookies', 'ngRoute', 'ngSanitize', 'toaster', 'ui.bootstrap']);
+    var app = angular.module('shocktrade', ['ngAnimate', 'ngCookies', 'ngRoute', 'ngSanitize', 'nvd3ChartDirectives', 'toaster', 'ui.bootstrap']);
 
     /**
      * Configure the application

@@ -49,6 +49,7 @@ libraryDependencies ++= Seq(
 // Web Jar dependencies
 libraryDependencies ++= Seq(
 	"org.webjars" % "angularjs" % "1.3.15",
+  "org.webjars" % "angularjs-nvd3-directives" % "0.0.7-1",
   "org.webjars" % "angularjs-toaster" % "0.4.8",
 //	"org.webjars" % "angular-file-upload" % "1.6.12",
 //	"org.webjars" % "angular-translate" % "2.3.0",
@@ -60,5 +61,6 @@ libraryDependencies ++= Seq(
   "org.webjars" % "jquery" % "2.1.3",
 //	"org.webjars" % "less" % "2.5.0",
 //  "org.webjars" % "textAngular" % "1.2.0",
+  "org.webjars" % "nvd3" % "1.1.15-beta-2",
   "org.webjars" %% "webjars-play" % "2.3.0-3"
 )
