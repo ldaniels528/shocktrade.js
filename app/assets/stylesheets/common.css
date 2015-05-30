@@ -96,6 +96,10 @@ legend {
 	font-size: 14pt;
 }
 
+.st_indent {
+	margin-left: 16px;
+}
+
 .st_sub_heading {
 	font-size: 12pt;
 }

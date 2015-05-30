@@ -1,0 +1,59 @@
+<div ng-if="!MySession.contestIsEmpty()">
+
+    <!-- Contest -->
+    <div>
+        <i class="fa fa-globe st_blue"></i>
+        <span class="st_blue bold">{{ MySession.getContest().name }}</span>
+    </div>
+
+    <div class="st_indent" ng-repeat="p in MySession.getContest().participants">
+        <!-- Participant -->
+        <i class="fa clickable st_orange bold" ng-class="p.expanded ? 'fa-minus-square' : 'fa-plus-square'" ng-click="expandPlayer(p)"></i>
+        <avatar id="{{ p.facebookID }}" class="avatar-16"></avatar> <span class="st_blue bold">{{ p.name }}</span>
+
+        <!-- Open Orders -->
+        <div ng-show="p.expanded" class="st_indent">
+            <i class="fa clickable st_orange bold" ng-class="p.myOpenOrders.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+               ng-click="expandItem(p.myOpenOrders)"></i> Open Orders
+
+            <div class="st_indent" ng-show="p.myOpenOrders.expanded" ng-repeat="o in p.orders">
+                {{ o.symbol }} @ {{ o.price | quoteNumber }} x {{ o.quantity | number }} [{{ o.accountType }}]
+            </div>
+        </div>
+
+        <!-- Closed Orders -->
+        <div ng-show="p.expanded" class="st_indent">
+            <i class="fa clickable st_orange bold" ng-class="p.myClosedOrders.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+               ng-click="expandItem(p.myClosedOrders)"></i> Closed Orders
+
+            <div class="st_indent" ng-show="p.myClosedOrders.expanded" ng-repeat="co in p.closedOrders">
+                {{ co.symbol }} @ {{ co.price | quoteNumber }} x {{ co.quantity | number }}
+            </div>
+        </div>
+
+        <!-- Positions -->
+        <div ng-show="p.expanded" class="st_indent">
+            <i class="fa clickable st_orange bold" ng-class="p.myPositions.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+               ng-click="expandItem(p.myPositions)"></i> Positions
+
+            <div class="st_indent" ng-show="p.myPositions.expanded" ng-repeat="ps in p.positions">
+                {{ ps.symbol }} @ {{ ps.pricePaid | quoteNumber }} x {{ ps.quantity | number }}
+            </div>
+        </div>
+
+        <!-- Performance -->
+        <div ng-show="p.expanded" class="st_indent">
+            <i class="fa clickable st_orange bold" ng-class="p.myPerformance.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+               ng-click="expandItem(p.myPerformance)"></i> Performance
+
+            <div class="st_indent" ng-show="p.myPerformance.expanded" ng-repeat="pf in p.performance">
+                {{ pf.symbol }} @ {{ pf.pricePaid | quoteNumber }} x {{ pf.quantity | number }}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div ng-show="MySession.contestIsEmpty()">
+    <span class="st_orange bold">No contest selected</span>
+</div>
