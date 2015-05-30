@@ -19,9 +19,9 @@ case class UserProfile(id: BSONObjectID = BSONObjectID.generate,
                        name: String,
                        facebookID: String,
                        email: Option[String] = None,
-                       netWorth: BigDecimal = 100000,
+                       netWorth: BigDecimal = 250000,
                        level: Int = 1,
-                       rep: Int = 1,
+                       admin: Option[Boolean] = None,
                        totalXP: Int = 0,
                        awards: List[String] = Nil,
                        favorites: List[String] = Nil,
@@ -43,7 +43,7 @@ object UserProfile {
       (__ \ "email").readNullable[String] and
       (__ \ "netWorth").read[BigDecimal] and
       (__ \ "level").read[Int] and
-      (__ \ "rep").read[Int] and
+      (__ \ "admin").readNullable[Boolean] and
       (__ \ "totalXP").read[Int] and
       (__ \ "awards").read[List[String]] and
       (__ \ "favorites").read[List[String]] and
@@ -59,7 +59,7 @@ object UserProfile {
       (__ \ "email").writeNullable[String] and
       (__ \ "netWorth").write[BigDecimal] and
       (__ \ "level").write[Int] and
-      (__ \ "rep").write[Int] and
+      (__ \ "admin").writeNullable[Boolean] and
       (__ \ "totalXP").write[Int] and
       (__ \ "awards").write[List[String]] and
       (__ \ "favorites").write[List[String]] and
@@ -76,7 +76,7 @@ object UserProfile {
       doc.getAs[String]("email"),
       doc.getAs[BigDecimal]("netWorth").get,
       doc.getAs[Int]("level").getOrElse(1),
-      doc.getAs[Int]("rep").getOrElse(1),
+      doc.getAs[Boolean]("admin"),
       doc.getAs[Int]("totalXP").getOrElse(0),
       doc.getAs[List[String]]("awards").getOrElse(Nil),
       doc.getAs[List[String]]("favorites").getOrElse(Nil),
@@ -100,7 +100,7 @@ object UserProfile {
       "email" -> userProfile.email,
       "netWorth" -> userProfile.netWorth,
       "level" -> userProfile.level,
-      "rep" -> userProfile.rep,
+      "admin" -> userProfile.admin,
       "totalXP" -> userProfile.totalXP,
       "awards" -> userProfile.awards,
       "favorites" -> userProfile.favorites,
