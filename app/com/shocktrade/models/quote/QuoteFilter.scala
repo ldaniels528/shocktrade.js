@@ -1,5 +1,6 @@
 package com.shocktrade.models.quote
 
+import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS, _}
@@ -23,7 +24,7 @@ case class QuoteFilter(changeMin: Option[Double] = None,
                        maxResults: Option[Int] = None) {
 
   def makeQuery = {
-    var js = JS("active" -> true)
+    var js = JS("active" -> true, "tradeDateTime" -> JS("$gte" -> new DateTime().minusDays(3)))
     changeMin.foreach(v => js = js ++ JS("changePct" -> JS("$gte" -> v)))
     changeMax.foreach(v => js = js ++ JS("changePct" -> JS("$lte" -> v)))
     marketCapMin.foreach(v => js = js ++ JS("marketCap" -> JS("$gte" -> v)))

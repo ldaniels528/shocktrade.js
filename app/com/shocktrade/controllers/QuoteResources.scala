@@ -1,6 +1,8 @@
 package com.shocktrade.controllers
 
+import com.ldaniels528.commons.helpers.StringHelper._
 import java.util.Date
+import play.api.Logger
 import reactivemongo.core.commands._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
@@ -355,12 +357,17 @@ object QuoteResources extends Controller with MongoController with ProfileFilter
     val endDate = new Date()
     val startDate = new DateTime(endDate).plusDays(-45).toDate
 
+    // normalize the ticker
+    val ticker = symbol.lastIndexOptionOf(".") map(index => symbol.substring(0, index)) getOrElse symbol
+    if(ticker != symbol) {
+      Logger.info(s"getTradingHistory: using '$ticker' instead of '$symbol'")
+    }
+
     // get the trading history
-    val tradingHistory = GoogleFinanceTradingHistoryService.getTradingHistory(symbol, startDate, endDate)
+    val tradingHistory = GoogleFinanceTradingHistoryService.getTradingHistory(ticker, startDate, endDate).take(30)
 
     // convert to historical quotes (in JSON)
-    val quotes = transformHistoricalQuotes(tradingHistory)
-    Ok(JsArray(quotes.take(30)))
+    Ok(JsArray(transformHistoricalQuotes(tradingHistory)))
   }
 
   /**
