@@ -244,6 +244,10 @@ object ContestActor {
           } yield (c, p)
 
           outcome.foreach { case (c, p) => WebSockets ! ParticipantUpdated(c, p) }
+  case class UpdateProcessingHost(contestId: BSONObjectID, host: Option[String]) extends ContestAction {
+    override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
+      ContestDAO.updateProcessingHost(contestId, host) onComplete {
+        case Success(lastError) => mySender ! lastError
         case Failure(e) => mySender ! e
       }
     }

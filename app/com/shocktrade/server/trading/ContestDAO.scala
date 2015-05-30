@@ -125,6 +125,15 @@ object ContestDAO {
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
+  def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit ec: ExecutionContext): Future[LastError] = {
+    Logger.info(s"host = $host")
+    mc.update(
+      selector = BS("_id" -> contestId),
+      update = host.map(name => BS("$set" -> BS("processingHost" -> name))) getOrElse BS("$unset" -> BS("processingHost" -> "")),
+      writeConcern = GetLastError(),
+      upsert = false, multi = false)
+  }
+
   private def createQuery(so: SearchOptions) = {
     var q = BS()
     so.activeOnly.foreach { isSet =>

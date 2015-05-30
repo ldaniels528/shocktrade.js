@@ -414,6 +414,11 @@ object ContestResources extends Controller with ErrorHandler {
     }
   }
 
+  def updateProcessingHost(contestId: String) = Action.async { implicit request =>
+    val host = request.body.asJson flatMap (js => (js \ "host").asOpt[String])
+    Contests.updateProcessingHost(contestId.toBSID, host) map (_ => Ok(JS()))
+  }
+
   def getAvailablePerks(contestId: String) = Action.async {
     Contests.findAvailablePerks(contestId.toBSID) map (perks => Ok(Json.toJson(perks)))
   }
