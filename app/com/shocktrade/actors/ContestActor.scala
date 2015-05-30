@@ -49,30 +49,12 @@ object ContestActor {
 
   }
 
-  case class TransferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double) extends ContestAction {
+  case class ApplyMarginInterest(contest: Contest, asOfDate: Date) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
-      ContestDAO.transferFundsBetweenAccounts(contestId, playerId, source, amount) onComplete {
+      ContestDAO.applyMarginInterest(contest, asOfDate) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          for {
-            c <- contest_?
-            p <- c.participants.find(_.id == playerId)
-          } {
-            WebSockets ! ParticipantUpdated(c, p)
-          }
-        case Failure(e) => mySender ! e
-      }
-    }
-  }
-
-  case class CloseOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestAction {
-    override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
-      ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          for (c <- contest_?; p <- c.participants.find(_.id == playerId)) {
-            WebSockets ! OrdersUpdated(c, p)
-          }
+          contest_?.foreach { WebSockets ! ContestUpdated(_)}
         case Failure(e) => mySender ! e
       }
     }
@@ -89,12 +71,41 @@ object ContestActor {
     }
   }
 
+  case class CreateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestAction {
+    override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
+      ContestDAO.createMarginAccount(contestId, playerId, account) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          val outcome = for {
+            c <- contest_?
+            p <- c.participants.find(_.id == playerId)
+          } yield (c, p)
+
+          outcome.foreach { case (c, p) => WebSockets ! ParticipantUpdated(c, p) }
+        case Failure(e) => mySender ! e
+      }
+    }
+  }
+
   case class CreateMessage(contestId: BSONObjectID, message: Message, fields: Seq[String]) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.createMessage(contestId, message) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach(WebSockets ! MessagesUpdated(_))
+        case Failure(e) => mySender ! e
+      }
+    }
+  }
+
+  case class CloseOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestAction {
+    override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
+      ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
+        case Success(contest_?) =>
+          mySender ! contest_?
+          for (c <- contest_?; p <- c.participants.find(_.id == playerId)) {
+            WebSockets ! OrdersUpdated(c, p)
+          }
         case Failure(e) => mySender ! e
       }
     }
@@ -233,17 +244,22 @@ object ContestActor {
     }
   }
 
-  case class CreateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestAction {
+  case class TransferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
-      ContestDAO.createMarginAccount(contestId, playerId, account) onComplete {
+      ContestDAO.transferFundsBetweenAccounts(contestId, playerId, source, amount) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          val outcome = for {
+          for {
             c <- contest_?
             p <- c.participants.find(_.id == playerId)
-          } yield (c, p)
+          } {
+            WebSockets ! ParticipantUpdated(c, p)
+          }
+        case Failure(e) => mySender ! e
+      }
+    }
+  }
 
-          outcome.foreach { case (c, p) => WebSockets ! ParticipantUpdated(c, p) }
   case class UpdateProcessingHost(contestId: BSONObjectID, host: Option[String]) extends ContestAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.updateProcessingHost(contestId, host) onComplete {
