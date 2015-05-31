@@ -17,7 +17,7 @@ import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
 import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS}
+import reactivemongo.bson.{BSONArray, BSONDocument => BS}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -156,7 +156,19 @@ object StockQuotes {
   }
 
   def getSymbolsForCsvUpdate(implicit ec: ExecutionContext): Future[Seq[BS]] = {
-    mcQBS.find(BS("active" -> true, "yfDynLastUpdated" -> BS("$lte" -> new DateTime().minusMinutes(15))), BS("symbol" -> 1))
+    mcQBS.find(BS("active" -> true, "$or" -> BSONArray(Seq(
+      BS("yfDynLastUpdated" -> BS("$exists" -> false)),
+      BS("yfDynLastUpdated" -> BS("$lte" -> new DateTime().minusMinutes(15)))
+    ))), BS("symbol" -> 1))
+      .cursor[BS]
+      .collect[Seq]()
+  }
+
+  def getSymbolsForKeyStatisticsUpdate(implicit ec: ExecutionContext): Future[Seq[BS]] = {
+    mcQBS.find(BS("active" -> true, "$or" -> BSONArray(Seq(
+      BS("yfKeyStatsLastUpdated" -> BS("$exists" -> false)),
+      BS("yfKeyStatsLastUpdated" -> BS("$lte" -> new DateTime().minusDays(2)))
+    ))), BS("symbol" -> 1))
       .cursor[BS]
       .collect[Seq]()
   }

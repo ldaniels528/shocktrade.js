@@ -7,9 +7,9 @@
 	</div>
 	<div class="col-md-4">
 		<span class="qm_header">Change / %</span>
-		<span ng-if="q.change" class="plain pull-right">
+		<span ng-if="q.change !== null && q.change !== undefined" class="plain pull-right">
 			<span ng-class="q.change < 0 ? 'negative' : ''">{{ q.change | quoteNumber }}</span>
-			<changeArrow value="{{ q.changePct }}" />
+			<changeArrow value="{{ q.changePct }}"></changeArrow>
 			<span ng-class="q.change < 0 ? 'negative' : 'positive'">{{ q.changePct | quoteChange }}%</span>
 		</span>
 	</div>
@@ -44,7 +44,7 @@
 <div class="row">
 	<div class="col-md-4">
         <span class="qm_header">Volume</span>
-	    <span class="qm_detail pull-right">{{ q.volume | number | bigNumber }}</span>
+	    <span class="qm_detail pull-right">{{ q.volume | number }}</span>
     </div>
 
 	<div class="col-md-4">
@@ -63,7 +63,7 @@
 <div class="row">
 	<div class="col-md-4">
         <span class="qm_header">Avg Vol</span> <span class="small">(10-day)</span>
-	    <span class="qm_detail pull-right">{{ q.avgVolume10Day | number | bigNumber }}</span>
+	    <span class="qm_detail pull-right">{{ q.avgVolume10Day | number }}</span>
     </div>
 
 	<div class="col-md-4">
@@ -82,7 +82,7 @@
 <div class="row">
 	<div class="col-md-4">
         <span class="qm_header">Market Cap</span>
-	    <span class="qm_detail pull-right">{{ q.marketCap | number | bigNumber }}</span>
+	    <span class="qm_detail pull-right">{{ q.marketCap | number }}</span>
     </div>
 
 	<div class="col-md-4">

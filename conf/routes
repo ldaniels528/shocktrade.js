@@ -112,6 +112,8 @@ DELETE        /api/updates                                          com.shocktra
 GET           /api/session/list                                     com.shocktrade.controllers.SessionsResources.getSessions
 
 # Trading
+GET           /api/tradingProcess/quotes                            com.shocktrade.controllers.TradingResources.startStockQuoteUpdate
+GET           /api/tradingProcess/keystats                          com.shocktrade.controllers.TradingResources.startKeyStatisticsUpdate
 GET           /api/tradingClock/status/:lastUpdate                  com.shocktrade.controllers.TradingResources.status(lastUpdate: Long)
 GET           /api/tradingClock/delayUntilStart                     com.shocktrade.controllers.TradingResources.delayUntilTradingStart
 

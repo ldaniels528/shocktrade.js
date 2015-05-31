@@ -24,7 +24,14 @@ case class QuoteFilter(changeMin: Option[Double] = None,
                        maxResults: Option[Int] = None) {
 
   def makeQuery = {
-    var js = JS("active" -> true, "tradeDateTime" -> JS("$gte" -> new DateTime().minusDays(3)))
+    val tenDaysAgo = new DateTime().minusDays(10)
+
+    // start with active stocks whose last trade date was updated in the last 10 days
+    var js = JS("active" -> true /*, "$or" -> JsArray(Seq(
+      JS("tradeDate" -> JS("$gte" -> tenDaysAgo)),
+      JS("tradeDateTime" -> JS("$gte" -> tenDaysAgo))
+    ))*/)
+
     changeMin.foreach(v => js = js ++ JS("changePct" -> JS("$gte" -> v)))
     changeMax.foreach(v => js = js ++ JS("changePct" -> JS("$lte" -> v)))
     marketCapMin.foreach(v => js = js ++ JS("marketCap" -> JS("$gte" -> v)))
@@ -47,8 +54,7 @@ case class QuoteFilter(changeMin: Option[Double] = None,
  */
 object QuoteFilter {
 
-
-  implicit val searchFormReads: Reads[QuoteFilter] = (
+  implicit val quoteFilterReads: Reads[QuoteFilter] = (
     (__ \ "changeMin").readNullable[Double] and
       (__ \ "changeMax").readNullable[Double] and
       (__ \ "spreadMin").readNullable[Double] and

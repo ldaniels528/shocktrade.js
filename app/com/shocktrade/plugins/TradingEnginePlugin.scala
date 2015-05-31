@@ -21,15 +21,15 @@ class TradingEnginePlugin(app: Application) extends Plugin {
     if (Play.isProd(app)) {
       // start the stock quote update process
       StockQuoteUpdateProcess.start()
-
-      // start the trading engine
-      Contests.start()
     }
 
     // if development, start the Trading Robots
     if(Play.isDev(app)) {
       // start the trading robots
       TradingRobots.start()
+
+      // start the trading engine
+      Contests.start()
     }
   }
 

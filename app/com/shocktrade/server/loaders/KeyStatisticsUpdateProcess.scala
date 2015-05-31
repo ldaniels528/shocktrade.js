@@ -1,7 +1,6 @@
 package com.shocktrade.server.loaders
 
-import com.shocktrade.actors.{YahooKeyStatisticsUpdateActor, YahooCsvQuoteUpdateActor}
-import com.shocktrade.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
+import com.shocktrade.actors.YahooKeyStatisticsUpdateActor
 import com.shocktrade.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
 import com.shocktrade.server.trading.TradingClock
 import play.api.Logger
@@ -11,10 +10,10 @@ import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 /**
- * Stock Quote Update Process
+ * Yahoo! Key Statistics Update Actor
  * @author lawrence.daniels@gmail.com
  */
-object StockQuoteUpdateProcess {
+object KeyStatisticsUpdateProcess {
   private val system = Akka.system
   implicit val ec = system.dispatcher
 
@@ -22,17 +21,13 @@ object StockQuoteUpdateProcess {
    * Starts the process
    */
   def start() {
-    Logger.info("Starting Financial Update Processes ...")
-
-    // schedules stock quote updates
+    Logger.info("Starting Key Statistics Update Process ...")
     system.scheduler.schedule(5.seconds, 30.minutes) {
       if (TradingClock.isTradingActive) {
-        YahooCsvQuoteUpdateActor ! RefreshAllQuotes
+        Logger.info("Loading symbols for Key Statistics update...")
+        YahooKeyStatisticsUpdateActor ! RefreshAllKeyStatistics
       }
     }
-
-    // schedules key statistics updates
-    system.scheduler.schedule(1.hour, 8.hours)(YahooKeyStatisticsUpdateActor ! RefreshAllKeyStatistics)
     ()
   }
 
