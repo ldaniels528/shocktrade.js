@@ -23,6 +23,10 @@
                 return !value ? value : ((value < 0) ? -value : value);
             };
 
+            $scope.getDate = function(date) {
+                return date && date.$date ? date.$date : date;
+            };
+
             $scope.getHtmlQuote = function (q) {
                 if(!q) return "";
                 else {

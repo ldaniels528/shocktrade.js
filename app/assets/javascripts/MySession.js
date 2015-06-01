@@ -271,7 +271,7 @@
         };
 
         function lookupParticipant(contest, playerId) {
-            var participants = contest ? contest.participants : [];
+            var participants = service.getContest().participants || [];
             for (var n = 0; n < participants.length; n++) {
                 if (participants[n].OID() === playerId) {
                     return participants[n];

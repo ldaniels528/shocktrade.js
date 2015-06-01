@@ -41,8 +41,8 @@
                 return MySession.getMarginAccount().cashFunds || 0;
             };
 
-            $scope.getInterestRate = function () {
-                return interestRate;
+            $scope.getInterestPaid = function () {
+                return MySession.getMarginAccount().interestPaid || 0;
             };
 
             $scope.getInitialMargin = function () {

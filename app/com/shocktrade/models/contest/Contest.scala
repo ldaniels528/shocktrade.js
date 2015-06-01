@@ -21,18 +21,17 @@ case class Contest(id: BSONObjectID = BSONObjectID.generate,
                    creator: PlayerRef,
                    creationTime: Date,
                    startTime: Option[Date] = None,
-                   processedTime: Option[Date] = None,
                    expirationTime: Option[Date] = None,
-                   lastMarketClose: Option[Date] = None,
                    startingBalance: BigDecimal,
                    messages: List[Message] = Nil,
                    participants: List[Participant] = Nil,
                    status: ContestStatus = ContestStatuses.ACTIVE,
+                   levelCap: Option[Int] = None,
                    friendsOnly: Boolean = false,
                    invitationOnly: Boolean = false,
-                   levelCap: Option[Int] = None,
                    perksAllowed: Boolean = false,
-                   robotsAllowed: Boolean = false)
+                   robotsAllowed: Boolean = false,
+                   processing: ContestProcessing = new ContestProcessing())
 
 /**
  * Contest Singleton
@@ -47,37 +46,35 @@ object Contest {
       (__ \ "creator").read[PlayerRef] and
       (__ \ "creationTime").read[Date] and
       (__ \ "startTime").readNullable[Date] and
-      (__ \ "processedTime").readNullable[Date] and
       (__ \ "expirationTime").readNullable[Date] and
-      (__ \ "lastMarketClose").readNullable[Date] and
       (__ \ "startingBalance").read[BigDecimal] and
       (__ \ "messages").readNullable[List[Message]].map(_.getOrElse(Nil)) and
       (__ \ "participants").readNullable[List[Participant]].map(_.getOrElse(Nil)) and
       (__ \ "status").read[ContestStatus] and
+      (__ \ "levelCap").readNullable[Int] and
       (__ \ "friendsOnly").read[Boolean] and
       (__ \ "invitationOnly").read[Boolean] and
-      (__ \ "levelCap").readNullable[Int] and
       (__ \ "perksAllowed").read[Boolean] and
-      (__ \ "robotsAllowed").read[Boolean])(Contest.apply _)
+      (__ \ "robotsAllowed").read[Boolean] and
+      (__ \ "processing").read[ContestProcessing])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
     (__ \ "_id").write[BSONObjectID] and
-    (__ \ "name").write[String] and
+      (__ \ "name").write[String] and
       (__ \ "creator").write[PlayerRef] and
       (__ \ "creationTime").write[Date] and
       (__ \ "startTime").writeNullable[Date] and
-      (__ \ "processedTime").writeNullable[Date] and
       (__ \ "expirationTime").writeNullable[Date] and
-      (__ \ "lastMarketClose").writeNullable[Date] and
       (__ \ "startingBalance").write[BigDecimal] and
       (__ \ "messages").write[List[Message]] and
       (__ \ "participants").write[List[Participant]] and
       (__ \ "status").write[ContestStatus] and
+      (__ \ "levelCap").writeNullable[Int] and
       (__ \ "friendsOnly").write[Boolean] and
       (__ \ "invitationOnly").write[Boolean] and
-      (__ \ "levelCap").writeNullable[Int] and
       (__ \ "perksAllowed").write[Boolean] and
-      (__ \ "robotsAllowed").write[Boolean])(unlift(Contest.unapply))
+      (__ \ "robotsAllowed").write[Boolean] and
+      (__ \ "processing").write[ContestProcessing])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
     def read(doc: BSONDocument) = Try(Contest(
@@ -86,18 +83,17 @@ object Contest {
       doc.getAs[PlayerRef]("creator").get,
       doc.getAs[Date]("creationTime").getOrElse(new Date()),
       doc.getAs[Date]("startTime"),
-      doc.getAs[Date]("processedTime"),
       doc.getAs[Date]("expirationTime"),
-      doc.getAs[Date]("lastMarketClose"),
       doc.getAs[BigDecimal]("startingBalance").get,
       doc.getAs[List[Message]]("messages").getOrElse(Nil),
       doc.getAs[List[Participant]]("participants").getOrElse(Nil),
       doc.getAs[ContestStatus]("status").get,
+      doc.getAs[Int]("levelCap"),
       doc.getAs[Boolean]("friendsOnly").contains(true),
       doc.getAs[Boolean]("invitationOnly").contains(true),
-      doc.getAs[Int]("levelCap"),
       doc.getAs[Boolean]("perksAllowed").contains(true),
-      doc.getAs[Boolean]("robotsAllowed").contains(true)
+      doc.getAs[Boolean]("robotsAllowed").contains(true),
+      doc.getAs[ContestProcessing]("processing").getOrElse(ContestProcessing())
     )) match {
       case Success(v) => v
       case Failure(e) =>
@@ -113,19 +109,18 @@ object Contest {
       "creator" -> contest.creator,
       "creationTime" -> contest.creationTime,
       "startTime" -> contest.startTime,
-      "processedTime" -> contest.processedTime,
       "expirationTime" -> contest.expirationTime,
-      "lastMarketClose" -> contest.lastMarketClose,
       "startingBalance" -> contest.startingBalance,
       "messages" -> contest.messages,
       "participants" -> contest.participants,
       "status" -> contest.status,
+      "levelCap" -> contest.levelCap,
       "friendsOnly" -> contest.friendsOnly,
       "invitationOnly" -> contest.invitationOnly,
-      "levelCap" -> contest.levelCap,
       "perksAllowed" -> contest.perksAllowed,
       "robotsAllowed" -> contest.robotsAllowed,
-      "playerCount" -> contest.participants.size
+      "processing" -> contest.processing,
+      "playerCount" -> contest.participants.length
     )
   }
 

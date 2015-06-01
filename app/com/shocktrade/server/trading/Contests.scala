@@ -46,22 +46,29 @@ object Contests {
 
     // process orders once every 5 minutes
     system.scheduler.schedule(5.seconds, frequency.minutes)(processOrders())
+
+    // process orders once per hour
+    system.scheduler.schedule(1.hour, frequency.minutes)(applyMarginInterest())
     ()
   }
 
-  /**
-   * Ensures an actor instance per contest
-   * @param id the given [[BSONObjectID contest ID]]
-   * @return a reference to the actor that manages the contest
-   */
-  private def contestActor(id: BSONObjectID): ActorRef = {
-    contestActors.getOrElseUpdate(id.stringify, system.actorOf(Props[ContestActor], name = s"ContestActor-${id.stringify}"))
-  }
+  def applyMarginInterest()(implicit timeout: Timeout) = {
+    /*
+    try {
+      val currentTime = new Date()
 
-  private def computeInitialFulfillmentDate: Date = {
-    val tradeStart = getTradeStartTime
-    val currentTime = new Date()
-    if (tradeStart >= currentTime) currentTime else tradeStart
+      Logger.info(s"Applying interest charges for margin accounts...")
+      ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(60)).enumerate().apply(Iteratee.foreach { contest =>
+        contestActor(contest.id) ! ApplyMarginInterest(contest, lastEffectiveDate)
+      })
+
+      // update the effective date
+      lastEffectiveDate = currentTime;
+
+    } catch {
+      case e: Exception =>
+        Logger.error("Error processing orders", e)
+    }*/
   }
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
@@ -155,9 +162,8 @@ object Contests {
   }
 
   private def processOrders() {
+    val currentTime = new Date()
     try {
-      val currentTime = new Date()
-
       Logger.info(s"Processing order fulfillment [as of $lastEffectiveDate]...")
       ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(frequency)).enumerate().apply(Iteratee.foreach { contest =>
         contestActor(contest.id) ! ProcessOrders(contest, lastEffectiveDate)
@@ -206,6 +212,28 @@ object Contests {
       case e: Exception => throw new IllegalStateException(e)
       case response => response.asInstanceOf[Option[Contest]]
     }
+  }
+
+  def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit timeout: Timeout) = {
+    (contestActor(contestId) ? UpdateProcessingHost(contestId, host)) map {
+      case e: Exception => throw new IllegalStateException(e.getMessage, e)
+      case response => response.asInstanceOf[LastError]
+    }
+  }
+
+  /**
+   * Ensures an actor instance per contest
+   * @param id the given [[BSONObjectID contest ID]]
+   * @return a reference to the actor that manages the contest
+   */
+  private def contestActor(id: BSONObjectID): ActorRef = {
+    contestActors.getOrElseUpdate(id.stringify, system.actorOf(Props[ContestActor], name = s"ContestActor-${id.stringify}"))
+  }
+
+  private def computeInitialFulfillmentDate: Date = {
+    val tradeStart = getTradeStartTime
+    val currentTime = new Date()
+    if (tradeStart >= currentTime) currentTime else tradeStart
   }
 
 }

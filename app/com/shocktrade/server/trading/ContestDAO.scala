@@ -1,5 +1,6 @@
 package com.shocktrade.server.trading
 
+import java.net.InetAddress
 import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
@@ -7,12 +8,13 @@ import com.shocktrade.controllers.ProfileResources._
 import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
+import com.shocktrade.server.trading.Outcome.Failed
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import play.api.Logger
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
-import reactivemongo.core.commands.{FindAndModify, LastError, Update}
+import reactivemongo.core.commands._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
@@ -24,6 +26,7 @@ import scala.util.Try
  */
 object ContestDAO {
   private lazy implicit val mc = db.collection[BSONCollection]("Contests")
+  private val hostName = Try(InetAddress.getLocalHost.getHostName).toOption.orNull
 
   /////////////////////////////////////////////////////////////////////////////////
   //        Contests
@@ -71,20 +74,27 @@ object ContestDAO {
     mc.find(BS(
       "status" -> ContestStatuses.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
-      "$or" -> BSONArray(Seq(BS("processedTime" -> BS("$lte" -> lastProcessedTime)), BS("processedTime" -> BS("$exists" -> false)))) //,
+      "$or" -> BSONArray(Seq(
+        BS("processing" -> BS("$exists" -> false)),
+        BS("processing.processedTime" -> BS("$exists" -> false)),
+        BS("processing.processedTime" -> BS("$lte" -> lastProcessedTime)))),
+      "$or" -> BSONArray(Seq(
+        BS("processing" -> BS("$exists" -> false)),
+        BS("processing.host" -> BS("$exists" -> false)),
+        BS("processing.host" -> hostName)))
       // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
     )).cursor[Contest]
   }
 
-  def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String])(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
+  def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
     mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[T].headOption
   }
 
-  def findContestByID(contestId: BSONObjectID, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+  def findContestByID(contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].headOption
   }
 
-  def findContests(searchOptions: SearchOptions, fields: Seq[String])(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
+  def findContests(searchOptions: SearchOptions, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
     mc.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest].collect[Seq]()
   }
 
@@ -129,7 +139,7 @@ object ContestDAO {
     Logger.info(s"host = $host")
     mc.update(
       selector = BS("_id" -> contestId),
-      update = host.map(name => BS("$set" -> BS("processingHost" -> name))) getOrElse BS("$unset" -> BS("processingHost" -> "")),
+      update = host.map(name => BS("$set" -> BS("processing.host" -> name))) getOrElse BS("$unset" -> BS("processing.host" -> "")),
       writeConcern = GetLastError(),
       upsert = false, multi = false)
   }
@@ -159,6 +169,23 @@ object ContestDAO {
   //        Margin Account
   /////////////////////////////////////////////////////////////////////////////////
 
+  def applyMarginInterest(contest: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+    // update all of the margin accounts for each player
+    val participants = contest.participants map { player =>
+      player.copy(marginAccount = player.marginAccount map { acct =>
+        val interest = MarginAccount.InterestRate * acct.borrowedFunds
+        acct.copy(interestPaid = acct.interestPaid + interest, cashFunds = acct.cashFunds - interest, asOfDate = asOfDate)
+      })
+    }
+
+    // update the entire contest
+    db.command(FindAndModify(
+      collection = "Contests",
+      query = BS("_id" -> contest.id),
+      modify = new Update(BS("$set" -> BS("participants" -> participants)), fetchNewObject = true),
+      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+  }
+
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     db.command(FindAndModify(
       collection = "Contests",
@@ -167,12 +194,16 @@ object ContestDAO {
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
+  def marginCashPortion(amount: BigDecimal) = amount * MarginAccount.InitialMargin
+
+  def marginCreditPortion(amount: BigDecimal) = amount * (1d - MarginAccount.InitialMargin)
+
   def transferFundsBetweenAccounts(contestId: BSONObjectID,
                                    playerId: BSONObjectID,
                                    source: AccountType,
                                    amount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     val asOfDate = new Date()
-    val funds = if(source == AccountTypes.CASH) amount else -amount
+    val funds = if (source == AccountTypes.CASH) amount else -amount
 
     db.command(FindAndModify(
       collection = "Contests",
@@ -220,12 +251,12 @@ object ContestDAO {
         BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> order.playerId))),
         BS(
           // set the lastMarketClose and lastUpdatedTime properties
-          "$set" -> BS("lastMarketClose" -> asOfDate, "lastUpdatedTime" -> new Date()),
+          "$set" -> BS("processing.lastMarketClose" -> asOfDate, "lastUpdatedTime" -> new Date()),
 
-          // remove the expired orders
+          // remove the expired order
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> order.id)),
 
-          // add the orders to the order history
+          // add the order to the order history
           "$addToSet" -> BS("participants.$.closedOrders" -> order.toClosedOrder(asOfDate, "Expired"))),
         upsert = false, multi = false) map (_.n)
     }) map (_.sum)
@@ -262,20 +293,20 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of orders updated
    */
-  def failOrder(c: Contest, wo: WorkOrder, message: String, asOfDate: Date)(implicit ec: ExecutionContext) = {
+  def failOrder(c: Contest, wo: WorkOrder, message: String, asOfDate: Date)(implicit ec: ExecutionContext): Future[LastError] = {
     mc.update(
       // find the matching the record
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
       BS(
-        // set the last update time
-        "$set" -> BS("lastUpdatedTime" -> new Date()),
+        // update the effective date
+        "$set" -> BS("participants.$.cashAccount.asOfDate" -> asOfDate),
 
         // remove the order
         "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id)),
 
         // create the order history record
         "$addToSet" -> BS("participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, message))),
-      upsert = false, multi = false) map (_.n)
+      upsert = false, multi = false)
   }
 
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Order]] = {
@@ -377,25 +408,6 @@ object ContestDAO {
     } yield position
   }
 
-  /**
-   * Increases a position by creating or updating a position
-   * @param c the given [[Contest contest]]
-   * @param claim the given [[Claim claim]]
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of positions updated
-   */
-  def increasePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
-    findPosition(c, claim, 0.0d) match {
-      case Some(position) => increasePositionUpdate(c, claim, position, asOfDate)
-      case None => increasePositionCreate(c, claim, asOfDate)
-    }
-  }
-
-  private def marginCashPortion(amount: BigDecimal) = amount * MarginAccount.InitialMargin
-
-  private def marginCreditPortion(amount: BigDecimal) = amount * (1d - MarginAccount.InitialMargin)
-
   private def fundingSource(playerId: BSONObjectID, accountType: AccountType, amount: BigDecimal) = {
     accountType match {
       case AccountTypes.CASH => BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> amount))
@@ -420,6 +432,21 @@ object ContestDAO {
   }
 
   /**
+   * Increases a position by creating or updating a position
+   * @param c the given [[Contest contest]]
+   * @param claim the given [[Claim claim]]
+   * @param asOfDate the given [[Date effective date]]
+   * @param ec the implicit [[ExecutionContext execution context]]
+   * @return a promise of the number of positions updated
+   */
+  def increasePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    findPosition(c, claim, 0.0d) match {
+      case Some(position) => updatePosition(c, claim, position, asOfDate)
+      case None => createNewPosition(c, claim, asOfDate)
+    }
+  }
+
+  /**
    * Increases a position by creating a new position
    * @param c the given [[Contest contest]]
    * @param claim the given [[Claim claim]]
@@ -427,7 +454,7 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of positions updated
    */
-  private def increasePositionCreate(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
+  private def createNewPosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // cache the work order
     val wo = claim.workOrder
 
@@ -435,7 +462,6 @@ object ContestDAO {
     mc.update(
       // find the matching the record
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost))),
-
       BS(
         // set the effective date
         "$set" -> fundingAsOfDate(wo, asOfDate),
@@ -453,10 +479,7 @@ object ContestDAO {
           // create the order history record
           "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
       ),
-      upsert = false, multi = false) map { result =>
-      Logger.info(s"increasePositionCreate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
-      result.n
-    }
+      upsert = false, multi = false) map Outcome.apply
   }
 
   /**
@@ -467,7 +490,7 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of positions updated
    */
-  private def increasePositionUpdate(c: Contest, claim: Claim, pos: Position, asOfDate: Date)(implicit ec: ExecutionContext) = {
+  private def updatePosition(c: Contest, claim: Claim, pos: Position, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // create the increased position
     val increasedPos = claim.toPositionIncrease(pos)
 
@@ -480,7 +503,6 @@ object ContestDAO {
       BS("_id" -> c.id,
         "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost)),
         "participants.positions" -> BS("$elemMatch" -> BS("_id" -> pos.id))),
-
       BS(
         // set the effective date
         "$set" -> fundingAsOfDate(wo, asOfDate),
@@ -500,13 +522,12 @@ object ContestDAO {
           "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
       ),
       upsert = false, multi = false) map { result =>
-      Logger.info(s"increasePositionUpdate: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
-
       // if the update successful, perform phase 2 of the commit
-      commitUpdatedPosition(c, wo, increasedPos)
-
-      if (result.n > 0) result.n
-      else throw new Exception(s"The position for ${claim.symbol} could not be updated (cost: ${claim.cost})")
+      if (result.n > 0) {
+        commitUpdatedPosition(c, wo, increasedPos)
+        Outcome(result)
+      }
+      else Failed("A qualifying position was not found")
     }
   }
 
@@ -555,19 +576,17 @@ object ContestDAO {
               "participants.$.closedOrders" -> wo.toClosedOrder(asOfDate, "Processed"))
           ),
           upsert = false, multi = false) map { result =>
-          Logger.info(s"reducePosition: result.n = ${result.n}, result.inError = ${result.inError}, result.errMsg = ${result.errMsg}}")
-
           // if the update successful, perform phase 2 of the commit
-          commitUpdatedPosition(c, wo, reducedPosition)
-
-          if (result.n > 0) result.n
-          else
-            throw new Exception(s"A qualifying position could not be found")
+          if (result.n > 0) {
+            commitUpdatedPosition(c, wo, reducedPosition)
+            Outcome(result)
+          }
+          else Failed("A qualifying position was not found")
         }
 
       // if the update successful, perform phase 2 of the commit
       case None =>
-        throw new Exception(s"A qualifying position could not be found")
+        Future.successful(Failed("A qualifying position was not found"))
     }
   }
 
@@ -585,13 +604,15 @@ object ContestDAO {
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
 
       BS("$pull" -> BS("participants.$.POSITIONS" -> BS("_id" -> tmpPos.id))) ++
-        (if (tmpPos.quantity > 0) BS("$addToSet" -> BS("participants.$.positions" -> tmpPos)) else BS()))
+        (if (tmpPos.quantity > 0)
+          BS("$addToSet" -> BS("participants.$.positions" -> tmpPos))
+        else BS()))
   }
 
   private def toWorkOrder(p: Participant, o: Order): WorkOrder = {
     WorkOrder(
       id = o.id,
-      playerId = p.id,
+      participant = p,
       accountType = o.accountType,
       symbol = o.symbol,
       exchange = o.exchange,

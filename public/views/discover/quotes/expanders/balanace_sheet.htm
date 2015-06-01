@@ -72,7 +72,7 @@
         <span class="qm_header">Most Recent Qtr</span>
         <span class="qm_detail pull-right">
             <span ng-show="q.mostRecentQuarterDate == null" class="null">&#8212;</span>
-            <span ng-show="q.mostRecentQuarterDate != null">{{ q.mostRecentQuarterDate | date:'MM/dd/yyyy' }}</span>
+            <span ng-show="q.mostRecentQuarterDate != null">{{ getDate(q.mostRecentQuarterDate) | date:'MM/dd/yyyy' }}</span>
         </span>
     </div>
 </div>	
@@ -98,7 +98,7 @@
         <span class="qm_header">Fiscal Year End</span>
         <span class="qm_detail pull-right">
             <span ng-show="q.fiscalYearEndDate == null" class="null">&#8212;</span>
-            <span ng-show="q.fiscalYearEndDate != null">{{ q.fiscalYearEndDate | date:'MMM yyyy' }}</span>
+            <span ng-show="q.fiscalYearEndDate != null">{{ getDate(q.fiscalYearEndDate) | date:'MMM yyyy' }}</span>
         </span>
     </div>
 </div>	

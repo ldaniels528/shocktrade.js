@@ -6,7 +6,7 @@ import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.OrderTypes._
 import com.shocktrade.models.contest.PriceTypes._
-import com.shocktrade.models.contest.{ClosedOrder, MarginAccount}
+import com.shocktrade.models.contest.{Participant, ClosedOrder, MarginAccount}
 import reactivemongo.bson.BSONObjectID
 
 /**
@@ -14,7 +14,7 @@ import reactivemongo.bson.BSONObjectID
  * @author lawrence.daniels@gmail.com
  */
 case class WorkOrder(id: BSONObjectID,
-                     playerId: BSONObjectID,
+                     participant: Participant,
                      symbol: String,
                      exchange: String,
                      orderTime: Date,
@@ -30,6 +30,8 @@ case class WorkOrder(id: BSONObjectID,
                      marginAccount: Option[MarginAccount]) {
 
   def expirationTime: Option[Date] = orderTerm.toDate(orderTime)
+
+  def playerId: BSONObjectID = participant.id
 
   def toClosedOrder(asOfDate: Date, message: String) = ClosedOrder(
     id = id,

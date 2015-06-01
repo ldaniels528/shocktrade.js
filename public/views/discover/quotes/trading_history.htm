@@ -59,7 +59,7 @@
          ng-click="selectTradingHistory(t)">
         <div class="col-md-2">
             <span ng-hide="t.tradeDate" class="null">N/A</span>
-            <span ng-show="t.tradeDate">{{ t.tradeDate | date:'MM/dd/yy' }}</span>
+            <span ng-show="t.tradeDate">{{ getDate(t.tradeDate) | date:'MM/dd/yy' }}</span>
         </div>
         <div class="col-md-2 right">
             <span ng-hide="t.open" class="null">N/A</span>

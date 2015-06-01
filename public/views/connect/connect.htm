@@ -82,7 +82,7 @@
                     {{ u.eventType == 'MAIL' ? u.title : u.description }}
                 </div>
                 <div class="col-md-3">
-                    {{ (u.creationTime.$date || u.creationTime) | date:'MM/dd hh:mma' }}
+                    {{ getDate((u.creationTime) | date:'MM/dd hh:mma' }}
                 </div>
             </div>
 		</div>
@@ -99,7 +99,7 @@
 				<span style="font-weight: bold">From:</span> 
 				<span ng-show="myUpdate.sender.name" style="color: #0000ff">{{ myUpdate.sender.name }}</span>
 				<span ng-hide="myUpdate.sender.name" style="color: #ff00ff">ShockTrade</span>
-				on {{ (myUpdate.creationTime.$date || myUpdate.creationTime) | date:"EEE MMM dd, yyyy 'at' hh:mma" }}</div>
+				on {{ getDate(myUpdate.creationTime) | date:"EEE MMM dd, yyyy 'at' hh:mma" }}</div>
 			<div class="previewContainer" style="margin-top: 10px">
 				{{ myUpdate.description }}
 			</div>

@@ -56,10 +56,10 @@
             $scope.investedAmount = 0.00; // TODO get actual values for these
             $scope.investmentValue = 0.00;
             $scope.actions = [{
-                "label": "Cash to Transfer Funds",
+                "label": "Cash to Margin Account",
                 "source": "CASH"
             }, {
-                "label": "Transfer Funds to Cash",
+                "label": "Margin Account to Cash",
                 "source": "MARGIN"
             }];
 

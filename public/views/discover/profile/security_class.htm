@@ -23,7 +23,7 @@
         <span class="col-md-4 qm_value">{{q.ipoYear}}</span>
 
         <span class="col-md-3 qm_header">Fiscal Year End Date</span>
-        <span class="col-md-3 qm_value">{{q.fiscalYearEndDate | date:'MM/dd'}}</span>
+        <span class="col-md-3 qm_value">{{ getDate(q.fiscalYearEndDate) | date:'MM/dd'}}</span>
     </div>
 
     <div class="row" ng-hide="q.assetType == 'ETF' || !q.sicNumber">
@@ -46,7 +46,7 @@
 
     <div class="row" ng-show="q.assetType == 'ETF'">
         <span class="col-md-2 qm_header">Inception Date</span>
-        <span class="col-md-4 qm_value">{{q.inceptionDate | date:'MM/dd/yyyy' }}</span>
+        <span class="col-md-4 qm_value">{{ getDate(q.inceptionDate) | date:'MM/dd/yyyy' }}</span>
 
         <span class="col-md-3 qm_header">Number Of Holdings</span>
         <span class="col-md-3 qm_value">{{q.numberOfHoldings | number}}</span>

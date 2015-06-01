@@ -44,7 +44,7 @@
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
                         <span ng-show="c.status === 'ACTIVE'">
-                            <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
+                            <span ng-show="c.expirationTime">{{ getDate(c.expirationTime) | date:'MM-dd-yyyy' }}</span>
                             <span ng-hide="c.expirationTime">&#8212;</span>
                         </span>
                         <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>

@@ -5,14 +5,18 @@ import java.util.Date
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.ldaniels528.tabular.formatters.FormatHandler
+import com.shocktrade.models.contest.OrderTerms.OrderTerm
+import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfiles
+import com.shocktrade.server.trading.Outcome.{Failed, Succeeded}
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
 import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
 import play.api.Logger
+import play.libs.Akka
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
@@ -27,6 +31,7 @@ object OrderProcessor {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
   private val quoteCache = ConcurrentCache[String, Seq[YFIntraDayQuote]](2.hours)
+  private implicit val ec = Akka.system().dispatcher
 
   /**
    * Processes the given contest
@@ -38,7 +43,7 @@ object OrderProcessor {
     // perform the claiming process
     val results = {
       // if claiming has never occurred, serially execute each
-      if (c.processedTime.isEmpty) {
+      if (c.processing.processedTime.isEmpty) {
         for {
           claimsA <- processOrders(c, asOfDate, isDaysClose = false)
           claimsB <- processOrders(c, asOfDate, isDaysClose = true)
@@ -46,10 +51,10 @@ object OrderProcessor {
       }
 
       // was the last run while trading still active?
-      else if (c.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
+      else if (c.processing.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
 
       // if not, was there already an end-of-Trading Day-event?
-      else if (c.lastMarketClose.isEmpty || c.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
+      else if (c.processing.lastMarketClose.isEmpty || c.processing.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
 
       // otherwise nothing happens
       else Future.successful(Nil)
@@ -64,7 +69,7 @@ object OrderProcessor {
       closeOrders <- ContestDAO.closeExpiredOrders(c, asOfDate)
 
       // compute the updated count
-      updatedCount = (claimOutcomes map { case (_, oc) => oc } sum) + closeOrders
+      updatedCount = (claimOutcomes map { case (_, outcome) => if (outcome.isSuccess) 1 else 0 } sum) + closeOrders
 
     } yield (claimOutcomes, closeOrders, updatedCount)
 
@@ -128,7 +133,7 @@ object OrderProcessor {
         // create a fake work-order
         val workOrder = WorkOrder(
           id = pos.id,
-          playerId = participant.id,
+          participant = participant,
           accountType = pos.accountType,
           symbol = pos.symbol,
           exchange = pos.exchange,
@@ -155,8 +160,8 @@ object OrderProcessor {
           workOrder = workOrder)
 
         // liquidate the asset
-        ContestDAO.reducePosition(c, claim, asOfDate) map { update =>
-          Liquidation(participant.name, pos.symbol, pos.pricePaid, pos.quantity, workOrder.price, update)
+        ContestDAO.reducePosition(c, claim, asOfDate) map { outcome =>
+          Liquidation(participant.name, pos.symbol, pos.pricePaid, pos.quantity, workOrder.price, outcome)
         }
       }
     })
@@ -168,10 +173,6 @@ object OrderProcessor {
       UserProfiles.deductFunds(participant.id, -totalCash)
     })
   }
-
-  case class Pricing(symbol: String, exchange: Option[String], lastTrade: Option[Double], tradeDate: Option[Date])
-
-  case class Liquidation(player: String, symbol: String, pricePaid: BigDecimal, quantity: Long, marketPrice: Option[BigDecimal], update: Int = 0)
 
   /**
    * Processes the given orders
@@ -185,65 +186,70 @@ object OrderProcessor {
 
     if (orders.nonEmpty) {
       info(c, s"${orders.size} eligible order(s) found")
-      tabular.transform(orders) foreach (info(c, _))
+      showOrders(c, orders)
 
       // get the common asset quotes
       val quotes = getEligibleStockQuotes(c, orders, asOfDate)
 
       // process the market close orders
-      val eligibleClaims = orders flatMap (getEligibleClaim(c, _, asOfDate, quotes))
+      val eligibleClaims = orders flatMap { o =>
+        getEligibleClaim(c, o, asOfDate, quotes.filter(_.symbol == o.symbol))
+      }
 
       // display the eligible claims
       info(c, s"Attempting fulfillment on ${eligibleClaims.size} eligible claim(s)")
-      tabular.transform(eligibleClaims) foreach (info(c, _))
+      showEligibleClaims(c, eligibleClaims)
 
       // update positions for processed orders
-      processClaims(c, asOfDate, eligibleClaims)
+      val outcomes = fulfillOrders(c, asOfDate, eligibleClaims)
+      showOrderFulfillment(c, outcomes)
+      outcomes
     }
     else Future.successful(Nil)
   }
 
-  private def processClaims(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
-    Future.sequence(claims map { claim =>
-      for {
-      // perform the BUY or SELL
-        outcome <- claim.workOrder.orderType match {
-          case OrderTypes.BUY =>
-            info(c, s"[${claim.workOrder.playerId.stringify}] Increasing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.increasePosition(c, claim, asOfDate)
-          case OrderTypes.SELL =>
-            info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.reducePosition(c, claim, asOfDate)
-          case orderType =>
-            error(c, s"[${claim.workOrder.playerId.stringify}] position of ${claim.symbol} x ${claim.quantity} - Unrecognized order type $orderType")
-            throw new IllegalStateException(s"Unrecognized order type $orderType")
-        }
-      } yield (claim, outcome)
-    })
+  private def showOrders(c: Contest, orders: Seq[WorkOrder]): Unit = {
+    tabular.transform(orders map { o =>
+      DisplayOrder(o.participant.name, o.symbol, o.priceType, o.price, o.quantity, o.orderTime, o.orderTerm)
+    }) foreach (info(c, _))
   }
 
-  private def showProcessingSummary(c: Contest, outcomes: Seq[(Claim, Int)], closedOrders: Int, updatedCount: Int) = {
-    // display the summary information
-    info(c, s"$updatedCount claimed of ${outcomes.length} qualified order(s)")
+  case class DisplayOrder(player: String, symbol: String, priceType: PriceType, price: Option[BigDecimal], quantity: BigDecimal, time: Date, term: OrderTerm)
 
-    // close orders
-    if (closedOrders > 0) info(c, s"$closedOrders order(s) closed")
+  private def showEligibleClaims(c: Contest, eligibleClaims: Seq[Claim]) {
+    tabular.transform(eligibleClaims.map { ec =>
+      DisplayEligibleClaim(ec.workOrder.participant.name, ec.symbol, ec.price, ec.quantity, ec.purchaseTime, ec.workOrder.orderTerm)
+    }) foreach (info(c, _))
+  }
 
-    // display the failures
-    outcomes foreach {
-      case (claim, outcome) =>
-        if (outcome > 0)
-          info(c, s"Order #${claim.workOrder.id}: count = $outcome")
+  case class DisplayEligibleClaim(player: String, symbol: String, price: BigDecimal, quantity: BigDecimal, time: Date, term: OrderTerm)
+
+  private def showOrderFulfillment(c: Contest, result: Future[Seq[(Claim, Outcome)]]) {
+    result.map {
+      _ map { case (claim, o) =>
+        DisplayClaimOutcome(claim.workOrder.participant.name, claim.symbol, claim.price, claim.quantity, claim.purchaseTime, o match {
+          case Succeeded(n) => "Claimed"
+          case Failed(message, _) => message
+        })
+      }
+    } foreach { outcomes =>
+      tabular.transform(outcomes) foreach (info(c, _))
     }
   }
 
-  private def getEligibleClaim(c: Contest, wo: WorkOrder, asOfDate: Date, quotes: Seq[WorkQuote]): Iterable[Claim] = {
+  case class DisplayClaimOutcome(player: String, symbol: String, price: BigDecimal, quantity: BigDecimal, time: Date, status: String)
+
+  private def getEligibleClaim(c: Contest, wo: WorkOrder, asOfDate: Date, quotes: Seq[WorkQuote]): Option[Claim] = {
+    var qualifications: List[DisplayQualification] = Nil
+
     // generate the list of potential claims
-    val potentials = quotes.filter(_.symbol == wo.symbol).foldLeft[List[Claim]](Nil) { (list, q) =>
+    val potentials = quotes.foldLeft[List[Claim]](Nil) { (list, q) =>
       // is it a valid claim?
       val (isGoodTime, time) = isEligibleTime(c, wo, q, asOfDate)
       val (isGoodVolume, quantity) = isEligibleVolume(c, wo, q)
       val (isGoodPrice, price) = isEligiblePrice(c, wo, q)
+
+      qualifications = DisplayQualification(wo.symbol, wo.priceType, time, isGoodTime, price, isGoodPrice, quantity, isGoodVolume) :: qualifications
 
       // if the required volume is satisfied, and
       // the price type is either not LIMIT or the price is satisfied, then claim it
@@ -260,15 +266,80 @@ object OrderProcessor {
         list
     }
 
-    // one claim per work order ID
-    potentials.groupBy(_.workOrder.id) flatMap { case (id, claims) =>
-      val sortedClaims = claims.sortBy(-_.quantity)
-      sortedClaims.headOption.toList
+    //info(c, "Qualifications:")
+    //tabular.transform(qualifications) foreach(info(c, _))
+
+    // one claim per work order ID,
+    // produce the lowest price or the highest quantity
+    val claim =
+      if (wo.partialFulfillment)
+        potentials.sortBy(-_.quantity).headOption
+      else
+        potentials.sortBy(_.price).headOption
+
+    // if we can claim a higher quantity ...
+    // remember we'll have to dollar-cost average the prices
+    if (potentials.nonEmpty && (wo.quantity >= potentials.map(_.quantity).sum))
+      dollarCostAverage(potentials)
+    else
+      claim
+  }
+
+  case class DisplayQualification(symbol: String, priceType: PriceType, time: Date, isGoodTime: Boolean, price: Double, isGoodPrice: Boolean, quantity: Long, isGoodVolume: Boolean)
+
+  private def dollarCostAverage(potentials: Seq[Claim]) = {
+    val totalQuantity = potentials.map(_.quantity).sum
+    val totalCost = potentials.map(c => c.price * c.quantity.toDouble).sum
+    val averagePrice = totalCost / totalQuantity.toDouble
+    potentials.headOption.map(_.copy(price = averagePrice, quantity = totalQuantity))
+  }
+
+  private def fulfillOrders(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
+    Future.sequence(claims map { claim =>
+      for {
+      // perform the BUY or SELL
+        outcome <- claim.workOrder.orderType match {
+          case OrderTypes.BUY =>
+            info(c, s"[${claim.workOrder.playerId}] Increasing position of ${claim.symbol} x ${claim.quantity}")
+            ContestDAO.increasePosition(c, claim, asOfDate) map {
+              case o@Failed(error, _) if error.contains("qualifying position") =>
+                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRFCTIMG)) {
+                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                }
+                o
+              case outcome => outcome
+            }
+          case OrderTypes.SELL =>
+            info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
+            ContestDAO.reducePosition(c, claim, asOfDate) map {
+              case o@Failed(error, _) if error.contains("qualifying position") =>
+                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRCHEMNT)) {
+                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                }
+                o
+              case outcome => outcome
+            }
+        }
+      } yield (claim, outcome)
+    })
+  }
+
+  private def showProcessingSummary(c: Contest, outcomes: Seq[(Claim, Outcome)], closedOrders: Int, updatedCount: Int) = {
+    // display the summary information
+    info(c, s"$updatedCount claimed of ${outcomes.length} qualified order(s)")
+
+    // close orders
+    if (closedOrders > 0) info(c, s"$closedOrders order(s) closed")
+
+    // display the failures
+    outcomes foreach {
+      case (claim, outcome) =>
+        info(c, s"Order #${claim.workOrder.id}: outcome = $outcome")
     }
   }
 
   private def isEligibleTime(c: Contest, wo: WorkOrder, q: WorkQuote, asOfDate: Date): (Boolean, Date) = {
-    (wo.orderTime <= q.tradeDateTime && (isTradingActive(asOfDate) || wo.priceType == PriceTypes.MARKET_ON_CLOSE), q.tradeDateTime)
+    (wo.orderTime <= q.tradeDateTime || wo.priceType == PriceTypes.MARKET_ON_CLOSE, q.tradeDateTime)
   }
 
   private def isEligibleVolume(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Long) = {
@@ -279,21 +350,17 @@ object OrderProcessor {
     val isGood = wo.priceType match {
       case PriceTypes.LIMIT =>
         wo.orderType match {
-          case OrderTypes.BUY =>
-            wo.price exists (q.price <= _)
-          case OrderTypes.SELL =>
-            wo.price exists (q.price >= _)
+          case OrderTypes.BUY => wo.price exists (q.price <= _)
+          case OrderTypes.SELL => wo.price exists (q.price >= _)
         }
       case PriceTypes.STOP_LIMIT =>
         wo.orderType match {
-          case OrderTypes.BUY =>
-            wo.price exists (q.price <= _)
-          case OrderTypes.SELL =>
-            wo.price exists (q.price >= _)
+          case OrderTypes.BUY => wo.price exists (q.price <= _)
+          case OrderTypes.SELL => wo.price exists (q.price >= _)
         }
-      case priceType => true
+      case _ => true
     }
-    ((q.price > 0) && isGood, q.price)
+    ((q.price > 0.00d) && isGood, q.price)
   }
 
   private def getEligibleStockQuotes(c: Contest, orders: Seq[WorkOrder], asOfDate: Date): Seq[WorkQuote] = {
@@ -318,7 +385,7 @@ object OrderProcessor {
 
     // store the service quote in the cache
     svcQuotes.foreach { case (symbol, prices) => quoteCache.put(symbol, prices) }
-    tabular.transform(svcQuotes.values.toSeq.flatten) foreach (info(c, _))
+    //tabular.transform(svcQuotes.values.toSeq.flatten) foreach (info(c, _))
 
     // combine the service and cached quotes
     val quotes = svcQuotes ++ cachedQuotes
@@ -356,6 +423,10 @@ object OrderProcessor {
       case _ => None
     }
   }
+
+  case class Liquidation(player: String, symbol: String, pricePaid: BigDecimal, quantity: Long, marketPrice: Option[BigDecimal], outcome: Outcome)
+
+  case class Pricing(symbol: String, exchange: Option[String], lastTrade: Option[Double], tradeDate: Option[Date])
 
   /**
    * Generically represents the common elements of a stock quote

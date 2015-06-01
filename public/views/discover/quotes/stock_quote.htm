@@ -16,8 +16,8 @@
 	<div class="col-md-4">
 		<span class="qm_header">Updated</span>
 		<span class="plain pull-right">
-			<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
-			<span ng-hide="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+			<span ng-show="q.tradeDateTime">{{ getDate(q.tradeDateTime) | date:'MM/dd hh:mma Z' }}</span>
+			<span ng-hide="q.tradeDateTime">{{ getDate(q.tradeDateTime) | date:'MM/dd hh:mma Z' }}</span>
 		</span>
 	</div>
 </div>

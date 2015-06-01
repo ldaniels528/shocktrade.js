@@ -29,11 +29,11 @@
              * Initializes the view by displaying an initial chart
              */
             $scope.init = function () {
-                if(MySession.getUserID()) {
+                if (MySession.getUserID()) {
                     $scope.exposurePieChart(MySession.getContest(), $scope.exposure.value, MySession.getUserID());
                 }
                 else {
-                    $timeout(function() {
+                    $timeout(function () {
                         $scope.init();
                     }, 1000);
                 }
@@ -49,20 +49,20 @@
                     });
             };
 
-            $scope.colorFunction = function() {
-                return function(d, i) {
+            $scope.colorFunction = function () {
+                return function (d, i) {
                     return colors[i % colors.length];
                 };
             };
 
-            $scope.xFunction = function(){
-                return function(d) {
+            $scope.xFunction = function () {
+                return function (d) {
                     return d.label;
                 };
             };
 
-            $scope.yFunction = function(){
-                return function(d) {
+            $scope.yFunction = function () {
+                return function (d) {
                     return d.value;
                 };
             };
