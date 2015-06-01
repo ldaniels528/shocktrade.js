@@ -72,8 +72,13 @@
                 return $scope.getCashFunds() >= $scope.getMaintenanceMarginAmount();
             };
 
+            $scope.getMarginAccountEquity = function () {
+                return $scope.getCashFunds() + (($scope.getInvestmentMarketValue() || $scope.getInvestmentCost()) - $scope.getInvestmentCost());
+            };
+
             $scope.getMaintenanceMarginAmount = function () {
-                return $scope.getInvestmentCost() * $scope.getMaintenanceMargin();
+                var maintenanceAmount = ($scope.getInvestmentCost() - $scope.getMarginAccountEquity()) * $scope.getMaintenanceMargin();
+                return maintenanceAmount > 0 ? maintenanceAmount : 0;
             };
 
             $scope.getMarginCallAmount = function() {

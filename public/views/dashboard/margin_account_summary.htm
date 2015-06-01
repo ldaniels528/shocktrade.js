@@ -17,11 +17,11 @@
         </div>
         <div class="col-md-12">
             <span class="alabel">
-                <span ng-show="isAccountInGoodStanding()">Minimum Required Balance</span>
+                <span ng-show="isAccountInGoodStanding()">Current Equity</span>
                 <span class="st_orange" ng-hide="isAccountInGoodStanding()">Additional Funds Required</span>
             </span>
             <span class="bold pull-right">
-                <span ng-show="isAccountInGoodStanding()" class="st_green">{{ getMaintenanceMarginAmount() | number:2 }}</span>
+                <span ng-show="isAccountInGoodStanding()" class="st_green">{{ getMarginAccountEquity() | number:2 }}</span>
                 <span ng-hide="isAccountInGoodStanding()" class="st_orange">{{ getMarginCallAmount() | number:2 }}</span>
             </span>
         </div>
