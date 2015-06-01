@@ -256,6 +256,27 @@ object DateUtil {
   }
 
   /**
+   * The U.S. Stock Markets close at 4pm Eastern Time
+   * @return the { @link Date stock market closing time}
+   */
+  def getTradeStopTime(date: Date): Date = {
+    import Calendar._
+
+    // get current time in New York
+    val cal = Calendar.getInstance()
+    cal.setTime(date)
+    cal.setTimeZone(TimeZone.getTimeZone("America/New_York"))
+    cal.setTime(getTradeStartTime)
+
+    // set the time to 4pm
+    cal.set(HOUR_OF_DAY, 16)
+    cal.set(MINUTE, 0)
+    cal.set(SECOND, 0)
+    cal.set(MILLISECOND, 0)
+    cal.getTime
+  }
+
+  /**
    * The U.S. Stock Markets open at 9:30am Eastern Time
    * @return the { @link Date stock market opening time}
    */

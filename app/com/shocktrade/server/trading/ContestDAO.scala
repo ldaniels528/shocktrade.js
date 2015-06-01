@@ -64,7 +64,7 @@ object ContestDAO {
    * Queries all active contests that haven't been update in 5 minutes
    * <pre>
    * db.Contests.count({"status": "ACTIVE",
-   * "$or" : [ { processedTime : { "$lte" : new Date() } }, { processedTime : { "$exists" : false } } ],
+   * "$or" : [ { asOfDate : { "$lte" : new Date() } }, { asOfDate : { "$exists" : false } } ],
    * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
    * </pre>
    * @param lastProcessedTime the last time an update was performed
@@ -75,14 +75,11 @@ object ContestDAO {
       "status" -> ContestStatuses.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
       "$or" -> BSONArray(Seq(
-        BS("processing" -> BS("$exists" -> false)),
-        BS("processing.processedTime" -> BS("$exists" -> false)),
-        BS("processing.processedTime" -> BS("$lte" -> lastProcessedTime)))),
+        BS("asOfDate" -> BS("$exists" -> false)),
+        BS("asOfDate" -> BS("$lte" -> lastProcessedTime)))),
       "$or" -> BSONArray(Seq(
-        BS("processing" -> BS("$exists" -> false)),
-        BS("processing.host" -> BS("$exists" -> false)),
-        BS("processing.host" -> hostName)))
-      // "$or" -> BSONArray(Seq(BS("expirationTime" -> BS("$gte" -> asOfDate)), BS("expirationTime" -> BS("$exists" -> false))))
+        BS("host" -> BS("$exists" -> false)),
+        BS("host" -> hostName)))
     )).cursor[Contest]
   }
 
@@ -139,8 +136,24 @@ object ContestDAO {
     Logger.info(s"host = $host")
     mc.update(
       selector = BS("_id" -> contestId),
-      update = host.map(name => BS("$set" -> BS("processing.host" -> name))) getOrElse BS("$unset" -> BS("processing.host" -> "")),
-      writeConcern = GetLastError(),
+      update = host.map(name => BS("$set" -> BS("host" -> name))) getOrElse BS("$unset" -> BS("host" -> "")),
+      upsert = false, multi = false)
+  }
+
+  def updateProcessingStats(contestId: BSONObjectID,
+                            executionTime: Long,
+                            asOfDate: Date,
+                            lastMarketClose: Option[Date] = None)(implicit ec: ExecutionContext): Future[LastError] = {
+    var myUpdate = BS(
+      "asOfDate" -> asOfDate,
+      "executionTime" -> executionTime,
+      "processedHost" -> InetAddress.getLocalHost.getHostName)
+
+    lastMarketClose.foreach(t => myUpdate = myUpdate ++ BS("lastMarketClose" -> t))
+
+    mc.update(
+      selector = BS("_id" -> contestId),
+      update = BS("$set" -> myUpdate),
       upsert = false, multi = false)
   }
 
@@ -251,7 +264,7 @@ object ContestDAO {
         BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> order.playerId))),
         BS(
           // set the lastMarketClose and lastUpdatedTime properties
-          "$set" -> BS("processing.lastMarketClose" -> asOfDate, "lastUpdatedTime" -> new Date()),
+          "$set" -> BS("lastMarketClose" -> asOfDate, "lastUpdatedTime" -> new Date()),
 
           // remove the expired order
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> order.id)),

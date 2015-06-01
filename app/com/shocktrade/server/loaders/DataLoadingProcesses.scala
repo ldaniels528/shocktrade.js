@@ -11,10 +11,10 @@ import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 /**
- * Stock Quote Update Process
+ * ShockTrade Data Loading Process
  * @author lawrence.daniels@gmail.com
  */
-object StockQuoteUpdateProcess {
+object DataLoadingProcesses {
   private val system = Akka.system
   implicit val ec = system.dispatcher
 

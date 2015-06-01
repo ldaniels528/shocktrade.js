@@ -11,10 +11,6 @@ import com.shocktrade.actors.ContestActor._
 import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
-import com.shocktrade.util.DateUtil._
-import org.joda.time.DateTime
-import play.api.Logger
-import play.api.libs.iteratee.Iteratee
 import play.libs.Akka
 import reactivemongo.bson.BSONObjectID
 import reactivemongo.core.commands.LastError
@@ -22,7 +18,7 @@ import reactivemongo.core.commands.LastError
 import scala.collection.concurrent.TrieMap
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.implicitConversions
+import scala.language.{postfixOps, implicitConversions}
 
 /**
  * Contest Management Proxy
@@ -31,99 +27,44 @@ import scala.language.implicitConversions
 object Contests {
   private val system = Akka.system
   private implicit val ec = system.dispatcher
-  private val finderActor = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 10)), name = "ContestFinder")
+  private val finderActor = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 20)), name = "ContestFinder")
   private val contestActors = TrieMap[String, ActorRef]()
-
-  private implicit val timeout: Timeout = 30.second
-  private var lastEffectiveDate: DateTime = computeInitialFulfillmentDate
-  private val frequency = 1 // TODO should be 5 (in minutes)
-
-  /**
-   * Starts the Order Processing System
-   */
-  def start() {
-    Logger.info("Starting Order Processing System ...")
-
-    // process orders once every 5 minutes
-    system.scheduler.schedule(5.seconds, frequency.minutes)(processOrders())
-
-    // process orders once per hour
-    system.scheduler.schedule(1.hour, frequency.minutes)(applyMarginInterest())
-    ()
-  }
-
-  def applyMarginInterest()(implicit timeout: Timeout) = {
-    /*
-    try {
-      val currentTime = new Date()
-
-      Logger.info(s"Applying interest charges for margin accounts...")
-      ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(60)).enumerate().apply(Iteratee.foreach { contest =>
-        contestActor(contest.id) ! ApplyMarginInterest(contest, lastEffectiveDate)
-      })
-
-      // update the effective date
-      lastEffectiveDate = currentTime;
-
-    } catch {
-      case e: Exception =>
-        Logger.error("Error processing orders", e)
-    }*/
-  }
+  private implicit val timeout: Timeout = 5.second
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? CloseOrder(contestId, playerId, orderId, fields)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? CloseOrder(contestId, playerId, orderId, fields)).mapTo[Option[Contest]]
   }
 
   def createContest(contest: Contest)(implicit timeout: Timeout) = {
-    (contestActor(contest.id) ? CreateContest(contest)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[LastError]
-    }
+    (Contests ? CreateContest(contest)).mapTo[LastError]
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? CreateMarginAccount(contestId, playerId, account)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? CreateMarginAccount(contestId, playerId, account)).mapTo[Option[Contest]]
   }
 
   def createMessage(contestId: BSONObjectID, message: Message)(fields: String*)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? CreateMessage(contestId, message, fields)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? CreateMessage(contestId, message, fields)).mapTo[Option[Contest]]
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? CreateOrder(contestId, playerId, order)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? CreateOrder(contestId, playerId, order)).mapTo[Option[Contest]]
   }
 
   def deleteContestByID(id: BSONObjectID)(implicit timeout: Timeout) = {
-    (contestActor(id) ? DeleteContestByID(id)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[LastError]
-    }
+    (Contests ? DeleteContestByID(id)).mapTo[LastError]
   }
 
   /**
    * Retrieves all of the system-defined perks
    * @return a promise of a sequence of perks
    */
-  def findAvailablePerks(id: BSONObjectID) = ContestDAO.findAvailablePerks(id)
+  def findAvailablePerks(id: BSONObjectID)(implicit timeout: Timeout) = {
+    (Contests ? FindAvailablePerks(id)).mapTo[Seq[Perk]]
+  }
 
   def findContestByID(id: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (contestActor(id) ? FindContestByID(id, fields)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? FindContestByID(id, fields)).mapTo[Option[Contest]]
   }
 
   def findContests(searchOptions: SearchOptions)(fields: String*)(implicit timeout: Timeout) = {
@@ -148,34 +89,11 @@ object Contests {
   }
 
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? FindOrderByID(contestId, orderId, fields)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? FindOrderByID(contestId, orderId, fields)).mapTo[Option[Contest]]
   }
 
   def joinContest(id: BSONObjectID, participant: Participant)(implicit timeout: Timeout) = {
-    (contestActor(id) ? JoinContest(id, participant)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
-  }
-
-  private def processOrders() {
-    val currentTime = new Date()
-    try {
-      Logger.info(s"Processing order fulfillment [as of $lastEffectiveDate]...")
-      ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(frequency)).enumerate().apply(Iteratee.foreach { contest =>
-        contestActor(contest.id) ! ProcessOrders(contest, lastEffectiveDate)
-      })
-
-      // update the effective date
-      lastEffectiveDate = currentTime;
-
-    } catch {
-      case e: Exception =>
-        Logger.error("Error processing orders", e)
-    }
+    (Contests ? JoinContest(id, participant)).mapTo[Option[Contest]]
   }
 
   /**
@@ -187,38 +105,37 @@ object Contests {
    * @return a promise of an option of a contest
    */
   def purchasePerks(id: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double): Future[Option[Contest]] = {
-    (contestActor(id) ? PurchasePerks(id, playerId, perkCodes, totalCost)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? PurchasePerks(id, playerId, perkCodes, totalCost)).mapTo[Option[Contest]]
   }
 
   def quitContest(id: BSONObjectID, playerId: BSONObjectID)(implicit timeout: Timeout) = {
-    (contestActor(id) ? QuitContest(id, playerId)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? QuitContest(id, playerId)).mapTo[Option[Contest]]
   }
 
   def startContest(id: BSONObjectID, startTime: Date)(implicit timeout: Timeout) = {
-    (contestActor(id) ? StartContest(id, startTime)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? StartContest(id, startTime)).mapTo[Option[Contest]]
   }
 
   def transferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double)(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? TransferFundsBetweenAccounts(contestId, playerId, source, amount)) map {
-      case e: Exception => throw new IllegalStateException(e)
-      case response => response.asInstanceOf[Option[Contest]]
-    }
+    (Contests ? TransferFundsBetweenAccounts(contestId, playerId, source, amount)).mapTo[Option[Contest]]
   }
 
   def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit timeout: Timeout) = {
-    (contestActor(contestId) ? UpdateProcessingHost(contestId, host)) map {
-      case e: Exception => throw new IllegalStateException(e.getMessage, e)
-      case response => response.asInstanceOf[LastError]
-    }
+    (Contests ? UpdateProcessingHost(contestId, host)).mapTo[LastError]
+  }
+
+  def !(action: ContestAgnosticAction) = finderActor ! action
+
+  def !(action: ContestSpecificAction) = contestActor(action.contestId) ! action
+
+  def ?(action: ContestAgnosticAction)(implicit timeout: Timeout) = (finderActor ? action) map {
+    case e: Exception => throw new IllegalStateException(e.getMessage, e)
+    case response => response
+  }
+
+  def ?(action: ContestSpecificAction)(implicit timeout: Timeout) = (contestActor(action.contestId) ? action) map {
+    case e: Exception => throw new IllegalStateException(e.getMessage, e)
+    case response => response
   }
 
   /**
@@ -228,12 +145,6 @@ object Contests {
    */
   private def contestActor(id: BSONObjectID): ActorRef = {
     contestActors.getOrElseUpdate(id.stringify, system.actorOf(Props[ContestActor], name = s"ContestActor-${id.stringify}"))
-  }
-
-  private def computeInitialFulfillmentDate: Date = {
-    val tradeStart = getTradeStartTime
-    val currentTime = new Date()
-    if (tradeStart >= currentTime) currentTime else tradeStart
   }
 
 }

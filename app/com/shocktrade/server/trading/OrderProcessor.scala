@@ -40,30 +40,10 @@ object OrderProcessor {
     // compute the market close time (+20 minutes for margin of error)
     val tradingClose = new DateTime(getTradeStopTime()).plusMinutes(20).toDate
 
-    // perform the claiming process
-    val results = {
-      // if claiming has never occurred, serially execute each
-      if (c.processing.processedTime.isEmpty) {
-        for {
-          claimsA <- processOrders(c, asOfDate, isDaysClose = false)
-          claimsB <- processOrders(c, asOfDate, isDaysClose = true)
-        } yield (claimsA ++ claimsB).distinct
-      }
-
-      // was the last run while trading still active?
-      else if (c.processing.processedTime.exists(_ < tradingClose)) processOrders(c, asOfDate, isDaysClose = false)
-
-      // if not, was there already an end-of-Trading Day-event?
-      else if (c.processing.lastMarketClose.isEmpty || c.processing.lastMarketClose.exists(_ < tradingClose)) processOrders(c, tradingClose, isDaysClose = true)
-
-      // otherwise nothing happens
-      else Future.successful(Nil)
-    }
-
     // gather the outcomes
     val allOutcomes = for {
     // unwrap the claiming outcomes
-      claimOutcomes <- results
+      claimOutcomes <- processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
 
       // close any expired orders
       closeOrders <- ContestDAO.closeExpiredOrders(c, asOfDate)
@@ -181,9 +161,7 @@ object OrderProcessor {
     info(c, s"Processing Orders as of ${new DateTime(asOfDate).toString("MM/dd/yyyy hh:mm:ss")} [Market ${daysCloseLabels(isDaysClose)}]")
 
     // if it's day's close, grab all orders; otherwise, all non-Market Close orders
-    val openOrders = ContestDAO.getOpenWorkOrders(c, asOfDate)
-    val orders = if (isDaysClose) openOrders else openOrders.filterNot(_.priceType == PriceTypes.MARKET_ON_CLOSE)
-
+    val orders = ContestDAO.getOpenWorkOrders(c, asOfDate)
     if (orders.nonEmpty) {
       info(c, s"${orders.size} eligible order(s) found")
       showOrders(c, orders)
@@ -294,36 +272,6 @@ object OrderProcessor {
     potentials.headOption.map(_.copy(price = averagePrice, quantity = totalQuantity))
   }
 
-  private def fulfillOrders(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
-    Future.sequence(claims map { claim =>
-      for {
-      // perform the BUY or SELL
-        outcome <- claim.workOrder.orderType match {
-          case OrderTypes.BUY =>
-            info(c, s"[${claim.workOrder.playerId}] Increasing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.increasePosition(c, claim, asOfDate) map {
-              case o@Failed(error, _) if error.contains("qualifying position") =>
-                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRFCTIMG)) {
-                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
-                }
-                o
-              case outcome => outcome
-            }
-          case OrderTypes.SELL =>
-            info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.reducePosition(c, claim, asOfDate) map {
-              case o@Failed(error, _) if error.contains("qualifying position") =>
-                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRCHEMNT)) {
-                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
-                }
-                o
-              case outcome => outcome
-            }
-        }
-      } yield (claim, outcome)
-    })
-  }
-
   private def showProcessingSummary(c: Contest, outcomes: Seq[(Claim, Outcome)], closedOrders: Int, updatedCount: Int) = {
     // display the summary information
     info(c, s"$updatedCount claimed of ${outcomes.length} qualified order(s)")
@@ -336,14 +284,6 @@ object OrderProcessor {
       case (claim, outcome) =>
         info(c, s"Order #${claim.workOrder.id}: outcome = $outcome")
     }
-  }
-
-  private def isEligibleTime(c: Contest, wo: WorkOrder, q: WorkQuote, asOfDate: Date): (Boolean, Date) = {
-    (wo.orderTime <= q.tradeDateTime || wo.priceType == PriceTypes.MARKET_ON_CLOSE, q.tradeDateTime)
-  }
-
-  private def isEligibleVolume(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Long) = {
-    if (q.totalVolume >= wo.quantity) (true, wo.quantity) else (wo.partialFulfillment && q.totalVolume > 0, q.totalVolume)
   }
 
   private def isEligiblePrice(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Double) = {
@@ -361,6 +301,18 @@ object OrderProcessor {
       case _ => true
     }
     ((q.price > 0.00d) && isGood, q.price)
+  }
+
+  private def isEligibleTime(c: Contest, wo: WorkOrder, q: WorkQuote, asOfDate: Date): (Boolean, Date) = {
+    val isGood = wo.priceType match {
+      case PriceTypes.MARKET_ON_CLOSE => !TradingClock.isTradingActive(asOfDate) || asOfDate > DateUtil.getTradeStopTime(asOfDate)
+      case _ => wo.orderTime <= q.tradeDateTime
+    }
+    (isGood, q.tradeDateTime)
+  }
+
+  private def isEligibleVolume(c: Contest, wo: WorkOrder, q: WorkQuote): (Boolean, Long) = {
+    if (q.totalVolume >= wo.quantity) (true, wo.quantity) else (wo.partialFulfillment && q.totalVolume > 0, q.totalVolume)
   }
 
   private def getEligibleStockQuotes(c: Contest, orders: Seq[WorkOrder], asOfDate: Date): Seq[WorkQuote] = {
@@ -400,6 +352,36 @@ object OrderProcessor {
 
     // display the stock quotes
     stockQuotes
+  }
+
+  private def fulfillOrders(c: Contest, asOfDate: Date, claims: Seq[Claim])(implicit ec: ExecutionContext) = {
+    Future.sequence(claims map { claim =>
+      for {
+      // perform the BUY or SELL
+        outcome <- claim.workOrder.orderType match {
+          case OrderTypes.BUY =>
+            info(c, s"[${claim.workOrder.playerId}] Increasing position of ${claim.symbol} x ${claim.quantity}")
+            ContestDAO.increasePosition(c, claim, asOfDate) map {
+              case o@Failed(error, _) if error.contains("qualifying position") =>
+                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRFCTIMG)) {
+                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                }
+                o
+              case outcome => outcome
+            }
+          case OrderTypes.SELL =>
+            info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
+            ContestDAO.reducePosition(c, claim, asOfDate) map {
+              case o@Failed(error, _) if error.contains("qualifying position") =>
+                if (!claim.workOrder.participant.perks.contains(PerkTypes.PRCHEMNT)) {
+                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                }
+                o
+              case outcome => outcome
+            }
+        }
+      } yield (claim, outcome)
+    })
   }
 
   private def isTradingActive(asOfDate: Date) = DateUtil.isTradingActive(asOfDate)

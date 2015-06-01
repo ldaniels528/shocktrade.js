@@ -10,8 +10,6 @@ import play.api.libs.json.{Reads, Writes, __}
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, _}
 
-import scala.util.{Failure, Success, Try}
-
 /**
  * Represents a contest
  * @author lawrence.daniels@gmail.com
@@ -31,7 +29,7 @@ case class Contest(id: BSONObjectID = BSONObjectID.generate,
                    invitationOnly: Boolean = false,
                    perksAllowed: Boolean = false,
                    robotsAllowed: Boolean = false,
-                   processing: ContestProcessing = new ContestProcessing())
+                   asOfDate: Option[Date] = None)
 
 /**
  * Contest Singleton
@@ -56,7 +54,7 @@ object Contest {
       (__ \ "invitationOnly").read[Boolean] and
       (__ \ "perksAllowed").read[Boolean] and
       (__ \ "robotsAllowed").read[Boolean] and
-      (__ \ "processing").read[ContestProcessing])(Contest.apply _)
+      (__ \ "asOfDate").readNullable[Date])(Contest.apply _)
 
   implicit val contestWrites: Writes[Contest] = (
     (__ \ "_id").write[BSONObjectID] and
@@ -74,10 +72,10 @@ object Contest {
       (__ \ "invitationOnly").write[Boolean] and
       (__ \ "perksAllowed").write[Boolean] and
       (__ \ "robotsAllowed").write[Boolean] and
-      (__ \ "processing").write[ContestProcessing])(unlift(Contest.unapply))
+      (__ \ "asOfDate").writeNullable[Date])(unlift(Contest.unapply))
 
   implicit object ContestReader extends BSONDocumentReader[Contest] {
-    def read(doc: BSONDocument) = Try(Contest(
+    def read(doc: BSONDocument) = Contest(
       doc.getAs[BSONObjectID]("_id").get,
       doc.getAs[String]("name").get,
       doc.getAs[PlayerRef]("creator").get,
@@ -93,13 +91,8 @@ object Contest {
       doc.getAs[Boolean]("invitationOnly").contains(true),
       doc.getAs[Boolean]("perksAllowed").contains(true),
       doc.getAs[Boolean]("robotsAllowed").contains(true),
-      doc.getAs[ContestProcessing]("processing").getOrElse(ContestProcessing())
-    )) match {
-      case Success(v) => v
-      case Failure(e) =>
-        e.printStackTrace()
-        throw new IllegalStateException(e)
-    }
+      doc.getAs[Date]("asOfDate")
+    )
   }
 
   implicit object ContestWriter extends BSONDocumentWriter[Contest] {
@@ -119,7 +112,7 @@ object Contest {
       "invitationOnly" -> contest.invitationOnly,
       "perksAllowed" -> contest.perksAllowed,
       "robotsAllowed" -> contest.robotsAllowed,
-      "processing" -> contest.processing,
+      "asOfDate" -> contest.asOfDate,
       "playerCount" -> contest.participants.length
     )
   }

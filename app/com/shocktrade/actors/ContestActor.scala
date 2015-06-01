@@ -12,21 +12,23 @@ import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime
 import play.api.Logger
+import play.libs.Akka
 import reactivemongo.bson.BSONObjectID
 
-import scala.concurrent.ExecutionContext
-import scala.util.{Failure, Success}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Contest I/O Actor
  * @author lawrence.daniels@gmail.com
  */
 class ContestActor extends Actor with ActorLogging {
-
-  import context.dispatcher
+  implicit val ec = Akka.system.dispatcher
 
   override def receive = {
-    case action: ContestAction => action.execute(sender())
+    case action: ContestAgnosticAction => action.execute(sender())
+    case action: ContestSpecificAction => action.execute(sender())
     case message =>
       log.error(s"Unhandled message '$message' (${Option(message).map(_.getClass.getName).orNull})")
       unhandled(message)
@@ -38,29 +40,44 @@ class ContestActor extends Actor with ActorLogging {
  * @author lawrence.daniels@gmail.com
  */
 object ContestActor {
+  implicit val ec = Akka.system.dispatcher
 
   /**
    * Represents an asynchronous action
    * @author lawrence.daniels@gmail.com
    */
-  sealed trait ContestAction {
+  sealed trait ContestAgnosticAction {
 
     def execute(mySender: ActorRef)(implicit ec: ExecutionContext)
 
   }
 
-  case class ApplyMarginInterest(contest: Contest, asOfDate: Date) extends ContestAction {
+  /**
+   * Represents an asynchronous action
+   * @author lawrence.daniels@gmail.com
+   */
+  sealed trait ContestSpecificAction extends ContestAgnosticAction {
+    
+    def contestId: BSONObjectID
+
+  }
+
+  case class ApplyMarginInterest(contest: Contest, asOfDate: Date) extends ContestSpecificAction {
+    override def contestId = contest.id
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.applyMarginInterest(contest, asOfDate) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
-          contest_?.foreach { WebSockets ! ContestUpdated(_)}
+          contest_?.foreach {
+            WebSockets ! ContestUpdated(_)
+          }
         case Failure(e) => mySender ! e
       }
     }
   }
 
-  case class CreateContest(contest: Contest) extends ContestAction {
+  case class CreateContest(contest: Contest) extends ContestSpecificAction {
+    override def contestId = contest.id
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.createContest(contest) onComplete {
         case Success(lastError) =>
@@ -71,7 +88,7 @@ object ContestActor {
     }
   }
 
-  case class CreateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestAction {
+  case class CreateMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.createMarginAccount(contestId, playerId, account) onComplete {
         case Success(contest_?) =>
@@ -87,7 +104,7 @@ object ContestActor {
     }
   }
 
-  case class CreateMessage(contestId: BSONObjectID, message: Message, fields: Seq[String]) extends ContestAction {
+  case class CreateMessage(contestId: BSONObjectID, message: Message, fields: Seq[String]) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.createMessage(contestId, message) onComplete {
         case Success(contest_?) =>
@@ -98,7 +115,7 @@ object ContestActor {
     }
   }
 
-  case class CloseOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestAction {
+  case class CloseOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.closeOrder(contestId, playerId, orderId) onComplete {
         case Success(contest_?) =>
@@ -111,7 +128,7 @@ object ContestActor {
     }
   }
 
-  case class CreateOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order) extends ContestAction {
+  case class CreateOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.createOrder(contestId, playerId, order) onComplete {
         case Success(contest_?) =>
@@ -124,7 +141,7 @@ object ContestActor {
     }
   }
 
-  case class DeleteContestByID(contestId: BSONObjectID) extends ContestAction {
+  case class DeleteContestByID(contestId: BSONObjectID) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.deleteContestByID(contestId) onComplete {
         case Success(lastError) =>
@@ -135,16 +152,16 @@ object ContestActor {
     }
   }
 
-  case class FindContestByID(id: BSONObjectID, fields: Seq[String]) extends ContestAction {
+  case class FindContestByID(contestId: BSONObjectID, fields: Seq[String]) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
-      ContestDAO.findContestByID(id, fields) onComplete {
+      ContestDAO.findContestByID(contestId, fields) onComplete {
         case Success(contest_?) => mySender ! contest_?
         case Failure(e) => mySender ! e
       }
     }
   }
 
-  case class FindContests(searchOptions: SearchOptions, fields: Seq[String]) extends ContestAction {
+  case class FindContests(searchOptions: SearchOptions, fields: Seq[String]) extends ContestAgnosticAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) = {
       ContestDAO.findContests(searchOptions, fields) onComplete {
         case Success(contests) => mySender ! contests
@@ -153,7 +170,7 @@ object ContestActor {
     }
   }
 
-  case class FindContestsByPlayerID(playerId: BSONObjectID, fields: Seq[String]) extends ContestAction {
+  case class FindContestsByPlayerID(playerId: BSONObjectID, fields: Seq[String]) extends ContestAgnosticAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.findContestsByPlayerID(playerId) onComplete {
         case Success(contests) => mySender ! contests
@@ -162,7 +179,7 @@ object ContestActor {
     }
   }
 
-  case class FindContestsByPlayerName(playerName: String, fields: Seq[String]) extends ContestAction {
+  case class FindContestsByPlayerName(playerName: String, fields: Seq[String]) extends ContestAgnosticAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.findContestsByPlayerName(playerName) onComplete {
         case Success(contests) => mySender ! contests
@@ -171,7 +188,7 @@ object ContestActor {
     }
   }
 
-  case class FindOrderByID(contestId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestAction {
+  case class FindOrderByID(contestId: BSONObjectID, orderId: BSONObjectID, fields: Seq[String]) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.findOrderByID(contestId, orderId) onComplete {
         case Success(contest_?) => mySender ! contest_?
@@ -180,7 +197,16 @@ object ContestActor {
     }
   }
 
-  case class JoinContest(contestId: BSONObjectID, participant: Participant) extends ContestAction {
+  case class FindAvailablePerks(contestId: BSONObjectID) extends ContestAgnosticAction {
+    override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
+      ContestDAO.findAvailablePerks(contestId) onComplete {
+        case Success(perks) => mySender ! perks
+        case Failure(e) => mySender ! e
+      }
+    }
+  }
+
+  case class JoinContest(contestId: BSONObjectID, participant: Participant) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.joinContest(contestId, participant) onComplete {
         case Success(contest_?) =>
@@ -191,7 +217,7 @@ object ContestActor {
     }
   }
 
-  case class PurchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double) extends ContestAction {
+  case class PurchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.purchasePerks(contestId, playerId, perkCodes, totalCost) onComplete {
         case Success(contest_?) =>
@@ -204,11 +230,20 @@ object ContestActor {
     }
   }
 
-  case class ProcessOrders(contest: Contest, asOfDate: DateTime) extends ContestAction {
+  case class ProcessOrders(contest: Contest, asOfDate: DateTime) extends ContestSpecificAction {
+    override def contestId = contest.id
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
+      val startTime = System.currentTimeMillis()
+
       // if trading was active during the as-of date
-      OrderProcessor.processContest(contest, asOfDate) onComplete {
+      Try(Await.result(OrderProcessor.processContest(contest, asOfDate), 5.seconds)) match {
         case Success(updateCount) =>
+          val elapsedTime = System.currentTimeMillis() - startTime
+          Logger.info(s"Finished processing orders in $elapsedTime msec(s)")
+
+          // update the processing info
+          ContestDAO.updateProcessingStats(contest.id, executionTime = elapsedTime, asOfDate = asOfDate)
+
           // if an update occurred, notify the users
           if (updateCount > 0) {
             ContestDAO.findContestByID(contest.id, fields = Nil) foreach {
@@ -222,7 +257,7 @@ object ContestActor {
     }
   }
 
-  case class QuitContest(contestId: BSONObjectID, playerId: BSONObjectID) extends ContestAction {
+  case class QuitContest(contestId: BSONObjectID, playerId: BSONObjectID) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.quitContest(contestId, playerId) onComplete {
         case Success(contest_?) =>
@@ -233,7 +268,7 @@ object ContestActor {
     }
   }
 
-  case class StartContest(contestId: BSONObjectID, startTime: Date) extends ContestAction {
+  case class StartContest(contestId: BSONObjectID, startTime: Date) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.startContest(contestId, startTime) onComplete {
         case Success(contest_?) =>
@@ -244,7 +279,7 @@ object ContestActor {
     }
   }
 
-  case class TransferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double) extends ContestAction {
+  case class TransferFundsBetweenAccounts(contestId: BSONObjectID, playerId: BSONObjectID, source: AccountType, amount: Double) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.transferFundsBetweenAccounts(contestId, playerId, source, amount) onComplete {
         case Success(contest_?) =>
@@ -260,7 +295,7 @@ object ContestActor {
     }
   }
 
-  case class UpdateProcessingHost(contestId: BSONObjectID, host: Option[String]) extends ContestAction {
+  case class UpdateProcessingHost(contestId: BSONObjectID, host: Option[String]) extends ContestSpecificAction {
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.updateProcessingHost(contestId, host) onComplete {
         case Success(lastError) => mySender ! lastError
