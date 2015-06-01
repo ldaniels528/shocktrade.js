@@ -14,7 +14,7 @@ import play.modules.reactivemongo.json.collection.JSONCollection
  * Session Resources
  * @author lawrence.daniels@gmail.com
  */
-object SessionsResources extends Controller with MongoController {
+object SessionsController extends Controller with MongoController {
   lazy val mc: JSONCollection = db.collection[JSONCollection]("UserSessions")
 
   def getSessions = Action.async {

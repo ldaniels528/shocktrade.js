@@ -16,7 +16,7 @@ import scala.concurrent.duration._
  * Trading Resources
  * @author lawrence.daniels@gmail.com
  */
-object TradingResources extends Controller {
+object TradingController extends Controller {
   private val system = Akka.system
   implicit val ec = system.dispatcher
 

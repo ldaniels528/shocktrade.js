@@ -1,6 +1,6 @@
 package com.shocktrade.controllers
 
-import com.shocktrade.controllers.QuoteResources._
+import com.shocktrade.controllers.QuoteController._
 import com.shocktrade.models.quote.QuoteFilter
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

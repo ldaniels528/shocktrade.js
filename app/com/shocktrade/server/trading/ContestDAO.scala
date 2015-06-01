@@ -4,7 +4,7 @@ import java.net.InetAddress
 import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.controllers.ProfileResources._
+import com.shocktrade.controllers.ProfileController._
 import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._

@@ -20,7 +20,7 @@ import scala.concurrent.Future
  * News REST Resources
  * @author lawrence.daniels@gmail.com
  */
-object NewsResources extends Controller with MongoController with ParsingCapabilities {
+object NewsController extends Controller with MongoController with ParsingCapabilities {
   private lazy val mcQ = db.collection[JSONCollection]("Stocks")
   private lazy val mcR = db.collection[JSONCollection]("RssFeeds")
 

@@ -15,7 +15,7 @@ import scala.collection.concurrent.TrieMap
  * Online Status Resources
  * @author lawrence.daniels@gmail.com
  */
-object OnlineStatusResources extends Controller with ErrorHandler {
+object OnlineStatusController extends Controller with ErrorHandler {
   private val statuses = TrieMap[String, OnlineStatus]()
 
   ////////////////////////////////////////////////////////////////////////////

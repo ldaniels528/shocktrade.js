@@ -7,8 +7,8 @@ import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
-import com.shocktrade.controllers.ContestResourceForms._
-import com.shocktrade.controllers.QuoteResources.Quote
+import com.shocktrade.controllers.ContestControllerForms._
+import com.shocktrade.controllers.QuoteController.Quote
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
@@ -28,10 +28,10 @@ import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 
 /**
- * Contest Resources
+ * Contest Controller
  * @author lawrence.daniels@gmail.com
  */
-object ContestResources extends Controller with ErrorHandler {
+object ContestController extends Controller with ErrorHandler {
   private val tabular = new Tabular()
   private val DisplayColumns = Seq(
     "name", "creator", "startTime", "expirationTime", "startingBalance", "status",
@@ -508,7 +508,7 @@ object ContestResources extends Controller with ErrorHandler {
 
     for {
     // query the quotes for all symbols
-      quotes <- QuoteResources.findQuotesBySymbols(allSymbols)
+      quotes <- QuoteController.findQuotesBySymbols(allSymbols)
       //_ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes

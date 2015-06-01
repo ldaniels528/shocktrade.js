@@ -19,6 +19,9 @@ class TradingEnginePlugin(app: Application) extends Plugin {
 
     // if production, start the Stock Quote Update and Trade Claiming processes
     if (Play.isProd(app)) {
+      // start the trading engine
+      Contests.start()
+
       // start the stock quote update process
       StockQuoteUpdateProcess.start()
     }
@@ -29,7 +32,7 @@ class TradingEnginePlugin(app: Application) extends Plugin {
       TradingRobots.start()
 
       // start the trading engine
-      Contests.start()
+      //Contests.start()
     }
   }
 

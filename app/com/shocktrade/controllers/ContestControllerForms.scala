@@ -16,7 +16,7 @@ import scala.language.{implicitConversions, postfixOps}
  * Contest Resource Forms
  * @author lawrence.daniels@gmail.com
  */
-object ContestResourceForms {
+object ContestControllerForms {
 
   case class ContestCreateForm(name: String,
                                playerId: String,

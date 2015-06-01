@@ -26,7 +26,7 @@ import scala.concurrent.Future
  * Quote REST Resources
  * @author lawrence.daniels@gmail.com
  */
-object QuoteResources extends Controller with MongoController with ProfileFiltering {
+object QuoteController extends Controller with MongoController with ProfileFiltering {
   private lazy val naicsCodes = loadNaicsMappings()
   private lazy val sicCodes = loadSicsMappings()
   private val Stocks = "Stocks"

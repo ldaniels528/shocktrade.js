@@ -23,7 +23,7 @@ import scala.language.postfixOps
  * Chart Resources
  * @author lawrence.daniels@gmail.com
  */
-object ChartResources extends Controller with MongoController {
+object ChartController extends Controller with MongoController {
   private val analystCharts = ConcurrentCache[String, Future[Result]](3.days)
   private val stockCharts = ConcurrentCache[String, Future[Result]](15.minutes)
   lazy val mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
@@ -91,7 +91,7 @@ object ChartResources extends Controller with MongoController {
       quantities = participant.positions map (pos => (pos.symbol, pos.quantity))
 
       // query the symbols for the current market price
-      quotes <- QuoteResources.findQuotesBySymbols(quantities map (_._1))
+      quotes <- QuoteController.findQuotesBySymbols(quantities map (_._1))
 
       // create the mapping of symbols to quotes
       mappingQ = Map(quotes map (q => (q.symbol, q)): _*)

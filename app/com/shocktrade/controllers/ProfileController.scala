@@ -22,7 +22,7 @@ import scala.util.{Failure, Success, Try}
  * User Profile Resources
  * @author lawrence.daniels@gmail.com
  */
-object ProfileResources extends Controller with MongoController with ErrorHandler {
+object ProfileController extends Controller with MongoController with ErrorHandler {
   lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
 

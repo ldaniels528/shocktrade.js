@@ -1,6 +1,6 @@
 package com.shocktrade.models.profile
 
-import com.shocktrade.controllers.ProfileResources._
+import com.shocktrade.controllers.ProfileController._
 import com.shocktrade.util.BSONHelper._
 import play.libs.Akka
 import reactivemongo.api.collections.default.BSONCollection
