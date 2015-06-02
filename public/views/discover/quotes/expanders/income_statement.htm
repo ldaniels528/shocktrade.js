@@ -58,7 +58,7 @@
 
 <div class="row">
 	<div class="col-md-4">
-		<span class="qm_label">Revenue Growth <span class="small">(quarter)</span></span>
+		<span class="qm_label">Revenue Growth <span class="small">(qtr)</span></span>
 		<span class="qm_value pull-right">
 			<span ng-show="q.revenueGrowthQuarterly == null" class="null">&#8212;</span>
 			<span ng-show="q.revenueGrowthQuarterly != null"
@@ -67,11 +67,11 @@
 	</div>		
 	
 	<div class="col-md-4">
-		<span class="qm_label">Earnings Growth <span class="small">(quarter)</span></span>
+		<span class="qm_label">Earnings Growth <span class="small">(qtr)</span></span>
 		<span class="qm_value pull-right">
 			<span ng-show="q.earningsGrowthQuarterly == null" class="null">&#8212;</span>
 			<span ng-show="q.earningsGrowthQuarterly != null"
-				ng-class="q.earningsGrowthQuarterly < 0 ? 'negative' : ''">{{ q.earningsGrowthQuarterly | number:2 }}</span>
+				ng-class="q.earningsGrowthQuarterly < 0 ? 'negative' : ''">{{ q.earningsGrowthQuarterly | number:2 }}%</span>
 		</span>
 	</div>	
 	
