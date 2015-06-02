@@ -19,6 +19,10 @@
             //          Public Functions
             ///////////////////////////////////////////////////////////////////////////
 
+            $scope.mainInit = function(uuid) {
+                console.log("Session UUID is " + uuid);
+            };
+
             $scope.abs = function (value) {
                 return !value ? value : ((value < 0) ? -value : value);
             };
