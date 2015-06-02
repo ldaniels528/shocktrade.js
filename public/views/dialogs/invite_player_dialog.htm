@@ -3,26 +3,27 @@
         <h3>Send Game Invite(s)</h3>
     </div>
     <div class="modal-body">
-        <div class="gameline">
+        <div class="bold">
             {{ getInvitedCount() }} Friend(s) Selected
         </div>
-        <div style="display: inline; float: left; width: 60%">
-            <div class="friendsContainer">
-                <table style="width: 100%">
-                    <tr ng-repeat="friend in MySession.fbFriends">
-                        <td>
-                            <input type="checkbox" ng-model="invites[$index]">
-                            <avatar object="{{ friend }}" class="avatar-16"></avatar>
-                            {{ friend.name }}
-                        </td>
-                    </tr>
-                </table>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="friendsContainer">
+                    <table style="width: 100%">
+                        <tr ng-repeat="friend in MySession.fbFriends">
+                            <td>
+                                <input type="checkbox" ng-model="invites[$index]">
+                                <avatar object="{{ friend }}" class="avatar-16"></avatar>
+                                {{ friend.name }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <textarea style="width: 200px; height: 200px">Come play with us!</textarea>
             </div>
         </div>
-        <div style="display: inline; float: right; width: 40%">
-            <textarea style="width: 200px; height: 200px">Come play with us!</textarea>
-        </div>
-        <br style="clear: both">
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">

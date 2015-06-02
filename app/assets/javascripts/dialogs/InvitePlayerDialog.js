@@ -9,26 +9,30 @@
      * Invite Player Dialog Singleton
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('InvitePlayerDialog', function ($http, $log, $modal, $q) {
+    app.factory('InvitePlayerDialog', function ($http, $log, $modal, Facebook, MySession) {
         var service = {};
 
         /**
          * Invite a player via pop-up dialog
          */
-        service.popup = function ($scope, contest) {
+        service.popup = function (contest) {
 
             var modalInstance = $modal.open({
                 templateUrl: 'invite_player_dialog.htm',
                 controller: 'PlayerInviteCtrl',
                 resolve: {
-                    invites: function () {
-                        return $scope.selectedFriends;
+                    myFriends: function () {
+                        return MySession.fbFriends;
                     }
                 }
             });
 
             modalInstance.result.then(function (selectedFriends) {
-                $log.info("selectedFriends = " + angular.toJson(selectedFriends));
+                if(selectedFriends.length) {
+                    $log.info("selectedFriends = " + angular.toJson(selectedFriends));
+                    Facebook.send("http://www.nytimes.com/interactive/2015/04/15/travel/europe-favorite-streets.html");
+                }
+
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
@@ -41,17 +45,16 @@
      * Player Invite Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PlayerInviteCtrl', ['$scope', '$log', '$modalInstance', 'MySession',
-        function ($scope, $log, $modalInstance, MySession) {
+    app.controller('PlayerInviteCtrl', ['$scope', '$log', '$modalInstance', 'MySession', 'myFriends',
+        function ($scope, $log, $modalInstance, MySession, myFriends) {
 
             $scope.invites = [];
 
             $scope.getInvitedCount = function () {
                 var count = 0;
-                var invites = $scope.invites;
-                for (var n = 0; n < invites.length; n++) {
-                    if (invites[n]) count += 1;
-                }
+                angular.forEach($scope.invites, function (invitee) {
+                    if (invitee) count += 1;
+                });
                 return count;
             };
 
@@ -66,7 +69,7 @@
             function getSelectedFriends(invites) {
                 var selectedFriends = [];
                 for (var n = 0; n < invites.length; n++) {
-                    if (invites[n]) selectedFriends.push(MySession.fbFriends[n]);
+                    if (invites[n]) selectedFriends.push(myFriends[n]);
                 }
                 return selectedFriends;
             }

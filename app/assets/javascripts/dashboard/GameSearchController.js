@@ -5,8 +5,8 @@
      * Game Search Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('GameSearchController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'MySession', 'NewGameDialog',
-        function ($scope, $location, $log, $routeParams, $timeout, toaster, ContestService, MySession, NewGameDialog) {
+    app.controller('GameSearchController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'InvitePlayerDialog', 'MySession', 'NewGameDialog',
+        function ($scope, $location, $log, $routeParams, $timeout, toaster, ContestService, InvitePlayerDialog, MySession, NewGameDialog) {
 
             // public variables
             $scope.myContests = [];
@@ -37,6 +37,16 @@
             $scope.enterGame = function (contest) {
                 MySession.setContest(contest);
                 $location.path("/dashboard/" + contest.OID());
+            };
+
+            $scope.invitePlayerPopup = function (contest, playerID) {
+                var participant = ContestService.findPlayerByID(contest, playerID);
+                if(participant) {
+                    InvitePlayerDialog.popup($scope, participant);
+                }
+                else {
+                    toaster.pop('error', 'You must join tghe game to use this feature', null);
+                }
             };
 
             $scope.getAvailableCount = function () {

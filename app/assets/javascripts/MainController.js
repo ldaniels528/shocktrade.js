@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'InvitePlayerDialog', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
-        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, InvitePlayerDialog, MarketStatus, MySession, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
             $scope.loading = false;
@@ -72,7 +72,7 @@
              * Returns the contacts matching the given search term
              */
             $scope.getRegisteredFriends = function () {
-                return MySession.fbFriends.slice(0, 20);
+                return MySession.fbFriends;
             };
 
             $scope.getBarRanking = function () {
@@ -218,6 +218,7 @@
                 Facebook.getTaggableFriends().then(
                     function (response) {
                         var friends = response.data;
+                        console.log(friends.length + " friends loaded");
                         MySession.fbFriends = friends.sort(function (a, b) {
                             if (a.name < b.name) return -1;
                             else if (a.name > b.name) return 1;
@@ -228,10 +229,6 @@
                         toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends");
                     });
             }
-
-            $scope.invitePlayerPopup = function (participant) {
-                InvitePlayerDialog.popup($scope, participant);
-            };
 
             $scope.signUpPopup = function (fbUserID, fbProfile) {
                 SignUpDialog.popup(fbUserID, fbProfile);

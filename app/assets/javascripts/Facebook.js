@@ -109,6 +109,20 @@
             return deferred.promise;
         };
 
+        service.getUserProfile = function () {
+            var deferred = $q.defer();
+            FB.api("/v2.3/me?access_token=" + service.auth.accessToken,
+                function (response) {
+                    if (response && !response.error) {
+                        deferred.resolve(response);
+                    }
+                    else {
+                        deferred.reject(response);
+                    }
+                });
+            return deferred.promise;
+        };
+
         service.login = function () {
             var deferred = $q.defer();
             FB.login(function (response) {
@@ -137,18 +151,29 @@
             return deferred.promise;
         };
 
-        service.getUserProfile = function () {
-            var deferred = $q.defer();
-            FB.api("/me?access_token=" + service.auth.accessToken,
-                function (response) {
-                    if (response && !response.error) {
-                        deferred.resolve(response);
-                    }
-                    else {
-                        deferred.reject(response);
-                    }
-                });
-            return deferred.promise;
+        service.feed = function(caption, link) {
+            FB.ui({
+                "app_id": getAppId(),
+                "method": 'feed',
+                "link": link,
+                "caption": caption
+            }, function(response){});
+        };
+
+        service.send = function (message, link) {
+            FB.ui({
+                "app_id": getAppId(),
+                "method": 'send',
+                "link": link
+            });
+        };
+
+        service.share = function (link) {
+            FB.ui({
+                "app_id": getAppId(),
+                "method": 'share',
+                "href": link
+            }, function (response) {});
         };
 
         return service;
@@ -174,7 +199,36 @@
     ref.parentNode.insertBefore(js, ref);
 }(document));
 
-// Asynchronously load the Facebook SDK 
+/**
+ * Returns the Facebook application ID based on the running host
+ * @returns {*}
+ */
+window.getAppId = function () {
+    console.log("Facebook - hostname: " + location.hostname);
+    switch (location.hostname) {
+        case "localhost":
+            return "522523074535098"; // local dev
+        case "www.shocktrade.biz":
+            return "616941558381179";
+        case "shocktrade.biz":
+            return "616941558381179";
+        case "www.shocktrade.com":
+            return "364507947024983";
+        case "shocktrade.com":
+            return "364507947024983";
+        case "www.shocktrade.net":
+            return "616569495084446";
+        case "shocktrade.net":
+            return "616569495084446";
+        default:
+            console.log("Unrecognized hostname '" + location.hostname + "'");
+            return "522523074535098"; // unknown, so local dev
+    }
+};
+
+/**
+ * Asynchronously load the Facebook SDK
+ */
 window.fbAsyncInit = function () {
     // initialize the Facebook SDK
     FB.init({
@@ -216,22 +270,6 @@ window.fbAsyncInit = function () {
             }
         }
     });
-
-    /**
-     * Returns the Facebook application ID based on the running host
-     * @returns {*}
-     */
-    function getAppId() {
-        switch(location.hostname) {
-            case "localhost": return "522523074535098"; // local dev
-            case "shocktrade.biz": return "616941558381179";
-            case "shocktrade.com": return "364507947024983";
-            case "shocktrade.net": return "616569495084446";
-            default:
-                console.log("Unrecognized hostname '" + location.hostname + "'");
-                return "522523074535098"; // unknown, so local dev
-        }
-    }
 
 };
 
