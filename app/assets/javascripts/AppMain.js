@@ -12,8 +12,6 @@
         function ($routeProvider) {
             // setup the routes
             $routeProvider
-                .when('/awards', {templateUrl: '/assets/views/awards/awards.htm', controller: 'AwardsController'})
-                .when('/connect', {templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectController'})
                 .when('/dashboard', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/dashboard/:contestId', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/discover', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
@@ -23,7 +21,10 @@
                 .when('/news', {templateUrl: '/assets/views/news/news_center.htm', controller: 'NewsController'})
                 .when('/research', {templateUrl: '/assets/views/research/research.htm', controller: 'ResearchController'})
                 .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
-                .when('/profile', {templateUrl: '/assets/views/profile/profile.htm', controller: 'ProfileController'})
+                .when('/profile', {redirectTo: '/profile/connect'})
+                .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'ProfileController'})
+                .when('/profile/connect', {templateUrl: '/assets/views/profile/connect/connect.htm', controller: 'ProfileController'})
+                .when('/profile/statistics', {templateUrl: '/assets/views/profile/statistics.htm', controller: 'ProfileController'})
                 .otherwise({redirectTo: '/discover'});
         }]);
 

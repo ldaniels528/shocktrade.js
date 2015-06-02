@@ -1,8 +1,0 @@
-<div ng-init="initProfile()">
-    <tabset>
-        <tab ng-repeat="tab in profileTabs">
-            <tab-heading><i ng-class="tab.icon"></i> {{ tab.name }}</tab-heading>
-            <div ng-include src="tab.path"></div>
-        </tab>
-    </tabset>
-</div>

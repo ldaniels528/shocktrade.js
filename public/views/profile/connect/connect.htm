@@ -1,3 +1,4 @@
+<div ng-include src="'/assets/views/profile/profile_tabs.htm'"></div>
 <div class="col-md-12 profile_bkg" ng-controller="ConnectController">
 	<!-- Contacts -->
 	<div class="col-md-3">
@@ -10,10 +11,10 @@
 		</div>
 		<div ng-show="contact.id" style="width: 100%">
 			<!-- if ShockTrade user -->
-			<div ng-show="contact.profile" ng-include src="'/assets/views/connect/contact_card.htm'"></div>
+			<div ng-show="contact.profile" ng-include src="'/assets/views/profile/connect/contact_card.htm'"></div>
 			
 			<!-- Non-ShockTrade user -->
-			<div ng-hide="contact.profile" ng-include src="'/assets/views/connect/unregistered_user_card.htm'"></div>
+			<div ng-hide="contact.profile" ng-include src="'/assets/views/profile/connect/unregistered_user_card.htm'"></div>
 		</div>		
 		<div class="contactsContainer">
 			<span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
