@@ -82,7 +82,7 @@
                     {{ u.eventType == 'MAIL' ? u.title : u.description }}
                 </div>
                 <div class="col-md-3">
-                    {{ getDate((u.creationTime) | date:'MM/dd hh:mma' }}
+                    {{ getDate(u.creationTime) | duration }}
                 </div>
             </div>
 		</div>
