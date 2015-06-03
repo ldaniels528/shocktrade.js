@@ -1,9 +1,0 @@
-<div ng-init="initProfile()">
-    <tabset>
-        <tab ng-repeat="tab in profileTabs" active="tab.active" select="changeProfileTab($index)">
-            <tab-heading>
-                <i ng-class="tab.icon"></i> {{ tab.name }}
-            </tab-heading>
-        </tab>
-    </tabset>
-</div>

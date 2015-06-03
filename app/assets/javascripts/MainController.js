@@ -103,12 +103,12 @@
                 if (path.indexOf("/search") != -1) return 0;
                 else if (path.indexOf("/dashboard") != -1) return 1;
                 else if (path.indexOf("/discover") != -1) return 2;
-                else if (path.indexOf("/explore") != -1) return 2;
-                else if (path.indexOf("/favorites") != -1) return 3;
-                else if (path.indexOf("/research") != -1) return 4;
-                else if (path.indexOf("/connect") != -1) return 5;
-                else if (path.indexOf("/awards") != -1) return 6;
-                else if (path.indexOf("/statistics") != -1) return 7;
+                else if (path.indexOf("/explore") != -1) return 3;
+                else if (path.indexOf("/favorites") != -1) return 4;
+                else if (path.indexOf("/research") != -1) return 5;
+                else if (path.indexOf("/connect") != -1) return 6;
+                else if (path.indexOf("/awards") != -1) return 7;
+                else if (path.indexOf("/statistics") != -1) return 8;
                 else return 0;
             }
 
@@ -305,9 +305,17 @@
                 }
             }, {
                 "name": "Discover",
-                "icon_class": "fa-newspaper-o",
+                "icon_class": "fa-cube",
                 "tool_tip": "Stock News and Quotes",
                 "url": "/discover",
+                "isVisible": function () {
+                    return true;
+                }
+            }, {
+                "name": "Explore",
+                "icon_class": "fa-trello",
+                "tool_tip": "Explore Sectors and Industries",
+                "url": "/explore",
                 "isVisible": function () {
                     return true;
                 }
