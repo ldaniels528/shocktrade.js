@@ -12,6 +12,7 @@
         function ($routeProvider) {
             // setup the routes
             $routeProvider
+                .when('/connect', {templateUrl: '/assets/views/connect/connect.htm', controller: 'ConnectController'})
                 .when('/dashboard', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/dashboard/:contestId', {templateUrl: '/assets/views/dashboard/dashboard.htm', controller: 'DashboardController'})
                 .when('/discover', {templateUrl: '/assets/views/discover/discover.htm', controller: 'DiscoverController'})
@@ -24,10 +25,8 @@
                 .when('/symbols/favorites?:symbol', {templateUrl: '/assets/views/discover/favorites.htm', reloadOnSearch: false, controller: 'FavoritesController'})
                 .when('/symbols', {redirectTo: '/symbols/favorites'})
                 .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'ProfileController'})
-                .when('/profile/connect', {templateUrl: '/assets/views/profile/connect/connect.htm', controller: 'ProfileController'})
-                .when('/profile/favorites?:symbol', {templateUrl: '/assets/views/profile/favorites.htm', reloadOnSearch: false, controller: 'FavoritesController'})
                 .when('/profile/statistics', {templateUrl: '/assets/views/profile/statistics.htm', controller: 'ProfileController'})
-                .when('/profile', {redirectTo: '/profile/connect'})
+                .when('/profile', {redirectTo: '/profile/awards'})
                 .otherwise({redirectTo: '/discover'});
         }]);
 

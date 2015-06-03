@@ -106,7 +106,8 @@
                 else if (path.indexOf("/explore") != -1) return 2;
                 else if (path.indexOf("/favorites") != -1) return 3;
                 else if (path.indexOf("/research") != -1) return 4;
-                else if (path.indexOf("/profile") != -1) return 5;
+                else if (path.indexOf("/connect") != -1) return 5;
+                else if (path.indexOf("/profile") != -1) return 6;
                 else return 0;
             }
 
@@ -324,6 +325,14 @@
                 "url": "/research",
                 "isVisible": function () {
                     return true;
+                }
+            }, {
+                "name": "Connect",
+                "icon_class": "fa-facebook-square",
+                "tool_tip": "Connect & Share",
+                "url": "/connect",
+                "isVisible": function () {
+                    return MySession.authenticated;
                 }
             }, {
                 "name": "My Profile",

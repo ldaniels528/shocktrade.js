@@ -7,11 +7,6 @@
      */
     app.controller('ProfileController', ['$scope', '$location', '$log', function ($scope, $location, $log) {
         $scope.profileTabs = [{
-            "name": "Share",
-            "path": "/profile/connect",
-            "icon": "fa fa-facebook-square",
-            "active": false
-        },{
             "name": "My Awards",
             "path": "/profile/awards",
             "icon": "fa fa-trophy",
@@ -35,9 +30,8 @@
 
         function profileTabIndex() {
             var path = $location.url();
-            if (path.indexOf('connect') !== -1) return 0;
-            else if (path.indexOf('awards') !== -1) return 1;
-            else if (path.indexOf('statistics') !== -1) return 2;
+            if (path.indexOf('awards') !== -1) return 0;
+            else if (path.indexOf('statistics') !== -1) return 1;
             else return 0;
         }
 
