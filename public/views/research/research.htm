@@ -38,13 +38,13 @@
                     <div class="col-md-4 rs_label">Volume</div>
                     <div class="col-md-4 form-group-sm">
                         <label for="volumeMin">Min</label>
-                        <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v for v in volumeRanges">
+                        <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v.toLocaleString() for v in volumeRanges">
                             <option value="">ANY</option>
                         </select>
                     </div>
                     <div class="col-md-4 form-group-sm ">
                         <label for="volumeMax">Max</label>
-                        <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v for v in volumeRanges.slice(1, volumeRanges.length)">
+                        <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v.toLocaleString() for v in volumeRanges.slice(1, volumeRanges.length)">
                             <option value="">ANY</option>
                         </select>
                     </div>
