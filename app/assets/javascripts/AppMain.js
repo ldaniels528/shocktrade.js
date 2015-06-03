@@ -21,6 +21,8 @@
                 .when('/news', {templateUrl: '/assets/views/news/news_center.htm', controller: 'NewsController'})
                 .when('/research', {templateUrl: '/assets/views/research/research.htm', controller: 'ResearchController'})
                 .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
+                .when('/symbols/favorites?:symbol', {templateUrl: '/assets/views/discover/favorites.htm', reloadOnSearch: false, controller: 'FavoritesController'})
+                .when('/symbols', {redirectTo: '/symbols/favorites'})
                 .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'ProfileController'})
                 .when('/profile/connect', {templateUrl: '/assets/views/profile/connect/connect.htm', controller: 'ProfileController'})
                 .when('/profile/favorites?:symbol', {templateUrl: '/assets/views/profile/favorites.htm', reloadOnSearch: false, controller: 'FavoritesController'})

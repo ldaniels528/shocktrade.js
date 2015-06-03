@@ -19,7 +19,7 @@
             //          Public Functions
             ///////////////////////////////////////////////////////////////////////////
 
-            $scope.mainInit = function(uuid) {
+            $scope.mainInit = function (uuid) {
                 console.log("Session UUID is " + uuid);
             };
 
@@ -27,12 +27,12 @@
                 return !value ? value : ((value < 0) ? -value : value);
             };
 
-            $scope.getDate = function(date) {
+            $scope.getDate = function (date) {
                 return date && date.$date ? date.$date : date;
             };
 
             $scope.getHtmlQuote = function (q) {
-                if(!q) return "";
+                if (!q) return "";
                 else {
                     var html = "<i class='" + $scope.getAssetIcon(q) + "'></i> " + q.symbol + ' - ' + q.name;
                     console.log("html = " + html);
@@ -100,14 +100,13 @@
 
             function determineTableIndex() {
                 var path = $location.path();
-                if (path.indexOf("/connect") != -1) return 1;
+                if (path.indexOf("/search") != -1) return 0;
+                else if (path.indexOf("/dashboard") != -1) return 1;
                 else if (path.indexOf("/discover") != -1) return 2;
                 else if (path.indexOf("/explore") != -1) return 2;
-                else if (path.indexOf("/dashboard") != -1) return 1;
-                else if (path.indexOf("/news") != -1) return 2;
-                else if (path.indexOf("/research") != -1) return 3;
-                else if (path.indexOf("/search") != -1) return 0;
-                else if (path.indexOf("/profile") != -1) return 4;
+                else if (path.indexOf("/favorites") != -1) return 3;
+                else if (path.indexOf("/research") != -1) return 4;
+                else if (path.indexOf("/profile") != -1) return 5;
                 else return 0;
             }
 
@@ -311,8 +310,16 @@
                     return true;
                 }
             }, {
+                "name": "Favorites",
+                "icon_class": "fa-heart",
+                "tool_tip": "My Favorite Securities",
+                "url": "/symbols/favorites",
+                "isVisible": function () {
+                    return MySession.authenticated;
+                }
+            }, {
                 "name": "Research",
-                "icon_class": "fa-table",
+                "icon_class": "fa-database",
                 "tool_tip": "Stock Research",
                 "url": "/research",
                 "isVisible": function () {

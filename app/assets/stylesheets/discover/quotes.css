@@ -9,6 +9,12 @@
 	margin-bottom: 5px;
 }
 
+.favorites_panel {
+    border-radius: 5px;
+    background: white;
+    padding: 10px;
+}
+
 .symbol_input_text_field {
 	background-color: #ffffcc;
 }

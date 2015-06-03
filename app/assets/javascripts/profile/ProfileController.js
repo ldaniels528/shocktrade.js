@@ -11,12 +11,7 @@
             "path": "/profile/connect",
             "icon": "fa fa-facebook-square",
             "active": false
-        }, {
-            "name": "My Favorites",
-            "path": "/profile/favorites",
-            "icon": "fa fa-heart",
-            "active": false
-        }, {
+        },{
             "name": "My Awards",
             "path": "/profile/awards",
             "icon": "fa fa-trophy",
@@ -41,9 +36,8 @@
         function profileTabIndex() {
             var path = $location.url();
             if (path.indexOf('connect') !== -1) return 0;
-            else if (path.indexOf('favorites') !== -1) return 1;
-            else if (path.indexOf('awards') !== -1) return 2;
-            else if (path.indexOf('statistics') !== -1) return 3;
+            else if (path.indexOf('awards') !== -1) return 1;
+            else if (path.indexOf('statistics') !== -1) return 2;
             else return 0;
         }
 

@@ -1,3 +1,11 @@
+<div>
+    <div ng-class="{'col-md-12':(!isSplitScreen()), 'col-md-5':(isSplitScreen())}">
+        <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-9':(isSplitScreen())}" class="bold left">Name</div>
+        <div ng-class="{'col-md-2':(!isSplitScreen()), 'col-md-3':(isSplitScreen())}" class="bold left">Symbol</div>
+        <div ng-hide="isSplitScreen()" class="col-md-3 bold right">Last Sale</div>
+        <div ng-hide="isSplitScreen()" class="col-md-3 bold right">Volume</div>
+    </div>
+</div>
 <div class="favoritesContainer">
     <div class="col-md-12 qm left">
             <span class="notice" ng-hide="getFavoriteQuotes().length">
@@ -12,7 +20,7 @@
              ng-class="selectedQuote == quote ? 'highlighted_quote' : ($index % 2 ? 'even' : 'odd')">
 
             <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-9':(isSplitScreen())}" class="qm left">
-                <i class="fa fa-remove st_close"
+                <i class="fa fa-times-circle st_control"
                    ng-click="removeFavoriteSymbol(quote.symbol)"
                    popover="Remove {{ quote.symbol }} from My Favorites"
                    popover-trigger="mouseenter" popover-placement="right"></i>
