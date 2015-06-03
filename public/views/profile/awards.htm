@@ -1,5 +1,7 @@
-<div ng-include src="'/assets/views/profile/profile_tabs.htm'"></div>
-<div class="profile_bkg" ng-controller="AwardsController" ng-init="setupAwards()">
+<fieldset>
+    <legend>My Awards</legend>
+</fieldset>
+<div ng-controller="AwardsController" ng-init="setupAwards()">
     <div class="myAwardsContainer">
         <div style="padding-bottom: 5px" ng-repeat="award in awards">
             <img style="vertical-align: middle" ng-src="{{ award.owned ? award.icon : '/assets/images/awards/locked_award.gif'}}">

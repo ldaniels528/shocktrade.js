@@ -24,8 +24,8 @@
                 .when('/search', {templateUrl: '/assets/views/play/search.htm', controller: 'GameSearchController'})
                 .when('/symbols/favorites?:symbol', {templateUrl: '/assets/views/discover/favorites.htm', reloadOnSearch: false, controller: 'FavoritesController'})
                 .when('/symbols', {redirectTo: '/symbols/favorites'})
-                .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'ProfileController'})
-                .when('/profile/statistics', {templateUrl: '/assets/views/profile/statistics.htm', controller: 'ProfileController'})
+                .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'AwardsController'})
+                .when('/profile/statistics', {templateUrl: '/assets/views/profile/statistics.htm', controller: 'StatisticsController'})
                 .when('/profile', {redirectTo: '/profile/awards'})
                 .otherwise({redirectTo: '/discover'});
         }]);

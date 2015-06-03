@@ -107,7 +107,8 @@
                 else if (path.indexOf("/favorites") != -1) return 3;
                 else if (path.indexOf("/research") != -1) return 4;
                 else if (path.indexOf("/connect") != -1) return 5;
-                else if (path.indexOf("/profile") != -1) return 6;
+                else if (path.indexOf("/awards") != -1) return 6;
+                else if (path.indexOf("/statistics") != -1) return 7;
                 else return 0;
             }
 
@@ -335,10 +336,18 @@
                     return MySession.authenticated;
                 }
             }, {
-                "name": "My Profile",
-                "icon_class": "fa-user",
-                "tool_tip": "My Profile",
-                "url": "/profile",
+                "name": "My Awards",
+                "icon_class": "fa-trophy",
+                "tool_tip": "My Awards",
+                "url": "/profile/awards",
+                "isVisible": function () {
+                    return MySession.authenticated;
+                }
+            }, {
+                "name": "My Statistics",
+                "icon_class": "fa-bar-chart",
+                "tool_tip": "My Statistics",
+                "url": "/profile/statistics",
                 "isVisible": function () {
                     return MySession.authenticated;
                 }
