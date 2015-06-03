@@ -8,7 +8,7 @@
 
     window.toDuration = function (time) {
         var duration = time && time.$date ? time.$date : time;
-        if(duration === null || duration === undefined) return null;
+        if (duration === null || duration === undefined) return null;
 
         // compute the time delta
         var delta = (Date.now() - duration) / 60000;
@@ -16,7 +16,7 @@
         // compute the age
         var unit = 0;
         var age = Math.abs(delta);
-        while(age >= factors[unit]) {
+        while (age >= factors[unit]) {
             age /= factors[unit];
             unit++;
         }
@@ -62,7 +62,7 @@
         return re.test(email);
     };
 
-    window.makeClone = function(obj) {
+    window.makeClone = function (obj) {
         // Handle the 3 simple types, and null or undefined
         if (null == obj || "object" != typeof obj) return obj;
 
