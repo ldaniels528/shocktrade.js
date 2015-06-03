@@ -317,8 +317,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     result match {
       case Some(symbols) if symbols.nonEmpty =>
         mcQ.find(JS("symbol" -> JS("$in" -> symbols)),
-          JS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1,
-            "lastTrade" -> 1, "spread" -> 1, "changePct" -> 1, "volume" -> 1))
+          JS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "open" -> 1, "close" -> 1, "lastTrade" -> 1, "tradeDateTime" -> 1,
+            "high" -> 1, "low" -> 1, "high52Week" -> 1, "low52Week" -> 1, "spread" -> 1, "changePct" -> 1, "volume" -> 1))
           .cursor[JsObject]
           .collect[Seq]()
           .map(docs => Ok(JsArray(docs)))

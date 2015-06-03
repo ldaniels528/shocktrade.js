@@ -1,106 +1,10 @@
-<div ng-include src="'/assets/views/profile/profile_tabs.htm'"></div>
-<div ng-controller="FavoritesController" class="profile_bkg" ng-init="initFavorites()">
+<div ng-controller="ProfileController" ng-include src="'/assets/views/profile/profile_tabs.htm'"></div>
+<div class="profile_bkg">
     <div ng-class="{'col-md-12':(!isSplitScreen()), 'col-md-5':(isSplitScreen())}">
         <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-9':(isSplitScreen())}" class="left">Name</div>
         <div ng-class="{'col-md-2':(!isSplitScreen()), 'col-md-3':(isSplitScreen())}" class="left">Symbol</div>
         <div ng-hide="isSplitScreen()" class="col-md-3 right">Last Sale</div>
         <div ng-hide="isSplitScreen()" class="col-md-3 right">Volume</div>
     </div>
-    <div class="favoritesContainer">
-        <div class="col-md-12 qm left">
-            <span class="notice" ng-hide="getFavoriteQuotes().length">
-                <i class="fa fa-warning warning"></i> No records found
-            </span>
-        </div>
-
-        <div ng-class="{'col-md-12':(!isSplitScreen()), 'col-md-5':(isSplitScreen())}">
-            <div class="row clickable"
-                 ng-repeat="quote in getFavoriteQuotes()"
-                 ng-click="selectQuote(quote)"
-                 ng-class="selectedQuote == quote ? 'highlighted_quote' : ($index % 2 ? 'even' : 'odd')">
-
-                <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-9':(isSplitScreen())}" class="qm left">
-                    <i class="fa fa-remove st_close"
-                       ng-click="removeFavoriteSymbol(quote.symbol)"
-                       popover="Remove {{ quote.symbol }} from My Favorites"
-                       popover-trigger="mouseenter" popover-placement="right"></i>
-                    {{ quote.name }}
-                </div>
-                <div ng-class="{'col-md-2':(!isSplitScreen()), 'col-md-3':(isSplitScreen())}" class="qm left">
-                    <span ng-class="normalizeExchange(quote.exchange)">{{ quote.symbol }}</span>
-                </div>
-                <div ng-hide="isSplitScreen()" class="col-md-3 qm right">
-                    {{ quote.lastTrade | quoteNumber }}
-                    <i ng-show="quote.changePct < 0.0" class="fa fa-arrow-down negative"></i>
-                    <i ng-show="quote.changePct > 0.0" class="fa fa-arrow-up positive"></i>
-                    <i ng-show="quote.changePct === 0.0" class="null">&#8212;</i>
-                    <span ng-class="quote.changePct < 0 ? 'negative' : ''">{{ abs(quote.changePct) | quoteChange:2 }}</span>
-                </div>
-                <div ng-hide="isSplitScreen()" class="col-md-3 qm right">
-                    {{ quote.volume | number }}
-                </div>
-            </div>
-        </div>
-
-        <div ng-if="isSplitScreen()" class="col-md-7">
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Name</div>
-                <div class="col-md-8">{{ selectedQuote.name }}</div>
-                <div class="col-md-1">
-                    <span class="st_control" ng-click="cancelSelection()">
-                        <nobr><i class="fa fa-chevron-circle-left"></i> Back</nobr>
-                    </span>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Symbol</div>
-                <div class="col-md-9">
-                    <span ng-class="normalizeExchange(selectedQuote.exchange)">{{ normalizeExchange(selectedQuote.exchange) }}</span> /
-                    <a ng-href="#/discover/{{ selectedQuote.symbol }}">{{ selectedQuote.symbol }}</a>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Last Sale</div>
-                <div class="col-md-9">{{ selectedQuote.lastTrade | quoteNumber }}</div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Change</div>
-                <div class="col-md-9" ng-class="selectedQuote.changePct < 0 ? 'negative' : ''">
-                    {{ selectedQuote.changePct | number:2 }}
-                    <i ng-show="selectedQuote.changePct < 0.0" class="fa fa-arrow-down negative"></i>
-                    <i ng-show="selectedQuote.changePct > 0.0" class="fa fa-arrow-up positive"></i>
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Open Price</div>
-                <div class="col-md-9">{{ selectedQuote.open | quoteNumber }}</div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Day's High</div>
-                <div class="col-md-9">{{ selectedQuote.high | quoteNumber }}</div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Day's Low</div>
-                <div class="col-md-9">{{ selectedQuote.low | quoteNumber }}</div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Spread</div>
-                <div ng-show="selectedQuote.spread != null" class="col-md-9">{{ selectedQuote.spread | number:2 }}%</div>
-                <div ng-hide="selectedQuote.spread != null" class="col-md-9 null">Not Available</div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-3 bold">Volume</div>
-                <div class="col-md-9">{{ selectedQuote.volume | number }}</div>
-            </div>
-
-        </div>
-    </div>
+    <div ng-include src="'/assets/views/profile/quote_set.htm'"></div>
 </div>

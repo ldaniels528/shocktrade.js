@@ -5,13 +5,9 @@
      * Favorites Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('FavoritesController', ['$scope', '$log', '$timeout', 'toaster', 'FavoriteSymbols',
-        function ($scope, $log, $timeout, toaster, FavoriteSymbols) {
+    app.controller('FavoritesController', ['$scope', '$location', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols',
+        function ($scope, $location, $log, $routeParams, $timeout, toaster, FavoriteSymbols) {
             $scope.selectedQuote = null;
-
-            $scope.initFavorites = function () {
-
-            };
 
             $scope.cancelSelection = function () {
                 $scope.selectedQuote = null;
@@ -22,6 +18,7 @@
             };
 
             $scope.selectQuote = function (quote) {
+                $location.search('symbol', quote.symbol);
                 $scope.selectedQuote = quote;
             };
 
@@ -44,6 +41,21 @@
             $scope.removeFavoriteSymbol = function (symbol) {
                 FavoriteSymbols.remove(symbol);
             };
+
+            /////////////////////////////////////////////////////////////////////////////
+            //			Initialization
+            /////////////////////////////////////////////////////////////////////////////
+
+            (function() {
+                var symbol = $routeParams.symbol;
+                if(symbol) {
+                    angular.forEach($scope.getFavoriteQuotes(), function(quote) {
+                        if(quote.symbol === symbol) {
+                            $scope.selectQuote(quote);
+                        }
+                    });
+                }
+            })();
 
         }]);
 
