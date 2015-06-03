@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(cache, filters, ws)
 libraryDependencies ++= Seq(
 	"com.ldaniels528" %% "commons-helpers" % "0.1.0",
 	"com.ldaniels528" %% "play-json-compat" % "0.1.0",
-	"com.ldaniels528" %% "shocktrade-services" % "0.4.2",
+	"com.ldaniels528" %% "shocktrade-services" % "0.4.3",
   "com.ldaniels528" %% "tabular" % "0.1.2"
 )
 
@@ -62,5 +62,7 @@ libraryDependencies ++= Seq(
 //	"org.webjars" % "less" % "2.5.0",
 //  "org.webjars" % "textAngular" % "1.2.0",
   "org.webjars" % "nvd3" % "1.1.15-beta-2",
-  "org.webjars" %% "webjars-play" % "2.3.0-3"
+  "org.webjars" %% "webjars-play" % "2.3.0-3",
+//	"org.webjars" %% "webjars-play" % "2.4.0-1",
+	"org.webjars" % "bootstrap" % "3.1.1-2"
 )

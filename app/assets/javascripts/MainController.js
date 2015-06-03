@@ -305,7 +305,7 @@
                 }
             }, {
                 "name": "Discover",
-                "icon_class": "fa-cube",
+                "icon_class": "fa-newspaper-o",
                 "tool_tip": "Stock News and Quotes",
                 "url": "/discover",
                 "isVisible": function () {

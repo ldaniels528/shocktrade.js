@@ -1,9 +1,12 @@
 package com.shocktrade.server.loaders
 
-import com.shocktrade.actors.{YahooKeyStatisticsUpdateActor, YahooCsvQuoteUpdateActor}
-import com.shocktrade.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
-import com.shocktrade.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
-import com.shocktrade.server.trading.TradingClock
+import java.util.Date
+
+import com.shocktrade.server.actors.CikNumberUpdateActor.UpdateMissingCikNumbers
+import com.shocktrade.server.actors.FinraRegShoUpdateActor.ProcessRegSHO
+import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
+import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
+import com.shocktrade.server.actors._
 import play.api.Logger
 import play.libs.Akka
 
@@ -24,15 +27,18 @@ object DataLoadingProcesses {
   def start() {
     Logger.info("Starting Financial Update Processes ...")
 
-    // schedules stock quote updates
-    system.scheduler.schedule(5.seconds, 30.minutes) {
-      if (TradingClock.isTradingActive) {
-        YahooCsvQuoteUpdateActor ! RefreshAllQuotes
-      }
-    }
+    // schedules CIK updates
+    system.scheduler.schedule(1.hour, 3.days)(CikNumberUpdateActor ! UpdateMissingCikNumbers)
 
     // schedules key statistics updates
     system.scheduler.schedule(1.hour, 8.hours)(YahooKeyStatisticsUpdateActor ! RefreshAllKeyStatistics)
+
+    // schedules Reg SHO updates
+    system.scheduler.schedule(1.hour, 24.hours)(FinraRegShoUpdateActor ! ProcessRegSHO(new Date()))
+
+    // schedules stock quote updates
+    system.scheduler.schedule(5.seconds, 30.minutes)(YahooCsvQuoteUpdateActor ! RefreshAllQuotes)
+
     ()
   }
 

@@ -1,4 +1,4 @@
-package com.shocktrade.actors
+package com.shocktrade.server.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
@@ -7,8 +7,8 @@ import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern.ask
 import akka.routing.RoundRobinPool
 import akka.util.Timeout
-import com.shocktrade.actors.YahooKeyStatisticsUpdateActor.{RefreshAllKeyStatistics, RefreshKeyStatics}
 import com.shocktrade.models.quote.StockQuotes
+import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor._
 import com.shocktrade.services.yahoofinance.YFKeyStatisticsService
 import com.shocktrade.util.BSONHelper._
 import play.libs.Akka
@@ -113,6 +113,7 @@ class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
       }
 
     case message =>
+      log.error(s"Unhandled message: $message (${Option(message).map(_.getClass.getName).orNull}})")
       unhandled(message)
 
   }

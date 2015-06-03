@@ -1,4 +1,4 @@
-package com.shocktrade.actors
+package com.shocktrade.server.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
@@ -6,8 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import com.shocktrade.actors.YahooCsvQuoteUpdateActor._
 import com.shocktrade.models.quote.StockQuotes
+import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor._
+import com.shocktrade.server.trading.TradingClock
 import com.shocktrade.services.yahoofinance.YFStockQuoteService
 import com.shocktrade.util.BSONHelper._
 import play.libs.Akka
@@ -21,26 +22,29 @@ import scala.concurrent.ExecutionContext
  */
 class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  val counter = new AtomicInteger()
+  private val counter = new AtomicInteger()
 
   override def receive = {
     case RefreshAllQuotes =>
-      log.info("Loading symbols for CSV updates...")
-      val mySender = sender()
+      if (TradingClock.isTradingActive) {
+        log.info("Loading symbols for CSV updates...")
+        val mySender = sender()
 
-      counter.set(0)
-      var count = 0
-      StockQuotes.getSymbolsForCsvUpdate foreach { docs =>
-        docs.flatMap(_.getAs[String]("symbol")).sliding(32, 32) foreach { symbols =>
-          count += symbols.length
-          self ! RefreshQuotes(symbols)
+        counter.set(0)
+        var count = 0
+        StockQuotes.getSymbolsForCsvUpdate foreach { docs =>
+          docs.flatMap(_.getAs[String]("symbol")).sliding(32, 32) foreach { symbols =>
+            count += symbols.length
+            self ! RefreshQuotes(symbols)
+          }
+          mySender ! count
         }
-        mySender ! count
       }
 
     case RefreshQuotes(symbols) =>
       YFStockQuoteService.getQuotesSync(symbols, Parameters) foreach { q =>
         StockQuotes.updateQuote(q.symbol, BS(
+          "name" -> q.name,
           "exchange" -> q.exchange,
           "lastTrade" -> q.lastTrade,
           "tradeDate" -> q.tradeDate.map(t => BSONDateTime(t.getTime)).orNull,
@@ -70,6 +74,7 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
       }
 
     case message =>
+      log.error(s"Unhandled message: $message (${Option(message).map(_.getClass.getName).orNull}})")
       unhandled(message)
   }
 
@@ -81,7 +86,7 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
  */
 object YahooCsvQuoteUpdateActor {
   private val Parameters = YFStockQuoteService.getParams(
-    "symbol", "exchange", "lastTrade", "tradeDate", "tradeTime", "change", "changePct", "prevClose", "open", "close", "high", "low",
+    "symbol", "exchange", "name", "lastTrade", "tradeDate", "tradeTime", "change", "changePct", "prevClose", "open", "close", "high", "low",
     "high52Week", "low52Week", "volume", "marketCap", "errorMessage", "ask", "askSize", "bid", "bidSize")
 
   private val myActor = Akka.system.actorOf(Props[YahooCsvQuoteUpdateActor], name = "CsvQuote")

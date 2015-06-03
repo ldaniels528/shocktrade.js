@@ -1,9 +1,13 @@
 package com.shocktrade.controllers
 
+import java.text.SimpleDateFormat
+
 import akka.util.Timeout
-import com.shocktrade.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
-import com.shocktrade.actors.{YahooKeyStatisticsUpdateActor, YahooCsvQuoteUpdateActor}
-import com.shocktrade.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
+import com.shocktrade.server.actors.CikNumberUpdateActor.UpdateMissingCikNumbers
+import com.shocktrade.server.actors.FinraRegShoUpdateActor.ProcessRegSHO
+import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
+import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
+import com.shocktrade.server.actors._
 import com.shocktrade.server.trading.TradingClock
 import com.shocktrade.util.DateUtil
 import play.api.libs.json.Json.{obj => JS}
@@ -20,18 +24,46 @@ object TradingController extends Controller {
   private val system = Akka.system
   implicit val ec = system.dispatcher
 
-  def startStockQuoteUpdate = Action.async {
-    implicit val timeout: Timeout = 120.seconds
+  /**
+   * Starts the CIK Update process
+   */
+  def startCikUpdate = Action.async {
+    implicit val timeout: Timeout = 10.minutes
 
-    (YahooCsvQuoteUpdateActor ? RefreshAllQuotes).mapTo[Int] map { count =>
+    (CikNumberUpdateActor ? UpdateMissingCikNumbers).mapTo[Int] map { count =>
       Ok(JS("symbol_count" -> count))
     }
   }
 
+  /**
+   * Starts the Key Statistics Update process
+   */
   def startKeyStatisticsUpdate = Action.async {
     implicit val timeout: Timeout = 10.minutes
 
     (YahooKeyStatisticsUpdateActor ? RefreshAllKeyStatistics).mapTo[Int] map { count =>
+      Ok(JS("symbol_count" -> count))
+    }
+  }
+
+  /**
+   * Starts the FINRA/OTCBB Registration Update process
+   */
+  def startRegSHOUpdate(dateString: String) = Action.async {
+    implicit val timeout: Timeout = 10.minutes
+
+    (FinraRegShoUpdateActor ? ProcessRegSHO(new SimpleDateFormat("yyyyMMdd").parse(dateString))).mapTo[Int] map { count =>
+      Ok(JS("symbol_count" -> count))
+    }
+  }
+
+  /**
+   * Starts the Stock Quote Update process
+   */
+  def startStockQuoteUpdate = Action.async {
+    implicit val timeout: Timeout = 10.minutes
+
+    (YahooCsvQuoteUpdateActor ? RefreshAllQuotes).mapTo[Int] map { count =>
       Ok(JS("symbol_count" -> count))
     }
   }
