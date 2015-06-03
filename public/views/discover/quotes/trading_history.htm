@@ -62,24 +62,24 @@
             <span ng-show="t.tradeDate">{{ getDate(t.tradeDate) | date:'MM/dd/yy' }}</span>
         </div>
         <div class="col-md-2 right">
-            <span ng-hide="t.open" class="null">N/A</span>
-            <span ng-show="t.open">{{ t.open | quoteNumber }}</span>
+            <span ng-hide="t.open !== null" class="null">N/A</span>
+            <span ng-show="t.open !== null">{{ t.open | quoteNumber }}</span>
         </div>
         <div class="col-md-2 right">
-            <span ng-hide="t.close" class="null">N/A</span>
-            <span ng-show="t.close">{{ t.close | quoteNumber }}</span>
+            <span ng-hide="t.close !== null" class="null">N/A</span>
+            <span ng-show="t.close !== null">{{ t.close | quoteNumber }}</span>
         </div>
         <div class="col-md-2 right">
-            <span ng-hide="t.high" class="null">N/A</span>
-            <span ng-show="t.high">{{ t.high | quoteNumber }}</span>
+            <span ng-hide="t.high !== null" class="null">N/A</span>
+            <span ng-show="t.high !== null">{{ t.high | quoteNumber }}</span>
         </div>
         <div class="col-md-2 right">
-            <span ng-hide="t.low" class="null">N/A</span>
-            <span ng-show="t.low">{{ t.low | quoteNumber }}</span>
+            <span ng-hide="t.low !== null" class="null">N/A</span>
+            <span ng-show="t.low !== null">{{ t.low | quoteNumber }}</span>
         </div>
         <div class="col-md-2 right">
-            <span ng-hide="t.volume" class="null">N/A</span>
-            <span ng-show="t.volume">{{ t.volume | number }}</span>
+            <span ng-hide="t.volume !== null" class="null">N/A</span>
+            <span ng-show="t.volume !== null">{{ t.volume | number }}</span>
         </div>
     </div>
 </div>

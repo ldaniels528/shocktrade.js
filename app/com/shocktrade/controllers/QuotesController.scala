@@ -1,13 +1,13 @@
 package com.shocktrade.controllers
 
-import com.ldaniels528.commons.helpers.StringHelper._
 import java.util.Date
-import play.api.Logger
-import reactivemongo.core.commands._
+
+import com.ldaniels528.commons.helpers.StringHelper._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
@@ -18,15 +18,15 @@ import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
-import reactivemongo.core.commands.GetLastError
+import reactivemongo.core.commands.{GetLastError, _}
 
 import scala.concurrent.Future
 
 /**
- * Quote REST Resources
+ * Quotes Controller
  * @author lawrence.daniels@gmail.com
  */
-object QuoteController extends Controller with MongoController with ProfileFiltering {
+object QuotesController extends Controller with MongoController with ProfileFiltering {
   private lazy val naicsCodes = loadNaicsMappings()
   private lazy val sicCodes = loadSicsMappings()
   private val Stocks = "Stocks"
@@ -311,16 +311,20 @@ object QuoteController extends Controller with MongoController with ProfileFilte
 
   def getQuotes = Action.async { implicit request =>
     // attempt to retrieve the symbols from the request
-    val result = for {
-      js <- request.body.asJson
-      symbols <- js.asOpt[Array[String]] if symbols.nonEmpty
-    } yield StockQuotes.findDBaseQuotes(symbols)
+    val result = request.body.asJson map (_.as[Seq[String]])
 
     // return the promise of the quotes
-    (result match {
-      case Some(futureQuotes) => futureQuotes
-      case None => Future.successful(JsArray())
-    }) map (r => Ok(r))
+    result match {
+      case Some(symbols) if symbols.nonEmpty =>
+        mcQ.find(JS("symbol" -> JS("$in" -> symbols)),
+          JS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1,
+            "lastTrade" -> 1, "spread" -> 1, "changePct" -> 1, "volume" -> 1))
+          .cursor[JsObject]
+          .collect[Seq]()
+          .map(docs => Ok(JsArray(docs)))
+      case _ =>
+        Future.successful(Ok(JsArray()))
+    }
   }
 
   def getRealtimeQuote(symbol: String) = Action.async {
@@ -358,8 +362,8 @@ object QuoteController extends Controller with MongoController with ProfileFilte
     val startDate = new DateTime(endDate).plusDays(-45).toDate
 
     // normalize the ticker
-    val ticker = symbol.lastIndexOptionOf(".") map(index => symbol.substring(0, index)) getOrElse symbol
-    if(ticker != symbol) {
+    val ticker = symbol.lastIndexOptionOf(".") map (index => symbol.substring(0, index)) getOrElse symbol
+    if (ticker != symbol) {
       Logger.info(s"getTradingHistory: using '$ticker' instead of '$symbol'")
     }
 

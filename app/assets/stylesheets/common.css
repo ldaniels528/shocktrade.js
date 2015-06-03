@@ -104,8 +104,15 @@ legend {
 	font-size: 12pt;
 }
 
+.st_close {
+	border: 1px solid #ff8000;
+	color: #ff8000;
+	cursor: pointer;
+}
+
 .st_control {
     color: #ff8000;
+	cursor: pointer;
 }
 
 .st_nav_selected {
@@ -215,7 +222,7 @@ input { font-family: 'FontAwesome'; } /* This is for the placeholder */
 }
 
 .odd {
-    background-color: #d0eeff
+    background-color: #f0f0f0
 }
 
 .padding-left-16 {

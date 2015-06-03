@@ -53,28 +53,28 @@ GET           /api/news/sources                                     com.shocktra
 GET           /api/news/feed/:id                                    com.shocktrade.controllers.NewsController.getFeed(id)
 
 # Explore
-GET           /api/explore/symbol/:symbol                           com.shocktrade.controllers.QuoteController.getSectorInfo(symbol)
-GET           /api/explore/sectors                                  com.shocktrade.controllers.QuoteController.exploreSectors(userId ?= null)
-GET           /api/explore/industries                               com.shocktrade.controllers.QuoteController.exploreIndustries(userId ?= null, sector)
-GET           /api/explore/subIndustries                            com.shocktrade.controllers.QuoteController.exploreSubIndustries(userId ?= null, sector, industry)
-GET           /api/explore/quotes                                   com.shocktrade.controllers.QuoteController.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
-GET           /api/explore/naics                                    com.shocktrade.controllers.QuoteController.exploreNAICSSectors
-GET           /api/explore/sic                                      com.shocktrade.controllers.QuoteController.exploreSICSectors
+GET           /api/explore/symbol/:symbol                           com.shocktrade.controllers.QuotesController.getSectorInfo(symbol)
+GET           /api/explore/sectors                                  com.shocktrade.controllers.QuotesController.exploreSectors(userId ?= null)
+GET           /api/explore/industries                               com.shocktrade.controllers.QuotesController.exploreIndustries(userId ?= null, sector)
+GET           /api/explore/subIndustries                            com.shocktrade.controllers.QuotesController.exploreSubIndustries(userId ?= null, sector, industry)
+GET           /api/explore/quotes                                   com.shocktrade.controllers.QuotesController.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
+GET           /api/explore/naics                                    com.shocktrade.controllers.QuotesController.exploreNAICSSectors
+GET           /api/explore/sic                                      com.shocktrade.controllers.QuotesController.exploreSICSectors
 
 # Exchanges
-GET           /api/exchanges                                        com.shocktrade.controllers.QuoteController.getExchangeCounts
+GET           /api/exchanges                                        com.shocktrade.controllers.QuotesController.getExchangeCounts
 POST          /api/exchanges                                        com.shocktrade.controllers.ProfileController.setExchanges()
 
 # Quotes
-GET           /api/quotes/cached/:symbol                            com.shocktrade.controllers.QuoteController.getCachedQuote(symbol)
-GET           /api/quotes/autocomplete                              com.shocktrade.controllers.QuoteController.autocomplete(searchTerm, maxResults:Int)
-POST          /api/quotes/list                                      com.shocktrade.controllers.QuoteController.getQuotes
-GET           /api/quotes/order/symbol/:symbol                      com.shocktrade.controllers.QuoteController.getOrderQuote(symbol)
-POST          /api/quotes/pricing                                   com.shocktrade.controllers.QuoteController.getPricing
-GET           /api/quotes/realTime/:symbol                          com.shocktrade.controllers.QuoteController.getRealtimeQuote(symbol)
-GET           /api/quotes/riskLevel/:symbol                         com.shocktrade.controllers.QuoteController.getRiskLevel(symbol)
-GET           /api/quotes/symbol/:symbol                            com.shocktrade.controllers.QuoteController.getQuote(symbol)
-GET           /api/quotes/tradingHistory/:symbol                    com.shocktrade.controllers.QuoteController.getTradingHistory(symbol)
+GET           /api/quotes/cached/:symbol                            com.shocktrade.controllers.QuotesController.getCachedQuote(symbol)
+GET           /api/quotes/autocomplete                              com.shocktrade.controllers.QuotesController.autocomplete(searchTerm, maxResults:Int)
+POST          /api/quotes/list                                      com.shocktrade.controllers.QuotesController.getQuotes
+GET           /api/quotes/order/symbol/:symbol                      com.shocktrade.controllers.QuotesController.getOrderQuote(symbol)
+POST          /api/quotes/pricing                                   com.shocktrade.controllers.QuotesController.getPricing
+GET           /api/quotes/realTime/:symbol                          com.shocktrade.controllers.QuotesController.getRealtimeQuote(symbol)
+GET           /api/quotes/riskLevel/:symbol                         com.shocktrade.controllers.QuotesController.getRiskLevel(symbol)
+GET           /api/quotes/symbol/:symbol                            com.shocktrade.controllers.QuotesController.getQuote(symbol)
+GET           /api/quotes/tradingHistory/:symbol                    com.shocktrade.controllers.QuotesController.getTradingHistory(symbol)
 
 # Research
 POST          /api/research/search                                  com.shocktrade.controllers.ResearchController.quoteSearch
@@ -86,13 +86,13 @@ PUT           /api/online/:userID                                   com.shocktra
 DELETE        /api/online/:userID                                   com.shocktrade.controllers.OnlineStatusController.setIsOffline(userID)
 
 # Profile Quotes
-PUT           /api/profile/:id/exchange/:exchange                   com.shocktrade.controllers.QuoteController.addExchange(id, exchange)
-DELETE        /api/profile/:id/exchange/:exchange                   com.shocktrade.controllers.QuoteController.removeExchange(id, exchange)
+PUT           /api/profile/:id/exchange/:exchange                   com.shocktrade.controllers.QuotesController.addExchange(id, exchange)
+DELETE        /api/profile/:id/exchange/:exchange                   com.shocktrade.controllers.QuotesController.removeExchange(id, exchange)
 GET           /api/profile/:id/exchanges                            com.shocktrade.controllers.ProfileController.getExchanges(id)
-GET           /api/profile/:id/explore/sectors                      com.shocktrade.controllers.QuoteController.exploreSectors(id)
-GET           /api/profile/:id/explore/industries                   com.shocktrade.controllers.QuoteController.exploreIndustries(id, sector)
-GET           /api/profile/:id/explore/subIndustries                com.shocktrade.controllers.QuoteController.exploreSubIndustries(id, sector, industry)
-GET           /api/profile/:id/explore/quotes                       com.shocktrade.controllers.QuoteController.exploreQuotesBySubIndustry(id, sector, industry, subIndustry)
+GET           /api/profile/:id/explore/sectors                      com.shocktrade.controllers.QuotesController.exploreSectors(id)
+GET           /api/profile/:id/explore/industries                   com.shocktrade.controllers.QuotesController.exploreIndustries(id, sector)
+GET           /api/profile/:id/explore/subIndustries                com.shocktrade.controllers.QuotesController.exploreSubIndustries(id, sector, industry)
+GET           /api/profile/:id/explore/quotes                       com.shocktrade.controllers.QuotesController.exploreQuotesBySubIndustry(id, sector, industry, subIndustry)
 POST          /api/profile/:id/wallet                               com.shocktrade.controllers.ProfileController.deductFunds(id)
 
 # Profile Users

@@ -306,22 +306,6 @@
                 return $scope.selectedTradingHistory === t;
             };
 
-            // watch for changes to the player's profile
-            $scope.$watch("MySession.userProfile", function () {
-                if (!MySession.userProfile.favorites) MySession.userProfile.favorites = ['AAPL'];
-                if (!MySession.userProfile.recentSymbols) MySession.userProfile.recentSymbols = ['AAPL', 'AMZN', 'GOOG', 'MSFT'];
-
-                // load the favorite and recent quotes
-                FavoriteSymbols.setSymbols(MySession.userProfile.favorites);
-                RecentSymbols.setSymbols(MySession.userProfile.recentSymbols);
-
-                // load the held securities
-                var id = MySession.getUserID();
-                if (id) {
-                    HeldSecurities.init(id);
-                }
-            });
-
             function setupMarketStatusUpdates() {
                 $scope.usMarketsOpen = null;
                 $log.info("Retrieving market status...");

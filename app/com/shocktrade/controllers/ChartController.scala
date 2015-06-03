@@ -91,7 +91,7 @@ object ChartController extends Controller with MongoController {
       quantities = participant.positions map (pos => (pos.symbol, pos.quantity))
 
       // query the symbols for the current market price
-      quotes <- QuoteController.findQuotesBySymbols(quantities map (_._1))
+      quotes <- QuotesController.findQuotesBySymbols(quantities map (_._1))
 
       // create the mapping of symbols to quotes
       mappingQ = Map(quotes map (q => (q.symbol, q)): _*)

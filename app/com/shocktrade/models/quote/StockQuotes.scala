@@ -8,7 +8,7 @@ import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.actors.WebSockets.QuoteUpdated
 import com.shocktrade.actors.{DBaseQuoteActor, RealTimeQuoteActor, WebSockets}
-import com.shocktrade.controllers.QuoteController._
+import com.shocktrade.controllers.QuotesController._
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime

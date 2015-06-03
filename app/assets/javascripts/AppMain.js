@@ -24,6 +24,7 @@
                 .when('/profile', {redirectTo: '/profile/connect'})
                 .when('/profile/awards', {templateUrl: '/assets/views/profile/awards.htm', controller: 'ProfileController'})
                 .when('/profile/connect', {templateUrl: '/assets/views/profile/connect/connect.htm', controller: 'ProfileController'})
+                .when('/profile/favorites', {templateUrl: '/assets/views/profile/favorites.htm', controller: 'ProfileController'})
                 .when('/profile/statistics', {templateUrl: '/assets/views/profile/statistics.htm', controller: 'ProfileController'})
                 .otherwise({redirectTo: '/discover'});
         }]);

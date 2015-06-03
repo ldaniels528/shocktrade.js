@@ -3,9 +3,10 @@
 
     /**
      * Statistics Controller
+     * @author lawrence.daniels@gmail.com
      */
-    app.controller('StatisticsController', ['$scope', '$location', '$log', '$timeout', 'toaster', 'MySession', 'ContestService',
-        function ($scope, $location, $log, $timeout, toaster, MySession, ContestService) {
+    app.controller('StatisticsController', ['$scope', '$log', '$timeout', 'toaster', 'MySession',
+        function ($scope, $log, $timeout, toaster, MySession) {
 
 
         }]);

@@ -36,6 +36,10 @@ div.fund_summary {
 
 }
 
+.highlighted_quote {
+    background: #c0ffff;
+}
+
 .quote_title {
 	padding: 2px 2px 2px 2px;
 	color: #000088;
@@ -45,7 +49,14 @@ div.fund_summary {
 .quote_sub_title {
 	padding: 10px;
 }
- 
+
+div.favoritesContainer {
+	clear: both;
+	overflow: auto;
+	width: auto;
+	height: 550px;
+}
+
 div.filterContainer {
 	clear: both;
 	overflow: auto;	

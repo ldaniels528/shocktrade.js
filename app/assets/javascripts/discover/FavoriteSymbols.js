@@ -5,10 +5,15 @@
      * Favorite Symbols Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('FavoriteSymbols', function ($rootScope, $http, $log, $q, MySession) {
+    app.factory('FavoriteSymbols', function ($rootScope, $http, $log, $q, toaster, MySession) {
+        var loaded = false;
         var service = {
             symbols: [],
             quotes: []
+        };
+
+        service.getQuotes = function () {
+            return service.quotes;
         };
 
         service.isEmpty = function () {
@@ -85,15 +90,15 @@
         }
 
         function loadQuotes(symbols) {
-            return $http({
-                method: 'POST',
-                url: '/api/quotes/list',
-                data: angular.toJson(symbols)
-            }).then(function (response) {
-                var quotes = response.data;
-                service.quotes = quotes;
-                return quotes;
-            });
+            console.log("Loading symbols - " + angular.toJson(symbols));
+            return $http.post('/api/quotes/list', symbols)
+                .success(function (quotes) {
+                    $log.info("Loaded " + quotes.length + " quote(s)");
+                    service.quotes = quotes;
+                })
+                .error(function(xhr, error, status) {
+                    toaster.pop('error', 'Error loading quots', null);
+                });
         }
 
         /**

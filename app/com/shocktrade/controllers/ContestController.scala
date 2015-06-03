@@ -8,7 +8,7 @@ import com.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
-import com.shocktrade.controllers.QuoteController.Quote
+import com.shocktrade.controllers.QuotesController.Quote
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
@@ -508,7 +508,7 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // query the quotes for all symbols
-      quotes <- QuoteController.findQuotesBySymbols(allSymbols)
+      quotes <- QuotesController.findQuotesBySymbols(allSymbols)
       //_ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes

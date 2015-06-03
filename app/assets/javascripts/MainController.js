@@ -5,8 +5,8 @@
      * Main Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'SignUpDialog',
-        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, SignUpDialog) {
+    app.controller('MainController', ['$scope', '$http', '$interval', '$location', '$log', '$timeout', 'toaster', 'ContestService', 'Facebook', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'ProfileService', 'RecentSymbols', 'SignUpDialog',
+        function ($scope, $http, $interval, $location, $log, $timeout, toaster, ContestService, Facebook, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, ProfileService, RecentSymbols, SignUpDialog) {
             // setup the loading mechanism
             $scope._loading = false;
             $scope.loading = false;
@@ -362,6 +362,22 @@
 
             $scope.$on("user_status_changed", function (event, newState) {
                 $log.info("user_status_changed: newState = " + angular.toJson(newState));
+            });
+
+            // watch for changes to the player's profile
+            $scope.$watch("MySession.userProfile", function () {
+                if (!MySession.userProfile.favorites) MySession.userProfile.favorites = ['AAPL'];
+                if (!MySession.userProfile.recentSymbols) MySession.userProfile.recentSymbols = ['AAPL', 'AMZN', 'GOOG', 'MSFT'];
+
+                // load the favorite and recent quotes
+                FavoriteSymbols.setSymbols(MySession.userProfile.favorites);
+                RecentSymbols.setSymbols(MySession.userProfile.recentSymbols);
+
+                // load the held securities
+                var id = MySession.getUserID();
+                if (id) {
+                    HeldSecurities.init(id);
+                }
             });
 
         }]);
