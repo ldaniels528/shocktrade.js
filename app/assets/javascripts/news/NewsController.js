@@ -5,8 +5,8 @@
      * News Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewsController', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'MySession', 'NewsQuoteDialog', 'NewsService', 'NewsSymbols',
-        function ($scope, $cookieStore, $log, $sce, $timeout, MySession, NewsQuoteDialog, NewsService, NewsSymbols) {
+    app.controller('NewsController', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'toaster', 'MySession', 'NewsQuoteDialog', 'NewsService', 'NewsSymbols',
+        function ($scope, $cookieStore, $log, $sce, $timeout, toaster, MySession, NewsQuoteDialog, NewsService, NewsSymbols) {
 
             $scope.channels = [];
             $scope.selection = {};
@@ -19,13 +19,14 @@
 
             $scope.getNewsFeed = function (feedId) {
                 $scope.startLoading();
-                NewsService.getFeed(feedId).then(
-                    function (response) {
-                        populateQuotes(response.data);
-                        $scope.channels = enrichTickers(response.data);
+                NewsService.getFeed(feedId)
+                    .success(function (feeds) {
+                        populateQuotes(feeds);
+                        $scope.channels = enrichTickers(feeds);
                         $scope.stopLoading();
-                    },
-                    function (err) {
+                    })
+                    .error(function (err) {
+                        toaster.pop('error', 'Failed to load news feed ' + feedId);
                         $scope.stopLoading();
                     });
             };
@@ -51,11 +52,14 @@
                 NewsService.getSources()
                     .success(function (newsSources) {
                         $scope.newsSources = newsSources;
-                        $scope.selection.feed = newsSources[0].OID();
-                        $scope.getNewsFeed($scope.selection.feed);
+                        if(newsSources.length) {
+                            $scope.selection.feed = newsSources[0].OID();
+                            $scope.getNewsFeed($scope.selection.feed);
+                        }
                         $scope.stopLoading();
                     })
                     .error(function (err) {
+                        toaster.pop('error', 'Failed to load news sources');
                         $scope.stopLoading();
                     });
             };

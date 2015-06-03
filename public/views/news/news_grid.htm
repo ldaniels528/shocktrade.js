@@ -1,10 +1,10 @@
 <div ng-class="gridClass($index)" style="display: block; margin-bottom: 10px">
-	<age class="news_age" value="{{ item.pubDate }}"/>
+	<age class="news_age" value="{{ item.pubDate }}"></age>
 	<img ng-show="item.thumbNail.url" 
 		ng-src="{{ item.thumbNail.url }}" 
-		class="news_img"
-		style="float: right; width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
-	<a ng-bind-html="item.title" class="news" href="{{ item.link }}" target="newwindow">
+		class="news_img pull-right"
+		style="width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
+	<a ng-bind-html="item.title" class="news" ng-href="{{ item.link }}" target="newwindow">
 		<span class="news_title">{{ item.title }}</span>
 	</a>
 	&#8212; <span compile="item.description" class="news_desc">{{ item.description }}</span>	

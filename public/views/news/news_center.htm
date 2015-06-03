@@ -28,12 +28,12 @@
 		<div class="newsContainer">	 
 			 <div ng-show="view == 'list'" style="display: block; width: 100%">
 		 		<div ng-include src="'/assets/views/news/news_list.htm'"
-		 			ng-repeat="item in channel.items | orderBy:'-pubDate'" 
+		 			ng-repeat="item in channel.items | orderBy:pubDate:true"
 		 			ng-class-even="'news_list_even'" ng-class-odd="'news_list_odd'"></div>
 			 </div>
 			 
 			 <div ng-show="view == 'grid'" style="display: block; width: 100%">
-			 	<div ng-repeat="item in channel.items | orderBy:'-pubDate'" ng-class-even="'news_grid_even'" ng-class-odd="'news_grid_odd'">
+			 	<div ng-repeat="item in channel.items | orderBy:pubDate:true" ng-class-even="'news_grid_even'" ng-class-odd="'news_grid_odd'">
 			 		<div ng-include src="'/assets/views/news/news_grid.htm'"></div>
 			 	</div>
 			 	<br style="clear: both">
