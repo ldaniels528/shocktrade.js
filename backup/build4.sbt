@@ -20,7 +20,7 @@ scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7", "-target", "1.7", "-g:vars")
 
-//val clients = Seq(appScalaJs)
+val clients = Seq(appScalaJs)
 
 val scalajsOutputDir = Def.settingKey[File]("Directory for Javascript files output by ScalaJS")
 
@@ -46,7 +46,7 @@ lazy val appScalaJs = (project in file("app-js"))
       "com.greencatsoft" %%% "scalajs-angular" % "0.5-SNAPSHOT",
       "com.github.benhutchison" %%% "prickle" % "1.1.5"
     ))
-  .enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
 //.aggregate(appShared)
 
 lazy val appScalaJvm = (project in file("app-play"))
@@ -54,8 +54,8 @@ lazy val appScalaJvm = (project in file("app-play"))
     name := "shocktrade.js",
     scalaVersion := myScalaVersion,
     scalajsOutputDir := (crossTarget in Compile).value / "classes" / "public" / "javascripts",
-    //scalaJSProjects := clients,
-    pipelineStages := Seq(/*scalaJSProd,*/ gzip),
+    scalaJSProjects := clients,
+    pipelineStages := Seq(scalaJSProd, gzip),
     // ask scalajs project to put its outputs in scalajsOutputDir
     Seq(packageScalaJSLauncher, fastOptJS, fullOptJS) map { packageJSKey =>
       crossTarget in(appScalaJs, Compile, packageJSKey) := scalajsOutputDir.value
@@ -106,9 +106,8 @@ lazy val appScalaJvm = (project in file("app-play"))
       //"org.webjars" %% "webjars-play" % "2.4.0-1",
       "org.webjars" % "bootstrap" % "3.1.1-2"
     ))
-  .enablePlugins(play.PlayScala, play.twirl.sbt.SbtTwirl)
-  //.aggregate(clients.map(projectToRef): _*)
-  .aggregate(appScalaJs)
+  .enablePlugins(ScalaJSPlugin, ScalaJSPlay, PlayScala, play.twirl.sbt.SbtTwirl)
+  .aggregate(clients.map(projectToRef): _*)
 
 // loads the jvm project at sbt startup
-onLoad in Global := (Command.process("project appScalaJvm", _: State)) compose (onLoad in Global).value
+//onLoad in Global := (Command.process("project appScalaJvm", _: State)) compose (onLoad in Global).value
