@@ -5,31 +5,11 @@
 	<title>ShockTrade: Invest with Confidence</title>
 	<meta charset='utf-8'>
 	<meta name="keywords" content="stock game, investment game, research, investing, trading, stock, stocks, bonds, fixed income, mutual funds, etf, options, futures, IRAs, roll over 401k, retirement, Roth IRA, online trading, stock quotes, mobile trading, active trader, etrade pro, managed investments, etrade" />
-
-		<!-- WebJar JS libraries -->
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-animate.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-cookies.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-route.min.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-sanitize.min.js"))' type="text/javascript"></script>
-	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("angularjs-nvd3-directives.js"))" type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("d3.min.js"))' type="text/javascript"></script>
-	<script src="@routes.WebJarAssets.at(WebJarAssets.locate("nv.d3.min.js"))" type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.js"))' type="text/javascript"></script>
-	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
-
-	<!-- Angular Resources 	-->
-	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-fastopt.js")"></script>
-	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-launcher.js")"></script>
-
-	<!-- WebJar Stylesheets -->
-	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))' type="text/css" rel="stylesheet" media="screen">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))' type="text/css" rel="stylesheet" media="screen">
 	<link href='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.css"))' type="text/css" rel="stylesheet" media="screen">
 
-	<!-- ShockTrade Stylesheets -->
 	<link href='@routes.Assets.versioned("stylesheets/common.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("stylesheets/connect.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("stylesheets/dashboard/awards.css")' type="text/css" rel="stylesheet" media=screen>
@@ -53,6 +33,10 @@
 	<link href='@routes.Assets.versioned("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("images/favicon.png")' type="image/png" rel="shortcut icon">
+
+		<!-- Angular Resources 	-->
+	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-fastopt.js")"></script>
+	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-launcher.js")"></script>
 </head>
 
 <body ng-controller="MainController" ng-cloak ng-init="mainInit('@uuid')">
@@ -91,11 +75,22 @@
             <div style="display: none" id="fb-root"></div>
         </div>
 	</div>
+	
+	<!-- WebJar JS libraries -->
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-animate.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-cookies.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-route.min.js"))' type="text/javascript"></script>
+	<script src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-sanitize.min.js"))' type="text/javascript"></script>
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angularjs-nvd3-directives.js"))" type="text/javascript"></script>
+    <script src='@routes.WebJarAssets.at(WebJarAssets.locate("d3.min.js"))' type="text/javascript"></script>
+    <script src="@routes.WebJarAssets.at(WebJarAssets.locate("nv.d3.min.js"))" type="text/javascript"></script>
+    <script src='@routes.WebJarAssets.at(WebJarAssets.locate("toaster.js"))' type="text/javascript"></script>
+    <script src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))' type="text/javascript"></script>
 
 	<!-- local JS libraries -->
-    <!--
 	<script src='@routes.Assets.versioned("javascripts/AppMain.js")' type="text/javascript"></script>
-	-->
 	<script src='@routes.Assets.versioned("javascripts/app/commons.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/AgeDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/AvatarDirective.js")' type="text/javascript"></script>
@@ -126,12 +121,11 @@
     <script src='@routes.Assets.versioned("javascripts/dashboard/PortfolioController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/DiscoverController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/discover/DrillDownController.js")' type="text/javascript"></script>
-    <!--
 	<script src='@routes.Assets.versioned("javascripts/discover/FavoriteSymbols.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/HeldSecurities.js")' type="text/javascript"></script>
+	<script src='@routes.Assets.versioned("javascripts/discover/MarketStatus.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/QuoteService.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/RecentSymbols.js")' type="text/javascript"></script>
-    -->
     <script src='@routes.Assets.versioned("javascripts/discover/ResearchController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/news/NewsController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/news/NewsService.js")' type="text/javascript"></script>

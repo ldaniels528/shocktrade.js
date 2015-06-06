@@ -5,7 +5,7 @@
      * Favorite Symbols Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('FavoriteSymbols', function ($rootScope, $http, $log, $q, toaster) {
+    app.factory('FavoriteSymbols', function ($rootScope, $http, $log, $q, toaster, MySession) {
         var loaded = false;
         var service = {
             symbols: [],
@@ -28,7 +28,7 @@
             var index = indexOf(symbol);
             if (index == -1) {
                 // get the user ID
-                var id = $rootScope.MySession.getUserID();
+                var id = MySession.getUserID();
                 if (id) {
                     // add the symbol to the profile's Favorites
                     $http.put('/api/profile/' + id + '/favorite/' + symbol)
@@ -47,7 +47,7 @@
             var index = indexOf(symbol);
             if (index != -1) {
                 // get the user ID
-                var id = $rootScope.MySession.getUserID();
+                var id = MySession.getUserID();
                 if (id) {
                     // remove the symbol from the profile's Favorites
                     $http.delete('/api/profile/' + id + '/favorite/' + symbol)

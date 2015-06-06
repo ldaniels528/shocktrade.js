@@ -5,7 +5,7 @@
      * Quote Services
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('QuoteService', function ($rootScope, $http, $log, FavoriteSymbols, MySession) {
+    app.factory('QuoteService', function ($rootScope, $http, $log) {
         var quotes = {};
         var tradingHistory = {};
         var service = {
@@ -14,7 +14,7 @@
 
         function setFavorites(quotes) {
             for (var n = 0; n < quotes.length; n++) {
-                quotes[n].favorite = FavoriteSymbols.isFavorite(quotes[n].symbol)
+                quotes[n].favorite = $rootScope.FavoriteSymbols.isFavorite(quotes[n].symbol)
             }
             return quotes
         }
@@ -24,50 +24,45 @@
         };
 
         service.loadFilterQuotes = function (filter) {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http({
                     method: 'POST',
                     url: '/api/profile/' + id + '/quotes/filter/mini',
                     data: angular.toJson(filter)
-                }).then(function (response) {
-                    return setFavorites(response.data)
                 })
+                    .then(function (response) {
+                        return setFavorites(response.data)
+                    })
             }
             else {
-                return $http({
-                    method: 'POST',
-                    url: '/api/quotes/filter/mini',
-                    data: angular.toJson(filter)
-                }).then(function (response) {
-                    return setFavorites(response.data)
-                })
+                return $http({method: 'POST', url: '/api/quotes/filter/mini', data: angular.toJson(filter)})
+                    .then(function (response) {
+                        return setFavorites(response.data)
+                    })
             }
         };
 
         service.loadStockQuoteList = function (symbols) {
-            return $http.post("/api/quotes/list", symbols);
+            return $http({method: 'POST', url: '/api/quotes/list', data: angular.toJson(symbols)})
+                .then(function (response) {
+                    return setFavorites(response.data)
+                });
         };
 
-        service.getStockQuote = function (symbol) {
-            return $http.get("/api/quotes/symbol/" + symbol);
+        service.loadStockQuote = function (symbol) {
+            return $http.get('/api/quotes/symbol/' + symbol)
         };
 
         service.loadTradingHistory = function (symbol) {
-            return $http.get("/api/quotes/tradingHistory/" + symbol);
+            return $http.get('/api/quotes/tradingHistory/' + symbol)
+                .then(function (response) {
+                    return response.data
+                })
         };
 
         service.getRiskLevel = function (symbol) {
-            return $http.get("/api/quotes/riskLevel/" + symbol);
-        };
-
-        ////////////////////////////////////////////////////////////////////
-        //			Market Status Functions
-        ///////////////////////////////////////////////////////////////////
-
-        service.getMarketStatus = function (callback) {
-            // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
-            return $http.get("/api/tradingClock/status/0");
+            return $http.get('/api/quotes/riskLevel/' + symbol)
         };
 
         ////////////////////////////////////////////////////////////////////
@@ -93,8 +88,8 @@
         };
 
         service.loadSectors = function () {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http.get("/api/profile/" + id + "/explore/sectors")
             }
             else {
@@ -103,8 +98,8 @@
         };
 
         service.loadNAICSSectors = function () {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http.get("/api/profile/" + id + "/explore/naics/sectors")
             }
             else {
@@ -113,8 +108,8 @@
         };
 
         service.loadIndustries = function (sector) {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http.get("/api/profile/" + id + "/explore/industries", {params: {"sector": sector}})
             }
             else {
@@ -123,8 +118,8 @@
         };
 
         service.loadSubIndustries = function (sector, industry) {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http.get("/api/profile/" + id + "/explore/subIndustries", {
                     params: {
                         "sector": sector,
@@ -138,8 +133,8 @@
         };
 
         service.loadIndustryQuotes = function (sector, industry, subIndustry) {
-            if (MySession.isAuthorized()) {
-                var id = MySession.getUserID();
+            if ($rootScope.MySession.isAuthorized()) {
+                var id = $rootScope.MySession.getUserID();
                 return $http.get("/api/profile/" + id + "/explore/quotes", {
                     params: {
                         "sector": sector,
@@ -168,7 +163,15 @@
         };
 
         service.getPricing = function (symbols) {
-            return $http.post("/api/quotes/pricing", symbols);
+            return $http({
+                method: 'POST',
+                url: '/api/quotes/pricing',
+                data: angular.toJson(symbols)
+            })
+        };
+
+        service.getStockQuote = function (symbol) {
+            return service.loadStockQuote(symbol);
         };
 
         service.getStockQuoteList = function (symbols) {

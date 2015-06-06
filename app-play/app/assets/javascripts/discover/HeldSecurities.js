@@ -5,7 +5,7 @@
      * Held Securities Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('HeldSecurities', function ($rootScope, $http, $log, $q, $timeout, toaster) {
+    app.factory('HeldSecurities', function ($rootScope, $http, $log, $q, $timeout, toaster, MySession, ContestService, FavoriteSymbols) {
 
         var service = {
             symbols: [],
@@ -20,7 +20,7 @@
             var index = indexOf(symbol);
             if (index == -1) {
                 // get the user ID
-                var id = $rootScope.MySession.getUserID();
+                var id = MySession.getUserID();
 
                 // add the symbol to the list
                 service.symbols.unshift(symbol);
@@ -32,7 +32,7 @@
             var index = indexOf(symbol);
             if (index != -1) {
                 // get the user ID
-                var id = $rootScope.MySession.getUserID();
+                var id = MySession.getUserID();
 
                 // remove the symbol from the list
                 service.symbols.splice(index, 1);
@@ -75,7 +75,7 @@
             }).then(function (response) {
                 var quotes = response.data;
                 for (var n = 0; n < quotes.length; n++) {
-                    quotes[n].favorite = $rootScope.FavoriteSymbols.isFavorite(quotes[n].symbol);
+                    quotes[n].favorite = FavoriteSymbols.isFavorite(quotes[n].symbol);
                 }
                 service.quotes = quotes;
                 return service.quotes;
@@ -83,7 +83,7 @@
         }
 
         service.init = function (id) {
-            $rootScope.ContestService.getHeldSecurities(id).then(
+            ContestService.getHeldSecurities(id).then(
                 function (response) {
                     $log.info("Loading held securities...");
                     service.setSymbols(response.data);

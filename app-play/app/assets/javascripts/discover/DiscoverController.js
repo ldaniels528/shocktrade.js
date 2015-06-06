@@ -5,8 +5,8 @@
      * Discover Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DiscoverController', ['$scope', '$cookieStore', '$interval', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
-        function ($scope, $cookieStore, $interval, $log, $routeParams, $timeout, toaster, FavoriteSymbols, HeldSecurities, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
+    app.controller('DiscoverController', ['$scope', '$cookieStore', '$interval', '$log', '$routeParams', '$timeout', 'toaster', 'FavoriteSymbols', 'HeldSecurities', 'MarketStatus', 'MySession', 'NewOrderDialog', 'QuoteService', 'RecentSymbols',
+        function ($scope, $cookieStore, $interval, $log, $routeParams, $timeout, toaster, FavoriteSymbols, HeldSecurities, MarketStatus, MySession, NewOrderDialog, QuoteService, RecentSymbols) {
 
             // setup a private loading variable
             $scope.loading = false;
@@ -221,37 +221,44 @@
                 }
 
                 // load the quote
-                QuoteService.getStockQuote(symbol)
-                    .success(function (quote) {
-                        // capture the quote
-                        $scope.q = quote;
-                        $scope.ticker = quote.symbol + " - " + quote.name;
+                QuoteService.loadStockQuote(symbol).then(
+                    function (response) {
+                        var quote = response.data;
+                        if (quote) {
+                            // capture the quote
+                            $scope.q = quote;
+                            $scope.ticker = quote.symbol + " - " + quote.name;
 
-                        // save the cookie
-                        $cookieStore.put('symbol', quote.symbol);
+                            // save the cookie
+                            $cookieStore.put('symbol', quote.symbol);
 
-                        // add the symbol to the Recently-viewed Symbols
-                        RecentSymbols.add(symbol);
+                            // add the symbol to the Recently-viewed Symbols
+                            RecentSymbols.add(symbol);
 
-                        // get the risk level
-                        QuoteService.getRiskLevel(symbol).then(
-                            function (response) {
-                                quote.riskLevel = response.data;
-                            },
-                            function (response) {
-                                toaster.pop('error', 'Error!', "Error retrieving risk level for " + symbol);
-                            });
+                            // get the risk level
+                            QuoteService.getRiskLevel(symbol).then(
+                                function (response) {
+                                    quote.riskLevel = response.data;
+                                },
+                                function (response) {
+                                    toaster.pop('error', 'Error!', "Error retrieving risk level for " + symbol);
+                                });
 
-                        // load the trading history
-                        $scope.tradingHistory = null;
-                        if ($scope.expanders[6].expanded) {
-                            $scope.expandSection($scope.expanders[6]);
+                            // load the trading history
+                            $scope.tradingHistory = null;
+                            if ($scope.expanders[6].expanded) {
+                                $scope.expandSection($scope.expanders[6]);
+                            }
+                        }
+                        else {
+                            toaster.pop('error', 'Error!', "No quote found for " + symbol);
+                            console.log("Empty quote? " + angular.toJson(quote));
                         }
 
                         // disabling the loading status
                         $scope.stopLoading();
-                    })
-                    .error(function (response) {
+                    },
+                    function (response) {
                         $log.error("Failed to retrieve quote: " + response.status);
                         $scope.stopLoading();
                         toaster.pop('error', 'Error!', "Error loading quote " + symbol);
@@ -302,21 +309,21 @@
             function setupMarketStatusUpdates() {
                 $scope.usMarketsOpen = null;
                 $log.info("Retrieving market status...");
-                QuoteService.getMarketStatus()
-                    .success(function (response) {
+                MarketStatus.getMarketStatus()
+                    .success(function (status) {
                         // retrieve the delay in milliseconds from the server
-                        var delay = response.delay;
+                        var delay = status.delay;
                         if (delay < 0) {
-                            delay = response.end - response.sysTime;
+                            delay = status.end - status.sysTime;
                             if (delay <= 300000) {
                                 delay = 300000; // 5 minutes
                             }
                         }
 
                         // set the market status
-                        $log.info("US Markets are " + (response.active ? 'Open' : 'Closed') + "; Waiting for " + delay + " msec until next trading start...");
+                        $log.info("US Markets are " + (status.active ? 'Open' : 'Closed') + "; Waiting for " + delay + " msec until next trading start...");
                         setTimeout(function () {
-                            $scope.usMarketsOpen = response.active;
+                            $scope.usMarketsOpen = status.active;
                         }, 750);
 
                         // wait for the delay, then call recursively
@@ -324,8 +331,8 @@
                             setupMarketStatusUpdates();
                         }, delay);
                     })
-                    .error(function (err) {
-                        toaster.pop("error", "Failed to retrieve current market status", null);
+                    .error(function(err) {
+                        toaster.pop('error', 'Failed to retrieve market status');
                     });
             }
 
@@ -337,7 +344,7 @@
             (function () {
                 if (!$scope.q.symbol) {
                     // get the symbol
-                    var symbol = $routeParams.symbol || $cookieStore.get('symbol') || "AAPL"; //RecentSymbols.getLast();
+                    var symbol = $routeParams.symbol || $cookieStore.get('symbol') || RecentSymbols.getLast();
 
                     // load the symbol
                     $scope.loadQuote(symbol);
