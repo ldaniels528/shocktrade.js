@@ -62,31 +62,33 @@
             };
 
             $scope.expandOrCollapseIndustry = function (sector, industry, callback) {
-                if (!industry.expanded) {
-                    industry.loading = true;
-                    QuoteService.loadSubIndustries(sector.label, industry.label).then(
-                        function (response) {
-                            industry.loading = false;
-                            industry.subIndustries = [];
-                            angular.forEach(response.data, function (v) {
-                                industry.subIndustries.push({
-                                    label: v._id,
-                                    total: v.total
+                if (industry) {
+                    if (!industry.expanded) {
+                        industry.loading = true;
+                        QuoteService.loadSubIndustries(sector.label, industry.label).then(
+                            function (response) {
+                                industry.loading = false;
+                                industry.subIndustries = [];
+                                angular.forEach(response.data, function (v) {
+                                    industry.subIndustries.push({
+                                        label: v._id,
+                                        total: v.total
+                                    });
                                 });
-                            });
-                            industry.expanded = true;
+                                industry.expanded = true;
 
-                            // invoke the callback
-                            if (callback) {
-                                callback(sector, industry, industry.subIndustries);
-                            }
-                        },
-                        function (response) {
-                            industry.loading = false;
-                        });
-                }
-                else {
-                    industry.expanded = false;
+                                // invoke the callback
+                                if (callback) {
+                                    callback(sector, industry, industry.subIndustries);
+                                }
+                            },
+                            function (response) {
+                                industry.loading = false;
+                            });
+                    }
+                    else {
+                        industry.expanded = false;
+                    }
                 }
             };
 
@@ -109,7 +111,7 @@
                         });
                 }
                 else {
-                    if(subIndustry) subIndustry.expanded = false;
+                    if (subIndustry) subIndustry.expanded = false;
                 }
             };
 
