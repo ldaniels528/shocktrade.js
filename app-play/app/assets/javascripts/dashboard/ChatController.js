@@ -104,7 +104,7 @@
                         "sender": {
                             "_id": { "$oid" : MySession.getUserID() },
                             "name": MySession.getUserName(),
-                            "facebookID": MySession.fbUserID
+                            "facebookID": MySession.getFacebookID()
                         }
                     };
 

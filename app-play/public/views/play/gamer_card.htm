@@ -6,7 +6,7 @@
 	</div>
 	<div style="display: block; width: 100%">
 		<div style="display: inline; float: left; width: 75px">
-			<avatar id="{{ MySession.fbUserID }}" class="avatar-75"></avatar>
+			<avatar id="{{ MySession.getFacebookID() }}" class="avatar-75"></avatar>
 		</div>
 		<div style="display:inline; float: right; width: 155px">
 			<table style="width: 100%">			
@@ -35,7 +35,7 @@
 		</div>
 		<br style="clear: both">
 		<div ng-controller="AwardsController" ng-init="setupAwards()"  style="display: block; background-color: #cccccc; border: 1px solid #888888; border-radius: 4px 4px 4px 4px; height: 33px; text-align: center">
-			<img ng-repeat="award in MySession.userProfile.awards.slice(0,7)" style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">			
+			<img ng-repeat="award in MySession.getUserProfile().awards.slice(0,7)" style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">			
 		</div>
 	</div>
 </div>

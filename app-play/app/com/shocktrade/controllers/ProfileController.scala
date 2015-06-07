@@ -93,8 +93,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    */
   def findProfileByFacebookID(id: String) = Action.async {
     UserProfiles.findProfileByFacebookID(id) map {
-      case Some(profile) =>
-        Ok(Json.toJson(profile))
+      case Some(profile) => Ok(Json.toJson(profile))
       case None => Ok(createError("No profile found"))
     } recover {
       case e: Exception =>

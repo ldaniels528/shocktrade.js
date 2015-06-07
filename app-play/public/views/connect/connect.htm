@@ -1,22 +1,22 @@
 <fieldset>
     <legend>Connect & Share</legend>
 </fieldset>
-<div class="row" ng-controller="ConnectController">
+<div class="row" ng-controller="ConnectController" ng-init="searchTerm = ''">
     <!-- Contacts -->
     <div class="col-md-3">
         <div style="display: block; margin-left: 5px">
             <input class="form-control"
                    type="text"
                    ng-model="searchName"
-                   ng-change="contact = {}"
+                   ng-change="selectUpdate({})"
                    placeholder="Search my friends...">
         </div>
-        <div ng-show="contact.id" style="width: 100%">
+        <div ng-show="getContact()._id" style="width: 100%">
             <!-- if ShockTrade user -->
-            <div ng-show="contact.profile" ng-include src="'/assets/views/connect/contact_card.htm'"></div>
+            <div ng-show="getContact().profile" ng-include src="'/assets/views/connect/contact_card.htm'"></div>
 
             <!-- Non-ShockTrade user -->
-            <div ng-hide="contact.profile" ng-include src="'/assets/views/connect/unregistered_user_card.htm'"></div>
+            <div ng-hide="getContact().profile" ng-include src="'/assets/views/connect/unregistered_user_card.htm'"></div>
         </div>
         <div class="contactsContainer">
             <span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
@@ -57,18 +57,18 @@
                     </span>
                 </div>
                 <div class="col-md-3">
-                    <span>{{ myUpdates.length }} message(s)</span>
+                    <span>{{ getMyUpdates().length }} message(s)</span>
                 </div>
             </div>
         </div>
 
         <div class="updatesContainer">
-            <span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="myUpdates.length === 0" class="notice">
+            <span ng-init="loadMyUpdates(MySession.getUserName())" ng-show="getMyUpdates().length === 0" class="notice">
                 <i class="fa fa-lg fa-frown-o st_orange"></i>
                 <span class="st_orange">You have no messages</span>
             </span>
             <div class="col-md-12 clickable"
-                 ng-repeat="u in myUpdates track by $index"
+                 ng-repeat="u in getMyUpdates() track by $index"
                  ng-click="selectUpdate(u)"
                  ng-class="myUpdate === u ? 'notif_highlight' : ($index % 2 === 0 ? 'even' : 'odd')">
                 <div class="col-md-3">

@@ -5,8 +5,8 @@
      * News Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('NewsController', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'toaster', 'MySession', 'NewsQuoteDialog', 'NewsService', 'NewsSymbols',
-        function ($scope, $cookieStore, $log, $sce, $timeout, toaster, MySession, NewsQuoteDialog, NewsService, NewsSymbols) {
+    app.controller('NewsController', ['$scope', '$cookieStore', '$log', '$sce', '$timeout', 'toaster', 'NewsQuoteDialog', 'newsService', 'NewsSymbols',
+        function ($scope, $cookieStore, $log, $sce, $timeout, toaster, NewsQuoteDialog, newsService, NewsSymbols) {
 
             $scope.channels = [];
             $scope.selection = {};
@@ -19,7 +19,7 @@
 
             $scope.getNewsFeed = function (feedId) {
                 $scope.startLoading();
-                NewsService.getFeed(feedId)
+                newsService.getFeed(feedId)
                     .success(function (feeds) {
                         populateQuotes(feeds);
                         $scope.channels = enrichTickers(feeds);
@@ -49,7 +49,7 @@
 
             $scope.loadNewsSources = function () {
                 $scope.startLoading();
-                NewsService.getSources()
+                newsService.getSources()
                     .success(function (newsSources) {
                         $scope.newsSources = newsSources;
                         if(newsSources.length) {

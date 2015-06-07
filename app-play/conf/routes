@@ -16,8 +16,6 @@ GET           /api/charts/stock/:symbol/:size/:range                com.shocktra
 GET           /api/charts/ratings/:symbol                           com.shocktrade.controllers.ChartController.getAnalystRatings(symbol)
 
 # Contests
-GET           /assets/views/play/search.htm                         com.shocktrade.controllers.ContestController.search
-
 PUT           /api/contest                                          com.shocktrade.controllers.ContestController.createContest
 GET           /api/contest/:id                                      com.shocktrade.controllers.ContestController.getContestByID(id)
 DELETE        /api/contest/:id                                      com.shocktrade.controllers.ContestController.deleteContestByID(id)

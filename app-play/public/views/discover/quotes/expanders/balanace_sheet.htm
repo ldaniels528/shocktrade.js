@@ -3,7 +3,7 @@
 		<span class="qm_header">Total Cash</span>
 		<span class="qm_detail pull-right">
 			<span ng-show="q.totalCash == null" class="null">&#8212;</span>
-			<span ng-show="q.totalCash != null">{{ q.totalCash | number | bigNumber }}</span>
+			<span ng-show="q.totalCash != null">{{ q.totalCash | bigNumber }}</span>
 		</span>	
 	</div>
 
@@ -11,7 +11,7 @@
         <span class="qm_header">Total Debt</span>
         <span class="qm_detail pull-right">
             <span ng-show="q.totalDebt == null" class="null">&#8212;</span>
-            <span ng-show="q.totalDebt != null">{{ q.totalDebt | number | bigNumber }}</span>
+            <span ng-show="q.totalDebt != null">{{ q.totalDebt | bigNumber }}</span>
         </span>
     </div>
 

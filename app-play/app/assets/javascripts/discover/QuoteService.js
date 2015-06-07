@@ -5,12 +5,10 @@
      * Quote Services
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('QuoteService', function ($rootScope, $http, $log) {
+    app.factory('QuoteService', function ($rootScope, $http) {
         var quotes = {};
         var tradingHistory = {};
-        var service = {
-            lastSymbol: "GOOG"
-        };
+        var service = {};
 
         function setFavorites(quotes) {
             for (var n = 0; n < quotes.length; n++) {
@@ -20,23 +18,19 @@
         }
 
         service.autoCompleteSymbols = function (searchTerm, maxResults) {
-            return $http.get('/api/quotes/autocomplete', {params: {'searchTerm': searchTerm, 'maxResults': maxResults}})
+            return $http.get("/api/quotes/autocomplete", {params: {"searchTerm": searchTerm, "maxResults": maxResults}})
         };
 
         service.loadFilterQuotes = function (filter) {
             if ($rootScope.MySession.isAuthorized()) {
                 var id = $rootScope.MySession.getUserID();
-                return $http({
-                    method: 'POST',
-                    url: '/api/profile/' + id + '/quotes/filter/mini',
-                    data: angular.toJson(filter)
-                })
+                return $http.post("/api/profile/" + id + "/quotes/filter/mini", filter)
                     .then(function (response) {
                         return setFavorites(response.data)
                     })
             }
             else {
-                return $http({method: 'POST', url: '/api/quotes/filter/mini', data: angular.toJson(filter)})
+                return $http.post("/api/quotes/filter/mini", filter)
                     .then(function (response) {
                         return setFavorites(response.data)
                     })
@@ -44,25 +38,25 @@
         };
 
         service.loadStockQuoteList = function (symbols) {
-            return $http({method: 'POST', url: '/api/quotes/list', data: angular.toJson(symbols)})
+            return $http({method: "POST", url: "/api/quotes/list", data: angular.toJson(symbols)})
                 .then(function (response) {
                     return setFavorites(response.data)
                 });
         };
 
         service.loadStockQuote = function (symbol) {
-            return $http.get('/api/quotes/symbol/' + symbol)
+            return $http.get("/api/quotes/symbol/" + symbol)
         };
 
         service.loadTradingHistory = function (symbol) {
-            return $http.get('/api/quotes/tradingHistory/' + symbol)
+            return $http.get("/api/quotes/tradingHistory/" + symbol)
                 .then(function (response) {
                     return response.data
                 })
         };
 
         service.getRiskLevel = function (symbol) {
-            return $http.get('/api/quotes/riskLevel/' + symbol)
+            return $http.get("/api/quotes/riskLevel/" + symbol)
         };
 
         ////////////////////////////////////////////////////////////////////
@@ -163,11 +157,7 @@
         };
 
         service.getPricing = function (symbols) {
-            return $http({
-                method: 'POST',
-                url: '/api/quotes/pricing',
-                data: angular.toJson(symbols)
-            })
+            return $http.post("/api/quotes/pricing", symbols);
         };
 
         service.getStockQuote = function (symbol) {

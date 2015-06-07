@@ -89,7 +89,7 @@
                 $scope.form.player = {
                     id: $rootScope.MySession.getUserID(),
                     name: $rootScope.MySession.getUserName(),
-                    facebookID: $rootScope.MySession.fbUserID
+                    facebookID: $rootScope.MySession.getFacebookID()
                 };
 
                 $log.info("form = " + angular.toJson($scope.form));
@@ -104,7 +104,7 @@
 
             function isValidForm() {
                 $scope.errors = [];
-                if (!MySession.authenticated) {
+                if (!MySession.isAuthenticated()) {
                     $scope.errors.push("You must login to create games");
                 }
                 if (!$scope.form.name || $scope.form.name.trim().length == 0) {

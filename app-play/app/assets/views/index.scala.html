@@ -33,10 +33,6 @@
 	<link href='@routes.Assets.versioned("stylesheets/profile.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("stylesheets/sessions.css")' type="text/css" rel="stylesheet" media=screen>
 	<link href='@routes.Assets.versioned("images/favicon.png")' type="image/png" rel="shortcut icon">
-
-		<!-- Angular Resources 	-->
-	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-fastopt.js")"></script>
-	<script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-launcher.js")"></script>
 </head>
 
 <body ng-controller="MainController" ng-cloak ng-init="mainInit('@uuid')">
@@ -50,12 +46,13 @@
             </div>
             <div class="col-md-offset-5 col-md-4">
                 <span class="title_color pull-right" style="margin-right: 20px">
-                    <avatar ng-show="MySession.fbUserID" id="{{ MySession.fbUserID }}" class="avatar-24"></avatar>
-                    <span ng-hide="MySession.authenticated" class="clickable" ng-click="login($event)">
+                    <avatar ng-show="MySession.getFacebookID()" id="{{ MySession.getFacebookID() }}" class="avatar-24"></avatar>
+                    <span ng-hide="MySession.isAuthenticated()" class="clickable" ng-click="login($event)">
                         <i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign In
                     </span>
-                    <span ng-show="MySession.authenticated" class="title_color clickable" ng-click="logout()">Sign Out</span>
-                    <span ng-show="MySession.fbProfile.name && MySession.fbProfile.name != ''" class="title_color">&#8212; {{ MySession.fbProfile.name }}</span>
+                    <span ng-show="MySession.isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
+                    <span ng-show="MySession.getFacebookProfile().name && MySession.getFacebookProfile().name != ''"
+                        class="title_color">&#8212; {{ MySession.getFacebookProfile().name }}</span>
                 </span>
             </div>
         </div>
@@ -66,7 +63,7 @@
         <!-- main view -->
         <div>
 			<div>
-				<div ng-if="MySession.fbUserID" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+				<div ng-if="MySession.getFacebookID()" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
 				<div class="row" style="margin-top: 20px">
 					<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
 					<div class="col-md-11 pull-left" ng-view ng-cloak></div>
@@ -92,52 +89,35 @@
 	<!-- local JS libraries -->
 	<script src='@routes.Assets.versioned("javascripts/AppMain.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/commons.js")' type="text/javascript"></script>
+    <script src='@routes.Assets.versioned("javascripts/app/facebook_init.js")' type="text/javascript"></script>
+
+    <!-- Angular Directive -->
 	<script src='@routes.Assets.versioned("javascripts/app/directives/AgeDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/AvatarDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/ChangeArrowDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/CompileDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/CountryDirective.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/app/directives/NewsDirective.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/app/filters/BigNumberFilter.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/app/filters/DurationFilter.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/app/filters/EscapeFilter.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/app/filters/QuoteChangeFilter.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/app/filters/QuoteNumberFilter.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/app/filters/YesNoFilter.js")' type="text/javascript"></script>
+
+    <!-- Scala.js Resources 	-->
+    <script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-fastopt.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/shocktrade-scalajs-launcher.js")"></script>
 
 	<!-- Controllers and Services -->
-    <script src='@routes.Assets.versioned("javascripts/Facebook.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/MainController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/MySession.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/WebSockets.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/admin/InspectController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/CashAccountController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/dashboard/ChatController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/dashboard/ContestService.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/DashboardController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/ExposureController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/dashboard/GameSearchController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/MarginAccountController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/dashboard/PortfolioController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/DiscoverController.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/discover/DrillDownController.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/FavoriteSymbols.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/HeldSecurities.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/discover/MarketStatus.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/discover/QuoteService.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/discover/RecentSymbols.js")' type="text/javascript"></script>
     <script src='@routes.Assets.versioned("javascripts/discover/ResearchController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/news/NewsController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/news/NewsService.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/news/NewsSymbols.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/AwardsController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/ConnectController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/ConnectService.js")' type="text/javascript"></script>
 	<script src='@routes.Assets.versioned("javascripts/profile/FavoritesController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/PreferencesController.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/ProfileController.js")' type="text/javascript"></script>
-	<script src='@routes.Assets.versioned("javascripts/profile/ProfileService.js")' type="text/javascript"></script>
-    <script src='@routes.Assets.versioned("javascripts/profile/StatisticsController.js")' type="text/javascript"></script>
 
     <!-- Dialogs -->
     <script src='@routes.Assets.versioned("javascripts/dialogs/ComposeMessageDialog.js")' type="text/javascript"></script>

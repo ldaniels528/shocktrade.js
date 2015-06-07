@@ -97,12 +97,12 @@
                         MySession.setContest(contest);
                     })
                     .error(function (err) {
-                        toaster.pop('error', 'Error!', "Failed to cancel order");
+                        toaster.pop("error", "Error!", "Failed to cancel order");
                     });
             };
 
             $scope.isMarketOrder = function (order) {
-                return order.priceType == 'MARKET' || order.priceType == 'MARKET_ON_CLOSE';
+                return order.priceType == "MARKET" || order.priceType == "MARKET_ON_CLOSE";
             };
 
             $scope.isOrderSelected = function () {
@@ -121,8 +121,7 @@
                 // were the parameters passed?
                 params = params || {};
 
-                var symbol = $cookieStore.get('symbol');
-                if (!symbol) symbol = QuoteService.lastSymbol;
+                var symbol = $cookieStore.get("QuoteService_lastSymbol") || "AAPL";
                 params.symbol = symbol;
 
                 NewOrderDialog.popup(params);
@@ -236,7 +235,7 @@
                                 MySession.getParticipant().orders = enrichedOrders;
                             })
                             .error(function (err) {
-                                toaster.pop('error', 'Error!', "Error loading enriched orders");
+                                toaster.pop("error", "Error!", "Error loading enriched orders");
                             });
                     }
                 }
@@ -251,7 +250,7 @@
                                 MySession.getParticipant().positions = enrichedPositions;
                             })
                             .error(function (err) {
-                                toaster.pop('error', 'Error!', "Error loading enriched positions");
+                                toaster.pop("error", "Error!", "Error loading enriched positions");
                             });
                     }
                 }

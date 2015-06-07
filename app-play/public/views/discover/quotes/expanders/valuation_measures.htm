@@ -3,7 +3,7 @@
 		<span class="qm_header">Enterprise Value</span>
 		<span class="qm_detail pull-right">
 			<span ng-show="q.enterpriseValue == null" class="null">&#8212;</span>
-			<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | number | bigNumber }}</span>
+			<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | bigNumber }}</span>
 		</span>
 	</div>
 
@@ -72,7 +72,7 @@
 		<span class="qm_detail pull-right">
 			<span ng-show="q.operatingCashFlow == null" class="null">&#8212;</span>
 			<span ng-show="q.operatingCashFlow != null" ng-class="q.operatingCashFlow < 0 ? 'negative' : ''">
-				{{ q.operatingCashFlow | number | bigNumber }}
+				{{ q.operatingCashFlow | bigNumber }}
 			</span>
 		</span>
 	</div>
@@ -84,7 +84,7 @@
 		<span class="qm_detail pull-right">
 			<span ng-show="q.marketCapIntraday == null" class="null">&#8212;</span>
 			<span ng-show="q.marketCapIntraday != null" ng-class="q.marketCapIntraday < 0 ? 'negative' : ''">
-				{{ q.marketCapIntraday | number | bigNumber }}
+				{{ q.marketCapIntraday | bigNumber }}
 			</span>
 		</span>
 	</div>
@@ -101,7 +101,7 @@
 		<span class="qm_header">Cash Flow <span class="small">(Levered Free)</span></span>
 		<span class="qm_detail pull-right">
 			<span ng-show="q.leveredFreeCashFlow == null" class="null">&#8212;</span>
-			<span ng-show="q.leveredFreeCashFlow != null" ng-class="q.leveredFreeCashFlow < 0 ? 'negative' : ''">{{ q.leveredFreeCashFlow | number | bigNumber }}</span>
+			<span ng-show="q.leveredFreeCashFlow != null" ng-class="q.leveredFreeCashFlow < 0 ? 'negative' : ''">{{ q.leveredFreeCashFlow | bigNumber }}</span>
 		</span>
 	</div>
 </div>

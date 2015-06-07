@@ -43,7 +43,7 @@ lazy val appScalaJs = (project in file("app-js"))
     libraryDependencies ++= Seq(
       //"org.scala-js" %% "scalajs-library" % "0.6.3",
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-      "com.greencatsoft" %%% "scalajs-angular" % "0.5-SNAPSHOT",
+      "biz.enef" %%% "scalajs-angulate" % "0.2",
       "com.github.benhutchison" %%% "prickle" % "1.1.5"
     ))
   .enablePlugins(ScalaJSPlugin)

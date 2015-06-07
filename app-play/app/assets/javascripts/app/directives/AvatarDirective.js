@@ -4,7 +4,7 @@
     /**
      * Avatar Directive
      * @author lawrence.daniels@gmail.com
-     * <avatar id="{{ p.fbUserID }}" class="avatar-24"/>
+     * <avatar id="{{ p.facebookID }}" class="avatar-24"/>
      */
     app.directive('avatar', ['$log', function($log) {
         return {
@@ -23,7 +23,6 @@
                         var json = JSON.parse(scope.object);
                         if(!json) scope.url = scope.alt || "/assets/images/avatars/avatar100.png";
                         else if(json.picture) scope.url = json.picture.data.url;
-                        else if(json.fbUserID) scope.url = "http://graph.facebook.com/" + json.fbUserID + "/picture";
                         else if(json.facebookID) scope.url = "http://graph.facebook.com/" + json.facebookID + "/picture";
                         else {
                             $log.error("Avatar object type could not be determined - " + scope.object);

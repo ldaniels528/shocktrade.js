@@ -33,27 +33,14 @@
     /**
      * Initialize the application
      */
-    app.run(function ($rootScope,
-                      $location,
-                      ContestService,
-                      Facebook,
-                      FavoriteSymbols,
-                      HeldSecurities,
-                      MySession,
-                      NewsSymbols,
-                      QuoteService,
-                      RecentSymbols,
-                      WebSockets) {
-        $rootScope.ContestService = ContestService;
-        $rootScope.Facebook = Facebook;
+    app.run(function ($rootScope, FavoriteSymbols, HeldSecurities, MySession, RecentSymbols, WebSockets) {
         $rootScope.FavoriteSymbols = FavoriteSymbols;
         $rootScope.HeldSecurities = HeldSecurities;
         $rootScope.MySession = MySession;
-        $rootScope.NewsSymbols = NewsSymbols;
-        $rootScope.QuoteService = QuoteService;
         $rootScope.RecentSymbols = RecentSymbols;
-        $rootScope.WebSockets = WebSockets;
 
+        // initialize the web socket service
+        WebSockets.init();
     });
 
 })();

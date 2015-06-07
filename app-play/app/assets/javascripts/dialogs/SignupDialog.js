@@ -12,7 +12,7 @@
         /**
          * Sign-up Modal Dialog
          */
-        service.popup = function (fbUserID, fbProfile) {
+        service.popup = function (facebookID, fbProfile) {
             // create an instance of the dialog
             var $modalInstance = $modal.open({
                 controller: 'SignUpController',
@@ -20,7 +20,7 @@
                 resolve: {
                     params: function () {
                         return {
-                            "fbUserID": fbUserID,
+                            "facebookID": facebookID,
                             "fbProfile": fbProfile
                         }
                     }
@@ -28,8 +28,7 @@
             });
 
             $modalInstance.result.then(function (profile) {
-                MySession.authenticated = true;
-                MySession.userProfile = profile;
+                MySession.setUserProfile(profile);
 
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
@@ -52,7 +51,7 @@
         function ($scope, $log, $modalInstance, $timeout, toaster, params, SignUpDialog) {
             $scope.form = {
                 name: params.fbProfile.name,
-                facebookID: params.fbUserID,
+                facebookID: params.facebookID,
                 email: null
             };
             $scope.loading = false;

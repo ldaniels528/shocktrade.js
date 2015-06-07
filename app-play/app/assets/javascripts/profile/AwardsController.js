@@ -14,7 +14,7 @@
         $scope.setupAwards = function () {
             // create a mapping of the user's awards
             var myAwards = {};
-            angular.forEach(MySession.userProfile.awards, function(award) {
+            angular.forEach(MySession.getUserProfile().awards, function(award) {
                 myAwards[award] = true;
             });
 
@@ -30,6 +30,11 @@
 
             $scope.awardImageMap = imageMap;
         };
+
+        // watch for changes to the player's profile
+        $scope.$watch("MySession.getUserProfile()", function () {
+            $scope.setupAwards();
+        });
 
         $scope.awards = [
             {
@@ -142,7 +147,7 @@
             }];
 
         $scope.owned = function (award) {
-            var awards = MySession.userProfile ? MySession.userProfile.awards : [];
+            var awards = MySession.getUserProfile() ? MySession.getUserProfile().awards : [];
             if (awards) {
                 for (var n = 0; n < awards.length; n++) {
                     if (awards[n] == award.code) return true;
@@ -150,11 +155,6 @@
             }
             return false;
         };
-
-        // watch for changes to the player's profile
-        $scope.$watch("MySession.userProfile", function () {
-            $scope.setupAwards();
-        });
 
     }]);
 

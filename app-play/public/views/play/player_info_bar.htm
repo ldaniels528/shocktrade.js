@@ -1,7 +1,7 @@
 <div class="row player_info_bar contest_colors">
 	<div class="col-md-4">
         <div class="pull-left" style="display: inline">
-            <avatar id="{{ MySession.fbUserID }}" class="avatar-32"></avatar>
+            <avatar id="{{ MySession.getFacebookID() }}" class="avatar-32"></avatar>
         </div>
         <div class="pull-left" style="display: inline">
             <div>
@@ -48,7 +48,7 @@
         </span>
     </div>
     <div class="col-md-4" ng-controller="AwardsController" ng-init="setupAwards()">
-        <img class="pull-right" ng-repeat="award in MySession.userProfile.awards.slice(0,7)"
+        <img class="pull-right" ng-repeat="award in MySession.getUserProfile().awards.slice(0,7)"
              title="{{ award.name }}"
              style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
     </div>

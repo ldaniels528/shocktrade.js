@@ -166,7 +166,7 @@
             };
 
             // watch for changes to the player's profile
-            $scope.$watch("MySession.userProfile", function () {
+            $scope.$watch(MySession.getUserProfile(), function () {
                 $scope.loadMyUpdates(MySession.getUserName());
                 //$scope.chooseFirstContact();
             });

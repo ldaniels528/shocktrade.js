@@ -29,7 +29,7 @@
 								<i ng-src="getPreferenceIcon(row)"></i> {{ row[column] }}
 							</span>
 						</a>
-						<span ng-if="column === 'volume'">{{ row[column] | number | bigNumber }}</span>
+						<span ng-if="column === 'volume'">{{ row[column] | bigNumber }}</span>
 						<span ng-if="column !== 'symbol' && column != 'volume'" ng-class="row[column] < 0 ? 'negative' : ''">{{ row[column] | quoteNumber }}</span>
 						
 						<img ng-if="column === 'changePct' && row['changePct'] < 0" src="/assets/images/status/stock_down.gif">

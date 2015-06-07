@@ -85,7 +85,7 @@ object ChartController extends Controller with MongoController {
       contest <- Contests.findContestByID(contestId)() map (_ orDie "Game not found")
 
       // lookup the participant
-      participant = contest.participants.find(_.id == userId) orDie s"Player '$userId' not found"
+      participant = contest.participants.find(_.id == userId) orDie s"Player '${userId.stringify}' not found"
 
       // get the symbol & quantities for each position
       quantities = participant.positions map (pos => (pos.symbol, pos.quantity))

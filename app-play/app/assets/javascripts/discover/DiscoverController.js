@@ -106,8 +106,11 @@
 
             $scope.autoCompleteSymbols = function (searchTerm) {
                 return QuoteService.autoCompleteSymbols(searchTerm, 20)
-                    .then(function (response) {
-                        return response.data;
+                    .success(function (response) {
+                        return response;
+                    })
+                    .error(function (err) {
+                        toaster.pop("error", "Error auto-completing symbol", null)
                     });
             };
 
@@ -221,26 +224,25 @@
                 }
 
                 // load the quote
-                QuoteService.loadStockQuote(symbol).then(
-                    function (response) {
-                        var quote = response.data;
+                QuoteService.getStockQuote(symbol)
+                    .success(function (quote) {
                         if (quote) {
                             // capture the quote
                             $scope.q = quote;
                             $scope.ticker = quote.symbol + " - " + quote.name;
 
-                            // save the cookie
-                            $cookieStore.put('symbol', quote.symbol);
+                            // store the last symbol
+                            $cookieStore.put("QuoteService_lastSymbol", quote.symbol);
 
                             // add the symbol to the Recently-viewed Symbols
                             RecentSymbols.add(symbol);
 
                             // get the risk level
-                            QuoteService.getRiskLevel(symbol).then(
-                                function (response) {
-                                    quote.riskLevel = response.data;
-                                },
-                                function (response) {
+                            QuoteService.getRiskLevel(symbol)
+                                .success(function (response) {
+                                    quote.riskLevel = response;
+                                })
+                                .error(function (response) {
                                     toaster.pop('error', 'Error!', "Error retrieving risk level for " + symbol);
                                 });
 
@@ -257,8 +259,8 @@
 
                         // disabling the loading status
                         $scope.stopLoading();
-                    },
-                    function (response) {
+                    })
+                    .error(function (response) {
                         $log.error("Failed to retrieve quote: " + response.status);
                         $scope.stopLoading();
                         toaster.pop('error', 'Error!', "Error loading quote " + symbol);
@@ -266,12 +268,12 @@
             };
 
             $scope.loadTradingHistory = function (symbol, callback) {
-                QuoteService.getTradingHistory(symbol).then(
-                    function (results) {
+                QuoteService.getTradingHistory(symbol)
+                    .success(function (results) {
                         $scope.tradingHistory = results;
                         if (callback) callback();
-                    },
-                    function (response) {
+                    })
+                    .error(function (response) {
                         toaster.pop('error', 'Error!', "Error loading trading history for " + symbol);
                         if (callback) callback();
                     });
@@ -279,12 +281,12 @@
 
             $scope.loadFilterQuotes = function (filter, index) {
                 $scope.loading = true;
-                QuoteService.getFilterQuotes(filter).then(
-                    function (quotes) {
+                QuoteService.getFilterQuotes(filter)
+                    .success(function (quotes) {
                         $scope.loading = false;
                         filter.rows = quotes;
-                    },
-                    function (err) {
+                    })
+                    .error(function (err) {
                         $scope.loading = false;
                         toaster.pop('error', 'Error!', "Error loading filter " + filter.name);
                     });
@@ -344,7 +346,7 @@
             (function () {
                 if (!$scope.q.symbol) {
                     // get the symbol
-                    var symbol = $routeParams.symbol || $cookieStore.get('symbol') || RecentSymbols.getLast();
+                    var symbol = $routeParams.symbol || $cookieStore.get('QuoteService_lastSymbol') || RecentSymbols.getLast();
 
                     // load the symbol
                     $scope.loadQuote(symbol);

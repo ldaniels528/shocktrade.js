@@ -4,7 +4,7 @@
     /**
      * Country Directive
      * @author lawrence.daniels@gmail.com
-     * <country id="{{ p.fbUserID }}" style="width: 24px; height: 24px"/>
+     * <country id="{{ p.facebookID }}" style="width: 24px; height: 24px"/>
      */
     app.directive('country', ['$log', function($log) {
         return {

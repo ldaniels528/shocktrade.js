@@ -5,7 +5,7 @@
      * News Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('NewsService', function ($http, $q) {
+    app.factory('newsService', function ($http, $q) {
         var cache = {};
         var service = {};
 

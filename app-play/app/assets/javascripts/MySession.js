@@ -5,7 +5,7 @@
      * My Session Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('MySession', function ($rootScope, $log, $timeout, toaster) {
+    app.factory('MySession', function ($rootScope, $log, $timeout, toaster, ContestService) {
         var service = {};
 
         /////////////////////////////////////////////////////////////////////
@@ -45,20 +45,39 @@
         };
 
         /**
+         * Indicates whether the user is logged in
+         * @returns {boolean}
+         */
+        service.isAuthenticated = function () {
+            return service.getUserID() != null;
+        };
+
+        service.getFacebookID = function () {
+            return service.facebookID;
+        };
+
+        service.setFacebookID = function (facebookID) {
+            service.facebookID = facebookID;
+        };
+
+        service.isFbAuthenticated = function () {
+            return service.facebookID != null;
+        };
+
+        /**
          * Logout function
          */
         service.logout = function () {
             service.authenticated = false;
-            service.fbAuthenticated = false;
-            service.fbUserID = null;
+            service.facebookID = null;
             service.fbFriends = [];
             service.fbProfile = {};
             service.userProfile = createSpectatorProfile();
         };
 
         service.refresh = function () {
-            if (service.fbUserID !== null) {
-                $rootScope.ProfileService.getProfileByFacebookID(service.fbUserID)
+            if (service.facebookID !== null) {
+                $rootScope.ProfileService.getProfileByFacebookID(service.facebookID)
                     .then(function (profile) {
                         service.userProfile.netWorth = profile.netWorth;
                     });
@@ -126,7 +145,7 @@
 
             // retrieve the total investment
             $log.info("Loading Total investment...");
-            $rootScope.ContestService.getTotalInvestment(service.getUserID())
+            ContestService.getTotalInvestment(service.getUserID())
                 .success(function (response) {
                     service.totalInvestment = response.netWorth;
                     service.totalInvestmentStatus = "LOADED";

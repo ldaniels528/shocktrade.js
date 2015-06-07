@@ -68,7 +68,7 @@
         }
 
         function sendState(connected) {
-            var userID = MySession.fbUserID;
+            var userID = MySession.getFacebookID();
             if(userID) {
                 $log.info("Sending connected status for user " + userID + "...");
                 if(connected)

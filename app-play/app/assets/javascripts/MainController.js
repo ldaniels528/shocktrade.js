@@ -156,18 +156,14 @@
                 return new Array(n);
             };
 
-            $scope.facebookLoginStatus = function (fbUserID) {
-                $scope.postLoginUpdates(fbUserID, false);
-            };
-
             $scope.login = function (event) {
                 if (event) {
                     event.preventDefault();
                 }
                 Facebook.login().then(
                     function (response) {
-                        var fbUserID = response.authResponse.userID;
-                        $scope.postLoginUpdates(fbUserID, true);
+                        var facebookID = response.authResponse.userID;
+                        $scope.postLoginUpdates(facebookID, true);
                     },
                     function (err) {
                         $log.error("main:login err = " + angular.toJson(err));
@@ -182,40 +178,39 @@
                 MySession.logout();
             };
 
-            $scope.postLoginUpdates = function (fbUserID, userInitiated) {
+            $scope.postLoginUpdates = function (facebookID, userInitiated) {
                 // capture the user ID
-                MySession.fbUserID = fbUserID;
+                MySession.setFacebookID(facebookID);
 
                 // load the user's Facebook profile
                 Facebook.getUserProfile().then(
                     function (response) {
-                        MySession.fbProfile = response;
-                        MySession.fbAuthenticated = true;
+                        MySession.setFacebookProfile(response);
                     },
                     function (err) {
-                        toaster.pop('error', 'Error!', "Facebook login error - " + err.data);
+                        toaster.pop('error', 'Error!', "Facebook login error");
+                        console.log("Facebook login failure: " + err.data);
                     });
 
                 // load the user's ShockTrade profile
-                ProfileService.getProfileByFacebookID(fbUserID).then(
-                    function (profile) {
+                ProfileService.getProfileByFacebookID(facebookID)
+                    .success(function (profile) {
                         if (!profile.error) {
                             $log.info("ShockTrade user profile loaded...");
-                            MySession.userProfile = profile;
-                            MySession.authenticated = true;
+                            MySession.setUserProfile(profile);
 
                             loadFacebookFriends();
-                            $scope.filters = MySession.userProfile.filters;
+                            $scope.filters = MySession.getUserProfile().filters;
                         }
                         else {
                             $log.info("Non-member identified... Launching Sign-up dialog...");
                             MySession.nonMember = true;
-                            $scope.signUpPopup(fbUserID, MySession.fbProfile);
+                            $scope.signUpPopup(facebookID, MySession.fbProfile);
                         }
-                    },
-                    function (err) {
+                    })
+                    .error(function (err) {
                         toaster.pop('error', 'Error!', "ShockTrade Profile retrieval error - " + err.data);
-                        $scope.signUpPopup(fbUserID, MySession.fbProfile);
+                        $scope.signUpPopup(facebookID, MySession.fbProfile);
                     });
             };
 
@@ -235,8 +230,8 @@
                     });
             }
 
-            $scope.signUpPopup = function (fbUserID, fbProfile) {
-                SignUpDialog.popup(fbUserID, fbProfile);
+            $scope.signUpPopup = function (facebookID, fbProfile) {
+                SignUpDialog.popup(facebookID, fbProfile);
             };
 
             //////////////////////////////////////////////////////////////////////
@@ -325,7 +320,7 @@
                 "tool_tip": "My Favorite Securities",
                 "url": "/symbols/favorites",
                 "isVisible": function () {
-                    return MySession.authenticated;
+                    return MySession.isAuthenticated();
                 }
             }, {
                 "name": "Research",
@@ -341,7 +336,7 @@
                 "tool_tip": "Connect & Share",
                 "url": "/connect",
                 "isVisible": function () {
-                    return MySession.authenticated;
+                    return MySession.isAuthenticated();
                 }
             }, {
                 "name": "My Awards",
@@ -349,7 +344,7 @@
                 "tool_tip": "My Awards",
                 "url": "/profile/awards",
                 "isVisible": function () {
-                    return MySession.authenticated;
+                    return MySession.isAuthenticated();
                 }
             }, {
                 "name": "My Statistics",
@@ -357,7 +352,7 @@
                 "tool_tip": "My Statistics",
                 "url": "/profile/statistics",
                 "isVisible": function () {
-                    return MySession.authenticated;
+                    return MySession.isAuthenticated();
                 }
             }];
 
@@ -398,13 +393,13 @@
             });
 
             // watch for changes to the player's profile
-            $scope.$watch("MySession.userProfile", function () {
-                if (!MySession.userProfile.favorites) MySession.userProfile.favorites = ['AAPL'];
-                if (!MySession.userProfile.recentSymbols) MySession.userProfile.recentSymbols = ['AAPL', 'AMZN', 'GOOG', 'MSFT'];
+            $scope.$watch("MySession.getUserProfile()", function () {
+                if (!MySession.getUserProfile().favorites) MySession.getUserProfile().favorites = ['AAPL'];
+                if (!MySession.getUserProfile().recentSymbols) MySession.getUserProfile().recentSymbols = ['AAPL', 'AMZN', 'GOOG', 'MSFT'];
 
                 // load the favorite and recent quotes
-                FavoriteSymbols.setSymbols(MySession.userProfile.favorites);
-                RecentSymbols.setSymbols(MySession.userProfile.recentSymbols);
+                FavoriteSymbols.setSymbols(MySession.getUserProfile().favorites);
+                RecentSymbols.setSymbols(MySession.getUserProfile().recentSymbols);
 
                 // load the held securities
                 var id = MySession.getUserID();

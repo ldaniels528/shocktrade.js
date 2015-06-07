@@ -73,12 +73,12 @@
             $scope.contestSearch = function (searchOptions) {
                 $scope.startLoading();
 
-                ContestService.findContests(searchOptions).then(
-                    function (contests) {
+                ContestService.findContests(searchOptions)
+                    .success(function (contests) {
                         $scope.searchResults = contests;
                         $scope.stopLoading();
-                    },
-                    function (err) {
+                    })
+                    .error(function (err) {
                         toaster.pop('error', 'Error!', "Failed to execute Contest Search");
                         $scope.stopLoading();
                     });
@@ -137,7 +137,7 @@
             };
 
             $scope.getMyRankings = function (contest) {
-                if (!contest) return {};
+                if (!contest || !MySession.isAuthenticated()) return {};
                 else {
                     var rankings = ContestService.getPlayerRankings(contest, MySession.getUserName());
                     return rankings.player;
@@ -217,7 +217,7 @@
 
             $scope.isParticipant = function (contest) {
                 var id = MySession.getUserID();
-                return id && ContestService.findPlayerByID(contest, id) != null;
+                return contest && id && ContestService.findPlayerByID(contest, id) != null;
             };
 
             $scope.deleteContest = function (contest) {
@@ -242,7 +242,7 @@
             };
 
             $scope.isJoinable = function (contest) {
-                return MySession.authenticated && contest && !contest.invitationOnly && !$scope.isContestOwner(contest) && !$scope.isParticipant(contest);
+                return MySession.isAuthenticated() && contest && !contest.invitationOnly && !$scope.isContestOwner(contest) && !$scope.isParticipant(contest);
             };
 
             $scope.joinContest = function (contest) {
@@ -251,7 +251,7 @@
                     player: {
                         "id": MySession.getUserID(),
                         "name": MySession.getUserName(),
-                        "facebookID": MySession.fbUserID
+                        "facebookID": MySession.getFacebookID()
                     }
                 }).success(function (contest) {
                     if (!contest) {
@@ -422,7 +422,7 @@
                 }
             });
 
-            $scope.$watch("MySession.userProfile._id", function () {
+            $scope.$watch("MySession.getUserID()", function () {
                 loadMyContests();
             });
 

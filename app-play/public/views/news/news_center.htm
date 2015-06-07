@@ -1,5 +1,5 @@
-<div ng-init="loadNewsSources()">
-	<div ng-repeat="channel in channels">
+<div ng-controller="NewsController" ng-init="getNewsSources()">
+	<div ng-repeat="channel in getChannels()">
 		<div class="news_provider">
 			<div style="display: inline; float: left">
 				<span style="color: white">{{ channel.items.length || 0 }} stories</span>
@@ -7,7 +7,7 @@
 			<div class="pull-right" style="display: inline">
 				<select 
 					ng-model="selection.feed" 
-					ng-options="source.OID() as source.name for source in newsSources"
+					ng-options="source.OID() as source.name for source in newsSources()"
 					ng-change="getNewsFeed(selection.feed)">
 				</select>
 				<i class="fa fa-bars clickable white"

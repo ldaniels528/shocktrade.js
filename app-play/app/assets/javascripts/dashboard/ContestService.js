@@ -5,7 +5,7 @@
      * Contest Service
      * @author lawrence.daniels@gmail.com
      */
-    app.factory('ContestService', function ($http, $log, $q, toaster, QuoteService) {
+    app.factory('ContestService', function ($cookieStore, $http, $log, $q, toaster) {
         var service = {};
 
         ///////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
         ///////////////////////////////////////////////////////////////
 
         service.createContest = function (form) {
-            return $http({method: "PUT", url: "/api/contest", data: angular.toJson(form)});
+            return $http.put("/api/contest", form);
         };
 
         service.deleteContest = function (contestId) {
@@ -21,11 +21,7 @@
         };
 
         service.joinContest = function (contestId, playerInfo) {
-            return $http({
-                method: 'PUT',
-                url: "/api/contest/" + contestId + "/player",
-                data: angular.toJson(playerInfo)
-            });
+            return $http.put("/api/contest/" + contestId + "/player", playerInfo);
         };
 
         service.quitContest = function (contestId, playerId) {
@@ -177,11 +173,7 @@
         /////////////////////////////////////////////////////////////////////////////
 
         service.sendChatMessage = function (contestId, message) {
-            return $http({
-                method: 'PUT',
-                url: '/api/contest/' + contestId + '/chat',
-                data: angular.toJson(message)
-            });
+            return $http.put('/api/contest/' + contestId + '/chat', message);
         };
 
         /////////////////////////////////////////////////////////////////////////////
@@ -189,11 +181,7 @@
         /////////////////////////////////////////////////////////////////////////////
 
         service.createOrder = function (contestId, playerId, order) {
-            return $http({
-                method: "PUT",
-                url: "/api/order/" + contestId + "/" + playerId,
-                data: angular.toJson(order)
-            });
+            return $http.put("/api/order/" + contestId + "/" + playerId, order);
         };
 
         service.deleteOrder = function (contestId, playerId, orderId) {
@@ -211,7 +199,7 @@
                     var quote = response.data;
                     if (quote.symbol) {
                         $log.info("Setting lastSymbol as " + quote.symbol);
-                        QuoteService.lastSymbol = quote.symbol;
+                        $cookieStore.put("QuoteService_lastSymbol", quote.symbol);
                     }
                     return quote;
                 });

@@ -70,7 +70,7 @@
 					<th class="ks">Revenue</th>
 					<td class="ks">
 						<span ng-show="q.revenue == null" class="null">N/A</span>
-						<span ng-show="q.revenue != null">{{ q.revenue | number | bigNumber }}</span>
+						<span ng-show="q.revenue != null">{{ q.revenue | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -91,28 +91,28 @@
 					<th class="ks">Gross Profit</th>
 					<td class="ks">
 						<span ng-show="q.grossProfit == null" class="null">N/A</span>
-						<span ng-show="q.grossProfit != null">{{ q.grossProfit | number | bigNumber }}</span>
+						<span ng-show="q.grossProfit != null">{{ q.grossProfit | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">EBITDA</th>
 					<td class="ks">
 						<span ng-show="q.EBITDA == null" class="null">N/A</span>
-						<span ng-show="q.EBITDA != null">{{ q.EBITDA | number | bigNumber }}</span>
+						<span ng-show="q.EBITDA != null">{{ q.EBITDA | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Net Income</th>
 					<td class="ks">
 						<span ng-show="q.netIncomeAvailToCommon == null" class="null">N/A</span>
-						<span ng-show="q.netIncomeAvailToCommon != null">{{ q.netIncomeAvailToCommon | number | bigNumber }}</span>
+						<span ng-show="q.netIncomeAvailToCommon != null">{{ q.netIncomeAvailToCommon | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Earnings/Share (<span class="small">diluted</span>)</th>
 					<td class="ks">
 						<span ng-show="q.dilutedEPS == null" class="null">N/A</span>
-						<span ng-show="q.dilutedEPS != null">{{ q.dilutedEPS | number | bigNumber }}</span>
+						<span ng-show="q.dilutedEPS != null">{{ q.dilutedEPS | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -138,7 +138,7 @@
 					<th class="ks">Total Cash</th>
 					<td class="ks">
 						<span ng-show="q.totalCash == null" class="null">N/A</span>
-						<span ng-show="q.totalCash != null">{{ q.totalCash | number | bigNumber }}</span>
+						<span ng-show="q.totalCash != null">{{ q.totalCash | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -152,7 +152,7 @@
 					<th class="ks">Total Debt</th>
 					<td class="ks">
 						<span ng-show="q.totalDebt == null" class="null">N/A</span>
-						<span ng-show="q.totalDebt != null">{{ q.totalDebt | number | bigNumber }}</span>
+						<span ng-show="q.totalDebt != null">{{ q.totalDebt | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -203,7 +203,7 @@
 					<th class="ks">Enterprise Value</th>
 					<td class="ks">
 						<span ng-show="q.enterpriseValue == null" class="null">N/A</span>
-						<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | number | bigNumber }}</span>
+						<span ng-show="q.enterpriseValue != null">{{ q.enterpriseValue | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -259,14 +259,14 @@
 					<th class="ks">Operating Cash Flow</th>
 					<td class="ks">
 						<span ng-show="q.operatingCashFlow == null" class="null">N/A</span>
-						<span ng-show="q.operatingCashFlow != null">{{ q.operatingCashFlow | number | bigNumber }}</span>
+						<span ng-show="q.operatingCashFlow != null">{{ q.operatingCashFlow | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Levered Free Cash Flow</th>
 					<td class="ks">
 						<span ng-show="q.leveredFreeCashFlow == null" class="null">N/A</span>
-						<span ng-show="q.leveredFreeCashFlow != null">{{ q.leveredFreeCashFlow | number | bigNumber }}</span>
+						<span ng-show="q.leveredFreeCashFlow != null">{{ q.leveredFreeCashFlow | bigNumber }}</span>
 					</td>
 				</tr>
 			</table>
@@ -285,7 +285,7 @@
 					<th class="ks">Avg Volume (<span class="small">3 mos</span>)</th>
 					<td class="ks">
 						<span ng-show="q.avgVolume3Month == null" class="null">N/A</span>
-						<span ng-show="q.avgVolume3Month != null">{{ q.avgVolume3Month | number | bigNumber }}</span>
+						<span ng-show="q.avgVolume3Month != null">{{ q.avgVolume3Month | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -299,14 +299,14 @@
 					<th class="ks">Shares Outstanding</th>
 					<td class="ks">
 						<span ng-show="q.sharesOutstanding == null" class="null">N/A</span>
-						<span ng-show="q.sharesOutstanding != null">{{ q.sharesOutstanding | number | bigNumber }}</span>
+						<span ng-show="q.sharesOutstanding != null">{{ q.sharesOutstanding | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Shares Float</th>
 					<td class="ks">
 						<span ng-show="q.sharesFloat == null" class="null">N/A</span>
-						<span ng-show="q.sharesFloat != null">{{ q.sharesFloat | number | bigNumber }}</span>
+						<span ng-show="q.sharesFloat != null">{{ q.sharesFloat | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -327,7 +327,7 @@
 					<th class="ks">Shares Short</th>
 					<td class="ks">
 						<span ng-show="q.sharesShort == null" class="null">N/A</span>
-						<span ng-show="q.sharesShort != null">{{ q.sharesShort | number | bigNumber }}</span>
+						<span ng-show="q.sharesShort != null">{{ q.sharesShort | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -348,7 +348,7 @@
 					<th class="ks">Shares Short (<span class="small">prior month</span>)</th>
 					<td class="ks">
 						<span ng-show="q.sharesShortPriorMonth == null" class="null">N/A</span>
-						<span ng-show="q.sharesShortPriorMonth != null">{{ q.sharesShortPriorMonth | number | bigNumber }}</span>
+						<span ng-show="q.sharesShortPriorMonth != null">{{ q.sharesShortPriorMonth | bigNumber }}</span>
 					</td>
 				</tr>
 			</table>
@@ -466,14 +466,14 @@
 					<th class="ks">Profit Margin</th>
 					<td class="ks">
 						<span ng-show="q.profitMargin == null" class="null">N/A</span>
-						<span ng-show="q.profitMargin != null" ng-class="q.profitMargin < 0 ? 'negative' : ''">{{  q.profitMargin | number | bigNumber }}</span>
+						<span ng-show="q.profitMargin != null" ng-class="q.profitMargin < 0 ? 'negative' : ''">{{  q.profitMargin | bigNumber }}</span>
 					</td>
 				</tr>
 				<tr>
 					<th class="ks">Operating Margin</th>
 					<td class="ks">
 						<span ng-show="q.operatingMargin == null" class="null">N/A</span>
-						<span ng-show="q.operatingMargin != null">{{ q.operatingMargin | number | bigNumber }}</span>
+						<span ng-show="q.operatingMargin != null">{{ q.operatingMargin | bigNumber }}</span>
 					</td>
 				</tr>
 			</table>
