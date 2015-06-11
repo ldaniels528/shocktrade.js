@@ -8,6 +8,10 @@
     app.controller('DashboardController', ['$scope', '$log', '$routeParams', '$timeout', 'toaster', 'ContestService', 'TransferFundsDialog', 'MySession', 'PerksDialog',
         function ($scope, $log, $routeParams, $timeout, toaster, ContestService, TransferFundsDialog, MySession, PerksDialog) {
 
+            /////////////////////////////////////////////////////////////////////
+            //          Account Functions
+            /////////////////////////////////////////////////////////////////////
+
             var accountMode = false;
 
             $scope.isCashAccount = function () {

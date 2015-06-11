@@ -9,6 +9,7 @@ import com.shocktrade.javascript.MySession
  * Statistics Controller
  * @author lawrence.daniels@gmail.com
  */
-class StatisticsController($scope: Scope, $timeout: Timeout, toaster: Toaster, mySession: MySession) extends ScopeController {
+class StatisticsController($scope: Scope, $timeout: Timeout, toaster: Toaster,
+                           @named("MySession") mySession: MySession) extends ScopeController {
 
 }
