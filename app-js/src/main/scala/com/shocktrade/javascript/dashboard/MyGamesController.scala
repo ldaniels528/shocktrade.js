@@ -33,11 +33,12 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   scope.getMyContests = () => myContests
 
   scope.getMyRankings = (contest: js.Dynamic) => {
-    if (!isDefined(contest)) JS()
-    else {
-      val rankings = contestService.getPlayerRankings_@(contest, mySession.userProfile.name.as[String])
-      if (isDefined(rankings) && isDefined(rankings.player)) rankings.player else JS()
+    if (!isDefined(contest)) null
+    else if (!isDefined(contest.ranking)) {
+      val rankings = contestService.getPlayerRankings_@(contest, mySession.getUserName_@)
+      rankings.player
     }
+    else contest.ranking.player
   }
 
   scope.newGamePopup = () => {
@@ -51,21 +52,17 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def loadMyContests(userID: String) = {
-    // initially, reset the player's contests
-    myContests = emptyArray
-
+  private def loadMyContests(userID: String) {
     if (mySession.isAuthenticated_@) {
       g.console.log(s"Loading 'My Contests' for user '$userID'...")
       contestService.getContestsByPlayerID_@(userID) onComplete {
         case Success(contests: js.Array[js.Dynamic]) =>
           g.console.log(s"Loaded ${contests.length} contest(s)")
           myContests = contests
-        case Failure(response: HttpError) =>
+        case Failure(e) =>
           toaster.pop("error", "Failed to load 'My Contests'", null)
       }
     }
-    myContests
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -85,6 +82,9 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   /**
    * Listen for user profile changes
    */
-  $scope.$watch(mySession.getUserID, (newUserID: String, oldUserID: String) => loadMyContests(newUserID))
+  $scope.$watch(mySession.getUserID, { (newUserID: String, oldUserID: String) =>
+    g.console.log(s"newUserID = $newUserID, oldUserID = $oldUserID")
+    if (newUserID != null) loadMyContests(newUserID)
+  })
 
 }

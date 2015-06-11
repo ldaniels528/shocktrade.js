@@ -103,12 +103,13 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     }
   }
 
-  $scope.getSearchResults = (searchTerm: js.Dynamic) => {
-    if (!isDefined(searchTerm)) searchResults
-    else {
-      val term = searchTerm.as[String].trim.toLowerCase
-      searchResults.filter(_.name.as[String].toLowerCase.contains(term))
-    }
+  $scope.getSearchResults = (searchTerm: js.UndefOr[String]) => {
+    searchTerm map { mySearchTerm  =>
+      if(mySearchTerm != null) {
+        val term = mySearchTerm.trim.toLowerCase
+        searchResults.filter(_.name.as[String].toLowerCase.contains(term))
+      } else searchResults
+    } getOrElse searchResults
   }
 
   $scope.contestStatusClass = (contest: js.Dynamic) => {

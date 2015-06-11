@@ -20,7 +20,7 @@
                 {{ c.name }}
             </div>
             <div class="col-md-3 center">
-                <span ng-show="getMyRankings(c)">
+                <span ng-if="getMyRankings(c)">
                     <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
                     <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
                         <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}" />

@@ -1,13 +1,14 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.Service
-import biz.enef.angulate.core.{HttpError, HttpService}
+import biz.enef.angulate.core.HttpService
 import com.ldaniels528.angularjs.{CookieStore, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
+import scala.util.{Failure, Success}
 
 /**
  * Contest Service
@@ -94,7 +95,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
 
   protected[javascript] def getRankings_@(contestId: String) = {
     required("contestId", contestId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId/rankings")
+    $http.get[js.Array[js.Dynamic]](s"/api/contest/$contestId/rankings")
   }
 
   def getContestsByPlayerID: js.Function = (playerId: String) => getContestsByPlayerID_@(playerId)
@@ -154,19 +155,19 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
           player = null
         )
         g.console.log(s"Loading Contest Rankings for '${contest.name}'...")
-        getRankings_@(contest.OID)
-          .success { (participants: js.Array[js.Dynamic]) =>
-          contest.rankings.participants = participants
-          contest.rankings.leader = participants.headOption.orNull
-          contest.rankings.player = participants.find(_.name === playerName).orNull
-        }.error { (error: HttpError) =>
-          toaster.pop("error", "Error loading play rankings", null)
-          g.console.error(error.getMessage)
+        getRankings_@(contest.OID) onComplete {
+          case Success(participants) =>
+            contest.rankings.participants = participants
+            contest.rankings.leader = participants.headOption.orNull
+            contest.rankings.player = participants.find(_.name === playerName).orNull
+          case Failure(e) =>
+            toaster.pop("error", "Error loading play rankings", null)
+            e.printStackTrace()
         }
       }
 
       // if the rankings were loaded, but the player is not set
-      else if (isDefined(contest.rankings) && (js.isUndefined(contest.rankings.player) || contest.rankings.player == null)) {
+      else if (isDefined(contest.rankings) && !isDefined(contest.rankings.player)) {
         contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(_.name === playerName).orNull
       }
 

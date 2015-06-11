@@ -106,7 +106,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
     socket.onclose = (event: CloseEvent) => {
       connected = false
       sendState(connected)
-      g.console.warning("Websocket connection lost")
+      g.console.warn("Websocket connection lost")
       $timeout(() => connect(), 15000)
     }
 
