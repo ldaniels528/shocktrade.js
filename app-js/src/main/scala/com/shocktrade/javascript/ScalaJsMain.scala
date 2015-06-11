@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate._
-import com.shocktrade.javascript.dashboard.{DashboardController, ContestService, GameSearchController, MyGamesController}
+import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.discover.{MarketStatusService, QuoteService}
 import com.shocktrade.javascript.news.{ChatController, NewsController}
 import com.shocktrade.javascript.profile._
@@ -43,6 +43,7 @@ object ScalaJsMain extends JSApp {
 
     // ShockTrade controllers
     module.controllerOf[AwardsController]("AwardsController")
+    module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
     module.controllerOf[ConnectController]("ConnectController")
     module.controllerOf[DashboardController]("DashboardController")

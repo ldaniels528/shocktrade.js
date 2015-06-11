@@ -270,11 +270,11 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     )
   }
 
-  private def cashAccount_? = participant.flatMap(p => Option(p.cashAccount))
+  private[javascript] def cashAccount_? = participant.flatMap(p => Option(p.cashAccount))
 
-  private def marginAccount_? = participant.flatMap(p => Option(p.marginAccount))
+  private[javascript] def marginAccount_? = participant.flatMap(p => Option(p.marginAccount))
 
-  private def participant: Option[js.Dynamic] = {
+  private[javascript] def participant: Option[js.Dynamic] = {
     var userId = userProfile.OID
     if (userId == null) None
     else for {

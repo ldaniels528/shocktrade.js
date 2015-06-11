@@ -44,7 +44,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
    */
   private def getMessages: String = {
     val messages = mySession.getMessages().asArray[js.Dynamic]
-    if ((messages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) < 250) cachedHtml
+    if ((messages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 1000) cachedHtml
     else {
       // capture the start time
       val startTime = js.Date.now()
