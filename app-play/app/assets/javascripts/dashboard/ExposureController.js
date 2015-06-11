@@ -8,29 +8,23 @@
     app.controller('ExposureController', ['$scope', '$http', '$log', '$timeout', 'toaster', 'MySession',
         function ($scope, $http, $log, $timeout, toaster, MySession) {
 
-            $scope.chartData = [];
+            var chartData = [];
             var colors = ["#00ff00", "#88ffff", "#8888ff", "#ff8000", "#88ffaa", "#ff88ff", "#ff8888"];
-
-            // public variables
-            $scope.exposures = [{
-                "value": "sector", "label": "Sector Exposure"
-            }, {
-                "value": "industry", "label": "Industry Exposure"
-            }, {
-                "value": "exchange", "label": "Exchange Exposure"
-            }, {
-                "value": "market", "label": "Exchange Sub-Market Exposure"
-            }, {
-                "value": "securities", "label": "Securities Exposure"
-            }];
-            $scope.exposure = $scope.exposures[$scope.exposures.length - 1];
+            var exposures = [
+                {"value": "sector", "label": "Sector Exposure"},
+                {"value": "industry", "label": "Industry Exposure"},
+                {"value": "exchange", "label": "Exchange Exposure"},
+                {"value": "market", "label": "Exchange Sub-Market Exposure"},
+                {"value": "securities", "label": "Securities Exposure"}
+            ];
+            $scope.selectedExposure = exposures[exposures.length - 1];
 
             /**
              * Initializes the view by displaying an initial chart
              */
             $scope.init = function () {
                 if (MySession.getUserID()) {
-                    $scope.exposurePieChart(MySession.getContest(), $scope.exposure.value, MySession.getUserID());
+                    $scope.exposurePieChart(MySession.getContest(), $scope.selectedExposure.value, MySession.getUserID());
                 }
                 else {
                     $timeout(function () {
@@ -39,13 +33,21 @@
                 }
             };
 
+            $scope.getChartData = function () {
+                return chartData;
+            };
+
+            $scope.getExposures = function () {
+                return exposures;
+            };
+
             $scope.exposurePieChart = function (contest, exposure, userID) {
                 $http.get("/api/charts/exposure/" + exposure + "/" + contest.OID() + "/" + userID)
                     .success(function (data) {
-                        $scope.chartData = data;
+                        chartData = data;
                     })
                     .error(function (err) {
-                        $log.error("Failed to load " + exposure.label + " data")
+                        $log.error("Failed to load " + exposure + " data")
                     });
             };
 
