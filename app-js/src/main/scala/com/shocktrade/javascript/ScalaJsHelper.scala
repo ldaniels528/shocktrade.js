@@ -2,6 +2,7 @@ package com.shocktrade.javascript
 
 import scala.language.implicitConversions
 import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{global => g}
 
 /**
  * Service Support
@@ -17,7 +18,9 @@ object ScalaJsHelper {
 
   def params(values: (String, Any)*): String = {
     val queryString = values map { case (k, v) => s"$k=${encode(String.valueOf(v))}" } mkString "&"
-    if (queryString.nonEmpty) "?" + queryString else queryString
+    val fullQuery = if (queryString.nonEmpty) "?" + queryString else queryString
+    g.console.log(s"query is $fullQuery")
+    fullQuery
   }
 
   private def encode(text: String) = {
@@ -34,6 +37,8 @@ object ScalaJsHelper {
 
   def isDefined(obj: js.Dynamic) = obj != null && !js.isUndefined(obj)
 
+  def isDefined(fx: js.Function) = fx != null && !js.isUndefined(fx)
+
   def required(name: String, value: String) = {
     if (value == null || value.trim.isEmpty) die(s"Required property '$name' is missing")
   }
@@ -43,8 +48,10 @@ object ScalaJsHelper {
   }
 
   ////////////////////////////////////////////////////////////////////////
-  //    Implicit Classes
+  //    Implicit Defintions and Classes
   ////////////////////////////////////////////////////////////////////////
+
+  //implicit def jsDynamic2Value[T](obj: js.Dynamic): T = obj.as[T]
 
   implicit class StringExtensions(val string: String) extends AnyVal {
 
@@ -60,7 +67,7 @@ object ScalaJsHelper {
 
     def ===[T](value: T): Boolean = obj.asInstanceOf[T] == value
 
-    def as[T] = if(isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
+    def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
 
