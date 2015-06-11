@@ -28,8 +28,6 @@
 
             // setup filtered quotes & trading history
             $scope.filterQuotes = [];
-            $scope.tradingHistory = null;
-            $scope.selectedTradingHistory = null;
 
             // define the Quote module expanders
             $scope.expanders = [{
@@ -98,9 +96,10 @@
                 expanded: false,
                 loading: false,
                 onExpand: function (callback) {
+                    /*
                     if ($scope.tradingHistory === null && $scope.q.assetType === 'Common Stock') {
                         $scope.loadTradingHistory($scope.q.symbol, callback);
-                    }
+                    }*/
                 }
             }];
 
@@ -267,18 +266,6 @@
                     });
             };
 
-            $scope.loadTradingHistory = function (symbol, callback) {
-                QuoteService.getTradingHistory(symbol)
-                    .success(function (results) {
-                        $scope.tradingHistory = results;
-                        if (callback) callback();
-                    })
-                    .error(function (response) {
-                        toaster.pop('error', 'Error!', "Error loading trading history for " + symbol);
-                        if (callback) callback();
-                    });
-            };
-
             $scope.loadFilterQuotes = function (filter, index) {
                 $scope.loading = true;
                 QuoteService.getFilterQuotes(filter)
@@ -294,18 +281,6 @@
 
             $scope.tradingActive = function (time) {
                 return (new Date()).getTime();
-            };
-
-            $scope.selectTradingHistory = function (t) {
-                $scope.selectedTradingHistory = t;
-            };
-
-            $scope.hasSelectedTradingHistory = function () {
-                return $scope.selectedTradingHistory != null;
-            };
-
-            $scope.isSelectedTradingHistory = function (t) {
-                return $scope.selectedTradingHistory === t;
             };
 
             function setupMarketStatusUpdates() {

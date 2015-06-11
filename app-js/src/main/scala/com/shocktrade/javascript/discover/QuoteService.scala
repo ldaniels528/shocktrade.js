@@ -38,7 +38,9 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
 
   def getStockQuote: js.Function = (symbol: String) => $http.get[js.Dynamic](s"/api/quotes/symbol/$symbol")
 
-  def getTradingHistory: js.Function = (symbol: String) => $http.get[js.Dynamic](s"/api/quotes/tradingHistory/$symbol")
+  def getTradingHistory: js.Function = (symbol: String) => getTradingHistory_@(symbol)
+
+  def getTradingHistory_@(symbol: String) = $http.get[js.Array[js.Dynamic]](s"/api/quotes/tradingHistory/$symbol")
 
   ////////////////////////////////////////////////////////////////////
   //			Exchange Functions
@@ -59,7 +61,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
 
   def loadSectorInfo: js.Function = (symbol: String) => loadSectorInfo_@(symbol)
 
-  def loadSectorInfo_@ (symbol: String) = $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
+  def loadSectorInfo_@(symbol: String) = $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
 
   def loadSectors: js.Function = () => loadSectors_@
 
@@ -105,7 +107,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     loadIndustryQuotes_@(sector, industry, subIndustry)
   }
 
-  def loadIndustryQuotes_@ (sector: String, industry: String, subIndustry: String) = {
+  def loadIndustryQuotes_@(sector: String, industry: String, subIndustry: String) = {
     val queryString = params("sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry)
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/quotes$queryString")
