@@ -357,3 +357,11 @@ ul.error {
 .bottom {
 	vertical-align: bottom
 }
+
+.pad-left-20 {
+    padding-left: 20px
+}
+
+.pad-left-10 {
+    padding-left: 10px
+}

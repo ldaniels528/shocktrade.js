@@ -34,6 +34,8 @@ object ScalaJsHelper {
 
   def isDefined(obj: js.Dynamic) = obj != null && !js.isUndefined(obj)
 
+  def isDefined(fx: js.Function) = fx != null && !js.isUndefined(fx)
+
   def required(name: String, value: String) = {
     if (value == null || value.trim.isEmpty) die(s"Required property '$name' is missing")
   }
@@ -43,8 +45,10 @@ object ScalaJsHelper {
   }
 
   ////////////////////////////////////////////////////////////////////////
-  //    Implicit Classes
+  //    Implicit Defintions and Classes
   ////////////////////////////////////////////////////////////////////////
+
+  //implicit def jsDynamic2Value[T](obj: js.Dynamic): T = obj.as[T]
 
   implicit class StringExtensions(val string: String) extends AnyVal {
 

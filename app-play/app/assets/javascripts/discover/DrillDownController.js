@@ -5,8 +5,8 @@
      * Explore: Drill-Down Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('DrillDownController', ['$scope', '$anchorScroll', '$cookieStore', '$http', '$location', '$log', '$routeParams', '$timeout', 'QuoteService', 'RecentSymbols',
-        function ($scope, $anchorScroll, $cookieStore, $http, $location, $log, $routeParams, $timeout, QuoteService, RecentSymbols) {
+    app.controller('DrillDownController', ['$scope', '$anchorScroll', '$cookieStore', '$location', '$log', '$routeParams', '$timeout', 'QuoteService', 'RecentSymbols',
+        function ($scope, $anchorScroll, $cookieStore, $location, $log, $routeParams, $timeout, QuoteService, RecentSymbols) {
 
             // tree data
             $scope.sectors = [];
@@ -127,10 +127,10 @@
                         $log.info("Expanding " + info.sector + " >> " + info.industry + "....");
                         $scope.expandOrCollapseIndustry(sector, findLabel(industries, info.industry), function (sector, industry, subIndustries) {
                             $log.info("Expanding " + info.sector + " >> " + info.industry + " >> " + info.subIndustry + "....");
-                            $scope.expandOrCollapseSubIndustry(sector, industry, findLabel(subIndustries, info.subIndustry, function () {
+                            $scope.expandOrCollapseSubIndustry(sector, industry, findLabel(subIndustries, info.subIndustry), function () {
                                 $location.hash(10000);
                                 $anchorScroll();
-                            }));
+                            });
                         });
                     });
                 });
