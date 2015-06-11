@@ -136,7 +136,9 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()
   }
 
-  def getMarginMarketValue: js.Function = (contestId: String, playerId: String) => {
+  def getMarginMarketValue: js.Function = (contestId: String, playerId: String) => getMarginMarketValue_@(contestId, playerId)
+
+  def getMarginMarketValue_@(contestId: String, playerId: String) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
