@@ -87,7 +87,7 @@
                 }
             };
 
-            $scope.changePlayTab = function (tabIndex) {
+            $scope.changeAppTab = function (tabIndex) {
                 var tab = $scope.playTabs[tabIndex];
                 $log.info("Changing location to " + tab.url);
                 $location.path(tab.url);

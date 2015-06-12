@@ -38,18 +38,9 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.isLoading = () => isLoading
 
-  $scope.startLoading = (timeout: js.UndefOr[Double]) => {
-    isLoading = true
-    val _timeout = timeout.map(_.toInt) getOrElse 4000
+  $scope.startLoading = (timeout: js.UndefOr[Int]) => startLoading(timeout)
 
-    // set loading timeout
-    val promise = $timeout(() => {
-      g.console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
-      isLoading = false
-    }, _timeout)
-  }
-
-  $scope.stopLoading = () => $timeout(() => isLoading = false, 500)
+  $scope.stopLoading = () => stopLoading()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -61,7 +52,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.mainInit = (uuid: String) => g.console.log(s"Session UUID is $uuid")
 
-  $scope.changePlayTab = (tabIndex: js.UndefOr[Int]) => changePlayTab(tabIndex)
+  $scope.changeAppTab = (tabIndex: js.UndefOr[Int]) => changeAppTab(tabIndex)
 
   $scope.getAssetCode = (q: js.Dynamic) => getAssetCode(q)
 
@@ -95,10 +86,12 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def changePlayTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
+  private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
+    startLoading(DEFAULT_TIMEOUT)
     val tab = appTabs(tabIndex)
     g.console.log(s"Changing location to ${tab.url}")
-    $location.path(tab.url.as[String])
+    $location.url(tab.url.as[String])
+    stopLoading()
     true
   }
 
@@ -224,6 +217,19 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     }
   }
 
+  private def startLoading(timeout: js.UndefOr[Int]) = {
+    isLoading = true
+    val _timeout = timeout getOrElse DEFAULT_TIMEOUT
+
+    // set loading timeout
+    $timeout(() => {
+      g.console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
+      isLoading = false
+    }, _timeout)
+  }
+
+  private def stopLoading() = $timeout(() => isLoading = false, 500)
+
   //////////////////////////////////////////////////////////////////////
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
@@ -247,6 +253,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
  * @author lawrence.daniels@gmail.com
  */
 object MainController {
+  private val DEFAULT_TIMEOUT = 5000
 
   private def getAssetCode(q: js.Dynamic): String = {
     if (!isDefined(q) || !isDefined(q.assetType)) ""
