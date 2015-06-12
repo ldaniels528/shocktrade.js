@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author lawrence.daniels@gmail.com
  */
-class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout, $location: Location, $timeout: Timeout, toaster: Toaster,
+class MainController($scope: js.Dynamic, $http: HttpService, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @named("ContestService") contestService: ContestService,
                      @named("Facebook") facebook: FacebookService,
                      @named("FavoriteSymbols") favoriteSymbols: js.Dynamic,

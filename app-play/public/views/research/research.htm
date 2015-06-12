@@ -11,7 +11,7 @@
                         <nobr>
                             <input id="xchg_selected" type="checkbox" ng-model="exchangeSets[exchange]" ng-click="filterExchanges()">
                             <label ng-class="exchange" for="xchg_selected">{{ exchange }}</label>
-                            ({{ exchangeCounts[exchange] || 0 }})
+                            ({{ getExchangeCount(exchange) }})
                         </nobr>
                     </span>
                 </div>
