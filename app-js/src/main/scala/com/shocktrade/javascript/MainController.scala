@@ -55,33 +55,13 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-   // setup the tabs
-  private val appTabs = js.Array[js.Dynamic](
-    JS(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
-    JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
-    JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
-    JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
-    JS(name = "Favorites", icon_class = "fa-heart", tool_tip = "My Favorite Securities", url = "/symbols/favorites", authenticationRequired = true),
-    JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"),
-    JS(name = "Connect", icon_class = "fa-facebook-square", tool_tip = "Connect & Share", url = "/connect", authenticationRequired = true),
-    JS(name = "My Awards", icon_class = "fa-trophy", tool_tip = "My Awards", url = "/profile/awards", authenticationRequired = true),
-    JS(name = "My Statistics", icon_class = "fa-bar-chart", tool_tip = "My Statistics", url = "/profile/statistics", authenticationRequired = true))
-
   $scope.appTabs = appTabs
 
   $scope.levels = levels
 
-  $scope.isVisible = (tab: js.Dynamic) => {
-    (!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated_@)
-  }
-
   $scope.mainInit = (uuid: String) => g.console.log(s"Session UUID is $uuid")
 
-  $scope.getDate = (date: js.Dynamic) => if (isDefined(date) && isDefined(date.$date)) date.$date else date
-
-  $scope.getHtmlQuote = (q: js.Dynamic) => if (!isDefined(q)) "" else s"<i class='${$scope.getAssetIcon(q)}'></i> ${q.symbol} - ${q.name}"
-
-  $scope.getRegisteredFriends = () => mySession.fbFriends
+  $scope.changePlayTab = (tabIndex: js.UndefOr[Int]) => changePlayTab(tabIndex)
 
   $scope.getAssetCode = (q: js.Dynamic) => getAssetCode(q)
 
@@ -89,15 +69,19 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
 
   $scope.getBarRanking = () => getBarRanking.orNull
 
-  $scope.changePlayTab = (tabIndex: js.UndefOr[Int]) => changePlayTab(tabIndex)
+  $scope.getDate = (date: js.Dynamic) => if (isDefined(date) && isDefined(date.$date)) date.$date else date
 
   $scope.getExchangeClass = (exchange: js.UndefOr[String]) => s"${normalizeExchange(exchange)} bold"
+
+  $scope.getHtmlQuote = (q: js.Dynamic) => if (!isDefined(q)) "" else s"<i class='${$scope.getAssetIcon(q)}'></i> ${q.symbol} - ${q.name}"
+
+  $scope.isOnline = (player: js.Dynamic) => isOnline(player)
 
   $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
 
   $scope.getTabIndex = () => determineTableIndex
 
-  $scope.isOnline = (player: js.Dynamic) => isOnline(player)
+  $scope.isVisible = (tab: js.Dynamic) => !isLoading && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated_@))
 
   $scope.login = (event: js.Dynamic) => login(event)
 
@@ -111,13 +95,11 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def changePlayTab(index: js.UndefOr[Int]): Boolean = {
-    index exists { tabIndex =>
-      val tab = appTabs(tabIndex)
-      g.console.log(s"Changing location to ${tab.url}")
-      $location.path(tab.url.as[String])
-      true
-    }
+  private def changePlayTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
+    val tab = appTabs(tabIndex)
+    g.console.log(s"Changing location to ${tab.url}")
+    $location.path(tab.url.as[String])
+    true
   }
 
   private def determineTableIndex: Int = $location.path() match {
@@ -131,26 +113,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
     case path if path.contains("/awards") => 7
     case path if path.contains("/statistics") => 8
     case path => 0
-  }
-
-  private def getAssetCode(q: js.Dynamic): String = {
-    if (!isDefined(q) || !isDefined(q.assetType)) ""
-    else q.assetType.as[String] match {
-      case "Crypto-Currency" => "&#xf15a" // fa-bitcoin
-      case "Currency" => "&#xf155" // fa-dollar
-      case "ETF" => "&#xf18d" // fa-stack-exchange
-      case _ => "&#xf0ac" // fa-globe
-    }
-  }
-
-  private def getAssetIcon(q: js.Dynamic): String = {
-    if (!isDefined(q) || !isDefined(q.assetType)) "fa fa-globe st_blue"
-    else q.assetType.as[String] match {
-      case "Crypto-Currency" => "fa fa-bitcoin st_blue"
-      case "Currency" => "fa fa-dollar st_blue"
-      case "ETF" => "fa fa-stack-exchange st_blue"
-      case _ => "fa fa-globe st_blue"
-    }
   }
 
   private def getBarRanking: Option[js.Dynamic] = {
@@ -182,6 +144,19 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
     }
   }
 
+  private def getPreferenceIcon(q: js.Dynamic): String = {
+    /*
+    // fail-safe
+    if (!isDefined(q) || !isDefined(q.symbol)) ""
+
+    // check for favorite and held securities
+    val symbol = q.symbol
+    if (heldSecurities.isHeld(symbol)) "fa fa-star"
+    else if (favoriteSymbols.isFavorite(symbol)) "fa fa-heart"
+    else ""*/
+    ""
+  }
+
   private def loadFacebookFriends() {
     facebook.getTaggableFriends_@({ response: js.Dynamic =>
       val friends = response.data.asArray[js.Dynamic]
@@ -208,44 +183,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
     if (isDefined(event)) event.preventDefault()
     facebook.logout_@
     mySession.logout()
-  }
-
-  private def normalizeExchange(market: js.UndefOr[String]): String = {
-    market map { myMarket =>
-      if (myMarket == null) ""
-      else {
-        myMarket.toUpperCase match {
-          case s if s.contains("ASE") => s
-          case s if s.contains("CCY") => s
-          case s if s.contains("NAS") => "NASDAQ"
-          case s if s.contains("NCM") => "NASDAQ"
-          case s if s.contains("NGM") => "NASDAQ"
-          case s if s.contains("NMS") => "NASDAQ"
-          case s if s.contains("NYQ") => "NYSE"
-          case s if s.contains("NYS") => "NYSE"
-          case s if s.contains("OBB") => "OTCBB"
-          case s if s.contains("OTC") => "OTCBB"
-          case s if s.contains("OTHER") => "OTHER_OTC"
-          case s if s.contains("PCX") => s
-          case s if s.contains("PNK") => "OTCBB"
-          case s => g.console.warn(s"exchange = $s")
-            s
-        }
-      }
-    } getOrElse ""
-  }
-
-  private def getPreferenceIcon(q: js.Dynamic): String = {
-    /*
-    // fail-safe
-    if (!isDefined(q) || !isDefined(q.symbol)) ""
-
-    // check for favorite and held securities
-    val symbol = q.symbol
-    if (heldSecurities.isHeld(symbol)) "fa fa-star"
-    else if (favoriteSymbols.isFavorite(symbol)) "fa fa-heart"
-    else ""*/
-    ""
   }
 
   private def postLoginUpdates(facebookID: String, userInitiated: Boolean) = {
@@ -311,7 +248,61 @@ class MainController($scope: js.Dynamic, $http: HttpService, $interval: Timeout,
  */
 object MainController {
 
-  // define the levels
+  private def getAssetCode(q: js.Dynamic): String = {
+    if (!isDefined(q) || !isDefined(q.assetType)) ""
+    else q.assetType.as[String] match {
+      case "Crypto-Currency" => "&#xf15a" // fa-bitcoin
+      case "Currency" => "&#xf155" // fa-dollar
+      case "ETF" => "&#xf18d" // fa-stack-exchange
+      case _ => "&#xf0ac" // fa-globe
+    }
+  }
+
+  private def getAssetIcon(q: js.Dynamic): String = {
+    if (!isDefined(q) || !isDefined(q.assetType)) "fa fa-globe st_blue"
+    else q.assetType.as[String] match {
+      case "Crypto-Currency" => "fa fa-bitcoin st_blue"
+      case "Currency" => "fa fa-dollar st_blue"
+      case "ETF" => "fa fa-stack-exchange st_blue"
+      case _ => "fa fa-globe st_blue"
+    }
+  }
+
+  private[javascript] def normalizeExchange(market: js.UndefOr[String]): String = {
+    market map { myMarket =>
+      if (myMarket == null) ""
+      else {
+        myMarket.toUpperCase match {
+          //case s if s.contains("ASE") => s
+          //case s if s.contains("CCY") => s
+          case s if s.contains("NAS") => "NASDAQ"
+          case s if s.contains("NCM") => "NASDAQ"
+          case s if s.contains("NGM") => "NASDAQ"
+          case s if s.contains("NMS") => "NASDAQ"
+          case s if s.contains("NYQ") => "NYSE"
+          case s if s.contains("NYS") => "NYSE"
+          case s if s.contains("OBB") => "OTCBB"
+          case s if s.contains("OTC") => "OTCBB"
+          case s if s.contains("OTHER") => "OTHER_OTC"
+          //case s if s.contains("PCX") => s
+          case s if s.contains("PNK") => "OTCBB"
+          case s => s
+        }
+      }
+    } getOrElse ""
+  }
+
+  private val appTabs = js.Array(
+    JS(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
+    JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
+    JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
+    JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
+    JS(name = "Favorites", icon_class = "fa-heart", tool_tip = "My Favorite Securities", url = "/symbols/favorites", authenticationRequired = true),
+    JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"),
+    JS(name = "Connect", icon_class = "fa-facebook-square", tool_tip = "Connect & Share", url = "/connect", authenticationRequired = true),
+    JS(name = "My Awards", icon_class = "fa-trophy", tool_tip = "My Awards", url = "/profile/awards", authenticationRequired = true),
+    JS(name = "My Statistics", icon_class = "fa-bar-chart", tool_tip = "My Statistics", url = "/profile/statistics", authenticationRequired = true))
+
   private val levels = js.Array(
     JS(number = 1, nextLevelXP = 1000, description = "Private"),
     JS(number = 2, nextLevelXP = 2000, description = "Private 1st Class"),

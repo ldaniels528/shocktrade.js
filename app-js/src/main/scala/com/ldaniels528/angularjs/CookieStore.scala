@@ -8,7 +8,7 @@ import scala.scalajs.js
  */
 trait CookieStore extends js.Object {
 
-  def get(key: String): js.UndefOr[String] = js.native
+  def get[T](key: String): js.UndefOr[T] = js.native
 
   def put[T](key: String, value: T): Unit = js.native
 

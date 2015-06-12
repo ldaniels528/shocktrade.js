@@ -42,14 +42,20 @@
         </div>
         <br style="clear: both">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-8">
         <span ng-hide="MySession.contestIsEmpty()" style="font-size: 14pt; vertical-align: middle">
             Playing <span class="game_title">{{MySession.getContestName()}}</span>
         </span>
-    </div>
-    <div class="col-md-4" ng-controller="AwardsController" ng-init="setupAwards()">
-        <img class="pull-right" ng-repeat="award in MySession.getUserProfile().awards.slice(0,7)"
-             title="{{ award.name }}"
-             style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
+
+        <div ng-controller="AwardsController" ng-init="setupAwards()">
+            <img class="pull-right" ng-repeat="award in MySession.getUserProfile().awards.slice(0,7)"
+                 title="{{ award.name }}"
+                 style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
+        </div>
+
+        <div class="pull-right" >
+            <img ng-show="isLoading()" src="/assets/images/status/loading24.gif">
+            <img ng-hide="isLoading()" src="/assets/images/status/transparent24.png">
+        </div>
     </div>
 </div>

@@ -39,6 +39,8 @@ object ScalaJsHelper {
 
   def isDefined(fx: js.Function) = fx != null && !js.isUndefined(fx)
 
+  def isFalse(obj: js.Dynamic) = !isTrue(obj)
+
   def isTrue(obj: js.Dynamic) = isDefined(obj) && obj.as[Boolean]
 
   def required(name: String, value: String) = if (value == null || value.trim.isEmpty) die(s"Required property '$name' is missing")

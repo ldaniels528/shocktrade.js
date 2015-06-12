@@ -9,7 +9,6 @@ import com.shocktrade.javascript.profile.ProfileService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.scalajs.js.JSON
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
@@ -38,13 +37,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getUserProfile: js.Function = () => userProfile
 
-  def setUserProfile: js.Function = (profile: js.Dynamic) => {
-    g.console.log(s"setting profile ${JSON.stringify(profile)}")
-    if (isDefined(profile))
-      userProfile = profile
-    else
-      userProfile = createSpectatorProfile()
-  }
+  def setUserProfile: js.Function = (profile: js.Dynamic) => userProfile = if (isDefined(profile)) profile else createSpectatorProfile()
 
   /**
    * Returns the user ID for the current user's ID
@@ -58,7 +51,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    */
   def getUserName: js.Function = () => userProfile.name
 
-  def getUserName_@ = if(isDefined(userProfile.name)) userProfile.name.as[String] else null
+  def getUserName_@ = if (isDefined(userProfile.name)) userProfile.name.as[String] else null
 
   /**
    * Indicates whether the given user is an administrator
@@ -185,14 +178,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     if (!isDefined(aContest)) resetContest_@()
 
     // if the contest contained an error, show it
-    else if (isDefined(aContest.error)) {
-      toaster.pop("error", aContest.error.as[String], null)
-    }
+    else if (isDefined(aContest.error)) toaster.pop("error", aContest.error.as[String], null)
 
     // is it a delta?
-    else if (aContest.`type` === "delta") {
-      updateContestDelta(aContest)
-    }
+    else if (aContest.`type` === "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
     else {
@@ -257,19 +246,18 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Creates a default 'Spectator' user profile
    * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
    */
-  private def createSpectatorProfile() = {
-    JS(
-      name = "Spectator",
-      country = "us",
-      level = 1,
-      lastSymbol = "AAPL",
-      netWorth = 0.00,
-      totalXP = 0,
-      favorites = js.Array[String](),
-      friends = js.Array[String](),
-      recentSymbols = js.Array[String]()
-    )
-  }
+  private def createSpectatorProfile() = JS(
+    name = "Spectator",
+    country = "us",
+    level = 1,
+    lastSymbol = "AAPL",
+    netWorth = 0.00,
+    totalXP = 0,
+    awards = emptyArray[String],
+    favorites = emptyArray[String],
+    friends = emptyArray[String],
+    recentSymbols = emptyArray[String]
+  )
 
   private[javascript] def cashAccount_? = participant.flatMap(p => Option(p.cashAccount))
 
@@ -359,10 +347,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   $rootScope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Contest updated")
-    this.contest foreach { c =>
-      if (c.OID == contest.OID) setContest_@(contest)
-    }
-
+    this.contest foreach { c => if (c.OID == contest.OID) setContest_@(contest)}
     if (this.contest.isEmpty) setContest_@(contest)
   })
 
