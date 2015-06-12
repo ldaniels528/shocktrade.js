@@ -38,6 +38,7 @@
         $rootScope.HeldSecurities = HeldSecurities;
         $rootScope.MySession = MySession;
         $rootScope.RecentSymbols = RecentSymbols;
+        $rootScope.WebSockets = WebSockets;
 
         // initialize the web socket service
         WebSockets.init();

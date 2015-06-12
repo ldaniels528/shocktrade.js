@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.profile
 
 import biz.enef.angulate.Service
+import com.greencatsoft.angularjs.core.Q
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{ literal, global => g}
+import scala.scalajs.js.Dynamic.{global => g, literal}
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
@@ -12,7 +13,10 @@ import scala.scalajs.js.annotation.JSExportAll
  * @author lawrence.daniels@gmail.com
  */
 @JSExportAll
-class FacebookService($q: js.Dynamic) extends Service {
+class FacebookService($q: Q) extends Service {
+  type CallbackArray = js.Function1[js.Array[js.Dynamic], Unit]
+  type CallbackObject = js.Function1[js.Dynamic, Unit]
+
   var FB: js.Dynamic = null
   var appID: String = null
   var version = "v2.3"
@@ -22,34 +26,32 @@ class FacebookService($q: js.Dynamic) extends Service {
 
   def getVersion: js.Function = () => version
 
-  def createFriendList: js.Function = (friendListId: String) => {
+  def createFriendList: js.Function = { (friendListId: String) =>
     val deferred = $q.defer()
-    FB.api(s"/v2.3/me/$friendListId/members&access_token=$accessToken", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
+    FB.api(s"/v2.3/me/$friendListId/members&access_token=$accessToken", { (response: js.Dynamic) =>
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject("Failed to create friends list")
     })
     deferred.promise
   }
 
   def getFriends: js.Function = () => {
     val deferred = $q.defer()
-    FB.api("/v2.3/me/friends?access_token=$accessToken", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
+    FB.api(s"/v2.3/me/friends?access_token=$accessToken", (response: js.Dynamic) => {
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject("Failed to retrieve friends list")
     })
     deferred.promise
   }
 
-  def getTaggableFriends: js.Function = () => {
-    val deferred = $q.defer()
-    FB.api("/v2.3/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
-    })
-    deferred.promise
+  def getTaggableFriends: js.Function = (callback: CallbackObject) => getTaggableFriends_@(callback)
+
+  def getTaggableFriends_@(callback: CallbackObject) = {
+    FB.api(s"/v2.3/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => callback(response))
   }
 
   def getFriendList: js.Function = (listType: js.UndefOr[String]) => {
     val deferred = $q.defer()
     FB.api(s"/v2.3/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=$accessToken", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(s"Failed to retrieve friends list (type $listType)")
     })
     deferred.promise
   }
@@ -57,7 +59,7 @@ class FacebookService($q: js.Dynamic) extends Service {
   def getFriendListMembers: js.Function = (friendListId: String) => {
     val deferred = $q.defer()
     FB.api(s"/v2.3/me/$friendListId/members&access_token=$accessToken", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject("Failed to retrieve friend list members")
     })
     deferred.promise
   }
@@ -75,24 +77,24 @@ class FacebookService($q: js.Dynamic) extends Service {
         deferred.resolve(response)
       } else if (response.status === "not_authorized") {
         // the user is logged in to Facebook, but has not authenticated your app
-        deferred.reject(response)
+        deferred.reject("the user is logged in to Facebook, but has not authenticated the app")
       } else {
-        // the user isn"t logged in to Facebook.
-        deferred.reject(response)
+        // the user isn"t logged into Facebook.
+        deferred.reject("User is not logged into Facebook")
       }
     })
     deferred.promise
   }
 
-  def getUserProfile: js.Function = () => {
-    val deferred = $q.defer()
-    FB.api(s"/v2.3/me?access_token=${auth.accessToken}", (response: js.Dynamic) => {
-      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(response)
-    })
-    deferred.promise
+  def getUserProfile: js.Function = (callback: CallbackObject) => getUserProfile_@(callback)
+
+  def getUserProfile_@(callback: CallbackObject) {
+    FB.api(s"/v2.3/me?access_token=${auth.accessToken}", (response: js.Dynamic) => callback.apply(response))
   }
 
-  def login: js.Function = () => {
+  def login: js.Function = () => login_@
+
+  def login_@ = {
     g.console.log(s"Performing Facebook login using app ID $appID")
     val deferred = $q.defer()
     FB.login((response: js.Dynamic) => {
@@ -102,20 +104,22 @@ class FacebookService($q: js.Dynamic) extends Service {
         accessToken = response.authResponse.accessToken.as[String]
         deferred.resolve(response)
       } else {
-        deferred.reject(response)
+        deferred.reject("Could not login into Facebook")
       }
     })
     deferred.promise
   }
 
-  def logout: js.Function = () => {
+  def logout: js.Function = () => logout_@
+
+  def logout_@ = {
     val deferred = $q.defer()
     FB.logout((response: js.Dynamic) => {
       if (isDefined(response)) {
         auth = null
         deferred.resolve(response)
       } else {
-        deferred.reject(response)
+        deferred.reject("Error logging out of Facebook")
       }
     })
     deferred.promise

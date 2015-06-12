@@ -5,8 +5,8 @@
      * Portfolio Controller
      * @author lawrence.daniels@gmail.com
      */
-    app.controller('PortfolioController', ['$scope', '$cookieStore', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog', 'QuoteService',
-        function ($scope, $cookieStore, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog, QuoteService) {
+    app.controller('PortfolioController', ['$scope', '$cookieStore', '$log', '$timeout', 'toaster', 'MySession', 'ContestService', 'NewOrderDialog',
+        function ($scope, $cookieStore, $log, $timeout, toaster, MySession, ContestService, NewOrderDialog) {
 
             $scope.selectedClosedOrder = null;
             $scope.selectedOrder = null;

@@ -183,14 +183,9 @@
                 MySession.setFacebookID(facebookID);
 
                 // load the user's Facebook profile
-                Facebook.getUserProfile().then(
-                    function (response) {
-                        MySession.setFacebookProfile(response);
-                    },
-                    function (err) {
-                        toaster.pop('error', 'Error!', "Facebook login error");
-                        console.log("Facebook login failure: " + err.data);
-                    });
+                Facebook.getUserProfile(function (response) {
+                    MySession.setFacebookProfile(response);
+                });
 
                 // load the user's ShockTrade profile
                 ProfileService.getProfileByFacebookID(facebookID)
@@ -215,19 +210,16 @@
             };
 
             function loadFacebookFriends() {
-                Facebook.getTaggableFriends().then(
-                    function (response) {
-                        var friends = response.data;
-                        console.log(friends.length + " friends loaded");
-                        MySession.fbFriends = friends.sort(function (a, b) {
-                            if (a.name < b.name) return -1;
-                            else if (a.name > b.name) return 1;
-                            else return 0;
-                        });
-                    },
-                    function (err) {
-                        toaster.pop('error', 'Error!', "Failed to retrieve Facebook friends");
+                Facebook.getTaggableFriends(function (response) {
+                    console.log("response = " + angular.toJson(response.data));
+                    var friends = response.data;
+                    console.log(friends.length + " friends loaded");
+                    MySession.fbFriends = friends.sort(function (a, b) {
+                        if (a.name < b.name) return -1;
+                        else if (a.name > b.name) return 1;
+                        else return 0;
                     });
+                });
             }
 
             $scope.signUpPopup = function (facebookID, fbProfile) {
@@ -282,7 +274,7 @@
             //////////////////////////////////////////////////////////////////////
 
             // setup the tabs
-            $scope.playTabs = [{
+            $scope.appTabs = [{
                 "name": "Search",
                 "icon_class": "fa-search",
                 "tool_tip": "Search for games",

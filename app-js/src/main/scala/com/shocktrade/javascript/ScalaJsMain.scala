@@ -52,6 +52,7 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[ExposureController]("ExposureController")
     module.controllerOf[GameSearchController]("GameSearchController")
     module.controllerOf[InspectController]("InspectController")
+    module.controllerOf[MainController]("MainController")
     module.controllerOf[MarginAccountController]("MarginAccountController")
     module.controllerOf[MyGamesController]("MyGamesController")
     module.controllerOf[NewsController]("NewsController")

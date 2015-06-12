@@ -26,6 +26,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   var fbProfile: Option[js.Dynamic] = None
   var userProfile: js.Dynamic = createSpectatorProfile()
   var contest: Option[js.Dynamic] = None
+  var nonMember: Boolean = true
 
   // investment fields
   var totalInvestmentStatus: Option[String] = None

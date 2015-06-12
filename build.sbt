@@ -41,10 +41,11 @@ lazy val appScalaJs = (project in file("app-js"))
     persistLauncher in Test := false,
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
-      //"org.scala-js" %% "scalajs-library" % "0.6.3",
-      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
       "biz.enef" %%% "scalajs-angulate" % "0.2",
-      "com.github.benhutchison" %%% "prickle" % "1.1.5"
+      "com.github.benhutchison" %%% "prickle" % "1.1.5",
+      "com.greencatsoft" %%% "scalajs-angular" % "0.4",
+//    "org.scala-js" %% "scalajs-library" % "0.6.3",
+      "org.scala-js" %%% "scalajs-dom" % "0.8.0"
     ))
   .enablePlugins(ScalaJSPlugin)
 //.aggregate(appShared)

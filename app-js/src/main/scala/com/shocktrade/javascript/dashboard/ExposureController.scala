@@ -52,9 +52,9 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
 
   $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
 
-  $scope.xFunction = () => (d: js.Dynamic) => d.label
+  $scope.xFunction = { () => (d: js.Dynamic) => d.label }: js.Function
 
-  $scope.yFunction = () => (d: js.Dynamic) => d.value
+  $scope.yFunction = { () => (d: js.Dynamic) => d.value }: js.Function
 
   /**
    * Initializes the view by displaying an initial chart

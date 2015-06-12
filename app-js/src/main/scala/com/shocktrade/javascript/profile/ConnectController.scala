@@ -18,7 +18,9 @@ import scala.util.{Failure, Success}
 class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                         @named("ComposeMessageDialog") composeMessageDialog: js.Dynamic,
                         @named("ConnectService") connectService: ConnectService,
-                        @named("MySession") mySession: MySession) extends ScopeController {
+                        @named("MySession") mySession: MySession)
+  extends ScopeController {
+
   private val scope = $scope.asInstanceOf[Scope]
   private var myUpdates = emptyArray[js.Dynamic]
   private var myUpdate: js.Dynamic = null
@@ -77,7 +79,9 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
    * Returns the contacts matching the given search term
    */
   $scope.getContactList = (searchTerm: js.UndefOr[String]) => {
-    //g.console.log(s"searchTerm = $searchTerm (${Option(searchTerm).map(_.getClass.getName).orNull})")
+    // TODO reinstate search
+    /*
+    g.console.log(s"searchTerm = $searchTerm (${Option(searchTerm).map(_.getClass.getName).orNull})")
     searchTerm foreach { mySearchTerm =>
       val fbFriends = mySession.fbFriends
       if (!Option(searchTerm).exists(_.nonEmpty)) fbFriends.take(40)
@@ -85,7 +89,8 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
         val term = mySearchTerm.trim.toLowerCase
         fbFriends.filter(friend => isDefined(friend.name) && friend.name.as[String].toLowerCase.contains(term))
       }
-    }
+    }*/
+    mySession.fbFriends
   }
 
   /**
