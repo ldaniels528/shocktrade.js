@@ -25,7 +25,7 @@
                     <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
                         <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}" />
                         <span ng-show="(getMyRankings(c).gainLoss || 0) === 0" class="null">&#8212;</span>
-                        {{ abs(getMyRankings(c).gainLoss) | number:2 }}%
+                        {{ getMyRankings(c).gainLoss | number:2 }}%
                     </span>
                 </span>
                 <span ng-hide="getMyRankings(c)" class="null">

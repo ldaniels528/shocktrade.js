@@ -51,6 +51,12 @@ object ScalaJsHelper {
   //    Implicit Defintions and Classes
   ////////////////////////////////////////////////////////////////////////
 
+  object Implicits {
+
+    implicit def valueToOption[T](value: T): Option[T] = Option(value)
+
+  }
+
   //implicit def jsDynamic2Value[T](obj: js.Dynamic): T = obj.as[T]
 
   implicit class StringExtensions(val string: String) extends AnyVal {
@@ -71,7 +77,7 @@ object ScalaJsHelper {
 
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
 
-    def OID: String = if (isDefined(obj._id)) obj._id.$oid.asInstanceOf[String] else null
+    def OID: String = OID_?.orNull
 
     def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
 

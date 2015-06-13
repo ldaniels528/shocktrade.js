@@ -35,6 +35,10 @@
 	margin-right: 3px;
 }
 
+.pi_bar_cash {
+    font-size: 10pt;
+}
+
 fieldset.contest {
 
 }
@@ -46,6 +50,7 @@ legend.contest {
 .game_title {
 	color: #337ab7;
     font-weight: bold;
+	text-decoration: underline;
 }
 
 img.avatar {

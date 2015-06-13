@@ -35,7 +35,7 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   scope.getMyRankings = (contest: js.Dynamic) => {
     if (!isDefined(contest)) null
     else if (!isDefined(contest.ranking)) {
-      val rankings = contestService.getPlayerRankings_@(contest, mySession.getUserName_@)
+      val rankings = contestService.getPlayerRankings_@(contest, mySession.getUserID_@)
       rankings.player
     }
     else contest.ranking.player
@@ -56,7 +56,7 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
     if (mySession.isAuthenticated_@) {
       g.console.log(s"Loading 'My Contests' for user '$userID'...")
       contestService.getContestsByPlayerID_@(userID) onComplete {
-        case Success(contests: js.Array[js.Dynamic]) =>
+        case Success(contests) =>
           g.console.log(s"Loaded ${contests.length} contest(s)")
           myContests = contests
         case Failure(e) =>

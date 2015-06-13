@@ -22,7 +22,7 @@
                             <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
                                 <changearrow ng-hide="(p.gainLoss || 0) == 0" value="{{ p.gainLoss }}"></changearrow>
                                 <span ng-if="(p.gainLoss || 0) == 0" class="null">&#8212;</span>
-                                {{ abs(p.gainLoss) | number:2 }}%
+                                {{ p.gainLoss | number:2 }}%
                             </span>
                         </div>
                     </div>

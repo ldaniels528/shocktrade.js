@@ -1,60 +1,34 @@
-<div class="row player_info_bar contest_colors">
-	<div class="col-md-4">
-        <div class="pull-left" style="display: inline">
-            <avatar id="{{ MySession.getFacebookID() }}" class="avatar-32"></avatar>
-        </div>
-        <div class="pull-left" style="display: inline">
-            <div>
-                <img ng-show="WebSockets.isConnected()" ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png">
-                <span ng-show="MySession.contestIsEmpty()" class="null">[no game selected]</span>
-                <span ng-if="! MySession.contestIsEmpty()">
-                    <span ng-class="'rank_' + getBarRanking().rank">{{ getBarRanking().rank }}</span>
-                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '1st'" src="/assets/images/contests/gold.png">
-                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '2nd'" src="/assets/images/contests/silver.png">
-                    <img ng-if="MySession.getContestStatus() === 'CLOSED' && getBarRanking().rank === '3rd'" src="/assets/images/contests/bronze.png">
-                    <span ng-class="getBarRanking().gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(getBarRanking().gainLoss || 0) === 0" value="{{ getBarRanking().gainLoss }}"></changearrow>
-                        <span ng-show="(getBarRanking().gainLoss || 0) === 0" class="null">&#8212;</span>
-                        {{ abs(getBarRanking().gainLoss) | number:2 }}%
-                    </span>
-                </span>
-            </div>
-            <div class="positive" ng-if="MySession.getUserID()">
-                <span ng-show="MySession.isTotalInvestmentLoaded()">
-                    $ {{ MySession.getTotalCashAvailable() + MySession.getTotalInvestment() | number:2 }}
-                </span>
-                <span ng-hide="MySession.isTotalInvestmentLoaded()"
-                      ng-switch="MySession.totalInvestmentStatus">
-                    <span ng-switch-when="LOADING">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
-                        <img src="/assets/images/status/loading.gif">
-                    </span>
-                    <span ng-switch-when="FAILED">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
-                        <i title="reload" ng-click="MySession.reloadTotalInvestment()" class="fa fa-warning st_control clickable"></i>
-                    </span>
-                    <span ng-switch-when="TIMEOUT">
-                        $ {{ MySession.getTotalCashAvailable() | number:2 }}
-                        <i title="reload" ng-click="MySession.reloadTotalInvestment()" class="fa fa-clock-o st_control clickable"></i>
-                    </span>
-                </span>
-            </div>
-        </div>
-        <br style="clear: both">
+<div ng-controller="PlayerInfoBarController" ng-init="initPlayerBar()">
+    <div ng-hide="isBarVisible()">
+        <i class="fa fa-chevron-circle-right st_control" ng-click="toggleVisibility()" title="Show the information bar"></i>
     </div>
-    <div class="col-md-8">
-        <span ng-hide="MySession.contestIsEmpty()" style="font-size: 14pt; vertical-align: middle">
-            Playing <span class="game_title">{{MySession.getContestName()}}</span>
-        </span>
-
-        <div ng-controller="AwardsController" ng-init="setupAwards()">
-            <img class="pull-right" ng-repeat="award in MySession.getUserProfile().awards.slice(0,7)"
-                 title="{{ award.name }}"
-                 style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">
+    <div ng-if="isBarVisible()" class="row player_info_bar contest_colors" style="margin-bottom: 20px">
+        <div class="col-md-4">
+            <div class="inline pull-left">
+                <i class="fa fa-chevron-circle-left st_control" ng-click="toggleVisibility()" title="Hide the information bar"></i>
+                <img ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top">
+                <img ng-show="isLoading()" src="/assets/images/status/loading32.gif" class="avatar-32">
+                <avatar ng-hide="isLoading()" id="{{ MySession.getFacebookID() }}" class="avatar-32"></avatar>
+            </div>
+            <div class="inline pull-left pad-left-10 pi_bar_cash">
+                <div class="positive" title="Liquid cash available">
+                    <i class="fa fa-money"></i> {{ getTotalCashAvailable() | number:2 }}
+                </div>
+                <div class="emphasis" title="Total investment value">
+                    <i class="fa fa-line-chart"></i> {{ getTotalInvestment() | number:2 }}
+                </div>
+            </div>
+            <br style="clear: both">
         </div>
+        <div class="col-md-8">
+            <span ng-hide="MySession.contestIsEmpty()" class="middle" style="font-size: 14pt">
+                Playing <span class="game_title">{{MySession.getContestName()}}</span>
+            </span>
 
-        <div class="pull-right">
-            <img ng-show="isLoading()" src="/assets/images/status/loading24.gif">
+            <span ng-controller="AwardsController" class="middle pull-right">
+                <img ng-repeat="award in getMyAwards(MySession.userProfile).slice(0,7)" title="{{ award.name }}"
+                     style="padding: 2px 2px 2px 2px" ng-src="{{ award.icon }}">
+            </span>
         </div>
     </div>
 </div>

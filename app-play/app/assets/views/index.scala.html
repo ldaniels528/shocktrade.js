@@ -62,12 +62,10 @@
 
         <!-- main view -->
         <div>
-			<div>
-				<div ng-if="MySession.getFacebookID()" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
-				<div class="row" style="margin-top: 20px">
-					<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
-					<div class="col-md-11 pull-left" ng-view ng-cloak></div>
-				</div>
+			<div ng-if="MySession.isAuthenticated()" ng-include src="'/assets/views/play/player_info_bar.htm'"></div>
+			<div class="row">
+				<div class="col-md-1" style="width: 60px" ng-include src="'/assets/views/app_tabs.htm'"></div>
+				<div class="col-md-11 pull-left" ng-view ng-cloak></div>
 			</div>
             <div style="display: none" id="fb-root"></div>
         </div>

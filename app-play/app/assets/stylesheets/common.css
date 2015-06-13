@@ -334,7 +334,7 @@ ul.error {
  	text-align: center
 }
  
-.inline {
+.st_inline {
  	display: inline
 }
 
@@ -364,4 +364,8 @@ ul.error {
 
 .pad-left-10 {
     padding-left: 10px
+}
+
+.pad-right-10 {
+	padding-right: 10px
 }

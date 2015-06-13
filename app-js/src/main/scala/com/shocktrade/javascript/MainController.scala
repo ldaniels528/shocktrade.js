@@ -58,8 +58,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.getAssetIcon = (q: js.Dynamic) => getAssetIcon(q)
 
-  $scope.getBarRanking = () => getBarRanking.orNull
-
   $scope.getDate = (date: js.Dynamic) => if (isDefined(date) && isDefined(date.$date)) date.$date else date
 
   $scope.getExchangeClass = (exchange: js.UndefOr[String]) => s"${normalizeExchange(exchange)} bold"
@@ -108,18 +106,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     case path => 0
   }
 
-  private def getBarRanking: Option[js.Dynamic] = {
-    for {
-      contest <- mySession.contest
-      name = mySession.userProfile.name.as[String] if isDefined(mySession.userProfile.name)
-    } yield {
-      val rankings = contestService.getPlayerRankings_@(contest, name)
-      rankings.player
-    }
-  }
-
   private def isOnline(player: js.Dynamic): Boolean = {
-    g.console.log(s"player = ${JSON.stringify(player)}")
     if (!isDefined(player.facebookID)) false
     else {
       val playerID = player.facebookID.as[String]
@@ -193,7 +180,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     // load the user"s ShockTrade profile
     profileService.getProfileByFacebookID_@(facebookID) onComplete {
       case Success(profile) =>
-        g.console.log(s"profile = ${JSON.stringify(profile)}")
         if (!isDefined(profile.error)) {
           g.console.log("ShockTrade user profile loaded...")
           mySession.userProfile = profile

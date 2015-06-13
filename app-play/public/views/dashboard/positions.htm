@@ -99,7 +99,7 @@
                 <span ng-if="selectedPosition.gainLossPct != null">
                     <changearrow value="{{ selectedPosition.gainLossPct }}"/>
                     <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
-                        {{ abs(selectedPosition.gainLossPct) | number:2 }}%
+                        {{ selectedPosition.gainLossPct | number:2 }}%
                     </span>
                 </span>
             </div>

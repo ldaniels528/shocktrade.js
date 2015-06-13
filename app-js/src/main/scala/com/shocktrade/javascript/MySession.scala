@@ -27,10 +27,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   var contest: Option[js.Dynamic] = None
   var nonMember: Boolean = true
 
-  // investment fields
-  var totalInvestmentStatus: Option[String] = None
-  var totalInvestment: Option[Double] = None
-
   /////////////////////////////////////////////////////////////////////
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
@@ -43,7 +39,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the user ID for the current user's ID
    * @return {*}
    */
-  def getUserID: js.Function = () => userProfile.OID
+  def getUserID: js.Function = () => getUserID_@
+
+  def getUserID_@ : String = userProfile.OID
 
   /**
    * Returns the user ID for the current user's name
@@ -90,8 +88,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     fbProfile = None
     userProfile = createSpectatorProfile()
     contest = None
-    totalInvestmentStatus = None
-    totalInvestment = None
   }
 
   def refresh = () => {
@@ -115,47 +111,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   def getNetWorth: js.Function = () => userProfile.netWorth
-
-  def getTotalCashAvailable: js.Function = () => userProfile.netWorth
-
-  def getTotalInvestment: js.Function = () => {
-    // lookup the player
-    if (totalInvestment.isEmpty && totalInvestmentStatus.isEmpty) {
-      totalInvestmentStatus = Some("LOADING")
-
-      // load the total investment
-      loadTotalInvestment
-    }
-
-    totalInvestment getOrElse 0.00d
-  }
-
-  def isTotalInvestmentLoaded: js.Function = () => totalInvestment.isDefined
-
-  def reloadTotalInvestment: js.Function = () => totalInvestmentStatus = None
-
-  def loadTotalInvestment: js.Function = () => {
-    // set a timeout so that loading doesn't persist
-    $timeout({ () =>
-      if (totalInvestment.isEmpty) {
-        g.console.error("Total investment call timed out")
-        totalInvestmentStatus = Some("TIMEOUT")
-      }
-    }, delay = 20000)
-
-    // retrieve the total investment
-    g.console.log("Loading Total investment...")
-    contestService.getTotalInvestment_@(userProfile.OID) onComplete {
-      case Success(response) =>
-        totalInvestment = Option(response.netWorth.as[Double])
-        totalInvestmentStatus = Some("LOADED")
-        g.console.log("Total investment loaded")
-      case Failure(e) =>
-        toaster.pop("error", "Error loading total investment", null)
-        totalInvestmentStatus = Some("FAILED")
-        g.console.error("Total investment call failed")
-    }
-  }
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions

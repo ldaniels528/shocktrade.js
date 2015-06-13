@@ -152,7 +152,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
       splitScreen = true
 
       if (!isDefined(contest.rankings)) {
-        contestService.getPlayerRankings_@(contest, mySession.userProfile.name.as[String])
+        contestService.getPlayerRankings_@(contest, mySession.getUserID_@)
       }
     }
   }

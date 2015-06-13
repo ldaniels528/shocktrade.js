@@ -34,7 +34,7 @@
                 <i ng-show="quote.changePct < 0.0" class="fa fa-arrow-down negative"></i>
                 <i ng-show="quote.changePct > 0.0" class="fa fa-arrow-up positive"></i>
                 <i ng-show="quote.changePct === 0.0" class="null">&#8212;</i>
-                <span ng-class="quote.changePct < 0 ? 'negative' : ''">{{ abs(quote.changePct) | quoteChange:2 }}</span>
+                <span ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | quoteChange:2 }}</span>
             </div>
             <div ng-hide="isSplitScreen()" class="col-md-3 qm right">
                 {{ quote.volume | number }}

@@ -41,7 +41,7 @@
         <div class="col-md-6">
             <span ng-class="getSelectedTradingHistory().changePct < 0 ? 'negative' : 'positive'">{{ getSelectedTradingHistory().change | quoteNumber }}</span>
             <changearrow value="{{ getSelectedTradingHistory().changePct }}"/>
-            <span ng-class="getSelectedTradingHistory().changePct < 0 ? 'negative' : 'positive'">{{ Math.abs(getSelectedTradingHistory().changePct) | quoteChange }}%</span>
+            <span ng-class="getSelectedTradingHistory().changePct < 0 ? 'negative' : 'positive'">{{ getSelectedTradingHistory().changePct | quoteChange }}%</span>
         </div>
 
         <div class="col-md-offset-3 col-md-3 header">Spread %</div>

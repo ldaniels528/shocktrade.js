@@ -102,7 +102,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
 
   def getContestsByPlayerID_@(playerId: String) = {
     required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/contests/player/$playerId")
+    $http.get[js.Array[js.Dynamic]](s"/api/contests/player/$playerId")
   }
 
   def getEnrichedOrders: js.Function = (contestId: String, playerId: String) => {
@@ -144,9 +144,9 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings: js.Function = (contest: js.Dynamic, playerName: String) => getPlayerRankings_@(contest, playerName)
+  def getPlayerRankings: js.Function = (contest: js.Dynamic, playerID: String) => getPlayerRankings_@(contest, playerID)
 
-  protected[javascript] def getPlayerRankings_@(contest: js.Dynamic, playerName: String) = {
+  protected[javascript] def getPlayerRankings_@(contest: js.Dynamic, playerID: String) = {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -161,7 +161,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
           case Success(participants) =>
             contest.rankings.participants = participants
             contest.rankings.leader = participants.headOption.orNull
-            contest.rankings.player = participants.find(_.name === playerName).orNull
+            contest.rankings.player = participants.find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
           case Failure(e) =>
             toaster.pop("error", "Error loading play rankings", null)
             e.printStackTrace()
@@ -170,7 +170,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
 
       // if the rankings were loaded, but the player is not set
       else if (isDefined(contest.rankings) && !isDefined(contest.rankings.player)) {
-        contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(_.name === playerName).orNull
+        contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
       }
 
       contest.rankings

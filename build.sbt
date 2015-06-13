@@ -7,8 +7,6 @@ import sbt._
 
 name := "shocktrade.js"
 
-version := "1.1.2"
-
 organization := "shocktrade.com"
 
 val myScalaVersion = "2.11.6"
@@ -53,6 +51,7 @@ lazy val appScalaJs = (project in file("app-js"))
 lazy val appScalaJvm = (project in file("app-play"))
   .settings(
     name := "shocktrade.js",
+    version := "0.8.0",
     scalaVersion := myScalaVersion,
     scalajsOutputDir := (crossTarget in Compile).value / "classes" / "public" / "javascripts",
     //scalaJSProjects := clients,

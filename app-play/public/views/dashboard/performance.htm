@@ -78,7 +78,7 @@
 		<div class="col-md-4 bold">{{ gainLoss(selectedPerformance) < 0 ? 'Loss' : 'Gain' }}</div>
 		<div class="col-md-8">
             <span ng-show="gainLoss(selectedPerformance) == null" class="null">Not Available</span>
-			<span ng-show="gainLoss(selectedPerformance) < 0" class="negative">{{ abs(gainLoss(selectedPerformance)) | number:1 }}%</span>
+			<span ng-show="gainLoss(selectedPerformance) < 0" class="negative">{{ gainLoss(selectedPerformance) | number:1 }}%</span>
             <span ng-show="gainLoss(selectedPerformance) >= 0" class="positive">{{ gainLoss(selectedPerformance) | number:1 }}%</span>
 		</div>
 	</div>
