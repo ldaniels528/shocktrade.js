@@ -1,15 +1,15 @@
-package com.shocktrade.javascript.news
+package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.{HttpError, Location}
+import biz.enef.angulate.core.Location
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
-import com.shocktrade.javascript.Filters
+import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.ScalaJsHelper._
-import Filters.toDuration
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.util.{Failure, Success}
 
 /**
  * Chat Controller
@@ -57,12 +57,12 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
         // replace the symbols with icon images
         var text = msg.text.as[String]
         emoticons.foreach { emo =>
-         text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
+          text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
         }
 
         html + s"""|<img src="http://graph.facebook.com/${msg.sender.facebookID}/picture" class="chat_icon">
-                   |<span class="bold" style="color: ${colorOf(msg.sender.name.as[String])}">${msg.sender.name}</span>&nbsp;
-                   |[<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripMargin
+                                                                                  |<span class="bold" style="color: ${colorOf(msg.sender.name.as[String])}">${msg.sender.name}</span>&nbsp;
+                                                                                                                                                                                |[<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripMargin
       }
 
       g.console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
@@ -72,7 +72,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
     }
   }
 
-  private def sortMessagesByTime(messages: js.Array[js.Dynamic]) = messages.sort ({ (a: js.Dynamic, b: js.Dynamic) =>
+  private def sortMessagesByTime(messages: js.Array[js.Dynamic]) = messages.sort({ (a: js.Dynamic, b: js.Dynamic) =>
     val timeA = if (!js.isUndefined(a.sentTime.$date)) a.sentTime.$date else a.sentTime
     val timeB = if (!js.isUndefined(b.sentTime.$date)) b.sentTime.$date else b.sentTime
     (timeB.asInstanceOf[Double] - timeA.asInstanceOf[Double]).toInt
@@ -97,12 +97,12 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
         ))
 
       // transmit the message
-      contestService.sendChatMessage_@(mySession.getContestID().as[String], message)
-        .success { messages: js.Dynamic =>
-        $scope.chatMessage = ""
-        mySession.setMessages(messages)
-      }.error { err: HttpError =>
-        toaster.pop("error", "Failed to send message", null)
+      contestService.sendChatMessage(mySession.getContestID().as[String], message) onComplete {
+        case Success(messages) =>
+          $scope.chatMessage = ""
+          mySession.setMessages(messages)
+        case Failure(e) =>
+          toaster.pop("error", "Failed to send message", null)
       }
     }
   }

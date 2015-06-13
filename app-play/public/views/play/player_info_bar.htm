@@ -12,7 +12,7 @@
             </div>
             <div class="inline pull-left pad-left-10 pi_bar_cash">
                 <div class="positive" title="Liquid cash available">
-                    <i class="fa fa-money"></i> {{ getTotalCashAvailable() | number:2 }}
+                    <i class="fa fa-money"></i> {{ MySession.getNetWorth() | number:2 }}
                 </div>
                 <div class="emphasis" title="Total investment value">
                     <i class="fa fa-line-chart"></i> {{ getTotalInvestment() | number:2 }}

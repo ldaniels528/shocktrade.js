@@ -158,12 +158,12 @@
             //          Performance Functions
             /////////////////////////////////////////////////////////////////////
 
-            $scope.getPerformances = function () {
+            $scope.getPerformance = function () {
                 return MySession.getPerformance() || [];
             };
 
             $scope.isPerformanceSelected = function () {
-                return $scope.getPerformances().length && $scope.selectedPerformance != null;
+                return $scope.getPerformance().length && $scope.selectedPerformance != null;
             };
 
             $scope.selectPerformance = function (performance) {

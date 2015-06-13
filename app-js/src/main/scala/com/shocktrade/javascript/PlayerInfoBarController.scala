@@ -33,8 +33,6 @@ class PlayerInfoBarController($scope: js.Dynamic, $http: HttpService, $timeout: 
 
   $scope.getMyRanking = () => getMyRanking getOrElse JS()
 
-  $scope.getTotalCashAvailable = () => getTotalCashAvailable
-
   $scope.getTotalInvestment = () => getTotalInvestment
 
   $scope.getTotalInvestmentStatus = totalInvestmentStatus getOrElse LOADING
@@ -75,11 +73,9 @@ class PlayerInfoBarController($scope: js.Dynamic, $http: HttpService, $timeout: 
       contest <- mySession.contest
       playerID <- mySession.userProfile.OID_?
     } yield {
-      contestService.getPlayerRankings_@(contest, playerID).player
+      contestService.getPlayerRankings(contest, playerID).player
     }
   }
-
-  private def getTotalCashAvailable: Double = mySession.userProfile.netWorth.as[Double]
 
   private def getTotalInvestment = totalInvestment getOrElse 0.00d
 
@@ -98,7 +94,7 @@ class PlayerInfoBarController($scope: js.Dynamic, $http: HttpService, $timeout: 
 
     // retrieve the total investment
     g.console.log("Loading Total investment...")
-    contestService.getTotalInvestment_@(playerId) onComplete {
+    contestService.getTotalInvestment(playerId) onComplete {
       case Success(response) =>
         totalInvestment = Option(response.netWorth.as[Double])
         totalInvestmentStatus = Option(LOADED)

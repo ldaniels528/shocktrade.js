@@ -31,58 +31,52 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def getUserProfile: js.Function = () => userProfile
+  def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
-  def setUserProfile: js.Function = (profile: js.Dynamic) => userProfile = if (isDefined(profile)) profile else createSpectatorProfile()
+  def setUserProfile: js.Function1[js.Dynamic, Unit] = (profile: js.Dynamic) => {
+    userProfile = if (isDefined(profile)) profile else createSpectatorProfile()
+  }
 
   /**
    * Returns the user ID for the current user's ID
    * @return {*}
    */
-  def getUserID: js.Function = () => getUserID_@
-
-  def getUserID_@ : String = userProfile.OID
+  def getUserID: js.Function0[String] = () => userProfile.OID
 
   /**
    * Returns the user ID for the current user's name
    * @return {*}
    */
-  def getUserName: js.Function = () => userProfile.name
-
-  def getUserName_@ = if (isDefined(userProfile.name)) userProfile.name.as[String] else null
+  def getUserName: js.Function0[String] = () => if (isDefined(userProfile.name)) userProfile.name.as[String] else null
 
   /**
    * Indicates whether the given user is an administrator
    * @return {boolean}
    */
-  def isAdmin: js.Function = () => isDefined(userProfile.admin) && userProfile.admin.as[Boolean]
+  def isAdmin: js.Function0[Boolean] = () => isDefined(userProfile.admin) && userProfile.admin.as[Boolean]
 
   /**
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthorized: js.Function = () => userProfile.OID != null
+  def isAuthorized: js.Function0[Boolean] = () => userProfile.OID != null
 
-  def isAuthenticated: js.Function = () => userProfile.OID != null
+  def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID != null
 
-  protected[javascript] def isAuthenticated_@ = userProfile.OID != null
+  def getFacebookID: js.Function0[String] = () => facebookID.orNull
 
-  def getFacebookID: js.Function = () => facebookID.orNull
+  def setFacebookID: js.Function1[String, Unit] = (fbId: String) => facebookID = Option(fbId)
 
-  def setFacebookID: js.Function = (fbId: String) => facebookID = Option(fbId)
+  def getFacebookProfile: js.Function0[js.Dynamic] = () => fbProfile getOrElse JS()
 
-  def getFacebookProfile: js.Function = () => fbProfile getOrElse JS()
+  def setFacebookProfile: js.Function1[js.Dynamic, Unit] = (profile: js.Dynamic) => fbProfile = Option(profile)
 
-  def setFacebookProfile: js.Function = (profile: js.Dynamic) => fbProfile = Option(profile)
-
-  def isFbAuthenticated: js.Function = () => fbProfile.isDefined
-
-  def facebookID_@ : String = facebookID.orNull
+  def isFbAuthenticated: js.Function0[Boolean] = () => fbProfile.isDefined
 
   /**
    * Logout private def
    */
-  def logout = () => {
+  def logout: js.Function0[Unit] = () => {
     facebookID = None
     fbFriends = js.Array[js.Dynamic]()
     fbProfile = None
@@ -90,9 +84,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     contest = None
   }
 
-  def refresh = () => {
+  def refresh: js.Function0[Unit] = () => {
     facebookID.foreach { fbId =>
-      profileService.getProfileByFacebookID_@(fbId) onComplete {
+      profileService.getProfileByFacebookID(fbId) onComplete {
         case Success(profile) =>
           userProfile.netWorth = profile.netWorth
         case Failure(e) =>
@@ -105,32 +99,30 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          NetWorth Functions
   /////////////////////////////////////////////////////////////////////
 
-  def deduct: js.Function = (amount: Double) => {
+  def deduct: js.Function1[Double, js.Dynamic] = (amount: Double) => {
     g.console.log(f"Deducting $amount%.2f from ${userProfile.netWorth}")
     userProfile.netWorth -= amount
   }
 
-  def getNetWorth: js.Function = () => userProfile.netWorth
+  def getNetWorth: js.Function0[Double] = () => userProfile.netWorth.as[Double]
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
 
-  def contestIsEmpty: js.Function = () => contest.isEmpty
+  def contestIsEmpty: js.Function0[Boolean] = () => contest.isEmpty
 
-  def getContest: js.Function = () => contest getOrElse JS()
+  def getContest: js.Function0[js.Dynamic] = () => contest getOrElse JS()
 
-  def getContestID: js.Function = () => contest.map(_.OID).orNull
+  def getContestID: js.Function0[String] = () => contest.map(_.OID).orNull
 
-  def getContestName: js.Function = () => contest.map(_.name).orNull
+  def getContestName: js.Function0[String] = () => contest.map(_.name).orNull.as[String]
 
-  def getContestStatus: js.Function = () => contest.map(_.status).orNull
+  def getContestStatus: js.Function0[String] = () => contest.map(_.status).orNull.as[String]
 
-  def setContest: js.Function = (contest: js.Dynamic) => setContest_@(contest)
-
-  protected[javascript] def setContest_@(aContest: js.Dynamic) = {
+  def setContest: js.Function1[js.Dynamic, Unit] = (aContest: js.Dynamic) => {
     // if null or undefined, just reset the contest
-    if (!isDefined(aContest)) resetContest_@()
+    if (!isDefined(aContest)) resetContest()
 
     // if the contest contained an error, show it
     else if (isDefined(aContest.error)) toaster.pop("error", aContest.error.as[String], null)
@@ -143,55 +135,67 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
       this.contest = Some(aContest)
       $rootScope.$emit("contest_selected", aContest)
     }
+    ()
   }
 
   /**
    * Returns the combined total funds for both the cash and margin accounts
    */
-  def getCompleteFundsAvailable: js.Function = () => {
-    (cashAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00) + (marginAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00)
+  def getCompleteFundsAvailable: js.Function0[Double] = () => {
+    (cashAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d)
   }
 
-  def getFundsAvailable: js.Function = () => cashAccount_?.map(_.cashFunds) getOrElse 0.00
+  def getFundsAvailable: js.Function0[Double] = () => cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as) getOrElse 0.00d
 
-  def deductFundsAvailable: js.Function = (amount: Double) => {
+  def deductFundsAvailable: js.Function1[Double, Unit] = (amount: Double) => {
     participant.foreach { player =>
       g.console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
       player.cashAccount.cashFunds -= amount
     }
+    ()
   }
 
-  def hasMarginAccount: js.Function = () => marginAccount_?.isDefined
+  def hasMarginAccount: js.Function0[Boolean] = () => marginAccount_?.isDefined
 
-  def getCashAccount: js.Function = () => cashAccount_? getOrElse JS()
+  def getCashAccount: js.Function0[js.Dynamic] = () => cashAccount_? getOrElse JS()
 
-  def getMarginAccount: js.Function = () => marginAccount_? getOrElse JS()
+  def getMarginAccount: js.Function0[js.Dynamic] = () => marginAccount_? getOrElse JS()
 
-  def setMessages: js.Function = (messages: js.Array[js.Dynamic]) => contest.foreach(_.messages = messages)
+  def setMessages: js.Function1[js.Array[js.Dynamic], Unit] = (messages: js.Array[js.Dynamic]) => {
+    contest.foreach(_.messages = messages)
+  }
 
-  def getMessages: js.Function = () => contest.map(_.messages) getOrElse emptyArray[js.Dynamic]
+  def getMessages: js.Function0[js.Array[js.Dynamic]] = () => {
+    contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
 
-  def getOrders: js.Function = () => participant.flatMap(p => Option(p.orders)) getOrElse emptyArray[js.Dynamic]
+  def getOrders: js.Function0[js.Array[js.Dynamic]] = () => {
+    participant.flatMap(p => Option(p.orders).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
 
-  def getClosedOrders: js.Function = () => participant.flatMap(p => Option(p.closedOrders)) getOrElse emptyArray[js.Dynamic]
+  def getClosedOrders: js.Function0[js.Array[js.Dynamic]] = () => {
+    participant.flatMap(p => Option(p.closedOrders.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
 
-  def participantIsEmpty: js.Function = () => participant.isEmpty
+  def participantIsEmpty: js.Function0[Boolean] = () => participant.isEmpty
 
-  def getParticipant: js.Function = () => participant getOrElse JS()
+  def getParticipant: js.Function0[js.Dynamic] = () => participant getOrElse JS()
 
-  def getPerformance: js.Function = () => participant.flatMap(p => Option(p.performance)) getOrElse emptyArray[js.Dynamic]
+  def getPerformance: js.Function0[js.Array[js.Dynamic]] = () => {
+    participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
 
-  def getPerks: js.Function = () => getPerks_@
+  def getPerks: js.Function0[js.Array[String]] = () => {
+    participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
+  }
 
-  def getPerks_@ = participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
+  def hasPerk: js.Function1[String, Boolean] = (perkCode: String) => getPerks().contains(perkCode)
 
-  def hasPerk: js.Function = (perkCode: String) => getPerks_@.contains(perkCode)
+  def getPositions: js.Function0[js.Array[js.Dynamic]] = () => {
+    participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
 
-  def getPositions: js.Function = () => participant.flatMap(p => Option(p.positions)) getOrElse emptyArray[js.Dynamic]
-
-  def resetContest: js.Function = () => resetContest_@()
-
-  def resetContest_@() = contest = None
+  def resetContest: js.Function0[Unit] = () => contest = None
 
   ////////////////////////////////////////////////////////////
   //          Private Methods
@@ -296,34 +300,34 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   $rootScope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Contest deleted")
     this.contest foreach { c =>
-      if (c.OID == contest.OID) resetContest_@()
+      if (c.OID == contest.OID) resetContest()
     }
   })
 
   $rootScope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Contest updated")
-    this.contest foreach { c => if (c.OID == contest.OID) setContest_@(contest)}
-    if (this.contest.isEmpty) setContest_@(contest)
+    this.contest foreach { c => if (c.OID == contest.OID) setContest(contest)}
+    if (this.contest.isEmpty) setContest(contest)
   })
 
   $rootScope.$on("messages_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Messages updated")
-    setContest_@(contest)
+    setContest(contest)
   })
 
   $rootScope.$on("orders_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Orders updated")
-    setContest_@(contest)
+    setContest(contest)
   })
 
   $rootScope.$on("perks_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Perks updated")
-    setContest_@(contest)
+    setContest(contest)
   })
 
   $rootScope.$on("participant_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Participant updated")
-    setContest_@(contest)
+    setContest(contest)
   })
 
   $rootScope.$on("profile_updated", { (event: js.Dynamic, profile: js.Dynamic) =>

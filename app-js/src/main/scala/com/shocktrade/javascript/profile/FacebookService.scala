@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
 import biz.enef.angulate.Service
-import com.greencatsoft.angularjs.core.Q
+import com.greencatsoft.angularjs.core.{Promise, Q}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -42,10 +42,9 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getTaggableFriends: js.Function = (callback: CallbackObject) => getTaggableFriends_@(callback)
-
-  def getTaggableFriends_@(callback: CallbackObject) = {
+  def getTaggableFriends: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
     FB.api(s"/v2.3/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => callback(response))
+    ()
   }
 
   def getFriendList: js.Function = (listType: js.UndefOr[String]) => {
@@ -86,15 +85,12 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getUserProfile: js.Function = (callback: CallbackObject) => getUserProfile_@(callback)
-
-  def getUserProfile_@(callback: CallbackObject) {
+  def getUserProfile: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
     FB.api(s"/v2.3/me?access_token=${auth.accessToken}", (response: js.Dynamic) => callback.apply(response))
+    ()
   }
 
-  def login: js.Function = () => login_@
-
-  def login_@ = {
+  def login: js.Function0[Promise] = () => {
     g.console.log(s"Performing Facebook login using app ID $appID")
     val deferred = $q.defer()
     FB.login((response: js.Dynamic) => {
@@ -110,9 +106,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def logout: js.Function = () => logout_@
-
-  def logout_@ = {
+  def logout: js.Function0[Promise] = () =>  {
     val deferred = $q.defer()
     FB.logout((response: js.Dynamic) => {
       if (isDefined(response)) {

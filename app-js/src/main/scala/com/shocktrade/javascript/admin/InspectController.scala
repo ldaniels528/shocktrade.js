@@ -63,11 +63,10 @@ class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js
     g.console.log(s"Attempting to load contest $contestId")
 
     // load the contest
-    contestService.getContestByID_@(contestId) onComplete {
+    contestService.getContestByID(contestId) onComplete {
       case Success(contest) =>
         $scope.contest = contest
-        mySession.setContest_@(contest)
-
+        mySession.setContest(contest)
       case Failure(e) =>
         toaster.pop("error", "Failed to load contest " + contestId, null)
     }

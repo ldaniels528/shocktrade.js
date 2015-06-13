@@ -1,18 +1,21 @@
 package com.shocktrade.javascript.news
 
-import biz.enef.angulate.ScopeController
-import biz.enef.angulate.core.{HttpError, HttpService}
+import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.{CookieStore, Sce, Toaster}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
+import scala.util.{Failure, Success}
 
 /**
  * News Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $http: HttpService, $sce: Sce, toaster: Toaster) extends ScopeController {
+class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, toaster: Toaster,
+                     @named("NewsService") newsService: NewsService)
+  extends ScopeController {
+
   private var newsSymbols = js.Array[js.Dynamic]()
   private var loading = false
   private var channels = js.Array[js.Dynamic]()
@@ -49,32 +52,32 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $http: HttpS
   private def findNewsSources = {
     g.console.log("Loading news sources...")
     startLoading()
-    $http.get[js.Dynamic]("/api/news/sources")
-      .success { sources: js.Array[js.Dynamic] =>
-      newsSources = sources
-      if (newsSources.nonEmpty) {
-        val feed = newsSources.headOption.flatMap(obj => Option(obj._id).map(_.$oid)).orNull.asInstanceOf[String]
-        selection.feed = feed
-        findNewsFeed(feed)
-      }
-      stopLoading()
-    }.error { err: HttpError =>
-      toaster.pop("error", "Failed to load news sources", null)
-      stopLoading()
+    newsService.getNewsSources() onComplete {
+      case Success(sources) =>
+        newsSources = sources
+        if (newsSources.nonEmpty) {
+          val feed = newsSources.headOption.flatMap(obj => Option(obj._id).map(_.$oid)).orNull.asInstanceOf[String]
+          selection.feed = feed
+          findNewsFeed(feed)
+        }
+        stopLoading()
+      case Failure(e) =>
+        toaster.pop("error", "Failed to load news sources", null)
+        stopLoading()
     }
   }
 
   private def findNewsFeed(feedId: String) = {
     g.console.log("Getting news feeds...")
     startLoading()
-    $http.get[js.Dynamic](s"/api/news/feed/$feedId")
-      .success { feeds: js.Array[js.Dynamic] =>
-      populateQuotes(feeds)
-      this.channels = feeds; //enrichTickers(feeds)
-      stopLoading()
-    }.error { err: HttpError =>
-      toaster.pop("error", s"Failed to load news feed $feedId", null)
-      stopLoading()
+    newsService.getNewsFeed(feedId) onComplete {
+      case Success(channels) =>
+        populateQuotes(channels)
+        this.channels = channels; //enrichTickers(feeds)
+        stopLoading()
+      case Failure(e) =>
+        toaster.pop("error", s"Failed to load news feed $feedId", null)
+        stopLoading()
     }
   }
 

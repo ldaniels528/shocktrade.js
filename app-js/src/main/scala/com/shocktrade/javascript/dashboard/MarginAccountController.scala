@@ -8,7 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.{JSON, Date}
+import scala.scalajs.js.Date
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
@@ -39,7 +39,7 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
       userID <- mySession.userProfile.OID_?
     } {
       // load the margin accounts market value
-      contestService.getMarginMarketValue_@(contestID, userID) onComplete {
+      contestService.getMarginMarketValue(contestID, userID) onComplete {
         case Success(contest) =>
           investmentMarketValue = contest.marginMarketValue.as[Double]
         case Failure(e) =>

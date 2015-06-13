@@ -71,6 +71,8 @@ object ScalaJsHelper {
    */
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
 
+    def ?(label: String) = if(isDefined(obj(label))) obj(label) else null
+
     def ===[T](value: T): Boolean = obj.asInstanceOf[T] == value
 
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]

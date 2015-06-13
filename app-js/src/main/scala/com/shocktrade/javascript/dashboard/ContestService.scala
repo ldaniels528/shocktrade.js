@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.Service
-import biz.enef.angulate.core.HttpService
+import biz.enef.angulate.core.{HttpPromise, HttpService}
 import com.ldaniels528.angularjs.{CookieStore, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
@@ -26,39 +26,24 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     $http.put[js.Dynamic]("/api/contest", form)
   }
 
-  def deleteContest: js.Function = (contestId: String) => {
+  def deleteContest: js.Function1[String, HttpPromise[js.Dynamic]] = (contestId: String) => {
     required("contestId", contestId)
-    deleteContest_@(contestId)
+    $http.delete[js.Dynamic](s"/api/contest/$contestId")
   }
 
-  protected[javascript] def deleteContest_@(contestId: String) = {
-    required("contestId", contestId)
-    $http.delete(s"/api/contest/$contestId")
-  }
-
-  def joinContest: js.Function = (contestId: String, playerInfo: js.Dynamic) => joinContest_@(contestId, playerInfo)
-
-  protected[javascript] def joinContest_@(contestId: String, playerInfo: js.Dynamic) = {
+  def joinContest: js.Function2[String, js.Dynamic, HttpPromise[js.Dynamic]] = (contestId: String, playerInfo: js.Dynamic) => {
     required("contestId", contestId)
     required("playerInfo", playerInfo)
     $http.put[js.Dynamic](s"/api/contest/$contestId/player", playerInfo)
   }
 
-  def quitContest: js.Function = (contestId: String, playerId: String) => {
+  def quitContest: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
-    quitContest_@(contestId, playerId)
+    $http.delete[js.Dynamic](s"/api/contest/$contestId/player/$playerId")
   }
 
-  protected[javascript] def quitContest_@(contestId: String, playerId: String) = {
-    required("contestId", contestId)
-    required("playerId", playerId)
-    $http.delete(s"/api/contest/$contestId/player/$playerId")
-  }
-
-  def startContest: js.Function = (contestId: String) => startContest_@(contestId)
-
-  protected[javascript] def startContest_@(contestId: String) = {
+  def startContest: js.Function1[String, HttpPromise[js.Dynamic]] = (contestId: String) => {
     required("contestId", contestId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/start")
   }
@@ -67,51 +52,43 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def findContests: js.Function = (searchOptions: js.Dynamic) => findContests_@(searchOptions)
-
-  protected[javascript] def findContests_@(searchOptions: js.Dynamic) = {
+  def findContests: js.Function1[js.Dynamic, HttpPromise[js.Array[js.Dynamic]]] = (searchOptions: js.Dynamic) => {
     required("searchOptions", searchOptions)
-    $http.post[js.Dynamic]("/api/contests/search", searchOptions)
+    $http.post[js.Array[js.Dynamic]]("/api/contests/search", searchOptions)
   }
 
-  def getContestByID: js.Function = (contestId: String) => getContestByID_@(contestId)
-
-  protected[javascript] def getContestByID_@(contestId: String) = {
+  def getContestByID: js.Function1[String, HttpPromise[js.Dynamic]] = (contestId: String) => {
     required("contestId", contestId)
     $http.get[js.Dynamic](s"/api/contest/$contestId")
   }
 
-  def getParticipantByID: js.Function = (contestId: String, playerId: String) => {
+  def getParticipantByID: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def getCashAvailable: js.Function = { (contest: js.Dynamic, playerId: String) =>
-    contest.participants.asArray[js.Dynamic].find(_.OID == playerId) map (_.cashAccount.cashFunds) getOrElse 0.0
+  def getCashAvailable: js.Function2[js.Dynamic, String, Double] = (contest: js.Dynamic, playerId: String) => {
+    contest.participants.asArray[js.Dynamic].find(_.OID == playerId) map (_.cashAccount.cashFunds.as[Double]) getOrElse 0.0d
   }
 
-  def getRankings: js.Function = (contestId: String) => getRankings_@(contestId)
-
-  protected[javascript] def getRankings_@(contestId: String) = {
+  def getRankings: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (contestId: String) => {
     required("contestId", contestId)
     $http.get[js.Array[js.Dynamic]](s"/api/contest/$contestId/rankings")
   }
 
-  def getContestsByPlayerID: js.Function = (playerId: String) => getContestsByPlayerID_@(playerId)
-
-  def getContestsByPlayerID_@(playerId: String) = {
+  def getContestsByPlayerID: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (playerId: String) => {
     required("playerId", playerId)
     $http.get[js.Array[js.Dynamic]](s"/api/contests/player/$playerId")
   }
 
-  def getEnrichedOrders: js.Function = (contestId: String, playerId: String) => {
+  def getEnrichedOrders: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/orders/$playerId")
   }
 
-  def getEnrichedPositions: js.Function = (contestId: String, playerId: String) => {
+  def getEnrichedPositions: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/positions/$playerId")
@@ -121,9 +98,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //			Participants
   /////////////////////////////////////////////////////////////////////////////
 
-  def findPlayerByID: js.Function = (contest: js.Dynamic, playerId: String) => findPlayerByID_@(contest, playerId) getOrElse JS()
-
-  protected[javascript] def findPlayerByID_@(contest: js.Dynamic, playerId: String) = {
+  def findPlayerByID: js.Function2[js.Dynamic, String, Option[js.Dynamic]] = (contest: js.Dynamic, playerId: String) => {
     if (isDefined(contest) && isDefined(contest.participants))
       contest.participants.asArray[js.Dynamic].find(_.OID == playerId)
     else
@@ -136,17 +111,13 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()
   }
 
-  def getMarginMarketValue: js.Function = (contestId: String, playerId: String) => getMarginMarketValue_@(contestId, playerId)
-
-  def getMarginMarketValue_@(contestId: String, playerId: String) = {
+  def getMarginMarketValue: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings: js.Function = (contest: js.Dynamic, playerID: String) => getPlayerRankings_@(contest, playerID)
-
-  protected[javascript] def getPlayerRankings_@(contest: js.Dynamic, playerID: String) = {
+  def getPlayerRankings: js.Function2[js.Dynamic, String, js.Dynamic] = (contest: js.Dynamic, playerID: String) => {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -157,7 +128,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
           player = null
         )
         g.console.log(s"Loading Contest Rankings for '${contest.name}'...")
-        getRankings_@(contest.OID) onComplete {
+        getRankings(contest.OID) onComplete {
           case Success(participants) =>
             contest.rankings.participants = participants
             contest.rankings.leader = participants.headOption.orNull
@@ -178,9 +149,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     else JS()
   }
 
-  def getTotalInvestment: js.Function = (playerId: String) => getTotalInvestment_@(playerId)
-
-  protected[javascript] def getTotalInvestment_@(playerId: String) = {
+  def getTotalInvestment: js.Function1[String, HttpPromise[js.Dynamic]] = (playerId: String) => {
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contests/player/$playerId/totalInvestment")
   }
@@ -201,14 +170,11 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestId/$participantName")
   }
 
-  def sendChatMessage: js.Function = (contestId: String, message: js.Dynamic) => sendChatMessage_@(contestId, message)
-
-  protected[javascript] def sendChatMessage_@(contestId: String, message: js.Dynamic) = {
+  def sendChatMessage: js.Function2[String, js.Dynamic, HttpPromise[js.Array[js.Dynamic]]] = (contestId: String, message: js.Dynamic) => {
     required("contestId", contestId)
     required("message", message)
-    $http.put[js.Dynamic](s"/api/contest/$contestId/chat", message)
+    $http.put[js.Array[js.Dynamic]](s"/api/contest/$contestId/chat", message)
   }
-
 
   /////////////////////////////////////////////////////////////////////////////
   //			Positions & Orders
@@ -221,11 +187,11 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     $http.put[js.Dynamic](s"/api/order/$contestId/$playerId", order)
   }
 
-  def deleteOrder: js.Function = (contestId: String, playerId: String, orderId: String) => {
+  def deleteOrder: js.Function3[String, String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String, orderId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
     required("orderId", orderId)
-    $http.delete(s"/api/order/$contestId/$playerId/$orderId")
+    $http.delete[js.Dynamic](s"/api/order/$contestId/$playerId/$orderId")
   }
 
   def getHeldSecurities: js.Function = (playerId: String) => {

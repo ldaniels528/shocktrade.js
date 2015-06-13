@@ -70,7 +70,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.getTabIndex = () => determineTableIndex
 
-  $scope.isVisible = (tab: js.Dynamic) => !isLoading && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated_@))
+  $scope.isVisible = (tab: js.Dynamic) => !isLoading && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated()))
 
   $scope.login = (event: js.Dynamic) => login(event)
 
@@ -138,7 +138,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def loadFacebookFriends() {
-    facebook.getTaggableFriends_@({ response: js.Dynamic =>
+    facebook.getTaggableFriends({ response: js.Dynamic =>
       val friends = response.data.asArray[js.Dynamic]
       g.console.log(s"${friends.length} friend(s) loaded")
       mySession.fbFriends = friends
@@ -147,7 +147,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def login(event: js.Dynamic) {
     if (isDefined(event)) event.preventDefault()
-    facebook.login_@ onComplete {
+    facebook.login() onComplete {
       case Success(response) =>
         val fbResponse = response.asInstanceOf[js.Dynamic]
         g.console.log(s"fbResponse = ${JSON.stringify(fbResponse)}")
@@ -161,7 +161,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def logout(event: js.Dynamic) {
     if (isDefined(event)) event.preventDefault()
-    facebook.logout_@
+    facebook.logout()
     mySession.logout()
   }
 
@@ -172,13 +172,13 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     mySession.facebookID = Option(facebookID)
 
     // load the user"s Facebook profile
-    facebook.getUserProfile_@((response: js.Dynamic) => {
+    facebook.getUserProfile((response: js.Dynamic) => {
       g.console.log(s"fbProfile = ${JSON.stringify(response)}")
       mySession.fbProfile = Option(response)
     })
 
     // load the user"s ShockTrade profile
-    profileService.getProfileByFacebookID_@(facebookID) onComplete {
+    profileService.getProfileByFacebookID(facebookID) onComplete {
       case Success(profile) =>
         if (!isDefined(profile.error)) {
           g.console.log("ShockTrade user profile loaded...")

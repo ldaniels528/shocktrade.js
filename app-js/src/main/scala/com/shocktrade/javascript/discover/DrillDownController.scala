@@ -53,7 +53,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
   private def expandOrCollapseSector(sector: js.Dynamic, callback: SectorCallBackType) {
     if (!isDefined(sector.expanded) && !sector.expanded.as[Boolean]) {
       sector.loading = true
-      quoteService.loadIndustries_@(sector.label.as[String]) onComplete {
+      quoteService.loadIndustries(sector.label.as[String]) onComplete {
         case Success(data) =>
           sector.loading = false
           sector.industries = data.map { v => JS(label = v._id, total = v.total) }
@@ -69,7 +69,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
     if (isDefined(industry)) {
       if (!isDefined(industry.expanded) || !industry.expanded.as[Boolean]) {
         industry.loading = true
-        quoteService.loadSubIndustries_@(sector.label.as[String], industry.label.as[String]) onComplete {
+        quoteService.loadSubIndustries(sector.label.as[String], industry.label.as[String]) onComplete {
           case Success(data) =>
             industry.loading = false
             industry.subIndustries = data.map { v => JS(label = v._id, total = v.total) }
@@ -87,7 +87,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
       if (!isDefined(subIndustry.expanded) || !subIndustry.expanded.as[Boolean]) {
         subIndustry.loading = true
         val mySubIndustry = if (isDefined(subIndustry)) subIndustry.label.as[String] else null
-        quoteService.loadIndustryQuotes_@(sector.label.as[String], industry.label.as[String], mySubIndustry) onComplete {
+        quoteService.loadIndustryQuotes(sector.label.as[String], industry.label.as[String], mySubIndustry) onComplete {
           case Success(data) =>
             subIndustry.loading = false
             subIndustry.quotes = data
@@ -102,7 +102,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
 
   private def expandSectorForSymbol(symbol: String) {
     // lookup the symbol"s sector information
-    quoteService.loadSectorInfo_@(symbol) onComplete {
+    quoteService.loadSectorInfo(symbol) onComplete {
       case Success(data) =>
         val info = data.head
         g.console.log(s"info = ${JSON.stringify(info)}")
@@ -135,7 +135,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
   }
 
   private def refreshTree() {
-    quoteService.loadSectors_@ onComplete {
+    quoteService.loadSectors() onComplete {
       case Success(data) =>
         sectors = data.map { v => JS(label = v._id, total = v.total) }
 
@@ -150,7 +150,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
 
   private def selectedSymbol = {
     g.console.log(s"routeParams = ${$routeParams.symbol}")
-    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookieStore.get("symbol").getOrElse("AAPL")
+    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookieStore.getOrElse("symbol", "AAPL")
     g.console.log(s"symbol = $symbol")
     symbol
   }

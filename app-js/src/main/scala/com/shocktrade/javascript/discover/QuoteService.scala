@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.HttpService
+import biz.enef.angulate.core.{HttpPromise, HttpService}
 import biz.enef.angulate.{Service, named}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -59,13 +59,11 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
   //			Sector Exploration Functions
   ///////////////////////////////////////////////////////////////////
 
-  def loadSectorInfo: js.Function = (symbol: String) => loadSectorInfo_@(symbol)
+  def loadSectorInfo: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (symbol: String) => {
+    $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
+  }
 
-  def loadSectorInfo_@(symbol: String) = $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
-
-  def loadSectors: js.Function = () => loadSectors_@
-
-  def loadSectors_@ = {
+  def loadSectors: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/sectors")
     } getOrElse {
@@ -73,7 +71,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     }
   }
 
-  def loadNAICSSectors: js.Function = () => {
+  def loadNAICSSectors: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/naics/sectors")
     } getOrElse {
@@ -81,9 +79,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     }
   }
 
-  def loadIndustries: js.Function = (sector: String) => loadIndustries_@(sector)
-
-  def loadIndustries_@(sector: String) = {
+  def loadIndustries: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String) => {
     val queryString = params("sector" -> sector)
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/industries$queryString")
@@ -92,9 +88,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     }
   }
 
-  def loadSubIndustries: js.Function = (sector: String, industry: String) => loadSubIndustries_@(sector, industry)
-
-  def loadSubIndustries_@(sector: String, industry: String) = {
+  def loadSubIndustries: js.Function2[String, String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String, industry: String) => {
     val queryString = params("sector" -> sector, "industry" -> industry)
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/subIndustries$queryString")
@@ -103,11 +97,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     }
   }
 
-  def loadIndustryQuotes: js.Function = (sector: String, industry: String, subIndustry: String) => {
-    loadIndustryQuotes_@(sector, industry, subIndustry)
-  }
-
-  def loadIndustryQuotes_@(sector: String, industry: String, subIndustry: String) = {
+  def loadIndustryQuotes: js.Function3[String, String, String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String, industry: String, subIndustry: String) => {
     val queryString = params("sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry)
     mySession.userProfile.OID_? map { userID =>
       $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/quotes$queryString")

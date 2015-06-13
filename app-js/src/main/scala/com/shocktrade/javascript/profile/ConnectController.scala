@@ -56,7 +56,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
    */
   $scope.getUserInfo = (fbUserId: String) => {
     $scope.startLoading()
-    connectService.getUserInfo_@(fbUserId) onComplete {
+    connectService.getUserInfo(fbUserId) onComplete {
       case Success(profile) =>
         $scope.stopLoading()
         contact.profile = profile
@@ -69,7 +69,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   $scope.identifyFacebookFriends = (fbFriends: js.Array[js.Dynamic]) => {
     $scope.startLoading()
-    connectService.identifyFacebookFriends_@(fbFriends) onComplete {
+    connectService.identifyFacebookFriends(fbFriends) onComplete {
       case Success(_) => $scope.stopLoading()
       case Failure(e) => $scope.stopLoading()
     }
@@ -102,7 +102,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
     if (userName.nonBlank) {
       $scope.startLoading()
 
-      connectService.getUserUpdates_@(userName, 50) onComplete {
+      connectService.getUserUpdates(userName, 50) onComplete {
         case Success(data) =>
           $scope.stopLoading()
           myUpdates = data
@@ -123,7 +123,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
   /**
    * Composes a new message via pop-up dialog
    */
-  $scope.composeMessage = () => composeMessageDialog.popup(JS(success = () => loadMyUpdates(mySession.getUserName_@)))
+  $scope.composeMessage = () => composeMessageDialog.popup(JS(success = () => loadMyUpdates(mySession.getUserName())))
 
   /**
    * Deletes selected messages
@@ -137,7 +137,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
     // delete the records
     g.console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
     if (messageIDs.nonEmpty) {
-      connectService.deleteMessages_@(messageIDs) onComplete {
+      connectService.deleteMessages(messageIDs) onComplete {
         case Success(response) =>
           $scope.stopLoading()
           loadMyUpdates(userName)
@@ -160,7 +160,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   // watch for changes to the player"s profile
   scope.$watch(mySession.getUserID, () => {
-    loadMyUpdates(mySession.getUserName_@)
+    loadMyUpdates(mySession.getUserName())
     //$scope.chooseFirstContact()
   })
 

@@ -4,7 +4,7 @@ import biz.enef.angulate._
 import com.shocktrade.javascript.admin.InspectController
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.discover._
-import com.shocktrade.javascript.news.{ChatController, NewsController}
+import com.shocktrade.javascript.news.{NewsService, NewsController}
 import com.shocktrade.javascript.profile._
 
 import scala.scalajs.js.Dynamic.{global => g}
@@ -38,6 +38,7 @@ object ScalaJsMain extends JSApp {
     module.serviceOf[FacebookService]("Facebook")
     module.serviceOf[MarketStatusService]("MarketStatus")
     module.serviceOf[MySession]("MySession")
+    module.serviceOf[NewsService]("NewsService")
     module.serviceOf[ProfileService]("ProfileService")
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[WebSocketService]("WebSockets")

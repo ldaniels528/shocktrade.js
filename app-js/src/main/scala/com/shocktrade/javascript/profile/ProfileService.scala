@@ -18,11 +18,9 @@ class ProfileService($http: HttpService) extends Service {
   /**
    * Retrieves the current user's profile by FaceBook ID
    */
-  def getProfileByFacebookID: js.Function = (facebookID: String) => getProfileByFacebookID_@(facebookID)
-
-  def getProfileByFacebookID_@(facebookID: String) = {
+  def getProfileByFacebookID: js.Function1[String, HttpPromise[js.Dynamic]] = (facebookID: String) => {
     required("facebookID", facebookID)
-    $http.get(s"/api/profile/facebook/$facebookID").asInstanceOf[HttpPromise[js.Dynamic]]
+    $http.get[js.Dynamic](s"/api/profile/facebook/$facebookID")
   }
 
   def getExchanges: js.Function = (profileID: String) => {

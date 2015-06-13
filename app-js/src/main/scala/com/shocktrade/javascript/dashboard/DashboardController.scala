@@ -40,7 +40,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.marginAccountDialog = () => transferFundsDialog.popup(JS(success = (contest: js.Dynamic) => mySession.setContest_@(contest)))
+  $scope.marginAccountDialog = () => transferFundsDialog.popup(JS(success = (contest: js.Dynamic) => mySession.setContest(contest)))
 
   $scope.perksDialog = () => perksDialog.popup(JS())
 
@@ -54,7 +54,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
 
   $scope.getRankings = () => mySession.contest match {
     case Some(c) =>
-      val rankings = contestService.getPlayerRankings_@(c, mySession.getUserID_@)
+      val rankings = contestService.getPlayerRankings(c, mySession.getUserID())
       rankings.participants
     case None => emptyArray[js.Dynamic]
   }
@@ -70,8 +70,8 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
     // if the current contest is not the chosen contest ...
     if (!mySession.contest.exists(_.OID == contestId)) {
       g.console.log(s"Loading contest $contestId...")
-      contestService.getContestByID_@(contestId) onComplete {
-        case Success(loadedContest) => mySession.setContest_@(loadedContest)
+      contestService.getContestByID(contestId) onComplete {
+        case Success(loadedContest) => mySession.setContest(loadedContest)
         case Failure(e) =>
           g.console.error(s"Error loading contest $contestId")
           toaster.pop("error", "Error loading game", null)
