@@ -99,7 +99,7 @@
                         </span>
                     </div>
 
-                    <div class="pull-left">
+                    <div ng-if="getSelectedContest().participants.length > 1" class="pull-left">
                         <avatar id="{{ getSelectedContest().rankings.participants[1].facebookID }}" class="avatar-53"></avatar>
                         <img ng-if="getSelectedContest().status === 'CLOSED'" ng-src="/assets/images/{{ trophy(getSelectedContest().rankings.participants[1].rank) }}">
                         <span ng-class="'rank_' + getSelectedContest().rankings.participants[1].rank">
@@ -107,7 +107,7 @@
                         </span>
                     </div>
 
-                    <div class="pull-left">
+                    <div ng-if="getSelectedContest().participants.length > 2" class="pull-left">
                         <avatar id="{{ getSelectedContest().rankings.participants[2].facebookID }}" class="avatar-53"></avatar>
                         <img ng-if="getSelectedContest().status === 'CLOSED'" ng-src="/assets/images/{{ trophy(getSelectedContest().rankings.participants[2].rank) }}">
                         <span ng-class="'rank_' + getSelectedContest().rankings.participants[2].rank">
