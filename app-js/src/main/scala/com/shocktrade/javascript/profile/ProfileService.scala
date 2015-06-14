@@ -23,14 +23,38 @@ class ProfileService($http: HttpService) extends Service {
     $http.get[js.Dynamic](s"/api/profile/facebook/$facebookID")
   }
 
-  def getExchanges: js.Function = (profileID: String) => {
-    required("profileID", profileID)
-    $http.get(s"/api/profile/$profileID/exchanges")
+  def getExchanges: js.Function1[String, HttpPromise[js.Dynamic]] = (userID: String) => {
+    required("userID", userID)
+    $http.get[js.Dynamic](s"/api/profile/$userID/exchanges")
   }
 
-  def updateExchanges: js.Function = (profileID: String, exchanges: js.Array[String]) => {
-    required("profileID", profileID)
-    $http.post("/api/exchanges", literal(id = profileID, exchanges = exchanges))
+  def updateExchanges: js.Function2[String, js.Array[String], HttpPromise[js.Dynamic]] = (userID: String, exchanges: js.Array[String]) => {
+    required("userID", userID)
+    $http.post[js.Dynamic]("/api/exchanges", literal(id = userID, exchanges = exchanges))
+  }
+
+  def addFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+    required("userID", userID)
+    required("symbol", symbol)
+    $http.put[js.Array[String]](s"/api/profile/$userID/favorite/$symbol")
+  }
+
+  def removeFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+    required("userID", userID)
+    required("symbol", symbol)
+    $http.delete[js.Array[String]](s"/api/profile/$userID/favorite/$symbol")
+  }
+
+  def addRecentSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+    required("userID", userID)
+    required("symbol", symbol)
+    $http.put[js.Array[String]](s"/api/profile/$userID/recentSymbol/$symbol")
+  }
+
+  def removeRecentSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+    required("userID", userID)
+    required("symbol", symbol)
+    $http.delete[js.Array[String]](s"/api/profile/$userID/recentSymbol/$symbol")
   }
 
 }

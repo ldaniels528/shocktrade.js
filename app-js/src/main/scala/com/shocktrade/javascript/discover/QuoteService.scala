@@ -15,28 +15,33 @@ import scala.scalajs.js.annotation.JSExportAll
  */
 @JSExportAll
 class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession") mySession: MySession) extends Service {
-  g.console.log("QuoteService is loading...")
 
-  def autoCompleteSymbols: js.Function = (searchTerm: String, maxResults: Int) => {
+  def autoCompleteSymbols: js.Function2[String, Int, HttpPromise[js.Array[js.Dynamic]]] = (searchTerm: String, maxResults: Int) => {
     val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
-    $http.get[js.Dynamic](s"/api/quotes/autocomplete$queryString")
+    $http.get[js.Array[js.Dynamic]](s"/api/quotes/autocomplete$queryString")
   }
 
-  def getFilterQuotes: js.Function = (filter: js.Dynamic) => {
+  def getFilterQuotes: js.Function1[js.Dynamic, HttpPromise[js.Dynamic]] = (filter: js.Dynamic) => {
     mySession.userProfile.OID_? map { userID =>
-      $http.post(s"/api/profile/$userID/quotes/filter/mini", filter)
+      $http.post[js.Dynamic](s"/api/profile/$userID/quotes/filter/mini", filter)
     } getOrElse {
-      $http.post("/api/quotes/filter/mini", filter)
+      $http.post[js.Dynamic]("/api/quotes/filter/mini", filter)
     }
   }
 
   def getPricing: js.Function = (symbols: js.Array[String]) => $http.post[js.Dynamic]("/api/quotes/pricing", symbols)
 
-  def getRiskLevel: js.Function = (symbol: String) => $http.get[js.Dynamic](s"/api/quotes/riskLevel/$symbol")
+  def getRiskLevel: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    $http.get[js.Dynamic](s"/api/quotes/riskLevel/$symbol")
+  }
 
-  def getStockQuoteList: js.Function = (symbols: js.Array[String]) => $http.post[js.Dynamic]("/api/quotes/list", symbols)
+  def getStockQuoteList: js.Function1[js.Array[String], HttpPromise[js.Array[js.Dynamic]]] = (symbols: js.Array[String]) => {
+    $http.post[js.Array[js.Dynamic]]("/api/quotes/list", symbols)
+  }
 
-  def getStockQuote: js.Function = (symbol: String) => $http.get[js.Dynamic](s"/api/quotes/symbol/$symbol")
+  def getStockQuote: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    $http.get[js.Dynamic](s"/api/quotes/symbol/$symbol")
+  }
 
   def getTradingHistory: js.Function = (symbol: String) => getTradingHistory_@(symbol)
 

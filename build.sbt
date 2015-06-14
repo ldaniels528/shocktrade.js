@@ -43,7 +43,8 @@ lazy val appScalaJs = (project in file("app-js"))
       "com.github.benhutchison" %%% "prickle" % "1.1.5",
       "com.greencatsoft" %%% "scalajs-angular" % "0.4",
 //    "org.scala-js" %% "scalajs-library" % "0.6.3",
-      "org.scala-js" %%% "scalajs-dom" % "0.8.0"
+      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
+      "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
     ))
   .enablePlugins(ScalaJSPlugin)
 //.aggregate(appShared)

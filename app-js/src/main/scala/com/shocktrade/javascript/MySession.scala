@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.Timeout
+import biz.enef.angulate.core.{HttpPromise, Timeout}
 import biz.enef.angulate.{Scope, Service, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -13,7 +13,7 @@ import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
 /**
- * My Session Service
+ * My Session Facade
  * @author lawrence.daniels@gmail.com
  */
 @JSExportAll
@@ -107,6 +107,48 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getNetWorth: js.Function0[Double] = () => userProfile.netWorth.as[Double]
 
   /////////////////////////////////////////////////////////////////////
+  //          Symbols - Favorite
+  /////////////////////////////////////////////////////////////////////
+
+  def addFavoriteSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
+    profileService.addFavoriteSymbol(getUserID(), symbol) onSuccess { symbols =>
+      userProfile.favorites = symbols
+    }
+  }
+
+  def getFavoriteSymbols: js.Function0[js.Array[String]] = () => userProfile.favorites.asArray[String]
+
+  def isFavoriteSymbol: js.Function1[String, Boolean] = (symbol: String) => getFavoriteSymbols().contains(symbol)
+
+  def removeFavoriteSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
+    profileService.removeFavoriteSymbol(getUserID(), symbol) onSuccess { symbols =>
+      userProfile.favorites = symbols
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  //          Symbols - Recent
+  /////////////////////////////////////////////////////////////////////
+
+  def addRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
+    profileService.addRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
+      userProfile.favorites = symbols
+    }
+  }
+
+  def getRecentSymbols: js.Function0[js.Array[String]] = () => userProfile.favorites.asArray[String]
+
+  def isRecentSymbol: js.Function1[String, Boolean] = (symbol: String) => getRecentSymbols().contains(symbol)
+
+  def removeRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
+    profileService.removeRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
+      userProfile.favorites = symbols
+    }
+  }
+
+  def getMostRecentSymbol: js.Function0[String] = () => getRecentSymbols().lastOption getOrElse "AAPL"
+
+  /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
 
@@ -145,7 +187,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     (cashAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d)
   }
 
-  def getFundsAvailable: js.Function0[Double] = () => cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as) getOrElse 0.00d
+  def getFundsAvailable: js.Function0[Double] = () => cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]) getOrElse 0.00d
 
   def deductFundsAvailable: js.Function1[Double, Unit] = (amount: Double) => {
     participant.foreach { player =>

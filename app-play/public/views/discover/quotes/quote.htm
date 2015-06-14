@@ -39,7 +39,7 @@
 	</div>
 </div>
 
-<div ng-if="q.products.length">
+<div ng-if="hasHoldings(q)">
 	<div class="quote_sub_title contest_colors" style="color: #000080; font-weight: bold; text-align: center; padding: 5px">ETF Holdings Detail</div>
 	<div ng-include src="'/assets/views/discover/profile/holdings_detail.htm'"></div>
 	<hr>

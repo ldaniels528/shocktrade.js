@@ -125,16 +125,15 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def getPreferenceIcon(q: js.Dynamic): String = {
-    /*
     // fail-safe
     if (!isDefined(q) || !isDefined(q.symbol)) ""
-
-    // check for favorite and held securities
-    val symbol = q.symbol
-    if (heldSecurities.isHeld(symbol)) "fa fa-star"
-    else if (favoriteSymbols.isFavorite(symbol)) "fa fa-heart"
-    else ""*/
-    ""
+    else {
+      // check for favorite and held securities
+      val symbol = q.symbol.as[String]
+      //if (heldSecurities.isHeld(symbol)) "fa fa-star"
+      if (mySession.isFavoriteSymbol(symbol)) "fa fa-heart"
+      else ""
+    }
   }
 
   private def loadFacebookFriends() {

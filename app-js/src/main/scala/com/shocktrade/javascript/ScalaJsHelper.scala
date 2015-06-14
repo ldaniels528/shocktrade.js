@@ -1,8 +1,11 @@
 package com.shocktrade.javascript
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
+import scala.util.{Failure, Success, Try}
 
 /**
  * Service Support
@@ -27,6 +30,11 @@ object ScalaJsHelper {
     var s = text
     " !@#$^*()`~\"".toCharArray foreach (c => s = s.replaceAllLiterally(c.toString, f"%%$c%02x"))
     s
+  }
+
+  def flatten[T](future: Future[Try[T]]): Future[T] = future flatMap {
+    case Success(s) => Future.successful(s)
+    case Failure(f) => Future.failed(f)
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -71,9 +79,19 @@ object ScalaJsHelper {
    */
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
 
-    def ?(label: String) = if(isDefined(obj(label))) obj(label) else null
+    def ?(label: String) = if (isDefined(obj(label))) obj(label) else null
 
-    def ===[T](value: T): Boolean = obj.asInstanceOf[T] == value
+    def ===[T](value: T): Boolean = {
+      if(value == null) false
+      else {
+        Try(obj.asInstanceOf[T]) match {
+          case Success(converted) => converted == value
+          case Failure(e) =>
+            g.console.log(s"value '$value': ${e.getMessage}")
+            false
+        }
+      }
+    }
 
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 

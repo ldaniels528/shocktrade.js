@@ -50,15 +50,14 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
   $scope.toggleSelectedOrder = () => $scope.selectedOrder = null
 
   $scope.popupNewOrderDialog = (params: js.UndefOr[js.Dynamic]) => {
-    // were the parameters passed?
-    val myParams = params getOrElse JS()
-    val symbol = $cookieStore.getOrElse("QuoteService_lastSymbol", "AAPL")
-    myParams.symbol = symbol
-
-    newOrderDialog.popup(params)
+    newOrderDialog.popup({
+      val myParams = params getOrElse JS()
+      myParams.symbol = $cookieStore.getOrElse[String]("QuoteService_lastSymbol", mySession.getMostRecentSymbol())
+      myParams
+    })
   }
 
-  private def getActiveOrders = mySession.getOrders() filter(_.accountType === $scope.getAccountType())
+  private def getActiveOrders = mySession.getOrders() filter (_.accountType === $scope.getAccountType())
 
   private def selectedOrder = Option($scope.selectedOrder) map (_.as[js.Dynamic])
 
