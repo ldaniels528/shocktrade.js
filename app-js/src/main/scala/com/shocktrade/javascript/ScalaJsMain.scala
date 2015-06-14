@@ -4,7 +4,7 @@ import biz.enef.angulate._
 import com.shocktrade.javascript.admin.InspectController
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.discover._
-import com.shocktrade.javascript.news.{NewsService, NewsController}
+import com.shocktrade.javascript.news.{NewsController, NewsService}
 import com.shocktrade.javascript.profile._
 
 import scala.scalajs.js.Dynamic.{global => g}
@@ -21,7 +21,8 @@ object ScalaJsMain extends JSApp {
     val module = angular.module("shocktrade")
 
     // ShockTrade directives
-    //module.directiveOf[Avatar]
+    //module.directiveOf[AvatarDirective]
+    module.directiveOf[EscapeDirective]
 
     // ShockTrade filters
     module.filter("bigNumber", Filters.bigNumber)
