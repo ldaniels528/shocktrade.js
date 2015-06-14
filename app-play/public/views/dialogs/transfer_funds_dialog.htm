@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-md-5 bold">Cash Account Balance</div>
             <div class="col-md-7">
-                <span class="st_green">$ {{ MySession.getFundsAvailable() | number:2 }}</span>
+                <span class="st_green">$ {{ form.cashFunds | number:2 }}</span>
             </div>
 
             <div class="col-md-5 bold">Margin Account Balance</div>
-            <div class="col-md-7">$ {{ MySession.getMarginAccount().cashFunds | number:2 }}</div>
+            <div class="col-md-7">$ {{ form.marginFunds | number:2 }}</div>
 
             <div class="col-md-12 form-group" style="margin-top: 10px">
                 <label for="action">Transfer Action</label>
@@ -24,9 +24,9 @@
         </div>
 
         <!-- error messages -->
-        <div class="row" ng-show="messages">
+        <div class="row" ng-show="hasMessages()">
             <ul class="error">
-                <li class="error" ng-repeat="message in messages">
+                <li class="error" ng-repeat="message in getMessages()">
                     <span class="error">{{message}}</span>
                 </li>
             </ul>

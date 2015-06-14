@@ -5,7 +5,9 @@ import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.TransferFundsDialog
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -18,7 +20,8 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
                           @named("ContestService") contestService: ContestService,
                           @named("MySession") mySession: MySession,
                           @named("PerksDialog") perksDialog: js.Dynamic,
-                          @named("TransferFundsDialog") transferFundsDialog: js.Dynamic) extends ScopeController {
+                          @named("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
+  extends ScopeController {
 
   private var accountMode = false
 
@@ -40,7 +43,15 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.marginAccountDialog = () => transferFundsDialog.popup(JS(success = (contest: js.Dynamic) => mySession.setContest(contest)))
+  $scope.marginAccountDialog = () => {
+    transferFundsDialog.popup().onComplete {
+      case Success(contest: js.Dynamic) => mySession.setContest(contest)
+      case Success(response) =>
+        g.console.info(s"The process succeeded, but got back the wrong object - $response")
+      case Failure(e) =>
+        toaster.error("Error transferring funds")
+    }
+  }
 
   $scope.perksDialog = () => perksDialog.popup(JS())
 
