@@ -74,7 +74,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
         case Success(loadedContest) => mySession.setContest(loadedContest)
         case Failure(e) =>
           g.console.error(s"Error loading contest $contestId")
-          toaster.pop("error", "Error loading game", null)
+          toaster.error("Error loading game", null)
           e.printStackTrace()
       }
     }

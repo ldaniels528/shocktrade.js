@@ -100,7 +100,7 @@ class PlayerInfoBarController($scope: js.Dynamic, $http: HttpService, $timeout: 
         totalInvestmentStatus = Option(LOADED)
         g.console.log("Total investment loaded")
       case Failure(e) =>
-        toaster.pop("error", "Error loading total investment", null)
+        toaster.error("Error loading total investment", null)
         totalInvestmentStatus = Option(FAILED)
         g.console.error("Total investment call failed")
     }

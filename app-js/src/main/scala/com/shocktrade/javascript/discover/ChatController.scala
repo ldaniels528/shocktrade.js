@@ -60,9 +60,9 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
           text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
         }
 
-        html + s"""|<img src="http://graph.facebook.com/${msg.sender.facebookID}/picture" class="chat_icon">
-                                                                                  |<span class="bold" style="color: ${colorOf(msg.sender.name.as[String])}">${msg.sender.name}</span>&nbsp;
-                                                                                                                                                                                |[<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripMargin
+        html + s"""<img src="http://graph.facebook.com/${msg.sender.facebookID}/picture" class="chat_icon">
+                   <span class="bold" style="color: ${colorOf(msg.sender.name.as[String])}">${msg.sender.name}</span>&nbsp;
+                   [<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripPrefix(" ")
       }
 
       g.console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
@@ -102,7 +102,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
           $scope.chatMessage = ""
           mySession.setMessages(messages)
         case Failure(e) =>
-          toaster.pop("error", "Failed to send message", null)
+          toaster.error("Failed to send message", null)
       }
     }
   }

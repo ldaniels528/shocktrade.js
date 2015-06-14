@@ -8,6 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.{FacebookService, ProfileService}
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -21,11 +22,8 @@ import scala.util.{Failure, Success}
 class MainController($scope: js.Dynamic, $http: HttpService, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @named("ContestService") contestService: ContestService,
                      @named("Facebook") facebook: FacebookService,
-                     @named("FavoriteSymbols") favoriteSymbols: js.Dynamic,
-                     @named("HeldSecurities") heldSecurities: js.Dynamic,
                      @named("MySession") mySession: MySession,
                      @named("ProfileService") profileService: ProfileService,
-                     @named("RecentSymbols") recentSymbols: js.Dynamic,
                      @named("SignUpDialog") signUpDialog: js.Dynamic)
   extends ScopeController {
 
@@ -191,7 +189,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
         }
 
       case Failure(e) =>
-        toaster.pop("error", s"ShockTrade Profile retrieval error - ${e.getMessage}", null)
+        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}", null)
         signUpPopup(facebookID, mySession.fbProfile)
     }
   }
@@ -213,23 +211,13 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     }, _timeout)
   }
 
-  private def stopLoading() = $timeout(() => isLoading = false, 500)
+  private def stopLoading() = $timeout(() => isLoading = false, 500.millis)
 
   //////////////////////////////////////////////////////////////////////
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
   $scope.$on("user_status_changed", (event: js.Dynamic, newState: js.Dynamic) => g.console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
-
-  // watch for changes to the player"s profile
-  $scope.$watch(mySession.userProfile, { () =>
-    // load the favorite and recent quotes
-    favoriteSymbols.setSymbols(mySession.userProfile.favorites)
-    recentSymbols.setSymbols(mySession.userProfile.recentSymbols)
-
-    // load the held securities
-    mySession.userProfile.OID_? foreach { userID => heldSecurities.init(userID) }
-  })
 
 }
 

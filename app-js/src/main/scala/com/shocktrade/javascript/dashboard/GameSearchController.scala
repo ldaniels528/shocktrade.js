@@ -19,7 +19,9 @@ import scala.util.{Failure, Success}
 class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                            @named("ContestService") contestService: ContestService,
                            @named("InvitePlayerDialog") invitePlayerDialog: js.Dynamic,
-                           @named("MySession") mySession: MySession) extends ScopeController {
+                           @named("MySession") mySession: MySession)
+  extends ScopeController {
+
   val scope = $scope.asInstanceOf[Scope]
   val MaxPlayers = 24 // TODO
 
@@ -59,15 +61,15 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
       $location.path(s"/dashboard/${contest.OID}")
     }
     else {
-      toaster.pop("error", "You must join the contest first")
+      toaster.error("You must join the contest first")
     }
   }
 
   $scope.invitePlayerPopup = (contest: js.Dynamic, playerID: String) => {
-    contestService.findPlayerByID(contest, playerID) match {
+    mySession.findPlayerByID(contest, playerID) match {
       case Some(participant) => invitePlayerDialog.popup($scope, participant)
       case _ =>
-        toaster.pop("error", "You must join tghe game to use this feature", null)
+        toaster.error("You must join tghe game to use this feature")
     }
   }
 
@@ -99,7 +101,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
         searchResults = contests
         $scope.stopLoading()
       case Failure(e) =>
-        toaster.pop("error", "Error!", "Failed to execute Contest Search")
+        toaster.error("Error!", "Failed to execute Contest Search")
         $scope.stopLoading()
     }
   }
@@ -167,7 +169,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.containsPlayer = (contest: js.Dynamic, userProfile: js.Dynamic) => {
-    isDefined(contest) && isDefined(userProfile._id) && contestService.findPlayerByID(contest, userProfile.OID).isDefined
+    isDefined(contest) && isDefined(userProfile._id) && mySession.findPlayerByID(contest, userProfile.OID).isDefined
   }
 
   $scope.isContestOwner = (contest: js.Dynamic) => isContestOwner(contest)
@@ -190,16 +192,15 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   $scope.deleteContest = { (contest: js.Dynamic) =>
     contest.deleting = true
     g.console.log(s"Deleting contest ${contest.name}...")
-    contestService.deleteContest(contest.OID)
-      .success { (response: js.Dynamic) =>
-      //removeContestFromList(contest.OID)
-      $scope.contestSearch($scope.searchOptions)
-      $timeout(() => contest.deleting = false, 500)
-
-    }.error { (err: HttpError) =>
-      toaster.pop("error", "Error!", "Failed to delete contest")
-      g.console.error("An error occurred while deleting the contest")
-      $timeout(() => contest.deleting = false, 500)
+    contestService.deleteContest(contest.OID) onComplete {
+      case Success(response) =>
+        //removeContestFromList(contest.OID)
+        $scope.contestSearch($scope.searchOptions)
+        $timeout(() => contest.deleting = false, 500)
+      case Failure(e) =>
+        toaster.error("Error!", "Failed to delete contest")
+        g.console.error("An error occurred while deleting the contest")
+        $timeout(() => contest.deleting = false, 500)
     }
   }
 
@@ -215,7 +216,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     contestService.joinContest(contest.OID, playerInfo) onComplete {
       case Success(joinedContest) =>
         if (!js.isUndefined(joinedContest.error)) {
-          toaster.pop("error", joinedContest.error.as[String], null)
+          toaster.error(joinedContest.error.as[String], null)
           g.console.error(joinedContest.error)
         }
         else {
@@ -227,7 +228,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
         $timeout(() => joinedContest.joining = false, 500)
 
       case Failure(e) =>
-        toaster.pop("error", "Error!", "Failed to join contest")
+        toaster.error("Error!", "Failed to join contest")
         g.console.error("An error occurred while joining the contest")
         $timeout(() => contest.joining = false, 500)
     }
@@ -245,7 +246,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
       }
       else {
         g.console.error("error = " + updatedContest.error)
-        toaster.pop("error", "Unable to process your quit command at this time.", null)
+        toaster.error("Unable to process your quit command at this time.")
       }
       $timeout(() => contest.quitting = false, 500)
 
@@ -257,18 +258,18 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.startContest = { (contest: js.Dynamic) =>
     contest.starting = true
-    contestService.startContest(contest.OID)
-      .success { (contest: js.Dynamic) =>
-      if (!js.isUndefined(contest.error)) {
-        toaster.pop("error", contest.error.as[String], null)
-        g.console.error(contest.error)
-      }
+    contestService.startContest(contest.OID) onComplete {
+      case Success(theContest) =>
+        if (!js.isUndefined(theContest.error)) {
+          toaster.error(theContest.error.as[String])
+          g.console.error(theContest.error)
+        }
+        $timeout(() => theContest.starting = false, 500)
 
-      $timeout(() => contest.starting = false, 500)
-
-    }.error { err: HttpError =>
-      g.console.error("An error occurred while starting the contest")
-      $timeout(() => contest.starting = false, 500)
+      case Failure(e) =>
+        toaster.error("An error occurred while starting the contest")
+        g.console.error("An error occurred while starting the contest")
+        $timeout(() => contest.starting = false, 500)
     }
   }
 
@@ -295,7 +296,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
         case Success(loadedContest) => searchResults(index) = loadedContest
         case Failure(e) =>
           g.console.error("Error selecting feed: " + e.getMessage)
-          toaster.pop("error", "Error loading game", null)
+          toaster.error("Error loading game", null)
       }
     }
   }
@@ -319,7 +320,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest creation events
    */
-  $scope.$on("contest_created", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on("contest_created", { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"New contest created '${contest.name}'")
     searchResults.push(contest)
     //mySession.refresh()
@@ -328,7 +329,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest deletion events
    */
-  $scope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name}' deleted")
     selectedContest = null
     searchResults.push(contest)
@@ -338,9 +339,9 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest update events
    */
-  $scope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name} updated")
-    var contestId = contest.OID
+    val contestId = contest.OID
 
     // update the contest in our search results
     updateContestInList(searchResults, contestId)

@@ -62,7 +62,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
         }
         stopLoading()
       case Failure(e) =>
-        toaster.pop("error", "Failed to load news sources", null)
+        toaster.error("Failed to load news sources")
         stopLoading()
     }
   }
@@ -71,12 +71,12 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
     g.console.log("Getting news feeds...")
     startLoading()
     newsService.getNewsFeed(feedId) onComplete {
-      case Success(channels) =>
-        populateQuotes(channels)
-        this.channels = channels; //enrichTickers(feeds)
+      case Success(feedChannels) =>
+        populateQuotes(feedChannels)
+        this.channels = feedChannels; //enrichTickers(feeds)
         stopLoading()
       case Failure(e) =>
-        toaster.pop("error", s"Failed to load news feed $feedId", null)
+        toaster.error(s"Failed to load news feed $feedId")
         stopLoading()
     }
   }
@@ -109,7 +109,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
         case -1 => description
         case start =>
           sb.replace(start, start + term.length,
-            s"""|(<a href="#/discover/${q.symbol}">
+            s"""|(<a href="#/discover?symbol=${q.symbol}">
                 |<span ${popup(q)} class="${q.exchange}">${q.symbol}</span>
                 |</a>${changeArrow(q)})
                 |""".stripMargin)

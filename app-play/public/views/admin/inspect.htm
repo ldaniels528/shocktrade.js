@@ -192,7 +192,7 @@
                                 <td>{{ o.orderType }} / {{ o.orderTerm }}</td>
                                 <td>{{ o.creationTime | duration }}</td>
                                 <td>
-                                    <a ng-href="#/discover/{{ o.symbol }}">{{ o.symbol }}</a>
+                                    <a ng-href="#/discover?symbol={{ o.symbol }}">{{ o.symbol }}</a>
                                 </td>
                                 <td>{{ o.priceType }}</td>
                                 <td>{{ o.price | quoteNumber }}</td>

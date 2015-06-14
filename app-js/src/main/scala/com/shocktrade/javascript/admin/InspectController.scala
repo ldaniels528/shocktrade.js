@@ -50,7 +50,7 @@ class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js
       case Success(response) =>
         toaster.pop("success", "Processing host updated", null)
       case Failure(e) =>
-        toaster.pop("error", "Failed to update processing host", null)
+        toaster.error("Failed to update processing host", null)
     }
   }
 
@@ -68,7 +68,7 @@ class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js
         $scope.contest = contest
         mySession.setContest(contest)
       case Failure(e) =>
-        toaster.pop("error", "Failed to load contest " + contestId, null)
+        toaster.error("Failed to load contest " + contestId, null)
     }
   }
 

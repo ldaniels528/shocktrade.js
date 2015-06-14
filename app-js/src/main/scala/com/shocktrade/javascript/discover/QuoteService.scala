@@ -14,7 +14,8 @@ import scala.scalajs.js.annotation.JSExportAll
  * @author lawrence.daniels@gmail.com
  */
 @JSExportAll
-class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession") mySession: MySession) extends Service {
+class QuoteService($http: HttpService, @named("MySession") mySession: MySession)
+  extends Service {
 
   def autoCompleteSymbols: js.Function2[String, Int, HttpPromise[js.Array[js.Dynamic]]] = (searchTerm: String, maxResults: Int) => {
     val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
@@ -29,7 +30,9 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     }
   }
 
-  def getPricing: js.Function = (symbols: js.Array[String]) => $http.post[js.Dynamic]("/api/quotes/pricing", symbols)
+  def getPricing: js.Function1[js.Array[String], HttpPromise[js.Dynamic]] = (symbols: js.Array[String]) => {
+    $http.post[js.Dynamic]("/api/quotes/pricing", symbols)
+  }
 
   def getRiskLevel: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
     $http.get[js.Dynamic](s"/api/quotes/riskLevel/$symbol")
@@ -43,17 +46,19 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
     $http.get[js.Dynamic](s"/api/quotes/symbol/$symbol")
   }
 
-  def getTradingHistory: js.Function = (symbol: String) => getTradingHistory_@(symbol)
-
-  def getTradingHistory_@(symbol: String) = $http.get[js.Array[js.Dynamic]](s"/api/quotes/tradingHistory/$symbol")
+  def getTradingHistory: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (symbol: String) => {
+    $http.get[js.Array[js.Dynamic]](s"/api/quotes/tradingHistory/$symbol")
+  }
 
   ////////////////////////////////////////////////////////////////////
   //			Exchange Functions
   ///////////////////////////////////////////////////////////////////
 
-  def getExchangeCounts: js.Function = () => $http.get[js.Dynamic]("/api/exchanges")
+  def getExchangeCounts: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
+    $http.get[js.Array[js.Dynamic]]("/api/exchanges")
+  }
 
-  def setExchangeState: js.Function = (id: String, exchange: String, state: Boolean) => {
+  def setExchangeState: js.Function3[String, String, Boolean, HttpPromise[js.Dynamic]] = (id: String, exchange: String, state: Boolean) => {
     if (state)
       $http.put[js.Dynamic](s"/api/profile/$id/exchange/$exchange")
     else
@@ -113,7 +118,7 @@ class QuoteService($rootScope: js.Dynamic, $http: HttpService, @named("MySession
 
   private def setFavorites(updatedQuotes: js.Array[js.Dynamic]) = {
     updatedQuotes.foreach { quote =>
-      quote.favorite = $rootScope.FavoriteSymbols.isFavorite(quote.symbol)
+      quote.favorite = mySession.isFavoriteSymbol(quote.symbol.as[String])
     }
     updatedQuotes
   }

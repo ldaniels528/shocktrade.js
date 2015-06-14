@@ -15,7 +15,9 @@ import scala.util.{Failure, Success}
  * Research Controller
  * @author lawrence.daniels@gmail.com
  */
-class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: HttpService, $timeout: Timeout, toaster: Toaster) extends ScopeController {
+class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: HttpService, $timeout: Timeout, toaster: Toaster)
+  extends ScopeController {
+
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()
   private var filteredResults = emptyArray[js.Dynamic]
@@ -140,7 +142,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
 
       case Failure(e) =>
         g.console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
-        toaster.pop("error", "Failed to execute search", null)
+        toaster.error("Failed to execute search")
         stopLoading()
     }
   }

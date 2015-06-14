@@ -44,7 +44,7 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   scope.newGamePopup = () => {
     newGameDialog.popup(JS(
       success = { contest: js.Dynamic => myContests.push(contest) },
-      error = { err: HttpError => toaster.pop("error", "Failed to create game", null) }
+      error = { err: HttpError => toaster.error("Failed to create game", null) }
     ))
   }
 
@@ -60,7 +60,7 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
           g.console.log(s"Loaded ${contests.length} contest(s)")
           myContests = contests
         case Failure(e) =>
-          toaster.pop("error", "Failed to load 'My Contests'", null)
+          toaster.error("Failed to load 'My Contests'", null)
       }
     }
   }

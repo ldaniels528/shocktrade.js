@@ -28,6 +28,7 @@ object ScalaJsMain extends JSApp {
     module.filter("capitalize", Filters.capitalize)
     module.filter("duration", Filters.duration)
     module.filter("escape", Filters.escape)
+    module.filter("newsDuration", Filters.newsDuration)
     module.filter("quoteChange", Filters.quoteChange)
     module.filter("quoteNumber", Filters.quoteNumber)
     module.filter("yesno", Filters.yesNo)

@@ -130,7 +130,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
           })
         }
       case Failure(e) =>
-        toaster.pop("error", "Error loading sector information")
+        toaster.error("Error loading sector information")
     }
   }
 
@@ -142,7 +142,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
         // expand the sector, industry, sub-industry for the current symbol
         $timeout(() => expandSectorForSymbol(selectedSymbol), 500)
       case Failure(e) =>
-        toaster.pop("error", "Failed to refresh tree", null)
+        toaster.error("Failed to refresh tree")
     }
   }
 

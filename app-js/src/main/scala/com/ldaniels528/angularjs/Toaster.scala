@@ -8,7 +8,7 @@ import scala.scalajs.js
  */
 trait Toaster extends js.Object {
 
-  def pop(`type`: String, title: String, message: String = null): Unit = js.native
+  def pop(`type`: String, title: String, message: String): Unit = js.native
 
   def pop(`type`: String, title: String, message: String, delay: Long, format: String): Unit = js.native
 
@@ -29,6 +29,8 @@ object Toaster {
     def error(title: String, message: String = null) = toaster.pop(`type` = "error", title, message)
 
     def success(title: String, message: String = null) = toaster.pop(`type` = "success", title, message)
+
+    def success(title: String, message: String, delay: Long, format: String) = toaster.pop(`type` = "success", title, message, delay, format)
 
   }
 

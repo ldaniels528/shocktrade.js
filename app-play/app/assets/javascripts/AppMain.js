@@ -33,11 +33,8 @@
     /**
      * Initialize the application
      */
-    app.run(function ($rootScope, FavoriteSymbols, HeldSecurities, MySession, RecentSymbols, WebSockets) {
-        $rootScope.FavoriteSymbols = FavoriteSymbols;
-        $rootScope.HeldSecurities = HeldSecurities;
+    app.run(function ($rootScope, MySession, WebSockets) {
         $rootScope.MySession = MySession;
-        $rootScope.RecentSymbols = RecentSymbols;
         $rootScope.WebSockets = WebSockets;
 
         // initialize the web socket service

@@ -6,7 +6,7 @@
 			style="width: {{ item.thumbNail.width }}; height: {{ item.thumbNail.height }}">
 	</div>
 	<div style="display: inline">
-		<age class="news_age" value="{{ item.pubDate }}"></age>
+		<span class="news_age">{{ item.pubDate | newsDuration }}</span>
 		<a ng-bind-html="item.title" class="news" ng-href="{{ item.link }}" target="newwindow">
 			<span class="news_title">{{ item.title }}</span>
 		</a>

@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * Favorite Symbols Service
  * @author lawrence.daniels@gmail.com
  */
-class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, toaster: Toaster,
                           @named("MySession") mySession: MySession,
                           @named("ProfileService") profileService: ProfileService,
                           @named("QuoteService") quoteService: QuoteService)
@@ -45,7 +45,7 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
     profileService.addFavoriteSymbol(mySession.getUserID(), symbol) onComplete {
       case Success(response) =>
       case Failure(e) =>
-        toaster.pop("error", "Failed to add favorite symbol", null)
+        toaster.error("Failed to add favorite symbol")
         g.console.error(s"Failed to add favorite symbol: ${e.getMessage}")
     }
   }
@@ -56,7 +56,7 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
     profileService.removeFavoriteSymbol(mySession.getUserID(), symbol) onComplete {
       case Success(response) =>
       case Failure(e) =>
-        toaster.pop("error", "Failed to remove favorite symbol", null)
+        toaster.error("Failed to remove favorite symbol")
         g.console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
     }
   }
@@ -66,7 +66,7 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
     quoteService.getStockQuoteList(symbols) onComplete {
       case Success(updatedQuotes) => quotes = updatedQuotes
       case Failure(e) =>
-        toaster.pop("error", s"Failed to load quote: ${e.getMessage}", null)
+        toaster.error(s"Failed to load quote: ${e.getMessage}")
         g.console.error(s"Failed to load quote: ${e.getMessage}")
     }
   }

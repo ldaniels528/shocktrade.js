@@ -37,7 +37,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
     contestService.deleteOrder(contestId, playerId, orderId) onComplete {
       case Success(contest) => mySession.setContest(contest)
       case Failure(err) =>
-        toaster.pop("error", "Error!", "Failed to cancel order")
+        toaster.error("Error!", "Failed to cancel order")
     }
   }
 
@@ -141,7 +141,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
         contestService.getEnrichedOrders(mySession.getContestID(), participant.OID) onComplete {
           case Success(enrichedOrders) => mySession.getParticipant().orders = enrichedOrders
           case Failure(e) =>
-            toaster.pop("error", "Error!", "Error loading enriched orders")
+            toaster.error("Error!", "Error loading enriched orders")
         }
       }
     }
@@ -153,7 +153,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
         participant.enrichedPositions = true
         contestService.getEnrichedPositions(mySession.getContestID(), participant.OID) onComplete {
           case Success(enrichedPositions) => mySession.getParticipant().positions = enrichedPositions
-          case Failure(e) => toaster.pop("error", "Error!", "Error loading enriched positions")
+          case Failure(e) => toaster.error("Error!", "Error loading enriched positions")
         }
       }
     }

@@ -7,6 +7,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
 
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
@@ -19,7 +20,9 @@ import scala.util.{Failure, Success}
 @JSExportAll
 class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
                 @named("ContestService") contestService: ContestService,
-                @named("ProfileService") profileService: ProfileService) extends Service {
+                @named("ProfileService") profileService: ProfileService)
+  extends Service {
+
   var facebookID: Option[String] = None
   var fbFriends = js.Array[js.Dynamic]()
   var fbProfile: Option[js.Dynamic] = None
@@ -90,7 +93,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
         case Success(profile) =>
           userProfile.netWorth = profile.netWorth
         case Failure(e) =>
-          toaster.pop("error", "Error loading user profile", null);
+          toaster.error("Error loading user profile", null);
       }
     }
   }
@@ -167,7 +170,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     if (!isDefined(aContest)) resetContest()
 
     // if the contest contained an error, show it
-    else if (isDefined(aContest.error)) toaster.pop("error", aContest.error.as[String], null)
+    else if (isDefined(aContest.error)) toaster.error(aContest.error.as[String], null)
 
     // is it a delta?
     else if (aContest.`type` === "delta") updateContestDelta(aContest)
@@ -238,6 +241,23 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   def resetContest: js.Function0[Unit] = () => contest = None
+
+  ////////////////////////////////////////////////////////////
+  //          Participant Methods
+  ////////////////////////////////////////////////////////////
+
+  def findPlayerByID: js.Function2[js.Dynamic, String, Option[js.Dynamic]] = (contest: js.Dynamic, playerId: String) => {
+    if (isDefined(contest) && isDefined(contest.participants))
+      contest.participants.asArray[js.Dynamic].find(_.OID == playerId)
+    else
+      None
+  }
+
+  def findPlayerByName: js.Function2[js.Dynamic, String, js.Dynamic] = (contest: js.Dynamic, playerName: String) => {
+    required("contest", contest)
+    required("playerName", playerName)
+    contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()
+  }
 
   ////////////////////////////////////////////////////////////
   //          Private Methods
@@ -376,7 +396,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     g.console.log(s"User Profile for ${profile.name} updated")
     if (userProfile.OID == profile.OID) {
       userProfile.netWorth = profile.netWorth
-      toaster.pop("success", "Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5000, "trustedHtml")
+      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5.seconds, "trustedHtml")
     }
   })
 

@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.Timeout
+import biz.enef.angulate.core.{Location, Timeout}
 import biz.enef.angulate.{ScopeController, angular, named}
+import com.greencatsoft.angularjs.core.Q
 import com.ldaniels528.angularjs.{CookieStore, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -9,6 +10,7 @@ import com.shocktrade.javascript.discover.DiscoverController._
 import org.scalajs.jquery.jQuery
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -17,8 +19,8 @@ import scala.util.{Failure, Success}
  * Discover Controller
  * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interval: Timeout, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                         @named("HeldSecurities") heldSecurities: js.Dynamic,
+class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interval: Timeout, $location: Location, $q: Q,
+                         $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                          @named("MarketStatus") marketStatus: MarketStatusService,
                          @named("MySession") mySession: MySession,
                          @named("NewOrderDialog") newOrderDialog: js.Dynamic,
@@ -39,22 +41,19 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
    */
   $scope.init = () => {
     // setup market status w/updates
-    $interval(() => $scope.marketClock = new js.Date().toTimeString(), 1000)
+    $interval(() => $scope.marketClock = new js.Date().toTimeString(), 1.second)
 
     // setup the market status updates
     setupMarketStatusUpdates()
   }
 
-  $scope.autoCompleteSymbols = (searchTerm: js.UndefOr[String]) => {
-    searchTerm foreach { term =>
-      if (term.nonBlank) {
-        quoteService.autoCompleteSymbols(term, 20) onComplete {
-          case Success(response) => response
-          case Failure(e) =>
-            toaster.pop("error", "Error auto-completing symbol", null)
-        }
-      }
+  $scope.autoCompleteSymbols = (searchTerm: String) => {
+    val deferred = $q.defer()
+    quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
+      case Success(response) => deferred.resolve(response)
+      case Failure(e) => deferred.reject(e.getMessage)
     }
+    deferred.promise
   }
 
   $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
@@ -94,6 +93,8 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         $scope.q = quote
         $scope.ticker = s"${quote.symbol} - ${quote.name}"
 
+        $location.search("symbol", quote.symbol)
+
         // store the last symbol
         $cookieStore.put("QuoteService_lastSymbol", quote.symbol)
 
@@ -104,7 +105,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         quoteService.getRiskLevel(symbol) onComplete {
           case Success(response) => quote.riskLevel = response
           case Failure(e) =>
-            toaster.pop("error", "Error!", "Error retrieving risk level for " + symbol)
+            toaster.error("Error!", "Error retrieving risk level for " + symbol)
         }
 
         // load the trading history
@@ -120,7 +121,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
       case Failure(e) =>
         g.console.error(s"Failed to retrieve quote: ${e.getMessage}")
         $scope.stopLoading()
-        toaster.pop("error", "Error!", "Error loading quote " + symbol)
+        toaster.error("Error!", "Error loading quote " + symbol)
     }
   }
 
@@ -191,22 +192,21 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         // retrieve the delay in milliseconds from the server
         var delay = status.delay
         if (delay < 0) {
-          delay = (status.end - status.sysTime).toInt
-          if (delay <= 300000) {
-            delay = 300000 // 5 minutes
-          }
+          delay = Math.max(status.end - status.sysTime, 5.minutes)
         }
 
         // set the market status
         g.console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
-        $timeout(() => $scope.usMarketsOpen = status.active, 750)
+
+        // set the status after 750ms
+        $timeout(() => $scope.usMarketsOpen = status.active, 750.milliseconds)
 
         // wait for the delay, then call recursively
         $timeout(() => setupMarketStatusUpdates(), delay.toInt)
 
       case Failure(e) =>
-        toaster.pop("error", "Failed to retrieve market status")
-        e.printStackTrace()
+        toaster.error("Failed to retrieve market status")
+        g.console.error(s"Failed to retrieve market status: ${e.getMessage}")
     }
   }
 

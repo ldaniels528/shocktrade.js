@@ -98,19 +98,6 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //			Participants
   /////////////////////////////////////////////////////////////////////////////
 
-  def findPlayerByID: js.Function2[js.Dynamic, String, Option[js.Dynamic]] = (contest: js.Dynamic, playerId: String) => {
-    if (isDefined(contest) && isDefined(contest.participants))
-      contest.participants.asArray[js.Dynamic].find(_.OID == playerId)
-    else
-      None
-  }
-
-  def findPlayerByName: js.Function = (contest: js.Dynamic, playerName: String) => {
-    required("contest", contest)
-    required("playerName", playerName)
-    contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()
-  }
-
   def getMarginMarketValue: js.Function2[String, String, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("playerId", playerId)
@@ -134,7 +121,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
             contest.rankings.leader = participants.headOption.orNull
             contest.rankings.player = participants.find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
           case Failure(e) =>
-            toaster.pop("error", "Error loading play rankings", null)
+            toaster.error("Error loading play rankings", null)
             e.printStackTrace()
         }
       }
@@ -158,7 +145,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //			Chat and Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getChart: js.Function = (contestId: String, participantName: String, chartName: String) => {
+  def getChart: js.Function3[String, String, String, HttpPromise[js.Dynamic]] = (contestId: String, participantName: String, chartName: String) => {
     required("contestId", contestId)
     required("participantName", participantName)
     required("chartName", chartName)
@@ -180,7 +167,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def createOrder: js.Function = (contestId: String, playerId: String, order: js.Dynamic) => {
+  def createOrder: js.Function3[String, String, js.Dynamic, HttpPromise[js.Dynamic]] = (contestId: String, playerId: String, order: js.Dynamic) => {
     required("contestId", contestId)
     required("playerId", playerId)
     required("order", order)
@@ -194,12 +181,12 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
     $http.delete[js.Dynamic](s"/api/order/$contestId/$playerId/$orderId")
   }
 
-  def getHeldSecurities: js.Function = (playerId: String) => {
+  def getHeldSecurities: js.Function1[String, HttpPromise[js.Dynamic]] = (playerId: String) => {
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/positions/$playerId")
   }
 
-  def orderQuote: js.Function = (symbol: String) => {
+  def orderQuote: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
     required("symbol", symbol)
     $http.get[js.Dynamic](s"/api/quotes/order/symbol/$symbol")
   }

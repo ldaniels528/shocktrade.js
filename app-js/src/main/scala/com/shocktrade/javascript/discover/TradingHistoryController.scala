@@ -1,6 +1,5 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -13,8 +12,8 @@ import scala.util.{Failure, Success}
  * Trading History Controller
  * @author lawrence.daniels@gmail.com
  */
-class TradingHistoryController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                               @named("QuoteService") quoteService: QuoteService) extends ScopeController {
+class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("QuoteService") quoteService: QuoteService)
+  extends ScopeController {
 
   private var tradingHistory: js.Array[js.Dynamic] = null
   private var selectedTradingHistory: js.Dynamic = null
@@ -31,12 +30,11 @@ class TradingHistoryController($scope: js.Dynamic, $routeParams: js.Dynamic, $ti
 
   $scope.loadTradingHistory = { (symbol_? : js.UndefOr[String]) =>
     symbol_?.foreach { symbol =>
-      quoteService.getTradingHistory_@(symbol) onComplete {
-        case Success(results) =>
-          tradingHistory = results
-
-        case Failure(response) =>
-          toaster.pop("error", "Error loading trading history for " + symbol, null)
+      quoteService.getTradingHistory(symbol) onComplete {
+        case Success(results) => tradingHistory = results
+        case Failure(e) =>
+          toaster.error("Error loading trading history for symbol '$symbol'")
+          g.console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")
       }
     }
   }

@@ -1,5 +1,5 @@
 <div ng-class="gridClass($index)" style="display: block; margin-bottom: 10px">
-	<age class="news_age" value="{{ item.pubDate }}"></age>
+	<span class="news_age">{{ item.pubDate | newsDuration }}</span>
 	<img ng-show="item.thumbNail.url" 
 		ng-src="{{ item.thumbNail.url }}" 
 		class="news_img pull-right"

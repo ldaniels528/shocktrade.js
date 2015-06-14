@@ -24,7 +24,7 @@ class FacebookService($q: Q) extends Service {
   var auth: js.Dynamic = null
   var accessToken: String = null
 
-  def getVersion: js.Function = () => version
+  def getVersion: js.Function0[String] = () => version
 
   def createFriendList: js.Function = { (friendListId: String) =>
     val deferred = $q.defer()

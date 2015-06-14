@@ -37,12 +37,17 @@ object Filters {
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
-  val duration: AnnotatedFunction = () => { (time: js.Dynamic) => toDuration(time) }: js.Function
+  val duration: AnnotatedFunction = () => { (time: js.Dynamic) => toDuration(time, noFuture = false) }: js.Function
 
   /**
    * Escape: Performs an escape
    */
   val escape: AnnotatedFunction = () => { () => g.window.escape }: js.Function
+
+  /**
+   * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
+   */
+  val newsDuration: AnnotatedFunction = () => { (time: js.Dynamic) => toDuration(time, noFuture = true) }: js.Function
 
   /**
    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
@@ -76,7 +81,7 @@ object Filters {
    * @param time the given time stamp (in milliseconds)
    * @return the duration (e.g. "10 mins ago")
    */
-  def toDuration(time: js.Dynamic) = {
+  def toDuration(time: js.Dynamic, noFuture: Boolean = false) = {
     // compute the elapsed time
     val elapsed = (js.Date.now() - {
       if (!isDefined(time)) js.Date.now()
@@ -95,7 +100,9 @@ object Filters {
     // make the age and unit names more readable
     val unitName = timeUnits(unit) + (if (age.toInt != 1) "s" else "")
     if (unit == 0 && (age >= 0 && age < 1)) "just now"
-    else if (elapsed < 0) f"$age%.0f $unitName from now"
+    else if (elapsed < 0) {
+      if (noFuture) "moments ago" else f"$age%.0f $unitName from now"
+    }
     else f"$age%.0f $unitName ago"
   }
 

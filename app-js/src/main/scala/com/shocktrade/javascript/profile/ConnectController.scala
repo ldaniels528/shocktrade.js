@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * Connect Controller
  * @author lawrence.daniels@gmail.com
  */
-class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class ConnectController($scope: js.Dynamic, toaster: Toaster,
                         @named("ComposeMessageDialog") composeMessageDialog: js.Dynamic,
                         @named("ConnectService") connectService: ConnectService,
                         @named("MySession") mySession: MySession)
@@ -63,7 +63,7 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
       case Failure(e) =>
         $scope.stopLoading()
         g.console.log(s"Failed to retrieve profile for contact ${contact.name}")
-        toaster.pop("error ", s"Failed to retrieve the user profile for contact ${contact.name}", null)
+        toaster.error(s"Failed to retrieve the user profile for contact ${contact.name}")
     }
   }
 
@@ -144,12 +144,12 @@ class ConnectController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
         case Failure(e) =>
           $scope.stopLoading()
-          toaster.pop("error ", "Failed to delete message ", null)
+          toaster.error("Failed to delete message ")
       }
     }
     else {
       $scope.stopLoading()
-      toaster.pop("error", "No message(s) selected", null)
+      toaster.error("No message(s) selected")
     }
   }
 

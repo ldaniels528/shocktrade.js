@@ -47,14 +47,14 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
    */
   def send: js.Function = (message: String) => {
     if (!isDefined(g.window.WebSocket)) {
-      toaster.pop("error", "Online Status", "Web socket closed")
+      toaster.error("Online Status", "Web socket closed")
       false
     }
     if (socket.readyState == WebSocket.OPEN) {
       socket.send(message)
       true
     } else {
-      toaster.pop("error", "Online Status", "Web socket closed: readyState = " + socket.readyState)
+      toaster.error("Online Status", "Web socket closed: readyState = " + socket.readyState)
       false
     }
   }

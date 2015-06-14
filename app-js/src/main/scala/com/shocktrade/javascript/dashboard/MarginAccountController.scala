@@ -43,7 +43,7 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
         case Success(contest) =>
           investmentMarketValue = contest.marginMarketValue.as[Double]
         case Failure(e) =>
-          toaster.pop("error", "Failed to retrieve the Margin Account's market value", null)
+          toaster.error("Failed to retrieve the Margin Account's market value", null)
           attemptsLeft -= 1
           if (attemptsLeft > 0) $timeout(() => $scope.initMarginAccount(), 5000)
       }

@@ -6,6 +6,7 @@ import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -69,7 +70,7 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
       }
     }
     else {
-      $timeout(() => init(), 1000)
+      $timeout(() => init(), 1.5.seconds)
     }
   }
 

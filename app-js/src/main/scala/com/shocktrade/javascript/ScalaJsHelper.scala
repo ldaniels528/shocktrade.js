@@ -2,6 +2,7 @@ package com.shocktrade.javascript
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -32,7 +33,7 @@ object ScalaJsHelper {
     s
   }
 
-  def flatten[T](future: Future[Try[T]]): Future[T] = future flatMap {
+  def flatten[T](task: Future[Try[T]]): Future[T] = task flatMap {
     case Success(s) => Future.successful(s)
     case Failure(f) => Future.failed(f)
   }
@@ -59,9 +60,19 @@ object ScalaJsHelper {
   //    Implicit Defintions and Classes
   ////////////////////////////////////////////////////////////////////////
 
+  implicit def duration2Double(duration: FiniteDuration): Double = duration.toMillis
+
+  implicit def duration2Long(duration: FiniteDuration): Long = duration.toMillis
+
+  implicit def duration2Int(duration: FiniteDuration): Int = duration.toMillis.toInt
+
   object Implicits {
 
-    implicit def valueToOption[T](value: T): Option[T] = Option(value)
+    object Risky {
+
+      implicit def valueToOption[T](value: T): Option[T] = Option(value)
+
+    }
 
   }
 
