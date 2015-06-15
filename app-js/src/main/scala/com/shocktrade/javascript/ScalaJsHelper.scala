@@ -56,8 +56,12 @@ object ScalaJsHelper {
 
   def required(name: String, value: js.Dynamic) = if (!isDefined(value)) die(s"Required property '$name' is missing")
 
+  def required[T](name: String, value: js.Array[T], allowEmpty: Boolean = false) = {
+    if (value == null || (allowEmpty && value.isEmpty)) die(s"Required property '$name' is missing")
+  }
+
   ////////////////////////////////////////////////////////////////////////
-  //    Implicit Defintions and Classes
+  //    Implicit Definitions and Classes
   ////////////////////////////////////////////////////////////////////////
 
   implicit def duration2Double(duration: FiniteDuration): Double = duration.toMillis
@@ -76,8 +80,33 @@ object ScalaJsHelper {
 
   }
 
-  //implicit def jsDynamic2Value[T](obj: js.Dynamic): T = obj.as[T]
+  /**
+   * Convenience method for transforming Scala Sequences into js.Arrays
+   * @param items the given sequence of objects
+   * @tparam T the parameter type
+   */
+  implicit class JsArrayExtensionsA[T](val items: Seq[T]) extends AnyVal {
 
+    def toJsArray: js.Array[T] = items.asInstanceOf[js.Array[T]]
+
+  }
+
+  /**
+   * Convenience method for transforming Scala Sequences into js.Arrays
+   * @param items the given sequence of objects
+   * @tparam T the parameter type
+   */
+  implicit class JsArrayExtensionsB[T](val items: Array[T]) extends AnyVal {
+
+    def toJsArray: js.Array[T] = items.asInstanceOf[js.Array[T]]
+
+  }
+
+
+  /**
+   * Convenience methods for strings
+   * @param string the given host string
+   */
   implicit class StringExtensions(val string: String) extends AnyVal {
 
     def nonBlank: Boolean = string != null && string.trim.nonEmpty
@@ -93,7 +122,7 @@ object ScalaJsHelper {
     def ?(label: String) = if (isDefined(obj(label))) obj(label) else null
 
     def ===[T](value: T): Boolean = {
-      if(value == null) false
+      if (value == null) false
       else {
         Try(obj.asInstanceOf[T]) match {
           case Success(converted) => converted == value
@@ -105,6 +134,8 @@ object ScalaJsHelper {
     }
 
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
+
+    def asOpt[T] = if (isDefined(obj)) Option(obj.asInstanceOf[T]) else None
 
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
 

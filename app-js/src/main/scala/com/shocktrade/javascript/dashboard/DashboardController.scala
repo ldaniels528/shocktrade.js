@@ -5,7 +5,7 @@ import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.TransferFundsDialog
+import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
 class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                           @named("ContestService") contestService: ContestService,
                           @named("MySession") mySession: MySession,
-                          @named("PerksDialog") perksDialog: js.Dynamic,
+                          @named("PerksDialog") perksDialog: PerksDialog,
                           @named("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
   extends ScopeController {
 
@@ -44,16 +44,30 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   /////////////////////////////////////////////////////////////////////
 
   $scope.marginAccountDialog = () => {
-    transferFundsDialog.popup().onComplete {
+    transferFundsDialog.popup() onComplete {
       case Success(contest: js.Dynamic) => mySession.setContest(contest)
       case Success(response) =>
         g.console.info(s"The process succeeded, but got back the wrong object - $response")
       case Failure(e) =>
-        toaster.error("Error transferring funds")
+        if(e.getMessage != "cancel") {
+          e.printStackTrace()
+        }
     }
   }
 
-  $scope.perksDialog = () => perksDialog.popup(JS())
+  $scope.perksDialog = () => {
+    perksDialog.popup() onComplete {
+      case Success(contest: js.Dynamic) =>
+        g.console.info(s"Settings contest")
+        mySession.setContest(contest)
+      case Success(response) =>
+        g.console.info(s"The process succeeded, but got back the wrong object - $response")
+      case Failure(e) =>
+        if(e.getMessage != "cancel") {
+          e.printStackTrace()
+        }
+    }
+  }
 
   /////////////////////////////////////////////////////////////////////
   //          Participant Functions

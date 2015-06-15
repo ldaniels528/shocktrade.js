@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.core.{HttpPromise, Timeout}
-import biz.enef.angulate.{Scope, Service, named}
+import biz.enef.angulate.{Scope, Service, angular, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -170,14 +170,15 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     if (!isDefined(aContest)) resetContest()
 
     // if the contest contained an error, show it
-    else if (isDefined(aContest.error)) toaster.error(aContest.error.as[String], null)
+    else if (isDefined(aContest.error)) toaster.error(aContest.error.as[String])
 
     // is it a delta?
     else if (aContest.`type` === "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
     else {
-      this.contest = Some(aContest)
+      g.console.log(s"contest = ${angular.toJson(aContest, pretty = true)}")
+      contest = Some(aContest)
       $rootScope.$emit("contest_selected", aContest)
     }
     ()
@@ -196,6 +197,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     participant.foreach { player =>
       g.console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
       player.cashAccount.cashFunds -= amount
+      // TODO rethink this
     }
     ()
   }
@@ -368,7 +370,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   $rootScope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     info(contest, "Contest updated")
-    this.contest foreach { c => if (c.OID == contest.OID) setContest(contest)}
+    this.contest foreach { c => if (c.OID == contest.OID) setContest(contest) }
     if (this.contest.isEmpty) setContest(contest)
   })
 
