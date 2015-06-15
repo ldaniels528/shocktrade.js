@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
-import scala.util.{Failure, Success}
+import scala.util.{Try, Failure, Success}
 
 /**
  * My Session Facade
@@ -178,8 +178,12 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     // otherwise, digest the full contest
     else {
       g.console.log(s"contest = ${angular.toJson(aContest, pretty = true)}")
-      contest = Some(aContest)
-      $rootScope.$emit("contest_selected", aContest)
+      Try(contest = Some(aContest)) match {
+        case Success(_) =>
+        case Failure(e) =>
+          g.console.error("Failed to set contest")
+          e.printStackTrace()
+      }
     }
     ()
   }

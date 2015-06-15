@@ -46,7 +46,7 @@
             <div class="col-md-2 right" ng-hide="isPositionSelected()">
                 <span ng-show="p.gainLossPct != null">
                     <span ng-class="p.gainLossPct < 0 ? 'negative' : 'positive'">
-                        {{ p.gainLossPct | number:2 }}%
+                        {{ p.gainLossPct | abs | number:2 }}%
                     </span>
                 </span>
                 <span class="null" ng-hide="p.gainLossPct != null">N/A</span>

@@ -16,16 +16,15 @@
 
         <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
             <div class="col-md-6">
-                <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20" />
-                {{ c.name }}
+                <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20"></avatar> {{ c.name }}
             </div>
             <div class="col-md-3 center">
                 <span ng-if="getMyRankings(c)">
                     <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
                     <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}" />
+                        <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}"></changearrow>
                         <span ng-show="(getMyRankings(c).gainLoss || 0) === 0" class="null">&#8212;</span>
-                        {{ getMyRankings(c).gainLoss | number:2 }}%
+                        {{ getMyRankings(c).gainLoss | abs | number:2 }}%
                     </span>
                 </span>
                 <span ng-hide="getMyRankings(c)" class="null">

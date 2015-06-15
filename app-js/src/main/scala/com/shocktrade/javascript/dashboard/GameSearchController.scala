@@ -110,7 +110,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     searchTerm map { mySearchTerm =>
       if (mySearchTerm != null) {
         val term = mySearchTerm.trim.toLowerCase
-        searchResults.filter(_.name.as[String].toLowerCase.contains(term))
+        searchResults.filter(_.name.asOpt[String].map(_.toLowerCase).exists(_.contains(term)))
       } else searchResults
     } getOrElse searchResults
   }
@@ -135,7 +135,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     }
   }
 
-  $scope.trophy = (place: String) => place match {
+  $scope.trophy = (place: js.UndefOr[String]) => place map {
     case "1st" => "contests/gold.png"
     case "2nd" => "contests/silver.png"
     case "3rd" => "contests/bronze.png"
