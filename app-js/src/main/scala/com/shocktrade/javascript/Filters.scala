@@ -15,6 +15,13 @@ import scala.scalajs.js.Dynamic.{global => g}
 object Filters {
 
   /**
+   * Absolute Value
+   */
+  val abs: AnnotatedFunction = () => { (value: js.UndefOr[Double]) =>
+    value map { v => String.valueOf(Math.abs(v))} getOrElse ""
+  } :js.Function
+
+  /**
    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
    */
   val bigNumber: AnnotatedFunction = () => { value: js.UndefOr[Double] =>
@@ -82,12 +89,15 @@ object Filters {
    * @return the duration (e.g. "10 mins ago")
    */
   def toDuration(time: js.Dynamic, noFuture: Boolean = false) = {
+    // get an option of the time
+    val myTime = {
+      if (!isDefined(time)) Option(js.Date.now())
+      else if (isDefined(time.$date)) time.$date.asOpt[Double]
+      else time.asOpt[Double]
+    } getOrElse js.Date.now()
+
     // compute the elapsed time
-    val elapsed = (js.Date.now() - {
-      if (!isDefined(time)) js.Date.now()
-      else if (isDefined(time.$date)) time.$date.as[Double]
-      else time.as[Double]
-    }) / 60000
+    val elapsed = (js.Date.now() - myTime) / 60000
 
     // compute the age
     var age = Math.abs(elapsed)

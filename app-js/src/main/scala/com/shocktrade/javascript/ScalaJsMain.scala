@@ -29,6 +29,7 @@ object ScalaJsMain extends JSApp {
     module.directiveOf[EscapeDirective]
 
     // ShockTrade filters
+    module.filter("abs", Filters.abs)
     module.filter("bigNumber", Filters.bigNumber)
     module.filter("capitalize", Filters.capitalize)
     module.filter("duration", Filters.duration)
