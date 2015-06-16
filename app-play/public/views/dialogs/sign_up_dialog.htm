@@ -23,7 +23,7 @@
         <!-- error messages -->
         <div class="row">
             <ul class="error">
-                <li class="error" ng-repeat="message in messages">
+                <li class="error" ng-repeat="message in getMessages()">
                     <span class="error">{{message}}</span>
                 </li>
             </ul>
@@ -31,10 +31,10 @@
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">
-            <button class="btn btn-primary pull-left" ng-disabled="loading" ng-click="ok()">
-                <img ng-show="loading" src="/assets/images/status/loading.gif"> Create Account
+            <button class="btn btn-primary pull-left" ng-disabled="isLoading()" ng-click="createAccount(form)">
+                <img ng-show="isLoading()" src="/assets/images/status/loading.gif"> Create Account
             </button>
-            <button class="btn btn-warning pull-right" ng-disabled="loading" ng-click="cancel()">
+            <button class="btn btn-warning pull-right" ng-disabled="isLoading()" ng-click="cancel()">
                 Cancel
             </button>
         </div>

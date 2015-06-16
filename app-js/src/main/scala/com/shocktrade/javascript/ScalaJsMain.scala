@@ -1,16 +1,19 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate._
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.admin.InspectController
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs.PerksDialog.PerksDialogController
+import com.shocktrade.javascript.dialogs.SignUpDialog.SignUpController
 import com.shocktrade.javascript.dialogs.TransferFundsDialog.TransferFundsDialogController
-import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
+import com.shocktrade.javascript.dialogs.{PerksDialog, SignUpDialog, TransferFundsDialog}
 import com.shocktrade.javascript.directives.EscapeDirective
 import com.shocktrade.javascript.discover._
 import com.shocktrade.javascript.news.{NewsController, NewsService}
 import com.shocktrade.javascript.profile._
 
+import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSApp
 
@@ -80,8 +83,11 @@ object ScalaJsMain extends JSApp {
     // dialogs
     module.serviceOf[PerksDialog]("PerksDialog")
     module.controllerOf[PerksDialogController]("PerksDialogController")
+    module.serviceOf[SignUpDialog]("SignUpDialog")
+    module.controllerOf[SignUpController]("SignUpController")
     module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
+  }
 
   /**
    * Returns the Facebook application ID based on the running host

@@ -24,7 +24,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
                      @named("Facebook") facebook: FacebookService,
                      @named("MySession") mySession: MySession,
                      @named("ProfileService") profileService: ProfileService,
-                     @named("SignUpDialog") signUpDialog: js.Dynamic)
+                     @named("SignUpDialog") signUpDialog: SignUpDialog)
   extends ScopeController {
 
   private var isLoading = false
@@ -194,9 +194,15 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     }
   }
 
+  private def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
+
   private def signUpPopup(facebookID: String, fbProfile_? : Option[js.Dynamic]) {
     fbProfile_? foreach { fbProfile =>
-      signUpDialog.popup(facebookID, fbProfile)
+      signUpDialog.popup(facebookID, fbProfile) onSuccess {
+        case profile: js.Dynamic =>
+          mySession.setUserProfile(profile)
+          mySession.nonMember = false
+      }
     }
   }
 
