@@ -1,5 +1,7 @@
 package com.shocktrade.javascript
 
+import biz.enef.angulate.angular
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
@@ -18,6 +20,7 @@ object ScalaJsHelper {
   //    Convenience Functions
   ////////////////////////////////////////////////////////////////////////
 
+  @inline
   def emptyArray[T] = js.Array[T]()
 
   def params(values: (String, Any)*): String = {
@@ -27,35 +30,46 @@ object ScalaJsHelper {
     fullQuery
   }
 
+  @inline
   private def encode(text: String) = {
-    var s = text
-    " !@#$^*()`~\"".toCharArray foreach (c => s = s.replaceAllLiterally(c.toString, f"%%$c%02x"))
-    s
+    " `~!@#$^*()[]{}\"\\/".toCharArray.foldLeft[String](text) { (s, c) => s.replaceAllLiterally(c.toString, f"%%${c.toInt}%02x") }
   }
 
+  @inline
   def flatten[T](task: Future[Try[T]]): Future[T] = task flatMap {
     case Success(s) => Future.successful(s)
     case Failure(f) => Future.failed(f)
   }
 
+  @inline
+  def toJson(json: js.Any, pretty: Boolean = false) = angular.toJson(json, pretty)
+
   ////////////////////////////////////////////////////////////////////////
   //    Validation Functions
   ////////////////////////////////////////////////////////////////////////
 
+  @inline
   def die[T](message: String): T = throw new IllegalStateException(message)
 
+  @inline
   def isDefined(obj: js.Dynamic) = obj != null && !js.isUndefined(obj)
 
+  @inline
   def isDefined(fx: js.Function) = fx != null && !js.isUndefined(fx)
 
+  @inline
   def isFalse(obj: js.Dynamic) = !isTrue(obj)
 
+  @inline
   def isTrue(obj: js.Dynamic) = isDefined(obj) && obj.as[Boolean]
 
+  @inline
   def required(name: String, value: String) = if (value == null || value.trim.isEmpty) die(s"Required property '$name' is missing")
 
+  @inline
   def required(name: String, value: js.Dynamic) = if (!isDefined(value)) die(s"Required property '$name' is missing")
 
+  @inline
   def required[T](name: String, value: js.Array[T], allowEmpty: Boolean = false) = {
     if (value == null || (allowEmpty && value.isEmpty)) die(s"Required property '$name' is missing")
   }
@@ -109,7 +123,11 @@ object ScalaJsHelper {
    */
   implicit class StringExtensions(val string: String) extends AnyVal {
 
+    def isBlank: Boolean = string == null && string.trim.isEmpty
+
     def nonBlank: Boolean = string != null && string.trim.nonEmpty
+
+    def isValidEmail: Boolean = !string.matches( """/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i""")
 
   }
 
@@ -119,28 +137,34 @@ object ScalaJsHelper {
    */
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
 
+    @inline
     def ?(label: String) = if (isDefined(obj(label))) obj(label) else null
 
     def ===[T](value: T): Boolean = {
-      if (value == null) false
+      if (value == null) !isDefined(obj)
       else {
         Try(obj.asInstanceOf[T]) match {
           case Success(converted) => converted == value
           case Failure(e) =>
-            g.console.log(s"value '$value': ${e.getMessage}")
+            g.console.log(s"JsDynamicExtensionsA: value '$value': ${e.getMessage}")
             false
         }
       }
     }
 
+    @inline
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 
+    @inline
     def asOpt[T] = if (isDefined(obj)) Option(obj.asInstanceOf[T]) else None
 
+    @inline
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
 
+    @inline
     def OID: String = OID_?.orNull
 
+    @inline
     def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
 
   }
@@ -151,7 +175,15 @@ object ScalaJsHelper {
    */
   implicit class JsDynamicExtensionsB(val value: String) extends AnyVal {
 
-    def ===(obj: js.Dynamic): Boolean = value == obj.asInstanceOf[String]
+    def ===(obj: js.Dynamic): Boolean = if (!isDefined(obj)) value == null
+    else {
+      Try(obj.asInstanceOf[String]) match {
+        case Success(converted) => converted == value
+        case Failure(e) =>
+          g.console.log(s"JsDynamicExtensionsB: value '$value': ${e.getMessage}")
+          false
+      }
+    }
 
   }
 

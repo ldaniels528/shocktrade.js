@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
-import scala.util.{Try, Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
  * My Session Facade
@@ -37,7 +37,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
   def setUserProfile: js.Function1[js.Dynamic, Unit] = (profile: js.Dynamic) => {
-    userProfile = if (isDefined(profile)) profile else createSpectatorProfile()
+    userProfile = if (isDefined(profile)) {
+      nonMember = false
+      profile
+    } else createSpectatorProfile()
   }
 
   /**
@@ -135,17 +138,17 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def addRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
     profileService.addRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.favorites = symbols
+      userProfile.recentSymbols = symbols
     }
   }
 
-  def getRecentSymbols: js.Function0[js.Array[String]] = () => userProfile.favorites.asArray[String]
+  def getRecentSymbols: js.Function0[js.Array[String]] = () => userProfile.recentSymbols.asArray[String]
 
   def isRecentSymbol: js.Function1[String, Boolean] = (symbol: String) => getRecentSymbols().contains(symbol)
 
   def removeRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
     profileService.removeRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.favorites = symbols
+      userProfile.recentSymbols = symbols
     }
   }
 

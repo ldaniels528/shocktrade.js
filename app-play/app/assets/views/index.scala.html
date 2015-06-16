@@ -47,11 +47,15 @@
             <div class="col-md-offset-5 col-md-4">
                 <span class="title_color pull-right" style="margin-right: 20px">
                     <avatar ng-show="MySession.getFacebookID()" id="{{ MySession.getFacebookID() }}" class="avatar-24"></avatar>
-                    <span ng-hide="MySession.isAuthenticated()" class="clickable" ng-click="login($event)">
-                        <i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign In
+					<span ng-show="MySession.nonMember" class="clickable" ng-click="signUp()">
+						<i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign Up
+					</span>
+                    <span ng-hide="MySession.isAuthenticated()" class="clickable" ng-click="login()">
+                        <span ng-show="MySession.nonMember"> / </span>
+                        <i class="fa fa-lg fa-facebook-square fb_icon"></i> Login
                     </span>
                     <span ng-show="MySession.isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-                    <span ng-show="MySession.getFacebookProfile().name && MySession.getFacebookProfile().name != ''"
+                    <span ng-show="MySession.getFacebookProfile().name"
                         class="title_color">&#8212; {{ MySession.getFacebookProfile().name }}</span>
                 </span>
             </div>

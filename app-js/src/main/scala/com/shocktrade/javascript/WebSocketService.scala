@@ -21,6 +21,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
                        @named("MySession") mySession: MySession) extends Service {
   private var socket: WebSocket = null
   private var connected = false
+  private var attemptsLeft = 3
 
   /**
    * Initializes the service
@@ -82,8 +83,11 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
         if (connected) $http.put(s"/api/online/$userID")
         else $http.delete(s"/api/online/$userID")
       case None =>
-        g.console.log("User unknown, waiting 5 seconds...")
-        $timeout(() => sendState(connected), 5000)
+        g.console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
+        if(attemptsLeft > 0) {
+          $timeout(() => sendState(connected), 5000)
+          attemptsLeft -= 1
+        }
     }
   }
 

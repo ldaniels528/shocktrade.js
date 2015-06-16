@@ -7,6 +7,7 @@ import com.greencatsoft.angularjs.extensions.{ModalInstance, ModalOptions, Modal
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.TransferFundsDialog.TransferFundsDialogController
 import prickle.Unpickle
 
 import scala.scalajs.js
@@ -28,7 +29,7 @@ class TransferFundsDialog($http: HttpService, $modal: ModalService) extends Serv
   def popup: js.Function0[Promise] = () => {
     val options = ModalOptions()
     options.templateUrl = "transfer_funds_dialog.htm"
-    options.controller = "TransferFundsDialogController"
+    options.controller = classOf[TransferFundsDialogController].getSimpleName
 
     val modalInstance = $modal.open(options)
     modalInstance.result

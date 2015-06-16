@@ -6,10 +6,11 @@ import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.dialogs.SignUpDialog
 import com.shocktrade.javascript.profile.{FacebookService, ProfileService}
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -70,13 +71,15 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.isVisible = (tab: js.Dynamic) => !isLoading && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated()))
 
-  $scope.login = (event: js.Dynamic) => login(event)
+  $scope.login = () => login()
 
-  $scope.logout = (event: js.Dynamic) => logout(event)
+  $scope.logout = () => logout()
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => normalizeExchange(market)
 
   $scope.postLoginUpdates = (facebookID: String, userInitiated: Boolean) => postLoginUpdates(facebookID, userInitiated)
+
+  $scope.signUp = () => signUp()
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
@@ -135,29 +138,27 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def loadFacebookFriends() {
-    facebook.getTaggableFriends({ response: js.Dynamic =>
-      val friends = response.data.asArray[js.Dynamic]
+    g.console.log("Loading Facebook friends...")
+    facebook.getTaggableFriends() onSuccess { case response: js.Dynamic =>
+      val friends = response.asInstanceOf[js.Dynamic].asArray[js.Dynamic]
       g.console.log(s"${friends.length} friend(s) loaded")
-      mySession.fbFriends = friends
-    })
+      friends.foreach(friend => mySession.fbFriends.push(friend))
+    }
   }
 
-  private def login(event: js.Dynamic) {
-    if (isDefined(event)) event.preventDefault()
+  private def login() {
     facebook.login() onComplete {
       case Success(response) =>
         val fbResponse = response.asInstanceOf[js.Dynamic]
         g.console.log(s"fbResponse = ${JSON.stringify(fbResponse)}")
-        val facebookID = fbResponse.authResponse.userID.as[String]
-        $scope.postLoginUpdates(facebookID, true)
+        postLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
         e.printStackTrace()
     }
   }
 
-  private def logout(event: js.Dynamic) {
-    if (isDefined(event)) event.preventDefault()
+  private def logout() {
     facebook.logout()
     mySession.logout()
   }
@@ -169,23 +170,30 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     mySession.facebookID = Option(facebookID)
 
     // load the user"s Facebook profile
+    g.console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     facebook.getUserProfile((response: js.Dynamic) => {
-      g.console.log(s"fbProfile = ${JSON.stringify(response)}")
       mySession.fbProfile = Option(response)
+      facebook.profile = response
     })
 
     // load the user"s ShockTrade profile
+    g.console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
     profileService.getProfileByFacebookID(facebookID) onComplete {
       case Success(profile) =>
         if (!isDefined(profile.error)) {
           g.console.log("ShockTrade user profile loaded...")
-          mySession.userProfile = profile
-          mySession.nonMember = false
+          mySession.setUserProfile(profile)
           loadFacebookFriends()
         }
         else {
-          g.console.log("Non-member identified... Launching Sign-up dialog...")
-          signUpPopup(facebookID, mySession.fbProfile)
+          mySession.nonMember = true
+          if (userInitiated) {
+            g.console.log("Non-member identified... Launching Sign-up dialog...")
+            signUpPopup(facebookID, mySession.fbProfile)
+          }
+          else {
+            g.console.log("Non-member identified... Awaiting Sign-up request...")
+          }
         }
 
       case Failure(e) =>

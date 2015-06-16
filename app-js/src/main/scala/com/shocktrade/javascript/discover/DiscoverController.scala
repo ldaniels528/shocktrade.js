@@ -145,7 +145,11 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   //          Symbols - Recent
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.addRecentSymbol = (symbol: String) => mySession.addRecentSymbol(symbol)
+  $scope.addRecentSymbol = (symbol: String) => {
+    if (mySession.isAuthenticated() && !mySession.isRecentSymbol(symbol)) {
+      mySession.addRecentSymbol(symbol)
+    }
+  }
 
   $scope.isRecentSymbol = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isRecentSymbol)
 
