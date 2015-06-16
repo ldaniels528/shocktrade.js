@@ -166,13 +166,13 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   private def postLoginUpdates(facebookID: String, userInitiated: Boolean) = {
     g.console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
 
-    // capture the user ID
-    mySession.facebookID = Option(facebookID)
+    // capture the Facebook user ID
+    mySession.setFacebookID(facebookID)
 
     // load the user"s Facebook profile
     g.console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     facebook.getUserProfile((response: js.Dynamic) => {
-      mySession.fbProfile = Option(response)
+      mySession.setFacebookProfile(response)
       facebook.profile = response
     })
 

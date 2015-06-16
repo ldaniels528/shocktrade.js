@@ -444,17 +444,14 @@ object ContestController extends Controller with ErrorHandler {
   def purchasePerks(contestId: String, playerId: String) = Action.async { request =>
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
-      case Some(perkCodeNames) =>
-        val perkCodes = perkCodeNames.map(PerkTypes.withName)
+      case Some(perkCodeIDs) =>
+        val perkCodes = perkCodeIDs.map(PerkTypes.withName)
         val result = for {
-        // retrieve the perks
-          perks <- Contests.findAvailablePerks(contestId.toBSID)
-
-          // create the perk code to cost mapping
-          perkCodeCostMapping = Map(perks map (p => (p.code, p.cost)): _*)
+        // retrieve the mapping of perk codes to perk costs
+          perkCostsByCode <- Contests.findAvailablePerks(contestId.toBSID) map (perks => Map(perks map (p => (p.code, p.cost)): _*))
 
           // compute the total cost of the perks
-          totalCost = (perkCodes flatMap perkCodeCostMapping.get).sum
+          totalCost = (perkCodes flatMap perkCostsByCode.get).sum
 
           // perform the purchase
           perks_? <- Contests.purchasePerks(contestId.toBSID, playerId.toBSID, perkCodes, totalCost)
@@ -463,7 +460,8 @@ object ContestController extends Controller with ErrorHandler {
           margin_? <- {
             if (perkCodes.contains(PerkTypes.MARGIN))
               Contests.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount())
-            else Future.successful(None)
+            else
+              Future.successful(None)
           }
 
         } yield margin_? ?? perks_?

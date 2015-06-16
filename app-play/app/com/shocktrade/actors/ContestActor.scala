@@ -61,6 +61,10 @@ object ContestActor {
 
   }
 
+  ///////////////////////////////////////////////////////////////////////////////
+  //      Actor Messages
+  ///////////////////////////////////////////////////////////////////////////////
+
   case class ApplyMarginInterest(contest: Contest, asOfDate: Date) extends ContestSpecificAction {
     override def contestId = contest.id
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {

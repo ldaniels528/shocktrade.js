@@ -6,7 +6,6 @@ import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
@@ -22,12 +21,12 @@ class QuoteService($http: HttpService, @named("MySession") mySession: MySession)
     $http.get[js.Array[js.Dynamic]](s"/api/quotes/autocomplete$queryString")
   }
 
+  def getExchangeCounts: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
+    $http.get[js.Array[js.Dynamic]]("/api/exchanges")
+  }
+
   def getFilterQuotes: js.Function1[js.Dynamic, HttpPromise[js.Dynamic]] = (filter: js.Dynamic) => {
-    mySession.userProfile.OID_? map { userID =>
-      $http.post[js.Dynamic](s"/api/profile/$userID/quotes/filter/mini", filter)
-    } getOrElse {
-      $http.post[js.Dynamic]("/api/quotes/filter/mini", filter)
-    }
+    $http.post[js.Dynamic]("/api/quotes/filter/mini", filter)
   }
 
   def getPricing: js.Function1[js.Array[String], HttpPromise[js.Dynamic]] = (symbols: js.Array[String]) => {
@@ -51,21 +50,6 @@ class QuoteService($http: HttpService, @named("MySession") mySession: MySession)
   }
 
   ////////////////////////////////////////////////////////////////////
-  //			Exchange Functions
-  ///////////////////////////////////////////////////////////////////
-
-  def getExchangeCounts: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
-    $http.get[js.Array[js.Dynamic]]("/api/exchanges")
-  }
-
-  def setExchangeState: js.Function3[String, String, Boolean, HttpPromise[js.Dynamic]] = (id: String, exchange: String, state: Boolean) => {
-    if (state)
-      $http.put[js.Dynamic](s"/api/profile/$id/exchange/$exchange")
-    else
-      $http.delete[js.Dynamic](s"/api/profile/$id/exchange/$exchange")
-  }
-
-  ////////////////////////////////////////////////////////////////////
   //			Sector Exploration Functions
   ///////////////////////////////////////////////////////////////////
 
@@ -74,46 +58,26 @@ class QuoteService($http: HttpService, @named("MySession") mySession: MySession)
   }
 
   def loadSectors: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
-    mySession.userProfile.OID_? map { userID =>
-      $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/sectors")
-    } getOrElse {
-      $http.get[js.Array[js.Dynamic]]("/api/explore/sectors")
-    }
+    $http.get[js.Array[js.Dynamic]]("/api/explore/sectors")
   }
 
   def loadNAICSSectors: js.Function0[HttpPromise[js.Array[js.Dynamic]]] = () => {
-    mySession.userProfile.OID_? map { userID =>
-      $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/naics/sectors")
-    } getOrElse {
-      $http.get[js.Array[js.Dynamic]]("/api/explore/naics/sectors")
-    }
+    $http.get[js.Array[js.Dynamic]]("/api/explore/naics/sectors")
   }
 
   def loadIndustries: js.Function1[String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String) => {
     val queryString = params("sector" -> sector)
-    mySession.userProfile.OID_? map { userID =>
-      $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/industries$queryString")
-    } getOrElse {
-      $http.get[js.Array[js.Dynamic]](s"/api/explore/industries$queryString")
-    }
+    $http.get[js.Array[js.Dynamic]](s"/api/explore/industries$queryString")
   }
 
   def loadSubIndustries: js.Function2[String, String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String, industry: String) => {
     val queryString = params("sector" -> sector, "industry" -> industry)
-    mySession.userProfile.OID_? map { userID =>
-      $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/subIndustries$queryString")
-    } getOrElse {
-      $http.get[js.Array[js.Dynamic]](s"/api/explore/subIndustries$queryString")
-    }
+    $http.get[js.Array[js.Dynamic]](s"/api/explore/subIndustries$queryString")
   }
 
   def loadIndustryQuotes: js.Function3[String, String, String, HttpPromise[js.Array[js.Dynamic]]] = (sector: String, industry: String, subIndustry: String) => {
     val queryString = params("sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry)
-    mySession.userProfile.OID_? map { userID =>
-      $http.get[js.Array[js.Dynamic]](s"/api/profile/$userID/explore/quotes$queryString")
-    } getOrElse {
-      $http.get[js.Array[js.Dynamic]](s"/api/explore/quotes$queryString")
-    }
+    $http.get[js.Array[js.Dynamic]](s"/api/explore/quotes$queryString")
   }
 
   private def setFavorites(updatedQuotes: js.Array[js.Dynamic]) = {

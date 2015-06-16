@@ -18,7 +18,7 @@ import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
-import reactivemongo.core.commands.{GetLastError, _}
+import reactivemongo.core.commands._
 
 import scala.concurrent.Future
 
@@ -186,20 +186,6 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     mcQ.find(JS("symbol" -> symbol), JS("symbol" -> 1, "exchange" -> 1, "sector" -> 1, "industry" -> 1, "subIndustry" -> 1))
       .cursor[JsObject]
       .collect[Seq]() map (js => Ok(JsArray(js)))
-  }
-
-  def addExchange(id: String, exchange: String) = Action.async { implicit request =>
-    mcP.update(JS("_id" -> BSONObjectID(id)), JS("$addToSet" -> JS("exchanges" -> exchange)),
-      new GetLastError, upsert = false, multi = false) map { r =>
-      Ok(r.errMsg.getOrElse(""))
-    }
-  }
-
-  def removeExchange(id: String, exchange: String) = Action.async { implicit request =>
-    mcP.update(JS("_id" -> BSONObjectID(id)), JS("$pull" -> JS("exchanges" -> exchange)),
-      new GetLastError, upsert = false, multi = false) map { r =>
-      Ok(r.errMsg.getOrElse(""))
-    }
   }
 
   def getOrderQuote(symbol: String) = Action.async {
