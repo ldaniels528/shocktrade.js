@@ -1,6 +1,6 @@
 package com.shocktrade.controllers
 
-import com.shocktrade.models.profile.{UserProfile, UserProfiles}
+import com.shocktrade.models.profile.{UserProfile, UserProfileDAO, UserProfiles}
 import com.shocktrade.util.BSONHelper._
 import play.api._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -13,17 +13,15 @@ import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.bson.BSONObjectID
-import reactivemongo.core.commands.GetLastError
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 /**
- * User Profile Resources
+ * User Profile REST Controller
  * @author lawrence.daniels@gmail.com
  */
 object ProfileController extends Controller with MongoController with ErrorHandler {
-  lazy val mcP = db.collection[JSONCollection]("Players")
   lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
 
   ////////////////////////////////////////////////////////////////////////////
@@ -35,8 +33,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
     Try(request.body.asJson map (_.as[ProfileForm])) match {
       case Success(Some(form)) =>
         val profile = UserProfile(name = form.userName, facebookID = form.facebookID, email = form.email)
-        val profileJs = Json.toJson(profile)
-        mcP.insert(profileJs) map { _ => Ok(profileJs) } recover {
+        UserProfiles.createProfile(profile) map { _ => Ok(Json.toJson(profile)) } recover {
           case e: Exception =>
             Logger.error(s"Error creating user profile [${request.body.asJson.orNull}]", e)
             val messages = e.getMessage match {
@@ -54,30 +51,8 @@ object ProfileController extends Controller with MongoController with ErrorHandl
     }
   }
 
-  def getExchanges(id: String) = Action.async { implicit request =>
-    mcP.find(JS("_id" -> BSONObjectID(id)), JS("exchanges" -> 1))
-      .cursor[JsObject]
-      .collect[Seq]() map (o => Ok(JsArray(o)))
-  }
-
-  def setExchanges() = Action.async { implicit request =>
-    request.body.asJson match {
-      case Some(js) =>
-        val params = toExchangeUpdate(js)
-
-        // db.Players.update({_id:"51a308ac50c70a97d375a6b2", {$set:{exchangesToExclude:["AMEX", "NASDAQ", "NYSE"]}})
-        mcP.update(
-          JS("_id" -> params.id.toBSID),
-          JS("$set" -> JS("exchanges" -> JsArray(params.exchanges map (Json.toJson(_))))),
-          new GetLastError(),
-          upsert = false, multi = false) map (r => Ok(r.errMsg getOrElse ""))
-      case _ =>
-        Future.successful(BadRequest("JSON object expected"))
-    }
-  }
-
   def deductFunds(id: String) = Action.async { implicit request =>
-    request.body.asJson flatMap(_.asOpt[WalletForm]) match {
+    request.body.asJson flatMap (_.asOpt[WalletForm]) match {
       case Some(form) =>
         UserProfiles.deductFunds(id.toBSID, form.adjustment) map {
           case Some(profile) => Ok(Json.toJson(profile))
@@ -104,11 +79,8 @@ object ProfileController extends Controller with MongoController with ErrorHandl
 
   def findFacebookFriends = Action.async { request =>
     request.body.asJson match {
-      case Some(fbIds: JsArray) =>
-        // db.Players.find({facebookID:{$in:["100001920054300", "100001992439064"]}}, {name:1})
-        mcP.find(JS("facebookID" -> JS("$in" -> fbIds)), JS("name" -> 1, "facebookID" -> 1))
-          .cursor[JsObject]
-          .collect[Seq]() map (o => Ok(JsArray(o)))
+      case Some(JsArray(values)) =>
+        UserProfiles.findFacebookFriends(values.map(_.as[String])) map (o => Ok(Json.toJson(o)))
       case _ =>
         Future.successful(BadRequest("JSON array of IDs expected"))
     }
@@ -119,11 +91,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: PUT /api/profile/:id/favorite/:symbol
    */
   def addFavoriteSymbol(id: String, symbol: String) = Action.async {
-    for {
-    // db.Players.update({"_id":ObjectId("51a308ac50c70a97d375a6b2")}, {$addToSet:{"favorites" : "AHFD"}});
-      response <- mcP.update(JS("_id" -> BSONObjectID(id)), JS("$addToSet" -> JS("favorites" -> symbol)),
-        new GetLastError(), upsert = false, multi = false)
-    } yield Ok(symbol)
+    UserProfileDAO.addFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
   }
 
   /**
@@ -131,12 +99,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: DELETE /api/profile/:id/favorite/:symbol
    */
   def removeFavoriteSymbol(id: String, symbol: String) = Action.async {
-    for {
-    // db.Players.update({"_id":ObjectId("51a308ac50c70a97d375a6b2")}, {$pull:{"favorites" : "AHFD"}});
-    // db.Players.find({"_id":ObjectId("51a308ac50c70a97d375a6b2")}, {favorites:1});
-      response <- mcP.update(JS("_id" -> BSONObjectID(id)), JS("$pull" -> JS("favorites" -> symbol)),
-        new GetLastError(), upsert = false, multi = false)
-    } yield Ok(symbol)
+    UserProfileDAO.removeFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
   }
 
   /**
@@ -144,11 +107,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: PUT /api/profile/:id/recent/:symbol
    */
   def addRecentSymbol(id: String, symbol: String) = Action.async {
-    for {
-    // db.Players.update({"_id":ObjectId("51a308ac50c70a97d375a6b2")}, {$addToSet:{"favorites" : "AHFD"}});
-      response <- mcP.update(JS("_id" -> BSONObjectID(id)), JS("$addToSet" -> JS("recentSymbols" -> symbol)),
-        new GetLastError(), upsert = false, multi = false)
-    } yield Ok(symbol)
+    UserProfileDAO.addRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
   }
 
   /**
@@ -156,17 +115,14 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: DELETE /api/profile/:id/recent/:symbol
    */
   def removeRecentSymbol(id: String, symbol: String) = Action.async {
-    for {
-      response <- mcP.update(JS("_id" -> BSONObjectID(id)), JS("$pull" -> JS("recentSymbols" -> symbol)),
-        new GetLastError(), upsert = false, multi = false)
-    } yield Ok(symbol)
+    UserProfileDAO.removeRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
   }
 
   /**
    * Deletes a collection of notifications
    * REST: DELETE /api/updates
    */
-  def deleteNotifications() = Action.async { request =>
+  def deleteNotifications = Action.async { request =>
     request.body.asText match {
       case Some(msg) if msg.startsWith("[") && msg.endsWith("]") =>
         val messageIDs = msg.drop(1).dropRight(1).split(",").map(s => s.drop(1).dropRight(1)).toSeq
