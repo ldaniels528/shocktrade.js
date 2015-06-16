@@ -1,4 +1,6 @@
-// Facebook SDK injector
+/**
+ * Facebook SDK injector
+ */
 (function (fbroot) {
     // is the element our script?
     var id = 'facebook-jssdk';
@@ -7,13 +9,13 @@
     }
 
     // dynamically create the script
-    var js = fbroot.createElement('script');
+    var js = fbroot.createElement("script");
     js.id = id;
     js.async = true;
     js.src = "http://connect.facebook.net/en_US/all.js";
 
     // get the script and insert our dynamic script
-    var ref = fbroot.getElementsByTagName('script')[0];
+    var ref = fbroot.getElementsByTagName("script")[0];
     ref.parentNode.insertBefore(js, ref);
 }(document));
 
@@ -21,7 +23,7 @@
  * Returns the Facebook application ID based on the running host
  * @returns {*}
  */
-window.getAppId = function () {
+window.getShockTradeAppID = function () {
     console.log("Facebook - hostname: " + location.hostname);
     switch (location.hostname) {
         case "localhost":
@@ -48,47 +50,36 @@ window.getAppId = function () {
  * Asynchronously load the Facebook SDK
  */
 window.fbAsyncInit = function () {
-    // initialize the Facebook SDK
+    var appId = getShockTradeAppID();
+    console.log("Initializing Facebook SDK (App ID " + appId + ")...");
     FB.init({
-        appId: getAppId(),
+        appId: appId,
         status: true,
         xfbml: true
     });
 
-    // get the login status
-    FB.getLoginStatus(function (response) {
-        if (response.status === 'connected') {
-            // capture the Facebook login status
-            if (response.authResponse) {
-                console.log("Successfully loaded the Facebook profile...");
-
-                // capture the user ID and access token
-                var rootElem = $("#ShockTradeMain");
-                var injector = angular.element(rootElem).injector();
-                var Facebook = injector.get("Facebook");
-                if (Facebook) {
-                    Facebook.FB = FB;
-                    Facebook.appID = getAppId();
-                    Facebook.auth = response.authResponse;
-                    Facebook.userID = response.authResponse.userID;
-                    Facebook.accessToken = response.authResponse.accessToken;
-                }
-                else {
-                    console.log("Facebook service could not be retrieved");
-                }
+    // capture the user ID and access token
+    var elemName = "#ShockTradeMain";
+    var rootElem = $(elemName);
+    var injector = angular.element(rootElem).injector();
+    var facebook = injector.get("Facebook");
+    if (facebook) {
+        facebook.init(FB).then(
+            function (response) {
+                console.log("Facebook login successful.");
+                console.log("FB response: " + angular.toJson(response));
 
                 // react the the login status
                 var scope = angular.element(rootElem).scope();
                 if (scope) {
-                    scope.$apply(function () {
-                        scope.postLoginUpdates(Facebook.userID, false);
-                    });
+                    scope.postLoginUpdates(facebook.facebookID, false);
                 }
-                else {
-                    console.log("scope could not be retrieved");
-                }
-            }
-        }
-    });
+                else console.log("Scope for " + elemName + " could not be retrieved");
+            },
+            function (err) {
+                console.log("Facebook Service: " + err);
+            });
+    }
+    else console.log("Facebook service could not be retrieved");
 
 };
