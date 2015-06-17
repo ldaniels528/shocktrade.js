@@ -20,6 +20,7 @@ PUT           /api/contest                                          com.shocktra
 GET           /api/contest/:id                                      com.shocktrade.controllers.ContestController.getContestByID(id)
 DELETE        /api/contest/:id                                      com.shocktrade.controllers.ContestController.deleteContestByID(id)
 PUT           /api/contest/:id/chat                                 com.shocktrade.controllers.ContestController.createChatMessage(id)
+GET           /api/contest/:id/close                                com.shocktrade.controllers.ContestController.closeContest(id)
 POST          /api/contest/:id/host                                 com.shocktrade.controllers.ContestController.updateProcessingHost(id)
 GET           /api/contest/:id/margin/:playerId/marketValue         com.shocktrade.controllers.ContestController.getMarginMarketValue(id, playerId)
 PUT           /api/contest/:id/margin/:playerId                     com.shocktrade.controllers.ContestController.createMarginAccount(id, playerId)

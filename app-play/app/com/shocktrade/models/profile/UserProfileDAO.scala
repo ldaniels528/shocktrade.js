@@ -1,6 +1,7 @@
 package com.shocktrade.models.profile
 
 import com.shocktrade.controllers.ProfileController._
+import com.shocktrade.core.AwardCodes.AwardCode
 import com.shocktrade.util.BSONHelper._
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}
@@ -15,6 +16,15 @@ import scala.language.{implicitConversions, postfixOps}
  */
 object UserProfileDAO {
   private implicit val mc = db.collection[BSONCollection]("Players")
+
+  /**
+   * Applies the given set of awards to the specified user profile
+   * @param userID the given user ID
+   * @param awards the given collection of awards
+   */
+  def applyAwards(userID: BSONObjectID, awards: Seq[AwardCode])(implicit ec: ExecutionContext): Future[LastError] = {
+    mc.update(BS("_id" -> userID), BS("$addToSet" -> BS("awards" -> BS("$each" -> awards.map(_.toString)))), upsert = false, multi = false)
+  }
 
   /**
    * Creates the given user profile

@@ -12,7 +12,7 @@ import com.shocktrade.controllers.QuotesController.Quote
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
 import com.shocktrade.models.quote.StockQuotes
-import com.shocktrade.server.trading.Contests
+import com.shocktrade.server.trading.{Contests, OrderProcessor}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api._
@@ -56,6 +56,17 @@ object ContestController extends Controller with ErrorHandler {
       .map(_.orDie(s"Order $orderId could not be canceled"))
       .map(contest => Ok(Json.toJson(contest)))
       .recover { case e: Exception => Ok(createError(e)) }
+  }
+
+  def closeContest(contestId: String) = Action.async {
+    val outcome = for {
+      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+      result <- OrderProcessor.closeContest(contest, contest.asOfDate.getOrElse(new Date()))
+    } yield result
+
+    outcome map { case (liquidations, contest) =>
+      Ok(JS("name" -> contest.name, "count" -> liquidations.size))
+    }
   }
 
   /**

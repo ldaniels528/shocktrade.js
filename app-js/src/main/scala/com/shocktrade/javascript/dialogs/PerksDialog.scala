@@ -48,7 +48,7 @@ class PerksDialog($http: HttpService, $modal: ModalService, @named("MySession") 
    * Retrieves the promise of an option of a perks response
    * @return the promise of an option of a [[PerksResponse perks response]]
    */
-  def getMyPerks(contestId: String, playerId: String): HttpPromise[PerksResponse] = {
+  def getMyPerks: js.Function2[String, String, HttpPromise[PerksResponse]] = (contestId: String, playerId: String) => {
     required("contestId", contestId)
     required("userId", playerId)
 

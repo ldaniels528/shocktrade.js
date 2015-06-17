@@ -1,5 +1,7 @@
 package com.shocktrade.server.trading
 
+//import com.shocktrade.core.
+
 import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
@@ -8,7 +10,7 @@ import com.ldaniels528.tabular.formatters.FormatHandler
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
-import com.shocktrade.models.profile.UserProfiles
+import com.shocktrade.models.profile.{UserProfileDAO, UserProfiles}
 import com.shocktrade.server.trading.Outcome.{Failed, Succeeded}
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
@@ -36,7 +38,7 @@ object OrderProcessor {
   /**
    * Processes the given contest
    */
-  def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
+  def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Int] = {
     // compute the market close time (+20 minutes for margin of error)
     val tradingClose = new DateTime(getTradeStopTime()).plusMinutes(20).toDate
 
@@ -55,7 +57,7 @@ object OrderProcessor {
 
     // is this contest expired?
     if (c.expirationTime.exists(expTime => tradingClose >= expTime)) {
-      closedExpiredContest(c, asOfDate)
+      closeContest(c, asOfDate)
     }
 
     // if successful, display the summary,
@@ -67,7 +69,7 @@ object OrderProcessor {
     }
   }
 
-  def closedExpiredContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
+  def closeContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
     Logger.info(s"Closing contest '${c.name}' ...")
 
     val outcome = for {
@@ -76,12 +78,22 @@ object OrderProcessor {
       sellOff <- liquidateAllHeldSecurities(c, prices, asOfDate)
       closedContest <- ContestDAO.closeContest(c) map (_ orDie "Contest could not be closed")
       refunds <- refundTheProceedsToParticipants(closedContest)
+      awards <- applyAwards(closedContest)
     } yield (sellOff, closedContest)
 
     // display the results
     outcome.map { case (sellOff, _) =>
       Logger.info(s"Contest '${c.name}' is closed.")
       tabular.transform(sellOff) foreach (info(c, _))
+    }
+    outcome
+  }
+
+  private def applyAwards(c: Contest)(implicit ec: ExecutionContext) = {
+    Future.sequence {
+      AwardsProcessor.qualifyAwards(c) map { case (participant, awards) =>
+        UserProfileDAO.applyAwards(participant.id, awards)
+      }
     }
   }
 
