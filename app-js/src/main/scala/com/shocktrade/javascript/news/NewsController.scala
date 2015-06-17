@@ -2,6 +2,7 @@ package com.shocktrade.javascript.news
 
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.{CookieStore, Sce, Toaster}
+import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -17,31 +18,27 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
   extends ScopeController {
 
   private var newsSymbols = js.Array[js.Dynamic]()
-  private var loading = false
   private var channels = js.Array[js.Dynamic]()
-  private val selection = JS(feed = "")
   private var newsSources = js.Array[js.Dynamic]()
 
-  $scope.selection = selection
-
-  // get the previously selected view from the cookie
+  // define the scope variables
+  // view: get the previously selected view from the cookie
+  $scope.selection = JS(feed = "")
   $scope.view = $cookieStore.get("NewsController_view").toOption.getOrElse("list")
 
-  $scope.getChannels = () => channels
+  /////////////////////////////////////////////////////////////////////////////
+  //			Public Functions
+  /////////////////////////////////////////////////////////////////////////////
 
-  $scope.newsSources = () => newsSources
+  $scope.getChannels = () => channels
 
   $scope.getNewsFeed = (feedId: String) => findNewsFeed(feedId)
 
   $scope.getNewsSources = () => findNewsSources
 
-  /**
-   * Return the appropriate class to create a diagonal grid
-   */
-  $scope.gridClass = { (index: Int) => val row = Math.floor(index / 2)
-    val cell = if (row % 2 == 0) index % 2 else (index + 1) % 2
-    s"news_tile$cell"
-  }
+  $scope.gridClass = (index: Int) => getGridClass(index)
+
+  $scope.newsSources = () => newsSources
 
   $scope.trustMe = (html: String) => $sce.trustAsHtml(html)
 
@@ -51,33 +48,34 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
 
   private def findNewsSources = {
     g.console.log("Loading news sources...")
-    startLoading()
+    $scope.startLoading()
     newsService.getNewsSources() onComplete {
       case Success(sources) =>
         newsSources = sources
-        if (newsSources.nonEmpty) {
-          val feed = newsSources.headOption.flatMap(obj => Option(obj._id).map(_.$oid)).orNull.asInstanceOf[String]
-          selection.feed = feed
+
+        // select the ID of the first feed
+        newsSources.headOption.map(_.OID) foreach { feed =>
+          $scope.selection.feed = feed
           findNewsFeed(feed)
         }
-        stopLoading()
+        $scope.stopLoading()
       case Failure(e) =>
         toaster.error("Failed to load news sources")
-        stopLoading()
+        $scope.stopLoading()
     }
   }
 
   private def findNewsFeed(feedId: String) = {
     g.console.log("Getting news feeds...")
-    startLoading()
+    $scope.startLoading()
     newsService.getNewsFeed(feedId) onComplete {
       case Success(feedChannels) =>
         populateQuotes(feedChannels)
         this.channels = feedChannels; //enrichTickers(feeds)
-        stopLoading()
+        $scope.stopLoading()
       case Failure(e) =>
         toaster.error(s"Failed to load news feed $feedId")
-        stopLoading()
+        $scope.stopLoading()
     }
   }
 
@@ -93,12 +91,19 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
         }
 
         // add ... to the end of incomplete sentences
-        if (description.last != '.') {
-          item.description += "..."
-        }
+        if (description.last != '.') item.description += "..."
       }
     }
     channels
+  }
+
+  /**
+   * Return the appropriate class to create a diagonal grid
+   */
+  private def getGridClass(index: Int) = {
+    val row = Math.floor(index / 2)
+    val cell = if (row % 2 == 0) index % 2 else (index + 1) % 2
+    s"news_tile$cell"
   }
 
   private def replaceSymbols(description: String, quotes: js.Array[js.Dynamic]) = {
@@ -109,21 +114,21 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
         case -1 => description
         case start =>
           sb.replace(start, start + term.length,
-            s"""|(<a href="#/discover?symbol=${q.symbol}">
-                |<span ${popup(q)} class="${q.exchange}">${q.symbol}</span>
-                |</a>${changeArrow(q)})
-                |""".stripMargin)
+            s"""(<a href="#/discover?symbol=${q.symbol}">
+                    <span ${popup(q)} class="${q.exchange}">${q.symbol}</span>
+                  </a>${changeArrow(q)})""".stripPrefix(" ").stripSuffix(" ")
+          )
       }
     }
     sb.toString()
   }
 
   private def popup(q: js.Dynamic) = {
-    s"""|popover-title="${q.name} (${q.exchange})"
-        |popover="${q.sector} &#8212; ${q.industry}"
-        |popover-trigger="mouseenter"
-        |popover-placement="right"
-        |""".stripMargin
+    s"""popover-title="${q.name} (${q.exchange})"
+        popover="${q.sector} &#8212; ${q.industry}"
+        popover-trigger="mouseenter"
+        popover-placement="right"
+        """.stripPrefix(" ").stripSuffix(" ")
   }
 
   private def populateQuotes(channels: js.Array[js.Dynamic]) = {
@@ -144,9 +149,5 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
     val colorClass = if (isNeg) "negative" else "positive"
     f"""<span class="fa $iconClass $colorClass">$changePct%.2f%%</span>"""
   }
-
-  private def startLoading() = loading = true
-
-  private def stopLoading() = loading = false
 
 }
