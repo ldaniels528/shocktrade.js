@@ -1,6 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.angular
+import com.greencatsoft.angularjs.extensions.ModalOptions
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -116,21 +117,6 @@ object ScalaJsHelper {
 
   }
 
-
-  /**
-   * Convenience methods for strings
-   * @param string the given host string
-   */
-  implicit class StringExtensions(val string: String) extends AnyVal {
-
-    def isBlank: Boolean = string == null && string.trim.isEmpty
-
-    def nonBlank: Boolean = string != null && string.trim.nonEmpty
-
-    def isValidEmail: Boolean = !string.matches( """/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i""")
-
-  }
-
   /**
    * js.Dynamic to Value Extensions
    * @param obj the given [[js.Dynamic object]]
@@ -184,6 +170,30 @@ object ScalaJsHelper {
           false
       }
     }
+
+  }
+
+  /**
+   * Modal Options Extensions
+   * @param options the given [[ModalOptions modal options]]
+   */
+  implicit class ModalOptionsExtensions(val options: ModalOptions) extends AnyVal {
+
+    def resolve(values: js.Dynamic) = options.asInstanceOf[js.Dynamic].resolve = values
+
+  }
+
+  /**
+   * Convenience methods for strings
+   * @param string the given host string
+   */
+  implicit class StringExtensions(val string: String) extends AnyVal {
+
+    def isBlank: Boolean = string == null && string.trim.isEmpty
+
+    def nonBlank: Boolean = string != null && string.trim.nonEmpty
+
+    def isValidEmail: Boolean = !string.matches( """/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i""")
 
   }
 

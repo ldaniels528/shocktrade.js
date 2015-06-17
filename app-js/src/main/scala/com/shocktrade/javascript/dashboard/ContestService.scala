@@ -21,7 +21,7 @@ class ContestService($cookieStore: CookieStore, $http: HttpService, toaster: Toa
   //          Basic C.R.U.D.
   ///////////////////////////////////////////////////////////////
 
-  def createContest: js.Function = (form: js.Dynamic) => {
+  def createContest: js.Function1[js.Dynamic, HttpPromise[js.Dynamic]] = (form: js.Dynamic) => {
     required("form", form)
     $http.put[js.Dynamic]("/api/contest", form)
   }

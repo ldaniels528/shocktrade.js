@@ -6,7 +6,7 @@ import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.dialogs.SignUpDialog
+import com.shocktrade.javascript.dialogs.SignUpDialogService
 import com.shocktrade.javascript.profile.{FacebookService, ProfileService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,7 +25,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
                      @named("Facebook") facebook: FacebookService,
                      @named("MySession") mySession: MySession,
                      @named("ProfileService") profileService: ProfileService,
-                     @named("SignUpDialog") signUpDialog: SignUpDialog)
+                     @named("SignUpDialog") signUpDialog: SignUpDialogService)
   extends ScopeController {
 
   private var isLoading = false

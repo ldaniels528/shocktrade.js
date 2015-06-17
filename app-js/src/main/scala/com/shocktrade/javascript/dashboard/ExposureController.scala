@@ -29,6 +29,10 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
     JS(value = "market", label = "Exchange Sub-Market Exposure"),
     JS(value = "securities", label = "Securities Exposure"))
 
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
+
   /**
    * Initializes the view by displaying an initial chart
    */
@@ -41,6 +45,20 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
   $scope.getChartData = () => chartData
 
   $scope.exposurePieChart = (contest: js.Dynamic, exposure: js.Dynamic, userID: js.Dynamic) => {
+    exposurePieChart(contest, exposure, userID)
+  }
+
+  $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
+
+  $scope.xFunction = () => { (d: js.Dynamic) => d.label }: js.Function1[js.Dynamic, js.Dynamic]
+
+  $scope.yFunction = () => { (d: js.Dynamic) => d.value }: js.Function1[js.Dynamic, js.Dynamic]
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  private def exposurePieChart(contest: js.Dynamic, exposure: js.Dynamic, userID: js.Dynamic) = {
     g.console.log(s"contest = $contest, exposure = $exposure, userID = $userID")
     $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/${contest.OID}/$userID") onComplete {
       case Success(data) =>
@@ -50,12 +68,6 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
         g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")
     }
   }
-
-  $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
-
-  $scope.xFunction = { () => (d: js.Dynamic) => d.label }: js.Function
-
-  $scope.yFunction = { () => (d: js.Dynamic) => d.value }: js.Function
 
   /**
    * Initializes the view by displaying an initial chart

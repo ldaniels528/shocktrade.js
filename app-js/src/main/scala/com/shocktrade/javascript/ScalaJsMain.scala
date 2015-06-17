@@ -4,9 +4,6 @@ import biz.enef.angulate._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.admin.InspectController
 import com.shocktrade.javascript.dashboard._
-import com.shocktrade.javascript.dialogs.PerksDialog.PerksDialogController
-import com.shocktrade.javascript.dialogs.SignUpDialog.SignUpController
-import com.shocktrade.javascript.dialogs.TransferFundsDialog.TransferFundsDialogController
 import com.shocktrade.javascript.dialogs._
 import com.shocktrade.javascript.directives.EscapeDirective
 import com.shocktrade.javascript.discover._
@@ -81,13 +78,21 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
 
     // ShockTrade dialogs
+    module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
+    module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
+    module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")
+    module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
+    module.serviceOf[NewGameDialogService]("NewGameDialog")
+    module.controllerOf[NewGameDialogController]("NewGameDialogController")
     module.serviceOf[NewOrderDialogService]("NewOrderDialog")
     module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
-    module.serviceOf[PerksDialog]("PerksDialog")
+    module.serviceOf[NewsQuoteDialogService]("NewsQuoteDialog")
+    module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
+    module.serviceOf[PerksDialogService]("PerksDialog")
     module.controllerOf[PerksDialogController]("PerksDialogController")
-    module.serviceOf[SignUpDialog]("SignUpDialog")
-    module.controllerOf[SignUpController]("SignUpController")
-    module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
+    module.serviceOf[SignUpDialogService]("SignUpDialog")
+    module.controllerOf[SignUpDialogController]("SignUpController")
+    module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
   }
 

@@ -10,7 +10,7 @@ import com.shocktrade.javascript.discover.QuoteService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * New Order Dialog Controller
@@ -21,7 +21,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
                                @named("ContestService") contestService: ContestService,
                                @named("MySession") mySession: MySession,
                                @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
-                               @named("PerksDialog") perksDialog: PerksDialog,
+                               @named("PerksDialog") perksDialog: PerksDialogService,
                                @named("QuoteService") quoteService: QuoteService)
   extends ScopeController {
 
@@ -85,7 +85,6 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
   private def accept(form: js.Dynamic) = {
     if (isValid(form)) {
-      messages.remove(0, messages.length)
       processing = true
 
       val contestId = mySession.getContestID()

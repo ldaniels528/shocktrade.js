@@ -3,18 +3,15 @@
         <h3>Send Game Invite(s)</h3>
     </div>
     <div class="modal-body">
-        <div class="bold">
-            {{ getInvitedCount() }} Friend(s) Selected
-        </div>
+        <div class="bold">{{ getInvitedCount() }} Friend(s) Selected</div>
         <div class="row">
             <div class="col-md-7">
                 <div class="friendsContainer">
                     <table style="width: 100%">
-                        <tr ng-repeat="friend in MySession.fbFriends">
+                        <tr ng-repeat="friend in getFriends()">
                             <td>
                                 <input type="checkbox" ng-model="invites[$index]">
-                                <avatar object="{{ friend }}" class="avatar-16"></avatar>
-                                {{ friend.name }}
+                                <avatar object="{{ friend }}" class="avatar-16"></avatar> {{ friend.name }}
                             </td>
                         </tr>
                     </table>

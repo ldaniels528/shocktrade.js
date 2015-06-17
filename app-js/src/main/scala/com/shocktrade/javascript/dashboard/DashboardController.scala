@@ -5,7 +5,7 @@ import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
+import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
@@ -19,8 +19,8 @@ import scala.util.{Failure, Success}
 class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                           @named("ContestService") contestService: ContestService,
                           @named("MySession") mySession: MySession,
-                          @named("PerksDialog") perksDialog: PerksDialog,
-                          @named("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
+                          @named("PerksDialog") perksDialog: PerksDialogService,
+                          @named("TransferFundsDialog") transferFundsDialog: TransferFundsDialogService)
   extends ScopeController {
 
   private var accountMode = false
