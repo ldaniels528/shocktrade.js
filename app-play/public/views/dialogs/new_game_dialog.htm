@@ -3,10 +3,10 @@
         <h4 style="color: #345688">Create New Game</h4>
     </div>
     <div class="modal-body">
-        <span ng-show="errors.length">
+        <span ng-show="getMessages().length">
             <span class="error">Please correct the following:</span>
             <ul>
-                <li class="error" ng-repeat="error in errors">
+                <li class="error" ng-repeat="error in getMessages()">
                     <span class="error">{{ error }}</span>
                 </li>
             </ul>
@@ -54,9 +54,7 @@
                         ng-model="form.levelCap"
                         ng-disabled="!form.levelCapAllowed">
                     <option value="">-- Level Cap --</option>
-                    <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' +
-                        level.description }}
-                    </option>
+                    <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
                 </select>
             </div>
             <div class="col-md-6">
@@ -72,9 +70,9 @@
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">
             <button class="btn btn-primary pull-left" style="margin-top: 10px" ng-click="create()">
-                Create Game
+                <img ng-show="isProcessing()" src="/asset/images/status/loading.gif" ng-disabled="isProcessing()"> Create Game
             </button>
-            <button class="btn btn-warning pull-right" style="float: right; margin-top: 10px" ng-click="cancel()">
+            <button class="btn btn-warning pull-right" style="margin-top: 10px" ng-click="cancel()" ng-disabled="isProcessing()">
                 Cancel
             </button>
         </div>
