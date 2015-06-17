@@ -20,66 +20,64 @@
 }(document));
 
 /**
- * Returns the Facebook application ID based on the running host
- * @returns {*}
- */
-window.getShockTradeAppID = function () {
-    console.log("Facebook - hostname: " + location.hostname);
-    switch (location.hostname) {
-        case "localhost":
-            return "522523074535098"; // local dev
-        case "www.shocktrade.biz":
-            return "616941558381179";
-        case "shocktrade.biz":
-            return "616941558381179";
-        case "www.shocktrade.com":
-            return "364507947024983";
-        case "shocktrade.com":
-            return "364507947024983";
-        case "www.shocktrade.net":
-            return "616569495084446";
-        case "shocktrade.net":
-            return "616569495084446";
-        default:
-            console.log("Unrecognized hostname '" + location.hostname + "'");
-            return "522523074535098"; // unknown, so local dev
-    }
-};
-
-/**
  * Asynchronously load the Facebook SDK
  */
 window.fbAsyncInit = function () {
-    var appId = getShockTradeAppID();
-    console.log("Initializing Facebook SDK (App ID " + appId + ")...");
-    FB.init({
-        appId: appId,
-        status: true,
-        xfbml: true
-    });
+    var attemptsLeft = 5;
 
-    // capture the user ID and access token
-    var elemName = "#ShockTradeMain";
-    var rootElem = $(elemName);
-    var injector = angular.element(rootElem).injector();
-    var facebook = injector.get("Facebook");
-    if (facebook) {
-        facebook.init(FB).then(
-            function (response) {
-                console.log("Facebook login successful.");
-                console.log("FB response: " + angular.toJson(response));
+    /**
+     * Initializes the Facebook SDK
+     * @param appId the given application ID
+     */
+    function fbInit(appId) {
+        console.log("Initializing Facebook SDK (App ID " + appId + ")...");
+        FB.init({
+            appId: appId,
+            status: true,
+            xfbml: true
+        });
 
-                // react the the login status
-                var scope = angular.element(rootElem).scope();
-                if (scope) {
-                    scope.postLoginUpdates(facebook.facebookID, false);
-                }
-                else console.log("Scope for " + elemName + " could not be retrieved");
-            },
-            function (err) {
-                console.log("Facebook Service: " + err);
-            });
+        // capture the user ID and access token
+        var elemName = "#ShockTradeMain";
+        var rootElem = $(elemName);
+        var injector = angular.element(rootElem).injector();
+        var facebook = injector.get("Facebook");
+        if (facebook) {
+            facebook.init(FB).then(
+                function (response) {
+                    console.log("Facebook login successful.");
+
+                    // react the the login status
+                    var scope = angular.element(rootElem).scope();
+                    if (scope) {
+                        scope.postLoginUpdates(facebook.facebookID, false);
+                    }
+                    else console.log("Scope for " + elemName + " could not be retrieved");
+                },
+                function (err) {
+                    console.log("Facebook Service: " + err);
+                });
+        }
+        else console.log("Facebook service could not be retrieved");
     }
-    else console.log("Facebook service could not be retrieved");
+
+    /**
+     * Ensures the Facebook SDK is loaded using ShockTrade App ID
+     */
+    function doInit() {
+        var appId = getShockTradeAppID();
+        if(appId) fbInit(appId);
+        else if(--attemptsLeft > 0) {
+            console.log("Facebook Service not loaded yet... Retry in 500ms (attempts remaining = " + attemptsLeft + ")");
+            setTimeout(function() {
+                doInit();
+            }, 500)
+        }
+    }
+
+    // initialize the Facebook SDK
+    (function() {
+        doInit();
+    })();
 
 };
