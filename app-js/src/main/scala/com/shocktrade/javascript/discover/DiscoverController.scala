@@ -6,6 +6,7 @@ import com.greencatsoft.angularjs.core.Q
 import com.ldaniels528.angularjs.{CookieStore, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import org.scalajs.jquery.jQuery
 
@@ -23,7 +24,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
                          $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                          @named("MarketStatus") marketStatus: MarketStatusService,
                          @named("MySession") mySession: MySession,
-                         @named("NewOrderDialog") newOrderDialog: js.Dynamic,
+                         @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @named("QuoteService") quoteService: QuoteService)
   extends ScopeController {
 

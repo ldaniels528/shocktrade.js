@@ -57,10 +57,10 @@
                 <label for="marginAccount">Margin</label>
             </div>
             <div class="col-md-4">
-                <input class="form-control yellow" ng-model="form.limitPrice" type="text" placeholder="Price">
+                <input class="form-control yellow" ng-model="form.limitPrice" type="number" placeholder="Price">
             </div>
             <div class="col-md-4">
-                <input class="form-control yellow" ng-model="form.quantity" type="text" placeholder="Quantity">
+                <input class="form-control yellow" ng-model="form.quantity" type="number" placeholder="Quantity">
             </div>
         </div>
         <div class="row">
@@ -146,9 +146,12 @@
         </div>
 
         <!-- error messages -->
-        <div class="row">
+        <div class="row" style="padding-left: 10px">
+            <span ng-show="getMessages().length" class="error">
+                Please correct the following:
+            </span>
             <ul class="error">
-                <li class="error" ng-repeat="message in messages">
+                <li class="error" ng-repeat="message in getMessages()">
                     <span class="error">{{message}}</span>
                 </li>
             </ul>
@@ -156,7 +159,7 @@
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">
-            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="ok()">
+            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="ok(form)">
                 <img ng-show="processing" src="/assets/images/status/loading.gif"> Place Order
             </button>
             <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">

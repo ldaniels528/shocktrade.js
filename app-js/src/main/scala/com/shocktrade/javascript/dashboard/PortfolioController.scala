@@ -6,6 +6,7 @@ import com.ldaniels528.angularjs.{CookieStore, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
+import com.shocktrade.javascript.dialogs.NewOrderDialogService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -18,7 +19,7 @@ import scala.util.{Failure, Success}
 class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout: Timeout, toaster: Toaster,
                           @named("MySession") mySession: MySession,
                           @named("ContestService") contestService: ContestService,
-                          @named("NewOrderDialog") newOrderDialog: js.Dynamic)
+                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService)
   extends ScopeController {
 
   $scope.selectedClosedOrder = null

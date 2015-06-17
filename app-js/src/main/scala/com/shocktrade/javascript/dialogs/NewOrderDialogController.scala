@@ -1,0 +1,141 @@
+package com.shocktrade.javascript.dialogs
+
+import biz.enef.angulate.{ScopeController, named}
+import com.greencatsoft.angularjs.extensions.ModalInstance
+import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.discover.QuoteService
+
+import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.util.{Failure, Success, Try}
+
+/**
+ * New Order Dialog Controller
+ * @author lawrence.daniels@gmail.com
+ */
+class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, toaster: Toaster,
+                               @named("params") params: js.Dynamic,
+                               @named("ContestService") contestService: ContestService,
+                               @named("MySession") mySession: MySession,
+                               @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
+                               @named("PerksDialog") perksDialog: PerksDialog,
+                               @named("QuoteService") quoteService: QuoteService)
+  extends ScopeController {
+
+  private val messages = emptyArray[String]
+  private var processing = false
+
+  $scope.form = JS(
+    emailNotify = true,
+    symbol = if (isDefined(params.symbol)) params.symbol else "AAPL",
+    quantity = params.quantity,
+    accountType = if (isDefined(params.accountType)) params.accountType else "CASH"
+  )
+  $scope.quote = JS(symbol = $scope.form.symbol)
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => $scope.orderQuote($scope.form.symbol)
+
+  $scope.autoCompleteSymbols = (searchTerm: String) => quoteService.autoCompleteSymbols(searchTerm, 20)
+
+  $scope.cancel = () => $modalInstance.dismiss("cancel")
+
+  $scope.getMessages = () => messages
+
+  $scope.isProcessing = () => processing
+
+  $scope.ok = (form: js.Dynamic) => accept(form)
+
+  $scope.orderQuote = (ticker: js.Dynamic) => orderQuote(ticker)
+
+  $scope.getTotal = (form: js.Dynamic) => getTotal(form)
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  private def orderQuote(ticker: js.Dynamic) = {
+    // determine the symbol
+    var symbol: String = if (isDefined(ticker.symbol)) ticker.symbol.as[String]
+    else {
+      val _ticker = ticker.as[String]
+      val index = _ticker.indexOf(" ")
+      if (index == -1) _ticker else _ticker.substring(0, index)
+    }
+
+    if (symbol.nonBlank) {
+      symbol = symbol.trim.toUpperCase
+      newOrderDialog.lookupQuote(symbol) onComplete {
+        case Success(quote) =>
+          $scope.quote = quote
+          $scope.form.symbol = quote.symbol
+          $scope.form.limitPrice = quote.lastTrade
+          $scope.form.exchange = quote.exchange
+        case Failure(e) =>
+          messages.push(s"The order could not be processed (error code ${e.getMessage})")
+      }
+    }
+  }
+
+  private def accept(form: js.Dynamic) = {
+    if (isValid(form)) {
+      messages.remove(0, messages.length)
+      processing = true
+
+      val contestId = mySession.getContestID()
+      val playerId = mySession.getUserID()
+      g.console.log(s"contestId = $contestId, playerId = $playerId, form = ${toJson(form)}")
+
+      contestService.createOrder(contestId, playerId, $scope.form) onComplete {
+        case Success(contest) =>
+          processing = false
+          $modalInstance.close(contest)
+        case Failure(e) =>
+          processing = false
+          messages.push(s"The order could not be processed (error code ${e.getMessage})")
+      }
+    }
+  }
+
+  private def getTotal(form: js.Dynamic) = {
+    val price = if (isDefined(form.limitPrice)) form.limitPrice.as[Double] else 0.00
+    val quantity = if (isDefined(form.quantity)) form.quantity.as[Double] else 0.00
+    price * quantity
+  }
+
+  private def isValid(form: js.Dynamic) = {
+    messages.remove(0, messages.length)
+
+    // perform the validations
+    if (!isDefined(form.accountType)) messages.push("Please selected the account to use (Cash or Margin)")
+    if (isDefined(form.accountType) && form.accountType === "MARGIN" && !mySession.hasMarginAccount()) messages.push("You do not have a Margin Account (must buy the Perk)")
+    if (!isDefined(form.orderType)) messages.push("No Order Type (BUY or SELL) specified")
+    if (!isDefined(form.priceType)) messages.push("No Pricing Method specified")
+    if (!isDefined(form.orderTerm)) messages.push("No Order Term specified")
+    if (!isDefined(form.quantity) || form.quantity === 0d) messages.push("No quantity specified")
+    messages.isEmpty
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization
+  ///////////////////////////////////////////////////////////////////////////
+
+  for {
+    contestId <- Option(mySession.getContestID())
+    playerId <- Option(mySession.getUserID())
+  } {
+    // load the player"s perks
+    perksDialog.getMyPerks(contestId, playerId) onComplete {
+      case Success(contest) => $scope.form.perks = contest.perkCodes
+      case Failure(e) =>
+        toaster.error("Error retrieving perks")
+    }
+  }
+
+}

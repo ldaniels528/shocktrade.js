@@ -7,7 +7,7 @@ import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs.PerksDialog.PerksDialogController
 import com.shocktrade.javascript.dialogs.SignUpDialog.SignUpController
 import com.shocktrade.javascript.dialogs.TransferFundsDialog.TransferFundsDialogController
-import com.shocktrade.javascript.dialogs.{PerksDialog, SignUpDialog, TransferFundsDialog}
+import com.shocktrade.javascript.dialogs._
 import com.shocktrade.javascript.directives.EscapeDirective
 import com.shocktrade.javascript.discover._
 import com.shocktrade.javascript.news.{NewsController, NewsService}
@@ -80,7 +80,9 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[StatisticsController]("StatisticsController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
 
-    // dialogs
+    // ShockTrade dialogs
+    module.serviceOf[NewOrderDialogService]("NewOrderDialog")
+    module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
     module.serviceOf[PerksDialog]("PerksDialog")
     module.controllerOf[PerksDialogController]("PerksDialogController")
     module.serviceOf[SignUpDialog]("SignUpDialog")
