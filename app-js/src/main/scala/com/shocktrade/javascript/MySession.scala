@@ -23,6 +23,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
                 @named("ProfileService") profileService: ProfileService)
   extends Service {
 
+  private val notifications = emptyArray[String]
   var facebookID: Option[String] = None
   var fbFriends = js.Array[js.Dynamic]()
   var fbProfile: Option[js.Dynamic] = None
@@ -250,6 +251,21 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   def resetContest: js.Function0[Unit] = () => contest = None
+
+  ////////////////////////////////////////////////////////////
+  //          Notification Methods
+  ////////////////////////////////////////////////////////////
+
+  def addNotification: js.Function1[String, js.Array[String]] = (message: String) => {
+    if(notifications.push(message) > 20) {
+      notifications.shift()
+    }
+    notifications
+  }
+
+  def getNotifications: js.Function0[js.Array[String]] = () => notifications
+
+  def hasNotifications: js.Function0[Boolean] = () => notifications.nonEmpty
 
   ////////////////////////////////////////////////////////////
   //          Participant Methods
