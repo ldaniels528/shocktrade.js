@@ -18,7 +18,7 @@
                 <div class="emphasis" title="Total investment value">
                     <i ng-class="MySession.hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
                        title="{{ MySession.hasNotifications() ? 'New events available' : 'No events available' }}"></i>
-                    <i class="fa fa-line-chart"></i> {{ getTotalInvestment() | number:2 }}
+                    <i class="fa fa-line-chart"></i> <span class="pull-right">{{ getTotalInvestment() | number:2 }}</span>
                 </div>
             </div>
             <br style="clear: both">
