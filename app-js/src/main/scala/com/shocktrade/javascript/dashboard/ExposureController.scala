@@ -18,7 +18,8 @@ import scala.util.{Failure, Success}
  */
 class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeout, toaster: Toaster,
                          @named("ContestService") contestService: ContestService,
-                         @named("MySession") mySession: MySession) extends ScopeController {
+                         @named("MySession") mySession: MySession)
+  extends ScopeController {
 
   private var chartData = emptyArray[js.Dynamic]
   private val colors = js.Array("#00ff00", "#88ffff", "#8888ff", "#ff8000", "#88ffaa", "#ff88ff", "#ff8888")
