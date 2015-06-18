@@ -1,0 +1,209 @@
+@()
+<div ng-show="MySession.contestIsEmpty()">
+    <span class="st_orange bold">No contest selected</span>
+</div>
+
+<div ng-if="!MySession.contestIsEmpty()" class="row">
+
+    <!-- Navigation -->
+    <div class="col-md-2">
+        <!-- Contest -->
+        <div>
+            <i class="fa fa-globe st_blue"></i>
+            <span class="st_blue bold">{{ contest.name }}</span>
+        </div>
+
+        <div class="st_indent" ng-repeat="p in contest.participants">
+            <!-- Participant -->
+            <i class="fa clickable st_orange bold" ng-class="p.expanded ? 'fa-minus-square' : 'fa-plus-square'" ng-click="expandPlayer(p)"></i>
+            <avatar id="{{ p.facebookID }}" class="avatar-16"></avatar> <span class="st_blue bold">{{ p.name }}</span>
+
+            <!-- Open Orders -->
+            <div ng-show="p.expanded" class="st_indent">
+                <i class="fa clickable st_orange bold" ng-class="p.myOpenOrders.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+                   ng-click="expandItem(p.myOpenOrders)"></i> Open Orders
+
+                <div class="st_indent" ng-show="p.myOpenOrders.expanded" ng-repeat="o in p.orders">
+                    {{ o.symbol }} &#xf00d; {{ o.price | quoteNumber }} x {{ o.quantity | number }} [{{ o.accountType }}]
+                </div>
+            </div>
+
+            <!-- Closed Orders -->
+            <div ng-show="p.expanded" class="st_indent">
+                <i class="fa clickable st_orange bold" ng-class="p.myClosedOrders.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+                   ng-click="expandItem(p.myClosedOrders)"></i> Closed Orders
+
+                <div class="st_indent" ng-show="p.myClosedOrders.expanded" ng-repeat="co in p.closedOrders">
+                    {{ co.symbol }} &#xf00d; {{ co.price | quoteNumber }} x {{ co.quantity | number }}
+                </div>
+            </div>
+
+            <!-- Positions -->
+            <div ng-show="p.expanded" class="st_indent">
+                <i class="fa clickable st_orange bold" ng-class="p.myPositions.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+                   ng-click="expandItem(p.myPositions)"></i> Positions
+
+                <div class="st_indent" ng-show="p.myPositions.expanded" ng-repeat="ps in p.positions">
+                    {{ ps.symbol }} &#xf00d; {{ ps.pricePaid | quoteNumber }} x {{ ps.quantity | number }}
+                </div>
+            </div>
+
+            <!-- Performance -->
+            <div ng-show="p.expanded" class="st_indent">
+                <i class="fa clickable st_orange bold" ng-class="p.myPerformance.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+                   ng-click="expandItem(p.myPerformance)"></i> Performance
+
+                <div class="st_indent" ng-show="p.myPerformance.expanded" ng-repeat="pf in p.performance">
+                    {{ pf.symbol }} &#xf00d; {{ pf.pricePaid | quoteNumber }} x {{ pf.quantity | number }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="col-md-10">
+        <tabset>
+            <tab>
+                <tab-heading>General</tab-heading>
+                <div class="inspect_tab">
+                    <div class="row">
+                        <div class="col-md-4 bold">Game</div>
+                        <div class="col-md-8">{{ contest.name }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Created By</div>
+                        <div class="col-md-8">
+                            <avatar id="{{ contest.creator.facebookID }}" class="avatar-16"></avatar>
+                            {{ contest.creator.name }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Created</div>
+                        <div class="col-md-8">{{ contest.creationTime | duration }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Expires</div>
+                        <div class="col-md-8">{{ contest.expirationTime | duration }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Status</div>
+                        <div class="col-md-8">{{ contest.status }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Starting Balance / Buy-In</div>
+                        <div class="col-md-8">$ {{ contest.startingBalance | number:2 }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Participants</div>
+                        <div class="col-md-8">{{ contest.participants.length | number }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Level Cap</div>
+                        <div class="col-md-8">
+                            <span ng-show="contest.levelCap">{{ contest.levelCap }}</span>
+                            <span ng-hide="contest.levelCap" class="st_orange">NONE</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Friends-Only</div>
+                        <div class="col-md-8">{{ contest.friendsOnly | yesno }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Invitation-Only</div>
+                        <div class="col-md-8">{{ contest.invitationOnly | yesno }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Perks Allowed</div>
+                        <div class="col-md-8">{{ contest.perksAllowed | yesno }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Robots Allowed</div>
+                        <div class="col-md-8">{{ contest.robotsAllowed | yesno }}</div>
+                    </div>
+                </div>
+            </tab>
+
+            <tab ng-if="MySession.isAdmin()">
+                <tab-heading>System</tab-heading>
+                <div class="inspect_tab">
+                    <div class="row">
+                        <div class="col-md-4 bold">Game ID</div>
+                        <div class="col-md-8">{{ contest.OID() }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">System Host</div>
+                        <div class="col-md-8">
+                            <select class="col-md-10 form-control" ng-model="contest.host" ng-change="updateContestHost(contest.host)">
+                                <option value="">-- ANY --</option>
+                                <option value="spartan.local">Spartan</option>
+                                <option value="dev801">dev801</option>
+                                <option value="dev802">dev802</option>
+                                <option value="dev803">dev803</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Last Processing Event</div>
+                        <div class="col-md-8">
+                            <span ng-show="contest.processedTime">{{ contest.processedTime | duration }}</span>
+                            <span ng-hide="contest.processedTime" class="st_orange">Never</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 bold">Last Market Close Event</div>
+                        <div class="col-md-8">
+                            <span ng-show="contest.lastMarketClose">{{ contest.lastMarketClose | duration }}</span>
+                            <span ng-hide="contest.lastMarketClose" class="st_orange">Never</span>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+
+            <tab ng-if="MySession.isAdmin()">
+                <tab-heading>Open Orders</tab-heading>
+                <div class="inspect_tab">
+                    <div>
+                        <table class="col-md-12">
+                            <tr>
+                                <th>Account</th>
+                                <th>Type / Term</th>
+                                <th>Time</th>
+                                <th>Symbol</th>
+                                <th>Price Type</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Partial</th>
+                            </tr>
+                            <tr ng-repeat="o in getOpenOrders(contest)">
+                                <td><avatar id="{{ o.owner.facebookID }}" class="avatar-16"></avatar> {{ o.accountType }}</td>
+                                <td>{{ o.orderType }} / {{ o.orderTerm }}</td>
+                                <td>{{ o.creationTime | duration }}</td>
+                                <td>
+                                    <a ng-href="#/discover?symbol={{ o.symbol }}">{{ o.symbol }}</a>
+                                </td>
+                                <td>{{ o.priceType }}</td>
+                                <td>{{ o.price | quoteNumber }}</td>
+                                <td>{{ o.quantity | number }}</td>
+                                <td>{{ o.partialFulfillment | yesno }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

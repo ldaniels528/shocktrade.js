@@ -24,6 +24,10 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   private lazy val mcQ = db.collection[JSONCollection]("Stocks")
   private lazy val mcR = db.collection[JSONCollection]("RssFeeds")
 
+  ////////////////////////////////////////////////////////////////////////////
+  //      API Functions
+  ////////////////////////////////////////////////////////////////////////////
+
   /**
    * Returns the RSS feed for the given URL
    * @param id the given feed ID

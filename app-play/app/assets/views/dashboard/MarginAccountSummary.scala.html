@@ -1,0 +1,65 @@
+@()
+<div class="row" ng-init="initMarginAccount()">
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <span class="alabel">Cash Balance</span>
+			<span class="afunds pull-right clickable" ng-click="marginAccountDialog()">
+				<span class="fundsAvailable">{{ getCashFunds() | number:2 }}</span>
+			</span>
+			<span style="font-size: 9pt">
+				&nbsp; (as of {{ getAsOfDate() | date:'MM/dd hh:mma' }})
+			</span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Effective Buying Power</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getBuyingPower() | number:2 }}</span>
+			</span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">
+                <span ng-show="isAccountInGoodStanding()">Current Equity</span>
+                <span class="st_orange" ng-hide="isAccountInGoodStanding()">Additional Funds Required</span>
+            </span>
+            <span class="bold pull-right">
+                <span ng-show="isAccountInGoodStanding()" class="st_green">{{ getMarginAccountEquity() | number:2 }}</span>
+                <span ng-hide="isAccountInGoodStanding()" class="st_orange">{{ getMarginCallAmount() | number:2 }}</span>
+            </span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Account Status</span>
+			<span class="bold pull-right">
+                <span ng-show="isAccountInGoodStanding()" class="st_green">Good Standing</span>
+                <span ng-hide="isAccountInGoodStanding()" class="st_orange">Suspended - Margin Call</span>
+            </span>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-12">
+            <span class="alabel">Initial / Maintenance Margin</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ 100.0 * getInitialMargin() | number:1 }}%</span> /
+                <span class="st_green">{{ 100.0 * getMaintenanceMargin() | number:1 }}%</span>
+            </span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Interest Paid</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ getInterestPaid() | number:2 }}</span>
+            </span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Investment Cost</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getInvestmentCost() | number:2 }}</span>
+			</span>
+        </div>
+        <div class="col-md-12">
+            <span class="alabel">Investment Market Value</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getInvestmentMarketValue() | number:2 }}</span>
+			</span>
+        </div>
+    </div>
+</div>

@@ -47,6 +47,10 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   // TODO reinstate this later ...
   // StockQuotes.init(searchFields)
 
+  ////////////////////////////////////////////////////////////////////////////
+  //      API Functions
+  ////////////////////////////////////////////////////////////////////////////
+
   /**
    * Auto-completes symbols and company names
    */

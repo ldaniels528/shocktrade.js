@@ -1,10 +1,30 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+########################################################################################################################
+#       View Routes
+########################################################################################################################
 
-# Home page
 GET           /                                                     com.shocktrade.controllers.Application.index
+GET           /assets/views/admin/inspect.htm                       com.shocktrade.controllers.Application.inspectView()
+GET           /assets/views/connect/connect.htm                     com.shocktrade.controllers.Application.connectView()
+GET           /assets/views/dashboard/chat.htm                      com.shocktrade.controllers.Application.chatView()
+GET           /assets/views/dashboard/dashboard.htm                 com.shocktrade.controllers.Application.dashboardView()
+GET           /assets/views/dashboard/exposure.htm                  com.shocktrade.controllers.Application.exposureView()
+GET           /assets/views/dashboard/orders_active.htm             com.shocktrade.controllers.Application.ordersActiveView()
+GET           /assets/views/dashboard/orders_closed.htm             com.shocktrade.controllers.Application.ordersClosedView()
+GET           /assets/views/dashboard/performance.htm               com.shocktrade.controllers.Application.performanceView()
+GET           /assets/views/dashboard/positions.htm                 com.shocktrade.controllers.Application.positionsView()
+GET           /assets/views/discover/discover.htm                   com.shocktrade.controllers.Application.discoverView()
+GET           /assets/views/discover/favorites.htm                  com.shocktrade.controllers.Application.favoritesView()
+GET           /assets/views/explore/drill_down.htm                  com.shocktrade.controllers.Application.exploreView()
+GET           /assets/views/news/news_center.htm                    com.shocktrade.controllers.Application.newsCenterView()
+GET           /assets/views/play/search.htm                         com.shocktrade.controllers.Application.searchView()
+GET           /assets/views/profile/awards.htm                      com.shocktrade.controllers.Application.awardsView()
+GET           /assets/views/profile/statistics.htm                  com.shocktrade.controllers.Application.statisticsView()
+GET           /assets/views/research/research.htm                   com.shocktrade.controllers.Application.researchView()
 GET           /websocket                                            com.shocktrade.controllers.Application.webSocket
+
+########################################################################################################################
+#       API Routes
+########################################################################################################################
 
 # Charts
 GET           /api/charts/exposure/exchange/:id/:userID             com.shocktrade.controllers.ChartController.getExposureByExchange(id, userID)
@@ -67,10 +87,6 @@ DELETE        /api/order/:id/:playerId/:orderId                     com.shocktra
 # Positions
 GET           /api/positions/:playerId                              com.shocktrade.controllers.ContestController.getHeldSecurities(playerId)
 
-# Profile Updates
-DELETE        /api/updates                                          com.shocktrade.controllers.ProfileController.deleteNotifications
-GET           /api/updates/:userName/:limit                         com.shocktrade.controllers.ProfileController.getNotifications(userName, limit:Int)
-
 # Profile Users
 POST          /api/profile/create                                   com.shocktrade.controllers.ProfileController.createProfile
 PUT           /api/profile/:id/favorite/:symbol                     com.shocktrade.controllers.ProfileController.addFavoriteSymbol(id, symbol)
@@ -96,9 +112,6 @@ GET           /api/quotes/tradingHistory/:symbol                    com.shocktra
 # Research
 POST          /api/research/search                                  com.shocktrade.controllers.ResearchController.quoteSearch
 
-# Sessions
-GET           /api/session/list                                     com.shocktrade.controllers.SessionsController.getSessions
-
 # Trading Information and Processes
 GET           /api/tradingProcess/cik                               com.shocktrade.controllers.TradingController.startCikUpdate
 GET           /api/tradingProcess/keystats                          com.shocktrade.controllers.TradingController.startKeyStatisticsUpdate
@@ -106,6 +119,10 @@ GET           /api/tradingProcess/quotes                            com.shocktra
 GET           /api/tradingProcess/regsho/:date                      com.shocktrade.controllers.TradingController.startRegSHOUpdate(date)
 GET           /api/tradingClock/status/:lastUpdate                  com.shocktrade.controllers.TradingController.status(lastUpdate: Long)
 GET           /api/tradingClock/delayUntilStart                     com.shocktrade.controllers.TradingController.delayUntilTradingStart
+
+# Profile Updates
+DELETE        /api/updates                                          com.shocktrade.controllers.ProfileController.deleteNotifications
+GET           /api/updates/:userName/:limit                         com.shocktrade.controllers.ProfileController.getNotifications(userName, limit:Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)

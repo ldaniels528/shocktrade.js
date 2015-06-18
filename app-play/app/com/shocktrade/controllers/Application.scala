@@ -14,18 +14,42 @@ import play.modules.reactivemongo.MongoController
  */
 object Application extends Controller with MongoController {
 
-  /**
-   * Renders the index page
-   */
-  def index = Action {
-    Ok(assets.views.html.index(UUID.randomUUID().toString))
-  }
+  def index = Action(Ok(assets.views.html.index(UUID.randomUUID().toString)))
 
-  /**
-   * Handles web socket connections
-   */
-  def webSocket = WebSocket.acceptWithActor[JsValue, JsValue] { request => out =>
-    WebSocketHandler.props(out)
-  }
+  def awardsView() = Action(Ok(assets.views.html.profile.Awards()))
+
+  def chatView() = Action(Ok(assets.views.html.dashboard.Chat()))
+
+  def connectView() = Action(Ok(assets.views.html.connect.Connect()))
+
+  def dashboardView() = Action(Ok(assets.views.html.dashboard.Dashboard()))
+
+  def discoverView() = Action(Ok(assets.views.html.discover.Discover()))
+
+  def exploreView() = Action(Ok(assets.views.html.discover.Explore()))
+
+  def exposureView() = Action(Ok(assets.views.html.dashboard.Exposure()))
+
+  def favoritesView() = Action(Ok(assets.views.html.discover.Favorites()))
+
+  def inspectView() = Action(Ok(assets.views.html.admin.Inspect()))
+
+  def newsCenterView = Action(Ok(assets.views.html.news.NewsCenter()))
+
+  def ordersActiveView() = Action(Ok(assets.views.html.dashboard.ActiveOrders()))
+
+  def ordersClosedView() = Action(Ok(assets.views.html.dashboard.ClosedOrders()))
+
+  def performanceView() = Action(Ok(assets.views.html.dashboard.Performance()))
+
+  def positionsView() = Action(Ok(assets.views.html.dashboard.Positions()))
+
+  def researchView() = Action(Ok(assets.views.html.research.Research()))
+
+  def searchView() = Action(Ok(assets.views.html.search.Search()))
+
+  def statisticsView() = Action(Ok(assets.views.html.profile.Statistics()))
+
+  def webSocket = WebSocket.acceptWithActor[JsValue, JsValue] { request => out => WebSocketHandler.props(out) }
 
 }

@@ -1,0 +1,46 @@
+@()
+<div ng-controller="NewsController" ng-init="getNewsSources()">
+	<div ng-repeat="channel in getChannels()">
+		<div class="news_provider">
+			<div style="display: inline; float: left">
+				<span style="color: white">{{ channel.items.length || 0 }} stories</span>
+			</div>
+			<div class="pull-right" style="display: inline">
+				<select 
+					ng-model="selection.feed" 
+					ng-options="source.OID() as source.name for source in newsSources()"
+					ng-change="getNewsFeed(selection.feed)">
+				</select>
+				<i class="fa fa-bars clickable white"
+				   ng-click="view = 'list'"
+				   ng-class="view != 'list' ? 'clickable' : ''"
+				   popover="List view"
+				   popover-trigger="mouseenter"></i>
+
+				<i class="fa fa-th clickable white"
+				   ng-click="view = 'grid'"
+				   ng-class="view != 'grid' ? 'clickable' : ''"
+				   popover="Grid view"
+				   popover-trigger="mouseenter"></i>
+			</div>
+			<br style="clear: both">
+		</div>
+		
+		<div class="newsContainer">	 
+			 <div ng-show="view === 'list'">
+		 		<div ng-repeat="item in channel.items | orderBy:pubDate:true"
+                     ng-class-even="'news_list_even'" ng-class-odd="'news_list_odd'">
+                    @assets.views.html.news.NewsItemList()
+                </div>
+			 </div>
+			 
+			 <div ng-show="view === 'grid'">
+			 	<div ng-repeat="item in channel.items | orderBy:pubDate:true" ng-class-even="'news_grid_even'" ng-class-odd="'news_grid_odd'">
+			 		<div>@assets.views.html.news.NewsItemGrid()</div>
+			 	</div>
+			 	<br style="clear: both">
+			 </div>
+		 </div>
+	</div>
+</div>
+

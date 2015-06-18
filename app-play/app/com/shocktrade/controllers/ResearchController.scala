@@ -24,6 +24,10 @@ object ResearchController extends Controller {
     "changePct" -> 1, "low" -> 1, "high" -> 1, "spread" -> 1, "volume" -> 1
   )
 
+  ////////////////////////////////////////////////////////////////////////////
+  //      API Functions
+  ////////////////////////////////////////////////////////////////////////////
+
   def quoteSearch = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[QuoteFilter])) match {
       case Success(Some(form)) =>

@@ -1,0 +1,86 @@
+@()
+<div class="col-md-12">
+	<div class="col-md-2 bold">Symbol</div>
+	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Paid</div>
+	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Sold</div>
+    <div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Gain/Loss</div>
+	<div class="col-md-2 bold left" ng-hide="isPerformanceSelected()">Executed</div>
+	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Shares</div>
+
+	<div class="col-md-7 bold" ng-show="isPerformanceSelected()">
+		<span ng-class="getExchangeClass(selectedPerformance.exchange)">
+			{{ selectedPerformance.companyName }}
+		</span>
+	</div>
+	<div class="col-md-2" ng-show="isPerformanceSelected()">
+		 <span class="st_bkg_color clickable pull-right" ng-click="toggleSelectedPerformance()">
+            <i class="fa fa-chevron-circle-left st_control"
+			   title="Return to results"></i> Back
+        </span>
+	</div>
+</div>
+
+<div class="row ordersContainer">
+	<div class="col-md-offset-1 col-md-11" ng-show="getPerformance().length === 0">
+        <i class="fa fa-warning warning"></i>
+		<span class="warning">No closed orders found</span>
+	</div>
+
+	<!-- Data Rows -->
+	<div ng-class="{'col-md-12':(!isPerformanceSelected()), 'col-md-3':(isPerformanceSelected())}">
+		<div class="col-md-12 clickable" ng-repeat="p in getPerformance() track by $index"
+			 ng-class-even="'contest_even'"
+			 ng-class-odd="'contest_odd'"
+			 ng-class="selectedPerformance.OID() === p.OID() ? 'selected' : ''"
+			 ng-click="selectPerformance(p)">
+			<div class="col-md-2">
+                <span class="clickable" ng-class="getExchangeClass(p.exchange)" ng-click="loadQuote(p.symbol, true)">
+                    <span ng-class="selectedPerformance.OID() === p.OID() ? 'underlined' : ''">{{ p.symbol }}</span>
+                </span>
+			</div>
+			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.pricePaid | quoteNumber }}</div>
+			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">$ {{ p.priceSold | quoteNumber }}</div>
+            <div ng-hide="isPerformanceSelected()" class="col-md-2 right">
+                <span ng-class="gainLoss(p) < 0 ? 'negative' : 'positive'">{{ gainLoss(p) | number:1 }}%</span>
+            </div>
+			<div ng-hide="isPerformanceSelected()" class="col-md-2 left">{{ p.soldDate | duration }}</div>
+			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.quantity | number }}</div>
+		</div>
+	</div>
+
+	<!-- Expanded Section -->
+	<div ng-if="isPerformanceSelected()" class="col-md-9">
+		<div class="col-md-4 bold">Purchased Date</div>
+		<div class="col-md-8">{{ selectedPerformance.purchasedDate | duration }}</div>
+
+		<div class="col-md-4 bold">Sold Date</div>
+		<div class="col-md-8">{{ selectedPerformance.soldDate | duration }}</div>
+
+		<div class="col-md-4 bold">Exchange</div>
+		<div class="col-md-8">
+			<span ng-class="getExchangeClass(selectedPerformance.exchange)">{{ selectedPerformance.exchange }}</span>
+		</div>
+
+		<div class="col-md-4 bold">Price Paid</div>
+		<div class="col-md-8">$ {{ selectedPerformance.pricePaid | quoteNumber }}</div>
+
+        <div class="col-md-4 bold">Price Sold</div>
+        <div class="col-md-8">$ {{ selectedPerformance.priceSold | quoteNumber }}</div>
+
+		<div class="col-md-4 bold">Quantity</div>
+		<div class="col-md-8">{{ selectedPerformance.quantity | number }}</div>
+
+		<div class="col-md-4 bold">Original Cost</div>
+		<div class="col-md-8">$ {{ cost(selectedPerformance) | number }}</div>
+
+        <div class="col-md-4 bold">Sold Value</div>
+        <div class="col-md-8">$ {{ soldValue(selectedPerformance) | number }}</div>
+
+		<div class="col-md-4 bold">{{ gainLoss(selectedPerformance) < 0 ? 'Loss' : 'Gain' }}</div>
+		<div class="col-md-8">
+            <span ng-show="gainLoss(selectedPerformance) == null" class="null">Not Available</span>
+			<span ng-show="gainLoss(selectedPerformance) < 0" class="negative">{{ gainLoss(selectedPerformance) | number:1 }}%</span>
+            <span ng-show="gainLoss(selectedPerformance) >= 0" class="positive">{{ gainLoss(selectedPerformance) | number:1 }}%</span>
+		</div>
+	</div>
+</div>

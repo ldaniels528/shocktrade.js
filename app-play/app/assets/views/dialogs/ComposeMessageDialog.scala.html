@@ -1,0 +1,22 @@
+@()
+
+<script type="text/ng-template" id="compose_message.htm">
+    <div class="modal-header">
+        <h3>New Message</h3>
+    </div>
+    <div class="modal-body">
+        <div>
+            <textarea ng-model="newMessage.recipient" placeholder="Recipient(s)" rows="1" style="width: 512px"></textarea>
+        </div>
+        <div>
+            <textarea ng-model="newMessage.subject" placeholder="Subject" rows="1" style="width: 512px"></textarea>
+        </div>
+        <div>
+            <textarea ng-model="newMessage.body" style="width: 512px; height: 250px" spellcheck="true"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok(form)">Send</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

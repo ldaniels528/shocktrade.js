@@ -65,18 +65,19 @@ window.fbAsyncInit = function () {
      * Ensures the Facebook SDK is loaded using ShockTrade App ID
      */
     function doInit() {
-        var appId = getShockTradeAppID();
-        if(appId) fbInit(appId);
-        else if(--attemptsLeft > 0) {
+        if (getShockTradeAppID) {
+            fbInit(getShockTradeAppID());
+        }
+        else if (--attemptsLeft > 0) {
             console.log("Facebook Service not loaded yet... Retry in 500ms (attempts remaining = " + attemptsLeft + ")");
-            setTimeout(function() {
+            setTimeout(function () {
                 doInit();
             }, 500)
         }
     }
 
     // initialize the Facebook SDK
-    (function() {
+    (function () {
         doInit();
     })();
 
