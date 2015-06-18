@@ -11,13 +11,13 @@
 					ng-options="source.OID() as source.name for source in newsSources()"
 					ng-change="getNewsFeed(selection.feed)">
 				</select>
-				<i class="fa fa-bars clickable white"
+				<i class="fa fa-th-list st_control"
 				   ng-click="view = 'list'"
 				   ng-class="view != 'list' ? 'clickable' : ''"
 				   popover="List view"
 				   popover-trigger="mouseenter"></i>
 
-				<i class="fa fa-th clickable white"
+				<i class="fa fa-th st_control"
 				   ng-click="view = 'grid'"
 				   ng-class="view != 'grid' ? 'clickable' : ''"
 				   popover="Grid view"
