@@ -1,0 +1,86 @@
+package com.shocktrade.javascript.social
+
+import biz.enef.angulate.angular
+import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.ScalaJsMain
+import org.scalajs.jquery._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.annotation.JSExportAll
+import scala.util.{Failure, Success}
+
+/**
+ * Facebook Injector
+ * @author lawrence.daniels@gmail.com
+ */
+@JSExportAll
+object FacebookInjector {
+
+  /**
+   * Initializes the Facebook SDK
+   */
+  g.fbAsyncInit = (() => {
+    val appId = ScalaJsMain.getAppId()
+    g.console.log(s"Initializing Facebook SDK (App ID $appId)...")
+    g.FB.init(JS(
+      appId = appId,
+      status = true,
+      xfbml = true
+    ))
+
+    // capture the user ID and access token
+    val elemName = "#ShockTradeMain"
+    val rootElem = jQuery(elemName)
+    val injector = angular.element(rootElem).injector()
+    val facebook = injector.get("Facebook").asInstanceOf[FacebookService]
+    if (facebook != null) {
+      facebook.init(g.FB) onComplete {
+        case Success(_) =>
+          g.console.log("Facebook login successful.")
+
+          // react the the login status
+          val scope = angular.element(rootElem).scope()
+          if (scope != null) {
+            val $scope = scope.asInstanceOf[js.Dynamic]
+            $scope.postLoginUpdates(facebook.facebookID, false)
+          }
+          else
+            g.console.log(s"Scope for '$elemName' could not be retrieved")
+
+        case Failure(e) =>
+          g.console.log(s"Facebook Service: ${e.getMessage}")
+      }
+    }
+    else g.console.log("Facebook service could not be retrieved")
+    ()
+  }): js.Function0[Unit]
+
+  /**
+   * Injects the Facebook SDK
+   * @param fbroot the Facebook root element
+   */
+  private def inject(fbroot: js.Dynamic) {
+    // is the element our script?
+    val id = "facebook-jssdk"
+    if (!isDefined(fbroot.getElementById(id))) {
+      // dynamically create the script
+      val fbScript = fbroot.createElement("script")
+      fbScript.id = id
+      fbScript.async = true
+      fbScript.src = "http://connect.facebook.net/en_US/all.js"
+
+      // get the script and insert our dynamic script
+      val ref = fbroot.getElementsByTagName("script").asArray[js.Dynamic](0)
+      ref.parentNode.insertBefore(fbScript, ref)
+    }
+    ()
+  }
+
+  /**
+   * Inject the Facebook SDK
+   */
+  def init: js.Function0[Unit] = () => inject(g.document)
+
+}

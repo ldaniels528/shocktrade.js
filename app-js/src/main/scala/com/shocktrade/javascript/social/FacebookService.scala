@@ -1,4 +1,4 @@
-package com.shocktrade.javascript.profile
+package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
 import com.greencatsoft.angularjs.core.{Promise, Q}
@@ -44,9 +44,9 @@ class FacebookService($q: Q) extends Service {
         // capture the Facebook login status
         if (isDefined(response.authResponse)) {
           g.console.log("Successfully loaded the Facebook profile...")
-          this.auth = response.authResponse
-          this.facebookID = response.authResponse.userID.as[String]
-          this.accessToken = response.authResponse.accessToken.as[String]
+          auth = response.authResponse
+          facebookID = auth.userID.as[String]
+          accessToken = auth.accessToken.as[String]
           deferred.resolve(response)
         }
         else deferred.reject("Facebook response was undefined")

@@ -7,7 +7,8 @@ import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
-import com.shocktrade.javascript.profile.{FacebookService, ProfileService}
+import com.shocktrade.javascript.profile.ProfileService
+import com.shocktrade.javascript.social.FacebookService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

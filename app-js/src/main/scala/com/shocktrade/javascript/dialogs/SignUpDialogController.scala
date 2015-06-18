@@ -5,7 +5,7 @@ import biz.enef.angulate.{ScopeController, named}
 import com.greencatsoft.angularjs.extensions.ModalInstance
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.profile.FacebookService
+import com.shocktrade.javascript.social.FacebookService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}

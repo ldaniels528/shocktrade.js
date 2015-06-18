@@ -1,5 +1,6 @@
 /**
  * Facebook SDK injector
+ * @author lawrence.daniels@gmail.com
  */
 (function (fbroot) {
     // is the element our script?
@@ -21,6 +22,7 @@
 
 /**
  * Asynchronously load the Facebook SDK
+ * @author lawrence.daniels@gmail.com
  */
 window.fbAsyncInit = function () {
     var attemptsLeft = 5;

@@ -9,6 +9,7 @@ import com.shocktrade.javascript.directives.EscapeDirective
 import com.shocktrade.javascript.discover._
 import com.shocktrade.javascript.news.{NewsController, NewsService}
 import com.shocktrade.javascript.profile._
+import com.shocktrade.javascript.social.{FacebookInjector, FacebookService}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -94,6 +95,9 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[SignUpDialogController]("SignUpController")
     module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
+
+    // inject Facebook's JavaScript SDK
+    FacebookInjector.init()
   }
 
   /**
