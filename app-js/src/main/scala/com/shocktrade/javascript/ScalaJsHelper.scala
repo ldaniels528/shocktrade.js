@@ -142,7 +142,7 @@ object ScalaJsHelper {
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 
     @inline
-    def asOpt[T] = if (isDefined(obj)) Option(obj.asInstanceOf[T]) else None
+    def asOpt[T] = if (isDefined(obj)) Try(obj.asInstanceOf[T]).toOption else None
 
     @inline
     def asArray[T] = obj.asInstanceOf[js.Array[T]]

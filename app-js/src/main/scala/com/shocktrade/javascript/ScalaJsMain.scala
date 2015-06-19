@@ -3,14 +3,14 @@ package com.shocktrade.javascript
 import biz.enef.angulate.Module.RichModule
 import biz.enef.angulate._
 import biz.enef.angulate.ext.{Route, RouteProvider}
-import com.shocktrade.javascript.admin.InspectController
+import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
-import com.shocktrade.javascript.directives.EscapeDirective
+import com.shocktrade.javascript.directives.{AvatarDirective, ChangeArrowDirective}
 import com.shocktrade.javascript.discover._
-import com.shocktrade.javascript.news.{NewsController, NewsService}
+import com.shocktrade.javascript.news._
 import com.shocktrade.javascript.profile._
-import com.shocktrade.javascript.social.{FacebookInjector, FacebookService}
+import com.shocktrade.javascript.social._
 
 import scala.scalajs.js
 
@@ -36,8 +36,11 @@ object ScalaJsMain extends js.JSApp {
   }
 
   private def configureDirectives(module: RichModule) {
+    AvatarDirective.init()
     //module.directiveOf[AvatarDirective]
-    module.directiveOf[EscapeDirective]
+    ChangeArrowDirective.init()
+    //module.directiveOf[ChangeArrowDirective]
+    //module.directiveOf[EscapeDirective]
   }
 
   private def configureFilters(module: RichModule) {
