@@ -33,7 +33,7 @@ class FacebookService($q: Q) extends Service {
    */
   def init: js.Function1[js.Dynamic, Promise] = (fbSDK: js.Dynamic) => {
     val deferred = $q.defer()
-    this.FB = fbSDK
+    FB = fbSDK
 
     // get the login status
     g.console.log("Retrieving Facebook login status...")

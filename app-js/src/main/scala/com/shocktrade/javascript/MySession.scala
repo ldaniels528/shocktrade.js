@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.core.{HttpPromise, Timeout}
-import biz.enef.angulate.{Scope, Service, angular, named}
+import biz.enef.angulate.{Scope, Service, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * My Session Facade
@@ -25,7 +25,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   private val notifications = emptyArray[String]
   var facebookID: Option[String] = None
-  var fbFriends = js.Array[js.Dynamic]()
+  var fbFriends = emptyArray[js.Dynamic]
   var fbProfile: Option[js.Dynamic] = None
   var userProfile: js.Dynamic = createSpectatorProfile()
   var contest: Option[js.Dynamic] = None
@@ -54,13 +54,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the user ID for the current user's name
    * @return {*}
    */
-  def getUserName: js.Function0[String] = () => if (isDefined(userProfile.name)) userProfile.name.as[String] else null
+  def getUserName: js.Function0[String] = () => userProfile.name.as[String]
 
   /**
    * Indicates whether the given user is an administrator
    * @return {boolean}
    */
-  def isAdmin: js.Function0[Boolean] = () => isDefined(userProfile.admin) && userProfile.admin.as[Boolean]
+  def isAdmin: js.Function0[Boolean] = () => userProfile.admin.asOpt[Boolean].getOrElse(false)
 
   /**
    * Indicates whether the user is logged in
@@ -117,40 +117,32 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Symbols - Favorite
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
-    profileService.addFavoriteSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.favorites = symbols
-    }
+  def addFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    profileService.addFavoriteSymbol(getUserID(), symbol)
   }
 
   def getFavoriteSymbols: js.Function0[js.Array[String]] = () => userProfile.favorites.asArray[String]
 
   def isFavoriteSymbol: js.Function1[String, Boolean] = (symbol: String) => getFavoriteSymbols().contains(symbol)
 
-  def removeFavoriteSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
-    profileService.removeFavoriteSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.favorites = symbols
-    }
+  def removeFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    profileService.removeFavoriteSymbol(getUserID(), symbol)
   }
 
   /////////////////////////////////////////////////////////////////////
   //          Symbols - Recent
   /////////////////////////////////////////////////////////////////////
 
-  def addRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
-    profileService.addRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.recentSymbols = symbols
-    }
+  def addRecentSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    profileService.addRecentSymbol(getUserID(), symbol)
   }
 
   def getRecentSymbols: js.Function0[js.Array[String]] = () => userProfile.recentSymbols.asArray[String]
 
   def isRecentSymbol: js.Function1[String, Boolean] = (symbol: String) => getRecentSymbols().contains(symbol)
 
-  def removeRecentSymbol: js.Function1[String, HttpPromise[js.Array[String]]] = (symbol: String) => {
-    profileService.removeRecentSymbol(getUserID(), symbol) onSuccess { symbols =>
-      userProfile.recentSymbols = symbols
-    }
+  def removeRecentSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
+    profileService.removeRecentSymbol(getUserID(), symbol)
   }
 
   def getMostRecentSymbol: js.Function0[String] = () => getRecentSymbols().lastOption getOrElse "AAPL"
@@ -180,16 +172,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     else if (aContest.`type` === "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
-    else {
-      g.console.log(s"contest = ${angular.toJson(aContest, pretty = true)}")
-      Try(contest = Some(aContest)) match {
-        case Success(_) =>
-        case Failure(e) =>
-          g.console.error("Failed to set contest")
-          e.printStackTrace()
-      }
-    }
-    ()
+    else contest = Some(aContest)
   }
 
   /**
@@ -257,7 +240,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   ////////////////////////////////////////////////////////////
 
   def addNotification: js.Function1[String, js.Array[String]] = (message: String) => {
-    if(notifications.push(message) > 20) {
+    if (notifications.push(message) > 20) {
       notifications.shift()
     }
     notifications

@@ -180,26 +180,16 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     // load the user"s ShockTrade profile
     g.console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
     profileService.getProfileByFacebookID(facebookID) onComplete {
+      case Success(profile) if isDefined(profile.error) =>
+        mySession.nonMember = true
+        g.console.log("Non-member identified.")
+        if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
       case Success(profile) =>
-        if (!isDefined(profile.error)) {
-          g.console.log("ShockTrade user profile loaded...")
-          mySession.setUserProfile(profile)
-          loadFacebookFriends()
-        }
-        else {
-          mySession.nonMember = true
-          if (userInitiated) {
-            g.console.log("Non-member identified... Launching Sign-up dialog...")
-            signUpPopup(facebookID, mySession.fbProfile)
-          }
-          else {
-            g.console.log("Non-member identified... Awaiting Sign-up request...")
-          }
-        }
-
+        g.console.log("ShockTrade user profile loaded...")
+        mySession.setUserProfile(profile)
+        loadFacebookFriends()
       case Failure(e) =>
-        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}", null)
-        signUpPopup(facebookID, mySession.fbProfile)
+        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
     }
   }
 

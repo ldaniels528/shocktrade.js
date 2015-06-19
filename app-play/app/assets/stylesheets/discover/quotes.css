@@ -50,6 +50,13 @@ div.fund_summary {
 	padding: 10px;
 }
 
+.holdings_detail {
+	color: #000080;
+	font-weight: bold;
+	text-align: center;
+	padding: 5px
+}
+
 div.favoritesContainer {
 	clear: both;
 	overflow: auto;

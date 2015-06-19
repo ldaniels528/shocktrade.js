@@ -33,28 +33,28 @@ class ProfileService($http: HttpService) extends Service {
     $http.post[js.Dynamic]("/api/exchanges", literal(id = userID, exchanges = exchanges))
   }
 
-  def addFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+  def addFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.put[js.Array[String]](s"/api/profile/$userID/favorite/$symbol")
+    $http.put[js.Dynamic](s"/api/profile/$userID/favorite/$symbol")
   }
 
-  def removeFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+  def removeFavoriteSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.delete[js.Array[String]](s"/api/profile/$userID/favorite/$symbol")
+    $http.delete[js.Dynamic](s"/api/profile/$userID/favorite/$symbol")
   }
 
-  def addRecentSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+  def addRecentSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.put[js.Array[String]](s"/api/profile/$userID/recentSymbol/$symbol")
+    $http.put[js.Dynamic](s"/api/profile/$userID/recentSymbol/$symbol")
   }
 
-  def removeRecentSymbol: js.Function2[String, String, HttpPromise[js.Array[String]]] = (userID: String, symbol: String) => {
+  def removeRecentSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.delete[js.Array[String]](s"/api/profile/$userID/recentSymbol/$symbol")
+    $http.delete[js.Dynamic](s"/api/profile/$userID/recentSymbol/$symbol")
   }
 
 }

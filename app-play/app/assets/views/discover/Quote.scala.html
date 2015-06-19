@@ -17,7 +17,7 @@
 </div>
 
 <div class="advisory" ng-show="q.advisory">
-	<i ng-class="q.advisoryType == 'INFO' ? 'fa fa-info-circle st_blue' : 'fa fa-warning st_orange'"></i> {{ q.advisory }}
+	<i ng-class="q.advisoryType === 'INFO' ? 'fa fa-info-circle st_blue' : 'fa fa-warning st_orange'"></i> {{ q.advisory }}
 </div>
 
 <div>@assets.views.html.discover.StockQuote()</div>
@@ -41,7 +41,7 @@
 </div>
 
 <div ng-if="hasHoldings(q)">
-	<div class="quote_sub_title contest_colors" style="color: #000080; font-weight: bold; text-align: center; padding: 5px">ETF Holdings Detail</div>
+	<div class="quote_sub_title contest_colors holdings_detail">ETF Holdings Detail</div>
 	<div ng-include src="'/assets/views/discover/profile/holdings_detail.htm'"></div>
 	<hr>
 </div>

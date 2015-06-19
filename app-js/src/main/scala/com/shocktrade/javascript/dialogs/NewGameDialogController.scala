@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
 class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: HttpService, $modalInstance: ModalInstance, $timeout: Timeout,
                               @named("ContestService") ContestService: ContestService,
                               @named("MySession") MySession: MySession,
-                              @named("NewGameDialogService") mewGameDialogService: NewGameDialogService)
+                              @named("NewGameDialogService") newGameDialog: NewGameDialogService)
   extends ScopeController {
 
   private val errors = emptyArray[String]
@@ -59,12 +59,13 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
         facebookID = MySession.getFacebookID()
       )
 
-      g.console.log(s"form = ${toJson(form)}")
-      mewGameDialogService.createNewGame(form) onComplete {
+      // create the new game
+      newGameDialog.createNewGame(form) onComplete {
         case Success(response) =>
-          $modalInstance.close($scope.form)
+          $modalInstance.close(response)
           processing = false
         case Failure(e) =>
+          g.console.error(s"Error creating New Game: ${e.getMessage} => form = ${toJson(form)}")
           processing = false
       }
     }

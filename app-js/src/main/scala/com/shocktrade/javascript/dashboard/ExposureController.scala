@@ -60,10 +60,8 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
   ///////////////////////////////////////////////////////////////////////////
 
   private def exposurePieChart(contest: js.Dynamic, exposure: js.Dynamic, userID: js.Dynamic) = {
-    g.console.log(s"contest = $contest, exposure = $exposure, userID = $userID")
     $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/${contest.OID}/$userID") onComplete {
       case Success(data) =>
-        g.console.log(s"chartData = ${JSON.stringify(data)}")
         chartData = data
       case Failure(e) =>
         g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")

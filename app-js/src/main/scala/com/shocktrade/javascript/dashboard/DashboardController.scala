@@ -45,9 +45,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
 
   $scope.marginAccountDialog = () => {
     transferFundsDialog.popup() onComplete {
-      case Success(contest: js.Dynamic) => mySession.setContest(contest)
-      case Success(response) =>
-        g.console.info(s"The process succeeded, but got back the wrong object - $response")
+      case Success(contest) => mySession.setContest(contest.asInstanceOf[js.Dynamic])
       case Failure(e) =>
         if(e.getMessage != "cancel") {
           e.printStackTrace()
@@ -57,11 +55,9 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
 
   $scope.perksDialog = () => {
     perksDialog.popup() onComplete {
-      case Success(contest: js.Dynamic) =>
-        g.console.info(s"Settings contest")
-        mySession.setContest(contest)
-      case Success(response) =>
-        g.console.info(s"The process succeeded, but got back the wrong object - $response")
+      case Success(contest) =>
+        g.console.log(s"Settings contest")
+        mySession.setContest(contest.asInstanceOf[js.Dynamic])
       case Failure(e) =>
         if(e.getMessage != "cancel") {
           e.printStackTrace()

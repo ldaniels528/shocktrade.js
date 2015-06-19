@@ -1,13 +1,15 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.{HttpError, Timeout}
+import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{Scope, ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.NewGameDialogService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
@@ -19,7 +21,7 @@ import scala.util.{Failure, Success}
 class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
                         @named("ContestService") contestService: ContestService,
                         @named("MySession") mySession: MySession,
-                        @named("NewGameDialog") newGameDialog: js.Dynamic) extends ScopeController {
+                        @named("NewGameDialogService") newGameDialog: NewGameDialogService) extends ScopeController {
 
   private var myContests = js.Array[js.Dynamic]()
   private val scope = $scope.asInstanceOf[js.Dynamic]
@@ -42,10 +44,13 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   scope.newGamePopup = () => {
-    newGameDialog.popup(JS(
-      success = { contest: js.Dynamic => myContests.push(contest) },
-      error = { err: HttpError => toaster.error("Failed to create game", null) }
-    ))
+    newGameDialog.popup() onComplete {
+      case Success(contest) =>
+        myContests.push(contest.asInstanceOf[js.Dynamic])
+      case Failure(e) =>
+        toaster.error("Failed to create game")
+        g.console.error(s"Failed to create game ${e.getMessage}")
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
