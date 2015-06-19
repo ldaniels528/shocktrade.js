@@ -16,8 +16,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Timeout, toaster: Toaster,
-                              @named("ContestService") contestService: ContestService,
-                              @named("MySession") mySession: MySession)
+                           @named("ContestService") contestService: ContestService,
+                           @named("MySession") mySession: MySession,
+                           @named("WebSocketService") webSocket: WebSocketService)
   extends ScopeController {
 
   private var totalInvestmentStatus: Option[String] = None
@@ -44,6 +45,8 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
   $scope.isBarVisible = () => isVisible
 
   $scope.toggleVisibility = () => isVisible = !isVisible
+
+  $scope.webSockectConnected = () => webSocket.isConnected()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions

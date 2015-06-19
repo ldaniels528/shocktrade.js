@@ -1,7 +1,8 @@
 package com.shocktrade.javascript
 
+import biz.enef.angulate.Module.RichModule
 import biz.enef.angulate._
-import com.shocktrade.javascript.ScalaJsHelper._
+import biz.enef.angulate.ext.{Route, RouteProvider}
 import com.shocktrade.javascript.admin.InspectController
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
@@ -12,29 +13,34 @@ import com.shocktrade.javascript.profile._
 import com.shocktrade.javascript.social.{FacebookInjector, FacebookService}
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
-import scala.scalajs.js.JSApp
 
 /**
  * Scala Js Main
  * @author lawrence.daniels@gmail.com
  */
-object ScalaJsMain extends JSApp {
+object ScalaJsMain extends js.JSApp {
 
   def main() {
-    g.console.log("ScalaJS Main method is executing...")
+    // create the application
+    val module = angular.createModule("shocktrade",
+      js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3ChartDirectives", "toaster", "ui.bootstrap"))
 
-    // define the global function for retrieving the App ID
-    g.getShockTradeAppID = { () => getAppId() }: js.Function0[String]
+    // configure and start the application
+    configureDirectives(module)
+    configureFilters(module)
+    configureServices(module)
+    configureControllers(module)
+    configureDialogs(module)
+    configureRoutes(module)
+    runApplication(module)
+  }
 
-    // get a reference to the application
-    val module = angular.module("shocktrade")
-
-    // ShockTrade directives
+  private def configureDirectives(module: RichModule) {
     //module.directiveOf[AvatarDirective]
     module.directiveOf[EscapeDirective]
+  }
 
-    // ShockTrade filters
+  private def configureFilters(module: RichModule) {
     module.filter("abs", Filters.abs)
     module.filter("bigNumber", Filters.bigNumber)
     module.filter("capitalize", Filters.capitalize)
@@ -44,8 +50,9 @@ object ScalaJsMain extends JSApp {
     module.filter("quoteChange", Filters.quoteChange)
     module.filter("quoteNumber", Filters.quoteNumber)
     module.filter("yesno", Filters.yesNo)
+  }
 
-    // ShockTrade services
+  private def configureServices(module: RichModule) {
     module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[FacebookService]("Facebook")
@@ -54,9 +61,10 @@ object ScalaJsMain extends JSApp {
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[ProfileService]("ProfileService")
     module.serviceOf[QuoteService]("QuoteService")
-    module.serviceOf[WebSocketService]("WebSockets")
+    module.serviceOf[WebSocketService]("WebSocketService")
+  }
 
-    // ShockTrade controllers
+  private def configureControllers(module: RichModule) {
     module.controllerOf[AwardsController]("AwardsController")
     module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
@@ -77,13 +85,15 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[StatisticsController]("StatisticsController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
+  }
 
+  private def configureDialogs(module: RichModule) {
     // ShockTrade dialogs
     module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
     module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")
     module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
-    module.serviceOf[NewGameDialogService]("NewGameDialog")
+    module.serviceOf[NewGameDialogService]("NewGameDialogService")
     module.controllerOf[NewGameDialogController]("NewGameDialogController")
     module.serviceOf[NewOrderDialogService]("NewOrderDialog")
     module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
@@ -95,29 +105,41 @@ object ScalaJsMain extends JSApp {
     module.controllerOf[SignUpDialogController]("SignUpController")
     module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
-
-    // inject Facebook's JavaScript SDK
-    FacebookInjector.init()
   }
 
-  /**
-   * Returns the Facebook application ID based on the running host
-   * @return {*}
-   */
-  def getAppId: js.Function0[String] = () => {
-    g.console.log(s"Facebook - hostname: ${g.location.hostname}")
-    g.location.hostname.as[String] match {
-      case "localhost" => "522523074535098" // local dev
-      case "www.shocktrade.biz" => "616941558381179"
-      case "shocktrade.biz" => "616941558381179"
-      case "www.shocktrade.com" => "364507947024983"
-      case "shocktrade.com" => "364507947024983"
-      case "www.shocktrade.net" => "616569495084446"
-      case "shocktrade.net" => "616569495084446"
-      case _ =>
-        g.console.log(s"Unrecognized hostname '${g.location.hostname}'")
-        "522523074535098" // unknown, so local dev
-    }
+  private def configureRoutes(module: RichModule) {
+    module.config({ ($routeProvider: RouteProvider) =>
+      $routeProvider
+        .when("/connect", Route(templateUrl = "/assets/views/connect/connect.htm", controller = "ConnectController"))
+        .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/dashboard/:contestId", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
+        .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
+        .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
+        .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
+        .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
+        .when("/symbols/favorites?:symbol", Route(templateUrl = "/assets/views/discover/favorites.htm", /*reloadOnSearch = false,*/ controller = "FavoritesController"))
+        .when("/symbols", Route(redirectTo = "/symbols/favorites"))
+        .when("/profile/awards", Route(templateUrl = "/assets/views/profile/awards.htm", controller = "AwardsController"))
+        .when("/profile/statistics", Route(templateUrl = "/assets/views/profile/statistics.htm", controller = "StatisticsController"))
+        .when("/profile", Route(redirectTo = "/profile/awards"))
+        .otherwise(Route(redirectTo = "/discover"))
+    })
+  }
+
+  private def runApplication(module: RichModule) {
+    module.run({ ($rootScope: js.Dynamic, MySession: MySession, WebSocketService: WebSocketService) =>
+      // capture the session and websocket instances
+      $rootScope.MySession = MySession.asInstanceOf[js.Dynamic]
+
+      // inject Facebook's JavaScript SDK
+      FacebookInjector.init()
+
+      // initialize the web socket service
+      WebSocketService.init()
+    })
   }
 
 }

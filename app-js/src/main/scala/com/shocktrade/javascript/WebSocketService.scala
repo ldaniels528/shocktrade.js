@@ -41,7 +41,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
   /**
    * Indicates whether a connection is established
    */
-  def isConnected: js.Function = () => connected
+  def isConnected: js.Function0[Boolean] = () => connected
 
   /**
    * Transmits the message to the server via web-socket

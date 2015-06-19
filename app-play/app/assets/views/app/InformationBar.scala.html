@@ -10,8 +10,8 @@
             </div>
             <div class="inline pull-left pad-left-10 pi_bar_cash">
                 <div class="positive" title="Liquid cash available">
-                    <img ng-src="/assets/images/status/{{ WebSockets.isConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
-                         title="{{ WebSockets.isConnected() ? 'Connected' : 'Not Connected' }}">
+                    <img ng-src="/assets/images/status/{{ webSockectConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
+                         title="{{ webSockectConnected() ? 'Connected' : 'Not Connected' }}">
                     <i class="fa fa-money"></i> {{ MySession.getNetWorth() | number:2 }}
                 </div>
                 <div class="emphasis" title="Total investment value">

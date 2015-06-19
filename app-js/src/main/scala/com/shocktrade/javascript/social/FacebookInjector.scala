@@ -2,27 +2,44 @@ package com.shocktrade.javascript.social
 
 import biz.enef.angulate.angular
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.ScalaJsMain
 import org.scalajs.jquery._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
 /**
  * Facebook Injector
  * @author lawrence.daniels@gmail.com
  */
-@JSExportAll
 object FacebookInjector {
+
+  /**
+   * Returns the Facebook application ID based on the running host
+   * @return {*}
+   */
+  def getShockTradeAppID: js.Function0[String] = () => {
+    g.console.log(s"Facebook - hostname: ${g.location.hostname}")
+    g.location.hostname.as[String] match {
+      case "localhost" => "522523074535098" // local dev
+      case "www.shocktrade.biz" => "616941558381179"
+      case "shocktrade.biz" => "616941558381179"
+      case "www.shocktrade.com" => "364507947024983"
+      case "shocktrade.com" => "364507947024983"
+      case "www.shocktrade.net" => "616569495084446"
+      case "shocktrade.net" => "616569495084446"
+      case _ =>
+        g.console.log(s"Unrecognized hostname '${g.location.hostname}'")
+        "522523074535098" // unknown, so local dev
+    }
+  }
 
   /**
    * Initializes the Facebook SDK
    */
   g.fbAsyncInit = (() => {
-    val appId = ScalaJsMain.getAppId()
+    val appId = getShockTradeAppID()
     g.console.log(s"Initializing Facebook SDK (App ID $appId)...")
     g.FB.init(JS(
       appId = appId,
