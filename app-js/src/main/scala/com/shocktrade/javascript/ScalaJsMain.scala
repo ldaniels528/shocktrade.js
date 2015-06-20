@@ -113,6 +113,7 @@ object ScalaJsMain extends js.JSApp {
   private def configureRoutes(module: RichModule) {
     module.config({ ($routeProvider: RouteProvider) =>
       $routeProvider
+        .when("/aboutUs", Route(templateUrl = "/assets/views/about/us.htm"))
         .when("/connect", Route(templateUrl = "/assets/views/connect/connect.htm", controller = "ConnectController"))
         .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
         .when("/dashboard/:contestId", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
