@@ -20,7 +20,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
                            @named("ContestService") contestService: ContestService,
                            @named("InvitePlayerDialog") invitePlayerDialog: js.Dynamic,
                            @named("MySession") mySession: MySession)
-  extends ScopeController {
+  extends GameController($scope, $location, toaster, mySession) {
 
   val scope = $scope.asInstanceOf[Scope]
   val MaxPlayers = 24 // TODO
@@ -55,15 +55,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.searchOptions = () => searchOptions
 
-  $scope.enterGame = (contest: js.Dynamic) => {
-    if (isDefined(contest) && isParticipant(contest)) {
-      mySession.setContest(contest)
-      $location.path(s"/dashboard/${contest.OID}")
-    }
-    else {
-      toaster.error("You must join the contest first")
-    }
-  }
+  $scope.enterGame = (contest: js.Dynamic) => enterGame(contest)
 
   $scope.invitePlayerPopup = (contest: js.Dynamic, playerID: String) => {
     mySession.findPlayerByID(contest, playerID) match {
@@ -183,11 +175,6 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   }
 
   $scope.isParticipant = (contest: js.Dynamic) => isParticipant(contest)
-
-  private def isParticipant(contest: js.Dynamic) = {
-    isDefined(contest) && isDefined(contest.participants) &&
-      contest.participants.asArray[js.Dynamic].exists(_.OID == mySession.userProfile.OID)
-  }
 
   $scope.deleteContest = { (contest: js.Dynamic) =>
     contest.deleting = true

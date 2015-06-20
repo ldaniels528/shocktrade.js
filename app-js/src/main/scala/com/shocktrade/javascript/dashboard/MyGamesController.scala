@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.Timeout
-import biz.enef.angulate.{Scope, ScopeController, named}
+import biz.enef.angulate.core.{Location, Timeout}
+import biz.enef.angulate.named
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -18,23 +18,25 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 @JSExportAll
-class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
+class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @named("ContestService") contestService: ContestService,
                         @named("MySession") mySession: MySession,
-                        @named("NewGameDialogService") newGameDialog: NewGameDialogService) extends ScopeController {
+                        @named("NewGameDialogService") newGameDialog: NewGameDialogService)
+  extends GameController($scope, $location, toaster, mySession) {
 
   private var myContests = js.Array[js.Dynamic]()
-  private val scope = $scope.asInstanceOf[js.Dynamic]
 
   ///////////////////////////////////////////////////////////////////////////
   //          Scope Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  scope.initMyGames = () => mySession.userProfile.OID_? foreach loadMyContests
+  $scope.initMyGames = () => mySession.userProfile.OID_? foreach loadMyContests
 
-  scope.getMyContests = () => myContests
+  $scope.enterGame = (contest: js.Dynamic) => enterGame(contest)
 
-  scope.getMyRankings = (contest: js.Dynamic) => {
+  $scope.getMyContests = () => myContests
+
+  $scope.getMyRankings = (contest: js.Dynamic) => {
     if (!isDefined(contest)) null
     else if (!isDefined(contest.ranking)) {
       val rankings = contestService.getPlayerRankings(contest, mySession.getUserID())
@@ -43,7 +45,7 @@ class MyGamesController($scope: Scope, $timeout: Timeout, toaster: Toaster,
     else contest.ranking.player
   }
 
-  scope.newGamePopup = () => {
+  $scope.newGamePopup = () => {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
         myContests.push(contest.asInstanceOf[js.Dynamic])
