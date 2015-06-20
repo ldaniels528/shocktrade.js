@@ -18,11 +18,11 @@ class AwardsController($scope: js.Dynamic, $http: HttpService, @named("MySession
 
   $scope.getAwards = () => availableAwards
 
-  $scope.getMyAwards = (userProfile: js.Dynamic) => getMyAwards(userProfile)
+  $scope.getMyAwards = () => getMyAwards(mySession.userProfile)
 
   $scope.getAwardImage = (code: String) => awardIconsByCode.get(code).orNull
 
-  $scope.setupAwards = (userProfile: js.Dynamic) => setupAwards(userProfile)
+  $scope.setupAwards = () => setupAwards(mySession.userProfile)
 
   // watch for changes to the player's profile
   $scope.$watch(mySession.userProfile, (newProfile: js.Dynamic, oldProfile: js.Dynamic) => {

@@ -12,7 +12,7 @@
                    ng-change="selectUpdate({})"
                    placeholder="Search my friends...">
         </div>
-        <div ng-show="getContact()._id" style="width: 100%">
+        <div ng-if="getContact()._id" style="width: 100%">
             <!-- if ShockTrade user -->
             <div ng-show="getContact().profile">@assets.views.html.connect.ContactCard()</div>
 
@@ -20,7 +20,7 @@
             <div ng-hide="getContact().profile">@assets.views.html.connect.NonMemberCard()</div>
         </div>
         <div class="contactsContainer">
-            <span ng-show="MySession.fbFriends.length == 0" class="notice" style="margin-left: 10px">
+            <span ng-show="getFriends().length == 0" class="notice" style="margin-left: 10px">
                 <i class="fa fa-lg fa-frown-o st_orange"></i>
                 <span class="st_orange">You have no friends</span>
             </span>

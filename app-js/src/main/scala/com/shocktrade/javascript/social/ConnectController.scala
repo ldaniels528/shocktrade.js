@@ -1,6 +1,5 @@
-package com.shocktrade.javascript.profile
+package com.shocktrade.javascript.social
 
-import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{Scope, ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
@@ -41,6 +40,8 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   $scope.chooseFirstContact = () => mySession.fbFriends.headOption foreach ($scope chooseContact _)
 
   $scope.getContact = () => contact
+
+  $scope.getFriends = () => mySession.fbFriends
 
   $scope.getMyUpdates = () => myUpdates
 

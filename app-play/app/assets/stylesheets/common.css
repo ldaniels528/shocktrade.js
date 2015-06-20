@@ -34,6 +34,12 @@ a:active  { cursor: pointer; text-decoration: none; }
     height: 32px;
 }
 
+.avatar-40 {
+	width: 32px;
+	height: 32px;
+	margin: 3px;
+}
+
 .avatar-45 {
     width: 45px;
     height: 45px;

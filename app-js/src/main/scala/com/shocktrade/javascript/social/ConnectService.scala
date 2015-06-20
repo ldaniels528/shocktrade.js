@@ -1,4 +1,4 @@
-package com.shocktrade.javascript.profile
+package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
 import biz.enef.angulate.core.{HttpPromise, HttpService}

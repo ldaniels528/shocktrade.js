@@ -17,7 +17,6 @@ object AvatarDirective {
     val app = g.angular.module("shocktrade")
 
     val updateScope = { (newValue: js.Any, oldValue: js.Any, scope: js.Dynamic) =>
-      //g.console.log(s"newValue = $newValue, oldValue = $oldValue, (${Option(newValue).map(_.getClass.getName).orNull})")
       if (isDefined(scope.id)) {
         scope.url = s"http://graph.facebook.com/${scope.id}/picture"
         scope.myClass = "playerAvatar"
@@ -40,7 +39,6 @@ object AvatarDirective {
     }
 
     val linkFx = { (scope: js.Dynamic, element: js.Dynamic, attrs: js.Dynamic) =>
-      g.console.log("In link function")
       scope.$watch("object", (newValue: js.Any, oldValue: js.Any) => updateScope(newValue, oldValue, scope))
       scope.$watch("id", (newValue: js.Any, oldValue: js.Any) => updateScope(newValue, oldValue, scope))
     }

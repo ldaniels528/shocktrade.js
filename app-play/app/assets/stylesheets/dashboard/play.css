@@ -171,13 +171,6 @@ div.availGamesContainer {
 	height: 200px;
 }
 
-div.myAwardsContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 550px;
-}
-
 div.myPerksContainer {
 	clear: both;
 	overflow: auto;	

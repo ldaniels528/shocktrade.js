@@ -120,6 +120,7 @@ object ScalaJsMain extends js.JSApp {
         .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
         .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
         .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
+        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "StatisticsController"))
         .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
         .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
         .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))

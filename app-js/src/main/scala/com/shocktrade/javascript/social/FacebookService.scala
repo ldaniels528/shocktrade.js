@@ -59,8 +59,9 @@ class FacebookService($q: Q) extends Service {
     val deferred = $q.defer()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
-      FB.api(s"/v2.3/me/$friendListId/members&access_token=$accessToken", { (response: js.Dynamic) =>
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject("Failed to create friends list")
+      FB.api(s"/$version/me/$friendListId/members&access_token=$accessToken", { (response: js.Dynamic) =>
+        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+        else deferred.reject("Failed to create friends list")
       })
     }
     deferred.promise
@@ -70,8 +71,9 @@ class FacebookService($q: Q) extends Service {
     val deferred = $q.defer()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
-      FB.api(s"/v2.3/me/friends?access_token=$accessToken", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response.data) else deferred.reject("Failed to retrieve friends list")
+      FB.api(s"/$version/me/friends?access_token=$accessToken", (response: js.Dynamic) => {
+        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response.data)
+        else deferred.reject("Failed to retrieve friends list")
       })
     }
     deferred.promise
@@ -81,8 +83,9 @@ class FacebookService($q: Q) extends Service {
     val deferred = $q.defer()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
-      FB.api(s"/v2.3/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=$accessToken", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject(s"Failed to retrieve friends list (type $listType)")
+      FB.api(s"/$version/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=$accessToken", (response: js.Dynamic) => {
+        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+        else deferred.reject(s"Failed to retrieve friends list (type $listType)")
       })
     }
     deferred.promise
@@ -92,19 +95,37 @@ class FacebookService($q: Q) extends Service {
     val deferred = $q.defer()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
-      FB.api(s"/v2.3/me/$friendListId/members&access_token=$accessToken", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response) else deferred.reject("Failed to retrieve friend list members")
+      FB.api(s"/$version/me/$friendListId/members&access_token=$accessToken", (response: js.Dynamic) => {
+        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+        else deferred.reject("Failed to retrieve friend list members")
       })
     }
     deferred.promise
   }
 
-  def getTaggableFriends: js.Function0[Promise] = () => {
-    val deferred = $q.defer()
-    FB.api(s"/v2.3/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => {
-      deferred.resolve(response.data)
-    })
-    deferred.promise
+  def getTaggableFriends: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
+    if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
+    else FB.api(s"/$version/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => callback(response))
+    ()
+  }
+
+  def getAllTaggableFriends: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
+    if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
+    else {
+      FB.api(s"/$version/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => paginatedResults(response, callback))
+    }
+    ()
+  }
+
+  def paginatedResults(response: js.Dynamic, callback: CallbackObject) {
+    // perform the callback for this response
+    callback(response)
+
+    // if there are more results, recursively extract them
+    if (isDefined(response.paging) && isDefined(response.paging.next)) {
+      g.console.log(s"Getting next page: ${response.paging.next}")
+      FB.api(response.paging.next, (response: js.Dynamic) => paginatedResults(response, callback))
+    }
   }
 
   def getLoginStatus: js.Function0[Promise] = () => {
@@ -138,7 +159,7 @@ class FacebookService($q: Q) extends Service {
   def getUserProfile: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
     if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
     else {
-      FB.api(s"/v2.3/me?access_token=${auth.accessToken}", (response: js.Dynamic) => callback(response))
+      FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: js.Dynamic) => callback(response))
     }
     ()
   }

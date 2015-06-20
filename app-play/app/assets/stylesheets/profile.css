@@ -3,3 +3,31 @@
     background: white;
     padding: 10px;
 }
+
+div.myAwardsContainer {
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 550px;
+}
+
+div.profile_MyFavorites {
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 125px;
+}
+
+div.profile_MyFriends {
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 490px;
+}
+
+div.profile_MyAwards {
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 125px;
+}

@@ -86,28 +86,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
-    startLoading(DEFAULT_TIMEOUT)
-    val tab = appTabs(tabIndex)
-    g.console.log(s"Changing location to ${tab.url}")
-    $location.url(tab.url.as[String])
-    stopLoading()
-    true
-  }
-
-  private def determineTableIndex: Int = $location.path() match {
-    case path if path.contains("/search") => 0
-    case path if path.contains("/dashboard") => 1
-    case path if path.contains("/discover") => 2
-    case path if path.contains("/explore") => 3
-    case path if path.contains("/favorites") => 4
-    case path if path.contains("/research") => 5
-    case path if path.contains("/connect") => 6
-    case path if path.contains("/awards") => 7
-    case path if path.contains("/statistics") => 8
-    case path => 0
-  }
-
   private def isOnline(player: js.Dynamic): Boolean = {
     if (!isDefined(player.facebookID)) false
     else {
@@ -140,11 +118,14 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def loadFacebookFriends() {
     g.console.log("Loading Facebook friends...")
-    facebook.getTaggableFriends() onSuccess { case response: js.Dynamic =>
-      val friends = response.asInstanceOf[js.Dynamic].asArray[js.Dynamic]
-      g.console.log(s"${friends.length} friend(s) loaded")
-      friends.foreach(friend => mySession.fbFriends.push(friend))
-    }
+    facebook.getAllTaggableFriends({ (response: js.Dynamic) =>
+      if(isDefined(response.data)) {
+        val friends = response.data.asArray[js.Dynamic]
+        g.console.log(s"${friends.length} friend(s) loaded")
+        friends.foreach(mySession.fbFriends.push(_))
+      }
+      ()
+    })
   }
 
   private def login() {
@@ -219,6 +200,33 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   private def stopLoading() = $timeout(() => isLoading = false, 500.millis)
 
   //////////////////////////////////////////////////////////////////////
+  //              Tab Functions
+  //////////////////////////////////////////////////////////////////////
+
+  private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
+    startLoading(DEFAULT_TIMEOUT)
+    val tab = appTabs(tabIndex)
+    g.console.log(s"Changing location to ${tab.url}")
+    $location.url(tab.url.as[String])
+    stopLoading()
+    true
+  }
+
+  private def determineTableIndex: Int = $location.path() match {
+    case path if path.contains("/home") => 0
+    case path if path.contains("/search") => 1
+    case path if path.contains("/dashboard") => 2
+    case path if path.contains("/discover") => 3
+    case path if path.contains("/explore") => 4
+    case path if path.contains("/favorites") => 5
+    case path if path.contains("/research") => 6
+    case path if path.contains("/connect") => 7
+    case path if path.contains("/awards") => 8
+    case path if path.contains("/statistics") => 9
+    case path => 3
+  }
+
+  //////////////////////////////////////////////////////////////////////
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
@@ -231,7 +239,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
  * @author lawrence.daniels@gmail.com
  */
 object MainController {
-  private val DEFAULT_TIMEOUT = 5000
+  private val DEFAULT_TIMEOUT = 15000
 
   private def getAssetCode(q: js.Dynamic): String = {
     if (!isDefined(q) || !isDefined(q.assetType)) ""
@@ -278,6 +286,7 @@ object MainController {
   }
 
   private val appTabs = js.Array(
+    JS(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
     JS(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
     JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
     JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
