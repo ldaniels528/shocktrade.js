@@ -5,10 +5,8 @@ import biz.enef.angulate.{Service, named}
 import com.greencatsoft.angularjs.core.Promise
 import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * Invite Player Dialog Service
@@ -25,7 +23,7 @@ class InvitePlayerDialogService($http: HttpService, $modal: ModalService, @named
     val options = ModalOptions()
     options.templateUrl = "invite_player_dialog.htm"
     options.controller = classOf[InvitePlayerDialogController].getSimpleName
-    options.resolve(JS(myFriends = { () => mySession.fbFriends }: js.Function))
+    options.resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))
 
     /*
     function(selectedFriends) {

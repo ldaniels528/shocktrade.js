@@ -17,22 +17,24 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, toaster: Toaster,
-                               @named("params") params: js.Dynamic,
                                @named("ContestService") contestService: ContestService,
                                @named("MySession") mySession: MySession,
                                @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                                @named("PerksDialog") perksDialog: PerksDialogService,
-                               @named("QuoteService") quoteService: QuoteService)
+                               @named("QuoteService") quoteService: QuoteService,
+                               @named("params") params: js.Dynamic)
   extends ScopeController {
 
   private val messages = emptyArray[String]
   private var processing = false
 
+  g.console.log(s"params = ${toJson(params)}")
+
   $scope.form = JS(
     emailNotify = true,
-    symbol = if (isDefined(params.symbol)) params.symbol else "AAPL",
-    quantity = params.quantity,
-    accountType = if (isDefined(params.accountType)) params.accountType else "CASH"
+    accountType = params.accountType,
+    symbol = params.symbol,
+    quantity = params.quantity
   )
   $scope.quote = JS(symbol = $scope.form.symbol)
 

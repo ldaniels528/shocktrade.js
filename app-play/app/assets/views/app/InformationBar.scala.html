@@ -28,7 +28,7 @@
             </span>
 
             <span ng-controller="AwardsController" class="middle pull-right">
-                <img ng-repeat="award in getMyAwards(MySession.userProfile).slice(0,7)" title="{{ award.name }}"
+                <img ng-repeat="award in getMyAwards().slice(0,7)" title="{{ award.name }}"
                      style="padding: 2px 2px 2px 2px" ng-src="{{ award.icon }}">
             </span>
         </div>

@@ -4,10 +4,6 @@
 </div>
 <div class="col-md-5 inline pull-left">
     <div class="col-md-12 pull-left">
-        <span class="pull-left">Rep</span>
-        <span class="pull-right"><i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
-    </div>
-    <div class="col-md-12 pull-left">
         <span class="pull-left">Level</span>
         <span class="pull-right">{{ userProfile.level || 1 }} &#8212; {{ levels[ userProfile.level || 0 ].description }}</span>
     </div>
@@ -19,6 +15,10 @@
         <span class="pull-left">Next Level</span>
         <span class="pull-right">{{ levels[ userProfile.level || 0 ].nextLevelXP }} <span class="small">XP</span></span>
     </div>
+    <div class="col-md-12 pull-left">
+        <span class="pull-left">Rep</span>
+        <span class="pull-right"><i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
+    </div>
 </div>
 <div class="col-md-5 inline pull-right">
     <div class="col-md-12 pull-left">
@@ -26,11 +26,15 @@
         <span class="pull-right st_green">{{ MySession.getNetWorth() | number:2 }}</span>
     </div>
     <div class="col-md-12 pull-left">
-        <span class="pull-left">Equity</span>
+        <span class="pull-left">Assets</span>
         <span class="pull-right st_blue">{{ getTotalInvestment() | number:2 }}</span>
     </div>
     <div class="col-md-12 pull-left">
-        <span class="pull-right">
+        <span class="pull-left">Total</span>
+        <span class="pull-right st_orange">{{ MySession.getNetWorth() + getTotalInvestment() | number:2 }}</span>
+    </div>
+    <div class="col-md-12 pull-left">
+        <span class="pull-left">
             <img src="/assets/images/contests/gold.png"> x {{ userProfile.trophiesGold || 0 }}&nbsp;
             <img src="/assets/images/contests/silver.png"> x {{ userProfile.trophiesSilver || 0 }}&nbsp;
             <img src="/assets/images/contests/bronze.png"> x {{ userProfile.trophiesBronze || 0 }}

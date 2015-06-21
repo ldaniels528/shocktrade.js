@@ -1,8 +1,8 @@
 @()
-<div class="row" style="background: #dddddd; padding: 4px; border: 1px solid #cccccc; border-radius: 4px; margin: 15px">
+<div class="row portfolio_button_panel">
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold"
-                ng-click="popupNewOrderDialog({'accountType': getAccountType()})"
+                ng-click="popupNewOrderDialog(getAccountType())"
                 ng-hide="MySession.getContestStatus() === 'CLOSED'"
                 title="Create a new order">
             <i class="fa fa-cart-plus"></i> Order

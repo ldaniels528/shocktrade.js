@@ -50,12 +50,11 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
 
   $scope.toggleSelectedOrder = () => $scope.selectedOrder = null
 
-  $scope.popupNewOrderDialog = (params: js.UndefOr[js.Dynamic]) => {
-    newOrderDialog.popup({
-      val myParams = params getOrElse JS()
-      myParams.symbol = $cookieStore.getOrElse[String]("QuoteService_lastSymbol", mySession.getMostRecentSymbol())
-      myParams
-    })
+  $scope.popupNewOrderDialog = (accountType: js.UndefOr[String]) => {
+    newOrderDialog.popup(JS(
+      symbol = $cookieStore.get[String]("QuoteService_lastSymbol"),
+      accountType = accountType
+    ))
   }
 
   private def getActiveOrders = mySession.getOrders() filter (_.accountType === $scope.getAccountType())
@@ -118,7 +117,9 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
 
   $scope.selectPosition = (position: js.Dynamic) => $scope.selectedPosition = position
 
-  $scope.sellPosition = (symbol: js.Dynamic, quantity: js.Dynamic) => newOrderDialog.popup(JS(symbol = symbol, quantity = quantity))
+  $scope.sellPosition = (symbol: js.UndefOr[String], quantity: js.UndefOr[Int]) => {
+    newOrderDialog.popup(JS(symbol = symbol, quantity = quantity))
+  }
 
   $scope.toggleSelectedPosition = () => $scope.selectedPosition = null
 

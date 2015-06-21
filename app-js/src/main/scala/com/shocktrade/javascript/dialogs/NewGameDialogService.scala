@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.core.{HttpPromise, HttpService}
 import biz.enef.angulate.{Service, named}
-import com.greencatsoft.angularjs.core.{Promise, Q}
+import com.greencatsoft.angularjs.core.Promise
 import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
 import com.shocktrade.javascript.dashboard.ContestService
 
@@ -12,7 +12,7 @@ import scala.scalajs.js
  * New Game Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewGameDialogService($http: HttpService, $modal: ModalService, $q: Q,
+class NewGameDialogService($http: HttpService, $modal: ModalService,
                            @named("ContestService") contestService: ContestService)
   extends Service {
 

@@ -172,7 +172,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     else if (aContest.`type` === "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
-    else contest = Some(aContest)
+    else contest = Option(aContest)
   }
 
   /**
@@ -275,18 +275,26 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Creates a default 'Spectator' user profile
    * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
    */
-  private def createSpectatorProfile() = JS(
-    name = "Spectator",
-    country = "us",
-    level = 1,
-    lastSymbol = "AAPL",
-    netWorth = 0.00,
-    totalXP = 0,
-    awards = emptyArray[String],
-    favorites = emptyArray[String],
-    friends = emptyArray[String],
-    recentSymbols = emptyArray[String]
-  )
+  private def createSpectatorProfile() = {
+    notifications.remove(0, notifications.length)
+    facebookID = None
+    fbFriends = emptyArray[js.Dynamic]
+    fbProfile = None
+    contest = None
+    nonMember = true
+
+    JS(
+      name = "Spectator",
+      country = "us",
+      level = 1,
+      lastSymbol = "AAPL",
+      netWorth = 0.00,
+      totalXP = 0,
+      awards = emptyArray[String],
+      favorites = emptyArray[String],
+      recentSymbols = emptyArray[String]
+    )
+  }
 
   private[javascript] def cashAccount_? = participant.flatMap(p => Option(p.cashAccount))
 
@@ -312,92 +320,95 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   private def info(contest: js.Dynamic, message: String) = g.console.log(s"${contest.name}: $message")
 
-  private def updateContestDelta(contest: js.Dynamic) {
+  private def updateContestDelta(updatedContest: js.Dynamic) {
     // update the messages (if present)
-    if (isDefined(contest.messages)) {
-      contest.messages = contest.messages
+    if (isDefined(updatedContest.messages)) {
+      info(updatedContest, s"Updating messages")
+      contest.foreach(_.messages = updatedContest.messages)
     }
 
     // lookup our local participant
     for {
       myParticipant <- participant
-      foreignPlayer <- lookupParticipant(contest, myParticipant.OID)
+      foreignPlayer <- lookupParticipant(updatedContest, myParticipant.OID)
     } {
-      // update the cash account (if present)
-      if (isDefined(foreignPlayer.cashAccount)) {
-        info(contest, s"Updating cash account for ${foreignPlayer.name}")
-        myParticipant.cashAccount = foreignPlayer.cashAccount
-      }
-
-      // update the margin account (if present)
-      if (isDefined(foreignPlayer.marginAccount)) {
-        info(contest, s"Updating margin account for ${foreignPlayer.name}")
-        myParticipant.marginAccount = foreignPlayer.marginAccount
-      }
-
-      // update the orders (if present)
-      if (isDefined(foreignPlayer.orders)) {
-        info(contest, s"Updating active orders for ${foreignPlayer.name}")
-        myParticipant.orders = foreignPlayer.orders
-      }
-
-      // update the order history (if present)
-      if (isDefined(foreignPlayer.closedOrders)) {
-        info(contest, s"Updating closed orders for ${foreignPlayer.name}")
-        myParticipant.closedOrders = foreignPlayer.closedOrders
-      }
-
-      // update the performance (if present)
-      if (isDefined(foreignPlayer.performance)) {
-        info(contest, s"Updating performance for ${foreignPlayer.name}")
-        myParticipant.performance = foreignPlayer.performance
-      }
-
-      // update the perks (if present)
-      if (isDefined(foreignPlayer.perks)) {
-        info(contest, s"Updating perks for ${foreignPlayer.name}")
-        myParticipant.perks = foreignPlayer.perks
-      }
-
-      // update the positions (if present)
-      if (isDefined(foreignPlayer.positions)) {
-        info(contest, s"Updating positions for ${foreignPlayer.name}")
-        myParticipant.positions = foreignPlayer.positions
-      }
+      // update each object (if present)
+      if (isDefined(foreignPlayer.cashAccount)) updateContest_CashAccount(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.marginAccount)) updateContest_MarginAccount(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.orders)) updateContest_ActiveOrders(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.closedOrders)) updateContest_ClosedOrders(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.performance)) updateContest_Performance(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.perks)) updateContest_Perks(updatedContest, myParticipant, foreignPlayer)
+      if (isDefined(foreignPlayer.positions)) updateContest_Positions(updatedContest, myParticipant, foreignPlayer)
     }
   }
 
-  $rootScope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Contest deleted")
-    this.contest foreach { c =>
-      if (c.OID == contest.OID) resetContest()
+  private def updateContest_CashAccount(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating cash account for ${foreignPlayer.name}")
+    myParticipant.cashAccount = foreignPlayer.cashAccount
+  }
+
+  private def updateContest_MarginAccount(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating margin account for ${foreignPlayer.name}")
+    myParticipant.marginAccount = foreignPlayer.marginAccount
+  }
+
+  private def updateContest_ActiveOrders(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating active orders for ${foreignPlayer.name}")
+    myParticipant.orders = foreignPlayer.orders
+  }
+
+  private def updateContest_ClosedOrders(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating closed orders for ${foreignPlayer.name}")
+    myParticipant.closedOrders = foreignPlayer.closedOrders
+  }
+
+  private def updateContest_Performance(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating performance for ${foreignPlayer.name}")
+    myParticipant.performance = foreignPlayer.performance
+  }
+
+  private def updateContest_Perks(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating perks for ${foreignPlayer.name}")
+    myParticipant.perks = foreignPlayer.perks
+  }
+
+  private def updateContest_Positions(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+    info(contest, s"Updating positions for ${foreignPlayer.name}")
+    myParticipant.positions = foreignPlayer.positions
+  }
+
+  $rootScope.$on("contest_deleted", { (event: js.Dynamic, deletedContest: js.Dynamic) =>
+    info(deletedContest, "Contest deleted event received...")
+    contest foreach { c =>
+      if (c.OID == deletedContest.OID) resetContest()
     }
   })
 
-  $rootScope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Contest updated")
-    this.contest foreach { c => if (c.OID == contest.OID) setContest(contest) }
-    if (this.contest.isEmpty) setContest(contest)
+  $rootScope.$on("contest_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+    info(updatedContest, "Contest updated event received...")
+    contest foreach { c => if (c.OID == updatedContest.OID) setContest(updatedContest) }
+    if (contest.isEmpty) setContest(updatedContest)
   })
 
-  $rootScope.$on("messages_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Messages updated")
-    setContest(contest)
+  $rootScope.$on("messages_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+    info(updatedContest, "Messages updated event received...")
+    updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("orders_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Orders updated")
-    setContest(contest)
+  $rootScope.$on("orders_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+    info(updatedContest, "Orders updated event received...")
+    updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("perks_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Perks updated")
-    setContest(contest)
+  $rootScope.$on("perks_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+    info(updatedContest, "Perks updated event received...")
+    updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("participant_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
-    info(contest, "Participant updated")
-    setContest(contest)
+  $rootScope.$on("participant_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+    info(updatedContest, "Participant updated event received...")
+    updateContestDelta(updatedContest)
   })
 
   $rootScope.$on("profile_updated", { (event: js.Dynamic, profile: js.Dynamic) =>

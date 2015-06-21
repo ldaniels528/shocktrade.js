@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext
  */
 object AwardsProcessor {
   private val conditions = Seq(CheckeredFlag, CrystalBall, GoldTrophy, MadMoney, PayDirt, PerkSet)
-  private val MinParticipation = 10
+  private val MinParticipation = 4
 
   def qualifyAwards(c: Contest)(implicit ec: ExecutionContext) = {
     c.participants map { participant =>

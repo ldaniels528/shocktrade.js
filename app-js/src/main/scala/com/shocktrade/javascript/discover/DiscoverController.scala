@@ -61,7 +61,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
 
   $scope.getMatchedAssetIcon = (q: js.Dynamic) => "/assets/images/asset_types/stock.png"
 
-  $scope.popupNewOrderDialog = (symbol: String) => newOrderDialog.popup(JS(symbol = symbol))
+  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Quotes Loading

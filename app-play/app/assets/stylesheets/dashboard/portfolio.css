@@ -10,6 +10,14 @@
 	font-size: 10pt; padding-bottom: 2px;
 }
 
+.portfolio_button_panel {
+	background: #dddddd;
+	padding: 4px;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	margin: 15px
+}
+
 .portfolio_tab {
     background: #ffffff;
 	border-left: 1px solid #cccccc;

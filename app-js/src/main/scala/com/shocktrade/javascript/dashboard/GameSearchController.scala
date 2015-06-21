@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.core.{HttpError, Location, Timeout}
-import biz.enef.angulate.{Scope, ScopeController, named}
+import biz.enef.angulate.{Scope, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -140,7 +140,13 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.isSplitScreen = () => splitScreen && (selectedContest != null)
 
-  $scope.selectContest = (contest: js.Dynamic) => {
+  $scope.selectContest = (contest: js.Dynamic) => selectContest(contest)
+
+  $scope.toggleSplitScreen = () => splitScreen = false
+
+  private def isContestSelected(contestId: String) = Option(selectedContest).exists(_.OID_?.contains(contestId))
+
+  private def selectContest(contest: js.Dynamic) = {
     if (isDefined(contest)) {
       g.console.log(s"Selecting contest '${contest.name}' (${contest.OID})")
       selectedContest = contest
@@ -152,10 +158,6 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     }
   }
 
-  $scope.toggleSplitScreen = () => splitScreen = false
-
-  private def isContestSelected(contestId: String) = (selectedContest != null) && (selectedContest.OID == contestId)
-
   ///////////////////////////////////////////////////////////////////////////
   //          Contest Management Functions
   ///////////////////////////////////////////////////////////////////////////
@@ -166,23 +168,24 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.isContestOwner = (contest: js.Dynamic) => isContestOwner(contest)
 
-  private def isContestOwner(contest: js.Dynamic) = {
-    isDefined(contest) && isDefined(contest.creator) && isDefined(contest.creator.name) && contest.creator.name == mySession.userProfile.name
-  }
-
   $scope.isDeletable = { (contest: js.Dynamic) =>
     isContestOwner(contest) && (!isDefined(contest.startTime) || contest.participants.asArray[js.Dynamic].length == 1)
   }
 
   $scope.isParticipant = (contest: js.Dynamic) => isParticipant(contest)
 
-  $scope.deleteContest = { (contest: js.Dynamic) =>
+  $scope.deleteContest = (contest: js.Dynamic) => deleteContest(contest)
+
+  private def isContestOwner(contest: js.Dynamic) = {
+    isDefined(contest) && isDefined(contest.creator) && isDefined(contest.creator.name) && contest.creator.name == mySession.userProfile.name
+  }
+
+  private def deleteContest(contest: js.Dynamic) = {
     contest.deleting = true
     g.console.log(s"Deleting contest ${contest.name}...")
     contestService.deleteContest(contest.OID) onComplete {
       case Success(response) =>
-        //removeContestFromList(contest.OID)
-        $scope.contestSearch($scope.searchOptions)
+        removeContestFromList(searchResults, contest.OID)
         $timeout(() => contest.deleting = false, 500)
       case Failure(e) =>
         toaster.error("Error!", "Failed to delete contest")
@@ -319,8 +322,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   scope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name}' deleted")
     selectedContest = null
-    searchResults.push(contest)
-    //mySession.refresh()
+    searchResults = searchResults.filterNot(_.OID == contest.OID)
   })
 
   /**
@@ -328,14 +330,14 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
    */
   scope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name} updated")
-    val contestId = contest.OID
+    contest.OID_? foreach { contestId =>
+      // update the contest in our search results
+      updateContestInList(searchResults, contestId)
 
-    // update the contest in our search results
-    updateContestInList(searchResults, contestId)
-
-    // make sure we"re pointing at the updated contest
-    if (isContestSelected(contestId)) {
-      selectedContest = contest
+      // make sure we"re pointing at the updated contest
+      if (isContestSelected(contestId)) {
+        selectedContest = contest
+      }
     }
   })
 

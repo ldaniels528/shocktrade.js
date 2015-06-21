@@ -13,8 +13,17 @@
             </tabset>
         </div>
         <div class="col-md-6 pull-right">
-            <div >
-            @assets.views.html.profile.Awards("profile_MyAwards")
+            <div ng-controller="AwardsController">
+                <fieldset>
+                    <legend>My Awards ({{ getMyAwards().length || 0 }})</legend>
+                </fieldset>
+                <span ng-if="getMyAwards()">
+                    <img ng-repeat="award in getMyAwards().slice(0,7)" title="{{ award.name }}"
+                        style="padding: 2px 2px 2px 2px" ng-src="{{ award.icon }}">
+                </span>
+                <span ng-hide="getMyAwards()" class="warning">
+                    No awards granted.
+                </span>
             </div>
 
             <div class="contest_colors" style="padding: 6px; margin-top: 20px" ng-controller="MyGamesController" ng-init="initMyGames()">

@@ -39,9 +39,9 @@ lazy val appScalaJs = (project in file("app-js"))
     persistLauncher in Test := false,
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
-      "biz.enef" %%% "scalajs-angulate" % "0.2",
+      "biz.enef" %%% "scalajs-angulate" % "0.2.2-SNAPSHOT",
       "com.github.benhutchison" %%% "prickle" % "1.1.5",
-      "com.greencatsoft" %%% "scalajs-angular" % "0.4",
+      "com.greencatsoft" %%% "scalajs-angular" % "0.5-SNAPSHOT",
 //    "org.scala-js" %% "scalajs-library" % "0.6.3",
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
       "be.doeraene" %%% "scalajs-jquery" % "0.8.0"

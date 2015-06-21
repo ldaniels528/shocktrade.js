@@ -173,13 +173,9 @@ object ScalaJsHelper {
 
   }
 
-  /**
-   * Modal Options Extensions
-   * @param options the given [[ModalOptions modal options]]
-   */
-  implicit class ModalOptionsExtensions(val options: ModalOptions) extends AnyVal {
+  implicit class OptionExtensions[T](val optA: Option[T]) extends AnyVal {
 
-    def resolve(values: js.Dynamic) = options.asInstanceOf[js.Dynamic].resolve = values
+    def ??(optB: => Option[T]): Option[T] = if (optA.isDefined) optA else optB
 
   }
 
