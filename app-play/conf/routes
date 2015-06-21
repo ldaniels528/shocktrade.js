@@ -18,9 +18,7 @@ GET           /assets/views/discover/favorites.htm                  com.shocktra
 GET           /assets/views/explore/drill_down.htm                  com.shocktrade.controllers.Application.exploreView()
 GET           /assets/views/news/news_center.htm                    com.shocktrade.controllers.Application.newsCenterView()
 GET           /assets/views/play/search.htm                         com.shocktrade.controllers.Application.searchView()
-GET           /assets/views/profile/awards.htm                      com.shocktrade.controllers.Application.awardsView()
 GET           /assets/views/profile/home.htm                        com.shocktrade.controllers.Application.homeView()
-GET           /assets/views/profile/statistics.htm                  com.shocktrade.controllers.Application.statisticsView()
 GET           /assets/views/research/research.htm                   com.shocktrade.controllers.Application.researchView()
 GET           /websocket                                            com.shocktrade.controllers.Application.webSocket
 

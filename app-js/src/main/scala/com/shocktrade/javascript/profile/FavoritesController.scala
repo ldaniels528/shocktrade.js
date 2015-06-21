@@ -1,11 +1,11 @@
-package com.shocktrade.javascript.discover
+package com.shocktrade.javascript.profile
 
-import biz.enef.angulate.core.{Location, Timeout}
+import biz.enef.angulate.core.Location
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.profile.ProfileService
+import com.shocktrade.javascript.discover.QuoteService
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -62,7 +62,7 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
   }
 
   private def loadQuotes(symbols: js.Array[String]) {
-    g.console.log(s"Loading symbols ${symbols}...")
+    g.console.log(s"Loading symbols $symbols...")
     quoteService.getStockQuoteList(symbols) onComplete {
       case Success(updatedQuotes) => quotes = updatedQuotes
       case Failure(e) =>

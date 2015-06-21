@@ -1,0 +1,10 @@
+@()
+<div ng-controller="AwardsController" ng-ini="setupAwards()">
+    <div ng-repeat="award in getAwards()">
+        <img style="vertical-align: middle; padding: 4px"
+             ng-src="{{ award.owned ? award.icon : '/assets/images/awards/locked_award.gif'}}">
+        <span style="vertical-align: middle" ng-class="award.owned ? '' : 'null'" >
+            <span style="font-weight: bold">{{award.name}}</span> &#8212; {{award.description}}
+        </span>
+    </div>
+</div>

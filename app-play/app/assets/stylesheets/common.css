@@ -235,6 +235,10 @@ input { font-family: 'FontAwesome'; } /* This is for the placeholder */
 	padding-left: 16px
 }
 
+.padding-3 {
+    padding: 3px;
+}
+
 th {
 	vertical-align: top;
 	text-align: left;

@@ -1,0 +1,95 @@
+@()
+<fieldset>
+    <legend><i class="fa fa-flag-checkered"></i> Competitive Statistics</legend>
+    <span class="col-md-6">
+        <span class="pull-left">Winning Streak</span>
+        <span class="pull-right">{{ userProfile.winningStreak || 0 }} time(s)</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Losing Streak</span>
+        <span class="pull-right">{{ userProfile.lossingStreak || 0 }} time(s)</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Last Place</span>
+        <span class="pull-right">{{ userProfile.lastPlace || 0 }} time(s)</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Max players (single game)</span>
+        <span class="pull-right">{{ userProfile.maxPlayers || 0 }}</span>
+    </span>
+</fieldset>
+
+<fieldset class="home_headroom">
+    <legend><i class="fa fa-gamepad"></i> Games Statistics</legend>
+    <span class="col-md-6">
+        <span class="pull-left">Games created</span>
+        <span class="pull-right">{{ userProfile.gamesCreated || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Games deleted</span>
+        <span class="pull-right">{{ userProfile.gamesDeleted || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Games joined</span>
+        <span class="pull-right">{{ userProfile.gamesJoined || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Games in-progress</span>
+        <span class="pull-right">{{ userProfile.gamesInProgress || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Games withdrawn</span>
+        <span class="pull-right">{{ userProfile.gamesDropped || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Games completed</span>
+        <span class="pull-right">{{ userProfile.gamesCompleted || 0 | number }}</span>
+    </span>
+</fieldset>
+
+<fieldset class="home_headroom">
+    <legend><i class="fa fa-gamepad"></i> Perks</legend>
+    <span class="col-md-6">
+        <span class="pull-left">Perk-points earned</span>
+        <span class="pull-right">{{ userProfile.perkPointsEarned || 0 | number }}</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Perk-points used</span>
+        <span class="pull-right">{{ userProfile.perkPointsUsed || 0 | number }}</span>
+    </span>
+</fieldset>
+
+<fieldset class="home_headroom">
+    <legend><i class="fa fa-money"></i> Portfolio Growth</legend>
+    <span class="col-md-6">
+        <span class="pull-left">Net Cash gains (losses)</span>
+        <span class="pull-right">
+            $ {{ (userProfile.netCashEarned || 0) | number:2 }}
+            <i ng-show="userProfile.netCashEarned > 0" class="fa fa-arrow-up positive"></i>
+            <i ng-show="userProfile.netCashEarned < 0" class="fa fa-arrow-down negative"></i>
+        </span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Max Portfolio growth</span>
+        <span class="pull-right">{{ (userProfile.maxPctGrowth || 0) | number:1 }}%</span>
+    </span>
+    <span class="col-md-6">
+        <span class="pull-left">Max Portfolio loss</span>
+        <span class="pull-right">{{ (userProfile.maxPctLoss || 0) | number:1 }}%</span>
+    </span>
+</fieldset>
+
+<fieldset class="home_headroom">
+    <legend><i class="fa fa-trophy"></i> Trophy Collection</legend>
+    <span class="col-md-12">
+        <span class="col-md-6">
+            <span class="pull-left">Trophies earned</span>
+            <span class="pull-right">{{ userProfile.trophiesGold + userProfile.trophiesSilver + userProfile.trophiesBronze || 0 }}</span>
+        </span>
+        <span class="pull-right">
+            <img src="/assets/images/contests/gold.png"> x {{ userProfile.trophiesGold || 0 }}&nbsp;
+            <img src="/assets/images/contests/silver.png"> x {{ userProfile.trophiesSilver || 0 }}&nbsp;
+            <img src="/assets/images/contests/bronze.png"> x {{ userProfile.trophiesBronze || 0 }}
+        </span>
+    </span>
+</fieldset>

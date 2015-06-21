@@ -78,6 +78,7 @@ object ScalaJsMain extends js.JSApp {
     module.controllerOf[ExposureController]("ExposureController")
     module.controllerOf[FavoritesController]("FavoritesController")
     module.controllerOf[GameSearchController]("GameSearchController")
+    module.controllerOf[HomeController]("HomeController")
     module.controllerOf[InspectController]("InspectController")
     module.controllerOf[MainController]("MainController")
     module.controllerOf[MarginAccountController]("MarginAccountController")
@@ -85,8 +86,8 @@ object ScalaJsMain extends js.JSApp {
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
     module.controllerOf[PortfolioController]("PortfolioController")
+    module.controllerOf[RecentQuotesController]("RecentQuotesController")
     module.controllerOf[ResearchController]("ResearchController")
-    module.controllerOf[StatisticsController]("StatisticsController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
   }
 
@@ -120,7 +121,7 @@ object ScalaJsMain extends js.JSApp {
         .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
         .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
         .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
-        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "StatisticsController"))
+        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
         .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
         .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
         .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))

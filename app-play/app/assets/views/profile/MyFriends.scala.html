@@ -1,5 +1,35 @@
 @()
 
-<div class="inline pull-left" ng-repeat="friend in MySession.fbFriends">
-    <avatar title="{{ friend.name }}" object="{{ friend }}" class="avatar-40 clickable"></avatar>
+<div ng-init="initHome()">
+    <div class="col-md-7" style="border-right: solid 1px #888888">
+        <div class="inline pull-left" ng-repeat="friend in MySession.fbFriends">
+            <avatar object="{{ friend }}" ng-click="selectFriend(friend)" class="avatar-40 clickable" title="{{ friend.name }}" ></avatar>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div ng-if="getSelectedFriend()">
+            <div class="inline pull-left">
+                <avatar object="{{ getSelectedFriend() }}" class="avatar-53 padding-3"></avatar>
+            </div>
+            <div class="inline pull-left">
+                <div>
+                    <span>{{ getSelectedFriend().name || "Unknown" }}</span>
+                </div>
+                <div>
+                    <span>Level {{ getSelectedFriend().level || 1 }} &#8212; {{ levels[ getSelectedFriend().level || 0 ].description }}</span>
+                </div>
+                <div>
+                    <span>Rep <i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
+                </div>
+            </div>
+            <br style="clear: both">
+            <div>
+                Status:
+                <span ng-hide="getSelectedFriend().profile">
+                    <img src="/assets/images/status/loading.gif"> Loading...
+                </span>
+                <span ng-hide="getSelectedFriend().error" class="error">{{ getSelectedFriend().error }}</span>
+            </div>
+        </div>
+    </div>
 </div>

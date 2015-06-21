@@ -118,7 +118,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def loadFacebookFriends() {
     g.console.log("Loading Facebook friends...")
-    facebook.getAllTaggableFriends({ (response: js.Dynamic) =>
+    facebook.getTaggableFriends({ (response: js.Dynamic) =>
       if(isDefined(response.data)) {
         val friends = response.data.asArray[js.Dynamic]
         g.console.log(s"${friends.length} friend(s) loaded")
@@ -218,11 +218,8 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     case path if path.contains("/dashboard") => 2
     case path if path.contains("/discover") => 3
     case path if path.contains("/explore") => 4
-    case path if path.contains("/favorites") => 5
-    case path if path.contains("/research") => 6
-    case path if path.contains("/connect") => 7
-    case path if path.contains("/awards") => 8
-    case path if path.contains("/statistics") => 9
+    case path if path.contains("/research") => 5
+    case path if path.contains("/connect") => 6
     case path => 3
   }
 
@@ -291,11 +288,8 @@ object MainController {
     JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
     JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
     JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
-    JS(name = "Favorites", icon_class = "fa-heart", tool_tip = "My Favorite Securities", url = "/symbols/favorites", authenticationRequired = true),
     JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"),
-    JS(name = "Connect", icon_class = "fa-facebook-square", tool_tip = "Connect & Share", url = "/connect", authenticationRequired = true),
-    JS(name = "My Awards", icon_class = "fa-trophy", tool_tip = "My Awards", url = "/profile/awards", authenticationRequired = true),
-    JS(name = "My Statistics", icon_class = "fa-bar-chart", tool_tip = "My Statistics", url = "/profile/statistics", authenticationRequired = true))
+    JS(name = "Connect", icon_class = "fa-facebook-square", tool_tip = "Connect & Share", url = "/connect", authenticationRequired = true))
 
   private val levels = js.Array(
     JS(number = 1, nextLevelXP = 1000, description = "Private"),

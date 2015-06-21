@@ -46,6 +46,7 @@ class FacebookService($q: Q) extends Service {
           auth = response.authResponse
           facebookID = auth.userID.as[String]
           accessToken = auth.accessToken.as[String]
+          g.console.log(s"accessToken = $accessToken")
           deferred.resolve(response)
         }
         else deferred.reject("Facebook response was undefined")
@@ -67,16 +68,11 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getFriends: js.Function0[Promise] = () => {
-    val deferred = $q.defer()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
+  def getFriends(callback: CallbackObject) {
+    if (!isDefined(FB)) die("Facebook SDK is not loaded")
     else {
-      FB.api(s"/$version/me/friends?access_token=$accessToken", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response.data)
-        else deferred.reject("Failed to retrieve friends list")
-      })
+      FB.api(s"/$version/me/friends?access_token=$accessToken", (response: js.Dynamic) => callback(response))
     }
-    deferred.promise
   }
 
   def getFriendList: js.Function = (listType: js.UndefOr[String]) => {
@@ -103,13 +99,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getTaggableFriends: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
-    if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
-    else FB.api(s"/$version/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => callback(response))
-    ()
-  }
-
-  def getAllTaggableFriends: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
+  def getTaggableFriends(callback: CallbackObject) {
     if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
     else {
       FB.api(s"/$version/me/taggable_friends?access_token=$accessToken", (response: js.Dynamic) => paginatedResults(response, callback))

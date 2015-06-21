@@ -11,23 +11,35 @@ div.myAwardsContainer {
     height: 550px;
 }
 
-div.profile_MyFavorites {
+fieldset.home_headroom {
+    margin-top: 10px;
+}
+
+.home_tab {
+    background: #ffffff;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 5px;
+}
+
+div.home_MyAwards {
+    height: 100px;
+}
+
+div.home_MyFavorites {
     clear: both;
     overflow: auto;
     width: auto;
     height: 125px;
 }
 
-div.profile_MyFriends {
+div.home_tab_container {
     clear: both;
     overflow: auto;
     width: auto;
-    height: 490px;
+    height: 450px;
 }
 
-div.profile_MyAwards {
-    clear: both;
-    overflow: auto;
-    width: auto;
-    height: 125px;
-}

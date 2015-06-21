@@ -7,7 +7,20 @@
         <!-- My Games -->
         <div class="col-md-6 contest_colors" style="padding-bottom: 4px"
              ng-controller="MyGamesController"
-             ng-init="initMyGames()">@assets.views.html.search.MyContests()</div>
+             ng-init="initMyGames()">
+            <fieldset class="contest">
+                <legend class="contest">My Games ({{getMyContests().length}})</legend>
+                <div class="myGamesContainer">
+                    @assets.views.html.search.MyContests()
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default st_button" ng-click="newGamePopup()">
+                        <i class="fa fa-plus-circle"></i> New
+                    </button>
+                </div>
+                <br style="clear: both">
+            </fieldset>
+        </div>
     </div>
 
     <!-- Search Results -->

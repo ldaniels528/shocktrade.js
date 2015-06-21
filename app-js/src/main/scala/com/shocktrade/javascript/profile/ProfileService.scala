@@ -48,13 +48,13 @@ class ProfileService($http: HttpService) extends Service {
   def addRecentSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.put[js.Dynamic](s"/api/profile/$userID/recentSymbol/$symbol")
+    $http.put[js.Dynamic](s"/api/profile/$userID/recent/$symbol")
   }
 
   def removeRecentSymbol: js.Function2[String, String, HttpPromise[js.Dynamic]] = (userID: String, symbol: String) => {
     required("userID", userID)
     required("symbol", symbol)
-    $http.delete[js.Dynamic](s"/api/profile/$userID/recentSymbol/$symbol")
+    $http.delete[js.Dynamic](s"/api/profile/$userID/recent/$symbol")
   }
 
 }

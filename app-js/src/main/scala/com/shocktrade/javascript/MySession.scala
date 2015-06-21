@@ -207,6 +207,8 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
   }
 
+  def getMyAwards: js.Function0[js.Array[String]] = () => userProfile.awards.asArray[String]
+
   def getOrders: js.Function0[js.Array[js.Dynamic]] = () => {
     participant.flatMap(p => Option(p.orders).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
   }

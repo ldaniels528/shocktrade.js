@@ -18,40 +18,27 @@ class AwardsController($scope: js.Dynamic, $http: HttpService, @named("MySession
 
   $scope.getAwards = () => availableAwards
 
-  $scope.getMyAwards = () => getMyAwards(mySession.userProfile)
+  $scope.getMyAwards = () => getMyAwards
 
   $scope.getAwardImage = (code: String) => awardIconsByCode.get(code).orNull
 
-  $scope.setupAwards = () => setupAwards(mySession.userProfile)
+  $scope.setupAwards = () => setupAwards()
 
   // watch for changes to the player's profile
-  $scope.$watch(mySession.userProfile, (newProfile: js.Dynamic, oldProfile: js.Dynamic) => {
-    if (newProfile != oldProfile) {
-      g.console.log(s"User ID changed from ${oldProfile.OID} to ${newProfile.OID}")
-      setupAwards(newProfile)
-    }
-  })
+  $scope.$watch(mySession.userProfile, (newProfile: js.Dynamic, oldProfile: js.Dynamic) => setupAwards())
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions and Data
   /////////////////////////////////////////////////////////////////////////////
 
-  private def getMyAwards(userProfile: js.Dynamic): js.Array[js.Dynamic] = {
-    userProfile.awards.asArray[String] map (code => awardsByCode.get(code).orNull)
+  private def getMyAwards: js.Array[js.Dynamic] = {
+    mySession.getMyAwards() map (code => awardsByCode.get(code).orNull)
   }
 
-  private def setupAwards(userProfile: js.Dynamic) {
-    if (isDefined(userProfile)) {
-      g.console.log("Setting up awards....")
-
-      // get the award codes for the user
-      val myAwardCodes = if (isDefined(userProfile.awards)) userProfile.awards.asArray[String] else emptyArray[String]
-
-      // setup the ownership for the awards
-      availableAwards foreach { award =>
-        // set the ownership indicator
-        award.owned = myAwardCodes.contains(award.code.as[String])
-      }
+  private def setupAwards() {
+    g.console.log("Setting up awards....")
+    availableAwards foreach { award =>
+      award.owned = mySession.getMyAwards().contains(award.code.as[String])
     }
   }
 
@@ -65,7 +52,10 @@ object AwardsController {
 
   // define all available awards
   private val availableAwards = js.Array[js.Dynamic](
-    Award.availableAwards map (a => JS(name = a.name, code = a.code.toString, icon = a.icon, description = a.description)): _*)
+    Award.availableAwards
+      .map (a => JS(name = a.name, code = a.code.toString, icon = a.icon, description = a.description)): _*)
+      .sortBy(_.owned.as[Boolean])
+      .reverse
 
   private val awardsByCode = js.Dictionary[js.Dynamic](
     availableAwards map { award => (award.code.as[String], award) }: _*

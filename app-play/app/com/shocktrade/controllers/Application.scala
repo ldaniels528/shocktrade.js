@@ -18,8 +18,6 @@ object Application extends Controller with MongoController {
 
   def aboutUs = Action(Ok(assets.views.html.AboutUs()))
 
-  def awardsView() = Action(Ok(assets.views.html.profile.Awards()))
-
   def chatView() = Action(Ok(assets.views.html.dashboard.Chat()))
 
   def connectView() = Action(Ok(assets.views.html.connect.Connect()))
@@ -51,8 +49,6 @@ object Application extends Controller with MongoController {
   def researchView() = Action(Ok(assets.views.html.research.Research()))
 
   def searchView() = Action(Ok(assets.views.html.search.Search()))
-
-  def statisticsView() = Action(Ok(assets.views.html.profile.Statistics()))
 
   def webSocket = WebSocket.acceptWithActor[JsValue, JsValue] { request => out => WebSocketHandler.props(out) }
 

@@ -1,38 +1,44 @@
-<div class="row col-md-12">
-    <div class="row">
-        <div class="col-md-6">
-            @assets.views.html.profile.Header()
+<div>
+    <div class="row col-md-12">
+        @assets.views.html.profile.Header()
 
-            <tabset>
-                <tab>
-                    <tab-heading>My Friends ({{ getFriends().length | number }})</tab-heading>
-                    <div class="row profile_MyFriends" style="padding: 10px; background: white">
+        <tabset>
+            <tab>
+                <tab-heading><i class="fa fa-trophy"></i> My Awards</tab-heading>
+                <div class="row home_tab home_tab_container">
+                    @assets.views.html.profile.MyAwards()
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-heart"></i> My Favorites</tab-heading>
+                <div ng-controller="FavoritesController" class="row home_tab home_tab_container">
+                    @assets.views.html.profile.MyFavorites()
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-clock-o"></i> Recent Quotes</tab-heading>
+                <div ng-controller="RecentQuotesController" class="row home_tab home_tab_container">
+                @assets.views.html.profile.RecentQuotes()
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-user"></i> My Friends ({{ getFriends().length | number }})</tab-heading>
+                <div class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyFriends()
-                    </div>
-                </tab>
-            </tabset>
-        </div>
-        <div class="col-md-6 pull-right">
-            <div ng-controller="AwardsController">
-                <fieldset>
-                    <legend>My Awards ({{ getMyAwards().length || 0 }})</legend>
-                </fieldset>
-                <span ng-if="getMyAwards()">
-                    <img ng-repeat="award in getMyAwards().slice(0,7)" title="{{ award.name }}"
-                        style="padding: 2px 2px 2px 2px" ng-src="{{ award.icon }}">
-                </span>
-                <span ng-hide="getMyAwards()" class="warning">
-                    No awards granted.
-                </span>
-            </div>
-
-            <div class="contest_colors" style="padding: 6px; margin-top: 20px" ng-controller="MyGamesController" ng-init="initMyGames()">
-                @assets.views.html.search.MyContests()
-            </div>
-
-            <div class="contest_colors" style="padding: 6px; margin-top: 20px">
-                @assets.views.html.discover.Favorites("profile_MyFavorites")
-            </div>
-        </div>
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
+                <div ng-controller="MyGamesController" ng-init="initMyGames()" class="row home_tab home_tab_container">
+                    @assets.views.html.search.MyContests(includeExpiry = true)
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-bar-chart"></i> My Statistics</tab-heading>
+                <div class="row home_tab home_tab_container">
+                    @assets.views.html.profile.MyStatistics()
+                </div>
+            </tab>
+        </tabset>
     </div>
 </div>
