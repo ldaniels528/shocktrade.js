@@ -9,7 +9,6 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.util.{Failure, Success}
 
 /**
  * Home Controller
@@ -52,16 +51,24 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
   /////////////////////////////////////////////////////////////////////////////
 
   private def selectFriend = (friend: js.Dynamic) => {
-    g.console.log(s"selecting friend ${toJson(friend)}")
-    selectedFriend = friend
-    if (!isDefined(friend.profile)) {
-      profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {
-        case Success(profile) =>
-          friend.profile = profile
-        case Failure(e) =>
+    if (isDefined(friend)) {
+      g.console.log(s"selecting friend ${toJson(friend)}")
+      selectedFriend = friend
+
+      if (!isDefined(friend.profile)) {
+        $timeout({ () =>
           friend.profile = JS()
-          friend.error = e.getMessage
-          g.console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
+          friend.error = "Failure to load status information"
+        }, 3.seconds)
+        /*
+        profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {
+          case Success(profile) =>
+            friend.profile = profile
+          case Failure(e) =>
+            friend.profile = JS()
+            friend.error = e.getMessage
+            g.console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
+    }*/
       }
     }
   }

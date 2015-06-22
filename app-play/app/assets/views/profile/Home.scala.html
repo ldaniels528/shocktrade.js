@@ -4,6 +4,12 @@
 
         <tabset>
             <tab>
+                <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
+                <div ng-controller="MyGamesController" ng-init="initMyGames()" class="row home_tab home_tab_container">
+                    @assets.views.html.search.MyContests(includeExpiry = true)
+                </div>
+            </tab>
+            <tab>
                 <tab-heading><i class="fa fa-trophy"></i> My Awards</tab-heading>
                 <div class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyAwards()
@@ -25,12 +31,6 @@
                 <tab-heading><i class="fa fa-user"></i> My Friends ({{ getFriends().length | number }})</tab-heading>
                 <div class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyFriends()
-                </div>
-            </tab>
-            <tab>
-                <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
-                <div ng-controller="MyGamesController" ng-init="initMyGames()" class="row home_tab home_tab_container">
-                    @assets.views.html.search.MyContests(includeExpiry = true)
                 </div>
             </tab>
             <tab>

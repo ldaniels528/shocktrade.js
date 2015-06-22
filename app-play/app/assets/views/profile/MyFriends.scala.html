@@ -24,11 +24,11 @@
             </div>
             <br style="clear: both">
             <div>
-                Status:
+                Status: <i ng-show="getSelectedFriend().error" class="fa fa-warning st_orange"></i>
                 <span ng-hide="getSelectedFriend().profile">
                     <img src="/assets/images/status/loading.gif"> Loading...
                 </span>
-                <span ng-hide="getSelectedFriend().error" class="error">{{ getSelectedFriend().error }}</span>
+                <span ng-show="getSelectedFriend().error" class="st_orange">{{ getSelectedFriend().error }}</span>
             </div>
         </div>
     </div>
