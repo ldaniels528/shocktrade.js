@@ -92,7 +92,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
       val playerID = player.facebookID.as[String]
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = JS(connected = false)
-        $http.get[js.Dynamic](s"/api/online/$playerID") onComplete {
+        profileService.getOnlineStatus(playerID) onComplete {
           case Success(newState) =>
             onlinePlayers(playerID) = newState
           case Failure(e) =>
@@ -119,7 +119,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   private def loadFacebookFriends() {
     g.console.log("Loading Facebook friends...")
     facebook.getTaggableFriends({ (response: js.Dynamic) =>
-      if(isDefined(response.data)) {
+      if (isDefined(response.data)) {
         val friends = response.data.asArray[js.Dynamic]
         g.console.log(s"${friends.length} friend(s) loaded")
         friends.foreach(mySession.fbFriends.push(_))
@@ -205,10 +205,20 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
     startLoading(DEFAULT_TIMEOUT)
-    val tab = appTabs(tabIndex)
-    g.console.log(s"Changing location to ${tab.url}")
-    $location.url(tab.url.as[String])
-    stopLoading()
+    mySession.userProfile.OID_? foreach { userID =>
+      profileService.setIsOnline(userID) onComplete {
+        case Success(outcome) =>
+          g.console.log(s"outcome = ${toJson(outcome)}")
+          if (isDefined(outcome.error)) toaster.error(outcome.error.as[String])
+          val tab = appTabs(tabIndex)
+          g.console.log(s"Changing location to ${tab.url}")
+          $location.url(tab.url.as[String])
+          stopLoading()
+        case Failure(e) =>
+          toaster.error(e.getMessage)
+          stopLoading()
+      }
+    }
     true
   }
 

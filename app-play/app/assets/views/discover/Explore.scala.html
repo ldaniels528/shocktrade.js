@@ -13,7 +13,7 @@
 			</div>
 
 			<div ng-repeat="sector in getSectors() | orderBy:sortField:sortDesc" class="pad-left-10">
-				<img ng-show="sector.loading" src="/assets/images/status/loading.gif">
+				<img ng-show="sector.loading" src="/assets/images/status/loading16.gif">
 				<a ng-click="expandOrCollapseSector(sector)">
 					<i ng-hide="sector.loading" class="fa st_control" ng-class="sector.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
 					<span class="sector_H">{{ sector.label }}</span>
@@ -22,7 +22,7 @@
 			
 				<div ng-if="sector.expanded && sector.industries" class="pad-left-20"
                      ng-repeat="industry in sector.industries | orderBy:'label'">
-					<img ng-show="industry.loading" src="/assets/images/status/loading.gif">
+					<img ng-show="industry.loading" src="/assets/images/status/loading16.gif">
 					<a ng-click="expandOrCollapseIndustry(sector, industry)">
 						<i ng-hide="industry.loading" class="fa st_control" ng-class="industry.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
 						<span class="industry_H">{{ industry.label }}</span>
@@ -31,7 +31,7 @@
 				
 					<div ng-if="industry.expanded && industry.subIndustries.length > 0" class="pad-left-20"
                          ng-repeat="subIndustry in industry.subIndustries | orderBy:'label'">
-						<img ng-show="subIndustry.loading" src="/assets/images/status/loading.gif">
+						<img ng-show="subIndustry.loading" src="/assets/images/status/loading16.gif">
 						<a ng-click="expandOrCollapseSubIndustry(sector, industry, subIndustry)">
 							<i ng-hide="subIndustry.loading" class="fa st_control" ng-class="subIndustry.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
 							<span class="sub_industry_H">{{ subIndustry.label }}</span>
