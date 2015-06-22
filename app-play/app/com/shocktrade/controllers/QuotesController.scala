@@ -84,9 +84,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     import reactivemongo.core.commands._
 
     val results = for {
-      exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> BS("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> BS("$ne" -> BSONNull))),
         GroupField("sector")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -98,9 +97,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     import reactivemongo.core.commands._
 
     val results = for {
-      exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> BS("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> BS("$ne" -> BSONNull))),
         GroupField("industry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -112,9 +110,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     import reactivemongo.core.commands._
 
     val results = for {
-      exchanges <- findStockExchanges(Option(userID))
       quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> BS("$ne" -> BSONNull))),
+        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> BS("$ne" -> BSONNull))),
         GroupField("subIndustry")("total" -> SumValue(1))))) map { results =>
         results.toSeq map (Json.toJson(_))
       }
@@ -124,8 +121,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
 
   def exploreQuotesBySubIndustry(userID: String, sector: String, industry: String, subIndustry: String) = Action.async {
     val results = for {
-      exchanges <- findStockExchanges(Option(userID))
-      quotes <- mcQ.find(JS("active" -> true, "exchange" -> BS("$in" -> exchanges), "assetType" -> JS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry), searchFields)
+      quotes <- mcQ.find(JS("active" -> true, "assetType" -> JS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry), searchFields)
         .cursor[JsObject]
         .collect[Seq]()
     } yield quotes
@@ -133,10 +129,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   }
 
   def exploreNAICSSectors = Action.async {
-    import reactivemongo.core.commands._
-
     (for {
-    // get the NAICS codes
       codes <- naicsCodes
       results <- db.command(new Aggregate(Stocks, Seq(
         Match(BS("active" -> true, "naicsNumber" -> BS("$ne" -> BSONNull))),
@@ -152,9 +145,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   }
 
   def exploreSICSectors = Action.async {
-
     (for {
-    // get the SIC codes
       codes <- sicCodes
       results <- db.command(new Aggregate(Stocks, Seq(
         Match(BS("active" -> true, "sicNumber" -> BS("$ne" -> BSONNull))),
@@ -170,7 +161,6 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   }
 
   def getExchangeCounts = Action.async {
-
     db.command(new Aggregate(Stocks, Seq(
       Match(BS("active" -> true, "exchange" -> BS("$ne" -> BSONNull), "assetType" -> BS("$in" -> BSONArray("Common Stock", "ETF")))),
       GroupField("exchange")("total" -> SumValue(1))))) map { results =>

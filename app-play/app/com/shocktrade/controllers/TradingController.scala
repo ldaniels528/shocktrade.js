@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import akka.util.Timeout
 import com.shocktrade.server.actors.CikNumberUpdateActor.UpdateMissingCikNumbers
 import com.shocktrade.server.actors.FinraRegShoUpdateActor.ProcessRegSHO
+import com.shocktrade.server.actors.NasdaqImportActor.NasdaqImport
 import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
 import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
 import com.shocktrade.server.actors._
@@ -43,6 +44,17 @@ object TradingController extends Controller {
 
     (YahooKeyStatisticsUpdateActor ? RefreshAllKeyStatistics).mapTo[Int] map { count =>
       Ok(JS("symbol_count" -> count))
+    }
+  }
+
+  /**
+   * Starts the NASDAQ import process
+   */
+  def startNasdaqImport = Action.async {
+    implicit val timeout: Timeout = 10.minutes
+
+    (NasdaqImportActor ? NasdaqImport).mapTo[(Int, Int, Int)] map { case (updates, skipped, errors) =>
+      Ok(JS("updates" -> updates, "skipped" -> skipped, "errors" -> errors))
     }
   }
 

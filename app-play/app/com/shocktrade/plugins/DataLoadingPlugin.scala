@@ -1,9 +1,7 @@
 package com.shocktrade.plugins
 
 import com.shocktrade.server.loaders.DataLoadingProcesses
-import com.shocktrade.server.trading.Contests
-import com.shocktrade.server.trading.robots.TradingRobots
-import play.api.{Play, Logger, Plugin, Application}
+import play.api.{Application, Logger, Play, Plugin}
 
 /**
  * Data Loading Plugin

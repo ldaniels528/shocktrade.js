@@ -19,6 +19,7 @@ import scala.util.{Failure, Success, Try}
  */
 object ResearchController extends Controller {
   private lazy val mcQ = db.collection[JSONCollection]("Stocks")
+  private val MaxResults = 250
   private val fields = JS(
     "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "prevClose" -> 1, "open" -> 1,
     "changePct" -> 1, "low" -> 1, "high" -> 1, "spread" -> 1, "volume" -> 1
@@ -31,7 +32,7 @@ object ResearchController extends Controller {
   def quoteSearch = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[QuoteFilter])) match {
       case Success(Some(form)) =>
-        val maxResults = form.maxResults.map(r => if (r <= 250) r else 250).getOrElse(250)
+        val maxResults = form.maxResults.map(Math.min(_, MaxResults)).getOrElse(MaxResults)
         mcQ.find(form.makeQuery, fields)
           .cursor[JsObject].collect[Seq](maxResults) map (js => Ok(Json.toJson(js)))
       case Success(None) =>
