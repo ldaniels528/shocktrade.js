@@ -13,7 +13,7 @@ trait ErrorHandler {
     JS("error" -> message)
   }
 
-   def createError(e: Exception) = {
+   def createError(e: Throwable) = {
     JS("error" -> e.getMessage)
   }
 

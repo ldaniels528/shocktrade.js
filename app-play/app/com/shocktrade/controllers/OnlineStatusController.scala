@@ -4,57 +4,81 @@ import java.util.Date
 
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserStateChanged
+import com.shocktrade.controllers.QuotesController._
+import com.shocktrade.util.BSONHelper._
 import play.api.Logger
-import play.api.libs.json.JsArray
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
+import play.api.libs.json.Reads._
+import play.api.libs.json.{JsArray, JsObject}
 import play.api.mvc.{Action, Controller}
+import play.modules.reactivemongo.json.BSONFormats._
+import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.{BSONDocument => BS, _}
+import reactivemongo.core.commands._
 
-import scala.collection.concurrent.TrieMap
+import scala.concurrent.Future
 
 /**
  * Online Status Resources
  * @author lawrence.daniels@gmail.com
  */
 object OnlineStatusController extends Controller with ErrorHandler {
-  private val statuses = TrieMap[String, OnlineStatus]()
+  private val CollectionName = "OnlineStatuses"
+  private val mc = db.collection[JSONCollection](CollectionName)
 
   ////////////////////////////////////////////////////////////////////////////
   //      API functions
   ////////////////////////////////////////////////////////////////////////////
 
-  def getGroupStatus = Action { request =>
+  def getGroupStatus = Action.async { request =>
     request.body.asText.map(_.split("[,]")) match {
       case Some(userIDs) =>
-        val results = userIDs map (userID => JS("userID" -> userID, "connected" -> statuses.get(userID).exists(_.connected)))
-        Ok(JsArray(results))
+        mc.find(JS("_id" -> JS("$in" -> userIDs))).cursor[JsObject].collect[Seq]() map (results => Ok(JsArray(results))) recover {
+          case e => Ok(createError(e))
+        }
       case None =>
-        BadRequest("comma delimited string expected")
+        Future.successful(BadRequest("comma delimited string expected"))
     }
   }
 
-  def getStatus(userID: String) = Action { request =>
-    Ok(JS("userID" -> userID, "connected" -> statuses.get(userID).exists(_.connected)))
-  }
-
-  def setIsOnline(userID: String) = Action { request =>
-    Ok(JS("connected" -> setConnectedStatus(userID, newState = true)))
-  }
-
-  def setIsOffline(userID: String) = Action { request =>
-    Ok(JS("connected" -> setConnectedStatus(userID, newState = false)))
-  }
-
-  private def setConnectedStatus(userID: String, newState: Boolean) = {
-    val prevState = statuses.get(userID).map(_.connected)
-    statuses.put(userID, OnlineStatus(connected = newState))
-
-    if (!prevState.contains(newState)) {
-      WebSockets ! UserStateChanged(userID, newState)
+  def getStatus(userID: String) = Action.async {
+    mc.find(JS("userID" -> userID.toBSID)).one[JsObject] map {
+      case Some(status) => Ok(status)
+      case None => Ok(JS("_id" -> userID.toBSID, "connected" -> false))
+    } recover {
+      case e => Ok(createError(e))
     }
-    Logger.info(s"User $userID is ${if (newState) "Online" else "Offline"}")
-    newState
   }
 
-  case class OnlineStatus(connected: Boolean, eventTime: Date = new Date())
+  def setIsOnline(userID: String) = Action.async {
+    setConnectedStatus(userID, newState = true) map (state => Ok(JS("connected" -> state))) recover {
+      case e => Ok(createError(e))
+    }
+  }
+
+  def setIsOffline(userID: String) = Action.async {
+    setConnectedStatus(userID, newState = false) map (state => Ok(JS("connected" -> state))) recover {
+      case e => Ok(createError(e))
+    }
+  }
+
+  private def setConnectedStatus(userID: String, newState: Boolean): Future[Boolean] = {
+    db.command(FindAndModify(
+      collection = CollectionName,
+      query = BS("_id" -> userID.toBSID),
+      modify = new Update(BS("$set" -> BS("connected" -> newState, "updatedTime" -> new Date())), fetchNewObject = false),
+      upsert = true)) map {
+      case Some(oldStatus) =>
+        if (!oldStatus.getAs[Boolean]("connected").contains(newState)) {
+          Logger.info(s"User $userID is now ${if (newState) "Online" else "Offline"}")
+          WebSockets ! UserStateChanged(userID, newState)
+        }
+        newState
+      case None =>
+        WebSockets ! UserStateChanged(userID, newState)
+        newState
+    }
+  }
 
 }
