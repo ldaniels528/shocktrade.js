@@ -5,7 +5,9 @@ import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -16,7 +18,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ConnectController($scope: js.Dynamic, toaster: Toaster,
-                        @named("ComposeMessageDialog") composeMessageDialog: js.Dynamic,
+                        @named("ComposeMessageDialog") messageDialog: ComposeMessageDialogService,
                         @named("ConnectService") connectService: ConnectService,
                         @named("MySession") mySession: MySession)
   extends ScopeController {
@@ -26,23 +28,32 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   private var myUpdate: js.Dynamic = null
   private var contact: js.Dynamic = JS()
 
-  /**
-   * Selects a specific contact/friend
-   */
-  $scope.chooseContact = (friend: js.Dynamic) => {
-    //g.console.log(s"contact = ${JSON.stringify(friend, null, "\t")}")
-    contact = friend
-    $scope.getUserInfo(friend.id)
-  }
+  /////////////////////////////////////////////////////////////////////////////
+  //			Public Functions
+  /////////////////////////////////////////////////////////////////////////////
+  
+  $scope.chooseContact = (friend: js.Dynamic) => chooseContact(friend)
+  
+  $scope.chooseFirstContact = () => mySession.fbFriends.headOption foreach ($scope chooseContact _)
+
+  $scope.composeMessage = () => composeMessage()
 
   /**
-   * Selects the contact in the player"s friends list
+   * Composes a new message via pop-up dialog
    */
-  $scope.chooseFirstContact = () => mySession.fbFriends.headOption foreach ($scope chooseContact _)
+  private def composeMessage() = {
+    messageDialog.popup() onComplete {
+      case Success(response) => loadMyUpdates(mySession.getUserName())
+      case Failure(e) =>
+        toaster.error(e.getMessage)
+    }
+  }
 
   $scope.getContact = () => contact
 
   $scope.getFriends = () => mySession.fbFriends
+
+  $scope.deleteMessages = (userName: js.UndefOr[String]) => userName foreach deleteMessages
 
   $scope.getMyUpdates = () => myUpdates
 
@@ -52,11 +63,37 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    * Selects a specific message
    */
   $scope.selectUpdate = (entry: js.Dynamic) => myUpdate = entry
+  
+  $scope.getUserInfo = (fbUserId: String) => getUserInfo(fbUserId)
 
+  $scope.identifyFacebookFriends = (fbFriends: js.Array[js.Dynamic]) => identifyFacebookFriends(fbFriends)
+
+  $scope.getContactList = (searchTerm: js.UndefOr[String]) => getContactList(searchTerm)
+  
+  $scope.loadMyUpdates = (userName: String) => loadMyUpdates(userName)
+
+  /**
+   * Selects all currently visible messages
+   */
+  $scope.selectAll = (checked: Boolean) => myUpdates.foreach(_.selected = checked)
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Private Functions
+  /////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Selects a specific contact/friend
+   */
+  private def chooseContact(friend: js.Dynamic) = {
+    //g.console.log(s"contact = ${JSON.stringify(friend, null, "\t")}")
+    contact = friend
+    $scope.getUserInfo(friend.id)
+  }
+  
   /**
    * Retrieve a limited set of user profile information for a specific contact/friend
    */
-  $scope.getUserInfo = (fbUserId: String) => {
+  private def getUserInfo(fbUserId: String) = {
     $scope.startLoading()
     connectService.getUserInfo(fbUserId) onComplete {
       case Success(profile) =>
@@ -69,7 +106,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
     }
   }
 
-  $scope.identifyFacebookFriends = (fbFriends: js.Array[js.Dynamic]) => {
+  private def identifyFacebookFriends(fbFriends: js.Array[js.Dynamic]) = {
     $scope.startLoading()
     connectService.identifyFacebookFriends(fbFriends) onComplete {
       case Success(_) => $scope.stopLoading()
@@ -80,7 +117,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   /**
    * Returns the contacts matching the given search term
    */
-  $scope.getContactList = (searchTerm: js.UndefOr[String]) => {
+  private def getContactList = (searchTerm: js.UndefOr[String]) => {
     // TODO reinstate search
     /*
     g.console.log(s"searchTerm = $searchTerm (${Option(searchTerm).map(_.getClass.getName).orNull})")
@@ -98,8 +135,6 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   /**
    * Loads updates from the database
    */
-  $scope.loadMyUpdates = (userName: String) => loadMyUpdates(userName)
-
   private def loadMyUpdates(userName: String) = {
     if (userName.nonBlank) {
       $scope.startLoading()
@@ -122,15 +157,10 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
     }
   }
 
-  /**
-   * Composes a new message via pop-up dialog
-   */
-  $scope.composeMessage = () => composeMessageDialog.popup(JS(success = () => loadMyUpdates(mySession.getUserName())))
-
-  /**
+    /**
    * Deletes selected messages
    */
-  $scope.deleteMessages = (userName: String) => {
+  private def deleteMessages(userName: String) {
     $scope.startLoading()
 
     // gather the records to delete
@@ -154,11 +184,6 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
       toaster.error("No message(s) selected")
     }
   }
-
-  /**
-   * Selects all currently visible messages
-   */
-  $scope.selectAll = (checked: Boolean) => myUpdates.foreach(_.selected = checked)
 
   /////////////////////////////////////////////////////////////////////////////
   //			Event Listeners

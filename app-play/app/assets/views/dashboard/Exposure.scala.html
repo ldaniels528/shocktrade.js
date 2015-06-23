@@ -1,10 +1,10 @@
 @()
-<div class="row" ng-controller="ExposureController" ng-init="init()">
+<div class="row" ng-controller="ExposureController" ng-init="initExposure()">
     <div class="col-md-12" style="padding-bottom: 4px">
         <select class="form-control symbol_input_text_field"
                 ng-model="selectedExposure"
                 ng-options="e.label for e in getExposures()"
-                ng-change="exposurePieChart(MySession.getContest(), selectedExposure.value, MySession.getUserID())">
+                ng-change="exposurePieChart(selectedExposure.value, MySession.getContestID(), MySession.getUserID())">
         </select>
     </div>
 

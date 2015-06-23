@@ -4,7 +4,7 @@ import biz.enef.angulate.angular
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.jquery._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}

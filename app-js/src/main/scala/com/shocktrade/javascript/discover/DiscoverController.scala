@@ -10,7 +10,7 @@ import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.jquery.jQuery
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}

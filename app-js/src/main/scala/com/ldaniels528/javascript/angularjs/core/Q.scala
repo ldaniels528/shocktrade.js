@@ -3,7 +3,6 @@ package com.ldaniels528.javascript.angularjs.core
 import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.scalajs.js
-import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -45,7 +44,8 @@ object Defer {
 
     override def isCompleted: Boolean = completed
 
-    override def tryComplete(result: Try[T]): Boolean = if (isCompleted) false else {
+    override def tryComplete(result: Try[T]): Boolean = if (isCompleted) false
+    else {
       result match {
         case Success(r) =>
           defer.resolve(r)
@@ -57,5 +57,6 @@ object Defer {
       completed
     }
   }
+
 }
 

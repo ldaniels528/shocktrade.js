@@ -146,6 +146,13 @@ class ContestService($cookieStore: CookieStore, $http: Http, toaster: Toaster) e
   //			Chat and Charts
   /////////////////////////////////////////////////////////////////////////////
 
+  def getExposureChartData(exposure: String, contestId: String, userID: String) = {
+    required("exposure", exposure)
+    required("contestId", contestId)
+    required("userID", userID)
+    $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/$contestId/$userID")
+  }
+
   def getChart(contestId: String, participantName: String, chartName: String) = {
     required("contestId", contestId)
     required("participantName", participantName)

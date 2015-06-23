@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import biz.enef.angulate.angular
 import com.greencatsoft.angularjs.extensions.ModalOptions
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions

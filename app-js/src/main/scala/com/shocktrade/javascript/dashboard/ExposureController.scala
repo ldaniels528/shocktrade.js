@@ -7,6 +7,7 @@ import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.concurrent.duration._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -37,7 +38,7 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
   /**
    * Initializes the view by displaying an initial chart
    */
-  $scope.init = () => init()
+  $scope.initExposure = () => init()
 
   $scope.selectedExposure = exposures.last
 
@@ -45,8 +46,8 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
 
   $scope.getChartData = () => chartData
 
-  $scope.exposurePieChart = (contest: js.Dynamic, exposure: js.Dynamic, userID: js.Dynamic) => {
-    exposurePieChart(contest, exposure, userID)
+  $scope.exposurePieChart = (exposure: js.UndefOr[String], contestID: js.UndefOr[String], userID: js.UndefOr[String]) => {
+    exposurePieChart(exposure, contestID, userID)
   }
 
   $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
@@ -59,12 +60,18 @@ class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeo
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def exposurePieChart(contest: js.Dynamic, exposure: js.Dynamic, userID: js.Dynamic) = {
-    $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/${contest.OID}/$userID") onComplete {
-      case Success(data) =>
-        chartData = data
-      case Failure(e) =>
-        g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")
+  private def exposurePieChart(exposure: js.UndefOr[String], contestID: js.UndefOr[String], userID: js.UndefOr[String]) = {
+    for {
+      exp <- exposure.toOption
+      cid <- contestID.toOption
+      uid <- userID.toOption
+    } {
+      contestService.getExposureChartData(exp, cid, uid) onComplete {
+        case Success(data) =>
+          chartData = data
+        case Failure(e) =>
+          g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")
+      }
     }
   }
 
