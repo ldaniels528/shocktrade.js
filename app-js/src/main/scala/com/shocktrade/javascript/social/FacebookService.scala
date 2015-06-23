@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
-import com.greencatsoft.angularjs.core.{Promise, Q}
+import com.ldaniels528.angularjs.{Promise, Q}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -31,8 +31,8 @@ class FacebookService($q: Q) extends Service {
   /**
    * Initializes the Facebook service
    */
-  def init: js.Function1[js.Dynamic, Promise] = (fbSDK: js.Dynamic) => {
-    val deferred = $q.defer()
+  def init: js.Function1[js.Dynamic, Promise[js.Dynamic]] = (fbSDK: js.Dynamic) => {
+    val deferred = $q.defer[js.Dynamic]()
     FB = fbSDK
 
     // get the login status
@@ -56,8 +56,8 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def createFriendList: js.Function1[String, Promise] = { (friendListId: String) =>
-    val deferred = $q.defer()
+  def createFriendList: js.Function1[String, Promise[js.Dynamic]] = { (friendListId: String) =>
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.api(s"/$version/me/$friendListId/members&access_token=$accessToken", { (response: js.Dynamic) =>
@@ -76,7 +76,7 @@ class FacebookService($q: Q) extends Service {
   }
 
   def getFriendList: js.Function = (listType: js.UndefOr[String]) => {
-    val deferred = $q.defer()
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.api(s"/$version/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=$accessToken", (response: js.Dynamic) => {
@@ -87,8 +87,8 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getFriendListMembers: js.Function1[String, Promise] = (friendListId: String) => {
-    val deferred = $q.defer()
+  def getFriendListMembers: js.Function1[String, Promise[js.Dynamic]] = (friendListId: String) => {
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.api(s"/$version/me/$friendListId/members&access_token=$accessToken", (response: js.Dynamic) => {
@@ -118,8 +118,8 @@ class FacebookService($q: Q) extends Service {
     }
   }
 
-  def getLoginStatus: js.Function0[Promise] = () => {
-    val deferred = $q.defer()
+  def getLoginStatus: js.Function0[Promise[js.Dynamic]] = () => {
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
     else {
       FB.getLoginStatus((response: js.Dynamic) => {
@@ -154,8 +154,8 @@ class FacebookService($q: Q) extends Service {
     ()
   }
 
-  def login: js.Function0[Promise] = () => {
-    val deferred = $q.defer()
+  def login: js.Function0[Promise[js.Dynamic]] = () => {
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.login((response: js.Dynamic) => {
@@ -172,8 +172,8 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def logout: js.Function0[Promise] = () => {
-    val deferred = $q.defer()
+  def logout: js.Function0[Promise[js.Dynamic]] = () => {
+    val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.logout((response: js.Dynamic) => {

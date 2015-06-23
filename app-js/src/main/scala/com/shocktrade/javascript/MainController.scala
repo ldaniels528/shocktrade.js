@@ -129,7 +129,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def login() {
     facebook.login() onComplete {
-      case Success(_) =>
+      case Success(response) =>
         postLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
