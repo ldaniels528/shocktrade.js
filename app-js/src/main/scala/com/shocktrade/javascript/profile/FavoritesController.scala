@@ -2,12 +2,13 @@ package com.shocktrade.javascript.profile
 
 import biz.enef.angulate.core.Location
 import biz.enef.angulate.{Scope, ScopeController, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.discover.QuoteService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}

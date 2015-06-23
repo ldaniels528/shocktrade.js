@@ -2,7 +2,7 @@ package com.shocktrade.javascript.discover
 
 import biz.enef.angulate._
 import biz.enef.angulate.core.{HttpService, Timeout}
-import com.ldaniels528.angularjs.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.discover.ResearchController._

@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.{Location, Timeout}
 import biz.enef.angulate.{ScopeController, angular, named}
-import com.greencatsoft.angularjs.core.Q
-import com.ldaniels528.angularjs.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.core.{Location, Q, Timeout}
+import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
+import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.jquery.jQuery
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,6 +25,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
                          @named("MarketStatus") marketStatus: MarketStatusService,
                          @named("MySession") mySession: MySession,
                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
+                         @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
   extends ScopeController {
 
@@ -49,7 +50,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   }
 
   $scope.autoCompleteSymbols = (searchTerm: String) => {
-    val deferred = $q.defer()
+    val deferred = $q.defer[js.Array[js.Dynamic]]()
     quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
       case Success(response) => deferred.resolve(response)
       case Failure(e) => deferred.reject(e.getMessage)
@@ -136,11 +137,11 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   //          Symbols - Favorites
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.addFavoriteSymbol = (symbol: String) => mySession.addFavoriteSymbol(symbol)
+  $scope.addFavoriteSymbol = (symbol: String) => profileService.addFavoriteSymbol(mySession.getUserID(), symbol)
 
   $scope.isFavorite = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isFavoriteSymbol)
 
-  $scope.removeFavoriteSymbol = (symbol: String) => mySession.removeFavoriteSymbol(symbol)
+  $scope.removeFavoriteSymbol = (symbol: String) => profileService.removeFavoriteSymbol(mySession.getUserID(), symbol)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Symbols - Recent
@@ -148,13 +149,13 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
 
   $scope.addRecentSymbol = (symbol: String) => {
     if (mySession.isAuthenticated() && !mySession.isRecentSymbol(symbol)) {
-      mySession.addRecentSymbol(symbol)
+      profileService.addRecentSymbol(mySession.getUserID(), symbol)
     }
   }
 
   $scope.isRecentSymbol = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isRecentSymbol)
 
-  $scope.removeRecentSymbol = (symbol: String) => mySession.removeRecentSymbol(symbol)
+  $scope.removeRecentSymbol = (symbol: String) => profileService.removeRecentSymbol(mySession.getUserID(), symbol)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Risk Functions

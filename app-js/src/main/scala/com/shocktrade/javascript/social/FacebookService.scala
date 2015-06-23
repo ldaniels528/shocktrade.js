@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
-import com.ldaniels528.angularjs.{Promise, Q}
+import com.ldaniels528.javascript.angularjs.core.{Promise, Q}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js

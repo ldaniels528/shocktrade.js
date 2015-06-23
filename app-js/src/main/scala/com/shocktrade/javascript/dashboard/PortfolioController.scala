@@ -1,14 +1,15 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.angularjs.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}

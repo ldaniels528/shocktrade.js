@@ -2,12 +2,14 @@ package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.{ScopeController, named}
 import com.greencatsoft.angularjs.extensions.ModalInstance
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.core.HttpPromise._
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}

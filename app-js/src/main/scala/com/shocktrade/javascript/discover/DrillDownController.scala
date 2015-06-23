@@ -2,10 +2,11 @@ package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.core.{HttpService, Location, Timeout}
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.angularjs.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}

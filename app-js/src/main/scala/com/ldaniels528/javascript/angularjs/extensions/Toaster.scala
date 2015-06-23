@@ -1,4 +1,4 @@
-package com.ldaniels528.angularjs
+package com.ldaniels528.javascript.angularjs.extensions
 
 import scala.scalajs.js
 
@@ -14,13 +14,17 @@ trait Toaster extends js.Object {
 
 }
 
+/**
+ * Angular.js Toaster Singleton
+ * @author lawrence.daniels@gmail.com
+ */
 object Toaster {
 
   /**
    * Toaster Enhancements
-   * @param toaster
+   * @param toaster the given Toaster service instance
    */
-  implicit class ToasterEnhancements(val toaster: Toaster) extends AnyVal {
+  final implicit class ToasterEnhancements(val toaster: Toaster) extends AnyVal {
 
     def info(title: String, message: String = null) = toaster.pop(`type` = "info", title, message)
 

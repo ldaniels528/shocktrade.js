@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.{Scope, ScopeController, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._

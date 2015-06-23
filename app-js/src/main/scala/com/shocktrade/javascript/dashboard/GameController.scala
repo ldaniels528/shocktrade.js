@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.ScopeController
 import biz.enef.angulate.core.Location
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 

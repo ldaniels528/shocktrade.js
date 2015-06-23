@@ -2,11 +2,12 @@ package com.shocktrade.javascript.admin
 
 import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}

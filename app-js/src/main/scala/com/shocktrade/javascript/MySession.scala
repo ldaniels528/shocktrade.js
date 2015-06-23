@@ -1,14 +1,15 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.{HttpPromise, Timeout}
 import biz.enef.angulate.{Scope, Service, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.core.{Timeout, HttpPromise}
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
 
 import scala.concurrent.duration._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
@@ -29,7 +30,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   var fbFriends = emptyArray[js.Dynamic]
   var fbProfile: Option[js.Dynamic] = None
   var contest: Option[js.Dynamic] = None
-  var nonMember: Boolean = true
   var userProfile: js.Dynamic = createSpectatorProfile()
 
   /////////////////////////////////////////////////////////////////////
@@ -43,7 +43,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
     this.fbProfile = Some(fbProfile)
     this.facebookID = Some(facebookID)
-    this.nonMember = false
 
     g.console.log(s"profile = ${toJson(profile)}")
     this.userProfile = profile
@@ -90,7 +89,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def isFbAuthenticated: js.Function0[Boolean] = () => fbProfile.isDefined
 
   /**
-   * Logout private def
+   * Logout function
    */
   def logout: js.Function0[Unit] = () => {
     facebookID = None
@@ -292,7 +291,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     fbFriends = emptyArray[js.Dynamic]
     fbProfile = None
     contest = None
-    nonMember = true
 
     JS(
       name = "Spectator",

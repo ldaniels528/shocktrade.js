@@ -2,7 +2,8 @@ package com.shocktrade.javascript
 
 import biz.enef.angulate.core.{HttpService, Location, Timeout}
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -31,6 +32,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   extends ScopeController {
 
   private var isLoading = false
+  private var nonMember = true
   private val onlinePlayers = js.Dictionary[js.Dynamic]()
 
   ///////////////////////////////////////////////////////////////////////////
@@ -49,7 +51,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.appTabs = appTabs
 
-  $scope.levels = levels
+  $scope.levels = GameLevels.Levels
 
   $scope.mainInit = (uuid: String) => g.console.log(s"Session UUID is $uuid")
 
@@ -130,6 +132,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   private def login() {
     facebook.login() onComplete {
       case Success(response) =>
+        nonMember = true
         postLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
@@ -138,6 +141,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def logout() {
+    nonMember = false
     facebook.logout()
     mySession.logout()
   }
@@ -159,10 +163,11 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     g.console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
     profileService.getProfileByFacebookID(facebookID) onComplete {
       case Success(profile) if isDefined(profile.error) =>
-        mySession.nonMember = true
+        nonMember = true
         g.console.log("Non-member identified.")
         if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
       case Success(profile) =>
+        nonMember = false
         g.console.log("ShockTrade user profile loaded...")
         mySession.setUserProfile(profile, facebook.profile, facebookID)
         loadFacebookFriends()
@@ -294,32 +299,5 @@ object MainController {
     JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
     JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
     JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"))
-
-  private val levels = js.Array(
-    JS(number = 1, nextLevelXP = 1000, description = "Private"),
-    JS(number = 2, nextLevelXP = 2000, description = "Private 1st Class"),
-    JS(number = 3, nextLevelXP = 4000, description = "Corporal"),
-    JS(number = 4, nextLevelXP = 8000, description = "First Corporal"),
-    JS(number = 5, nextLevelXP = 16000, description = "Sergeant"),
-    JS(number = 6, nextLevelXP = 32000, description = "Staff Sergeant"),
-    JS(number = 7, nextLevelXP = 64000, description = "Gunnery Sergeant"),
-    JS(number = 8, nextLevelXP = 1280000, description = "Master Sergeant"),
-    JS(number = 9, nextLevelXP = 256000, description = "First Sergeant"),
-    JS(number = 10, nextLevelXP = 1024000, description = "Sergeant Major"),
-    JS(number = 11, nextLevelXP = 2048000, description = "Warrant Officer 3rd Class"),
-    JS(number = 12, nextLevelXP = 4096000, description = "Warrant Officer 2nd Class"),
-    JS(number = 13, nextLevelXP = 4096000, description = "Warrant Officer 1st Class"),
-    JS(number = 14, nextLevelXP = 8192000, description = "Chief Warrant Officer"),
-    JS(number = 15, nextLevelXP = 8192000, description = "Master Chief Warrant Officer"),
-    JS(number = 16, nextLevelXP = 16384000, description = "Lieutenant"),
-    JS(number = 17, nextLevelXP = 32768000, description = "First Lieutenant"),
-    JS(number = 18, nextLevelXP = 65536000, description = "Captain"),
-    JS(number = 19, nextLevelXP = 131072000, description = "Major"),
-    JS(number = 20, nextLevelXP = 262144000, description = "Lieutenant Colonel"),
-    JS(number = 21, nextLevelXP = 524288000, description = "Colonel"),
-    JS(number = 22, nextLevelXP = 524288000, description = "Brigadier General"),
-    JS(number = 23, nextLevelXP = 524288000, description = "Major General"),
-    JS(number = 24, nextLevelXP = 524288000, description = "Lieutenant General"),
-    JS(number = 25, nextLevelXP = 524288000, description = "General"))
 
 }

@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.{ScopeController, named}
 import com.greencatsoft.angularjs.extensions.ModalInstance
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._

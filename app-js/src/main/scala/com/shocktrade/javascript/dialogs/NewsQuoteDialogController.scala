@@ -4,6 +4,7 @@ import biz.enef.angulate.{ScopeController, named}
 import com.greencatsoft.angularjs.extensions.ModalInstance
 import com.shocktrade.javascript.dashboard.ContestService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}

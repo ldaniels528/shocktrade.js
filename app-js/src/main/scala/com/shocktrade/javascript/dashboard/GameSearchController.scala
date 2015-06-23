@@ -1,13 +1,14 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.AppEvents._
-import biz.enef.angulate.core.{HttpError, Location, Timeout}
+import biz.enef.angulate.core.{Location, Timeout}
 import biz.enef.angulate.{Scope, named}
-import com.ldaniels528.angularjs.Toaster
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -229,21 +230,21 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.quitContest = { (contest: js.Dynamic) =>
     contest.quitting = true
-    contestService.quitContest(contest.OID, mySession.getUserID())
-      .success { (updatedContest: js.Dynamic) =>
-      if (js.isUndefined(updatedContest.error)) {
-        $scope.contest = updatedContest
-        mySession.setContest(updatedContest)
-      }
-      else {
-        g.console.error("error = " + updatedContest.error)
-        toaster.error("Unable to process your quit command at this time.")
-      }
-      $timeout(() => contest.quitting = false, 500)
+    contestService.quitContest(contest.OID, mySession.getUserID()) onComplete {
+      case Success(updatedContest) =>
+        if (js.isUndefined(updatedContest.error)) {
+          $scope.contest = updatedContest
+          mySession.setContest(updatedContest)
+        }
+        else {
+          g.console.error(s"error = ${updatedContest.error}")
+          toaster.error("Unable to process your quit command at this time.")
+        }
+        $timeout(() => contest.quitting = false, 500)
 
-    }.error { (err: HttpError) =>
-      g.console.error("An error occurred while joining the contest")
-      $timeout(() => contest.quitting = false, 500)
+      case Failure(e) =>
+        g.console.error("An error occurred while joining the contest")
+        $timeout(() => contest.quitting = false, 500)
     }
   }
 

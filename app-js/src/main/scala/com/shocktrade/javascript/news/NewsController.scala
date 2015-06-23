@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.news
 
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.angularjs.{CookieStore, Sce, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js

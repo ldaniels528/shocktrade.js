@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
+import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.{Location, Timeout}
 import biz.enef.angulate.{Scope, named}
-import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogService

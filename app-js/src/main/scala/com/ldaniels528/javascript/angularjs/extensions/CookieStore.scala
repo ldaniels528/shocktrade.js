@@ -1,4 +1,4 @@
-package com.ldaniels528.angularjs
+package com.ldaniels528.javascript.angularjs.extensions
 
 import scala.scalajs.js
 
