@@ -27,6 +27,9 @@ object OnlineStatusController extends Controller with ErrorHandler {
   private val CollectionName = "OnlineStatuses"
   private val mc = db.collection[JSONCollection](CollectionName)
 
+  // This collection requires a TTL index to function properly
+  // db.OnlineStatuses.createIndex({updatedTime:1}, {expireAfterSeconds:1800})
+
   ////////////////////////////////////////////////////////////////////////////
   //      API functions
   ////////////////////////////////////////////////////////////////////////////
