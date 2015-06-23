@@ -24,7 +24,7 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
   private var totalInvestmentStatus: Option[String] = None
   private var totalInvestment: Option[Double] = None
   private var attemptsLeft = 3
-  private var isVisible = true
+  private var isVisible = false
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -32,6 +32,8 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
 
   $scope.initNav = () => init()
 
+  $scope.isAuthenticated = () => mySession.isAuthenticated()
+  
   $scope.getMyRanking = () => getMyRanking getOrElse JS()
 
   $scope.getTotalInvestment = () => getTotalInvestment

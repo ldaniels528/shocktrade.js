@@ -2,7 +2,7 @@
 
 <div class="pull-left st_nav_bar contest_colors">
     <ul class="nav nav-tabs nav-stacked">
-        <li ng-hide="isBarVisible()"
+        <li ng-hide="isBarVisible() || !isAuthenticated()"
             class="st_nav_bar fa fa-2x fa-chevron-circle-right st_control"
             title="Show the information bar"
             ng-click="toggleVisibility()">
