@@ -74,8 +74,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthorized: js.Function0[Boolean] = () => userProfile.OID != null
-
   def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID != null
 
   def getFacebookID: js.Function0[String] = () => facebookID.orNull

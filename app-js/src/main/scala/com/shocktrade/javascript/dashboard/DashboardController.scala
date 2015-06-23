@@ -9,7 +9,7 @@ import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialo
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
 /**
@@ -57,7 +57,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
     perksDialog.popup() onComplete {
       case Success(contest) =>
         g.console.log(s"Settings contest")
-        mySession.setContest(contest.asInstanceOf[js.Dynamic])
+        mySession.setContest(contest)
       case Failure(e) =>
         if(e.getMessage != "cancel") {
           e.printStackTrace()

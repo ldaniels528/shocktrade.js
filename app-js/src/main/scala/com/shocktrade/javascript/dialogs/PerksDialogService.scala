@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.core.{HttpPromise, HttpService}
+import biz.enef.angulate.ext.{ModalOptions, ModalService}
 import biz.enef.angulate.{Service, named}
-import com.greencatsoft.angularjs.core.Promise
-import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
+import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.scalajs.js
 
@@ -21,14 +21,14 @@ class PerksDialogService($http: HttpService, $modal: ModalService, @named("MySes
   /**
    * Perks Modal Dialog
    */
-  def popup(): Promise = {
+  def popup()(implicit ec: ExecutionContext) = {
     val options = ModalOptions()
     options.templateUrl = "perks_dialog.htm"
     options.controller = classOf[PerksDialogController].getSimpleName
 
     // create an instance of the dialog
     val $modalInstance = $modal.open(options)
-    $modalInstance.result
+    $modalInstance.result.map(_.asInstanceOf[js.Dynamic])
   }
 
   /**
