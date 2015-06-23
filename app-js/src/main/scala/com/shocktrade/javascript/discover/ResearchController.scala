@@ -35,15 +35,15 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
     "OTHER_OTC" -> true
   )
 
-  $scope.maxResultsSet = maxResultsSet
+  $scope.maxResultsSet = MaxResultsSet
 
-  $scope.priceRanges = priceRanges
+  $scope.priceRanges = PriceRanges
 
-  $scope.volumeRanges = volumeRanges
+  $scope.volumeRanges = VolumeRanges
 
-  $scope.percentages = percentages
+  $scope.percentages = Percentages
 
-  $scope.changePercentages = changePercentages
+  $scope.changePercentages = ChangePercentages
 
   //////////////////////////////////////////////////////////////////////
   //              Public Functions
@@ -58,7 +58,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
   $scope.searchOptions = JS(
     sortBy = null,
     reverse = false,
-    maxResults = maxResultsSet(1)
+    maxResults = MaxResultsSet(1)
   )
 
   $scope.getExchangeSet = (exchange: js.UndefOr[String]) => getExchangeSet(exchange)
@@ -138,7 +138,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
         stopLoading()
 
         // save the search options
-        $cookieStore.put(cookieName, searchOptions)
+        $cookieStore.put(CookieName, searchOptions)
 
       case Failure(e) =>
         g.console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
@@ -164,9 +164,9 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
   ///////////////////////////////////////////////////////////////////////////
 
   // retrieve the search options cookie
-  $cookieStore.get[js.Dynamic](cookieName) foreach { options =>
+  $cookieStore.get[js.Dynamic](CookieName) foreach { options =>
     if (isDefined(options)) {
-      g.console.log(s"Retrieved search options from cookie '$cookieName': ${angular.toJson(options, pretty = false)}")
+      g.console.log(s"Retrieved search options from cookie '$CookieName': ${angular.toJson(options, pretty = false)}")
       $scope.searchOptions = options
     }
   }
@@ -178,13 +178,13 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
  * @author lawrence.daniels@gmail.com
  */
 object ResearchController {
-  private val cookieName = "ShockTrade_Research_SearchOptions"
+  private val CookieName = "ShockTrade_Research_SearchOptions"
 
   // data collections
-  private val maxResultsSet = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
-  private val priceRanges = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
-  private val volumeRanges = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
-  private val percentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
-  private val changePercentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
+  private val MaxResultsSet = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
+  private val PriceRanges = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
+  private val VolumeRanges = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
+  private val Percentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
+  private val ChangePercentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
 
 }

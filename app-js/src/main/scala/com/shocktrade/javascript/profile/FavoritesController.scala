@@ -1,8 +1,9 @@
 package com.shocktrade.javascript.profile
 
 import biz.enef.angulate.core.Location
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.{Scope, ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.discover.QuoteService
@@ -20,8 +21,9 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
                           @named("ProfileService") profileService: ProfileService,
                           @named("QuoteService") quoteService: QuoteService)
   extends ScopeController {
-
+  private val scope = $scope.asInstanceOf[Scope]
   private var quotes = emptyArray[js.Dynamic]
+
   $scope.selectedQuote = null
 
   $scope.cancelSelection = () => $scope.selectedQuote = null
@@ -86,9 +88,10 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
   //			Event Listeners
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.$watch(mySession.getUserID, (newID: String, oldID: String) => {
-    g.console.log(s"newID = $newID, oldID = $oldID")
-    if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(mySession.getFavoriteSymbols())
-  })
+  /**
+   * Listen for changes to the player's profile
+   */
+  scope.$on(UserProfileChanged, (profile: js.Dynamic) =>
+    if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(mySession.getFavoriteSymbols()))
 
 }

@@ -1,8 +1,9 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.core.{HttpService, Timeout}
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.{Scope, ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -21,6 +22,7 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
                            @named("WebSocketService") webSocket: WebSocketService)
   extends ScopeController {
 
+  private val scope = $scope.asInstanceOf[Scope]
   private var totalInvestmentStatus: Option[String] = None
   private var totalInvestment: Option[Double] = None
   private var attemptsLeft = 3
@@ -33,7 +35,7 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
   $scope.initNav = () => init()
 
   $scope.isAuthenticated = () => mySession.isAuthenticated()
-  
+
   $scope.getMyRanking = () => getMyRanking getOrElse JS()
 
   $scope.getTotalInvestment = () => getTotalInvestment
@@ -115,8 +117,10 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
 
-  // when the player ID changes, load the total investment
-  $scope.$watch(mySession.userProfile, (newProfile: js.Dynamic, oldProfile: js.Dynamic) => init())
+  /**
+   * Listen for changes to the player's profile
+   */
+  scope.$on(UserProfileChanged, (profile: js.Dynamic) => init())
 
 }
 

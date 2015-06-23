@@ -3,6 +3,7 @@ package com.shocktrade.javascript
 import biz.enef.angulate.core.{HttpPromise, Timeout}
 import biz.enef.angulate.{Scope, Service, named}
 import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
@@ -23,13 +24,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
                 @named("ProfileService") profileService: ProfileService)
   extends Service {
 
-  private val notifications = emptyArray[String]
+  val notifications = emptyArray[String]
   var facebookID: Option[String] = None
   var fbFriends = emptyArray[js.Dynamic]
   var fbProfile: Option[js.Dynamic] = None
-  var userProfile: js.Dynamic = createSpectatorProfile()
   var contest: Option[js.Dynamic] = None
   var nonMember: Boolean = true
+  var userProfile: js.Dynamic = createSpectatorProfile()
 
   /////////////////////////////////////////////////////////////////////
   //          Authentication & Authorization Functions
@@ -37,11 +38,19 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
-  def setUserProfile: js.Function1[js.Dynamic, Unit] = (profile: js.Dynamic) => {
-    userProfile = if (isDefined(profile)) {
-      nonMember = false
-      profile
-    } else createSpectatorProfile()
+  def setUserProfile(profile: js.Dynamic, fbProfile: js.Dynamic, facebookID: String) {
+    g.console.log(s"facebookID = $facebookID, fbProfile = ${toJson(fbProfile)}")
+
+    this.fbProfile = Some(fbProfile)
+    this.facebookID = Some(facebookID)
+    this.nonMember = false
+
+    g.console.log(s"profile = ${toJson(profile)}")
+    this.userProfile = profile
+
+    // broadcast the user profile change event
+    $rootScope.$broadcast(UserProfileChanged, profile)
+    ()
   }
 
   /**
@@ -380,40 +389,40 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     myParticipant.positions = foreignPlayer.positions
   }
 
-  $rootScope.$on("contest_deleted", { (event: js.Dynamic, deletedContest: js.Dynamic) =>
+  $rootScope.$on(ContestDeleted, { (event: js.Dynamic, deletedContest: js.Dynamic) =>
     info(deletedContest, "Contest deleted event received...")
     contest foreach { c =>
       if (c.OID == deletedContest.OID) resetContest()
     }
   })
 
-  $rootScope.$on("contest_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(ContestUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Contest updated event received...")
     contest foreach { c => if (c.OID == updatedContest.OID) setContest(updatedContest) }
     if (contest.isEmpty) setContest(updatedContest)
   })
 
-  $rootScope.$on("messages_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(MessagesUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Messages updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("orders_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(OrderUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Orders updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("perks_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(PerksUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Perks updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("participant_updated", { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(ParticipantUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Participant updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on("profile_updated", { (event: js.Dynamic, profile: js.Dynamic) =>
+  $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: js.Dynamic) =>
     g.console.log(s"User Profile for ${profile.name} updated")
     if (userProfile.OID == profile.OID) {
       userProfile.netWorth = profile.netWorth

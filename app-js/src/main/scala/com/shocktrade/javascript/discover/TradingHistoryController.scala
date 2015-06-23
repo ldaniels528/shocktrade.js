@@ -18,6 +18,10 @@ class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("Quo
   private var tradingHistory: js.Array[js.Dynamic] = null
   private var selectedTradingHistory: js.Dynamic = null
 
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
+
   $scope.getTradingHistory = () => tradingHistory
 
   $scope.getSelectedTradingHistory = () => selectedTradingHistory
@@ -28,7 +32,13 @@ class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("Quo
 
   $scope.selectTradingHistory = (t: js.Dynamic) => selectedTradingHistory = t
 
-  $scope.loadTradingHistory = { (symbol_? : js.UndefOr[String]) =>
+  $scope.loadTradingHistory = (symbol: js.UndefOr[String]) => loadTradingHistory(symbol)
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  private def loadTradingHistory(symbol_? : js.UndefOr[String]) = {
     symbol_?.foreach { symbol =>
       quoteService.getTradingHistory(symbol) onComplete {
         case Success(results) => tradingHistory = results

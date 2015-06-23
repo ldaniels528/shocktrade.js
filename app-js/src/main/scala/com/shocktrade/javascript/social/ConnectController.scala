@@ -2,6 +2,7 @@ package com.shocktrade.javascript.social
 
 import biz.enef.angulate.{Scope, ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
@@ -159,10 +160,18 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    */
   $scope.selectAll = (checked: Boolean) => myUpdates.foreach(_.selected = checked)
 
-  // watch for changes to the player"s profile
-  scope.$watch(mySession.getUserID, () => {
-    loadMyUpdates(mySession.getUserName())
-    //$scope.chooseFirstContact()
+  /////////////////////////////////////////////////////////////////////////////
+  //			Event Listeners
+  /////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Listen for changes to the player's profile
+   */
+  scope.$on(UserProfileChanged, { (profile: js.Dynamic) =>
+    if (mySession.getRecentSymbols().nonEmpty) {
+      loadMyUpdates(mySession.getUserName())
+      //$scope.chooseFirstContact()
+    }
   })
 
 }

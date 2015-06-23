@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
+import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.{Location, Timeout}
-import biz.enef.angulate.named
+import biz.enef.angulate.{Scope, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -79,22 +80,21 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
 
+  private val scope = $scope.asInstanceOf[Scope]
+
   /**
    * Listen for contest creation events
    */
-  $scope.$on("contest_created", (event: js.Dynamic, contest: js.Dynamic) => init())
+  scope.$on(ContestCreated, (event: js.Dynamic, contest: js.Dynamic) => init())
 
   /**
    * Listen for contest deletion events
    */
-  $scope.$on("contest_deleted", (event: js.Dynamic, contest: js.Dynamic) => init())
+  scope.$on(ContestDeleted, (event: js.Dynamic, contest: js.Dynamic) => init())
 
   /**
    * Listen for user profile changes
    */
-  $scope.$watch(mySession.getUserID, { (newUserID: String, oldUserID: String) =>
-    g.console.log(s"newUserID = $newUserID, oldUserID = $oldUserID")
-    if (newUserID != null) loadMyContests(newUserID)
-  })
+  scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => loadMyContests(profile.OID))
 
 }

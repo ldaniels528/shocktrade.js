@@ -3,6 +3,7 @@ package com.shocktrade.javascript
 import biz.enef.angulate.core.{HttpService, Location, Timeout}
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -128,9 +129,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def login() {
     facebook.login() onComplete {
-      case Success(response) =>
-        val fbResponse = response.asInstanceOf[js.Dynamic]
-        g.console.log(s"fbResponse = ${JSON.stringify(fbResponse)}")
+      case Success(_) =>
         postLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
@@ -165,7 +164,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
         if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
       case Success(profile) =>
         g.console.log("ShockTrade user profile loaded...")
-        mySession.setUserProfile(profile)
+        mySession.setUserProfile(profile, facebook.profile, facebookID)
         loadFacebookFriends()
       case Failure(e) =>
         toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
@@ -178,8 +177,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     fbProfile_? foreach { fbProfile =>
       signUpDialog.popup(facebookID, fbProfile) onSuccess {
         case profile: js.Dynamic =>
-          mySession.setUserProfile(profile)
-          mySession.nonMember = false
+          mySession.setUserProfile(profile, fbProfile, facebookID)
       }
     }
   }
@@ -234,7 +232,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.$on("user_status_changed", (event: js.Dynamic, newState: js.Dynamic) => g.console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
+  $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) => g.console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
 
 }
 

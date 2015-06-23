@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
+import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.{HttpError, Location, Timeout}
 import biz.enef.angulate.{Scope, named}
 import com.ldaniels528.angularjs.Toaster
@@ -310,7 +311,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest creation events
    */
-  scope.$on("contest_created", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on(ContestCreated, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"New contest created '${contest.name}'")
     searchResults.push(contest)
     //mySession.refresh()
@@ -319,7 +320,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest deletion events
    */
-  scope.$on("contest_deleted", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on(ContestDeleted, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name}' deleted")
     selectedContest = null
     searchResults = searchResults.filterNot(_.OID == contest.OID)
@@ -328,7 +329,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   /**
    * Listen for contest update events
    */
-  scope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
+  scope.$on(ContestUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"Contest '${contest.name} updated")
     contest.OID_? foreach { contestId =>
       // update the contest in our search results

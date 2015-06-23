@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
+import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.{CookieStore, Toaster}
@@ -175,24 +176,24 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
   //              Watch Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.$on("contest_selected", { (event: js.Dynamic, contest: js.Dynamic) =>
+  $scope.$on(ContestSelected, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"[Portfolio] Contest '${contest.name}' selected")
     resetOrders()
     resetPositions()
   })
 
-  $scope.$on("contest_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
+  $scope.$on(ContestUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"[Portfolio] Contest '${contest.name}' updated")
     resetOrders()
     resetPositions()
   })
 
-  $scope.$on("orders_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
+  $scope.$on(OrderUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
     resetOrders()
   })
 
-  $scope.$on("participant_updated", { (event: js.Dynamic, contest: js.Dynamic) =>
+  $scope.$on(ParticipantUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
     g.console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
     resetPositions()
   })

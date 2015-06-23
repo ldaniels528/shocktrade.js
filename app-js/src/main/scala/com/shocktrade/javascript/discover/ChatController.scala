@@ -4,8 +4,10 @@ import biz.enef.angulate.core.Location
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.angularjs.Toaster
 import com.shocktrade.javascript.Filters.toDuration
+import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.discover.ChatController._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -16,9 +18,10 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
-                     @named("MySession") mySession: js.Dynamic,
-                     @named("ContestService") contestService: ContestService) extends ScopeController {
-  private val colors = js.Array("#0088ff", "#ff00ff", "#008888", "#2200ff")
+                     @named("MySession") mySession: MySession,
+                     @named("ContestService") contestService: ContestService)
+  extends ScopeController {
+
   private val colorMap = js.Dictionary[String]()
   private var lastUpdateTime = 0d
   private var lastMessageCount = 0
@@ -28,7 +31,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
 
   $scope.addSmiley = (emoticon: js.Dynamic) => $scope.chatMessage += " " + emoticon.symbol
 
-  $scope.getEmoticons = () => emoticons
+  $scope.getEmoticons = () => Emoticons
 
   $scope.getMessages = () => getMessages
 
@@ -43,7 +46,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
    * @return an HTML string
    */
   private def getMessages: String = {
-    val messages = mySession.getMessages().asArray[js.Dynamic]
+    val messages = mySession.getMessages()
     if ((messages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 1000) cachedHtml
     else {
       // capture the start time
@@ -56,7 +59,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
       val html = sortMessagesByTime(messages).foldLeft[String]("") { (html, msg) =>
         // replace the symbols with icon images
         var text = msg.text.as[String]
-        emoticons.foreach { emo =>
+        Emoticons.foreach { emo =>
           text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
         }
 
@@ -78,7 +81,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
     (timeB.asInstanceOf[Double] - timeA.asInstanceOf[Double]).toInt
   })
 
-  private def colorOf(name: String) = colorMap.getOrElseUpdate(name, colors((1 + colorMap.size) % colors.length))
+  private def colorOf(name: String) = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
 
   /**
    * Sends a chat message to the server
@@ -97,7 +100,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
         ))
 
       // transmit the message
-      contestService.sendChatMessage(mySession.getContestID().as[String], message) onComplete {
+      contestService.sendChatMessage(mySession.getContestID(), message) onComplete {
         case Success(messages) =>
           $scope.chatMessage = ""
           mySession.setMessages(messages)
@@ -107,7 +110,17 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
     }
   }
 
-  private val emoticons = js.Array(
+}
+
+/**
+ * Chat Controller Singleton
+ * @author lawrence.daniels@gmail.com
+ */
+object ChatController {
+
+  private val Colors = js.Array("#0088ff", "#ff00ff", "#008888", "#2200ff")
+
+  private val Emoticons = js.Array(
     JS(symbol = ":-@", uri = "icon_mrgreen.gif", tooltip = "Big Grin"),
     JS(symbol = ":-)", uri = "icon_smile.gif", tooltip = "Smile"),
     JS(symbol = "-)", uri = "icon_wink.gif", tooltip = "Wink"),

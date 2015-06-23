@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.profile
 
+import com.shocktrade.javascript.AppEvents._
 import biz.enef.angulate.core.HttpService
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.{Scope, ScopeController, named}
 import com.shocktrade.core.Award
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -15,32 +16,48 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
  * @author lawrence.daniels@gmail.com
  */
 class AwardsController($scope: js.Dynamic, $http: HttpService, @named("MySession") mySession: MySession) extends ScopeController {
+  private val scope = $scope.asInstanceOf[Scope]
 
-  $scope.getAwards = () => availableAwards
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.getAwards = () => AvailableAwards
 
   $scope.getMyAwards = () => getMyAwards
 
-  $scope.getAwardImage = (code: String) => awardIconsByCode.get(code).orNull
+  $scope.getAwardImage = (code: String) => AwardIconsByCode.get(code).orNull
 
   $scope.setupAwards = () => setupAwards()
-
-  // watch for changes to the player's profile
-  $scope.$watch(mySession.userProfile, (newProfile: js.Dynamic, oldProfile: js.Dynamic) => setupAwards())
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions and Data
   /////////////////////////////////////////////////////////////////////////////
 
   private def getMyAwards: js.Array[js.Dynamic] = {
-    mySession.getMyAwards() map (code => awardsByCode.get(code).orNull)
+    mySession.getMyAwards() map (code => AwardsByCode.get(code).orNull)
   }
 
   private def setupAwards() {
     g.console.log("Setting up awards....")
-    availableAwards foreach { award =>
+    AvailableAwards foreach { award =>
       award.owned = mySession.getMyAwards().contains(award.code.as[String])
     }
   }
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Event Listeners
+  ///////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Listen for changes to the player's profile
+   */
+  scope.$on(UserProfileChanged, (profile: js.Dynamic) => setupAwards())
+
+  /**
+   * Listen for changes to the player's awards
+   */
+  scope.$on(AwardsUpdated, (profile: js.Dynamic) => setupAwards())
 
 }
 
@@ -51,18 +68,18 @@ class AwardsController($scope: js.Dynamic, $http: HttpService, @named("MySession
 object AwardsController {
 
   // define all available awards
-  private val availableAwards = js.Array[js.Dynamic](
+  private val AvailableAwards = js.Array[js.Dynamic](
     Award.availableAwards
       .map (a => JS(name = a.name, code = a.code.toString, icon = a.icon, description = a.description)): _*)
       .sortBy(_.owned.as[Boolean])
       .reverse
 
-  private val awardsByCode = js.Dictionary[js.Dynamic](
-    availableAwards map { award => (award.code.as[String], award) }: _*
+  private val AwardsByCode = js.Dictionary[js.Dynamic](
+    AvailableAwards map { award => (award.code.as[String], award) }: _*
   )
 
-  private val awardIconsByCode = js.Dictionary[String](
-    availableAwards map { award => (award.code.as[String], award.icon.as[String]) }: _*
+  private val AwardIconsByCode = js.Dictionary[String](
+    AvailableAwards map { award => (award.code.as[String], award.icon.as[String]) }: _*
   )
 
 }
