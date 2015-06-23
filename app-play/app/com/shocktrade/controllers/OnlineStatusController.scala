@@ -43,7 +43,7 @@ object OnlineStatusController extends Controller with ErrorHandler {
   }
 
   def getStatus(userID: String) = Action.async {
-    mc.find(JS("userID" -> userID.toBSID)).one[JsObject] map {
+    mc.find(JS("_id" -> userID.toBSID)).one[JsObject] map {
       case Some(status) => Ok(status)
       case None => Ok(JS("_id" -> userID.toBSID, "connected" -> false))
     } recover {

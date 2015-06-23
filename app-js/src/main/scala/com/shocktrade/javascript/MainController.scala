@@ -87,9 +87,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //////////////////////////////////////////////////////////////////////
 
   private def isOnline(player: js.Dynamic): Boolean = {
-    if (!isDefined(player.facebookID)) false
-    else {
-      val playerID = player.facebookID.as[String]
+    player.OID_? exists { playerID =>
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = JS(connected = false)
         profileService.getOnlineStatus(playerID) onComplete {
@@ -229,7 +227,6 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     case path if path.contains("/discover") => 3
     case path if path.contains("/explore") => 4
     case path if path.contains("/research") => 5
-    case path if path.contains("/connect") => 6
     case path => 3
   }
 
@@ -298,8 +295,7 @@ object MainController {
     JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
     JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
     JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
-    JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"),
-    JS(name = "Connect", icon_class = "fa-facebook-square", tool_tip = "Connect & Share", url = "/connect", authenticationRequired = true))
+    JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"))
 
   private val levels = js.Array(
     JS(number = 1, nextLevelXP = 1000, description = "Private"),

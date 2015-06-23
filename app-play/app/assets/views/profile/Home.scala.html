@@ -4,19 +4,19 @@
 
         <tabset>
             <tab>
+                <tab-heading><i class="fa fa-inbox"></i> Inbox</tab-heading>
+                <div class="row home_tab home_tab_container">
+                @assets.views.html.connect.Connect()
+                </div>
+            </tab>
+            <tab>
                 <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
                 <div ng-controller="MyGamesController" ng-init="initMyGames()" class="row home_tab home_tab_container">
                     @assets.views.html.search.MyContests(includeExpiry = true)
                 </div>
             </tab>
             <tab>
-                <tab-heading><i class="fa fa-trophy"></i> My Awards</tab-heading>
-                <div class="row home_tab home_tab_container">
-                    @assets.views.html.profile.MyAwards()
-                </div>
-            </tab>
-            <tab>
-                <tab-heading><i class="fa fa-heart"></i> My Favorites</tab-heading>
+                <tab-heading><i class="fa fa-heart"></i> Favorites</tab-heading>
                 <div ng-controller="FavoritesController" class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyFavorites()
                 </div>
@@ -31,6 +31,12 @@
                 <tab-heading><i class="fa fa-user"></i> My Friends ({{ getFriends().length | number }})</tab-heading>
                 <div class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyFriends()
+                </div>
+            </tab>
+            <tab>
+                <tab-heading><i class="fa fa-trophy"></i> My Awards</tab-heading>
+                <div class="row home_tab home_tab_container">
+                @assets.views.html.profile.MyAwards()
                 </div>
             </tab>
             <tab>

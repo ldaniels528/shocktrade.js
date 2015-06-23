@@ -149,10 +149,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
   private def findLabel(array: js.Array[js.Dynamic], label: String) = array.find(_.label === label)
 
   private def selectedSymbol = {
-    g.console.log(s"routeParams = ${$routeParams.symbol}")
-    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookieStore.getOrElse("symbol", "AAPL")
-    g.console.log(s"symbol = $symbol")
-    symbol
+    if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookieStore.getOrElse("symbol", "AAPL")
   }
 
 }
