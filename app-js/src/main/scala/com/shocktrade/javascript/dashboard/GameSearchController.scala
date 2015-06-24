@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.{Location, Timeout}
 import biz.enef.angulate.{Scope, named}
+import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -20,7 +21,7 @@ import scala.util.{Failure, Success}
  */
 class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                            @named("ContestService") contestService: ContestService,
-                           @named("InvitePlayerDialog") invitePlayerDialog: js.Dynamic,
+                           @named("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
                            @named("MySession") mySession: MySession)
   extends GameController($scope, $location, toaster, mySession) {
 
@@ -61,7 +62,8 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.invitePlayerPopup = (contest: js.Dynamic, playerID: String) => {
     mySession.findPlayerByID(contest, playerID) match {
-      case Some(participant) => invitePlayerDialog.popup($scope, participant)
+      case Some(participant) =>
+        invitePlayerDialog.popup(participant)
       case _ =>
         toaster.error("You must join tghe game to use this feature")
     }
@@ -208,7 +210,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     contestService.joinContest(contest.OID, playerInfo) onComplete {
       case Success(joinedContest) =>
         if (!js.isUndefined(joinedContest.error)) {
-          toaster.error(joinedContest.error.as[String], null)
+          toaster.error(joinedContest.error)
           g.console.error(joinedContest.error)
         }
         else {
@@ -253,7 +255,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
     contestService.startContest(contest.OID) onComplete {
       case Success(theContest) =>
         if (!js.isUndefined(theContest.error)) {
-          toaster.error(theContest.error.as[String])
+          toaster.error(theContest.error)
           g.console.error(theContest.error)
         }
         $timeout(() => theContest.starting = false, 500)
@@ -287,8 +289,8 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
       contestService.getContestByID(contestId) onComplete {
         case Success(loadedContest) => searchResults(index) = loadedContest
         case Failure(e) =>
-          g.console.error("Error selecting feed: " + e.getMessage)
-          toaster.error("Error loading game", null)
+          g.console.error(s"Error selecting feed: ${e.getMessage}")
+          toaster.error("Error loading game")
       }
     }
   }

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.{Promise, Q}
+import com.ldaniels528.javascript.angularjs.core.{Q, QPromise}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -31,7 +31,7 @@ class FacebookService($q: Q) extends Service {
   /**
    * Initializes the Facebook service
    */
-  def init: js.Function1[js.Dynamic, Promise[js.Dynamic]] = (fbSDK: js.Dynamic) => {
+  def init: js.Function1[js.Dynamic, QPromise[js.Dynamic]] = (fbSDK: js.Dynamic) => {
     val deferred = $q.defer[js.Dynamic]()
     FB = fbSDK
 
@@ -56,7 +56,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def createFriendList: js.Function1[String, Promise[js.Dynamic]] = { (friendListId: String) =>
+  def createFriendList: js.Function1[String, QPromise[js.Dynamic]] = { (friendListId: String) =>
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -87,7 +87,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getFriendListMembers: js.Function1[String, Promise[js.Dynamic]] = (friendListId: String) => {
+  def getFriendListMembers: js.Function1[String, QPromise[js.Dynamic]] = (friendListId: String) => {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -118,7 +118,7 @@ class FacebookService($q: Q) extends Service {
     }
   }
 
-  def getLoginStatus: js.Function0[Promise[js.Dynamic]] = () => {
+  def getLoginStatus: js.Function0[QPromise[js.Dynamic]] = () => {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
     else {
@@ -154,7 +154,7 @@ class FacebookService($q: Q) extends Service {
     ()
   }
 
-  def login: js.Function0[Promise[js.Dynamic]] = () => {
+  def login: js.Function0[QPromise[js.Dynamic]] = () => {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -172,7 +172,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def logout: js.Function0[Promise[js.Dynamic]] = () => {
+  def logout: js.Function0[QPromise[js.Dynamic]] = () => {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {

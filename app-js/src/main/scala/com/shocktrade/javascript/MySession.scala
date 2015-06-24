@@ -103,7 +103,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
         case Success(profile) =>
           userProfile.netWorth = profile.netWorth
         case Failure(e) =>
-          toaster.error("Error loading user profile", null);
+          toaster.error("Error loading user profile");
       }
     }
   }
@@ -172,7 +172,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     if (!isDefined(aContest)) resetContest()
 
     // if the contest contained an error, show it
-    else if (isDefined(aContest.error)) toaster.error(aContest.error.as[String])
+    else if (isDefined(aContest.error)) toaster.error(aContest.error)
 
     // is it a delta?
     else if (aContest.`type` === "delta") updateContestDelta(aContest)

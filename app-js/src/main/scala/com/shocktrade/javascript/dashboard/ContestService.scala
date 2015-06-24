@@ -122,7 +122,7 @@ class ContestService($cookieStore: CookieStore, $http: Http, toaster: Toaster) e
             contest.rankings.leader = participants.headOption.orNull
             contest.rankings.player = participants.find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
           case Failure(e) =>
-            toaster.error("Error loading play rankings", null)
+            toaster.error("Error loading play rankings")
             e.printStackTrace()
         }
       }

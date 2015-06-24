@@ -92,7 +92,9 @@ class FavoritesController($scope: js.Dynamic, $location: Location, $routeParams:
   /**
    * Listen for changes to the player's profile
    */
-  scope.$on(UserProfileChanged, (profile: js.Dynamic) =>
-    if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(mySession.getFavoriteSymbols()))
+  scope.$on(UserProfileChanged, { (profile: js.Dynamic) =>
+    g.console.log("Updating Favorite Symbols...")
+    if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(mySession.getFavoriteSymbols())
+  })
 
 }

@@ -1,16 +1,22 @@
 package com.ldaniels528.javascript.angularjs.extensions
 
+import scala.concurrent.duration.FiniteDuration
 import scala.scalajs.js
 
 /**
  * Angular.js Toaster
  * @author lawrence.daniels@gmail.com
+ * @see https://github.com/jirikavi/AngularJS-Toaster
  */
 trait Toaster extends js.Object {
 
-  def pop(`type`: String, title: String, message: String): Unit = js.native
+  def pop(`type`: js.Any, title: js.Any, message: js.Any): Unit = js.native
 
-  def pop(`type`: String, title: String, message: String, delay: Long, format: String): Unit = js.native
+  def pop(`type`: js.Any, title: js.Any, message: js.Any, delay: Long, format: js.Any): Unit = js.native
+
+  def pop(`type`: js.Any, title: js.Any, message: js.Any, delay: FiniteDuration, format: js.Any): Unit = {
+    pop(`type`, title, message, delay.toMillis.toInt, format)
+  }
 
 }
 
@@ -19,6 +25,11 @@ trait Toaster extends js.Object {
  * @author lawrence.daniels@gmail.com
  */
 object Toaster {
+  val INFO = "info"
+  val DANGER = "danger"
+  val ERROR = "error"
+  val SUCCESS = "success"
+  val WARNING = "warning"
 
   /**
    * Toaster Enhancements
@@ -26,15 +37,27 @@ object Toaster {
    */
   final implicit class ToasterEnhancements(val toaster: Toaster) extends AnyVal {
 
-    def info(title: String, message: String = null) = toaster.pop(`type` = "info", title, message)
+    def info(title: js.Any, message: js.Any = null) = toaster.pop(`type` = INFO, title, message)
 
-    def danger(title: String, message: String = null) = toaster.pop(`type` = "danger", title, message)
+    def info(title: js.Any, message: js.Any, delay: Long, format: js.Any) = toaster.pop(`type` = INFO, title, message, delay, format)
 
-    def error(title: String, message: String = null) = toaster.pop(`type` = "error", title, message)
+    def info(title: js.Any, message: js.Any, delay: FiniteDuration, format: js.Any) = toaster.pop(`type` = INFO, title, message, delay, format)
 
-    def success(title: String, message: String = null) = toaster.pop(`type` = "success", title, message)
+    def danger(title: js.Any, message: js.Any = null) = toaster.pop(`type` = DANGER, title, message)
 
-    def success(title: String, message: String, delay: Long, format: String) = toaster.pop(`type` = "success", title, message, delay, format)
+    def error(title: js.Any, message: js.Any = null) = toaster.pop(`type` = ERROR, title, message)
+
+    def success(title: js.Any, message: js.Any = null) = toaster.pop(`type` = SUCCESS, title, message)
+
+    def success(title: js.Any, message: js.Any, delay: Long, format: js.Any) = toaster.pop(`type` = SUCCESS, title, message, delay, format)
+
+    def success(title: js.Any, message: js.Any, delay: FiniteDuration, format: js.Any) = toaster.pop(`type` = SUCCESS, title, message, delay, format)
+
+    def warning(title: js.Any, message: js.Any = null) = toaster.pop(`type` = WARNING, title, message)
+
+    def warning(title: js.Any, message: js.Any, delay: Long, format: js.Any) = toaster.pop(`type` = WARNING, title, message, delay, format)
+
+    def warning(title: js.Any, message: js.Any, delay: FiniteDuration, format: js.Any) = toaster.pop(`type` = WARNING, title, message, delay, format)
 
   }
 

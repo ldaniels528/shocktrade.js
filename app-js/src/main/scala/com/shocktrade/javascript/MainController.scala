@@ -200,7 +200,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
-    promise.foreach(_.cancel())
+    promise.foreach($timeout.cancel)
     $timeout(() => isLoading = false, 500.millis)
   }
 
@@ -214,7 +214,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
       profileService.setIsOnline(userID) onComplete {
         case Success(outcome) =>
           g.console.log(s"outcome = ${toJson(outcome)}")
-          if (isDefined(outcome.error)) toaster.error(outcome.error.as[String])
+          if (isDefined(outcome.error)) toaster.error(outcome.error)
           val tab = appTabs(tabIndex)
           g.console.log(s"Changing location to ${tab.url}")
           $location.url(tab.url.as[String])

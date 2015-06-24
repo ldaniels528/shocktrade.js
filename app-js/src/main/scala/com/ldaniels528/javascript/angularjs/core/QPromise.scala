@@ -6,10 +6,10 @@ import scala.scalajs.js
 import scala.scalajs.runtime._
 
 /**
- * Angular Q Promise
+ * Angular.js Q Promise
  * @author lawrence.daniels@gmail.com
  */
-trait Promise[T] extends js.Object {
+trait QPromise[T] extends js.Object {
 
   def `then`(successCallback: js.Function1[T, T]): this.type = js.native
 
@@ -27,9 +27,9 @@ trait Promise[T] extends js.Object {
  * Angular Q Promise Singleton
  * @author lawrence.daniels@gmail.com
  */
-object Promise {
+object QPromise {
 
-  implicit def qPromise2Future[T](promise: Promise[T]): Future[T] = {
+  implicit def qPromise2Future[T](promise: QPromise[T]): Future[T] = {
     val p = concurrent.Promise[T]()
 
     def onSuccess(data: T): T = {

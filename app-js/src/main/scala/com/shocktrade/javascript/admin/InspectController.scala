@@ -49,9 +49,9 @@ class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js
   $scope.updateContestHost = (host: js.Dynamic) => {
     $http.post[js.Dynamic](s"/api/contest/${$scope.contest.OID}/host", JS(host = host)) onComplete {
       case Success(response) =>
-        toaster.pop("success", "Processing host updated", null)
+        toaster.success("Processing host updated")
       case Failure(e) =>
-        toaster.error("Failed to update processing host", null)
+        toaster.error("Failed to update processing host")
     }
   }
 
@@ -69,7 +69,7 @@ class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js
         $scope.contest = contest
         mySession.setContest(contest)
       case Failure(e) =>
-        toaster.error("Failed to load contest " + contestId, null)
+        toaster.error("Failed to load contest " + contestId)
     }
   }
 

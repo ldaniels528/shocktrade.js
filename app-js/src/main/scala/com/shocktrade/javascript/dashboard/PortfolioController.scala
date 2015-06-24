@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.Timeout
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.AppEvents._
@@ -157,7 +157,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
         participant.enrichedPositions = true
         contestService.getEnrichedPositions(mySession.getContestID(), participant.OID) onComplete {
           case Success(enrichedPositions) => mySession.getParticipant().positions = enrichedPositions
-          case Failure(e) => toaster.error("Error!", "Error loading enriched positions")
+          case Failure(e) => toaster.error("Error loading enriched positions")
         }
       }
     }

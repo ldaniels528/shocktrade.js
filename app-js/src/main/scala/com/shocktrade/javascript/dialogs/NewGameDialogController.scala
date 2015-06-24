@@ -26,6 +26,10 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
   private val errors = emptyArray[String]
   private var processing = false
 
+  /////////////////////////////////////////////////////////////////////////////
+  //			Public Data Structures
+  /////////////////////////////////////////////////////////////////////////////
+
   $scope.durations = durations
   $scope.startingBalances = startingBalances
   $scope.restrictionTypes = emptyArray[js.Dynamic]
@@ -38,6 +42,10 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
     startingBalance = startingBalances.head
   )
 
+  /////////////////////////////////////////////////////////////////////////////
+  //			Public Functions
+  /////////////////////////////////////////////////////////////////////////////
+
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
   $scope.createGame = (form: js.Dynamic) => createGame(form)
@@ -47,6 +55,10 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
   $scope.isProcessing = () => processing
 
   $scope.getMessages = () => errors
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Private Functions
+  /////////////////////////////////////////////////////////////////////////////
 
   private def createGame(form: js.Dynamic) = {
     if (isValidForm(form)) {

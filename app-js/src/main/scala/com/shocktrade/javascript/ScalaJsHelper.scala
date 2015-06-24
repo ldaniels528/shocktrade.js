@@ -79,12 +79,6 @@ object ScalaJsHelper {
   //    Implicit Definitions and Classes
   ////////////////////////////////////////////////////////////////////////
 
-  implicit def duration2Double(duration: FiniteDuration): Double = duration.toMillis
-
-  implicit def duration2Long(duration: FiniteDuration): Long = duration.toMillis
-
-  implicit def duration2Int(duration: FiniteDuration): Int = duration.toMillis.toInt
-
   object Implicits {
 
     object Risky {

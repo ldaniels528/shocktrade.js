@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
+import biz.enef.angulate.{Scope, named}
+import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import biz.enef.angulate.core.{Location, Timeout}
-import biz.enef.angulate.{Scope, named}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogService
@@ -66,10 +66,10 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
     }
   }
 
-  private def newGamePopup() = {
+  private def newGamePopup() {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        myContests.push(contest.asInstanceOf[js.Dynamic])
+        if (isDefined(contest.error)) toaster.error(contest.error) else myContests.push(contest)
       case Failure(e) =>
         toaster.error("Failed to create game")
         g.console.error(s"Failed to create game ${e.getMessage}")
@@ -95,6 +95,6 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   /**
    * Listen for user profile changes
    */
-  scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => loadMyContests(profile.OID))
+  scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => init())
 
 }

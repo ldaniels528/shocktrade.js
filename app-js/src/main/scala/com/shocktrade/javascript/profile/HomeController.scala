@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
 import biz.enef.angulate._
-import biz.enef.angulate.core.Timeout
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._

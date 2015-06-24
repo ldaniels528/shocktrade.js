@@ -106,7 +106,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
           $scope.chatMessage = ""
           mySession.setMessages(messages)
         case Failure(e) =>
-          toaster.error("Failed to send message", null)
+          toaster.error("Failed to send message")
       }
     }
   }

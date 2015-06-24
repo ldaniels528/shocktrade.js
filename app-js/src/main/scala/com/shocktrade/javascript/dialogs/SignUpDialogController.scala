@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.core.Timeout
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
 import com.greencatsoft.angularjs.extensions.ModalInstance
 import com.ldaniels528.javascript.angularjs.extensions.Toaster

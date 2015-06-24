@@ -107,7 +107,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         quoteService.getRiskLevel(symbol) onComplete {
           case Success(response) => quote.riskLevel = response
           case Failure(e) =>
-            toaster.error("Error!", "Error retrieving risk level for " + symbol)
+            toaster.error(s"Error retrieving risk level for $symbol")
         }
 
         // load the trading history
@@ -123,7 +123,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
       case Failure(e) =>
         g.console.error(s"Failed to retrieve quote: ${e.getMessage}")
         $scope.stopLoading()
-        toaster.error("Error!", "Error loading quote " + symbol)
+        toaster.error(s"Error loading quote $symbol")
     }
   }
 
@@ -198,7 +198,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         // retrieve the delay in milliseconds from the server
         var delay = status.delay
         if (delay < 0) {
-          delay = Math.max(status.end - status.sysTime, 5.minutes)
+          delay = Math.max(status.end - status.sysTime, 5.minutes.toMillis.toInt)
         }
 
         // set the market status

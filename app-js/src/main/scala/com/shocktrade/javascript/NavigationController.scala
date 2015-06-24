@@ -108,7 +108,7 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
         totalInvestmentStatus = Option(LOADED)
         g.console.log("Total investment loaded")
       case Failure(e) =>
-        toaster.error("Error loading total investment", null)
+        toaster.error("Error loading total investment")
         totalInvestmentStatus = Option(FAILED)
         g.console.error("Total investment call failed")
     }

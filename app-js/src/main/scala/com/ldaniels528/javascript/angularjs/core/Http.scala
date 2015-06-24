@@ -1,13 +1,10 @@
 package com.ldaniels528.javascript.angularjs.core
 
-import scala.concurrent.Future
 import scala.language.implicitConversions
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.literal
-import scala.scalajs.js.UndefOr
 
 /**
- * Angular.js $http Service
+ * Angular.js HTTP Service ($http)
  * @author lawrence.daniels@gmail.com
  */
 trait Http extends js.Object {
@@ -46,8 +43,16 @@ trait Http extends js.Object {
 
 }
 
+/**
+ * HTTP Error
+ * @author lawrence.daniels@gmail.com
+ */
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)
 
+/**
+ * HTTP Provider
+ * @author lawrence.daniels@gmail.com
+ */
 trait HttpProvider extends js.Object {
 
   def useApplyAsync(): HttpProvider = js.native
@@ -60,6 +65,10 @@ trait HttpProvider extends js.Object {
 
 }
 
+/**
+ * HTTP Defaults
+ * @author lawrence.daniels@gmail.com
+ */
 trait HttpDefaults extends js.Object {
   var cache: js.Dynamic = js.native
   var xsrfCookieName: String = js.native
@@ -68,6 +77,10 @@ trait HttpDefaults extends js.Object {
   var withCredentials: Boolean = js.native
 }
 
+/**
+ * HTTP Response
+ * @author lawrence.daniels@gmail.com
+ */
 trait HttpResponse extends js.Object {
   def status: Int = js.native
 

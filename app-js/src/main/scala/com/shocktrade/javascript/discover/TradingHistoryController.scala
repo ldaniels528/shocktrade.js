@@ -44,7 +44,7 @@ class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("Quo
       quoteService.getTradingHistory(symbol) onComplete {
         case Success(results) => tradingHistory = results
         case Failure(e) =>
-          toaster.error("Error loading trading history for symbol '$symbol'")
+          toaster.error(s"Error loading trading history for symbol '$symbol'")
           g.console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")
       }
     }

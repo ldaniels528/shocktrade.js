@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -47,7 +47,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
     transferFundsDialog.popup() onComplete {
       case Success(contest) => mySession.setContest(contest.asInstanceOf[js.Dynamic])
       case Failure(e) =>
-        if(e.getMessage != "cancel") {
+        if (e.getMessage != "cancel") {
           e.printStackTrace()
         }
     }
@@ -59,7 +59,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
         g.console.log(s"Settings contest")
         mySession.setContest(contest)
       case Failure(e) =>
-        if(e.getMessage != "cancel") {
+        if (e.getMessage != "cancel") {
           e.printStackTrace()
         }
     }
@@ -95,7 +95,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
         case Success(loadedContest) => mySession.setContest(loadedContest)
         case Failure(e) =>
           g.console.error(s"Error loading contest $contestId")
-          toaster.error("Error loading game", null)
+          toaster.error("Error loading game")
           e.printStackTrace()
       }
     }

@@ -6,7 +6,7 @@ import scala.scalajs.js
 import scala.util.{Failure, Success, Try}
 
 /**
- * Angular Q Service
+ * Angular.js Q Service ($q)
  * @author lawrence.daniels@gmail.com
  */
 trait Q extends js.Object {
@@ -27,7 +27,7 @@ trait Defer[T] extends js.Object {
 
   def notify(value: T): Unit = js.native
 
-  def promise: Promise[T] = js.native
+  def promise: QPromise[T] = js.native
 
 }
 
@@ -40,7 +40,7 @@ object Defer {
   implicit class DeferredPromise[T](defer: Defer[T]) extends scala.concurrent.Promise[T] {
     private var completed = false
 
-    override def future: Future[T] = Promise.qPromise2Future(defer.promise)
+    override def future: Future[T] = QPromise.qPromise2Future(defer.promise)
 
     override def isCompleted: Boolean = completed
 
