@@ -1,7 +1,8 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.{HttpService, Location, Timeout}
+import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.{CancellablePromise, Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
@@ -12,8 +13,8 @@ import com.shocktrade.javascript.dialogs.SignUpDialogService
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.FacebookService
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.concurrent.duration._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -43,7 +44,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.startLoading = (timeout: js.UndefOr[Int]) => startLoading(timeout)
 
-  $scope.stopLoading = () => stopLoading()
+  $scope.stopLoading = (promise: js.UndefOr[CancellablePromise]) => stopLoading(promise)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -187,7 +188,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     }
   }
 
-  private def startLoading(timeout: js.UndefOr[Int]) = {
+  private def startLoading(timeout: js.UndefOr[Int]): CancellablePromise = {
     isLoading = true
     val _timeout = timeout getOrElse DEFAULT_TIMEOUT
 
@@ -198,14 +199,17 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     }, _timeout)
   }
 
-  private def stopLoading() = $timeout(() => isLoading = false, 500.millis)
+  private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
+    promise.foreach(_.cancel())
+    $timeout(() => isLoading = false, 500.millis)
+  }
 
   //////////////////////////////////////////////////////////////////////
   //              Tab Functions
   //////////////////////////////////////////////////////////////////////
 
   private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
-    startLoading(DEFAULT_TIMEOUT)
+   val promise = startLoading(DEFAULT_TIMEOUT)
     mySession.userProfile.OID_? foreach { userID =>
       profileService.setIsOnline(userID) onComplete {
         case Success(outcome) =>
@@ -214,10 +218,10 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
           val tab = appTabs(tabIndex)
           g.console.log(s"Changing location to ${tab.url}")
           $location.url(tab.url.as[String])
-          stopLoading()
+          stopLoading(promise)
         case Failure(e) =>
           toaster.error(e.getMessage)
-          stopLoading()
+          stopLoading(promise)
       }
     }
     true

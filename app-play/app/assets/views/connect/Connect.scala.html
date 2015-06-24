@@ -46,16 +46,15 @@
                 <div class="col-md-3">
                     <input type="checkbox" ng-model="myState" ng-click="selectAll(!myState)" style="vertical-align: top"> All
                 </div>
-                <div class="col-md-6">
-                    <span>
-                    <img ng-click="composeMessage()" src="/assets/images/buttons/new-mail24.png" title="Create new message" style="cursor: pointer"> &nbsp;
-                    <img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/trash24.png" title="Delete message(s)" style="cursor: pointer"> &nbsp;
-                    <img ng-click="deleteMessages(MySession.getUserName())" src="/assets/images/buttons/spam24.png" title="Report spam" style="cursor: pointer">  &nbsp;
-                    <img ng-click="loadMyUpdates(MySession.getUserName())" ng-src="/assets/images/{{ isLoading() ? 'status/loading24.gif' : 'buttons/refresh24.png' }}" title="Refresh message(s)" style="cursor: pointer">  &nbsp;
-                    </span>
-                </div>
-                <div class="col-md-3">
-                    <span>{{ getMyUpdates().length }} message(s)</span>
+                <div class="col-md-9">
+                    <i ng-click="composeMessage()" class="fa fa-envelope clickable pad-left-20" title="New message"></i>
+                    <i ng-click="replyToMessage()" class="fa fa-reply clickable pad-left-20" title="Reply"></i>
+                    <i ng-click="replyAll()" class="fa fa-reply-all clickable pad-left-20" title="Reply All"></i>
+                    <i ng-click="forwardMessage()" class="fa fa-mail-forward clickable pad-left-20" title="Forward"></i>
+                    <i ng-click="moveToTrash(MySession.getUserName())" class="fa fa-trash clickable pad-left-20" title="Move to trash"></i>
+                    <i ng-click="moveToSpam(MySession.getUserName())" class="fa fa-bitbucket clickable pad-left-20" title="Move to spam bin"></i>
+                    <i ng-click="loadMyUpdates(MySession.getUserName())" class="fa fa-refresh clickable pad-left-20" title="Search for new messages"></i>
+                    <span class="pull-right">{{ getMyUpdates().length }} message(s)</span>
                 </div>
             </div>
         </div>
@@ -75,15 +74,13 @@
                     <span ng-show="u.sender">{{ u.sender.name }}</span>
                     <span ng-hide="u.sender" style="color: #ff00ff">ShockTrade</span>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-9">
                     <i ng-show="u.eventType == 'ALERT'" class="fa fa-warning warning"></i>
                     <i ng-show="u.eventType == 'MAIL'" class="fa fa-envelope st_green"></i>
                     <i ng-show="u.eventType == 'CHAT'" class="fa fa-comment st_green"></i>
                     <i ng-show="u.eventType == 'INVITE'" class="fa fa-facebook-square fb_icon"></i>
                     {{ u.eventType == 'MAIL' ? u.title : u.description }}
-                </div>
-                <div class="col-md-3">
-                    {{ getDate(u.creationTime) | duration }}
+                    <span class="pull-right">{{ getDate(u.creationTime) | duration }}</span>
                 </div>
             </div>
         </div>

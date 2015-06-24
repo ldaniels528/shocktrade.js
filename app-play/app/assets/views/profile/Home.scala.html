@@ -3,7 +3,7 @@
         @assets.views.html.profile.Header()
 
         <tabset>
-            <tab>
+            <tab ng-if="MySession.isAdmin()">
                 <tab-heading><i class="fa fa-inbox"></i> Inbox</tab-heading>
                 <div class="row home_tab home_tab_container">
                 @assets.views.html.connect.Connect()

@@ -78,7 +78,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     g.console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
 
     // setup the loading animation
-    $scope.startLoading()
+   val promise = $scope.startLoading()
 
     // determine the symbol
     val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String]

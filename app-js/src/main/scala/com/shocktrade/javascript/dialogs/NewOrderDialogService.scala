@@ -1,13 +1,11 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.ScalaJsHelper._
-import biz.enef.angulate.core.{HttpPromise, HttpService}
+import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{Service, named}
 import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS, global => g}
 
 /**
  * New Order Dialog Service
@@ -31,8 +29,6 @@ class NewOrderDialogService($http: HttpService, $modal: ModalService, @named("My
     $modalInstance.result
   }
 
-  def lookupQuote: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
-    $http.get[js.Dynamic]("/api/quotes/cached/" + symbol)
-  }
+  def lookupQuote(symbol: String) = $http.get[js.Dynamic](s"/api/quotes/cached/$symbol")
 
 }
