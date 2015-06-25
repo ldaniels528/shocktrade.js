@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.core.{HttpService, Timeout}
 import biz.enef.angulate.{Scope, ScopeController, named}
-import com.greencatsoft.angularjs.extensions.ModalInstance
+import com.ldaniels528.javascript.angularjs.core.{Http, ModalInstance, Timeout}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewGameDialogController._
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * New Game Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: HttpService, $modalInstance: ModalInstance, $timeout: Timeout,
+class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout,
                               @named("ContestService") ContestService: ContestService,
                               @named("MySession") MySession: MySession,
                               @named("NewGameDialogService") newGameDialog: NewGameDialogService)
@@ -63,7 +63,7 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
   private def createGame(form: js.Dynamic) = {
     if (isValidForm(form)) {
       processing = true
-      $timeout(() => processing = false, 5000)
+      val promise = $timeout(() => processing = false, 30.seconds)
 
       // add the player info
       $scope.form.player = JS(
@@ -76,9 +76,11 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
       newGameDialog.createNewGame(form) onComplete {
         case Success(response) =>
           $modalInstance.close(response)
+          $timeout.cancel(promise)
           processing = false
         case Failure(e) =>
           g.console.error(s"Error creating New Game: ${e.getMessage} => form = ${toJson(form)}")
+          $timeout.cancel(promise)
           processing = false
       }
     }

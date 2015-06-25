@@ -1,13 +1,14 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.{ScopeController, named}
-import com.greencatsoft.angularjs.extensions.ModalInstance
+import com.ldaniels528.javascript.angularjs.core.ModalInstance
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
 import prickle.Unpickle
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -17,7 +18,7 @@ import scala.util.{Failure, Success}
  * Transfer Funds Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, toaster: Toaster,
+class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
                                     @named("MySession") mySession: MySession,
                                     @named("TransferFundsDialog") dialog: TransferFundsDialogService)
   extends ScopeController {
@@ -34,6 +35,10 @@ class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalIns
     amount = null
   )
 
+  /////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  /////////////////////////////////////////////////////////////////////
+
   $scope.init = () => {
     // TODO compute the net value of the stock in the margin account
   }
@@ -45,6 +50,10 @@ class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalIns
   $scope.accept = (form: js.Dynamic) => accept(form)
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
+
+  /////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  /////////////////////////////////////////////////////////////////////
 
   private def accept(form: js.Dynamic) {
     if (isValidated(form)) {

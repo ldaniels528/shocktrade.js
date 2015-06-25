@@ -200,7 +200,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
-    promise.foreach($timeout.cancel)
+    $timeout.cancel(promise)
     $timeout(() => isLoading = false, 500.millis)
   }
 

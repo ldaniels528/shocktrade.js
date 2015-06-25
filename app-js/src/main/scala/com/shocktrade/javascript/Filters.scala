@@ -18,7 +18,7 @@ object Filters {
    * Absolute Value
    */
   val abs: AnnotatedFunction = () => { (value: js.UndefOr[Double]) =>
-    value map { v => String.valueOf(Math.abs(v))} getOrElse ""
+    value map { v => Math.abs(v)} getOrElse value
   } :js.Function
 
   /**

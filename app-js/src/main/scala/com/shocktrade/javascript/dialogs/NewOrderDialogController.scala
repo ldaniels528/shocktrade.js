@@ -1,9 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.{ScopeController, named}
-import com.greencatsoft.angularjs.extensions.ModalInstance
-import com.ldaniels528.javascript.angularjs.core.HttpPromise._
-import com.ldaniels528.javascript.angularjs.core.Q
+import com.ldaniels528.javascript.angularjs.core.{ModalInstance, Q}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -19,7 +17,7 @@ import scala.util.{Failure, Success}
  * New Order Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, $q: Q, toaster: Toaster,
+class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $q: Q, toaster: Toaster,
                                @named("ContestService") contestService: ContestService,
                                @named("MySession") mySession: MySession,
                                @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
@@ -30,8 +28,6 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
   private val messages = emptyArray[String]
   private var processing = false
-
-  g.console.log(s"params = ${toJson(params)}")
 
   $scope.form = JS(
     emailNotify = true,
@@ -47,7 +43,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
   $scope.init = () => $scope.orderQuote($scope.form.symbol)
 
-   $scope.autoCompleteSymbols = (searchTerm: String) => {
+  $scope.autoCompleteSymbols = (searchTerm: String) => {
     val deferred = $q.defer[js.Array[js.Dynamic]]()
     quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
       case Success(response) => deferred.resolve(response)

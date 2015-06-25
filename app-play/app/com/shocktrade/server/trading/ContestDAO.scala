@@ -38,7 +38,7 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the [[LastError outcome]]
    */
-  def createContest(c: Contest)(implicit ec: ExecutionContext): Future[LastError] = mc.insert(c)
+  def createContest(c: Contest)(implicit ec: ExecutionContext) = mc.insert(c)
 
   def closeContest(c: Contest)(implicit ec: ExecutionContext) = {
     db.command(FindAndModify(
@@ -56,7 +56,7 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the [[LastError outcome]]
    */
-  def deleteContestByID(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[LastError] = {
+  def deleteContestByID(contestId: BSONObjectID)(implicit ec: ExecutionContext) = {
     mc.remove(query = BS("_id" -> contestId), firstMatchOnly = true)
   }
 

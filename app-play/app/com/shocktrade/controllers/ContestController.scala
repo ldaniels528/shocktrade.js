@@ -115,7 +115,7 @@ object ContestController extends Controller with ErrorHandler {
    * Creates a new contest
    */
   def createContest = Action.async { implicit request =>
-    Try(request.body.asJson.map(_.as[ContestCreateForm])) match {
+    Try(request.body.asJson.flatMap(_.asOpt[ContestCreateForm])) match {
       case Success(Some(form)) =>
         val outcome = for {
         // deduct the buy-in cost from the profile
@@ -127,9 +127,12 @@ object ContestController extends Controller with ErrorHandler {
         } yield (newContest, lastError)
 
         outcome map { case (newContest, lastError) =>
-          Ok(Json.toJson(newContest))
+          Ok(JS("_id" -> newContest.id))
         } recover {
-          case e: Exception => Ok(createError(e))
+          case e: Exception =>
+            e.printStackTrace()
+            Logger.error(s"${e.getMessage}: json = ${request.body.asJson.orNull}")
+            Ok(createError(e))
         }
       case Success(None) =>
         Future.successful(BadRequest("Contest form was expected as JSON body"))
@@ -139,6 +142,11 @@ object ContestController extends Controller with ErrorHandler {
     }
   }
 
+  /**
+   * Deletes a contest by ID
+   * @param contestId the given contest ID
+   * @return a contest
+   */
   def deleteContestByID(contestId: String) = Action.async {
     val outcome = for {
     // retrieve the contest

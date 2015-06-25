@@ -69,7 +69,13 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   private def newGamePopup() {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        if (isDefined(contest.error)) toaster.error(contest.error) else myContests.push(contest)
+        g.console.log(s"contest = ${toJson(contest)}")
+        if (isDefined(contest.error)) toaster.error(contest.error)
+        else {
+          // TODO add to Contests
+          init()
+        }
+
       case Failure(e) =>
         toaster.error("Failed to create game")
         g.console.error(s"Failed to create game ${e.getMessage}")

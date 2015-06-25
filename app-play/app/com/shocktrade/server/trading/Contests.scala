@@ -29,7 +29,7 @@ object Contests {
   private implicit val ec = system.dispatcher
   private val finderActor = system.actorOf(Props[ContestActor].withRouter(RoundRobinPool(nrOfInstances = 20)), name = "ContestFinder")
   private val contestActors = TrieMap[String, ActorRef]()
-  private implicit val timeout: Timeout = 5.second
+  private implicit val timeout: Timeout = 10.second
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(fields: String*)(implicit timeout: Timeout) = {
     (Contests ? CloseOrder(contestId, playerId, orderId, fields)).mapTo[Option[Contest]]
@@ -129,12 +129,12 @@ object Contests {
   def !(action: ContestSpecificAction) = contestActor(action.contestId) ! action
 
   def ?(action: ContestAgnosticAction)(implicit timeout: Timeout) = (finderActor ? action) map {
-    case e: Exception => throw new IllegalStateException(e.getMessage, e)
+    case e: Throwable => throw new IllegalStateException(e.getMessage, e)
     case response => response
   }
 
   def ?(action: ContestSpecificAction)(implicit timeout: Timeout) = (contestActor(action.contestId) ? action) map {
-    case e: Exception => throw new IllegalStateException(e.getMessage, e)
+    case e: Throwable => throw new IllegalStateException(e.getMessage, e)
     case response => response
   }
 

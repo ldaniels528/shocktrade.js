@@ -45,7 +45,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
 
   $scope.marginAccountDialog = () => {
     transferFundsDialog.popup() onComplete {
-      case Success(contest) => mySession.setContest(contest.asInstanceOf[js.Dynamic])
+      case Success(contest) => mySession.setContest(contest)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
           e.printStackTrace()

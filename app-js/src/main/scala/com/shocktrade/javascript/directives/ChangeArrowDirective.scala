@@ -20,7 +20,11 @@ object ChangeArrowDirective {
           case d: Double => d
           case _ => 0.0d
         }
-        scope.icon = if (value >= 0) "fa fa-arrow-up positive" else "fa fa-arrow-down negative"
+        scope.icon = value match {
+          case v if v > 0 => "fa fa-arrow-up positive"
+          case v if v < 0 => "fa fa-arrow-down negative"
+          case _ => "fa fa-minus null"
+        }
       })
     }
 

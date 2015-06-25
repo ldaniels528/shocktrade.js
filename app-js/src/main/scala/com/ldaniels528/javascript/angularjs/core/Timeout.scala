@@ -35,7 +35,7 @@ trait Timeout extends js.Object {
    */
   def apply(f: js.Function, delay: FiniteDuration, invokeApply: Boolean): CancellablePromise = apply(f, delay.toMillis.toInt, invokeApply)
 
-  def cancel(promise: CancellablePromise): Unit = js.native
+  def cancel(promise: js.UndefOr[CancellablePromise]): Unit = js.native
 
   def flush(delay: Int = 0): Unit = js.native
 

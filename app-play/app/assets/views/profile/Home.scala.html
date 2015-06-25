@@ -16,15 +16,9 @@
                 </div>
             </tab>
             <tab>
-                <tab-heading><i class="fa fa-heart"></i> Favorites</tab-heading>
-                <div ng-controller="FavoritesController" class="row home_tab home_tab_container">
-                    @assets.views.html.profile.MyFavorites()
-                </div>
-            </tab>
-            <tab>
-                <tab-heading><i class="fa fa-clock-o"></i> Recent Quotes</tab-heading>
-                <div ng-controller="RecentQuotesController" class="row home_tab home_tab_container">
-                @assets.views.html.profile.RecentQuotes()
+                <tab-heading><i class="fa fa-heart"></i> My Quotes</tab-heading>
+                <div ng-controller="MyQuotesController" class="row home_tab home_tab_container">
+                    @assets.views.html.profile.MyQuotes()
                 </div>
             </tab>
             <tab>

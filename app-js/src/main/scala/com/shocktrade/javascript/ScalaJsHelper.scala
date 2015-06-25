@@ -1,12 +1,10 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.angular
-import com.greencatsoft.angularjs.extensions.ModalOptions
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success, Try}
@@ -53,7 +51,7 @@ object ScalaJsHelper {
   def die[T](message: String): T = throw new IllegalStateException(message)
 
   @inline
-  def isDefined(obj: js.Dynamic) = obj != null && !js.isUndefined(obj)
+  def isDefined(obj: js.Any) = obj != null && !js.isUndefined(obj)
 
   @inline
   def isDefined(fx: js.Function) = fx != null && !js.isUndefined(fx)
@@ -140,6 +138,9 @@ object ScalaJsHelper {
 
     @inline
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
+
+    @inline
+    def isTrue = Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
 
     @inline
     def OID: String = OID_?.orNull
