@@ -233,12 +233,20 @@ object QuotesController extends Controller with MongoController with ProfileFilt
         val naicsNumber = Option(q \ "naicsNumber") flatMap (_.asOpt[Int])
         val sicDescription = sicNumber flatMap sicMap.get
         val naicsDescription = naicsNumber flatMap naicsMap.get
-        val betaDescription = getBetaDescription((q \ "beta").asOpt[Double])
+        val beta = (q \ "beta").asOpt[Double]
+        val betaDescription = getBetaDescription(beta)
+        val riskLevel = beta.map {
+          case b if b >= 0 && b <= 1.25 => "Low";
+          case b if b > 1.25 && b <= 1.9 => "Medium";
+          case _ => "High"
+        } getOrElse "Unknown"
 
         // add the values to the JSON object
         JS("betaDescription" -> betaDescription,
           "sicDescription" -> sicDescription,
           "naicsDescription" -> naicsDescription,
+          "betaDescription" -> betaDescription,
+          "riskLevel" -> riskLevel,
           "advisory" -> (advisoryTuple map (_._1)),
           "advisoryType" -> (advisoryTuple map (_._2))) ++ q ++
           (if (productQuotes.nonEmpty) JS("products" -> productQuotes) else JS())

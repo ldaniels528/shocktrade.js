@@ -103,26 +103,15 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         // add the symbol to the Recently-viewed Symbols
         mySession.addRecentSymbol(symbol)
 
-        // get the risk level
-        quoteService.getRiskLevel(symbol) onComplete {
-          case Success(response) => quote.riskLevel = response
-          case Failure(e) =>
-            toaster.error(s"Error retrieving risk level for $symbol")
-        }
-
         // load the trading history
         $scope.tradingHistory = null
         val expanders = $scope.expanders.asArray[js.Dynamic]
-        if (isDefined(expanders(6).expanded)) {
+        if (expanders(6).expanded.isTrue) {
           $scope.expandSection(expanders(6))
         }
 
-        // disabling the loading status
-        $scope.stopLoading()
-
       case Failure(e) =>
         g.console.error(s"Failed to retrieve quote: ${e.getMessage}")
-        $scope.stopLoading()
         toaster.error(s"Error loading quote $symbol")
     }
   }
