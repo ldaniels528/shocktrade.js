@@ -147,7 +147,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
 object MyQuotesController {
   private val Favorites = "Favorites"
   private val Held = "Held Securities"
-  private val Recents = "Recent"
+  private val Recents = "Recently Viewed"
 
   private val QuoteLists = js.Array(
     Favorites -> "fa-heart",
