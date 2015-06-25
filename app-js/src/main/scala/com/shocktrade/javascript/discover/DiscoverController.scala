@@ -10,8 +10,8 @@ import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.jquery.jQuery
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.concurrent.duration._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -38,10 +38,36 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   $scope.options = JS(range = $cookieStore.getOrElse("chart_range", "5d"))
   $scope.expanders = expanders
 
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Function
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => init()
+
+  $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
+
+  $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
+
+  $scope.getBetaClass = (beta: js.UndefOr[java.lang.Double]) => getBetaClass(beta)
+
+  $scope.getRiskClass = (riskLevel: js.UndefOr[String]) => getRiskClass(riskLevel)
+
+  $scope.getRiskDescription = (riskLevel: js.UndefOr[String]) => getRiskDescription(riskLevel)
+
+  $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
+
+  $scope.loadTickerQuote = (ticker: String) => loadTickerQuote(ticker)
+
+  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  ///////////////////////////////////////////////////////////////////////////
+
   /**
    * Initializes the module
    */
-  $scope.init = () => {
+  private def init() = {
     // setup market status w/updates
     $interval(() => $scope.marketClock = new js.Date().toTimeString(), 1.second)
 
@@ -49,7 +75,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     setupMarketStatusUpdates()
   }
 
-  $scope.autoCompleteSymbols = (searchTerm: String) => {
+  private def autoCompleteSymbols(searchTerm: String) = {
     val deferred = $q.defer[js.Array[js.Dynamic]]()
     quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
       case Success(response) => deferred.resolve(response)
@@ -58,27 +84,14 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     deferred.promise
   }
 
-  $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
-
-  $scope.getMatchedAssetIcon = (q: js.Dynamic) => "/assets/images/asset_types/stock.png"
-
-  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Quotes Loading
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.loadTickerQuote = (_ticker: String) => {
+  private def loadTickerQuote(_ticker: String) = {
     val stockTicker = jQuery("#stockTicker").value()
     val ticker = if (isDefined(stockTicker)) stockTicker.as[String] else _ticker
     $scope.loadQuote(ticker)
   }
 
-  $scope.loadQuote = (ticker: js.Dynamic) => {
+  private def loadQuote(ticker: js.Dynamic) = {
     g.console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
-
-    // setup the loading animation
-   val promise = $scope.startLoading()
 
     // determine the symbol
     val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String]
@@ -89,7 +102,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     }).toUpperCase
 
     // load the quote
-    quoteService.getStockQuote(symbol) onComplete {
+    withLoading($scope)(quoteService.getStockQuote(symbol)) onComplete {
       case Success(quote) =>
         // capture the quote
         $scope.q = quote
@@ -150,7 +163,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   //          Risk Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.getBetaClass = (beta: js.UndefOr[java.lang.Double]) => {
+  private def getBetaClass(beta: js.UndefOr[java.lang.Double]) = {
     beta map {
       case b if b > 1.3 || b < -1.3 => "volatile_red"
       case b if b >= 0.0 => "volatile_green"
@@ -159,12 +172,12 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     } getOrElse ""
   }
 
-  $scope.getRiskClass = (riskLevel: js.UndefOr[String]) => riskLevel map {
+  private def getRiskClass(riskLevel: js.UndefOr[String]) = riskLevel map {
     case rs if rs != null && rs.nonBlank => s"risk_${rs.toLowerCase}"
     case _ => null
   }
 
-  $scope.getRiskDescription = (riskLevel: js.UndefOr[String]) => {
+  private def getRiskDescription(riskLevel: js.UndefOr[String]) = {
     riskLevel map {
       case "Low" => "Generally recommended for investment"
       case "Medium" => "Not recommended for inexperienced investors"
@@ -212,11 +225,11 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   // load the symbol
   if (!isDefined($scope.q.symbol)) {
     // get the symbol
-    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String]
+    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol
     else $cookieStore.getOrElse("QuoteService_lastSymbol", mySession.getMostRecentSymbol())
 
     // load the symbol
-    $scope.loadQuote(symbol)
+    loadQuote(symbol)
   }
 
   ///////////////////////////////////////////////////////////////////////////

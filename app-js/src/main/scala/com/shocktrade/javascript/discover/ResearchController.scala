@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate._
-import biz.enef.angulate.core.{HttpService, Timeout}
+import biz.enef.angulate.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -15,7 +15,8 @@ import scala.util.{Failure, Success}
  * Research Controller
  * @author lawrence.daniels@gmail.com
  */
-class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: HttpService, $timeout: Timeout, toaster: Toaster)
+class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout: Timeout, toaster: Toaster,
+                         @named("ResearchService") researchService: ResearchService)
   extends ScopeController {
 
   // search reference data components
@@ -112,8 +113,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $http: H
 
     // execute the search
     startLoading()
-    g.console.log(s"searchOptions = ${angular.toJson(searchOptions, pretty = false)}")
-    $http.post[js.Array[js.Dynamic]]("/api/research/search", searchOptions) onComplete {
+    researchService.search(searchOptions) onComplete {
       case Success(results) =>
         val exchanges = js.Dictionary[Int]()
         results.foreach { q =>

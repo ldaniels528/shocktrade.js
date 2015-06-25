@@ -40,6 +40,15 @@ object ScalaJsHelper {
     case Failure(f) => Future.failed(f)
   }
 
+  def withLoading[T]($scope: js.Dynamic)(task: => Future[T]): Future[T] = {
+    val promise = $scope.startLoading()
+    task onComplete {
+      case Success(_) => $scope.stopLoading(promise)
+      case Failure(_) => $scope.stopLoading(promise)
+    }
+    task
+  }
+
   @inline
   def toJson(json: js.Any, pretty: Boolean = false) = angular.toJson(json, pretty)
 
@@ -76,16 +85,6 @@ object ScalaJsHelper {
   ////////////////////////////////////////////////////////////////////////
   //    Implicit Definitions and Classes
   ////////////////////////////////////////////////////////////////////////
-
-  object Implicits {
-
-    object Risky {
-
-      implicit def valueToOption[T](value: T): Option[T] = Option(value)
-
-    }
-
-  }
 
   /**
    * Convenience method for transforming Scala Sequences into js.Arrays

@@ -58,7 +58,6 @@ class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Tim
   ///////////////////////////////////////////////////////////////////////////
 
   private def init() {
-    g.console.log(s"NavigationController init is running...")
     mySession.userProfile.OID_? match {
       case Some(userID) =>
         g.console.log(s"Loading player information for user ID $userID")

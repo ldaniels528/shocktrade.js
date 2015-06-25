@@ -49,7 +49,7 @@
             <span ng-show="q.change52WeekSNP500 == null" class="null">&#8212;</span>
             <span ng-show="q.change52WeekSNP500 != null"
                  ng-class="q.change52WeekSNP500 < 0 ? 'negative' : ''">{{ q.change52WeekSNP500 | number:2 }}%</span>
-            <changeArrow ng-show="q.change52WeekSNP500 != null" value="{{ q.change52WeekSNP500 }}" />
+            <changeArrow ng-show="q.change52WeekSNP500 != null" value="{{ q.change52WeekSNP500 }}"></changeArrow>
         </span>
     </div>
 </div>
@@ -59,23 +59,14 @@
         <span class="qm_header">Beta</span>
         <span class="qm_detail pull-right">
             <span ng-show="q.beta" ng-class="getBetaClass(q.beta) + ' clickable'">
-                <span popover="{{q.betaDescription}}"
-                    popover-placement="right"
-                    popover-trigger="mouseenter">{{ q.beta | number:2 }}</span>
+                <span>{{ q.beta | number:2 }}</span>
             </span>
         </span>
     </div>
-	
-	<div class="col-md-4">&nbsp;</div>
-	
-	<div class="col-md-4">
-        <span class="qm_header">Risk Level</span>
-        <span class="qm_detail pull-right">
-            <span ng-class="getRiskClass(q.riskLevel)"
-                style="padding-right: 20px"
-                popover="{{ getRiskDescription(q.riskLevel) }}"
-                popover-placement="right"
-                popover-trigger="mouseenter">{{ q.riskLevel }}</span>
-        </span>
+
+    <div class="col-md-8">
+        <span class="qm_header">Risk:</span>
+        <span ng-class="getRiskClass(q.riskLevel)">{{ q.riskLevel }}</span> &#8212;
+        <span ng-class="getRiskClass(q.riskLevel)">{{ q.betaDescription }}</span>
     </div>
 </div>	

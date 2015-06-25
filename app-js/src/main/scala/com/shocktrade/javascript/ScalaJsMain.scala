@@ -64,6 +64,7 @@ object ScalaJsMain extends js.JSApp {
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[ProfileService]("ProfileService")
     module.serviceOf[QuoteService]("QuoteService")
+    module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[WebSocketService]("WebSocketService")
   }
 

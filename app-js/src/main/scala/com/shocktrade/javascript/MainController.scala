@@ -32,7 +32,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
                      @named("SignUpDialog") signUpDialog: SignUpDialogService)
   extends ScopeController {
 
-  private var isLoading = false
+  private var loadingIndex = 0
   private var nonMember = true
   private val onlinePlayers = js.Dictionary[js.Dynamic]()
 
@@ -40,7 +40,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //          Loading Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isLoading = () => isLoading
+  $scope.isLoading = () => loadingIndex > 0
 
   $scope.startLoading = (timeout: js.UndefOr[Int]) => startLoading(timeout)
 
@@ -74,7 +74,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   $scope.getTabIndex = () => determineTableIndex
 
-  $scope.isVisible = (tab: js.Dynamic) => !isLoading && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated()))
+  $scope.isVisible = (tab: js.Dynamic) => (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated()))
 
   $scope.login = () => login()
 
@@ -134,6 +134,8 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
     facebook.login() onComplete {
       case Success(response) =>
         nonMember = true
+
+        // load the profile
         postLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
@@ -189,19 +191,19 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   }
 
   private def startLoading(timeout: js.UndefOr[Int]): CancellablePromise = {
-    isLoading = true
+    loadingIndex += 1
     val _timeout = timeout getOrElse DEFAULT_TIMEOUT
 
     // set loading timeout
     $timeout(() => {
       g.console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
-      isLoading = false
+      loadingIndex = 0
     }, _timeout)
   }
 
   private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
     $timeout.cancel(promise)
-    $timeout(() => isLoading = false, 500.millis)
+    $timeout(() => if(loadingIndex > 0) loadingIndex -= 1, 500.millis)
   }
 
   //////////////////////////////////////////////////////////////////////

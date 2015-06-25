@@ -14,7 +14,6 @@ GET           /assets/views/dashboard/orders_closed.htm             com.shocktra
 GET           /assets/views/dashboard/performance.htm               com.shocktrade.controllers.Application.performanceView()
 GET           /assets/views/dashboard/positions.htm                 com.shocktrade.controllers.Application.positionsView()
 GET           /assets/views/discover/discover.htm                   com.shocktrade.controllers.Application.discoverView()
-GET           /assets/views/discover/favorites.htm                  com.shocktrade.controllers.Application.favoritesView()
 GET           /assets/views/explore/drill_down.htm                  com.shocktrade.controllers.Application.exploreView()
 GET           /assets/views/news/news_center.htm                    com.shocktrade.controllers.Application.newsCenterView()
 GET           /assets/views/play/search.htm                         com.shocktrade.controllers.Application.searchView()

@@ -90,15 +90,15 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   $scope.contestSearch = (searchOptions: js.Dynamic) => contestSearch(searchOptions)
 
   def contestSearch(searchOptions: js.Dynamic) = {
-    $scope.startLoading()
+    val promise = $scope.startLoading()
     g.console.log(s"searchOptions = ${JSON.stringify(searchOptions)}")
     contestService.findContests(searchOptions) onComplete {
       case Success(contests) =>
         searchResults = contests
-        $scope.stopLoading()
+        $scope.stopLoading(promise)
       case Failure(e) =>
         toaster.error("Error!", "Failed to execute Contest Search")
-        $scope.stopLoading()
+        $scope.stopLoading(promise)
     }
   }
 
