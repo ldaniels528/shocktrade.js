@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.core.{HttpPromise, HttpService}
-import biz.enef.angulate.ext.{ModalOptions, ModalService}
 import biz.enef.angulate.{Service, named}
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
@@ -15,27 +14,26 @@ import scala.scalajs.js
  * Perks Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class PerksDialogService($http: HttpService, $modal: ModalService, @named("MySession") mySession: MySession)
+class PerksDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession)
   extends Service {
 
   /**
    * Perks Modal Dialog
    */
   def popup()(implicit ec: ExecutionContext) = {
-    val options = ModalOptions()
-    options.templateUrl = "perks_dialog.htm"
-    options.controller = classOf[PerksDialogController].getSimpleName
-
     // create an instance of the dialog
-    val $modalInstance = $modal.open(options)
-    $modalInstance.result.map(_.asInstanceOf[js.Dynamic])
+    val $modalInstance = $modal.open[js.Dynamic](ModalOptions(
+      templateUrl = "perks_dialog.htm",
+      controller = classOf[PerksDialogController].getSimpleName
+    ))
+    $modalInstance.result
   }
 
   /**
    * Retrieves the promise of a sequence of perks
    * @return the promise of a sequence of [[Perk perks]]
    */
-  def getPerks(contestId: String): HttpPromise[js.Array[js.Dynamic]] = {
+  def getPerks(contestId: String) = {
     required("contestId", contestId)
 
     $http.get[js.Array[js.Dynamic]](s"/api/contest/$contestId/perks")
@@ -45,7 +43,7 @@ class PerksDialogService($http: HttpService, $modal: ModalService, @named("MySes
    * Retrieves the promise of an option of a perks response
    * @return the promise of an option of a [[PerksResponse perks response]]
    */
-  def getMyPerks: js.Function2[String, String, HttpPromise[PerksResponse]] = (contestId: String, playerId: String) => {
+  def getMyPerks(contestId: String, playerId: String)(implicit ec: ExecutionContext) = {
     required("contestId", contestId)
     required("userId", playerId)
 
@@ -60,7 +58,7 @@ class PerksDialogService($http: HttpService, $modal: ModalService, @named("MySes
    * @param perkCodes the given perk codes to purchase
    * @return {*}
    */
-  def purchasePerks(contestId: String, playerId: String, perkCodes: js.Array[String]): HttpPromise[js.Dynamic] = {
+  def purchasePerks(contestId: String, playerId: String, perkCodes: js.Array[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     required("perkCodes", perkCodes)

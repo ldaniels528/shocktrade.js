@@ -3,6 +3,7 @@ package com.shocktrade.javascript.discover
 import biz.enef.angulate.Service
 import com.ldaniels528.javascript.angularjs.core.Http
 
+import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 
 /**
@@ -11,6 +12,8 @@ import scala.scalajs.js
  */
 class ResearchService($http: Http) extends Service {
 
-  def search(searchOptions: js.Dynamic) = $http.post[js.Array[js.Dynamic]]("/api/research/search", searchOptions)
+  def search(searchOptions: js.Dynamic)(implicit ec: ExecutionContext) = {
+    $http.post[js.Array[js.Dynamic]]("/api/research/search", searchOptions)
+  }
 
 }

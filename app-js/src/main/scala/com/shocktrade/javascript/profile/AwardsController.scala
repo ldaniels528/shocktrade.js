@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.profile
 
-import com.shocktrade.javascript.AppEvents._
-import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{Scope, ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.Http
 import com.shocktrade.core.Award
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.profile.AwardsController._
@@ -15,7 +15,7 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
  * Awards Controller
  * @author lawrence.daniels@gmail.com
  */
-class AwardsController($scope: js.Dynamic, $http: HttpService, @named("MySession") mySession: MySession) extends ScopeController {
+class AwardsController($scope: js.Dynamic, $http: Http, @named("MySession") mySession: MySession) extends ScopeController {
   private val scope = $scope.asInstanceOf[Scope]
 
   ///////////////////////////////////////////////////////////////////////////
@@ -70,9 +70,9 @@ object AwardsController {
   // define all available awards
   private val AvailableAwards = js.Array[js.Dynamic](
     Award.availableAwards
-      .map (a => JS(name = a.name, code = a.code.toString, icon = a.icon, description = a.description)): _*)
-      .sortBy(_.owned.as[Boolean])
-      .reverse
+      .map(a => JS(name = a.name, code = a.code.toString, icon = a.icon, description = a.description)): _*)
+    .sortBy(_.owned.isTrue)
+    .reverse
 
   private val AwardsByCode = js.Dictionary[js.Dynamic](
     AvailableAwards map { award => (award.code.as[String], award) }: _*

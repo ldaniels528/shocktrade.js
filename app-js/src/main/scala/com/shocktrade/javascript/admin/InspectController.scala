@@ -1,14 +1,14 @@
 package com.shocktrade.javascript.admin
 
-import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.Http
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * Inspect Controller
  * @author lawrence.daniels@gmail.com
  */
-class InspectController($scope: js.Dynamic, $http: HttpService, $routeParams: js.Dynamic, toaster: Toaster,
+class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynamic, toaster: Toaster,
                         @named("ContestService") contestService: ContestService,
                         @named("MySession") mySession: MySession) extends ScopeController {
 

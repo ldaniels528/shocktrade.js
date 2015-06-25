@@ -1,8 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{CancellablePromise, Location, Timeout}
+import com.ldaniels528.javascript.angularjs.core.{CancellablePromise, Http, Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
@@ -24,7 +23,7 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author lawrence.daniels@gmail.com
  */
-class MainController($scope: js.Dynamic, $http: HttpService, $location: Location, $timeout: Timeout, toaster: Toaster,
+class MainController($scope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @named("ContestService") contestService: ContestService,
                      @named("Facebook") facebook: FacebookService,
                      @named("MySession") mySession: MySession,
@@ -102,7 +101,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
         }
       }
       val state = onlinePlayers(playerID)
-      isDefined(state) && isDefined(state.connected) && state.connected.as[Boolean]
+      isDefined(state) && isDefined(state.connected) && state.connected.isTrue
     }
   }
 
@@ -203,7 +202,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
 
   private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
     $timeout.cancel(promise)
-    $timeout(() => if(loadingIndex > 0) loadingIndex -= 1, 500.millis)
+    $timeout(() => if (loadingIndex > 0) loadingIndex -= 1, 500.millis)
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -211,7 +210,7 @@ class MainController($scope: js.Dynamic, $http: HttpService, $location: Location
   //////////////////////////////////////////////////////////////////////
 
   private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
-   val promise = startLoading(DEFAULT_TIMEOUT)
+    val promise = startLoading(DEFAULT_TIMEOUT)
     mySession.userProfile.OID_? foreach { userID =>
       profileService.setIsOnline(userID) onComplete {
         case Success(outcome) =>

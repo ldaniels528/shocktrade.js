@@ -1,31 +1,28 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{Service, named}
-import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
 import com.shocktrade.javascript.MySession
 
+import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 
 /**
  * New Order Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewOrderDialogService($http: HttpService, $modal: ModalService, @named("MySession") mySession: MySession) extends Service {
+class NewOrderDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession) extends Service {
 
   /**
    * Opens a new Order Entry Pop-up Dialog
    */
-  def popup(params: js.Dynamic) = {
-    val options = ModalOptions()
-    options.templateUrl = "new_order_dialog.htm"
-    options.controller = classOf[NewOrderDialogController].getSimpleName
-
-    // params: the given input parameters (e.g. { symbol: *, quantity: * })
-    options.resolve = js.Dictionary("params" -> (() => params))
-
+  def popup(params: js.Dynamic)(implicit ec: ExecutionContext) = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open(options)
+    val $modalInstance = $modal.open(ModalOptions(
+      templateUrl = "new_order_dialog.htm",
+      controller = classOf[NewOrderDialogController].getSimpleName,
+      resolve = js.Dictionary("params" -> (() => params))
+    ))
     $modalInstance.result
   }
 

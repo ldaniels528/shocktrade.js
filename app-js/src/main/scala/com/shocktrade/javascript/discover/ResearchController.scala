@@ -7,6 +7,7 @@ import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.discover.ResearchController._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}

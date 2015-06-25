@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.Timeout
+import com.ldaniels528.javascript.angularjs.core.{Http, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -18,7 +17,7 @@ import scala.util.{Failure, Success}
  * Exposure Controller
  * @author lawrence.daniels@gmail.com
  */
-class ExposureController($scope: js.Dynamic, $http: HttpService, $timeout: Timeout, toaster: Toaster,
+class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
                          @named("ContestService") contestService: ContestService,
                          @named("MySession") mySession: MySession)
   extends ScopeController {

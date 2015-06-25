@@ -31,9 +31,9 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
-  
+
   $scope.chooseContact = (friend: js.Dynamic) => chooseContact(friend)
-  
+
   $scope.chooseFirstContact = () => mySession.fbFriends.headOption foreach ($scope chooseContact _)
 
   $scope.composeMessage = () => composeMessage()
@@ -63,13 +63,13 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    * Selects a specific message
    */
   $scope.selectUpdate = (entry: js.Dynamic) => myUpdate = entry
-  
+
   $scope.getUserInfo = (fbUserId: String) => getUserInfo(fbUserId)
 
   $scope.identifyFacebookFriends = (fbFriends: js.Array[js.Dynamic]) => identifyFacebookFriends(fbFriends)
 
   $scope.getContactList = (searchTerm: js.UndefOr[String]) => getContactList(searchTerm)
-  
+
   $scope.loadMyUpdates = (userName: String) => loadMyUpdates(userName)
 
   /**
@@ -89,18 +89,15 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
     contact = friend
     $scope.getUserInfo(friend.id)
   }
-  
+
   /**
    * Retrieve a limited set of user profile information for a specific contact/friend
    */
   private def getUserInfo(fbUserId: String) = {
-    $scope.startLoading()
-    connectService.getUserInfo(fbUserId) onComplete {
+    withLoading($scope)(connectService.getUserInfo(fbUserId)) onComplete {
       case Success(profile) =>
-        $scope.stopLoading()
         contact.profile = profile
       case Failure(e) =>
-        $scope.stopLoading()
         g.console.log(s"Failed to retrieve profile for contact ${contact.name}")
         toaster.error(s"Failed to retrieve the user profile for contact ${contact.name}")
     }
@@ -157,14 +154,14 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
     }
   }
 
-    /**
+  /**
    * Deletes selected messages
    */
   private def deleteMessages(userName: String) {
     $scope.startLoading()
 
     // gather the records to delete
-    val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.as[Boolean]).map(_.OID)
+    val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).map(_.OID)
 
     // delete the records
     g.console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")

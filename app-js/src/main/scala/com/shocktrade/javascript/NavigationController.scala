@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.{HttpService, Timeout}
 import biz.enef.angulate.{Scope, ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.{Timeout, Http}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * Player Information Bar Controller
  * @author lawrence.daniels@gmail.com
  */
-class NavigationController($scope: js.Dynamic, $http: HttpService, $timeout: Timeout, toaster: Toaster,
+class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
                            @named("ContestService") contestService: ContestService,
                            @named("MySession") mySession: MySession,
                            @named("WebSocketService") webSocket: WebSocketService)

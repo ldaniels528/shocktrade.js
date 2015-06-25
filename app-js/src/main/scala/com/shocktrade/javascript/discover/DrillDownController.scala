@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.{HttpService, Location, Timeout}
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
-import scala.scalajs.js
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * Explore: Drill-Down Controller
  * @author lawrence.daniels@gmail.com
  */
-class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: CookieStore, $http: HttpService,
+class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: CookieStore,
                           $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                           @named("QuoteService") quoteService: QuoteService) extends ScopeController {
   // define the callback signatures
@@ -52,7 +52,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
   /////////////////////////////////////////////////////////////////////
 
   private def expandOrCollapseSector(sector: js.Dynamic, callback: SectorCallBackType) {
-    if (!isDefined(sector.expanded) && !sector.expanded.as[Boolean]) {
+    if (!isDefined(sector.expanded) && !sector.expanded.isTrue) {
       sector.loading = true
       quoteService.loadIndustries(sector.label.as[String]) onComplete {
         case Success(data) =>
@@ -68,7 +68,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
 
   private def expandOrCollapseIndustry(sector: js.Dynamic, industry: js.Dynamic, callback: IndustryCallBackType) {
     if (isDefined(industry)) {
-      if (!isDefined(industry.expanded) || !industry.expanded.as[Boolean]) {
+      if (!isDefined(industry.expanded) || !industry.expanded.isTrue) {
         industry.loading = true
         quoteService.loadSubIndustries(sector.label.as[String], industry.label.as[String]) onComplete {
           case Success(data) =>
@@ -85,7 +85,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
 
   private def expandOrCollapseSubIndustry(sector: js.Dynamic, industry: js.Dynamic, subIndustry: js.Dynamic, callback: SubIndustryCallBackType) {
     if (isDefined(subIndustry)) {
-      if (!isDefined(subIndustry.expanded) || !subIndustry.expanded.as[Boolean]) {
+      if (!isDefined(subIndustry.expanded) || !subIndustry.expanded.isTrue) {
         subIndustry.loading = true
         val mySubIndustry = if (isDefined(subIndustry)) subIndustry.label.as[String] else null
         quoteService.loadIndustryQuotes(sector.label.as[String], industry.label.as[String], mySubIndustry) onComplete {

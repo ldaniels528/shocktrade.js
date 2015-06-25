@@ -7,6 +7,7 @@ import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}

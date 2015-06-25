@@ -1,12 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.ext.ModalInstance
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.ModalInstance
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
@@ -16,7 +17,7 @@ import scala.util.{Failure, Success}
  * Perks Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, toaster: Toaster,
+class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
                             @named("MySession") mySession: MySession,
                             @named("PerksDialog") dialog: PerksDialogService)
   extends ScopeController {
@@ -28,7 +29,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, t
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  $scope.countOwnedPerks = () => perks.count(_.owned.as[Boolean])
+  $scope.countOwnedPerks = () => perks.count(_.owned.isTrue)
 
   $scope.getPerks = () => perks
 
@@ -36,7 +37,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, t
 
   $scope.hasSufficientFunds = () => getSelectedPerksCost <= mySession.getFundsAvailable()
 
-  $scope.perksSelected = () => perks.exists(p => p.selected.as[Boolean] && !p.owned.as[Boolean])
+  $scope.perksSelected = () => perks.exists(p => p.selected.isTrue && !p.owned.isTrue)
 
   $scope.purchasePerks = () => purchasePerks()
 
@@ -70,7 +71,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, t
 
   private def getSelectedPerkCodes = getSelectedPerks map (_.code.as[String])
 
-  private def getSelectedPerks = perks.filter(perk => perk.selected.as[Boolean] && !perk.owned.as[Boolean])
+  private def getSelectedPerks = perks.filter(perk => perk.selected.isTrue && !perk.owned.isTrue)
 
   private def getSelectedPerksCost = getSelectedPerks map (_.cost.as[Double]) sum
 

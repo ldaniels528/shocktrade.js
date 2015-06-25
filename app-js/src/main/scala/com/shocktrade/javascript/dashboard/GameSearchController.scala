@@ -200,7 +200,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   $scope.isJoinable = { (contest: js.Dynamic) =>
     mySession.isAuthenticated() && isDefined(contest) &&
-      (!isDefined(contest.invitationOnly) || !contest.invitationOnly.as[Boolean]) &&
+      (!isDefined(contest.invitationOnly) || !contest.invitationOnly.isTrue) &&
       !isContestOwner(contest) && !isParticipant(contest)
   }
 

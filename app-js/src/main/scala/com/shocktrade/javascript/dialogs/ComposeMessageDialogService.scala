@@ -1,26 +1,25 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.Service
-import biz.enef.angulate.core.HttpService
-import biz.enef.angulate.ext.{ModalOptions, ModalService}
-import com.ldaniels528.javascript.angularjs.core.Q
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions, Q}
+
+import scala.scalajs.js
 
 /**
  * Compose Message Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class ComposeMessageDialogService($http: HttpService, $modal: ModalService, $q: Q) extends Service {
+class ComposeMessageDialogService($http: Http, $modal: Modal, $q: Q) extends Service {
 
   /**
    * Popups the Compose Message Dialog
    */
   def popup() = {
     // create an instance of the dialog
-    val options = ModalOptions()
-    options.templateUrl = "compose_message.htm"
-    options.controller = classOf[ComposeMessageDialogController].getSimpleName
-
-    val $modalInstance = $modal.open(options)
+    val $modalInstance = $modal.open[js.Dynamic](ModalOptions(
+      templateUrl = "compose_message.htm",
+      controller = classOf[ComposeMessageDialogController].getSimpleName
+    ))
     $modalInstance.result
   }
 

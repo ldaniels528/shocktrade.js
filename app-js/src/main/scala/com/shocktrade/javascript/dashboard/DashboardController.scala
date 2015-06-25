@@ -69,7 +69,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   //          Participant Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.isRankingsShown = () => !mySession.contest.exists(_.rankingsHidden.as[Boolean])
+  $scope.isRankingsShown = () => !mySession.contest.exists(_.rankingsHidden.isTrue)
 
   $scope.toggleRankingsShown = () => mySession.contest.foreach(c => c.rankingsHidden = !c.rankingsHidden)
 

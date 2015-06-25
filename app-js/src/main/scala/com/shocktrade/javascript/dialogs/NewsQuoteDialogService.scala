@@ -1,30 +1,26 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.Service
-import biz.enef.angulate.core.HttpService
-import com.greencatsoft.angularjs.core.Promise
-import com.greencatsoft.angularjs.extensions.{ModalOptions, ModalService}
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * News Quote Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewsQuoteDialogService($http: HttpService, $modal: ModalService) extends Service {
+class NewsQuoteDialogService($http: Http, $modal: Modal) extends Service {
 
   /**
    * Popups the News Quote Dialog
    */
-  def popup: js.Function1[String, Promise] = (symbol: String) => {
-    val options = ModalOptions()
-    options.templateUrl = "news_quote_dialog.htm"
-    options.controller = classOf[NewsQuoteDialogController].getSimpleName
-    options.resolve = js.Dictionary("symbol" -> (() => symbol))
-
+  def popup(symbol: String) = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open(options)
+    val $modalInstance = $modal.open(ModalOptions(
+      templateUrl = "news_quote_dialog.htm",
+      controller = classOf[NewsQuoteDialogController].getSimpleName,
+      resolve = js.Dictionary("symbol" -> (() => symbol))
+    ))
     $modalInstance.result
   }
 

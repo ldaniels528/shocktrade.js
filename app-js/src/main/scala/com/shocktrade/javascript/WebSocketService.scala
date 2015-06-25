@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.core.{HttpService, Location, Timeout}
 import biz.enef.angulate.{Service, named}
+import com.ldaniels528.javascript.angularjs.core.{Http, Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
@@ -17,7 +17,7 @@ import scala.scalajs.js.annotation.JSExportAll
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @JSExportAll
-class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Location, $timeout: Timeout, toaster: Toaster,
+class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                        @named("MySession") mySession: MySession) extends Service {
   private var socket: WebSocket = null
   private var connected = false
@@ -84,7 +84,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: HttpService, $location: Lo
         else $http.delete(s"/api/online/$userID")
       case None =>
         g.console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
-        if(attemptsLeft > 0) {
+        if (attemptsLeft > 0) {
           $timeout(() => sendState(connected), 5000)
           attemptsLeft -= 1
         }

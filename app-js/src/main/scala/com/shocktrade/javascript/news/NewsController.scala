@@ -4,6 +4,7 @@ import biz.enef.angulate.{ScopeController, named}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
