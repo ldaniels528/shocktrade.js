@@ -2,7 +2,7 @@
 <div class="container">
 
     <!-- Tree -->
-    <div class="col-md-7">
+    <div class="col-md-7" style="border-right: 1px solid #888888">
         <div ng-repeat="(name, list) in getQuoteSets()">
             <a ng-click="expandList(name)">
                 <i class="fa st_control" ng-class="list.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="col-md-5" style="border-left: 1px solid #888888">
+    <div class="col-md-5">
         <div ng-if="selectedQuote">
             <div class="col-md-12">
                 <div class="col-md-5 bold">Name</div>

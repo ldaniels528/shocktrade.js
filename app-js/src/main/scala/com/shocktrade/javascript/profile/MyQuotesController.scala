@@ -84,12 +84,11 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
 
   private def loadQuotes(name: String, symbols: js.Array[String], obj: js.Dynamic) {
     if (symbols.nonEmpty) {
-      g.console.log(s"Loading $name: ${symbols.toSeq}...")
       quoteService.getStockQuoteList(symbols) onComplete {
         case Success(updatedQuotes) => obj.quotes = updatedQuotes
         case Failure(e) =>
-          toaster.error(s"Failed to load quote: ${e.getMessage}")
-          g.console.error(s"Failed to load quote: ${e.getMessage}")
+          toaster.error(s"Failed to load $name")
+          g.console.error(s"Failed to load $name: ${e.getMessage}")
       }
     }
   }
@@ -103,11 +102,10 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
 
       outcome onComplete {
         case Success(updatedQuotes) =>
-          g.console.log(s"updatedQuotes = ${toJson(updatedQuotes)}")
           obj.quotes = updatedQuotes
         case Failure(e) =>
-          toaster.error(s"Failed to load quote: ${e.getMessage}")
-          g.console.error(s"Failed to load quote: ${e.getMessage}")
+          toaster.error("Failed to load Held Securities")
+          g.console.error(s"Failed to load Held Securities: ${e.getMessage}")
       }
     }
   }
@@ -148,13 +146,13 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
  */
 object MyQuotesController {
   private val Favorites = "Favorites"
-  private val Recents = "Recents"
   private val Held = "Held Securities"
+  private val Recents = "Recent"
 
   private val QuoteLists = js.Array(
     Favorites -> "fa-heart",
-    Recents -> "fa-history",
-    Held -> "fa-star"
+    Held -> "fa-star",
+    Recents -> "fa-history"
   )
 
 }
