@@ -9,15 +9,15 @@
                 @assets.views.html.connect.Connect()
                 </div>
             </tab>
-            <tab>
-                <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
-                <div ng-controller="MyGamesController" ng-init="initMyGames()" class="row home_tab home_tab_container">
+            <tab ng-controller="MyGamesController" ng-init="initMyGames()">
+                <tab-heading><i class="fa fa-gamepad"></i> My Games ({{ getMyContests().length || 0 }})</tab-heading>
+                <div class="row home_tab home_tab_container">
                     @assets.views.html.search.MyContests(includeExpiry = true)
                 </div>
             </tab>
-            <tab>
+            <tab ng-controller="MyQuotesController">
                 <tab-heading><i class="fa fa-heart"></i> My Quotes</tab-heading>
-                <div ng-controller="MyQuotesController" class="row home_tab home_tab_container">
+                <div class="row home_tab home_tab_container">
                     @assets.views.html.profile.MyQuotes()
                 </div>
             </tab>
