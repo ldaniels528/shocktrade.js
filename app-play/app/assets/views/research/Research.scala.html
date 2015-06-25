@@ -17,76 +17,68 @@
                 </div>
 
                 <!-- Share Price -->
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <div class="col-md-4 rs_label">Share Price</div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="priceMin">Min</label>
+                    <div class="col-md-4">
                         <select id="priceMin" class="form-control" ng-model="searchOptions.priceMin" ng-options="'$' + p for p in priceRanges">
-                            <option value="">ANY</option>
+                            <option value="">No Minimum</option>
                         </select>
                     </div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="priceMax">Max</label>
+                    <div class="col-md-4">
                         <select id="priceMax" class="form-control" ng-model="searchOptions.priceMax" ng-options="'$' + p for p in priceRanges.slice(1, priceRanges.length)">
-                            <option value="">ANY</option>
+                            <option value="">No Maximum</option>
                         </select>
                     </div>
                 </div>
 
                 <!-- Volume -->
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <div class="col-md-4 rs_label">Volume</div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="volumeMin">Min</label>
+                    <div class="col-md-4">
                         <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v.toLocaleString() for v in volumeRanges">
-                            <option value="">ANY</option>
+                            <option value="">No Minimum</option>
                         </select>
                     </div>
-                    <div class="col-md-4 form-group-sm ">
-                        <label for="volumeMax">Max</label>
+                    <div class="col-md-4">
                         <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v.toLocaleString() for v in volumeRanges.slice(1, volumeRanges.length)">
-                            <option value="">ANY</option>
+                            <option value="">No Maximum</option>
                         </select>
                     </div>
                 </div>
 
                 <!-- Change (%) -->
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <div class="col-md-4 rs_label">Change (%)</div>
-                    <div class="col-md-4 form-group-sm ">
-                        <label for="changeMin">Min</label>
+                    <div class="col-md-4">
                         <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in changePercentages">
-                            <option value="">ANY</option>
+                            <option value="">No Minimum</option>
                         </select>
                     </div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="changeMax">Max</label>
+                    <div class="col-md-4">
                         <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in changePercentages">
-                            <option value="">ANY</option>
+                            <option value="">No Maximum</option>
                         </select>
                     </div>
                 </div>
 
                 <!-- Spread -->
-                <div class="col-md-6">
+                <div class="col-md-6 form-group">
                     <div class="col-md-4 rs_label">Spread (%)</div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="spreadMin">Min</label>
+                    <div class="col-md-4">
                         <select id="spreadMin" class="form-control" ng-model="searchOptions.spreadMin" ng-options="p + '%' for p in percentages">
-                            <option value="">ANY</option>
+                            <option value="">No Minimum</option>
                         </select>
                     </div>
-                    <div class="col-md-4 form-group-sm">
-                        <label for="spreadMax">Max</label>
+                    <div class="col-md-4">
                         <select id="spreadMax" class="form-control" ng-model="searchOptions.spreadMax" ng-options="p + '%' for p in percentages">
-                            <option value="">ANY</option>
+                            <option value="">No Maximum</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="col-md-6" style="margin-top: 5px">
+                <div class="col-md-6 form-group">
                     <div class="col-md-4 rs_label">Max Results</div>
-                    <div class="col-md-4 form-group-sm">
+                    <div class="col-md-4">
                         <select id="maxResults" class="form-control"
                                 ng-model="searchOptions.maxResults"
                                 ng-options="r for r in maxResultsSet">
