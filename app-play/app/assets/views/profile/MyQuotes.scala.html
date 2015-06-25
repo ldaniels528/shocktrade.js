@@ -9,7 +9,12 @@
                 <i class="fa" ng-class="list.icon"></i> {{ name }}
             </a>
             <div ng-if="list.expanded">
-                <div class="col-md-12 notice" ng-hide="list.quotes.length">
+                <div class="col-md-12 notice" ng-show="list.quotes === null">
+                    <div class="col-md-12">
+                        <img src="/assets/images/status/loading16.gif"> Loading ...
+                    </div>
+                </div>
+                <div class="col-md-12 notice" ng-show="list.quotes.length === 0">
                     <div class="col-md-12">
                         <i class="fa fa-warning st_orange"></i> No records found
                     </div>
