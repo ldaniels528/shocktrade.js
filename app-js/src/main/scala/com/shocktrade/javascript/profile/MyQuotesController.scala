@@ -6,6 +6,7 @@ import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.profile.MyQuotesController._
 
@@ -19,6 +20,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, toaster: Toaster,
+                         @named("ContestService") contestService: ContestService,
                          @named("MySession") mySession: MySession,
                          @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
@@ -26,7 +28,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
   private val quoteSets = js.Dictionary[js.Dynamic](QuoteLists map { case (name, icon) =>
     name -> JS(
       icon = icon,
-      quotes = emptyArray[js.Dynamic],
+      quotes = null,
       expanded = false,
       loading = false)
   }: _*)
@@ -67,9 +69,11 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
   private def expandList(name: String) {
     quoteSets.get(name) foreach { obj =>
       obj.expanded = !obj.expanded
-      if (obj.expanded.isTrue) {
+      if (obj.expanded.isTrue && !isDefined(obj.quotes)) {
+        obj.quotes = emptyArray[js.Dynamic]
         name match {
           case Favorites => loadQuotes(name, mySession.getFavoriteSymbols(), obj)
+          case Held => loadHeldSecurities(obj)
           case Recents => loadQuotes(name, mySession.getRecentSymbols(), obj)
           case _ =>
             g.console.error(s"$name is not a recognized list")
@@ -83,6 +87,24 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
       g.console.log(s"Loading $name: ${symbols.toSeq}...")
       quoteService.getStockQuoteList(symbols) onComplete {
         case Success(updatedQuotes) => obj.quotes = updatedQuotes
+        case Failure(e) =>
+          toaster.error(s"Failed to load quote: ${e.getMessage}")
+          g.console.error(s"Failed to load quote: ${e.getMessage}")
+      }
+    }
+  }
+
+  private def loadHeldSecurities(obj: js.Dynamic): Unit = {
+    mySession.userProfile.OID_? foreach { playerId =>
+     val outcome = for {
+        symbols <- contestService.getHeldSecurities(playerId)
+        quotes <- quoteService.getStockQuoteList(symbols)
+      } yield quotes
+
+      outcome onComplete {
+        case Success(updatedQuotes) =>
+          g.console.log(s"updatedQuotes = ${toJson(updatedQuotes)}")
+          obj.quotes = updatedQuotes
         case Failure(e) =>
           toaster.error(s"Failed to load quote: ${e.getMessage}")
           g.console.error(s"Failed to load quote: ${e.getMessage}")

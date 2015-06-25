@@ -191,7 +191,7 @@ class ContestService($cookieStore: CookieStore, $http: Http, toaster: Toaster) e
 
   def getHeldSecurities(playerId: String) = {
     required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/positions/$playerId")
+    $http.get[js.Array[String]](s"/api/positions/$playerId")
   }
 
   def orderQuote(symbol: String) = {
