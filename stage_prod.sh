@@ -1,3 +1,3 @@
 #!/bin/bash
 activator $@ dist
-scp /Users/ldaniels/git/shocktrade/shocktrade-js/target/universal/shocktrade-js-*.zip dev801:~/
+scp app-play/target/universal/shocktrade-js-*.zip dev801:~/
