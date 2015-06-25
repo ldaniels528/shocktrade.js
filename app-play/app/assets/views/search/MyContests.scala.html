@@ -29,8 +29,7 @@
                 <span ng-if="c.rankings.leader">
                     <avatar object="{{ c.rankings.leader }}" class="avatar-20" title="{{ c.rankings.leader.name }}"></avatar>
                     <span ng-class="c.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow ng-hide="(c.rankings.leader.gainLoss || 0) == 0" value="{{ c.rankings.leader.gainLoss }}"></changearrow>
-                        <span ng-if="(c.rankings.leader.gainLoss || 0) == 0" class="null">&#8212;</span>
+                        <changearrow value="{{ c.rankings.leader.gainLoss }}"></changearrow>
                         {{ c.rankings.leader.gainLoss | abs | number:2 }}%
                     </span>
                 </span>
@@ -47,8 +46,7 @@
             <span ng-if="getMyRankings(c)">
                 <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
                 <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
-                    <changearrow ng-hide="(getMyRankings(c).gainLoss || 0) === 0" value="{{ getMyRankings(c).gainLoss }}"></changearrow>
-                    <span ng-show="(getMyRankings(c).gainLoss || 0) === 0" class="null">&#8212;</span>
+                    <changearrow value="{{ getMyRankings(c).gainLoss }}"></changearrow>
                     {{ getMyRankings(c).gainLoss | abs | number:2 }}%
                 </span>
             </span>
