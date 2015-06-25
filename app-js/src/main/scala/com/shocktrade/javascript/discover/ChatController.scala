@@ -69,7 +69,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
                    [<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripPrefix(" ")
       }
 
-      g.console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
+      //g.console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
       cachedHtml = html
       lastUpdateTime = js.Date.now()
       cachedHtml
