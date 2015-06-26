@@ -42,5 +42,6 @@ object QPromise {
     promise.`then`(onSuccess _).`catch`(onError _)
     p.future
   }
+
 }
 
