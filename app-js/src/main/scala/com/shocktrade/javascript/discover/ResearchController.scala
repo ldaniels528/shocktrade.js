@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate._
-import biz.enef.angulate.core.Timeout
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -86,12 +86,12 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout
   private def exchangeSets = $scope.exchangeSets.as[js.Dictionary[Boolean]]
 
   private def filterExchanges() {
-    startLoading()
-    filteredResults = searchResults.filter { q =>
-      val exchange = MainController.normalizeExchange(q.exchange.as[String])
-      exchangeSets.getOrElse(exchange, false)
+    syncLoading($scope, $timeout) {
+      filteredResults = searchResults.filter { q =>
+        val exchange = MainController.normalizeExchange(q.exchange.as[String])
+        exchangeSets.getOrElse(exchange, false)
+      }
     }
-    $timeout(() => stopLoading(), 500)
   }
 
   private def getExchangeSet(exchange: js.UndefOr[String]): Boolean = exchange.map(e => exchangeSets.getOrElse(e, false)) getOrElse false
@@ -113,8 +113,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout
     searchResults = emptyArray
 
     // execute the search
-    startLoading()
-    researchService.search(searchOptions) onComplete {
+    asyncLoading($scope)(researchService.search(searchOptions)) onComplete {
       case Success(results) =>
         val exchanges = js.Dictionary[Int]()
         results.foreach { q =>
@@ -136,7 +135,6 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout
         exchangeCounts = exchanges
         searchResults = results
         $scope.filterExchanges()
-        stopLoading()
 
         // save the search options
         $cookieStore.put(CookieName, searchOptions)
@@ -144,21 +142,10 @@ class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout
       case Failure(e) =>
         g.console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
         toaster.error("Failed to execute search")
-        stopLoading()
     }
   }
 
   private def rowClass(column: String, row: js.Dynamic) = if (column == "symbol") row.exchange else column
-
-  private def startLoading() {
-    $scope.loading = true
-    $scope.startLoading()
-  }
-
-  private def stopLoading() {
-    $scope.loading = false
-    $scope.stopLoading()
-  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization

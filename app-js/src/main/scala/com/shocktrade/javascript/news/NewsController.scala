@@ -35,7 +35,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
 
   $scope.getNewsFeed = (feedId: String) => findNewsFeed(feedId)
 
-  $scope.getNewsSources = () => findNewsSources
+  $scope.getNewsSources = () => loadNewsSources()
 
   $scope.gridClass = (index: Int) => getGridClass(index)
 
@@ -47,36 +47,30 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
   //			Private Functions and Data
   /////////////////////////////////////////////////////////////////////////////
 
-  private def findNewsSources = {
+  private def loadNewsSources() {
     g.console.log("Loading news sources...")
-    $scope.startLoading()
-    newsService.getNewsSources() onComplete {
+    asyncLoading($scope)(newsService.getNewsSources) onComplete {
       case Success(sources) =>
         newsSources = sources
 
         // select the ID of the first feed
-        newsSources.headOption.map(_.OID) foreach { feed =>
+        sources.headOption.map(_.OID) foreach { feed =>
           $scope.selection.feed = feed
           findNewsFeed(feed)
         }
-        $scope.stopLoading()
       case Failure(e) =>
         toaster.error("Failed to load news sources")
-        $scope.stopLoading()
     }
   }
 
   private def findNewsFeed(feedId: String) = {
     g.console.log("Getting news feeds...")
-    $scope.startLoading()
-    newsService.getNewsFeed(feedId) onComplete {
+    asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
         populateQuotes(feedChannels)
         this.channels = feedChannels; //enrichTickers(feeds)
-        $scope.stopLoading()
       case Failure(e) =>
         toaster.error(s"Failed to load news feed $feedId")
-        $scope.stopLoading()
     }
   }
 

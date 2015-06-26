@@ -87,8 +87,8 @@
                    </div>
                     <div class="col-md-4">
                         <button class="btn st_button" ng-click="quoteSearch(searchOptions)">
-                            <i ng-hide="loading" class="fa fa-search"></i>
-                            <img ng-show="loading" ng-disabled="loading" src="/assets/images/status/loading16.gif">
+                            <i ng-hide="isLoading()" class="fa fa-search"></i>
+                            <img ng-show="isLoading()" ng-disabled="loading" src="/assets/images/status/loading16.gif">
                             Search
                         </button>
                     </div>

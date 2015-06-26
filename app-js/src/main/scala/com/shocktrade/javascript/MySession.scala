@@ -322,7 +322,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   ////////////////////////////////////////////////////////////
-  //          Watch Events
+  //          Event Functions
   ////////////////////////////////////////////////////////////
 
   private def info(contest: js.Dynamic, message: String) = g.console.log(s"${contest.name}: $message")

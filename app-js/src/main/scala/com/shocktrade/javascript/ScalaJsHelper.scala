@@ -1,6 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.angular
+import com.ldaniels528.javascript.angularjs.core.Timeout
 
 import scala.concurrent.Future
 import scala.language.implicitConversions
@@ -40,7 +41,12 @@ object ScalaJsHelper {
     case Failure(f) => Future.failed(f)
   }
 
-  def withLoading[T]($scope: js.Dynamic)(task: => Future[T]): Future[T] = {
+  def syncLoading[T]($scope: js.Dynamic, $timeout: Timeout)(block: => T): T = {
+    val promise = $scope.startLoading()
+    try block finally $timeout(() => $scope.stopLoading(promise), 500)
+  }
+
+  def asyncLoading[T]($scope: js.Dynamic)(task: => Future[T]): Future[T] = {
     val promise = $scope.startLoading()
     task onComplete {
       case Success(_) => $scope.stopLoading(promise)

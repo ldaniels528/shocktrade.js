@@ -21,11 +21,29 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
                         @named("ContestService") contestService: ContestService,
                         @named("MySession") mySession: MySession) extends ScopeController {
 
+  /////////////////////////////////////////////////////////////////////
+  //          Public Variables
+  /////////////////////////////////////////////////////////////////////
+
   $scope.contest = null
+
+  /////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  /////////////////////////////////////////////////////////////////////
 
   $scope.expandItem = (item: js.Dynamic) => item.expanded = !item.expanded
 
-  $scope.expandPlayer = (player: js.Dynamic) => {
+  $scope.expandPlayer = (player: js.Dynamic) => expandPlayer(player)
+
+  $scope.getOpenOrders = (contest: js.Dynamic) => getOpenOrders(contest)
+
+  $scope.updateContestHost = (host: js.Dynamic) => updateContestHost(host)
+
+  /////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  /////////////////////////////////////////////////////////////////////
+
+  private def expandPlayer(player: js.Dynamic) = {
     player.expanded = !player.expanded
     if (!isDefined(player.myOpenOrders)) player.myOpenOrders = JS()
     if (!isDefined(player.myClosedOrders)) player.myClosedOrders = JS()
@@ -33,7 +51,7 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
     if (!isDefined(player.myPerformance)) player.myPerformance = JS()
   }
 
-  $scope.getOpenOrders = (contest: js.Dynamic) => {
+  private def getOpenOrders(contest: js.Dynamic) = {
     val orders = emptyArray[js.Dynamic]
     if (isDefined(contest)) {
       contest.participants.asArray[js.Dynamic] foreach { participant =>
@@ -46,7 +64,7 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
     orders
   }
 
-  $scope.updateContestHost = (host: js.Dynamic) => {
+  private def updateContestHost(host: js.Dynamic) = {
     $http.post[js.Dynamic](s"/api/contest/${$scope.contest.OID}/host", JS(host = host)) onComplete {
       case Success(response) =>
         toaster.success("Processing host updated")

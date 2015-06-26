@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.javascript.angularjs.core.Timeout
 import biz.enef.angulate.{ScopeController, named}
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -36,13 +36,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
 
   $scope.getActiveOrders = () => getActiveOrders
 
-  $scope.cancelOrder = (contestId: String, playerId: String, orderId: String) => {
-    contestService.deleteOrder(contestId, playerId, orderId) onComplete {
-      case Success(contest) => mySession.setContest(contest)
-      case Failure(err) =>
-        toaster.error("Error!", "Failed to cancel order")
-    }
-  }
+  $scope.cancelOrder = (contestId: String, playerId: String, orderId: String) => cancelOrder(contestId, playerId, orderId)
 
   $scope.isMarketOrder = (order: js.Dynamic) => order.priceType === "MARKET" || order.priceType === "MARKET_ON_CLOSE"
 
@@ -52,7 +46,17 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
 
   $scope.toggleSelectedOrder = () => $scope.selectedOrder = null
 
-  $scope.popupNewOrderDialog = (accountType: js.UndefOr[String]) => {
+  $scope.popupNewOrderDialog = (accountType: js.UndefOr[String]) => popupNewOrderDialog(accountType)
+
+  private def cancelOrder(contestId: String, playerId: String, orderId: String) = {
+    asyncLoading($scope)(contestService.deleteOrder(contestId, playerId, orderId)) onComplete {
+      case Success(contest) => mySession.setContest(contest)
+      case Failure(err) =>
+        toaster.error("Failed to cancel order")
+    }
+  }
+
+  private def popupNewOrderDialog(accountType: js.UndefOr[String]) = {
     newOrderDialog.popup(JS(
       symbol = $cookieStore.get[String]("QuoteService_lastSymbol"),
       accountType = accountType

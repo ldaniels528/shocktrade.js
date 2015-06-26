@@ -102,7 +102,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     }).toUpperCase
 
     // load the quote
-    withLoading($scope)(quoteService.getStockQuote(symbol)) onComplete {
+    asyncLoading($scope)(quoteService.getStockQuote(symbol)) onComplete {
       case Success(quote) =>
         // capture the quote
         $scope.q = quote

@@ -38,17 +38,6 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
 
   $scope.composeMessage = () => composeMessage()
 
-  /**
-   * Composes a new message via pop-up dialog
-   */
-  private def composeMessage() = {
-    messageDialog.popup() onComplete {
-      case Success(response) => loadMyUpdates(mySession.getUserName())
-      case Failure(e) =>
-        toaster.error(e.getMessage)
-    }
-  }
-
   $scope.getContact = () => contact
 
   $scope.getFriends = () => mySession.fbFriends
@@ -91,10 +80,21 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   }
 
   /**
+   * Composes a new message via pop-up dialog
+   */
+  private def composeMessage() = {
+    messageDialog.popup() onComplete {
+      case Success(response) => loadMyUpdates(mySession.getUserName())
+      case Failure(e) =>
+        toaster.error(e.getMessage)
+    }
+  }
+
+  /**
    * Retrieve a limited set of user profile information for a specific contact/friend
    */
   private def getUserInfo(fbUserId: String) = {
-    withLoading($scope)(connectService.getUserInfo(fbUserId)) onComplete {
+    asyncLoading($scope)(connectService.getUserInfo(fbUserId)) onComplete {
       case Success(profile) =>
         contact.profile = profile
       case Failure(e) =>
@@ -104,11 +104,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   }
 
   private def identifyFacebookFriends(fbFriends: js.Array[js.Dynamic]) = {
-    $scope.startLoading()
-    connectService.identifyFacebookFriends(fbFriends) onComplete {
-      case Success(_) => $scope.stopLoading()
-      case Failure(e) => $scope.stopLoading()
-    }
+    asyncLoading($scope)(connectService.identifyFacebookFriends(fbFriends))
   }
 
   /**
@@ -134,22 +130,14 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    */
   private def loadMyUpdates(userName: String) = {
     if (userName.nonBlank) {
-      $scope.startLoading()
-
-      connectService.getUserUpdates(userName, 50) onComplete {
+      asyncLoading($scope)(connectService.getUserUpdates(userName, 50)) onComplete {
         case Success(data) =>
-          $scope.stopLoading()
           myUpdates = data
           myUpdate = null
           data.foreach(_.selected = false)
-          $scope.loading = false
-
         case Failure(e) =>
-          $scope.stopLoading()
-          g.console.log("Failed to load Connect")
-          e.printStackTrace()
-          toaster.pop("error ", "Failed to load Connect", null)
-          $scope.loading = false
+          g.console.error(s"Failed to load Connect: ${e.getMessage}")
+          toaster.error("Failed to load Connect")
       }
     }
   }
@@ -158,26 +146,20 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    * Deletes selected messages
    */
   private def deleteMessages(userName: String) {
-    $scope.startLoading()
-
     // gather the records to delete
     val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).map(_.OID)
+    g.console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
 
     // delete the records
-    g.console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
     if (messageIDs.nonEmpty) {
-      connectService.deleteMessages(messageIDs) onComplete {
+      asyncLoading($scope)(connectService.deleteMessages(messageIDs)) onComplete {
         case Success(response) =>
-          $scope.stopLoading()
           loadMyUpdates(userName)
-
         case Failure(e) =>
-          $scope.stopLoading()
-          toaster.error("Failed to delete message ")
+          toaster.error("Failed to delete message")
       }
     }
     else {
-      $scope.stopLoading()
       toaster.error("No message(s) selected")
     }
   }
