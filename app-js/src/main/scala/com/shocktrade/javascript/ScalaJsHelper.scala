@@ -139,7 +139,7 @@ object ScalaJsHelper {
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
 
     @inline
-    def isTrue = Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
+    def isTrue = isDefined(obj) && Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
 
     @inline
     def OID: String = OID_?.orNull

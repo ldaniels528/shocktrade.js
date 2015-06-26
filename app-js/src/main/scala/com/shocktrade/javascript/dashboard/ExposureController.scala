@@ -32,15 +32,14 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
     JS(value = "securities", label = "Securities Exposure"))
 
   ///////////////////////////////////////////////////////////////////////////
-  //          Public Functions
+  //          Public Variables
   ///////////////////////////////////////////////////////////////////////////
 
-  /**
-   * Initializes the view by displaying an initial chart
-   */
-  $scope.initExposure = () => init()
+  $scope.selectedExposure = null
 
-  $scope.selectedExposure = exposures.last
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
 
   $scope.getExposures = () => exposures
 
@@ -72,23 +71,6 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
         case Failure(e) =>
           g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")
       }
-    }
-  }
-
-  /**
-   * Initializes the view by displaying an initial chart
-   */
-  private def init() {
-    if (mySession.userProfile.OID_?.isDefined && mySession.contest.isDefined) {
-      for {
-        userID <- mySession.userProfile.OID_?
-        contest <- mySession.contest
-      } {
-        $scope.exposurePieChart(contest, $scope.selectedExposure.value, userID)
-      }
-    }
-    else {
-      $timeout(() => init(), 1.5.seconds)
     }
   }
 
