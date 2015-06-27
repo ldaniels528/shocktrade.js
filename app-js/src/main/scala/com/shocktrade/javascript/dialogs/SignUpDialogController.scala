@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.javascript.angularjs.core.Timeout
-import biz.enef.angulate.{ScopeController, named}
-import com.greencatsoft.angularjs.extensions.ModalInstance
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
@@ -16,10 +15,10 @@ import scala.util.{Failure, Success}
  * Sign-Up Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance, $timeout: Timeout, toaster: Toaster,
+class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout, toaster: Toaster,
                              @named("Facebook") facebook: FacebookService,
                              @named("SignUpDialog") dialog: SignUpDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private val messages = emptyArray[String]
   private var loading = false

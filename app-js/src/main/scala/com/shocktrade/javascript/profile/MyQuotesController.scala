@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import biz.enef.angulate.core.Location
-import biz.enef.angulate.{Scope, ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Scope}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -24,7 +24,8 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
                          @named("MySession") mySession: MySession,
                          @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
-  extends ScopeController {
+  extends Controller {
+
   private val quoteSets = js.Dictionary[js.Dynamic](QuoteLists map { case (name, icon) =>
     name -> JS(
       icon = icon,
@@ -95,7 +96,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
 
   private def loadHeldSecurities(obj: js.Dynamic): Unit = {
     mySession.userProfile.OID_? foreach { playerId =>
-     val outcome = for {
+      val outcome = for {
         symbols <- contestService.getHeldSecurities(playerId)
         quotes <- quoteService.getStockQuoteList(symbols)
       } yield quotes

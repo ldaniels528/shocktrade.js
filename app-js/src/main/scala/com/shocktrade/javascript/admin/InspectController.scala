@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.admin
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.Http
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Http}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
  */
 class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynamic, toaster: Toaster,
                         @named("ContestService") contestService: ContestService,
-                        @named("MySession") mySession: MySession) extends ScopeController {
+                        @named("MySession") mySession: MySession) extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Variables

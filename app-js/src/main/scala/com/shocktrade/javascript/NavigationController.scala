@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.{Scope, ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{Timeout, Http}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Http, Scope, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
@@ -21,7 +21,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
                            @named("ContestService") contestService: ContestService,
                            @named("MySession") mySession: MySession,
                            @named("WebSocketService") webSocket: WebSocketService)
-  extends ScopeController {
+  extends Controller {
 
   private val scope = $scope.asInstanceOf[Scope]
   private var totalInvestmentStatus: Option[String] = None

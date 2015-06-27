@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate._
-import com.ldaniels528.javascript.angularjs.core.Timeout
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Angular.angular
+import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -18,7 +19,7 @@ import scala.util.{Failure, Success}
  */
 class ResearchController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout: Timeout, toaster: Toaster,
                          @named("ResearchService") researchService: ResearchService)
-  extends ScopeController {
+  extends Controller {
 
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()

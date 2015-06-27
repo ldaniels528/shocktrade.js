@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.social
 
-import biz.enef.angulate.{Scope, ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Scope}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -21,7 +22,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
                         @named("ComposeMessageDialog") messageDialog: ComposeMessageDialogService,
                         @named("ConnectService") connectService: ConnectService,
                         @named("MySession") mySession: MySession)
-  extends ScopeController {
+  extends Controller {
 
   private val scope = $scope.asInstanceOf[Scope]
   private var myUpdates = emptyArray[js.Dynamic]

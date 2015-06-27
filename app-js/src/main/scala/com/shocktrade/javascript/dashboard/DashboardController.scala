@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.Timeout
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -21,7 +21,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
                           @named("MySession") mySession: MySession,
                           @named("PerksDialog") perksDialog: PerksDialogService,
                           @named("TransferFundsDialog") transferFundsDialog: TransferFundsDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private var accountMode = false
 

@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions, Service}
 
 import scala.scalajs.js
 

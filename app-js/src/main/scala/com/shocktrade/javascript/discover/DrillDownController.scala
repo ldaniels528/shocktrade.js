@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
@@ -17,7 +17,9 @@ import scala.util.{Failure, Success}
  */
 class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: CookieStore,
                           $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                          @named("QuoteService") quoteService: QuoteService) extends ScopeController {
+                          @named("QuoteService") quoteService: QuoteService)
+  extends Controller {
+
   // define the callback signatures
   type SectorCallBackType = js.Function2[js.Dynamic, js.Array[js.Dynamic], Unit]
   type IndustryCallBackType = js.Function3[js.Dynamic, js.Dynamic, js.Array[js.Dynamic], Unit]

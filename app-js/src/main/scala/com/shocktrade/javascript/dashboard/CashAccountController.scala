@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Controller
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -8,13 +9,12 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Date
-import scala.scalajs.js.Dynamic.{global => g}
 
 /**
  * Cash Account Controller
  * @author lawrence.daniels@gmail.com
  */
-class CashAccountController($scope: js.Dynamic, toaster: Toaster, @named("MySession") mySession: MySession) extends ScopeController {
+class CashAccountController($scope: js.Dynamic, toaster: Toaster, @named("MySession") mySession: MySession) extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -42,7 +42,7 @@ class CashAccountController($scope: js.Dynamic, toaster: Toaster, @named("MySess
 
   private def getTotalInvestment = {
     var total = 0d
-    mySession.participant foreach (_.positions.asArray[js.Dynamic] filter(_.accountType === "CASH") foreach (total += _.netValue.as[Double]))
+    mySession.participant foreach (_.positions.asArray[js.Dynamic] filter (_.accountType === "CASH") foreach (total += _.netValue.as[Double]))
     total
   }
 

@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.profile
 
-import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.Http
+import com.ldaniels528.javascript.angularjs.core.{Http, Service}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js

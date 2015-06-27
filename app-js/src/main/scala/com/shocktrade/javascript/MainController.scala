@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{CancellablePromise, Http, Location, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core._
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
@@ -29,7 +29,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
                      @named("MySession") mySession: MySession,
                      @named("ProfileService") profileService: ProfileService,
                      @named("SignUpDialog") signUpDialog: SignUpDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private var loadingIndex = 0
   private var nonMember = true

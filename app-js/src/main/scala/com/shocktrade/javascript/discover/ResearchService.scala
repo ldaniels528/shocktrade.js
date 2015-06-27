@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.Http
+import com.ldaniels528.javascript.angularjs.core.{Service, Http}
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

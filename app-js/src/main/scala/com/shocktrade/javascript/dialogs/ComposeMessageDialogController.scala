@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.ScopeController
-import com.greencatsoft.angularjs.extensions.ModalInstance
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
@@ -10,7 +9,7 @@ import scala.scalajs.js.Dynamic.{literal => JS}
  * Compose Message Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class ComposeMessageDialogController($scope: js.Dynamic, $modalInstance: ModalInstance) extends ScopeController {
+class ComposeMessageDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic]) extends Controller {
 
   $scope.form = JS()
 

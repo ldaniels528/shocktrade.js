@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{Scope, ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{Http, ModalInstance, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Http, ModalInstance, Scope, Timeout}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -21,7 +21,7 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
                               @named("ContestService") ContestService: ContestService,
                               @named("MySession") MySession: MySession,
                               @named("NewGameDialogService") newGameDialog: NewGameDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private val errors = emptyArray[String]
   private var processing = false

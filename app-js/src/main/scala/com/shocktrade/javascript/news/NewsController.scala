@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.news
 
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Controller
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
@@ -16,7 +17,7 @@ import scala.util.{Failure, Success}
  */
 class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, toaster: Toaster,
                      @named("NewsService") newsService: NewsService)
-  extends ScopeController {
+  extends Controller {
 
   private var newsSymbols = js.Array[js.Dynamic]()
   private var channels = js.Array[js.Dynamic]()

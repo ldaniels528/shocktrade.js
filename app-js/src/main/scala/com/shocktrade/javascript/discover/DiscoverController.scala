@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.{ScopeController, angular, named}
-import com.ldaniels528.javascript.angularjs.core.{Location, Q, Timeout}
+import biz.enef.angulate.{angular, named}
+import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Q, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -27,7 +27,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
-  extends ScopeController {
+  extends Controller {
 
   // setup the public variables
   $scope.marketClock = new js.Date().toTimeString()

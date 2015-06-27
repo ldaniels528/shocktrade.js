@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Controller
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 
@@ -14,7 +15,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("QuoteService") quoteService: QuoteService)
-  extends ScopeController {
+  extends Controller {
 
   private var tradingHistory: js.Array[js.Dynamic] = null
   private var selectedTradingHistory: js.Dynamic = null

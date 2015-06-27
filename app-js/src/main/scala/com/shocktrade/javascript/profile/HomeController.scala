@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import biz.enef.angulate._
-import com.ldaniels528.javascript.angularjs.core.Timeout
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -17,7 +17,7 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                      @named("MySession") mySession: MySession,
                      @named("ProfileService") profileService: ProfileService)
-  extends ScopeController {
+  extends Controller {
 
   private var selectedFriend: js.Dynamic = null
 

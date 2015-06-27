@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.javascript.angularjs.core.Timeout
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Date
 import scala.scalajs.js.Dynamic.{global => g}
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
  */
 class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                               @named("ContestService") contestService: ContestService,
-                              @named("MySession") mySession: MySession) extends ScopeController {
+                              @named("MySession") mySession: MySession) extends Controller {
 
   private val interestRate = 0.15
   private val initialMargin = 0.50

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.{Scope, named}
-import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Location, Scope, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession

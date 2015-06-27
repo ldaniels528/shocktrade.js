@@ -1,14 +1,14 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.ModalInstance
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
 class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
                             @named("MySession") mySession: MySession,
                             @named("PerksDialog") dialog: PerksDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private var perks = emptyArray[js.Dynamic]
   private var perkMapping = js.Dictionary[js.Dynamic]()

@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.ScopeController
-import com.ldaniels528.javascript.angularjs.core.Location
+import com.ldaniels528.javascript.angularjs.core.{Controller, Location}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -13,7 +12,7 @@ import scala.scalajs.js
  * @author lawrence.daniels@gmail.com
  */
 abstract class GameController($scope: js.Dynamic, $location: Location, toaster: Toaster, mySession: MySession)
-  extends ScopeController {
+  extends Controller {
 
   def enterGame(contest: js.Dynamic) {
     if (isDefined(contest) && isParticipant(contest)) {

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.ModalInstance
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
                                     @named("MySession") mySession: MySession,
                                     @named("TransferFundsDialog") dialog: TransferFundsDialogService)
-  extends ScopeController {
+  extends Controller {
 
   private val messages = emptyArray[String]
 

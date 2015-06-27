@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.{Service, named}
-import com.ldaniels528.javascript.angularjs.core.{Http, Location, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Http, Location, Service, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
@@ -18,7 +18,9 @@ import scala.scalajs.js.annotation.JSExportAll
  */
 @JSExportAll
 class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
-                       @named("MySession") mySession: MySession) extends Service {
+                       @named("MySession") mySession: MySession)
+  extends Service {
+
   private var socket: WebSocket = null
   private var connected = false
   private var attemptsLeft = 3

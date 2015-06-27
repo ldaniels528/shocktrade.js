@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{ScopeController, named}
-import com.greencatsoft.angularjs.extensions.ModalInstance
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
 import com.shocktrade.javascript.dashboard.ContestService
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -14,10 +14,10 @@ import scala.util.{Failure, Success}
  * News Quote Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewsQuoteDialogController($scope: js.Dynamic, $modalInstance: ModalInstance,
+class NewsQuoteDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic],
                                 @named("ContestService") contestService: ContestService,
                                 @named("symbol") symbol: String)
-  extends ScopeController {
+  extends Controller {
 
   $scope.quote = JS(symbol = symbol)
 

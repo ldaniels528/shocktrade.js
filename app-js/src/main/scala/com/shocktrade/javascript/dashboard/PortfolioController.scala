@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.Timeout
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -22,7 +22,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
                           @named("MySession") mySession: MySession,
                           @named("ContestService") contestService: ContestService,
                           @named("NewOrderDialog") newOrderDialog: NewOrderDialogService)
-  extends ScopeController {
+  extends Controller {
 
   $scope.selectedClosedOrder = null
   $scope.selectedOrder = null

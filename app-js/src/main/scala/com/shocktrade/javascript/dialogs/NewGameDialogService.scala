@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{Service, named}
-import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions, Service}
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.scalajs.js

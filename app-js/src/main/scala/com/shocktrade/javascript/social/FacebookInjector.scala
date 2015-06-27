@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.social
 
-import biz.enef.angulate.angular
+import com.ldaniels528.javascript.angularjs.core.Angular.angular
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.jquery._
 
@@ -14,6 +14,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 object FacebookInjector {
+  val elemName = "#ShockTradeMain"
 
   /**
    * Returns the Facebook application ID based on the running host
@@ -48,11 +49,9 @@ object FacebookInjector {
     ))
 
     // capture the user ID and access token
-    val elemName = "#ShockTradeMain"
     val rootElem = jQuery(elemName)
     val injector = angular.element(rootElem).injector()
-    val facebook = injector.get("Facebook").asInstanceOf[FacebookService]
-    if (facebook != null) {
+    injector.get[FacebookService]("Facebook") foreach { facebook =>
       facebook.init(g.FB) onComplete {
         case Success(_) =>
           g.console.log("Facebook login successful.")
@@ -70,7 +69,6 @@ object FacebookInjector {
           g.console.log(s"Facebook Service: ${e.getMessage}")
       }
     }
-    else g.console.log("Facebook service could not be retrieved")
     ()
   }): js.Function0[Unit]
 

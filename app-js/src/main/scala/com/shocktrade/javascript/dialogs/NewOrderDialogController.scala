@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{ModalInstance, Q}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance, Q}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -24,7 +24,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
                                @named("PerksDialog") perksDialog: PerksDialogService,
                                @named("QuoteService") quoteService: QuoteService,
                                @named("params") params: js.Dynamic)
-  extends ScopeController {
+  extends Controller {
 
   private val messages = emptyArray[String]
   private var processing = false

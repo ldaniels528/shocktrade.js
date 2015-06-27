@@ -1,18 +1,15 @@
 package com.shocktrade.javascript.social
 
-import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.Q
+import com.ldaniels528.javascript.angularjs.core.{Service, Q}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.scalajs.js.annotation.JSExportAll
 
 /**
  * Facebook Service
  * @author lawrence.daniels@gmail.com
  */
-@JSExportAll
 class FacebookService($q: Q) extends Service {
   type CallbackArray = js.Function1[js.Array[js.Dynamic], Unit]
   type CallbackObject = js.Function1[js.Dynamic, Unit]
@@ -120,7 +117,7 @@ class FacebookService($q: Q) extends Service {
 
   def getLoginStatus() = {
     val deferred = $q.defer[js.Dynamic]()
-    if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
+    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.getLoginStatus((response: js.Dynamic) => {
         response.status.asOpt[String] match {
@@ -151,7 +148,7 @@ class FacebookService($q: Q) extends Service {
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
       FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: js.Dynamic) =>
-        if(isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+        if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     }
     deferred.promise
   }

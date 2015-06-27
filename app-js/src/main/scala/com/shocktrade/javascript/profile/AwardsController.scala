@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import biz.enef.angulate.{Scope, ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.Http
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Http, Scope}
 import com.shocktrade.core.Award
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -15,7 +15,7 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
  * Awards Controller
  * @author lawrence.daniels@gmail.com
  */
-class AwardsController($scope: js.Dynamic, $http: Http, @named("MySession") mySession: MySession) extends ScopeController {
+class AwardsController($scope: js.Dynamic, $http: Http, @named("MySession") mySession: MySession) extends Controller {
   private val scope = $scope.asInstanceOf[Scope]
 
   ///////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.{ScopeController, named}
-import com.ldaniels528.javascript.angularjs.core.{Http, Timeout}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Http, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
 class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
                          @named("ContestService") contestService: ContestService,
                          @named("MySession") mySession: MySession)
-  extends ScopeController {
+  extends Controller {
 
   private var chartData = emptyArray[js.Dynamic]
   private val colors = js.Array("#00ff00", "#88ffff", "#8888ff", "#ff8000", "#88ffaa", "#ff88ff", "#ff8888")

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.core.Location
-import biz.enef.angulate.{ScopeController, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Controller, Location}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.MySession
@@ -11,7 +11,7 @@ import com.shocktrade.javascript.discover.ChatController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
                      @named("MySession") mySession: MySession,
                      @named("ContestService") contestService: ContestService)
-  extends ScopeController {
+  extends Controller {
 
   private val colorMap = js.Dictionary[String]()
   private var lastUpdateTime = 0d
