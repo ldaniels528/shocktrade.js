@@ -209,23 +209,28 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //              Tab Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def changeAppTab(index: js.UndefOr[Int]) = index exists { tabIndex =>
-    val promise = startLoading(DEFAULT_TIMEOUT)
-    mySession.userProfile.OID_? foreach { userID =>
-      profileService.setIsOnline(userID) onComplete {
-        case Success(outcome) =>
-          g.console.log(s"outcome = ${toJson(outcome)}")
-          if (isDefined(outcome.error)) toaster.error(outcome.error)
-          val tab = appTabs(tabIndex)
-          g.console.log(s"Changing location to ${tab.url}")
-          $location.url(tab.url.as[String])
-          stopLoading(promise)
-        case Failure(e) =>
-          toaster.error(e.getMessage)
-          stopLoading(promise)
-      }
+  private def changeAppTab(index: js.UndefOr[Int]) = index foreach { tabIndex =>
+    mySession.userProfile.OID_? match {
+      case Some(userID) =>
+        asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
+          case Success(outcome) =>
+            if (isDefined(outcome.error)) {
+              g.console.log(s"outcome = ${toJson(outcome)}")
+              toaster.error(outcome.error)
+            }
+            performTabSwitch(tabIndex)
+          case Failure(e) =>
+            toaster.error(e.getMessage)
+        }
+      case None =>
+        performTabSwitch(tabIndex)
     }
-    true
+  }
+  
+  private def performTabSwitch(tabIndex: Int): Unit = {
+    val tab = appTabs(tabIndex)
+    g.console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
+    $location.url(tab.url.as[String])
   }
 
   private def determineTableIndex: Int = $location.path() match {
