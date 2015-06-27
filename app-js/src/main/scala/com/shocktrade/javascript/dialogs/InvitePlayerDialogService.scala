@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.{Service, named}
-import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions, Service}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
@@ -10,8 +10,7 @@ import scala.scalajs.js
  * Invite Player Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class InvitePlayerDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession)
-  extends Service {
+class InvitePlayerDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession) extends Service {
 
   /**
    * Invite a player via pop-up dialog

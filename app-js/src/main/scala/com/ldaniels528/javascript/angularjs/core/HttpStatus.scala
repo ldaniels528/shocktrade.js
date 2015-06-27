@@ -2,11 +2,19 @@ package com.ldaniels528.javascript.angularjs.core
 
 import scala.language.implicitConversions
 
+/**
+ * HTTP Status
+ * @param code the given status code
+ * @author lawrence.daniels@gmail.com
+ */
 case class HttpStatus(code: Int)
 
+/**
+ * HTTP Status Singleton
+ * @author lawrence.daniels@gmail.com
+ * @see https://github.com/spray/spray/blob/master/spray-http/src/main/scala/spray/http/StatusCode.scala
+ */
 object HttpStatus {
-  //From https://github.com/spray/spray/blob/master/spray-http/src/main/scala/spray/http/StatusCode.scala
-
   val Continue = HttpStatus(100)
   val SwitchingProtocols = HttpStatus(101)
   val Processing = HttpStatus(102)
@@ -78,4 +86,5 @@ object HttpStatus {
   val NetworkConnectTimeout = HttpStatus(599)
 
   implicit def int2HttpStatus(code: Int): HttpStatus = HttpStatus(code)
+
 }

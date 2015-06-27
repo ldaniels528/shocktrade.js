@@ -8,8 +8,8 @@ import scala.scalajs.js
  */
 trait RouteProvider extends js.Object {
 
-  def when(path: String, route: Route) : RouteProvider = js.native
+  def when(path: String, route: Route): RouteProvider = js.native
 
-  def otherwise(params: Route) : RouteProvider = js.native
+  def otherwise(params: Route): RouteProvider = js.native
 
 }
