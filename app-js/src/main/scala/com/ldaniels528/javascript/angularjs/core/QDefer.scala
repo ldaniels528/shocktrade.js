@@ -12,7 +12,7 @@ trait QDefer[T] extends js.Object {
 
   def resolve(value: T): Unit = js.native
 
-  def reject(reason: String): Unit = js.native
+  def reject(reason: js.Any): Unit = js.native
 
   def notify(value: T): Unit = js.native
 

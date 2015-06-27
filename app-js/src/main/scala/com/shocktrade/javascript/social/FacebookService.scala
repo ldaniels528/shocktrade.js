@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.Service
-import com.ldaniels528.javascript.angularjs.core.{Q, QPromise}
+import com.ldaniels528.javascript.angularjs.core.Q
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -31,7 +31,7 @@ class FacebookService($q: Q) extends Service {
   /**
    * Initializes the Facebook service
    */
-  def init: js.Function1[js.Dynamic, QPromise[js.Dynamic]] = (fbSDK: js.Dynamic) => {
+  def init(fbSDK: js.Dynamic) = {
     val deferred = $q.defer[js.Dynamic]()
     FB = fbSDK
 
@@ -56,7 +56,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def createFriendList: js.Function1[String, QPromise[js.Dynamic]] = { (friendListId: String) =>
+  def createFriendList(friendListId: String) = {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -87,7 +87,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getFriendListMembers: js.Function1[String, QPromise[js.Dynamic]] = (friendListId: String) => {
+  def getFriendListMembers(friendListId: String) = {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -118,7 +118,7 @@ class FacebookService($q: Q) extends Service {
     }
   }
 
-  def getLoginStatus: js.Function0[QPromise[js.Dynamic]] = () => {
+  def getLoginStatus() = {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
     else {
@@ -146,15 +146,17 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def getUserProfile: js.Function1[CallbackObject, Unit] = (callback: CallbackObject) => {
-    if (!isDefined(FB)) throw new IllegalStateException("Facebook SDK is not loaded")
+  def getUserProfile() = {
+    val deferred = $q.defer[js.Dynamic]()
+    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
-      FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: js.Dynamic) => callback(response))
+      FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: js.Dynamic) =>
+        if(isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     }
-    ()
+    deferred.promise
   }
 
-  def login: js.Function0[QPromise[js.Dynamic]] = () => {
+  def login() = {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -172,7 +174,7 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def logout: js.Function0[QPromise[js.Dynamic]] = () => {
+  def logout() = {
     val deferred = $q.defer[js.Dynamic]()
     if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
     else {
@@ -188,35 +190,37 @@ class FacebookService($q: Q) extends Service {
     deferred.promise
   }
 
-  def feed: js.Function = (caption: String, link: String) => {
+  def feed(caption: String, link: String) = {
+    val deferred = $q.defer[js.Dynamic]()
     FB.ui(JS(
       app_id = appID,
       method = "feed",
       link = link,
       caption = caption
-    ), (response: js.Dynamic) => {
-
-    })
+    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    deferred.promise
   }
 
-  def send: js.Function = (message: String, link: String) => {
+  def send(message: String, link: String) = {
+    val deferred = $q.defer[js.Dynamic]()
     FB.ui(JS(
       app_id = appID,
       method = "send",
       link = link
-    ), (response: js.Dynamic) => {
-
-    })
+    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    deferred.promise
   }
 
-  def share: js.Function = (link: String) => {
+  def share(link: String) = {
+    val deferred = $q.defer[js.Dynamic]()
     FB.ui(JS(
       app_id = appID,
       method = "share",
       href = link
-    ), (response: js.Dynamic) => {})
+    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    deferred.promise
   }
 
-  def getVersion: js.Function0[String] = () => version
+  def getVersion = version
 
 }

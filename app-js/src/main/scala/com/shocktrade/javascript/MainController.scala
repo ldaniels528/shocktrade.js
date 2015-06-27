@@ -156,10 +156,13 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
     // load the user"s Facebook profile
     g.console.log(s"Retrieving Facebook profile for FBID $facebookID...")
-    facebook.getUserProfile((response: js.Dynamic) => {
-      mySession.setFacebookProfile(response)
-      facebook.profile = response
-    })
+    facebook.getUserProfile() onComplete {
+      case Success(response) =>
+        mySession.setFacebookProfile(response)
+        facebook.profile = response
+      case Failure(e) =>
+        toaster.error(e.getMessage)
+    }
 
     // load the user"s ShockTrade profile
     g.console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
