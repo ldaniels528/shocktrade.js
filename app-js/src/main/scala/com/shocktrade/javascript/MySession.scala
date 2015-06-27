@@ -120,7 +120,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getNetWorth: js.Function0[Double] = () => userProfile.netWorth.as[Double]
 
   /////////////////////////////////////////////////////////////////////
-  //          Symbols - Favorite
+  //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
   def addFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
@@ -134,10 +134,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def removeFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
     profileService.removeFavoriteSymbol(getUserID(), symbol)
   }
-
-  /////////////////////////////////////////////////////////////////////
-  //          Symbols - Recent
-  /////////////////////////////////////////////////////////////////////
 
   def addRecentSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
     profileService.addRecentSymbol(getUserID(), symbol)

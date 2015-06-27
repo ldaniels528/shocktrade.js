@@ -226,10 +226,10 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
         performTabSwitch(tabIndex)
     }
   }
-  
+
   private def performTabSwitch(tabIndex: Int): Unit = {
     val tab = appTabs(tabIndex)
-    g.console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
+    g.console.log(s"Changing location for ${mySession.getUserName()} to ${tab.url}")
     $location.url(tab.url.as[String])
   }
 
