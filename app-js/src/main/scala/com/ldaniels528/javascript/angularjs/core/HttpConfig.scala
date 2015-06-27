@@ -1,10 +1,11 @@
 package com.ldaniels528.javascript.angularjs.core
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.literal
+import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
- * Created by ldaniels on 6/23/15.
+ * Angular.js HTTP Service Configuration
+ * @author lawrence.daniels@gmail.com
  */
 trait HttpConfig extends js.Object {
   var method: String = js.native
@@ -22,9 +23,13 @@ trait HttpConfig extends js.Object {
   var responseType: String = js.native
 }
 
+/**
+ * Angular.js HTTP Service Configuration Singleton
+ * @author lawrence.daniels@gmail.com
+ */
 object HttpConfig {
 
-  def apply[A](params: (String, A)*): HttpConfig = literal(params = js.Dictionary(params: _*)).asInstanceOf[HttpConfig]
+  def apply[T](params: (String, T)*): HttpConfig = JS(params = js.Dictionary(params: _*)).asInstanceOf[HttpConfig]
 
   def apply(method: String = null,
             url: String = null,
@@ -39,7 +44,7 @@ object HttpConfig {
             withCredentials: Boolean = false,
             timeout: js.Any = null,
             responseType: String = null): HttpConfig = {
-    literal(method = method, url = url, params = params, data = data, headers = headers,
+    JS(method = method, url = url, params = params, data = data, headers = headers,
       xsrfCookieName = xsrfCookieName, xsrfHeaderName = xsrfHeaderName,
       transformRequest = transformRequest, transformResponse = transformResponse,
       cache = cache, withCredentials = withCredentials, timeout = timeout,
