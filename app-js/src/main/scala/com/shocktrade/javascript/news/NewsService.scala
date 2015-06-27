@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.news
 
 import com.ldaniels528.javascript.angularjs.core.{Http, Service}
+import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -12,6 +13,9 @@ class NewsService($http: Http) extends Service {
 
   def getNewsSources = $http.get[js.Array[js.Dynamic]]("/api/news/sources")
 
-  def getNewsFeed(feedId: String) = $http.get[js.Array[js.Dynamic]](s"/api/news/feed/$feedId")
+  def getNewsFeed(feedId: String) = {
+    required("feedId", feedId)
+    $http.get[js.Array[js.Dynamic]](s"/api/news/feed/$feedId")
+  }
 
 }

@@ -2,7 +2,7 @@ package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
 import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Timeout}
-import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * Explore: Drill-Down Controller
  * @author lawrence.daniels@gmail.com
  */
-class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: CookieStore,
+class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: Cookies,
                           $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                           @named("QuoteService") quoteService: QuoteService)
   extends Controller {

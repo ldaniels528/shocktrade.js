@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.javascript.angularjs.core.{Service, Http}
-import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.core.{Http, Service}
+import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 @JSExportAll
-class ContestService($cookieStore: CookieStore, $http: Http, toaster: Toaster) extends Service {
+class ContestService($cookieStore: Cookies, $http: Http, toaster: Toaster) extends Service {
 
   ///////////////////////////////////////////////////////////////
   //          Basic C.R.U.D.

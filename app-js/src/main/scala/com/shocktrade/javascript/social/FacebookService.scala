@@ -3,6 +3,7 @@ package com.shocktrade.javascript.social
 import com.ldaniels528.javascript.angularjs.core.{Service, Q}
 import com.shocktrade.javascript.ScalaJsHelper._
 
+import scala.beans.BeanProperty
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 
@@ -14,9 +15,9 @@ class FacebookService($q: Q) extends Service {
   type CallbackArray = js.Function1[js.Array[js.Dynamic], Unit]
   type CallbackObject = js.Function1[js.Dynamic, Unit]
 
-  // define the API version and App ID
-  val appID: String = FacebookInjector.getShockTradeAppID()
-  val version = "v2.3"
+  // define the API version and App ID properties
+  @BeanProperty val appID: String = FacebookInjector.getShockTradeAppID()
+  @BeanProperty val version = "v2.3"
 
   // define the Facebook state variables
   var FB: js.Dynamic = null
@@ -217,7 +218,5 @@ class FacebookService($q: Q) extends Service {
     ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     deferred.promise
   }
-
-  def getVersion = version
 
 }

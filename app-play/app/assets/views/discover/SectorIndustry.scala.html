@@ -62,9 +62,9 @@
 		   popover-trigger="mouseenter"></i>
 
 		<!-- US Markets Open/Closed -->
-        <span class="pull-right" ng-class="usMarketsOpen === null ? 'mks_loading' : (usMarketsOpen ? 'mks_open' : 'mks_closed')">
-            <img ng-show="usMarketsOpen === null" src="/assets/images/status/loading16.gif">
-            {{ usMarketsOpen === null ? 'US Markets ....' : (usMarketsOpen ? 'US Markets Open' : 'US Markets Closed') }}
+        <span class="pull-right" ng-class="isUSMarketsOpen() === null ? 'mks_loading' : (isUSMarketsOpen() ? 'mks_open' : 'mks_closed')">
+            <img ng-show="isUSMarketsOpen() === null" src="/assets/images/status/loading16.gif">
+            {{ isUSMarketsOpen() === null ? 'US Markets ....' : (isUSMarketsOpen() ? 'US Markets Open' : 'US Markets Closed') }}
         </span>
 	</div>
 </div>

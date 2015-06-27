@@ -153,6 +153,9 @@ object ScalaJsHelper {
     @inline
     def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
 
+    @inline
+    def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
+
   }
 
   /**

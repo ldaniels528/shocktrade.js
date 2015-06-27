@@ -20,8 +20,7 @@ class MarketStatusService($http: Http) extends Service {
    * @return the current U.S. Stock [[MarketStatus market status]]
    */
   def getMarketStatus(implicit ec: ExecutionContext): Future[MarketStatus] = flatten {
-    val task = $http.get[js.Any]("/api/tradingClock/status/0")
-    task
+    $http.get[js.Any]("/api/tradingClock/status/0")
       .map(JSON.stringify(_))
       .map(Unpickle[MarketStatus].fromString(_))
   }

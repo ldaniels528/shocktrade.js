@@ -2,12 +2,13 @@ package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.named
 import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
-import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
+import com.shocktrade.javascript.discover.DiscoverController
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -18,7 +19,7 @@ import scala.util.{Failure, Success}
  * Portfolio Controller
  * @author lawrence.daniels@gmail.com
  */
-class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeout: Timeout, toaster: Toaster,
+class PortfolioController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: Timeout, toaster: Toaster,
                           @named("MySession") mySession: MySession,
                           @named("ContestService") contestService: ContestService,
                           @named("NewOrderDialog") newOrderDialog: NewOrderDialogService)
@@ -58,7 +59,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: CookieStore, $timeou
 
   private def popupNewOrderDialog(accountType: js.UndefOr[String]) = {
     newOrderDialog.popup(JS(
-      symbol = $cookieStore.get[String]("QuoteService_lastSymbol"),
+      symbol = $cookieStore.getOrElse(DiscoverController.LastSymbolCookie, "AAPL"),
       accountType = accountType
     ))
   }

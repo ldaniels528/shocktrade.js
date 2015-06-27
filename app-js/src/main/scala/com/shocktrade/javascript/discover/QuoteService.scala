@@ -12,8 +12,7 @@ import scala.scalajs.js.annotation.JSExport
  * Quote Services
  * @author lawrence.daniels@gmail.com
  */
-class QuoteService($http: Http, @named("MySession") mySession: MySession)
-  extends Service {
+class QuoteService($http: Http, @named("MySession") mySession: MySession) extends Service {
 
   @JSExport
   def autoCompleteSymbols: js.Function2[String, Int, HttpPromise[js.Array[js.Dynamic]]] = (searchTerm: String, maxResults: Int) => {
@@ -22,9 +21,7 @@ class QuoteService($http: Http, @named("MySession") mySession: MySession)
     $http.get[js.Array[js.Dynamic]](s"/api/quotes/autocomplete$queryString")
   }
 
-  def getExchangeCounts = {
-    $http.get[js.Array[js.Dynamic]]("/api/exchanges")
-  }
+  def getExchangeCounts = $http.get[js.Array[js.Dynamic]]("/api/exchanges")
 
   def getFilterQuotes(filter: js.Dynamic) = {
     required("filter", filter)
@@ -65,13 +62,9 @@ class QuoteService($http: Http, @named("MySession") mySession: MySession)
     $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
   }
 
-  def loadSectors() = {
-    $http.get[js.Array[js.Dynamic]]("/api/explore/sectors")
-  }
+  def loadSectors() = $http.get[js.Array[js.Dynamic]]("/api/explore/sectors")
 
-  def loadNAICSSectors() = {
-    $http.get[js.Array[js.Dynamic]]("/api/explore/naics/sectors")
-  }
+  def loadNAICSSectors() = $http.get[js.Array[js.Dynamic]]("/api/explore/naics/sectors")
 
   def loadIndustries(sector: String) = {
     required("sector", sector)

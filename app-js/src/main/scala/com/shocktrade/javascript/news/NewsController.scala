@@ -2,8 +2,9 @@ package com.shocktrade.javascript.news
 
 import biz.enef.angulate.named
 import com.ldaniels528.javascript.angularjs.core.Controller
-import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Sce, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.news.NewsController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -15,7 +16,7 @@ import scala.util.{Failure, Success}
  * News Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, toaster: Toaster,
+class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toaster: Toaster,
                      @named("NewsService") newsService: NewsService)
   extends Controller {
 
@@ -26,7 +27,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
   // define the scope variables
   // view: get the previously selected view from the cookie
   $scope.selection = JS(feed = "")
-  $scope.view = $cookieStore.get("NewsController_view").toOption.getOrElse("list")
+  $scope.view = $cookieStore.getOrElse(ViewTypeCookie, "list")
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
@@ -68,6 +69,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
     g.console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
+        g.console.log(s"feedChannels = ${toJson(feedChannels)}")
         populateQuotes(feedChannels)
         this.channels = feedChannels; //enrichTickers(feeds)
       case Failure(e) =>
@@ -145,5 +147,14 @@ class NewsController($scope: js.Dynamic, $cookieStore: CookieStore, $sce: Sce, t
     val colorClass = if (isNeg) "negative" else "positive"
     f"""<span class="fa $iconClass $colorClass">$changePct%.2f%%</span>"""
   }
+
+}
+
+/**
+ * News Controller Singleton
+ * @author lawrence.daniels@gmail.com
+ */
+object NewsController {
+  val ViewTypeCookie = "NewsController_view"
 
 }

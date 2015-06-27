@@ -1,12 +1,14 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.{angular, named}
+import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Angular.angular
 import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Q, Timeout}
-import com.ldaniels528.javascript.angularjs.extensions.{CookieStore, Toaster}
+import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
+import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.jquery.jQuery
 
@@ -20,14 +22,16 @@ import scala.util.{Failure, Success}
  * Discover Controller
  * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interval: Timeout, $location: Location, $q: Q,
-                         $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: Timeout, $location: Location,
+                         $q: Q, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                          @named("MarketStatus") marketStatus: MarketStatusService,
                          @named("MySession") mySession: MySession,
                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
   extends Controller {
+
+  private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 
   // setup the public variables
   $scope.marketClock = new js.Date().toTimeString()
@@ -44,6 +48,8 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
 
   $scope.init = () => init()
 
+  $scope.isUSMarketsOpen = () => isUSMarketsOpen
+
   $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
 
   $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
@@ -56,7 +62,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
 
   $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
 
-  $scope.loadTickerQuote = (ticker: String) => loadTickerQuote(ticker)
+  $scope.loadTickerQuote = (ticker: String) => getTickerQuote(ticker)
 
   $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
 
@@ -70,9 +76,6 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   private def init() = {
     // setup market status w/updates
     $interval(() => $scope.marketClock = new js.Date().toTimeString(), 1.second)
-
-    // setup the market status updates
-    setupMarketStatusUpdates()
   }
 
   private def autoCompleteSymbols(searchTerm: String) = {
@@ -84,10 +87,10 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
     deferred.promise
   }
 
-  private def loadTickerQuote(_ticker: String) = {
+  private def getTickerQuote(_ticker: String) = {
     val stockTicker = jQuery("#stockTicker").value()
     val ticker = if (isDefined(stockTicker)) stockTicker.as[String] else _ticker
-    $scope.loadQuote(ticker)
+    getQuote(ticker)
   }
 
   private def loadQuote(ticker: js.Dynamic) = {
@@ -101,6 +104,10 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
       if (index == -1) _ticker else _ticker.substring(0, index)
     }).toUpperCase
 
+    getQuote(symbol)
+  }
+
+  private def getQuote(symbol: String) = {
     // load the quote
     asyncLoading($scope)(quoteService.getStockQuote(symbol)) onComplete {
       case Success(quote) =>
@@ -111,7 +118,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
         $location.search("symbol", quote.symbol)
 
         // store the last symbol
-        $cookieStore.put("QuoteService_lastSymbol", quote.symbol)
+        $cookieStore.put(LastSymbolCookie, quote.symbol)
 
         // add the symbol to the Recently-viewed Symbols
         mySession.addRecentSymbol(symbol)
@@ -191,30 +198,36 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   //          Market Status Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def setupMarketStatusUpdates() {
-    $scope.usMarketsOpen = null
-    g.console.log("Retrieving market status...")
-    marketStatus.getMarketStatus onComplete {
-      case Success(status) =>
-        // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
-        // retrieve the delay in milliseconds from the server
-        var delay = status.delay
-        if (delay < 0) {
-          delay = Math.max(status.end - status.sysTime, 5.minutes.toMillis.toInt)
+  private def isUSMarketsOpen: java.lang.Boolean = {
+    usMarketStatus match {
+      case Left(status) => status.active
+      case Right(loading) =>
+        if (!loading) {
+          usMarketStatus = Right(true)
+          g.console.log("Retrieving market status...")
+          marketStatus.getMarketStatus onComplete {
+            case Success(status) =>
+              // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
+              // retrieve the delay in milliseconds from the server
+              var delay = status.delay
+              if (delay < 0) {
+                delay = Math.max(status.end - status.sysTime, 300000)
+              }
+
+              // set the market status
+              g.console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
+              usMarketStatus = Left(status)
+
+              // update the status after delay
+              g.console.log(s"Re-loading market status in ${status.delay.minutes}")
+              $timeout(() => usMarketStatus = Right(false), 300000)
+
+            case Failure(e) =>
+              toaster.error("Failed to retrieve market status")
+              g.console.error(s"Failed to retrieve market status: ${e.getMessage}")
+          }
         }
-
-        // set the market status
-        g.console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
-
-        // set the status after 750ms
-        $timeout(() => $scope.usMarketsOpen = status.active, 750.milliseconds)
-
-        // wait for the delay, then call recursively
-        $timeout(() => setupMarketStatusUpdates(), delay.toInt)
-
-      case Failure(e) =>
-        toaster.error("Failed to retrieve market status")
-        g.console.error(s"Failed to retrieve market status: ${e.getMessage}")
+        null
     }
   }
 
@@ -225,11 +238,10 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
   // load the symbol
   if (!isDefined($scope.q.symbol)) {
     // get the symbol
-    val symbol = if (isDefined($routeParams.symbol)) $routeParams.symbol
-    else $cookieStore.getOrElse("QuoteService_lastSymbol", mySession.getMostRecentSymbol())
+    val symbol = $routeParams.symbol.toUndefOr[String] getOrElse $cookieStore.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
 
     // load the symbol
-    loadQuote(symbol)
+    getQuote(symbol)
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -246,6 +258,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: CookieStore, $interva
  * @author lawrence.daniels@gmail.com
  */
 object DiscoverController {
+  val LastSymbolCookie = "QuoteService_lastSymbol"
 
   def isPerformanceRisk: js.Function1[js.Dynamic, Boolean] = (q: js.Dynamic) => {
     isDefined(q.high52Week) || isDefined(q.low52Week) || isDefined(q.change52Week) ||
