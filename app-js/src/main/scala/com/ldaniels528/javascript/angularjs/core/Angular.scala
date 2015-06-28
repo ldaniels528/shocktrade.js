@@ -12,6 +12,8 @@ import scala.scalajs.js.Dynamic.{global => g}
  */
 trait Angular extends js.Object {
 
+  def bind(self: js.Any, fn: js.Function, args: js.Any): js.Function = js.native
+
   def bootstrap(element: String, modules: String): Injector = js.native
 
   def bootstrap(element: String, modules: js.Array[Any]): Injector = js.native
@@ -52,17 +54,48 @@ trait Angular extends js.Object {
 
   def bootstrap(element: JQuery, modules: String, config: AngularConfig): Injector = js.native
 
+  /**
+   * @see https://docs.angularjs.org/api/ng/function/angular.copy
+   */
+  def copy(source: js.Any, destination: js.Any = js.undefined): js.Any = js.native
+
   def element(jquery: JQuery): AngularJQLite = js.native
 
   def element(ref: String): AngularJQLite = js.native
 
+  def equals(o0: js.Any, o1: js.Any): Boolean = js.native
+
   def injector(modules: js.Any, strictDi: Boolean = false): Injector = js.native
+
+  def isArray(value: js.Any): Boolean = js.native
+
+  def isDate(value: js.Any): Boolean = js.native
+
+  def isDefined(value: js.Any): Boolean = js.native
+
+  def isElement(value: js.Any): Boolean = js.native
+
+  def isFunction(value: js.Any): Boolean = js.native
+
+  def isNumber(value: js.Any): Boolean = js.native
+
+  def isObject(value: js.Any): Boolean = js.native
+
+  def isString(value: js.Any): Boolean = js.native
+
+  def isUndefined(value: js.Any): Boolean = js.native
+
+  def lowercase(value: String): String = js.native
+
+  def merge(dst: js.Any, src: js.Any): js.Any = js.native
 
   def module(name: String): Module = js.native
 
   def module(name: String, requires: js.Array[String]): Module = js.native
 
   def module(name: String, requires: js.Array[String], configFn: js.Array[Any]): Module = js.native
+
+  def noop(): Unit = js.native
 
   def reloadWithDebugInfo(): Unit = js.native
 
@@ -107,42 +140,6 @@ trait AngularJQLite extends js.Object {
 }
 
 /**
- * Angular.js Configuration
- * @author lawrence.daniels@gmail.com
- */
-trait AngularConfig extends js.Object {
-  var strictDi: Boolean = false
-
-}
-
-/**
- * Angular.js Configuration Singleton
- * @author lawrence.daniels@gmail.com
- */
-object AngularConfig {
-
-  def apply(strictDi: Boolean = false): AngularConfig = {
-    val config = new js.Object().asInstanceOf[AngularConfig]
-    config.strictDi = strictDi
-    config
-  }
-
-}
-
-/**
- * Angular.js Version Information
- * @author lawrence.daniels@gmail.com
- */
-trait AngularVersion extends js.Object {
-  val codeName: String = js.native
-  val dot: Int = js.native
-  val full: String = js.native
-  val major: Int = js.native
-  val minor: Int = js.native
-
-}
-
-/**
  * Angular.js Module Singleton
  * @author lawrence.daniels@gmail.com
  */
@@ -152,6 +149,8 @@ object Angular {
   /**
    * Returns the global Angular object
    */
-  def apply(): Angular = g.angular.asInstanceOf[js.UndefOr[Angular]].getOrElse(throw new RuntimeException("The Angular.js library not found"))
+  def apply(): Angular = g.angular
+    .asInstanceOf[js.UndefOr[Angular]]
+    .getOrElse(throw new RuntimeException("The Angular.js library not found"))
 
 }
