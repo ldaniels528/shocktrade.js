@@ -3,11 +3,11 @@ package com.ldaniels528.javascript.angularjs.extensions
 import scala.scalajs.js
 
 /**
- * Cookies Service (requires: ngCookies) - Provides read/write access to browser's cookies.
+ * CookieStore Service (requires: ngCookies) - Provides read/write access to browser's cookies.
  * @author lawrence.daniels@gmail.com
  * @see [[https://docs.angularjs.org/api/ngCookies/service/$cookies]]
  */
-trait Cookies extends js.Object {
+class CookieStore extends js.Object {
 
   /**
    * Returns the value of given cookie key
@@ -17,35 +17,37 @@ trait Cookies extends js.Object {
    */
   def get[T](key: String): js.UndefOr[T] = js.native
 
-  def getAll(): js.Any = js.native
-
-  def getObject[T](key: String): js.UndefOr[T] = js.native
-
+  /**
+   * Sets a value for given cookie key
+   * @param key the given cookie key
+   * @param value the value of given cookie key
+   * @tparam T the cookie value's type
+   */
   def put[T](key: String, value: T): Unit = js.native
 
-  def putObject[T](key: String, value: T, options: js.Any = null): Unit = js.native
-
-  def remove(key: String, options: js.Any = null): js.Any = js.native
+  /**
+   * Removes given cookie
+   * @param key the given cookie key
+   * @return
+   */
+  def remove(key: String): js.Any = js.native
 
 }
 
 /**
- * Cookies Service Singleton
+ * CookieStore Service Singleton
  * @author lawrence.daniels@gmail.com
  */
-object Cookies {
+object CookieStore {
 
   /**
    * Cookie Extensions
    * @param cookies the given cookies instance
    */
-  implicit class CookieExtensions(val cookies: Cookies) extends AnyVal {
+  implicit class CookieStroreExtensions(val cookies: Cookies) extends AnyVal {
 
     @inline
     def getOrElse[T](key: String, defaultValue: T): T = (cookies.get(key) getOrElse defaultValue).asInstanceOf[T]
-
-    @inline
-    def getObjectOrElse[T](key: String, defaultValue: T): T = (cookies.getObject(key) getOrElse defaultValue).asInstanceOf[T]
 
   }
 
