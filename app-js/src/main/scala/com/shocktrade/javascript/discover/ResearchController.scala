@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * Research Controller
  * @author lawrence.daniels@gmail.com
  */
-class ResearchController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: Timeout, toaster: Toaster,
+class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                          @named("ResearchService") researchService: ResearchService)
   extends Controller {
 
@@ -138,7 +138,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: Ti
         $scope.filterExchanges()
 
         // save the search options
-        $cookieStore.put(CookieName, searchOptions)
+        $cookies.putObject(CookieName, searchOptions)
 
       case Failure(e) =>
         g.console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
@@ -153,7 +153,7 @@ class ResearchController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: Ti
   ///////////////////////////////////////////////////////////////////////////
 
   // retrieve the search options cookie
-  $cookieStore.get[js.Dynamic](CookieName) foreach { options =>
+  $cookies.getObject[js.Dynamic](CookieName) foreach { options =>
     if (isDefined(options)) {
       g.console.log(s"Retrieved search options from cookie '$CookieName': ${angular.toJson(options, pretty = false)}")
       $scope.searchOptions = options

@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * Explore: Drill-Down Controller
  * @author lawrence.daniels@gmail.com
  */
-class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookieStore: Cookies,
+class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookies: Cookies,
                           $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                           @named("QuoteService") quoteService: QuoteService)
   extends Controller {
@@ -152,7 +152,7 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
   private def findLabel(array: js.Array[js.Dynamic], label: String) = array.find(_.label === label)
 
   private def selectedSymbol = {
-    if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookieStore.getOrElse("symbol", "AAPL")
+    if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookies.getOrElse("symbol", "AAPL")
   }
 
 }

@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
  * Portfolio Controller
  * @author lawrence.daniels@gmail.com
  */
-class PortfolioController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: Timeout, toaster: Toaster,
+class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                           @named("MySession") mySession: MySession,
                           @named("ContestService") contestService: ContestService,
                           @named("NewOrderDialog") newOrderDialog: NewOrderDialogService)
@@ -59,7 +59,7 @@ class PortfolioController($scope: js.Dynamic, $cookieStore: Cookies, $timeout: T
 
   private def popupNewOrderDialog(accountType: js.UndefOr[String]) = {
     newOrderDialog.popup(JS(
-      symbol = $cookieStore.getOrElse(DiscoverController.LastSymbolCookie, "AAPL"),
+      symbol = $cookies.getOrElse(DiscoverController.LastSymbolCookie, "AAPL"),
       accountType = accountType
     ))
   }

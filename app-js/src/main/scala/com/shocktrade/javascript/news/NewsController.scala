@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.news
 
 import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Angular.angular
 import com.ldaniels528.javascript.angularjs.core.Controller
 import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -9,25 +10,24 @@ import com.shocktrade.javascript.news.NewsController._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
 /**
  * News Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toaster: Toaster,
+class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: Toaster,
                      @named("NewsService") newsService: NewsService)
   extends Controller {
 
-  private var newsSymbols = js.Array[js.Dynamic]()
-  private var channels = js.Array[js.Dynamic]()
-  private var newsSources = js.Array[js.Dynamic]()
+  private var newsSymbols = emptyArray[js.Dynamic]
+  private var channels = emptyArray[js.Dynamic]
+  private var newsSources = emptyArray[js.Dynamic]
 
   // define the scope variables
   // view: get the previously selected view from the cookie
   $scope.selection = JS(feed = "")
-  $scope.view = $cookieStore.getOrElse(ViewTypeCookie, "list")
+  $scope.view = $cookies.getOrElse(ViewTypeCookie, "list")
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
@@ -46,7 +46,7 @@ class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toast
   $scope.trustMe = (html: String) => $sce.trustAsHtml(html)
 
   /////////////////////////////////////////////////////////////////////////////
-  //			Private Functions and Data
+  //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
   private def loadNewsSources() {
@@ -69,7 +69,6 @@ class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toast
     g.console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
-        g.console.log(s"feedChannels = ${toJson(feedChannels)}")
         populateQuotes(feedChannels)
         this.channels = feedChannels; //enrichTickers(feeds)
       case Failure(e) =>
@@ -79,11 +78,10 @@ class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toast
 
   private def enrichTickers(channels: js.Array[js.Dynamic]) = {
     channels.foreach { channel =>
-      val items = channel.asInstanceOf[js.Array[js.Dynamic]]
+      val items = channel.asArray[js.Dynamic]
       items.foreach { item =>
-        g.console.log(s"description = ${JSON.stringify(item.description)}")
-        val description = item.description.asInstanceOf[String]
-        val quotes = item.quotes.asInstanceOf[js.Array[js.Dynamic]]
+        val description = item.description.as[String]
+        val quotes = item.quotes.asArray[js.Dynamic]
         if (quotes.nonEmpty) {
           item.description = replaceSymbols(description, quotes)
         }
@@ -132,8 +130,8 @@ class NewsController($scope: js.Dynamic, $cookieStore: Cookies, $sce: Sce, toast
   private def populateQuotes(channels: js.Array[js.Dynamic]) = {
     // gather the quotes
     val myQuotes = channels.flatMap { channel =>
-      val items = channel.items.asInstanceOf[js.Array[js.Dynamic]]
-      items.flatMap(_.quotes.asInstanceOf[js.Array[js.Dynamic]])
+      val items = channel.items.asArray[js.Dynamic]
+      items.flatMap(_.quotes.asArray[js.Dynamic])
     }
 
     // set the quotes

@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
  * Discover Controller
  * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: Timeout, $location: Location,
+class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeout, $location: Location,
                          $q: Q, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                          @named("MarketStatus") marketStatus: MarketStatusService,
                          @named("MySession") mySession: MySession,
@@ -39,7 +39,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: T
   $scope.q = JS(active = true)
 
   // define the display options
-  $scope.options = JS(range = $cookieStore.getOrElse("chart_range", "5d"))
+  $scope.options = JS(range = $cookies.getOrElse("chart_range", "5d"))
   $scope.expanders = expanders
 
   ///////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: T
         $location.search("symbol", quote.symbol)
 
         // store the last symbol
-        $cookieStore.put(LastSymbolCookie, quote.symbol)
+        $cookies.put(LastSymbolCookie, quote.symbol)
 
         // add the symbol to the Recently-viewed Symbols
         mySession.addRecentSymbol(symbol)
@@ -238,7 +238,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: T
   // load the symbol
   if (!isDefined($scope.q.symbol)) {
     // get the symbol
-    val symbol = $routeParams.symbol.toUndefOr[String] getOrElse $cookieStore.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
+    val symbol = $routeParams.symbol.toUndefOr[String] getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
 
     // load the symbol
     getQuote(symbol)
@@ -249,7 +249,7 @@ class DiscoverController($scope: js.Dynamic, $cookieStore: Cookies, $interval: T
   ///////////////////////////////////////////////////////////////////////////
 
   // setup the chart range
-  $scope.$watch("options.range", (newValue: js.Dynamic, oldValue: js.Dynamic) => $cookieStore.put("chart_range", newValue))
+  $scope.$watch("options.range", (newValue: js.Dynamic, oldValue: js.Dynamic) => $cookies.put("chart_range", newValue))
 
 }
 
