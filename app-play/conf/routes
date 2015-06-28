@@ -3,6 +3,7 @@
 ########################################################################################################################
 
 GET           /                                                     com.shocktrade.controllers.Application.index
+GET           /assets/views/about/me.htm                            com.shocktrade.controllers.Application.aboutMe
 GET           /assets/views/about/us.htm                            com.shocktrade.controllers.Application.aboutUs
 GET           /assets/views/admin/inspect.htm                       com.shocktrade.controllers.Application.inspectView()
 GET           /assets/views/connect/connect.htm                     com.shocktrade.controllers.Application.connectView()

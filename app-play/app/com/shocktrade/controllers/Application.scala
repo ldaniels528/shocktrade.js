@@ -16,7 +16,9 @@ object Application extends Controller with MongoController {
 
   def index = Action(Ok(assets.views.html.index(UUID.randomUUID().toString)))
 
-  def aboutUs = Action(Ok(assets.views.html.AboutUs()))
+  def aboutMe = Action(Ok(assets.views.html.about.AboutMe()))
+
+  def aboutUs = Action(Ok(assets.views.html.about.AboutUs()))
 
   def chatView() = Action(Ok(assets.views.html.dashboard.Chat()))
 

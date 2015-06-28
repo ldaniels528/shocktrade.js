@@ -1,7 +1,6 @@
 package com.shocktrade.javascript.news
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.Angular.angular
 import com.ldaniels528.javascript.angularjs.core.Controller
 import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Sce, Toaster}
 import com.shocktrade.javascript.ScalaJsHelper._

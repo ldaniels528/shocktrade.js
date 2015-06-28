@@ -237,13 +237,14 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   }
 
   private def determineTableIndex: Int = $location.path() match {
-    case path if path.contains("/home") => 0
-    case path if path.contains("/search") => 1
-    case path if path.contains("/dashboard") => 2
-    case path if path.contains("/discover") => 3
-    case path if path.contains("/explore") => 4
-    case path if path.contains("/research") => 5
-    case path => 3
+    case path if path.contains("/about") => 0
+    case path if path.contains("/home") => 1
+    case path if path.contains("/search") => 2
+    case path if path.contains("/dashboard") => 3
+    case path if path.contains("/discover") => 4
+    case path if path.contains("/explore") => 5
+    case path if path.contains("/research") => 6
+    case path => 4
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -306,6 +307,7 @@ object MainController {
   }
 
   private val appTabs = js.Array(
+    JS(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),
     JS(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
     JS(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
     JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
