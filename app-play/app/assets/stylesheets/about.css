@@ -2,6 +2,15 @@
     color: #ff6000
 }
 
+.investor_heading {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.st_perks {
+    color: #ff00ff;
+}
+
 .st_fb_blue {
     color: #3a5795
 }

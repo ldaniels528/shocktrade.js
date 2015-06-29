@@ -30,11 +30,13 @@ object Application extends Controller with MongoController {
 
   def exploreView() = Action(Ok(assets.views.html.discover.Explore()))
 
-  def homeView() = Action(Ok(assets.views.html.profile.Home()))
-
   def exposureView() = Action(Ok(assets.views.html.dashboard.Exposure()))
 
+  def homeView() = Action(Ok(assets.views.html.profile.Home()))
+
   def inspectView() = Action(Ok(assets.views.html.admin.Inspect()))
+
+  def investors() = Action(Ok(assets.views.html.about.Investors()))
 
   def newsCenterView = Action(Ok(assets.views.html.news.NewsCenter()))
 

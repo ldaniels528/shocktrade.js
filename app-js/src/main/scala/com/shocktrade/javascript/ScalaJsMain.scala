@@ -114,6 +114,7 @@ object ScalaJsMain extends js.JSApp {
   private def configureRoutes(module: RichModule) {
     module.config({ ($routeProvider: RouteProvider) =>
       $routeProvider
+        .when("/about/investors", Route(templateUrl = "/assets/views/about/investors.htm"))
         .when("/about/me", Route(templateUrl = "/assets/views/about/me.htm"))
         .when("/about/us", Route(templateUrl = "/assets/views/about/us.htm"))
         .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
