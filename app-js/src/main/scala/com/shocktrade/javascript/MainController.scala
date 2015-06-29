@@ -1,6 +1,7 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.named
+import com.ldaniels528.javascript.angularjs.core.Angular.angular
 import com.ldaniels528.javascript.angularjs.core._
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.core.GameLevels
@@ -184,11 +185,14 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   private def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
 
   private def signUpPopup(facebookID: String, fbProfile_? : Option[js.Dynamic]) {
-    fbProfile_? foreach { fbProfile =>
+    fbProfile_? map { fbProfile =>
       signUpDialog.popup(facebookID, fbProfile) onSuccess {
         case profile: js.Dynamic =>
           mySession.setUserProfile(profile, fbProfile, facebookID)
       }
+    } getOrElse {
+      g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
+      toaster.info("Sign-in to Facebook, then Sign-up here")
     }
   }
 
@@ -244,7 +248,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     case path if path.contains("/discover") => 4
     case path if path.contains("/explore") => 5
     case path if path.contains("/research") => 6
-    case path => 4
+    case path => 0
   }
 
   //////////////////////////////////////////////////////////////////////

@@ -126,7 +126,7 @@ object ScalaJsMain extends js.JSApp {
         .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
         .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
         .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
-        .otherwise(Route(redirectTo = "/discover"))
+        .otherwise(Route(redirectTo = "/about/us"))
     })
   }
 

@@ -1,4 +1,17 @@
+.app_name {
+    color: #ff6000
+}
+
+.st_fb_blue {
+    color: #3a5795
+}
+
 .screenshot {
-    width: 45%;
-    height: 45%
+    border-radius: 10px;
+    width: 640px;
+    height: 300px
+}
+
+.screenshot_separator {
+    margin-bottom: 15px;
 }
