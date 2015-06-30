@@ -2,14 +2,14 @@ package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
 import com.ldaniels528.javascript.angularjs.core.Angular.angular
-import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Q, Timeout}
+import com.ldaniels528.javascript.angularjs.core.{Location, Q, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
-import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
+import com.shocktrade.javascript.{AutoCompletionController, MySession}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -28,12 +28,11 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @named("ProfileService") profileService: ProfileService,
                          @named("QuoteService") quoteService: QuoteService)
-  extends Controller {
+  extends AutoCompletionController($q, quoteService) {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 
   // setup the public variables
-  $scope.marketClock = new js.Date().toTimeString()
   $scope.ticker = null
   $scope.q = JS(active = true)
 
@@ -45,8 +44,6 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
   //          Public Function
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isUSMarketsOpen = () => isUSMarketsOpen
-
   $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
 
   $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
@@ -57,6 +54,8 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
 
   $scope.getRiskDescription = (riskLevel: js.UndefOr[String]) => getRiskDescription(riskLevel)
 
+  $scope.isUSMarketsOpen = () => isUSMarketsOpen
+
   $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
 
   $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
@@ -65,30 +64,21 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def autoCompleteSymbols(searchTerm: String) = {
-    val deferred = $q.defer[js.Array[js.Dynamic]]()
-    quoteService.autoCompleteSymbols(searchTerm, maxResults = 20) onComplete {
-      case Success(response) => deferred.resolve(response)
-      case Failure(e) => deferred.reject(e.getMessage)
-    }
-    deferred.promise
-  }
-
   private def loadQuote(ticker: js.Dynamic) = {
     g.console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
 
     // determine the symbol
-    val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String]
+    val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String].toUpperCase
     else {
       val _ticker = ticker.as[String]
       val index = _ticker.indexOf(" ")
       if (index == -1) _ticker else _ticker.substring(0, index)
     }).toUpperCase
 
-    getQuote(symbol)
+    updateQuote(symbol)
   }
 
-  private def getQuote(ticker: String) = {
+  private def updateQuote(ticker: String) {
     // get the symbol (e.g. "AAPL - Apple Inc")
     val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
 
@@ -99,6 +89,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
         $scope.q = quote
         $scope.ticker = s"${quote.symbol} - ${quote.name}"
 
+        // update the address bar
         $location.search("symbol", quote.symbol)
 
         // store the last symbol
@@ -229,7 +220,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
     val symbol = $routeParams.symbol.toUndefOr[String] getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
 
     // load the symbol
-    getQuote(symbol)
+    updateQuote(symbol)
   }
 
   ///////////////////////////////////////////////////////////////////////////

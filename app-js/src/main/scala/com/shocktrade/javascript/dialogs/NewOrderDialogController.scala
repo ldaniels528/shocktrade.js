@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance, Q}
+import com.ldaniels528.javascript.angularjs.core.{ModalInstance, Q}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
+import com.shocktrade.javascript.{AutoCompletionController, MySession}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -24,7 +24,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
                                @named("PerksDialog") perksDialog: PerksDialogService,
                                @named("QuoteService") quoteService: QuoteService,
                                @named("params") params: js.Dynamic)
-  extends Controller {
+  extends AutoCompletionController($q, quoteService) {
 
   private val messages = emptyArray[String]
   private var processing = false
@@ -43,14 +43,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
   $scope.init = () => $scope.orderQuote($scope.form.symbol)
 
-  $scope.autoCompleteSymbols = (searchTerm: String) => {
-    val deferred = $q.defer[js.Array[js.Dynamic]]()
-    quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
-      case Success(response) => deferred.resolve(response)
-      case Failure(e) => deferred.reject(e.getMessage)
-    }
-    deferred.promise
-  }
+  $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
