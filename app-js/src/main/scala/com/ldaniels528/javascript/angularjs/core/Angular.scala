@@ -99,7 +99,7 @@ trait Angular extends js.Object {
 
   def reloadWithDebugInfo(): Unit = js.native
 
-  def toJson(obj: js.Any, pretty: js.Any = false): String = js.native
+  def toJson(obj: js.Any, pretty: Boolean = false): String = js.native
 
   def uppercase(s: String): String = js.native
 
