@@ -4,7 +4,7 @@
         <input class="col-md-10 form-control symbol_input_text_field"
                id="stockTicker" type="text" ng-model="ticker"
                placeholder="Enter Symbol or Company name"
-               typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue) | filter:{symbol:$viewValue}"
+               typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue)"
                typeahead-template-url="symbol_lookup_dialog.htm"
                typeahead-loading="loadingLocations"
                typeahead-on-select="loadQuote(ticker)"

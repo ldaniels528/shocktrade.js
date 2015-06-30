@@ -80,7 +80,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
 
   private def autoCompleteSymbols(searchTerm: String) = {
     val deferred = $q.defer[js.Array[js.Dynamic]]()
-    quoteService.autoCompleteSymbols(searchTerm, 20) onComplete {
+    quoteService.autoCompleteSymbols(searchTerm, maxResults = 20) onComplete {
       case Success(response) => deferred.resolve(response)
       case Failure(e) => deferred.reject(e.getMessage)
     }

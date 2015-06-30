@@ -1,12 +1,11 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Http, HttpPromise, Service}
+import com.ldaniels528.javascript.angularjs.core.{Http, Service}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExport
 
 /**
  * Quote Services
@@ -14,8 +13,7 @@ import scala.scalajs.js.annotation.JSExport
  */
 class QuoteService($http: Http, @named("MySession") mySession: MySession) extends Service {
 
-  @JSExport
-  def autoCompleteSymbols: js.Function2[String, Int, HttpPromise[js.Array[js.Dynamic]]] = (searchTerm: String, maxResults: Int) => {
+  def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
     required("searchTerm", searchTerm)
     val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
     $http.get[js.Array[js.Dynamic]](s"/api/quotes/autocomplete$queryString")
