@@ -92,7 +92,7 @@ class DBaseQuoteActor() extends Actor with ActorLogging {
    */
   private def saveQuote(symbol: String, quote: JsObject): Future[LastError] = {
     log.info(s"Saving quote for $symbol...")
-    mcJS.update(selector = JS("symbol" -> symbol), update = JS("$set" -> quote), upsert = true)
+    mcJS.update(selector = JS("symbol" -> symbol.trim), update = JS("$set" -> quote), upsert = true)
   }
 
 }

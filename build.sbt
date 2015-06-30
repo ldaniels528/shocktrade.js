@@ -68,7 +68,7 @@ lazy val appScalaJvm = (project in file("app-play"))
       //
       "com.ldaniels528" %% "commons-helpers" % "0.1.0",
       "com.ldaniels528" %% "play-json-compat" % "0.1.0",
-      "com.ldaniels528" %% "shocktrade-services" % "0.4.3",
+      "com.ldaniels528" %% "shocktrade-services" % "0.4.4",
       "com.ldaniels528" %% "tabular" % "0.1.2",
       //
       // TypeSafe dependencies

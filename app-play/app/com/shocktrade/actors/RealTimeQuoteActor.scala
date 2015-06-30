@@ -24,7 +24,8 @@ class RealTimeQuoteActor() extends Actor with ActorLogging {
 
   private def getQuoteFromService(symbol: String): Option[JsObject] = {
     val q = YFRealtimeStockQuoteService.getQuoteSync(symbol)
-    Some(JS(
+    if(q.error.isDefined) None
+    else Some(JS(
       "symbol" -> q.symbol,
       "name" -> q.name,
       "exchange" -> q.exchange,

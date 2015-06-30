@@ -68,19 +68,20 @@ object StockQuotes {
 
     def relayQuote(task: Future[Option[JsObject]]) = {
       task.foreach(_ foreach { quote =>
-        realTimeCache.put(symbol, quote, if (DateUtil.isTradingActive) 1.minute else 4.hours)
+        realTimeCache.put(symbol, quote, if (DateUtil.isTradingActive) 1.minute else 15.minute)
         WebSockets ! QuoteUpdated(quote)
         mongoWriter ! SaveQuote(symbol, quote)
       })
       task
     }
 
-    if (DateUtil.isTradingActive) relayQuote(findRealTimeQuoteFromService(symbol))
+    val mySymbol = symbol.toUpperCase.trim
+    if (DateUtil.isTradingActive) relayQuote(findRealTimeQuoteFromService(mySymbol))
     else
-      realTimeCache.get(symbol) match {
+      realTimeCache.get(mySymbol) match {
         case quote@Some(_) => Future.successful(quote)
         case None =>
-          relayQuote(findRealTimeQuoteFromService(symbol))
+          relayQuote(findRealTimeQuoteFromService(mySymbol))
       }
   }
 
@@ -100,11 +101,12 @@ object StockQuotes {
    * @return a promise of an option of a [[JsObject quote]]
    */
   def findDBaseQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
-    diskCache.get(symbol) match {
+    val mySymbol = symbol.toUpperCase.trim
+    diskCache.get(mySymbol) match {
       case quote@Some(_) => Future.successful(quote)
       case None =>
-        val quote = (mongoReader ? GetQuote(symbol)).mapTo[Option[JsObject]]
-        quote.foreach(_ foreach (diskCache.put(symbol, _)))
+        val quote = (mongoReader ? GetQuote(mySymbol)).mapTo[Option[JsObject]]
+        quote.foreach(_ foreach (diskCache.put(mySymbol, _)))
         quote
     }
   }
@@ -143,8 +145,9 @@ object StockQuotes {
    * @return the [[Future promise]] of an option of a [[JsObject quote]]
    */
   def findFullQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
-    val rtQuoteFuture = findRealTimeQuote(symbol)
-    val dbQuoteFuture = findDBaseFullQuote(symbol)
+    val mySymbol = symbol.toUpperCase.trim
+    val rtQuoteFuture = findRealTimeQuote(mySymbol)
+    val dbQuoteFuture = findDBaseFullQuote(mySymbol)
     for {
       rtQuote <- rtQuoteFuture
       dbQuote <- dbQuoteFuture

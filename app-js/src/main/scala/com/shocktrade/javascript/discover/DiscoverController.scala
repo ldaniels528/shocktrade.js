@@ -10,7 +10,6 @@ import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
-import org.scalajs.jquery.jQuery
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -46,8 +45,6 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
   //          Public Function
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.init = () => init()
-
   $scope.isUSMarketsOpen = () => isUSMarketsOpen
 
   $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
@@ -62,21 +59,11 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
 
   $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
 
-  $scope.loadTickerQuote = (ticker: String) => getTickerQuote(ticker)
-
   $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Initializes the module
-   */
-  private def init() = {
-    // setup market status w/updates
-    $interval(() => $scope.marketClock = new js.Date().toTimeString(), 1.second)
-  }
 
   private def autoCompleteSymbols(searchTerm: String) = {
     val deferred = $q.defer[js.Array[js.Dynamic]]()
@@ -85,12 +72,6 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
       case Failure(e) => deferred.reject(e.getMessage)
     }
     deferred.promise
-  }
-
-  private def getTickerQuote(_ticker: String) = {
-    val stockTicker = jQuery("#stockTicker").value()
-    val ticker = if (isDefined(stockTicker)) stockTicker.as[String] else _ticker
-    getQuote(ticker)
   }
 
   private def loadQuote(ticker: js.Dynamic) = {
@@ -107,10 +88,13 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
     getQuote(symbol)
   }
 
-  private def getQuote(symbol: String) = {
+  private def getQuote(ticker: String) = {
+    // get the symbol (e.g. "AAPL - Apple Inc")
+    val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
+
     // load the quote
     asyncLoading($scope)(quoteService.getStockQuote(symbol)) onComplete {
-      case Success(quote) =>
+      case Success(quote) if isDefined(quote.symbol) =>
         // capture the quote
         $scope.q = quote
         $scope.ticker = s"${quote.symbol} - ${quote.name}"
@@ -129,6 +113,10 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeo
         if (expanders(6).expanded.isTrue) {
           $scope.expandSection(expanders(6))
         }
+
+      case Success(quote) =>
+        g.console.log(s"quote = ${angular.toJson(quote)}")
+        toaster.warning(s"Symbol $symbol not found")
 
       case Failure(e) =>
         g.console.error(s"Failed to retrieve quote: ${e.getMessage}")

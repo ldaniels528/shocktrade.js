@@ -11,8 +11,9 @@
                popover="Enter a Symbol or Business here"
                popover-trigger="focus">
     </span>
-    <button class="btn btn-default st_button" ng-click="loadTickerQuote(ticker)">
-        <i class="fa fa-search"></i> Search
+    <button class="btn btn-default st_button" ng-click="loadQuote(ticker)">
+		<img ng-show="isLoading()" src="/assets/images/status/loading16.gif">
+        <i ng-hide="isLoading()" class="fa fa-search"></i> Search
     </button>
 </div>
 
