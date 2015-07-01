@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.social
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Scope}
+import com.ldaniels528.javascript.angularjs.ScalaJsHelper._
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.javascript.angularjs.{Controller, Scope}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

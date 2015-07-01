@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
+import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js

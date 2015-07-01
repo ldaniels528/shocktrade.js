@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Location, Scope, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Scope}
+import com.ldaniels528.javascript.angularjs.core.{Location, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
 
 import scala.language.postfixOps

@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
+import com.ldaniels528.javascript.angularjs.core.ModalInstance
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
 import prickle.Unpickle
 

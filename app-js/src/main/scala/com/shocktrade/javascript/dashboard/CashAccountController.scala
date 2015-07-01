@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.Controller
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js

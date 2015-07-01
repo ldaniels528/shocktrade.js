@@ -1,6 +1,6 @@
-package com.shocktrade.javascript
+package com.ldaniels528.javascript.angularjs
 
-import biz.enef.angulate.angular
+import com.ldaniels528.javascript.angularjs.Angular.angular
 import com.ldaniels528.javascript.angularjs.core.Timeout
 
 import scala.concurrent.Future

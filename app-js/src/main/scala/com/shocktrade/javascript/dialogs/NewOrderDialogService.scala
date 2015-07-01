@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions, Service}
+import com.ldaniels528.javascript.angularjs.Service
+import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
 import com.shocktrade.javascript.MySession
 
 import scala.concurrent.ExecutionContext

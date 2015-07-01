@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Http, ModalInstance, Scope, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Scope, Controller}
+import com.ldaniels528.javascript.angularjs.core.{Http, ModalInstance, Timeout}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewGameDialogController._
 

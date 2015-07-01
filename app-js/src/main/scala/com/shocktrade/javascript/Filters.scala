@@ -1,7 +1,8 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.AnnotatedFunction
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.ScalaJsHelper
+import ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js

@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.javascript.angularjs.core.{Service, Http}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
+import com.ldaniels528.javascript.angularjs.core.Http
+import ScalaJsHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

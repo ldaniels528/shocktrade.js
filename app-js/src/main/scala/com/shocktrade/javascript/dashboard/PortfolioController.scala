@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.dashboard
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
+import com.ldaniels528.javascript.angularjs.core.Timeout
 import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController

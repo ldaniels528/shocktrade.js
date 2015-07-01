@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.directives
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.ScalaJsHelper
+import ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}

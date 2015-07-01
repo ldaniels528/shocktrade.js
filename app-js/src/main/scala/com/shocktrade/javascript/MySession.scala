@@ -1,10 +1,11 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{HttpPromise, Scope, Service, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service, Scope}
+import com.ldaniels528.javascript.angularjs.core.{HttpPromise, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
 

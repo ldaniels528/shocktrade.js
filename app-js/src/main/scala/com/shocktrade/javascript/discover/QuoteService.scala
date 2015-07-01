@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Http, Service}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
+import com.ldaniels528.javascript.angularjs.core.Http
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 
 import scala.scalajs.js
 

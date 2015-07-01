@@ -1,5 +1,6 @@
-package com.ldaniels528.javascript.angularjs.core
+package com.ldaniels528.javascript.angularjs
 
+import com.ldaniels528.javascript.angularjs.core.Q
 import org.scalajs.dom.html.{Document, Element}
 import org.scalajs.jquery.JQuery
 
@@ -89,7 +90,7 @@ trait Angular extends js.Object {
 
   def merge(dst: js.Any, src: js.Any): js.Any = js.native
 
-  def module(name: String): Module = js.native
+  def module(name: String): js.UndefOr[Module] = js.native
 
   def module(name: String, requires: js.Array[String]): Module = js.native
 

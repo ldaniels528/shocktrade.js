@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
+import com.ldaniels528.javascript.angularjs.core.{ModalInstance, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

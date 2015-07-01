@@ -1,6 +1,7 @@
-package com.ldaniels528.javascript.angularjs.core
+package com.ldaniels528.javascript.angularjs
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.Service
+import ScalaJsHelper._
 
 import scala.scalajs.js
 

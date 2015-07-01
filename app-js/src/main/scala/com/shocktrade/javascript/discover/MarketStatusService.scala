@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.javascript.angularjs.core.{Http, Service}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
+import com.ldaniels528.javascript.angularjs.core.Http
+import ScalaJsHelper._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import prickle.Unpickle
 

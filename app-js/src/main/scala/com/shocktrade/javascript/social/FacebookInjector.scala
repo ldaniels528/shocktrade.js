@@ -1,7 +1,8 @@
 package com.shocktrade.javascript.social
 
-import com.ldaniels528.javascript.angularjs.core.Angular.angular
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Angular}
+import Angular.angular
+import ScalaJsHelper._
 import org.scalajs.jquery._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

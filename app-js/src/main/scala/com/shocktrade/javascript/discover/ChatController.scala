@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.discover
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Location}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
+import com.ldaniels528.javascript.angularjs.core.Location
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.ChatController._
 

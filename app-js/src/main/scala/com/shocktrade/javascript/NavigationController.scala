@@ -1,11 +1,12 @@
 package com.shocktrade.javascript
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Http, Scope, Timeout}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Scope, Controller}
+import com.ldaniels528.javascript.angularjs.core.{Http, Timeout}
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

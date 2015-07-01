@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.javascript.angularjs.core.{Controller, ModalInstance}
+import com.ldaniels528.javascript.angularjs.Controller
+import com.ldaniels528.javascript.angularjs.core.ModalInstance
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}

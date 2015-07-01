@@ -1,4 +1,4 @@
-package com.ldaniels528.javascript.angularjs.core
+package com.ldaniels528.javascript.angularjs
 
 /**
  * Angular.js Directive

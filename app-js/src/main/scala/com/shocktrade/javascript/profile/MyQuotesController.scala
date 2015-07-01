@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.profile
 
 import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.core.{Controller, Location, Scope}
+import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Scope, Controller}
+import com.ldaniels528.javascript.angularjs.core.Location
 import com.ldaniels528.javascript.angularjs.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.profile.MyQuotesController._
