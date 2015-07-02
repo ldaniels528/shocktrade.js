@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
+import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Q
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
@@ -90,7 +91,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
       val contestId = mySession.getContestID()
       val playerId = mySession.getUserID()
-      g.console.log(s"contestId = $contestId, playerId = $playerId, form = ${toJson(form)}")
+      g.console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
 
       contestService.createOrder(contestId, playerId, $scope.form) onComplete {
         case Success(contest) =>

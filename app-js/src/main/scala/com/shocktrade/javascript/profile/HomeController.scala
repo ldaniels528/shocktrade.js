@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.profile
 
+import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
@@ -52,7 +53,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   private def selectFriend = (friend: js.Dynamic) => {
     if (isDefined(friend)) {
-      g.console.log(s"selecting friend ${toJson(friend)}")
+      g.console.log(s"selecting friend ${angular.toJson(friend)}")
       selectedFriend = friend
 
       if (!isDefined(friend.profile)) {

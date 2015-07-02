@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
+import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
@@ -23,7 +24,7 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
   private val messages = emptyArray[String]
   private var loading = false
 
-  g.console.log(s"facebook.profile = ${toJson(facebook.profile)}")
+  g.console.log(s"facebook.profile = ${angular.toJson(facebook.profile)}")
 
   $scope.form = JS(
     name = facebook.profile.name,

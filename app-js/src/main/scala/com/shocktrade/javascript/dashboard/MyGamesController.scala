@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{ScalaJsHelper, Scope, named}
+import com.ldaniels528.scalascript.{Scope, angular, named}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.NewGameDialogService
@@ -69,7 +69,7 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   private def newGamePopup() {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        g.console.log(s"contest = ${toJson(contest)}")
+        g.console.log(s"contest = ${angular.toJson(contest)}")
         if (isDefined(contest.error)) toaster.error(contest.error)
         else {
           // TODO add to Contests

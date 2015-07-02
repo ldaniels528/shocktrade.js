@@ -40,6 +40,7 @@ lazy val appScalaJs = (project in file("app-js"))
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
     libraryDependencies ++= Seq(
+      "com.ldaniels528" %%% "scalascript" % "0.1-SNAPSHOT",
       "com.github.benhutchison" %%% "prickle" % "1.1.5",
       "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
 //    "org.scala-js" %% "scalajs-library" % "0.6.3",

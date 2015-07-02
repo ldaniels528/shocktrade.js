@@ -3,7 +3,7 @@ package com.shocktrade.javascript.admin
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, named}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
 

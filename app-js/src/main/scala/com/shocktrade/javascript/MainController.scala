@@ -222,7 +222,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
           case Success(outcome) =>
             if (isDefined(outcome.error)) {
-              g.console.log(s"outcome = ${toJson(outcome)}")
+              g.console.log(s"outcome = ${angular.toJson(outcome)}")
               toaster.error(outcome.error)
             }
             performTabSwitch(tabIndex)

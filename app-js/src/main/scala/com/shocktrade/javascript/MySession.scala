@@ -1,5 +1,6 @@
 package com.shocktrade.javascript
 
+import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{HttpPromise, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
@@ -39,12 +40,12 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
   def setUserProfile(profile: js.Dynamic, fbProfile: js.Dynamic, facebookID: String) {
-    g.console.log(s"facebookID = $facebookID, fbProfile = ${toJson(fbProfile)}")
+    g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
 
     this.fbProfile = Some(fbProfile)
     this.facebookID = Some(facebookID)
 
-    g.console.log(s"profile = ${toJson(profile)}")
+    g.console.log(s"profile = ${angular.toJson(profile)}")
     this.userProfile = profile
 
     // broadcast the user profile change event

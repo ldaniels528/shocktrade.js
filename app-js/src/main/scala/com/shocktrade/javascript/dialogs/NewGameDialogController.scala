@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
+import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Http, Timeout}
 import com.ldaniels528.scalascript.extensions.ModalInstance
@@ -80,7 +81,7 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
           $timeout.cancel(promise)
           processing = false
         case Failure(e) =>
-          g.console.error(s"Error creating New Game: ${e.getMessage} => form = ${toJson(form)}")
+          g.console.error(s"Error creating New Game: ${e.getMessage} => form = ${angular.toJson(form)}")
           $timeout.cancel(promise)
           processing = false
       }
