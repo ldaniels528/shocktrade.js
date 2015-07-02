@@ -1,8 +1,8 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.Module.RichModule
-import biz.enef.angulate._
-import biz.enef.angulate.ext.{Route, RouteProvider}
+import com.ldaniels528.scalascript.Module.RichModule
+import com.ldaniels528.scalascript._
+import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._

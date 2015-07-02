@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.core.Timeout
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Timeout
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
 import com.shocktrade.javascript.MySession
-import ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.core.Location
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Location
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper}
 import com.shocktrade.javascript.MySession
-import ScalaJsHelper._
 
 import scala.scalajs.js
 

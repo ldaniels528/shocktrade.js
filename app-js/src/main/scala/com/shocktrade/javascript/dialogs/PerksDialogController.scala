@@ -1,11 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.core.ModalInstance
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
 import com.shocktrade.javascript.MySession
-import ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
 import scala.language.postfixOps

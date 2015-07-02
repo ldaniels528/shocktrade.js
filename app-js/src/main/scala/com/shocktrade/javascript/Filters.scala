@@ -1,8 +1,7 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.AnnotatedFunction
-import com.ldaniels528.javascript.angularjs.ScalaJsHelper
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.AnnotatedFunction
+import com.ldaniels528.scalascript.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -19,8 +18,8 @@ object Filters {
    * Absolute Value
    */
   val abs: AnnotatedFunction = () => { (value: js.UndefOr[Double]) =>
-    value map { v => Math.abs(v)} getOrElse value
-  } :js.Function
+    value map { v => Math.abs(v) } getOrElse value
+  }: js.Function
 
   /**
    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")

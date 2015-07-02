@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
-import com.ldaniels528.javascript.angularjs.Service
-import com.ldaniels528.javascript.angularjs.core.Http
+import com.ldaniels528.scalascript.Service
+import com.ldaniels528.scalascript.core.Http
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll

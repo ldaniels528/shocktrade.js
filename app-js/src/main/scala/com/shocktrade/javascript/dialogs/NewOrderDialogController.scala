@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.ScalaJsHelper
-import com.ldaniels528.javascript.angularjs.core.{ModalInstance, Q}
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Q
+import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.ldaniels528.scalascript.{ScalaJsHelper, named}
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.{AutoCompletionController, MySession}

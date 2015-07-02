@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Angular}
-import Angular.angular
-import com.ldaniels528.javascript.angularjs.core.{Location, Q, Timeout}
-import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Toaster}
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.angular
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.{Location, Q, Timeout}
+import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
+import com.ldaniels528.scalascript.{ScalaJsHelper, named}
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus

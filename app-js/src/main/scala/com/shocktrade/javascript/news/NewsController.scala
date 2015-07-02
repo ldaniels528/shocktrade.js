@@ -1,9 +1,8 @@
 package com.shocktrade.javascript.news
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.extensions.{Cookies, Sce, Toaster}
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
 import com.shocktrade.javascript.news.NewsController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

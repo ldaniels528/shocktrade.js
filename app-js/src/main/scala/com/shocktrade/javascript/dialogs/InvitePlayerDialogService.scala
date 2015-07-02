@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.Service
-import com.ldaniels528.javascript.angularjs.core.{Http, Modal, ModalOptions}
+import com.ldaniels528.scalascript.core.Http
+import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
+import com.ldaniels528.scalascript.{Service, named}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
@@ -17,12 +17,6 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @named("MySession") 
    * Invite a player via pop-up dialog
    */
   def popup(participant: js.Dynamic) = {
-    // create an instance of the dialog
-    val options = ModalOptions()
-    options.templateUrl = "invite_player_dialog.htm"
-    options.controller = classOf[InvitePlayerDialogController].getSimpleName
-    options.resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))
-
     /*
     function(selectedFriends) {
       if (selectedFriends.length) {
@@ -35,7 +29,11 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @named("MySession") 
     }
      */
 
-    val modalInstance = $modal.open[js.Dynamic](options)
+    val modalInstance = $modal.open[js.Dynamic](ModalOptions(
+      templateUrl = "invite_player_dialog.htm",
+      controller = classOf[InvitePlayerDialogController].getSimpleName,
+      resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))
+    ))
     modalInstance.result
   }
 

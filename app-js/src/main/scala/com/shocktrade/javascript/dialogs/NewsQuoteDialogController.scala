@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.Controller
-import com.ldaniels528.javascript.angularjs.core.ModalInstance
+import com.ldaniels528.scalascript.extensions.ModalInstance
+import com.ldaniels528.scalascript.{Controller, named}
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.language.postfixOps

@@ -1,9 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Controller, named}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js

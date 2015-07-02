@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.directives
 
-import biz.enef.angulate.core.{Attributes, JQLite}
-import biz.enef.angulate.{Scope, Directive}
+import com.ldaniels528.scalascript.core.{Attributes, JQLite}
+import com.ldaniels528.scalascript.{Scope, Directive}
 import org.scalajs.dom._
 
 import scala.scalajs.js

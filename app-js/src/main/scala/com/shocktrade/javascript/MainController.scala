@@ -1,14 +1,13 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller, Angular}
-import Angular.angular
-import com.ldaniels528.javascript.angularjs.core._
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.scalascript.angular
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.{CancellablePromise, Http, Location, Timeout}
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Angular, Controller, ScalaJsHelper, named}
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
-import ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
 import com.shocktrade.javascript.profile.ProfileService

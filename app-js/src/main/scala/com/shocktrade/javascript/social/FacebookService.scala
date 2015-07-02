@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.social
 
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
-import com.ldaniels528.javascript.angularjs.core.Q
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Q
+import com.ldaniels528.scalascript.{ScalaJsHelper, Service}
 
 import scala.beans.BeanProperty
 import scala.scalajs.js

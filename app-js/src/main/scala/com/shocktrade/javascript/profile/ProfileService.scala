@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
-import com.ldaniels528.javascript.angularjs.core.Http
+import com.ldaniels528.scalascript.{Service, ScalaJsHelper}
 import ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Http
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic._

@@ -1,9 +1,8 @@
 package com.shocktrade.javascript.social
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.ScalaJsHelper._
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import com.ldaniels528.javascript.angularjs.{Controller, Scope}
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, Scope, named}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService

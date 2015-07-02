@@ -1,10 +1,9 @@
 package com.shocktrade.javascript
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Service}
-import com.ldaniels528.javascript.angularjs.core.{Http, Location, Timeout}
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{ScalaJsHelper, Service, named}
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket}
 

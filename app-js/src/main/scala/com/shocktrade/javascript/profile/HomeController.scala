@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.profile
 
-import biz.enef.angulate.named
-import com.ldaniels528.javascript.angularjs.{ScalaJsHelper, Controller}
-import com.ldaniels528.javascript.angularjs.core.Timeout
-import com.ldaniels528.javascript.angularjs.extensions.Toaster
+import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.core.Timeout
+import com.ldaniels528.scalascript.extensions.Toaster
+import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
 import com.shocktrade.javascript.MySession
-import ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js
