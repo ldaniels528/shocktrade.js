@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Scope, angular, named}
+import com.ldaniels528.scalascript.{Scope, angular, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.NewGameDialogService
@@ -18,9 +18,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
-                        @named("ContestService") contestService: ContestService,
-                        @named("MySession") mySession: MySession,
-                        @named("NewGameDialogService") newGameDialog: NewGameDialogService)
+                        @injected("ContestService") contestService: ContestService,
+                        @injected("MySession") mySession: MySession,
+                        @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
   extends GameController($scope, $location, toaster, mySession) {
 
   private var myContests = js.Array[js.Dynamic]()

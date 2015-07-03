@@ -3,7 +3,7 @@ package com.shocktrade.javascript.admin
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
 
@@ -18,8 +18,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynamic, toaster: Toaster,
-                        @named("ContestService") contestService: ContestService,
-                        @named("MySession") mySession: MySession) extends Controller {
+                        @injected("ContestService") contestService: ContestService,
+                        @injected("MySession") mySession: MySession) extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Variables

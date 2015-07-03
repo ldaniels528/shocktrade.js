@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.social
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, Scope, named}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
@@ -18,9 +18,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ConnectController($scope: js.Dynamic, toaster: Toaster,
-                        @named("ComposeMessageDialog") messageDialog: ComposeMessageDialogService,
-                        @named("ConnectService") connectService: ConnectService,
-                        @named("MySession") mySession: MySession)
+                        @injected("ComposeMessageDialog") messageDialog: ComposeMessageDialogService,
+                        @injected("ConnectService") connectService: ConnectService,
+                        @injected("MySession") mySession: MySession)
   extends Controller {
 
   private val scope = $scope.asInstanceOf[Scope]

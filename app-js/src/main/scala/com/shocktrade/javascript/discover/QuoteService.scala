@@ -2,7 +2,7 @@ package com.shocktrade.javascript.discover
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.{ScalaJsHelper, Service, named}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
@@ -11,7 +11,7 @@ import scala.scalajs.js
  * Quote Services
  * @author lawrence.daniels@gmail.com
  */
-class QuoteService($http: Http, @named("MySession") mySession: MySession) extends Service {
+class QuoteService($http: Http, @injected("MySession") mySession: MySession) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
     required("searchTerm", searchTerm)

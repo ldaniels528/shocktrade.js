@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, angular, injected}
 import com.shocktrade.javascript.MainController
 import com.shocktrade.javascript.discover.ResearchController._
 
@@ -18,7 +17,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                         @named("ResearchService") researchService: ResearchService)
+                         @injected("ResearchService") researchService: ResearchService)
   extends Controller {
 
   // search reference data components

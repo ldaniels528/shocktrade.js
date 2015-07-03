@@ -2,7 +2,7 @@ package com.shocktrade.javascript.news
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.news.NewsController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: Toaster,
-                     @named("NewsService") newsService: NewsService)
+                     @injected("NewsService") newsService: NewsService)
   extends Controller {
 
   private var newsSymbols = emptyArray[js.Dynamic]

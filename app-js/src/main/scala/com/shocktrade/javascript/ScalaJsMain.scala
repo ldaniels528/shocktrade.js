@@ -1,5 +1,6 @@
 package com.shocktrade.javascript
 
+import com.ldaniels528.scalascript.AnnotatedFunction._
 import com.ldaniels528.scalascript.Module.RichModule
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
@@ -31,8 +32,37 @@ object ScalaJsMain extends js.JSApp {
     configureServices(module)
     configureControllers(module)
     configureDialogs(module)
-    configureRoutes(module)
-    runApplication(module)
+
+    // define the routes
+    module.config({ ($routeProvider: RouteProvider) =>
+      $routeProvider
+        .when("/about/investors", Route(templateUrl = "/assets/views/about/investors.htm"))
+        .when("/about/me", Route(templateUrl = "/assets/views/about/me.htm"))
+        .when("/about/us", Route(templateUrl = "/assets/views/about/us.htm"))
+        .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/dashboard/:contestId", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
+        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
+        .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
+        .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
+        .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
+        .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
+        .otherwise(Route(redirectTo = "/about/us"))
+    }: AnnotatedFunction)
+
+    // initialize the application
+    module.run({ ($rootScope: js.Dynamic, MySession: MySession, WebSocketService: WebSocketService) =>
+      // capture the session and websocket instances
+      $rootScope.MySession = MySession.asInstanceOf[js.Dynamic]
+
+      // inject Facebook's JavaScript SDK
+      FacebookInjector.init()
+
+      // initialize the web socket service
+      WebSocketService.init()
+    }: AnnotatedFunction)
   }
 
   private def configureDirectives(module: RichModule) {
@@ -109,39 +139,6 @@ object ScalaJsMain extends js.JSApp {
     module.controllerOf[SignUpDialogController]("SignUpController")
     module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
-  }
-
-  private def configureRoutes(module: RichModule) {
-    module.config({ ($routeProvider: RouteProvider) =>
-      $routeProvider
-        .when("/about/investors", Route(templateUrl = "/assets/views/about/investors.htm"))
-        .when("/about/me", Route(templateUrl = "/assets/views/about/me.htm"))
-        .when("/about/us", Route(templateUrl = "/assets/views/about/us.htm"))
-        .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
-        .when("/dashboard/:contestId", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
-        .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
-        .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
-        .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
-        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
-        .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
-        .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
-        .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
-        .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
-        .otherwise(Route(redirectTo = "/about/us"))
-    })
-  }
-
-  private def runApplication(module: RichModule) {
-    module.run({ ($rootScope: js.Dynamic, MySession: MySession, WebSocketService: WebSocketService) =>
-      // capture the session and websocket instances
-      $rootScope.MySession = MySession.asInstanceOf[js.Dynamic]
-
-      // inject Facebook's JavaScript SDK
-      FacebookInjector.init()
-
-      // initialize the web socket service
-      WebSocketService.init()
-    })
   }
 
 }

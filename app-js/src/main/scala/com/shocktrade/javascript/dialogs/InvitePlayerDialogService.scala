@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
-import com.ldaniels528.scalascript.{Service, named}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
@@ -11,7 +11,7 @@ import scala.scalajs.js
  * Invite Player Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class InvitePlayerDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession) extends Service {
+class InvitePlayerDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession) extends Service {
 
   /**
    * Invite a player via pop-up dialog

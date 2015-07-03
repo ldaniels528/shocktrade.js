@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dialogs
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
-import com.ldaniels528.scalascript.{Service, named}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
@@ -15,7 +15,7 @@ import scala.scalajs.js
  * Perks Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class PerksDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession)
+class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
   extends Service {
 
   /**

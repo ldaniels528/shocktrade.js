@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.extensions.{ModalOptions, Modal}
-import com.ldaniels528.scalascript.{Service, named}
+import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.concurrent.ExecutionContext
@@ -12,7 +12,7 @@ import scala.scalajs.js
  * New Order Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewOrderDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession) extends Service {
+class NewOrderDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession) extends Service {
 
   /**
    * Opens a new Order Entry Pop-up Dialog

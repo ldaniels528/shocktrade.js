@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Http, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, Scope, named}
+import com.ldaniels528.scalascript.{Controller, Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -18,9 +18,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
-                           @named("ContestService") contestService: ContestService,
-                           @named("MySession") mySession: MySession,
-                           @named("WebSocketService") webSocket: WebSocketService)
+                           @injected("ContestService") contestService: ContestService,
+                           @injected("MySession") mySession: MySession,
+                           @injected("WebSocketService") webSocket: WebSocketService)
   extends Controller {
 
   private val scope = $scope.asInstanceOf[Scope]

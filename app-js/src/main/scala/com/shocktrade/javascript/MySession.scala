@@ -1,10 +1,9 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.{HttpPromise, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{ScalaJsHelper, Scope, Service, named}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
@@ -22,8 +21,8 @@ import scala.util.{Failure, Success}
  */
 @JSExportAll
 class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
-                @named("ContestService") contestService: ContestService,
-                @named("ProfileService") profileService: ProfileService)
+                @injected("ContestService") contestService: ContestService,
+                @injected("ProfileService") profileService: ProfileService)
   extends Service {
 
   val notifications = emptyArray[String]

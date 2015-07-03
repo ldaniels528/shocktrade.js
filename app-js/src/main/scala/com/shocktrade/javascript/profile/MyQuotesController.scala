@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.profile
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Location
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, Scope, named}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
@@ -20,10 +20,10 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, toaster: Toaster,
-                         @named("ContestService") contestService: ContestService,
-                         @named("MySession") mySession: MySession,
-                         @named("ProfileService") profileService: ProfileService,
-                         @named("QuoteService") quoteService: QuoteService)
+                         @injected("ContestService") contestService: ContestService,
+                         @injected("MySession") mySession: MySession,
+                         @injected("ProfileService") profileService: ProfileService,
+                         @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
   private val quoteSets = js.Dictionary[js.Dynamic](QuoteLists map { case (name, icon) =>

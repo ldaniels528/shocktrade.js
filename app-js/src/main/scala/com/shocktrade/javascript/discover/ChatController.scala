@@ -3,7 +3,7 @@ package com.shocktrade.javascript.discover
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Location
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
@@ -19,8 +19,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
-                     @named("MySession") mySession: MySession,
-                     @named("ContestService") contestService: ContestService)
+                     @injected("MySession") mySession: MySession,
+                     @injected("ContestService") contestService: ContestService)
   extends Controller {
 
   private val colorMap = js.Dictionary[String]()

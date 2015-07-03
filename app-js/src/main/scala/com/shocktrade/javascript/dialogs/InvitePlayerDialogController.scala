@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.ModalInstance
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.js
@@ -12,8 +12,8 @@ import scala.scalajs.js
  * @author lawrence.daniels@gmail.com
  */
 class InvitePlayerDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Array[js.Dynamic]],
-                                   @named("MySession") mySession: MySession,
-                                   @named("myFriends") myFriends: js.Array[js.Dynamic])
+                                   @injected("MySession") mySession: MySession,
+                                   @injected("myFriends") myFriends: js.Array[js.Dynamic])
   extends Controller {
 
   private val invites = emptyArray[js.Dynamic]

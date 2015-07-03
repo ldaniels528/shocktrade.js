@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
 import prickle.Unpickle
@@ -18,8 +18,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
-                                    @named("MySession") mySession: MySession,
-                                    @named("TransferFundsDialog") dialog: TransferFundsDialogService)
+                                    @injected("MySession") mySession: MySession,
+                                    @injected("TransferFundsDialog") dialog: TransferFundsDialogService)
   extends Controller {
 
   private val messages = emptyArray[String]

@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Http, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -17,8 +17,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
-                         @named("ContestService") contestService: ContestService,
-                         @named("MySession") mySession: MySession)
+                         @injected("ContestService") contestService: ContestService,
+                         @injected("MySession") mySession: MySession)
   extends Controller {
 
   private var chartData = emptyArray[js.Dynamic]

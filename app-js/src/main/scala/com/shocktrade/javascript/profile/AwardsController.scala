@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.profile
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, Scope, named}
 import com.shocktrade.core.Award
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
@@ -15,7 +15,7 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
  * Awards Controller
  * @author lawrence.daniels@gmail.com
  */
-class AwardsController($scope: js.Dynamic, $http: Http, @named("MySession") mySession: MySession) extends Controller {
+class AwardsController($scope: js.Dynamic, $http: Http, @injected("MySession") mySession: MySession) extends Controller {
   private val scope = $scope.asInstanceOf[Scope]
 
   ///////////////////////////////////////////////////////////////////////////

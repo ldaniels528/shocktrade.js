@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.language.postfixOps
@@ -18,8 +18,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                              @named("ContestService") contestService: ContestService,
-                              @named("MySession") mySession: MySession) extends Controller {
+                              @injected("ContestService") contestService: ContestService,
+                              @injected("MySession") mySession: MySession) extends Controller {
 
   private val interestRate = 0.15
   private val initialMargin = 0.50

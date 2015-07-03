@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
 import com.shocktrade.javascript.MySession
 
 import scala.concurrent.duration._
@@ -16,8 +15,8 @@ import scala.scalajs.js.Dynamic.{global => g, literal => JS}
  * @author lawrence.daniels@gmail.com
  */
 class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                     @named("MySession") mySession: MySession,
-                     @named("ProfileService") profileService: ProfileService)
+                     @injected("MySession") mySession: MySession,
+                     @injected("ProfileService") profileService: ProfileService)
   extends Controller {
 
   private var selectedFriend: js.Dynamic = null

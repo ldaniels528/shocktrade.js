@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dashboard
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.language.postfixOps
@@ -13,7 +13,7 @@ import scala.scalajs.js.Date
  * Cash Account Controller
  * @author lawrence.daniels@gmail.com
  */
-class CashAccountController($scope: js.Dynamic, toaster: Toaster, @named("MySession") mySession: MySession) extends Controller {
+class CashAccountController($scope: js.Dynamic, toaster: Toaster, @injected("MySession") mySession: MySession) extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions

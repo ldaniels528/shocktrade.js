@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{ScalaJsHelper, Service, named}
+import com.ldaniels528.scalascript.{Service, injected}
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket}
 
@@ -18,7 +18,7 @@ import scala.scalajs.js.annotation.JSExportAll
  */
 @JSExportAll
 class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
-                       @named("MySession") mySession: MySession)
+                       @injected("MySession") mySession: MySession)
   extends Service {
 
   private var socket: WebSocket = null

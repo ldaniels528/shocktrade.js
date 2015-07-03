@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Q
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
@@ -19,12 +18,12 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $q: Q, toaster: Toaster,
-                               @named("ContestService") contestService: ContestService,
-                               @named("MySession") mySession: MySession,
-                               @named("NewOrderDialog") newOrderDialog: NewOrderDialogService,
-                               @named("PerksDialog") perksDialog: PerksDialogService,
-                               @named("QuoteService") quoteService: QuoteService,
-                               @named("params") params: js.Dynamic)
+                               @injected("ContestService") contestService: ContestService,
+                               @injected("MySession") mySession: MySession,
+                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
+                               @injected("PerksDialog") perksDialog: PerksDialogService,
+                               @injected("QuoteService") quoteService: QuoteService,
+                               @injected("params") params: js.Dynamic)
   extends AutoCompletionController($q, quoteService) {
 
   private val messages = emptyArray[String]

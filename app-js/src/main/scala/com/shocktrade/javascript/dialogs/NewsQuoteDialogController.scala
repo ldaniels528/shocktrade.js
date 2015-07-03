@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.extensions.ModalInstance
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.language.postfixOps
@@ -15,8 +15,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewsQuoteDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic],
-                                @named("ContestService") contestService: ContestService,
-                                @named("symbol") symbol: String)
+                                @injected("ContestService") contestService: ContestService,
+                                @injected("symbol") symbol: String)
   extends Controller {
 
   $scope.quote = JS(symbol = symbol)

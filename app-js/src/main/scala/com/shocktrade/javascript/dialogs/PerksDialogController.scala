@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 
@@ -17,8 +17,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
-                            @named("MySession") mySession: MySession,
-                            @named("PerksDialog") dialog: PerksDialogService)
+                            @injected("MySession") mySession: MySession,
+                            @injected("PerksDialog") dialog: PerksDialogService)
   extends Controller {
 
   private var perks = emptyArray[js.Dynamic]

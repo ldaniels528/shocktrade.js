@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.{Http, Timeout}
 import com.ldaniels528.scalascript.extensions.ModalInstance
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, Scope, named}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewGameDialogController._
@@ -20,9 +19,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout,
-                              @named("ContestService") ContestService: ContestService,
-                              @named("MySession") MySession: MySession,
-                              @named("NewGameDialogService") newGameDialog: NewGameDialogService)
+                              @injected("ContestService") ContestService: ContestService,
+                              @injected("MySession") MySession: MySession,
+                              @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
   extends Controller {
 
   private val errors = emptyArray[String]

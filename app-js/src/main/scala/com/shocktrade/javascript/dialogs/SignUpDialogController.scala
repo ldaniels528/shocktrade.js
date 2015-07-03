@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, angular, injected}
 import com.shocktrade.javascript.social.FacebookService
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -17,8 +16,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout, toaster: Toaster,
-                             @named("Facebook") facebook: FacebookService,
-                             @named("SignUpDialog") dialog: SignUpDialogService)
+                             @injected("Facebook") facebook: FacebookService,
+                             @injected("SignUpDialog") dialog: SignUpDialogService)
   extends Controller {
 
   private val messages = emptyArray[String]

@@ -1,10 +1,9 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{CancellablePromise, Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Angular, Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, angular, injected}
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
@@ -25,11 +24,11 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class MainController($scope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
-                     @named("ContestService") contestService: ContestService,
-                     @named("Facebook") facebook: FacebookService,
-                     @named("MySession") mySession: MySession,
-                     @named("ProfileService") profileService: ProfileService,
-                     @named("SignUpDialog") signUpDialog: SignUpDialogService)
+                     @injected("ContestService") contestService: ContestService,
+                     @injected("Facebook") facebook: FacebookService,
+                     @injected("MySession") mySession: MySession,
+                     @injected("ProfileService") profileService: ProfileService,
+                     @injected("SignUpDialog") signUpDialog: SignUpDialogService)
   extends Controller {
 
   private var loadingIndex = 0

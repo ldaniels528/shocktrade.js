@@ -2,7 +2,7 @@ package com.shocktrade.javascript.discover
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -13,7 +13,7 @@ import scala.util.{Failure, Success}
  * Trading History Controller
  * @author lawrence.daniels@gmail.com
  */
-class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @named("QuoteService") quoteService: QuoteService)
+class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
   private var tradingHistory: js.Array[js.Dynamic] = null

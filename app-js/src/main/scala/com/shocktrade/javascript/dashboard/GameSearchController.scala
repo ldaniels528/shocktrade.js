@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{ScalaJsHelper, Scope, named}
+import com.ldaniels528.scalascript.{Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
@@ -20,9 +20,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                           @named("ContestService") contestService: ContestService,
-                           @named("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
-                           @named("MySession") mySession: MySession)
+                           @injected("ContestService") contestService: ContestService,
+                           @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
+                           @injected("MySession") mySession: MySession)
   extends GameController($scope, $location, toaster, mySession) {
 
   val scope = $scope.asInstanceOf[Scope]

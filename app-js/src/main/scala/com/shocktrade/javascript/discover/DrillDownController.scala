@@ -3,7 +3,7 @@ package com.shocktrade.javascript.discover
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  */
 class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookies: Cookies,
                           $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
-                          @named("QuoteService") quoteService: QuoteService)
+                          @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
   // define the callback signatures

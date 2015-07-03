@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.extensions.{ModalOptions, Modal}
-import com.ldaniels528.scalascript.{Service, named}
+import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.scalajs.js
@@ -11,7 +11,7 @@ import scala.scalajs.js
  * New Game Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewGameDialogService($http: Http, $modal: Modal, @named("ContestService") contestService: ContestService)
+class NewGameDialogService($http: Http, $modal: Modal, @injected("ContestService") contestService: ContestService)
   extends Service {
 
   /**

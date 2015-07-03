@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.ldaniels528.scalascript.{Controller, ScalaJsHelper, named}
+import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.PortfolioController._
@@ -20,9 +20,9 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                          @named("MySession") mySession: MySession,
-                          @named("ContestService") contestService: ContestService,
-                          @named("NewOrderDialog") newOrderDialog: NewOrderDialogService)
+                          @injected("MySession") mySession: MySession,
+                          @injected("ContestService") contestService: ContestService,
+                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService)
   extends Controller {
 
   $scope.selectedClosedOrder = null

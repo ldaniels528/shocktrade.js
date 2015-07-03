@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
-import com.ldaniels528.scalascript.{Service, named}
+import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 
 import scala.concurrent.ExecutionContext
@@ -12,7 +12,7 @@ import scala.scalajs.js
  * Sign-Up Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class SignUpDialogService($http: Http, $modal: Modal, @named("MySession") mySession: MySession) extends Service {
+class SignUpDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession) extends Service {
 
   /**
    * Sign-up Modal Dialog
