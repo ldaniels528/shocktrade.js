@@ -11,10 +11,10 @@
         </div>
         <div ng-if="getContact()._id" style="width: 100%">
             <!-- if ShockTrade user -->
-            <div ng-show="getContact().profile">@assets.views.html.connect.ContactCard()</div>
+            <div ng-show="getContact().profile">@assets.views.html.connect.contactCard()</div>
 
             <!-- Non-ShockTrade user -->
-            <div ng-hide="getContact().profile">@assets.views.html.connect.NonMemberCard()</div>
+            <div ng-hide="getContact().profile">@assets.views.html.connect.nonMemberCard()</div>
         </div>
         <div class="contactsContainer">
             <span ng-show="getFriends().length == 0" class="notice" style="margin-left: 10px">
