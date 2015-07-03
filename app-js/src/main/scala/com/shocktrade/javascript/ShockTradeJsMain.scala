@@ -16,10 +16,10 @@ import com.shocktrade.javascript.social._
 import scala.scalajs.js
 
 /**
- * Scala Js Main
+ * ShockTrade.js Application Main
  * @author lawrence.daniels@gmail.com
  */
-object ScalaJsMain extends js.JSApp {
+object ShockTradeJsMain extends js.JSApp {
 
   def main() {
     // create the application
@@ -53,9 +53,9 @@ object ScalaJsMain extends js.JSApp {
     }: AnnotatedFunction)
 
     // initialize the application
-    module.run({ ($rootScope: js.Dynamic, MySession: MySession, WebSocketService: WebSocketService) =>
+    module.run({ ($rootScope: Scope, MySession: MySession, WebSocketService: WebSocketService) =>
       // capture the session and websocket instances
-      $rootScope.MySession = MySession.asInstanceOf[js.Dynamic]
+      $rootScope.dynamic.MySession = MySession.asInstanceOf[js.Dynamic]
 
       // inject Facebook's JavaScript SDK
       FacebookInjector.init()
@@ -122,7 +122,6 @@ object ScalaJsMain extends js.JSApp {
   }
 
   private def configureDialogs(module: RichModule) {
-    // ShockTrade dialogs
     module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
     module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")

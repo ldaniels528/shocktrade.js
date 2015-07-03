@@ -4,7 +4,7 @@ import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}
-import com.shocktrade.javascript.MainController
+import com.shocktrade.javascript.{GlobalLoading, MainController}
 import com.shocktrade.javascript.discover.ResearchController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
  */
 class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                          @injected("ResearchService") researchService: ResearchService)
-  extends Controller {
+  extends Controller with GlobalLoading {
 
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()

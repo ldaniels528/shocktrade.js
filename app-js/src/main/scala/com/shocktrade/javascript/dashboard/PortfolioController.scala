@@ -5,7 +5,7 @@ import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.{GlobalLoading, MySession}
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController
@@ -23,7 +23,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
                           @injected("MySession") mySession: MySession,
                           @injected("ContestService") contestService: ContestService,
                           @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService)
-  extends Controller {
+  extends Controller with GlobalLoading {
 
   $scope.selectedClosedOrder = null
   $scope.selectedOrder = null

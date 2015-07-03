@@ -1,14 +1,14 @@
 package com.shocktrade.javascript.discover
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
-import com.ldaniels528.scalascript.core.{Location, Q, Timeout}
+import com.ldaniels528.scalascript.core.{Interval, Location, Q, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.{AutoCompletionController, MySession}
+import com.shocktrade.javascript.{GlobalLoading, AutoCompletionController, MySession}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -20,14 +20,14 @@ import scala.util.{Failure, Success}
  * Discover Controller
  * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Timeout, $location: Location,
+class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Interval, $location: Location,
                          $q: Q, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                          @injected("MarketStatus") marketStatus: MarketStatusService,
                          @injected("MySession") mySession: MySession,
                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @injected("ProfileService") profileService: ProfileService,
                          @injected("QuoteService") quoteService: QuoteService)
-  extends AutoCompletionController($q, quoteService) {
+  extends AutoCompletionController($q, quoteService) with GlobalLoading {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 

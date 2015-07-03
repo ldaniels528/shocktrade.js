@@ -3,6 +3,7 @@ package com.shocktrade.javascript.news
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
+import com.shocktrade.javascript.GlobalLoading
 import com.shocktrade.javascript.news.NewsController._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -16,7 +17,7 @@ import scala.util.{Failure, Success}
  */
 class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: Toaster,
                      @injected("NewsService") newsService: NewsService)
-  extends Controller {
+  extends Controller with GlobalLoading {
 
   private var newsSymbols = emptyArray[js.Dynamic]
   private var channels = emptyArray[js.Dynamic]

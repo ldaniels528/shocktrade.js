@@ -29,7 +29,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
                      @injected("MySession") mySession: MySession,
                      @injected("ProfileService") profileService: ProfileService,
                      @injected("SignUpDialog") signUpDialog: SignUpDialogService)
-  extends Controller {
+  extends Controller with GlobalLoading {
 
   private var loadingIndex = 0
   private var nonMember = true
@@ -184,14 +184,15 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   private def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
 
   private def signUpPopup(facebookID: String, fbProfile_? : Option[js.Dynamic]) {
-    fbProfile_? map { fbProfile =>
-      signUpDialog.popup(facebookID, fbProfile) onSuccess {
-        case profile: js.Dynamic =>
-          mySession.setUserProfile(profile, fbProfile, facebookID)
-      }
-    } getOrElse {
-      g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
-      toaster.info("Sign-in to Facebook, then Sign-up here")
+    fbProfile_? match {
+      case Some(fbProfile) =>
+        signUpDialog.popup(facebookID, fbProfile) onSuccess {
+          case profile: js.Dynamic =>
+            mySession.setUserProfile(profile, fbProfile, facebookID)
+        }
+      case _ =>
+        g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
+        toaster.info("Sign-in to Facebook, then Sign-up here")
     }
   }
 
