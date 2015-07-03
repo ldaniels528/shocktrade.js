@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{CancellablePromise, Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, angular, injected}
+import com.ldaniels528.scalascript.{Scope, Controller, angular, injected}
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
@@ -256,6 +256,14 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //////////////////////////////////////////////////////////////////////
 
   $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) => g.console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
+
+}
+
+/**
+ * Main Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait MainScope extends Scope {
 
 }
 
