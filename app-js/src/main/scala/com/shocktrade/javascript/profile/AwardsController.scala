@@ -7,9 +7,10 @@ import com.shocktrade.core.Award
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.profile.AwardsController._
+import org.scalajs.dom.console
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * Awards Controller
@@ -39,7 +40,7 @@ class AwardsController($scope: js.Dynamic, $http: Http, @injected("MySession") m
   }
 
   private def setupAwards() {
-    g.console.log("Setting up awards....")
+    console.log("Setting up awards....")
     AvailableAwards foreach { award =>
       award.owned = mySession.getMyAwards().contains(award.code.as[String])
     }

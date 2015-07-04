@@ -5,6 +5,7 @@ import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
+import org.scalajs.dom.console
 import prickle.Unpickle
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -86,7 +87,7 @@ class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalIns
           if (isInsufficientMarginFunds(form)) messages.push("Insufficient funds in your margin account to complete the request")
         case Failure(e) =>
           messages.push("An Internal Error occurred. Try again later.")
-          g.console.log(s"formJs => ${JSON.stringify(formJs)}")
+          console.log(s"formJs => ${JSON.stringify(formJs)}")
           g.console.error(s"Internal Error: ${e.getMessage}")
       }
     }

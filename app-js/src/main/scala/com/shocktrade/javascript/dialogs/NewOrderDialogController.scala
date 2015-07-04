@@ -7,6 +7,7 @@ import com.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -90,7 +91,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
       val contestId = mySession.getContestID()
       val playerId = mySession.getUserID()
-      g.console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
+      console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
 
       contestService.createOrder(contestId, playerId, $scope.form) onComplete {
         case Success(contest) =>

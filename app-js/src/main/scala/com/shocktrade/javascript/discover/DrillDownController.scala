@@ -4,6 +4,7 @@ import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -108,19 +109,19 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
     quoteService.loadSectorInfo(symbol) onComplete {
       case Success(data) =>
         val info = data.head
-        g.console.log(s"info = ${JSON.stringify(info)}")
+        console.log(s"info = ${JSON.stringify(info)}")
         // find the symbol (expand: sector >> industry >> sub-industry >> symbol)
-        g.console.log(s"Expanding sector '${info.sector}'...")
+        console.log(s"Expanding sector '${info.sector}'...")
         findLabel(sectors, info.sector.as[String]) foreach { mySector =>
-          g.console.log(s"mySector is '${JSON.stringify(mySector)}'...")
+          console.log(s"mySector is '${JSON.stringify(mySector)}'...")
           expandOrCollapseSector(mySector, { (sector: js.Dynamic, industries: js.Array[js.Dynamic]) =>
 
-            g.console.log(s"Expanding industry '${info.sector}' >> '${info.industry}'...")
+            console.log(s"Expanding industry '${info.sector}' >> '${info.industry}'...")
             findLabel(industries, info.industry.as[String]) foreach { myIndustry =>
-              g.console.log(s"myIndustry is '${JSON.stringify(myIndustry)}'...")
+              console.log(s"myIndustry is '${JSON.stringify(myIndustry)}'...")
               expandOrCollapseIndustry(sector, myIndustry, { (sector: js.Dynamic, industry: js.Dynamic, subIndustries: js.Array[js.Dynamic]) =>
 
-                g.console.log(s"Expanding sub-industry '${info.sector}' >> '${info.industry}' >> '${info.subIndustry}'...")
+                console.log(s"Expanding sub-industry '${info.sector}' >> '${info.industry}' >> '${info.subIndustry}'...")
                 findLabel(subIndustries, info.subIndustry.as[String]) foreach { mySubIndustry =>
                   expandOrCollapseSubIndustry(sector, industry, mySubIndustry, { (sector: js.Dynamic, industry: js.Dynamic, subIndustry: js.Dynamic, quotes: js.Array[js.Dynamic]) =>
                     $location.hash("10000")

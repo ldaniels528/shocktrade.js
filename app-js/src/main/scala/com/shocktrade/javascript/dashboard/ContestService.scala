@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{ScalaJsHelper, Service}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -116,7 +116,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
           leader = null,
           player = null
         )
-        g.console.log(s"Loading Contest Rankings for '${contest.name}'...")
+        console.log(s"Loading Contest Rankings for '${contest.name}'...")
         getRankings(contest.OID) onComplete {
           case Success(participants) =>
             contest.rankings.participants = participants

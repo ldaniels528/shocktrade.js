@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{CancellablePromise, Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Scope, Controller, angular, injected}
+import com.ldaniels528.scalascript.{Controller, Scope, angular, injected}
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
@@ -11,6 +11,7 @@ import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.FacebookService
+import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -53,7 +54,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.levels = GameLevels.Levels
 
-  $scope.mainInit = (uuid: String) => g.console.log(s"Session UUID is $uuid")
+  $scope.mainInit = (uuid: String) => console.log(s"Session UUID is $uuid")
 
   $scope.changeAppTab = (tabIndex: js.UndefOr[Int]) => changeAppTab(tabIndex)
 
@@ -118,11 +119,11 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   }
 
   private def loadFacebookFriends() {
-    g.console.log("Loading Facebook friends...")
+    console.log("Loading Facebook friends...")
     facebook.getTaggableFriends({ (response: js.Dynamic) =>
       if (isDefined(response.data)) {
         val friends = response.data.asArray[js.Dynamic]
-        g.console.log(s"${friends.length} friend(s) loaded")
+        console.log(s"${friends.length} friend(s) loaded")
         friends.foreach(mySession.fbFriends.push(_))
       }
       ()
@@ -149,13 +150,13 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   }
 
   private def postLoginUpdates(facebookID: String, userInitiated: Boolean) = {
-    g.console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
+    console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
 
     // capture the Facebook user ID
     mySession.setFacebookID(facebookID)
 
     // load the user"s Facebook profile
-    g.console.log(s"Retrieving Facebook profile for FBID $facebookID...")
+    console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     facebook.getUserProfile() onComplete {
       case Success(response) =>
         mySession.setFacebookProfile(response)
@@ -165,15 +166,15 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     }
 
     // load the user"s ShockTrade profile
-    g.console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
+    console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
     profileService.getProfileByFacebookID(facebookID) onComplete {
       case Success(profile) if isDefined(profile.error) =>
         nonMember = true
-        g.console.log("Non-member identified.")
+        console.log("Non-member identified.")
         if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
       case Success(profile) =>
         nonMember = false
-        g.console.log("ShockTrade user profile loaded...")
+        console.log("ShockTrade user profile loaded...")
         mySession.setUserProfile(profile, facebook.profile, facebookID)
         loadFacebookFriends()
       case Failure(e) =>
@@ -191,7 +192,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
             mySession.setUserProfile(profile, fbProfile, facebookID)
         }
       case _ =>
-        g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
+        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
         toaster.info("Sign-in to Facebook, then Sign-up here")
     }
   }
@@ -202,7 +203,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
     // set loading timeout
     $timeout(() => {
-      g.console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
+      console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
       loadingIndex = 0
     }, _timeout)
   }
@@ -222,7 +223,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
           case Success(outcome) =>
             if (isDefined(outcome.error)) {
-              g.console.log(s"outcome = ${angular.toJson(outcome)}")
+              console.log(s"outcome = ${angular.toJson(outcome)}")
               toaster.error(outcome.error)
             }
             performTabSwitch(tabIndex)
@@ -236,7 +237,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   private def performTabSwitch(tabIndex: Int): Unit = {
     val tab = appTabs(tabIndex)
-    g.console.log(s"Changing location for ${mySession.getUserName()} to ${tab.url}")
+    console.log(s"Changing location for ${mySession.getUserName()} to ${tab.url}")
     $location.url(tab.url.as[String])
   }
 
@@ -255,7 +256,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) => g.console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
+  $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) => console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
 
 }
 

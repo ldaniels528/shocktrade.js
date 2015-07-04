@@ -7,6 +7,7 @@ import com.ldaniels528.scalascript.{Controller, Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
 import com.shocktrade.javascript.dashboard.ContestService
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -60,7 +61,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
   private def init() {
     mySession.userProfile.OID_? match {
       case Some(userID) =>
-        g.console.log(s"Loading player information for user ID $userID")
+        console.log(s"Loading player information for user ID $userID")
 
         // load the player's total investment
         loadTotalInvestment(userID)
@@ -69,7 +70,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
       case None =>
         attemptsLeft -= 1
         if (attemptsLeft > 0) {
-          g.console.log("No user ID found... awaiting re-try (5 seconds)")
+          console.log("No user ID found... awaiting re-try (5 seconds)")
           $timeout(() => init(), 5000)
         }
     }
@@ -100,12 +101,12 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
     }, delay = 20000)
 
     // retrieve the total investment
-    g.console.log("Loading Total investment...")
+    console.log("Loading Total investment...")
     contestService.getTotalInvestment(playerId) onComplete {
       case Success(response) =>
         totalInvestment = Option(response.netWorth.as[Double])
         totalInvestmentStatus = Option(LOADED)
-        g.console.log("Total investment loaded")
+        console.log("Total investment loaded")
       case Failure(e) =>
         toaster.error("Error loading total investment")
         totalInvestmentStatus = Option(FAILED)

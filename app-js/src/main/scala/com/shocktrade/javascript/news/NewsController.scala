@@ -5,10 +5,11 @@ import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.GlobalLoading
 import com.shocktrade.javascript.news.NewsController._
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -49,7 +50,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
   /////////////////////////////////////////////////////////////////////////////
 
   private def loadNewsSources() {
-    g.console.log("Loading news sources...")
+    console.log("Loading news sources...")
     asyncLoading($scope)(newsService.getNewsSources) onComplete {
       case Success(sources) =>
         newsSources = sources
@@ -65,7 +66,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
   }
 
   private def findNewsFeed(feedId: String) = {
-    g.console.log("Getting news feeds...")
+    console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
         populateQuotes(feedChannels)

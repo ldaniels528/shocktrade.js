@@ -1,6 +1,5 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.AnnotatedFunction
 import com.ldaniels528.scalascript.ScalaJsHelper._
 
 import scala.language.postfixOps
@@ -17,14 +16,14 @@ object Filters {
   /**
    * Absolute Value
    */
-  val abs: AnnotatedFunction = () => { (value: js.UndefOr[Double]) =>
+  val abs: js.Function = () => { (value: js.UndefOr[Double]) =>
     value map { v => Math.abs(v) } getOrElse value
   }: js.Function
 
   /**
    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
    */
-  val bigNumber: AnnotatedFunction = () => { value: js.UndefOr[Double] =>
+  val bigNumber: js.Function = () => { value: js.UndefOr[Double] =>
     value map {
       case num if Math.abs(num) >= 1.0e+12 => f"${num / 1.0e+12}%.2fT"
       case num if Math.abs(num) >= 1.0e+9 => f"${num / 1.0e+9}%.2fB"
@@ -37,29 +36,29 @@ object Filters {
   /**
    * Capitalize: Returns the capitalize representation of a given string
    */
-  val capitalize: AnnotatedFunction = () => { (s: String) =>
+  val capitalize: js.Function = () => { (s: String) =>
     if (s.nonEmpty) s.head.toUpper + s.tail else ""
   }: js.Function
 
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
-  val duration: AnnotatedFunction = () => { (time: js.Dynamic) => toDuration(time, noFuture = false) }: js.Function
+  val duration: js.Function = () => { (time: js.Dynamic) => toDuration(time, noFuture = false) }: js.Function
 
   /**
    * Escape: Performs an escape
    */
-  val escape: AnnotatedFunction = () => { () => g.window.escape }: js.Function
+  val escape: js.Function = () => { () => g.window.escape }: js.Function
 
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
-  val newsDuration: AnnotatedFunction = () => { (time: js.Dynamic) => toDuration(time, noFuture = true) }: js.Function
+  val newsDuration: js.Function = () => { (time: js.Dynamic) => toDuration(time, noFuture = true) }: js.Function
 
   /**
    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
    */
-  val quoteChange: AnnotatedFunction = () => { value: js.UndefOr[Double] =>
+  val quoteChange: js.Function = () => { value: js.UndefOr[Double] =>
     value map {
       case num if Math.abs(num) >= 100 => f"$num%.0f"
       case num if Math.abs(num) >= 10 => f"$num%.1f"
@@ -70,7 +69,7 @@ object Filters {
   /**
    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
    */
-  val quoteNumber: AnnotatedFunction = () => { value: js.UndefOr[Double] =>
+  val quoteNumber: js.Function = () => { value: js.UndefOr[Double] =>
     value map {
       case num if Math.abs(num) < 0.0001 => f"$num%.5f"
       case num if Math.abs(num) < 10 => f"$num%.4f"
@@ -81,7 +80,7 @@ object Filters {
   /**
    * Yes/No: Converts a boolean value into 'Yes' or 'No'
    */
-  val yesNo: AnnotatedFunction = () => ((state: Boolean) => if (state) "Yes" else "No"): js.Function
+  val yesNo: js.Function = () => ((state: Boolean) => if (state) "Yes" else "No"): js.Function
 
   /**
    * Converts the given time expression to a textual duration

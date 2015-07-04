@@ -1,12 +1,13 @@
 package com.shocktrade.javascript.social
 
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Q
-import com.ldaniels528.scalascript.{ScalaJsHelper, Service}
+import org.scalajs.dom.console
 
 import scala.beans.BeanProperty
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * Facebook Service
@@ -35,17 +36,17 @@ class FacebookService($q: Q) extends Service {
     FB = fbSDK
 
     // get the login status
-    g.console.log("Retrieving Facebook login status...")
+    console.log("Retrieving Facebook login status...")
     FB.getLoginStatus((response: js.Dynamic) => {
-      g.console.log(s"Facebook login status is ${response.status}")
+      console.log(s"Facebook login status is ${response.status}")
       if (response.status === "connected") {
         // capture the Facebook login status
         if (isDefined(response.authResponse)) {
-          g.console.log("Successfully loaded the Facebook profile...")
+          console.log("Successfully loaded the Facebook profile...")
           auth = response.authResponse
           facebookID = auth.userID.as[String]
           accessToken = auth.accessToken.as[String]
-          g.console.log(s"accessToken = $accessToken")
+          console.log(s"accessToken = $accessToken")
           deferred.resolve(response)
         }
         else deferred.reject("Facebook response was undefined")
@@ -112,7 +113,7 @@ class FacebookService($q: Q) extends Service {
 
     // if there are more results, recursively extract them
     if (isDefined(response.paging) && isDefined(response.paging.next)) {
-      g.console.log(s"Getting next page: ${response.paging.next}")
+      console.log(s"Getting next page: ${response.paging.next}")
       FB.api(response.paging.next, (response: js.Dynamic) => paginatedResults(response, callback))
     }
   }
@@ -127,11 +128,11 @@ class FacebookService($q: Q) extends Service {
             // the user is logged in and has authenticated your app, and response.authResponse supplies
             // the user"s ID, a valid access token, a signed request, and the time the access token
             // and signed request each expire
-            g.console.log("User connected... Gathering information...")
+            console.log("User connected... Gathering information...")
             facebookID = response.authResponse.userID.as[String]
             accessToken = response.authResponse.accessToken.as[String]
             auth = response.authResponse
-            g.console.log("Completed gathering information.")
+            console.log("Completed gathering information.")
             deferred.resolve(response)
           case Some("not_authorized") =>
             // the user is logged in to Facebook, but has not authenticated your app

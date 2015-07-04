@@ -7,6 +7,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
+import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -39,12 +40,12 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
   def setUserProfile(profile: js.Dynamic, fbProfile: js.Dynamic, facebookID: String) {
-    g.console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
+    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
 
     this.fbProfile = Some(fbProfile)
     this.facebookID = Some(facebookID)
 
-    g.console.log(s"profile = ${angular.toJson(profile)}")
+    console.log(s"profile = ${angular.toJson(profile)}")
     this.userProfile = profile
 
     // broadcast the user profile change event
@@ -113,7 +114,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   /////////////////////////////////////////////////////////////////////
 
   def deduct: js.Function1[Double, js.Dynamic] = (amount: Double) => {
-    g.console.log(f"Deducting $amount%.2f from ${userProfile.netWorth}")
+    console.log(f"Deducting $amount%.2f from ${userProfile.netWorth}")
     userProfile.netWorth -= amount
   }
 
@@ -188,7 +189,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def deductFundsAvailable: js.Function1[Double, Unit] = (amount: Double) => {
     participant.foreach { player =>
-      g.console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
+      console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
       player.cashAccount.cashFunds -= amount
       // TODO rethink this
     }
@@ -321,7 +322,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Event Functions
   ////////////////////////////////////////////////////////////
 
-  private def info(contest: js.Dynamic, message: String) = g.console.log(s"${contest.name}: $message")
+  private def info(contest: js.Dynamic, message: String) = console.log(s"${contest.name}: $message")
 
   private def updateContestDelta(updatedContest: js.Dynamic) {
     // update the messages (if present)
@@ -415,7 +416,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   })
 
   $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: js.Dynamic) =>
-    g.console.log(s"User Profile for ${profile.name} updated")
+    console.log(s"User Profile for ${profile.name} updated")
     if (userProfile.OID == profile.OID) {
       userProfile.netWorth = profile.netWorth
       toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5.seconds, "trustedHtml")

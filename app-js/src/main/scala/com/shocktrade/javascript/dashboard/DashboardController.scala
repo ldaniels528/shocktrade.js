@@ -6,6 +6,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -56,7 +57,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   $scope.perksDialog = () => {
     perksDialog.popup() onComplete {
       case Success(contest) =>
-        g.console.log(s"Settings contest")
+        console.log(s"Settings contest")
         mySession.setContest(contest)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
@@ -90,7 +91,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
 
     // if the current contest is not the chosen contest ...
     if (!mySession.contest.exists(_.OID == contestId)) {
-      g.console.log(s"Loading contest $contestId...")
+      console.log(s"Loading contest $contestId...")
       contestService.getContestByID(contestId) onComplete {
         case Success(loadedContest) => mySession.setContest(loadedContest)
         case Failure(e) =>

@@ -4,8 +4,9 @@ import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}
-import com.shocktrade.javascript.{GlobalLoading, MainController}
 import com.shocktrade.javascript.discover.ResearchController._
+import com.shocktrade.javascript.{GlobalLoading, MainController}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -154,7 +155,7 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
   // retrieve the search options cookie
   $cookies.getObject[js.Dynamic](CookieName) foreach { options =>
     if (isDefined(options)) {
-      g.console.log(s"Retrieved search options from cookie '$CookieName': ${angular.toJson(options, pretty = false)}")
+      console.log(s"Retrieved search options from cookie '$CookieName': ${angular.toJson(options, pretty = false)}")
       $scope.searchOptions = options
     }
   }

@@ -9,6 +9,7 @@ import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.{GlobalLoading, AutoCompletionController, MySession}
+import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -64,7 +65,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
   ///////////////////////////////////////////////////////////////////////////
 
   private def loadQuote(ticker: js.Dynamic) = {
-    g.console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
+    console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
 
     // determine the symbol
     val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String].toUpperCase
@@ -105,7 +106,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
         }
 
       case Success(quote) =>
-        g.console.log(s"quote = ${angular.toJson(quote)}")
+        console.log(s"quote = ${angular.toJson(quote)}")
         toaster.warning(s"Symbol $symbol not found")
 
       case Failure(e) =>
@@ -182,7 +183,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
       case Right(loading) =>
         if (!loading) {
           usMarketStatus = Right(true)
-          g.console.log("Retrieving market status...")
+          console.log("Retrieving market status...")
           marketStatus.getMarketStatus onComplete {
             case Success(status) =>
               // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
@@ -193,11 +194,11 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
               }
 
               // set the market status
-              g.console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
+              console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
               usMarketStatus = Left(status)
 
               // update the status after delay
-              g.console.log(s"Re-loading market status in ${status.delay.minutes}")
+              console.log(s"Re-loading market status in ${status.delay.minutes}")
               $timeout(() => usMarketStatus = Right(false), 300000)
 
             case Failure(e) =>

@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.social
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
-import com.ldaniels528.scalascript.angular
 import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.angular
+import org.scalajs.dom.console
 import org.scalajs.jquery._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -21,7 +22,7 @@ object FacebookInjector {
    * @return {*}
    */
   def getShockTradeAppID: js.Function0[String] = () => {
-    g.console.log(s"Facebook - hostname: ${g.location.hostname}")
+    console.log(s"Facebook - hostname: ${g.location.hostname}")
     g.location.hostname.as[String] match {
       case "localhost" => "522523074535098" // local dev
       case "www.shocktrade.biz" => "616941558381179"
@@ -31,7 +32,7 @@ object FacebookInjector {
       case "www.shocktrade.net" => "616569495084446"
       case "shocktrade.net" => "616569495084446"
       case _ =>
-        g.console.log(s"Unrecognized hostname '${g.location.hostname}'")
+        console.log(s"Unrecognized hostname '${g.location.hostname}'")
         "522523074535098" // unknown, so local dev
     }
   }
@@ -41,7 +42,7 @@ object FacebookInjector {
    */
   g.fbAsyncInit = (() => {
     val appId = getShockTradeAppID()
-    g.console.log(s"Initializing Facebook SDK (App ID $appId)...")
+    console.log(s"Initializing Facebook SDK (App ID $appId)...")
     g.FB.init(JS(
       appId = appId,
       status = true,
@@ -54,7 +55,7 @@ object FacebookInjector {
     injector.get[FacebookService]("Facebook") foreach { facebook =>
       facebook.init(g.FB) onComplete {
         case Success(_) =>
-          g.console.log("Facebook login successful.")
+          console.log("Facebook login successful.")
 
           // react the the login status
           val scope = angular.element(rootElem).scope()
@@ -63,10 +64,10 @@ object FacebookInjector {
             $scope.postLoginUpdates(facebook.facebookID, false)
           }
           else
-            g.console.log(s"Scope for '$elemName' could not be retrieved")
+            console.log(s"Scope for '$elemName' could not be retrieved")
 
         case Failure(e) =>
-          g.console.log(s"Facebook Service: ${e.getMessage}")
+          console.log(s"Facebook Service: ${e.getMessage}")
       }
     }
     ()

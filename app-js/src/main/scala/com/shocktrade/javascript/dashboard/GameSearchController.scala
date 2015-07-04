@@ -7,6 +7,7 @@ import com.ldaniels528.scalascript.{Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
+import org.scalajs.dom.console
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -90,7 +91,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   $scope.contestSearch = (searchOptions: js.Dynamic) => contestSearch(searchOptions)
 
   def contestSearch(searchOptions: js.Dynamic) = {
-    g.console.log(s"searchOptions = ${JSON.stringify(searchOptions)}")
+    console.log(s"searchOptions = ${JSON.stringify(searchOptions)}")
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
         searchResults = contests
@@ -149,7 +150,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   private def selectContest(contest: js.Dynamic) = {
     if (isDefined(contest)) {
-      g.console.log(s"Selecting contest '${contest.name}' (${contest.OID})")
+      console.log(s"Selecting contest '${contest.name}' (${contest.OID})")
       selectedContest = contest
       splitScreen = true
 
@@ -183,7 +184,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
 
   private def deleteContest(contest: js.Dynamic) = {
     contest.deleting = true
-    g.console.log(s"Deleting contest ${contest.name}...")
+    console.log(s"Deleting contest ${contest.name}...")
     asyncLoading($scope)(contestService.deleteContest(contest.OID)) onComplete {
       case Success(response) =>
         removeContestFromList(searchResults, contest.OID)
@@ -295,7 +296,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
   private def removeContestFromList(searchResults: js.Array[_], contestId: String) {
     val index = indexOfContest(contestId)
     if (index != -1) {
-      g.console.log(s"Removed contest $contestId from the list...")
+      console.log(s"Removed contest $contestId from the list...")
       searchResults.splice(index, 1)
     }
 
@@ -312,7 +313,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
    * Listen for contest creation events
    */
   scope.$on(ContestCreated, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"New contest created '${contest.name}'")
+    console.log(s"New contest created '${contest.name}'")
     searchResults.push(contest)
     //mySession.refresh()
   })
@@ -321,7 +322,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
    * Listen for contest deletion events
    */
   scope.$on(ContestDeleted, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"Contest '${contest.name}' deleted")
+    console.log(s"Contest '${contest.name}' deleted")
     selectedContest = null
     searchResults = searchResults.filterNot(_.OID == contest.OID)
   })
@@ -330,7 +331,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams
    * Listen for contest update events
    */
   scope.$on(ContestUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"Contest '${contest.name} updated")
+    console.log(s"Contest '${contest.name} updated")
     contest.OID_? foreach { contestId =>
       // update the contest in our search results
       updateContestInList(searchResults, contestId)

@@ -7,6 +7,7 @@ import com.ldaniels528.scalascript.{Scope, angular, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.NewGameDialogService
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -55,10 +56,10 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   }
 
   private def loadMyContests(userID: String) {
-    g.console.log(s"Loading 'My Contests' for user '$userID'...")
+    console.log(s"Loading 'My Contests' for user '$userID'...")
     contestService.getContestsByPlayerID(userID) onComplete {
       case Success(contests) =>
-        g.console.log(s"Loaded ${contests.length} contest(s)")
+        console.log(s"Loaded ${contests.length} contest(s)")
         myContests = contests
       case Failure(e) =>
         toaster.error("Failed to load 'My Contests'")
@@ -69,7 +70,7 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   private def newGamePopup() {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        g.console.log(s"contest = ${angular.toJson(contest)}")
+        console.log(s"contest = ${angular.toJson(contest)}")
         if (isDefined(contest.error)) toaster.error(contest.error)
         else {
           // TODO add to Contests

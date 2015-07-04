@@ -4,8 +4,9 @@ import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.{GlobalLoading, MySession}
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
+import com.shocktrade.javascript.{GlobalLoading, MySession}
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -74,7 +75,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    * Selects a specific contact/friend
    */
   private def chooseContact(friend: js.Dynamic) = {
-    //g.console.log(s"contact = ${JSON.stringify(friend, null, "\t")}")
+    //console.log(s"contact = ${JSON.stringify(friend, null, "\t")}")
     contact = friend
     $scope.getUserInfo(friend.id)
   }
@@ -98,7 +99,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
       case Success(profile) =>
         contact.profile = profile
       case Failure(e) =>
-        g.console.log(s"Failed to retrieve profile for contact ${contact.name}")
+        console.log(s"Failed to retrieve profile for contact ${contact.name}")
         toaster.error(s"Failed to retrieve the user profile for contact ${contact.name}")
     }
   }
@@ -113,7 +114,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   private def getContactList = (searchTerm: js.UndefOr[String]) => {
     // TODO reinstate search
     /*
-    g.console.log(s"searchTerm = $searchTerm (${Option(searchTerm).map(_.getClass.getName).orNull})")
+    console.log(s"searchTerm = $searchTerm (${Option(searchTerm).map(_.getClass.getName).orNull})")
     searchTerm foreach { mySearchTerm =>
       val fbFriends = mySession.fbFriends
       if (!Option(searchTerm).exists(_.nonEmpty)) fbFriends.take(40)
@@ -148,7 +149,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   private def deleteMessages(userName: String) {
     // gather the records to delete
     val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).map(_.OID)
-    g.console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
+    console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
 
     // delete the records
     if (messageIDs.nonEmpty) {

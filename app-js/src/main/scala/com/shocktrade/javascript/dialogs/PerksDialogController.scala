@@ -5,6 +5,7 @@ import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dialogs.PerksDialogController._
+import org.scalajs.dom.console
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -78,7 +79,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
     // load the player's perks
     dialog.getMyPerks(mySession.getContestID(), mySession.getUserID()) onComplete {
       case Success(response) =>
-        g.console.log(s"loadPerks: response = $response")
+        console.log(s"loadPerks: response = $response")
         myFunds = response.fundsAvailable
         myPerks = response.perkCodes
         setupPerks()
@@ -150,7 +151,7 @@ object PerksDialogController {
   implicit class PerkExtensions(val response: js.Dynamic) extends AnyVal {
 
     def toPerk: Option[Perk] = {
-      //g.console.log(s"toPerks: ${JSON.stringify(response)}")
+      //console.log(s"toPerks: ${JSON.stringify(response)}")
       for {
         name <- response.name.asOpt[String]
         code <- response.code.asOpt[String]
@@ -160,7 +161,7 @@ object PerksDialogController {
     }
 
     def toPerksResponse: PerksResponse = {
-      //g.console.log(s"toPerksResponse: ${JSON.stringify(response)}")
+      //console.log(s"toPerksResponse: ${JSON.stringify(response)}")
       val perkCodes = if (isDefined(response.perks)) response.perks.asArray[String] else emptyArray[String]
       val fundsAvailable = if (isDefined(response.fundsAvailable)) response.fundsAvailable.as[Double] else 0.0d
       PerksResponse(perkCodes, fundsAvailable)

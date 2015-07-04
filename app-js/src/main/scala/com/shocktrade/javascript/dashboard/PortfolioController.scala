@@ -9,6 +9,7 @@ import com.shocktrade.javascript.{GlobalLoading, MySession}
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -183,24 +184,24 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   //////////////////////////////////////////////////////////////////////
 
   $scope.$on(ContestSelected, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"[Portfolio] Contest '${contest.name}' selected")
+    console.log(s"[Portfolio] Contest '${contest.name}' selected")
     resetOrders()
     resetPositions()
   })
 
   $scope.$on(ContestUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"[Portfolio] Contest '${contest.name}' updated")
+    console.log(s"[Portfolio] Contest '${contest.name}' updated")
     resetOrders()
     resetPositions()
   })
 
   $scope.$on(OrderUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
+    console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
     resetOrders()
   })
 
   $scope.$on(ParticipantUpdated, { (event: js.Dynamic, contest: js.Dynamic) =>
-    g.console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
+    console.log(s"[Portfolio] Orders for Contest '${contest.name}' updated")
     resetPositions()
   })
 

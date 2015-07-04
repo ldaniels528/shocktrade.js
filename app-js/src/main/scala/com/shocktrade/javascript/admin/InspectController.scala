@@ -6,11 +6,12 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
+import org.scalajs.dom.console
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -79,7 +80,7 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
 
   if (isDefined($routeParams.contestId)) {
     val contestId = $routeParams.contestId.as[String]
-    g.console.log(s"Attempting to load contest $contestId")
+    console.log(s"Attempting to load contest $contestId")
 
     // load the contest
     contestService.getContestByID(contestId) onComplete {

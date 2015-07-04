@@ -1,7 +1,6 @@
 package com.shocktrade.javascript
 
 import com.ldaniels528.scalascript.AnnotatedFunction._
-import com.ldaniels528.scalascript.Module.RichModule
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
 import com.shocktrade.javascript.admin._
@@ -65,15 +64,13 @@ object ShockTradeJsMain extends js.JSApp {
     }: AnnotatedFunction)
   }
 
-  private def configureDirectives(module: RichModule) {
+  private def configureDirectives(module: Module) {
+    //module.directiveOf[AvatarDirective]("avatar")
     AvatarDirective.init()
-    //module.directiveOf[AvatarDirective]
     ChangeArrowDirective.init()
-    //module.directiveOf[ChangeArrowDirective]
-    //module.directiveOf[EscapeDirective]
   }
 
-  private def configureFilters(module: RichModule) {
+  private def configureFilters(module: Module) {
     module.filter("abs", Filters.abs)
     module.filter("bigNumber", Filters.bigNumber)
     module.filter("capitalize", Filters.capitalize)
@@ -85,7 +82,7 @@ object ShockTradeJsMain extends js.JSApp {
     module.filter("yesno", Filters.yesNo)
   }
 
-  private def configureServices(module: RichModule) {
+  private def configureServices(module: Module) {
     module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[FacebookService]("Facebook")
@@ -98,7 +95,7 @@ object ShockTradeJsMain extends js.JSApp {
     module.serviceOf[WebSocketService]("WebSocketService")
   }
 
-  private def configureControllers(module: RichModule) {
+  private def configureControllers(module: Module) {
     module.controllerOf[AwardsController]("AwardsController")
     module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
@@ -121,7 +118,7 @@ object ShockTradeJsMain extends js.JSApp {
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
   }
 
-  private def configureDialogs(module: RichModule) {
+  private def configureDialogs(module: Module) {
     module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
     module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")

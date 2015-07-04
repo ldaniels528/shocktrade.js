@@ -5,6 +5,7 @@ import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}
 import com.shocktrade.javascript.social.FacebookService
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -23,7 +24,7 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
   private val messages = emptyArray[String]
   private var loading = false
 
-  g.console.log(s"facebook.profile = ${angular.toJson(facebook.profile)}")
+  console.log(s"facebook.profile = ${angular.toJson(facebook.profile)}")
 
   $scope.form = JS(
     name = facebook.profile.name,
@@ -79,7 +80,7 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
         case Failure(e) =>
           stopLoading()
           toaster.error(e.getMessage)
-          g.console.log(s"Error registering user: ${e.getMessage}")
+          console.log(s"Error registering user: ${e.getMessage}")
       }
     }
   }

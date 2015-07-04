@@ -9,6 +9,7 @@ import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.profile.MyQuotesController._
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -112,7 +113,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: 
   }
 
   private def reloadQuotes() {
-    g.console.log("Updating Favorite Symbols...")
+    console.log("Updating Favorite Symbols...")
     /*
     if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(Favorites, mySession.getFavoriteSymbols())
     if (mySession.getRecentSymbols().nonEmpty) loadQuotes(Recents, mySession.getFavoriteSymbols())

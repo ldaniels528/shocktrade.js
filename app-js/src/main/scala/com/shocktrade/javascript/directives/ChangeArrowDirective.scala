@@ -1,12 +1,15 @@
 package com.shocktrade.javascript.directives
 
+import com.ldaniels528.scalascript.core.{JQLite, Attributes}
+import com.ldaniels528.scalascript.{Scope, Directive}
+
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 
 /**
  * Stock Change Arrow Directive
  * @author lawrence.daniels@gmail.com
- *         <changeArrow value="{{ q.change }}"></changeArrow>
+ * @example <changeArrow value="{{ q.change }}"></changeArrow>
  */
 object ChangeArrowDirective {
 
@@ -42,27 +45,54 @@ object ChangeArrowDirective {
 
 }
 
-/*
-class ChangeArrowDirective extends Directive {
-  override type ScopeType = js.Dynamic
-  override type ControllerType = js.Dynamic
-  override val scope = true
+/**
+ * Change Arrow Directive
+ * @author lawrence.daniels@gmail.com
+ * @example <changeArrow value="{{ q.change }}"></changeArrow>
+ */
+class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
+  override val scope = ChangeArrowDirectiveScope()
   override val restrict = "E"
   override val transclude = true
   override val replace = false
   override val template = """<i ng-class="icon"></i>"""
 
-  override def isolateScope = js.Dictionary[String]("value" -> "@value")
-
-  override def preLink(scope: ScopeType, element: JQLite, attrs: Attributes) {
+  def link(scope: ChangeArrowDirectiveScope, element: JQLite, attrs: Attributes) = {
     scope.$watch("value", { (newValue: Any, oldValue: Any) =>
-      g.console.log(s"scope.value = ${scope.value} (${Option(scope.value).map(_.getClass.getName).orNull}), newValue = $newValue, oldValue = $oldValue")
       val value = newValue match {
         case s: String if s.nonEmpty => s.toDouble
         case d: Double => d
         case _ => 0.0d
       }
-      scope.icon = if (value >= 0) "fa fa-arrow-up positive" else "fa fa-arrow-down negative"
+      scope.icon = value match {
+        case v if v > 0 => "fa fa-arrow-up positive"
+        case v if v < 0 => "fa fa-arrow-down negative"
+        case _ => "fa fa-minus null"
+      }
     })
   }
-}*/
+}
+
+/**
+ * Change Arrow Directive Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait ChangeArrowDirectiveScope extends Scope {
+  var value: String = js.native
+  var icon: String = js.native
+
+}
+
+/**
+ * Change Arrow Directive Scope Singleton
+ * @author lawrence.daniels@gmail.com
+ */
+object ChangeArrowDirectiveScope {
+
+  def apply(): ChangeArrowDirectiveScope = {
+    val scope = new js.Object().asInstanceOf[ChangeArrowDirectiveScope]
+    scope
+  }
+
+}
+

@@ -5,10 +5,11 @@ import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.MySession
+import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * Home Controller
@@ -52,7 +53,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   private def selectFriend = (friend: js.Dynamic) => {
     if (isDefined(friend)) {
-      g.console.log(s"selecting friend ${angular.toJson(friend)}")
+      console.log(s"selecting friend ${angular.toJson(friend)}")
       selectedFriend = friend
 
       if (!isDefined(friend.profile)) {

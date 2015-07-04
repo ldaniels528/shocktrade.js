@@ -6,6 +6,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Service, injected}
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket}
+import org.scalajs.dom.console
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -29,9 +30,9 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
    * Initializes the service
    */
   def init() {
-    g.console.log("Initializing Websocket service...")
+    console.log("Initializing Websocket service...")
     if (!isDefined(g.window.WebSocket)) {
-      g.console.log("Using a Mozilla Web Socket")
+      console.log("Using a Mozilla Web Socket")
       g.window.WebSocket = g.window.MozWebSocket
     }
 
@@ -70,7 +71,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
     if (event.data != null) {
       val message = JSON.parse(event.data.asInstanceOf[String])
       if (isDefined(message.action)) {
-        g.console.log(s"Broadcasting action '${message.action}'")
+        console.log(s"Broadcasting action '${message.action}'")
         $rootScope.$broadcast(message.action, message.data)
       }
       else g.console.warning(s"Message does not contain an action message = ${JSON.stringify(message)}")
@@ -81,11 +82,11 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
   private def sendState(connected: Boolean) {
     mySession.userProfile.OID_? match {
       case Some(userID) =>
-        g.console.log(s"Sending connected status for user $userID ...")
+        console.log(s"Sending connected status for user $userID ...")
         if (connected) $http.put(s"/api/online/$userID")
         else $http.delete(s"/api/online/$userID")
       case None =>
-        g.console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
+        console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
         if (attemptsLeft > 0) {
           $timeout(() => sendState(connected), 5000)
           attemptsLeft -= 1
@@ -98,7 +99,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
    */
   private def connect() {
     val endpoint = s"ws://${$location.host()}:${$location.port()}/websocket"
-    g.console.log(s"Connecting to websocket endpoint '$endpoint'...")
+    console.log(s"Connecting to websocket endpoint '$endpoint'...")
 
     // open the connection and setup the handlers
     socket = new WebSocket(endpoint)
@@ -106,7 +107,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
     socket.onopen = (event: Event) => {
       connected = true
       sendState(connected)
-      g.console.log("Websocket connection established")
+      console.log("Websocket connection established")
     }
 
     socket.onclose = (event: CloseEvent) => {
