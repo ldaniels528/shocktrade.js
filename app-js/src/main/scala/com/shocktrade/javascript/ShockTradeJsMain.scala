@@ -65,8 +65,7 @@ object ShockTradeJsMain extends js.JSApp {
   }
 
   private def configureDirectives(module: Module) {
-    //module.directiveOf[AvatarDirective]("avatar")
-    AvatarDirective.init()
+    module.directiveOf[AvatarDirective]("avatar")
     ChangeArrowDirective.init()
   }
 
