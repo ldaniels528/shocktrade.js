@@ -25,14 +25,10 @@ class AvatarDirective extends Directive[AvatarDirectiveScope] {
   }
 
   private def populateScope(scope: AvatarDirectiveScope, newValue: Any, oldValue: Any) {
-    // determine the image to use
-    if (angular.isDefined(scope.id)) scope.url = s"http://graph.facebook.com/${scope.id}/picture"
-    else if (angular.isDefined(scope.link)) {
-      val json = angular.fromJson(scope.link.get)
-      if (angular.isDefined(json.picture) && angular.isDefined(json.picture.data)) scope.url = json.picture.data.url.as[String]
-      else scope.url = UNKNOWN_PERSON
+    // determine the image URL
+    scope.url = scope.id.toOption map (id => s"http://graph.facebook.com/$id/picture") getOrElse {
+      scope.link.toOption map angular.fromJson flatMap (_.picture.data.url.asOpt[String]) getOrElse UNKNOWN_PERSON
     }
-    else scope.url = UNKNOWN_PERSON
 
     // set the ng-class
     scope.myClass = if (scope.url == UNKNOWN_PERSON) "spectatorAvatar" else "playerAvatar"
