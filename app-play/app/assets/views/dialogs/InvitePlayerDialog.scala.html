@@ -13,7 +13,7 @@
                         <tr ng-repeat="friend in getFriends()">
                             <td>
                                 <input type="checkbox" ng-model="invites[$index]">
-                                <avatar object="{{ friend }}" class="avatar-16"></avatar> {{ friend.name }}
+                                <avatar id="{{ friend.facebookID }}" class="avatar-16"></avatar> {{ friend.name }}
                             </td>
                         </tr>
                     </table>

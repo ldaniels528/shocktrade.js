@@ -22,12 +22,12 @@
 
     <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
         <div class="@{if(includeExpiry) "col-md-4" else "col-md-6"}">
-            <avatar object="{{ c.rankings.leader || c.participants[0] }}" class="avatar-20"></avatar> {{ c.name }}
+            <avatar id="{{ c.rankings.leader.facebookID || c.participants[0] }}" class="avatar-20"></avatar> {{ c.name }}
         </div>
         @if(includeExpiry) {
             <div class="col-md-2 center">
                 <span ng-if="c.rankings.leader">
-                    <avatar object="{{ c.rankings.leader }}" class="avatar-20" title="{{ c.rankings.leader.name }}"></avatar>
+                    <avatar id="{{ c.rankings.leader.facebookID }}" class="avatar-20" title="{{ c.rankings.leader.name }}"></avatar>
                     <span ng-class="c.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
                         <changearrow value="{{ c.rankings.leader.gainLoss }}"></changearrow>
                         {{ c.rankings.leader.gainLoss | abs | number:2 }}%
