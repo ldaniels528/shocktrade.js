@@ -14,22 +14,22 @@ import scala.scalajs.js.Dynamic.{literal => JS}
  */
 class AvatarDirective extends Directive[AvatarDirectiveScope] {
   override val restrict = "E"
-  override val scope = JS(id = "@id", alt = "@alt", `class` = "@class", style = "@style")
+  override val scope = JS(id = "@id", `class` = "@class", style = "@style")
   override val transclude = true
   override val replace = false
   override val template = """<img ng-src="{{ url }}" ng-class="myClass" class="{{ class }}" style="{{ style }}">"""
 
   override def link(scope: AvatarDirectiveScope, element: JQLite, attrs: Attributes) = {
-    scope.$watch("id", (newValue: js.Any, oldValue: js.Any) => populateScope(scope, newValue, oldValue))
+    scope.$watch("id", (newValue: Any, oldValue: Any) => populateScope(scope, newValue, oldValue))
   }
 
-  private def populateScope(scope: AvatarDirectiveScope, newValue: js.Any, oldValue: js.Any) {
+  private def populateScope(scope: AvatarDirectiveScope, newValue: Any, oldValue: Any) {
     if (scope.id.nonBlank) {
       scope.url = s"http://graph.facebook.com/${scope.id}/picture"
       scope.myClass = "playerAvatar"
     }
     else {
-      scope.url = if (scope.alt.nonBlank) scope.alt else "/assets/images/avatars/avatar100.png"
+      scope.url = "/assets/images/avatars/avatar100.png"
       scope.myClass = "spectatorAvatar"
     }
   }
@@ -41,7 +41,6 @@ class AvatarDirective extends Directive[AvatarDirectiveScope] {
  */
 trait AvatarDirectiveScope extends Scope {
   var id: String = js.native
-  var alt: String = js.native
   var `class`: String = js.native
   var myClass: String = js.native
   var style: String = js.native
@@ -55,6 +54,14 @@ trait AvatarDirectiveScope extends Scope {
  */
 object AvatarDirectiveScope {
 
-  def apply(): AvatarDirectiveScope = new js.Object().asInstanceOf[AvatarDirectiveScope]
+  def apply(): AvatarDirectiveScope = {
+    val scope = new js.Object().asInstanceOf[AvatarDirectiveScope]
+    scope.id = null
+    scope.`class` = null
+    scope.myClass = null
+    scope.style = null
+    scope.url = null
+    scope
+  }
 
 }

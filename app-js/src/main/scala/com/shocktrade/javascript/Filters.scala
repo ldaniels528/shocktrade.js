@@ -6,6 +6,7 @@ import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Any._
 import scala.scalajs.js.Dynamic.{global => g}
+import scala.util.Try
 
 /**
  * ShockTrade Filters
@@ -16,28 +17,36 @@ object Filters {
   /**
    * Absolute Value
    */
-  val abs: js.Function = () => { (value: js.UndefOr[Double]) =>
-    value map { v => Math.abs(v) } getOrElse value
+  val abs: js.Function = () => { (value: js.UndefOr[Any]) =>
+    value map {
+      case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
+      case v: Number => Math.abs(v.doubleValue())
+      case _ => 0.0d
+    } getOrElse value
   }: js.Function
 
   /**
    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
    */
-  val bigNumber: js.Function = () => { value: js.UndefOr[Double] =>
+  val bigNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
-      case num if Math.abs(num) >= 1.0e+12 => f"${num / 1.0e+12}%.2fT"
-      case num if Math.abs(num) >= 1.0e+9 => f"${num / 1.0e+9}%.2fB"
-      case num if Math.abs(num) >= 1.0e+6 => f"${num / 1.0e+6}%.2fM"
-      case num if Math.abs(num) <= 1.0e+3 => f"${num / 1.0e+3}%.2fK"
-      case num => f"$num%.2f"
+      case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
+      case n: Number => n.doubleValue() match {
+        case num if Math.abs(num) >= 1.0e+12 => f"${num / 1.0e+12}%.2fT"
+        case num if Math.abs(num) >= 1.0e+9 => f"${num / 1.0e+9}%.2fB"
+        case num if Math.abs(num) >= 1.0e+6 => f"${num / 1.0e+6}%.2fM"
+        case num if Math.abs(num) <= 1.0e+3 => f"${num / 1.0e+3}%.2fK"
+        case num => f"$num%.2f"
+        case _ => 0.0d
+      }
     } getOrElse ""
   }: js.Function
 
   /**
    * Capitalize: Returns the capitalize representation of a given string
    */
-  val capitalize: js.Function = () => { (s: String) =>
-    if (s.nonEmpty) s.head.toUpper + s.tail else ""
+  val capitalize: js.Function = () => { (value: js.UndefOr[String]) =>
+    value map { s => if (s.nonEmpty) s.head.toUpper + s.tail else "" }
   }: js.Function
 
   /**
@@ -58,22 +67,30 @@ object Filters {
   /**
    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
    */
-  val quoteChange: js.Function = () => { value: js.UndefOr[Double] =>
+  val quoteChange: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
-      case num if Math.abs(num) >= 100 => f"$num%.0f"
-      case num if Math.abs(num) >= 10 => f"$num%.1f"
-      case num => f"$num%.2f"
+      case s: String if s.nonEmpty => s
+      case n: Number => n.doubleValue() match {
+        case num if Math.abs(num) >= 100 => f"$num%.0f"
+        case num if Math.abs(num) >= 10 => f"$num%.1f"
+        case num => f"$num%.2f"
+      }
+      case _ => ""
     } getOrElse ""
   }: js.Function
 
   /**
    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
    */
-  val quoteNumber: js.Function = () => { value: js.UndefOr[Double] =>
+  val quoteNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
-      case num if Math.abs(num) < 0.0001 => f"$num%.5f"
-      case num if Math.abs(num) < 10 => f"$num%.4f"
-      case num => f"$num%.2f"
+      case s: String if s.nonEmpty => s
+      case n: Number => n.doubleValue() match {
+        case num if Math.abs(num) < 0.0001 => f"$num%.5f"
+        case num if Math.abs(num) < 10 => f"$num%.4f"
+        case num => f"$num%.2f"
+      }
+      case _ => ""
     } getOrElse ""
   }: js.Function
 
