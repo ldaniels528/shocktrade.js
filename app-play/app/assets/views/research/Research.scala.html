@@ -190,7 +190,7 @@
 						<td class="results_num">
 							<span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | abs | number:1 }}</span>
 							<span ng-show="quote.changePct == null" class="null center">&#8212;</span>
-							<changeArrow value="{{ quote.changePct }}"></changeArrow>
+							<change-arrow value="{{ quote.changePct }}"></change-arrow>
 						</td>
 						<td class="results_num">
 							<span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>

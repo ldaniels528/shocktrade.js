@@ -21,7 +21,7 @@
             <span ng-show="q.change52Week == null" class="null">&#8212;</span>
             <span ng-show="q.change52Week != null"
                  ng-class="q.change52Week < 0 ? 'negative' : ''">{{ q.change52Week | number:2 }}%</span>
-            <changeArrow ng-show="q.change52Week != null" value="{{ q.change52Week }}" />
+            <change-arrow ng-show="q.change52Week != null" value="{{ q.change52Week }}" />
         </span>
     </div>
 </div>
@@ -49,7 +49,7 @@
             <span ng-show="q.change52WeekSNP500 == null" class="null">&#8212;</span>
             <span ng-show="q.change52WeekSNP500 != null"
                  ng-class="q.change52WeekSNP500 < 0 ? 'negative' : ''">{{ q.change52WeekSNP500 | number:2 }}%</span>
-            <changeArrow ng-show="q.change52WeekSNP500 != null" value="{{ q.change52WeekSNP500 }}"></changeArrow>
+            <change-arrow ng-show="q.change52WeekSNP500 != null" value="{{ q.change52WeekSNP500 }}"></change-arrow>
         </span>
     </div>
 </div>

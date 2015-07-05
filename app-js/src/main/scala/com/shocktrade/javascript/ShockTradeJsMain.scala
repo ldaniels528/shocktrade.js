@@ -25,15 +25,25 @@ object ShockTradeJsMain extends js.JSApp {
     val module = angular.createModule("shocktrade",
       js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3ChartDirectives", "toaster", "ui.bootstrap"))
 
-    // configure and start the application
-    configureFilters(module)
+    // add the custom directives
+    module.directiveOf[AvatarDirective]("avatar")
+    module.directiveOf[ChangeArrowDirective]("changearrow")
+
+    // add the custom filters
+    module.filter("abs", Filters.abs)
+    module.filter("bigNumber", Filters.bigNumber)
+    module.filter("capitalize", Filters.capitalize)
+    module.filter("duration", Filters.duration)
+    module.filter("escape", Filters.escape)
+    module.filter("newsDuration", Filters.newsDuration)
+    module.filter("quoteChange", Filters.quoteChange)
+    module.filter("quoteNumber", Filters.quoteNumber)
+    module.filter("yesno", Filters.yesNo)
+
+    // add the controllers and services
     configureServices(module)
     configureControllers(module)
     configureDialogs(module)
-
-    // add the custom directives
-    module.directiveOf[AvatarDirective]("avatar")
-    module.directiveOf[ChangeArrowDirective]("changeArrow")
 
     // define the routes
     module.config({ ($routeProvider: RouteProvider) =>
@@ -65,18 +75,6 @@ object ShockTradeJsMain extends js.JSApp {
       // initialize the web socket service
       WebSocketService.init()
     }: AnnotatedFunction)
-  }
-
-  private def configureFilters(module: Module) {
-    module.filter("abs", Filters.abs)
-    module.filter("bigNumber", Filters.bigNumber)
-    module.filter("capitalize", Filters.capitalize)
-    module.filter("duration", Filters.duration)
-    module.filter("escape", Filters.escape)
-    module.filter("newsDuration", Filters.newsDuration)
-    module.filter("quoteChange", Filters.quoteChange)
-    module.filter("quoteNumber", Filters.quoteNumber)
-    module.filter("yesno", Filters.yesNo)
   }
 
   private def configureServices(module: Module) {

@@ -23,7 +23,7 @@
 				<tr>
 					<th class="ks">52-Week Change</th>
 					<td class="ks">
-						<changeArrow value="{{ q.change52Week }}" />
+						<change-arrow value="{{ q.change52Week }}" />
 						<span ng-show="q.change52Week == null" class="null">N/A</span>
 						<span ng-show="q.change52Week != null">{{ q.change52Week | number:2 }}</span>
 					</td>
@@ -31,7 +31,7 @@
 				<tr>
 					<th class="ks">52-Week Change (<span class="small">S&amp;P-500</span>)</th>
 					<td class="ks">
-						<changeArrow value="{{ q.change52WeekSNP500 }}" />
+						<change-arrow value="{{ q.change52WeekSNP500 }}" />
 						<span ng-show="q.change52WeekSNP500 == null" class="null">N/A</span>
 						<span ng-show="q.change52WeekSNP500 != null">{{ q.change52WeekSNP500 | number:2 }}</span>
 					</td>
