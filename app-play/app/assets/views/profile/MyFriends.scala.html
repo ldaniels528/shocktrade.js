@@ -3,13 +3,13 @@
 <div ng-init="initHome()">
     <div class="col-md-7" style="border-right: solid 1px #888888">
         <div class="inline pull-left" ng-repeat="friend in MySession.fbFriends">
-            <avatar id="{{ friend.facebookID }}" ng-click="selectFriend(friend)" class="avatar-40 clickable" title="{{ friend.name }}" ></avatar>
+            <avatar link="{{ friend }}" ng-click="selectFriend(friend)" class="avatar-40 clickable" title="{{ friend.name }}" ></avatar>
         </div>
     </div>
     <div class="col-md-5">
         <div ng-if="getSelectedFriend()">
             <div class="inline pull-left">
-                <avatar id="{{ getSelectedFriend().facebookID }}" class="avatar-53 padding-3"></avatar>
+                <avatar link="{{ getSelectedFriend() }}" class="avatar-53 padding-3"></avatar>
             </div>
             <div class="inline pull-left">
                 <div>
