@@ -43,9 +43,9 @@ trait AvatarDirectiveScope extends Scope {
   var id: String = js.native
   var alt: String = js.native
   var `class`: String = js.native
+  var myClass: String = js.native
   var style: String = js.native
   var url: String = js.native
-  var myClass: String = js.native
 
 }
 

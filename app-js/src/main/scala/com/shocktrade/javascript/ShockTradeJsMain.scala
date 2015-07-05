@@ -26,11 +26,14 @@ object ShockTradeJsMain extends js.JSApp {
       js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3ChartDirectives", "toaster", "ui.bootstrap"))
 
     // configure and start the application
-    configureDirectives(module)
     configureFilters(module)
     configureServices(module)
     configureControllers(module)
     configureDialogs(module)
+
+    // add the custom directives
+    module.directiveOf[AvatarDirective]("avatar")
+    module.directiveOf[ChangeArrowDirective]("changeArrow")
 
     // define the routes
     module.config({ ($routeProvider: RouteProvider) =>
@@ -62,11 +65,6 @@ object ShockTradeJsMain extends js.JSApp {
       // initialize the web socket service
       WebSocketService.init()
     }: AnnotatedFunction)
-  }
-
-  private def configureDirectives(module: Module) {
-    module.directiveOf[AvatarDirective]("avatar")
-    ChangeArrowDirective.init()
   }
 
   private def configureFilters(module: Module) {
