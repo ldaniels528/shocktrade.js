@@ -1,9 +1,10 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
-import com.ldaniels528.scalascript.core.{CancellablePromise, Http, Location, Timeout}
+import com.ldaniels528.scalascript.core.TimerConversions._
+import ScalaJsHelper._
+import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, Scope, angular, injected}
+import com.ldaniels528.scalascript._
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._

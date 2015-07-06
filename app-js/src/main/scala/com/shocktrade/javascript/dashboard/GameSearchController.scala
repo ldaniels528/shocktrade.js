@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Scope, injected}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
+import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.language.postfixOps
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  * Game Search Controller
  * @author lawrence.daniels@gmail.com
  */
-class GameSearchController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class GameSearchController($scope: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
                            @injected("MySession") mySession: MySession)

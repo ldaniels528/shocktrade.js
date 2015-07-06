@@ -1,14 +1,15 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
-import com.ldaniels528.scalascript.core.{Interval, Location, Q, Timeout}
+import com.ldaniels528.scalascript.core.TimerConversions._
+import com.ldaniels528.scalascript.core.{Location, Q, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{angular, injected}
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.{GlobalLoading, AutoCompletionController, MySession}
+import com.shocktrade.javascript.{AutoCompletionController, GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -21,8 +22,8 @@ import scala.util.{Failure, Success}
  * Discover Controller
  * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Interval, $location: Location,
-                         $q: Q, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Location, $q: Q,
+                         $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
                          @injected("MarketStatus") marketStatus: MarketStatusService,
                          @injected("MySession") mySession: MySession,
                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
@@ -38,7 +39,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
 
   // define the display options
   $scope.options = JS(range = $cookies.getOrElse("chart_range", "5d"))
-  $scope.expanders = expanders
+  $scope.expanders = Expanders
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Function
@@ -199,7 +200,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
 
               // update the status after delay
               console.log(s"Re-loading market status in ${status.delay.minutes}")
-              $timeout(() => usMarketStatus = Right(false), 300000)
+              $timeout(() => usMarketStatus = Right(false), 5.minutes)
 
             case Failure(e) =>
               toaster.error("Failed to retrieve market status")
@@ -217,7 +218,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
   // load the symbol
   if (!isDefined($scope.q.symbol)) {
     // get the symbol
-    val symbol = $routeParams.symbol.toUndefOr[String] getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
+    val symbol = $routeParams.symbol getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
 
     // load the symbol
     updateQuote(symbol)
@@ -228,7 +229,16 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $interval: Inter
   ///////////////////////////////////////////////////////////////////////////
 
   // setup the chart range
-  $scope.$watch("options.range", (newValue: js.Dynamic, oldValue: js.Dynamic) => $cookies.put("chart_range", newValue))
+  $scope.$watch("options.range", (newValue: js.UndefOr[Any], oldValue: js.Any) => newValue.foreach($cookies.put("chart_range", _)))
+
+}
+
+/**
+ * Discover Route Parameters
+ * @author lawrence.daniels@gmail.com
+ */
+trait DiscoverRouteParams extends js.Object {
+  var symbol: js.UndefOr[String] = js.native
 
 }
 
@@ -280,7 +290,7 @@ object DiscoverController {
   }
 
   // define the Quote module expanders
-  val expanders = js.Array(
+  val Expanders = js.Array(
     JS(title = "Performance & Risk",
       url = "/assets/views/discover/quotes/expanders/price_performance.htm",
       icon = "fa-line-chart",

@@ -1,14 +1,14 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
+import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookies: Cookies,
-                          $location: Location, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+                          $location: Location, $routeParams: DrillDownRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
@@ -152,8 +152,15 @@ class DrillDownController($scope: js.Dynamic, $anchorScroll: js.Dynamic, $cookie
 
   private def findLabel(array: js.Array[js.Dynamic], label: String) = array.find(_.label === label)
 
-  private def selectedSymbol = {
-    if (isDefined($routeParams.symbol)) $routeParams.symbol.as[String] else $cookies.getOrElse("symbol", "AAPL")
-  }
+  private def selectedSymbol = $routeParams.symbol getOrElse $cookies.getOrElse("symbol", "AAPL")
+
+}
+
+/**
+ * Drill-Down Route Params
+ * @author lawrence.daniels@gmail.com
+ */
+trait DrillDownRouteParams extends js.Object {
+  var symbol: js.UndefOr[String] = js.native
 
 }

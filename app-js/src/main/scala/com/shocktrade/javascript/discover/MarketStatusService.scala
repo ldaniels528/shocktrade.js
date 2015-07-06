@@ -1,14 +1,10 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.{ScalaJsHelper, Service}
 import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
-import prickle.Unpickle
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
-import scala.scalajs.js.JSON
+import scala.concurrent.ExecutionContext
 
 /**
  * Market Status Service
@@ -20,11 +16,7 @@ class MarketStatusService($http: Http) extends Service {
    * Retrieves the current stock market status
    * @return the current U.S. Stock [[MarketStatus market status]]
    */
-  def getMarketStatus(implicit ec: ExecutionContext): Future[MarketStatus] = flatten {
-    $http.get[js.Any]("/api/tradingClock/status/0")
-      .map(JSON.stringify(_))
-      .map(Unpickle[MarketStatus].fromString(_))
-  }
+  def getMarketStatus(implicit ec: ExecutionContext) = $http.getObject[MarketStatus]("/api/tradingClock/status/0")
 
 }
 

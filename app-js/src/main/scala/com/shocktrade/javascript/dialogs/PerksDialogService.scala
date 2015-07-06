@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.shocktrade.javascript.{ScalaJsHelper, MySession}
+import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.ldaniels528.scalascript.{Service, injected}

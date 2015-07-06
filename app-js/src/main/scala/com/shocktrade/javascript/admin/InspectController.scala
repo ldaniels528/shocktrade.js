@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.admin
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import org.scalajs.dom.console
 
@@ -18,9 +18,10 @@ import scala.util.{Failure, Success}
  * Inspect Controller
  * @author lawrence.daniels@gmail.com
  */
-class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynamic, toaster: Toaster,
+class InspectController($scope: js.Dynamic, $http: Http, $routeParams: InspectRouteParams, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
-                        @injected("MySession") mySession: MySession) extends Controller {
+                        @injected("MySession") mySession: MySession)
+  extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Variables
@@ -78,8 +79,7 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  if (isDefined($routeParams.contestId)) {
-    val contestId = $routeParams.contestId.as[String]
+  $routeParams.contestId foreach { contestId =>
     console.log(s"Attempting to load contest $contestId")
 
     // load the contest
@@ -91,5 +91,14 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: js.Dynami
         toaster.error("Failed to load contest " + contestId)
     }
   }
+
+}
+
+/**
+ * Inspect Route Params
+ * @author lawrence.daniels@gmail.com
+ */
+trait InspectRouteParams extends js.Object {
+  var contestId: js.UndefOr[String] = js.native
 
 }

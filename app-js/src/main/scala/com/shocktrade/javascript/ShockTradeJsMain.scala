@@ -1,6 +1,5 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.AnnotatedFunction._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
 import com.shocktrade.javascript.admin._
@@ -62,19 +61,19 @@ object ShockTradeJsMain extends js.JSApp {
         .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
         .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
         .otherwise(Route(redirectTo = "/about/us"))
-    }: AnnotatedFunction)
+    })
 
     // initialize the application
     module.run({ ($rootScope: Scope, MySession: MySession, WebSocketService: WebSocketService) =>
       // capture the session and websocket instances
-      $rootScope.dynamic.MySession = MySession.asInstanceOf[js.Dynamic]
+      $rootScope.dynamic.MySession = MySession.asInstanceOf[js.Object]
 
       // inject Facebook's JavaScript SDK
       FacebookInjector.init()
 
       // initialize the web socket service
       WebSocketService.init()
-    }: AnnotatedFunction)
+    })
   }
 
   private def configureServices(module: Module) {

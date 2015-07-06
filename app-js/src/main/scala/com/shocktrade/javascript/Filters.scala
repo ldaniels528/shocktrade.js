@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -37,8 +37,8 @@ object Filters {
         case num if Math.abs(num) >= 1.0e+6 => f"${num / 1.0e+6}%.2fM"
         case num if Math.abs(num) <= 1.0e+3 => f"${num / 1.0e+3}%.2fK"
         case num => f"$num%.2f"
-        case _ => 0.0d
       }
+      case _ => 0.0d
     } getOrElse ""
   }: js.Function
 

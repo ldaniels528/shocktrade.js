@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.directives
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.shocktrade.javascript.ScalaJsHelper
+import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Attributes, JQLite}
 import com.ldaniels528.scalascript.{Directive, Scope, angular}
 import com.shocktrade.javascript.directives.AvatarDirective.UNKNOWN_PERSON

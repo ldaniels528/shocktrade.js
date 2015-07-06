@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.shocktrade.javascript.{ScalaJsHelper, GlobalLoading, MainController}
+import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}

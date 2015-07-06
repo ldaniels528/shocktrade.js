@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.shocktrade.javascript.{ScalaJsHelper, MySession}
+import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Location
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}

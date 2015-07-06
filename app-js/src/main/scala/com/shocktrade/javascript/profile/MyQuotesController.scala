@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Location
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.profile.MyQuotesController._
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  * My Symbols Controller
  * @author lawrence.daniels@gmail.com
  */
-class MyQuotesController($scope: js.Dynamic, $location: Location, $routeParams: js.Dynamic, toaster: Toaster,
+class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySession") mySession: MySession,
                          @injected("ProfileService") profileService: ProfileService,

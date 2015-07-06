@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import com.shocktrade.javascript.ScalaJsHelper
+import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}

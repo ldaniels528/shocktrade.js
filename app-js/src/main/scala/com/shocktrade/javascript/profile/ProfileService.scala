@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript.{Service, ScalaJsHelper}
+import com.ldaniels528.scalascript.Service
+import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 

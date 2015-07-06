@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
+import ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.{HttpPromise, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster

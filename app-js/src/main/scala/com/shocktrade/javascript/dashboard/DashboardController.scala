@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
 import org.scalajs.dom.console
 
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * Dashboard Controller
  * @author lawrence.daniels@gmail.com
  */
-class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
                           @injected("MySession") mySession: MySession,
                           @injected("PerksDialog") perksDialog: PerksDialogService,
@@ -86,9 +86,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
   ///////////////////////////////////////////////////////////////////////////
 
   // if a contest ID was passed ...
-  if (isDefined($routeParams.contestId)) {
-    val contestId = $routeParams.contestId.as[String]
-
+  $routeParams.contestId foreach { contestId =>
     // if the current contest is not the chosen contest ...
     if (!mySession.contest.exists(_.OID == contestId)) {
       console.log(s"Loading contest $contestId...")
@@ -101,5 +99,14 @@ class DashboardController($scope: js.Dynamic, $routeParams: js.Dynamic, $timeout
       }
     }
   }
+
+}
+
+/**
+ * Dashboard Route Params
+ * @author lawrence.daniels@gmail.com
+ */
+trait DashboardRouteParams extends js.Object {
+  var contestId: js.UndefOr[String] = js.native
 
 }

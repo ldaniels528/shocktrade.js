@@ -2,7 +2,6 @@ package com.shocktrade.javascript.directives
 
 import com.ldaniels528.scalascript.core.{Attributes, JQLite}
 import com.ldaniels528.scalascript.{Directive, Scope}
-import org.scalajs.dom.console
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -31,14 +30,12 @@ class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
     })
   }
 
-  private def getNumericValue(newValue: Any): Option[Double] = {
-    console.log(s"getNumericValue: newValue = $newValue")
-    newValue match {
-      case n: Number => Some(n.doubleValue)
-      case s: String if s.nonEmpty => Try(s.toDouble).toOption
-      case _ => None
-    }
+  private def getNumericValue(newValue: Any): Option[Double] = newValue match {
+    case n: Number => Some(n.doubleValue)
+    case s: String if s.nonEmpty => Try(s.toDouble).toOption
+    case _ => None
   }
+
 }
 
 /**
