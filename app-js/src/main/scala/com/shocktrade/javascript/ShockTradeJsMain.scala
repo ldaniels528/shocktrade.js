@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript._
+import com.ldaniels528.scalascript.{DependencySet, Module, Scope, angular}
 import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
@@ -42,7 +42,6 @@ object ShockTradeJsMain extends js.JSApp {
     // add the controllers and services
     configureServices(module)
     configureControllers(module)
-    configureDialogs(module)
 
     // define the routes
     module.config({ ($routeProvider: RouteProvider) =>
@@ -61,6 +60,7 @@ object ShockTradeJsMain extends js.JSApp {
         .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
         .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
         .otherwise(Route(redirectTo = "/about/us"))
+      ()
     })
 
     // initialize the application
@@ -87,6 +87,15 @@ object ShockTradeJsMain extends js.JSApp {
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[WebSocketService]("WebSocketService")
+
+    module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
+    module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")
+    module.serviceOf[NewGameDialogService]("NewGameDialogService")
+    module.serviceOf[NewOrderDialogService]("NewOrderDialog")
+    module.serviceOf[NewsQuoteDialogService]("NewsQuoteDialog")
+    module.serviceOf[PerksDialogService]("PerksDialog")
+    module.serviceOf[SignUpDialogService]("SignUpDialog")
+    module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
   }
 
   private def configureControllers(module: Module) {
@@ -110,24 +119,14 @@ object ShockTradeJsMain extends js.JSApp {
     module.controllerOf[PortfolioController]("PortfolioController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
-  }
 
-  private def configureDialogs(module: Module) {
-    module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
-    module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")
     module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
-    module.serviceOf[NewGameDialogService]("NewGameDialogService")
     module.controllerOf[NewGameDialogController]("NewGameDialogController")
-    module.serviceOf[NewOrderDialogService]("NewOrderDialog")
     module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
-    module.serviceOf[NewsQuoteDialogService]("NewsQuoteDialog")
     module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
-    module.serviceOf[PerksDialogService]("PerksDialog")
     module.controllerOf[PerksDialogController]("PerksDialogController")
-    module.serviceOf[SignUpDialogService]("SignUpDialog")
     module.controllerOf[SignUpDialogController]("SignUpController")
-    module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
   }
 
