@@ -104,7 +104,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
     console.log("Loading Total investment...")
     contestService.getTotalInvestment(playerId) onComplete {
       case Success(response) =>
-        totalInvestment = Option(response.netWorth.as[Double])
+        totalInvestment = response.netWorth.asOpt[Double]
         totalInvestmentStatus = Option(LOADED)
         console.log("Total investment loaded")
       case Failure(e) =>

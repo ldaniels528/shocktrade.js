@@ -2,6 +2,7 @@ package com.shocktrade.javascript
 
 import ScalaJsHelper._
 
+import com.ldaniels528.scalascript.angular
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Any._
@@ -13,6 +14,8 @@ import scala.util.Try
  * @author lawrence.daniels@gmail.com
  */
 object Filters {
+  private val timeUnits = Seq("min", "hour", "day", "month", "year")
+  private val timeFactors = Seq(60, 24, 30, 12)
 
   /**
    * Absolute Value
@@ -104,12 +107,15 @@ object Filters {
    * @param time the given time stamp (in milliseconds)
    * @return the duration (e.g. "10 mins ago")
    */
-  def toDuration(time: js.Dynamic, noFuture: Boolean = false) = {
-    // get an option of the time
-    val myTime = {
-      if (!isDefined(time)) Option(js.Date.now())
-      else if (isDefined(time.$date)) time.$date.asOpt[Double]
-      else time.asOpt[Double]
+  def toDuration(time: js.UndefOr[js.Any], noFuture: Boolean = false) = {
+    // get the time in milliseconds
+    val myTime = time.toOption map {
+      case value if angular.isDate(value) => value.asInstanceOf[js.Date].getTime()
+      case value if angular.isNumber(value) => value.asInstanceOf[Double]
+      case value if angular.isObject(value) =>
+        val obj = value.asInstanceOf[js.Dynamic]
+        if(angular.isDefined(obj.$date)) obj.$date.as[Double] else js.Date.now()
+      case _ => js.Date.now()
     } getOrElse js.Date.now()
 
     // compute the elapsed time
@@ -131,8 +137,5 @@ object Filters {
     }
     else f"$age%.0f $unitName ago"
   }
-
-  private val timeUnits = Seq("min", "hour", "day", "month", "year")
-  private val timeFactors = Seq(60, 24, 30, 12)
 
 }

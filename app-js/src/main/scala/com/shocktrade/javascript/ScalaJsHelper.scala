@@ -87,10 +87,7 @@ object ScalaJsHelper {
    * js.Dynamic to Value Extensions
    * @param obj the given [[js.Dynamic object]]
    */
-  implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
-
-    @inline
-    def ?(label: String) = if (isDefined(obj(label))) obj(label) else null
+  implicit class JsDynamicExtensionsA(val obj: js.Any) extends AnyVal {
 
     def ===[T](value: T): Boolean = {
       if (value == null) !isDefined(obj)
@@ -108,7 +105,7 @@ object ScalaJsHelper {
     def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 
     @inline
-    def asOpt[T] = if (isDefined(obj)) Try(obj.asInstanceOf[T]).toOption else None
+    def asOpt[T] = obj.asInstanceOf[js.UndefOr[T]].toOption
 
     @inline
     def asArray[T] = obj.asInstanceOf[js.Array[T]]
@@ -120,7 +117,11 @@ object ScalaJsHelper {
     def OID: String = OID_?.orNull
 
     @inline
-    def OID_? : Option[String] = if (isDefined(obj) && isDefined(obj._id)) obj._id.$oid.asOpt[String] else None
+    def OID_? : Option[String] = for {
+      obj <- obj.asInstanceOf[js.UndefOr[js.Dynamic]].toOption
+      _id <- obj._id.asInstanceOf[js.UndefOr[js.Dynamic]].toOption
+      $oid <- _id.$oid.asInstanceOf[js.UndefOr[String]].toOption
+    } yield $oid
 
     @inline
     def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
