@@ -103,6 +103,8 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.getFacebookProfile = () => mySession.getFacebookProfile()
 
+  $scope.getFacebookFriends = () => mySession.fbFriends
+
   $scope.getFundsAvailable = () => mySession.getFundsAvailable()
 
   $scope.getNetWorth = () => mySession.getNetWorth()

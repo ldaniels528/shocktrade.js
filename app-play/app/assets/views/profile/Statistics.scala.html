@@ -66,8 +66,8 @@
 						<th style="width: 50%">Net Cash gains (losses):</th>
 						<td style="width: 50%">
 							$ {{ (userProfile.netCashEarned || 0) | number:2 }}
-							<i ng-show="MySession.getUserProfile().netCashEarned > 0" class="fa fa-arrow-up positive"></i>
-							<i ng-show="MySession.getUserProfile().netCashEarned < 0" class="fa fa-arrow-down negative"></i>
+							<i ng-show="getUserProfile().netCashEarned > 0" class="fa fa-arrow-up positive"></i>
+							<i ng-show="getUserProfile().netCashEarned < 0" class="fa fa-arrow-down negative"></i>
 						</td>
 					</tr>			
 					<tr>
