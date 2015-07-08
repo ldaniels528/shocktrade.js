@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.ldaniels528.scalascript.{Controller, injected, scoped}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -14,39 +13,40 @@ import scala.scalajs.js.Date
  * Cash Account Controller
  * @author lawrence.daniels@gmail.com
  */
-class CashAccountController($scope: js.Dynamic, toaster: Toaster, @injected("MySession") mySession: MySession) extends Controller {
+class CashAccountController($scope: CashAccountScope, toaster: Toaster, @injected("MySession") mySession: MySession)
+  extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.asOfDate = () => mySession.cashAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new Date()
+  @scoped def asOfDate = mySession.cashAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new Date()
 
-  $scope.getFundsAvailable = () => getFundsAvailable
+  @scoped def getTotalOrders = Seq("BUY", "SELL") map computeTotalOrdersByType sum
 
-  $scope.getTotalOrders = () => Seq("BUY", "SELL") map getTotalOrdersByType sum
+  @scoped def getTotalEquity = computeTotalInvestment + computeFundsAvailable
 
-  $scope.getTotalEquity = () => getTotalInvestment + getFundsAvailable
+  @scoped def getTotalBuyOrders = computeTotalOrdersByType(orderType = "BUY")
 
-  $scope.getTotalInvestment = () => getTotalInvestment
+  @scoped def getTotalSellOrders = computeTotalOrdersByType(orderType = "SELL")
 
-  $scope.getTotalBuyOrders = () => getTotalOrdersByType(orderType = "BUY")
+  @scoped def getFundsAvailable = computeFundsAvailable
 
-  $scope.getTotalSellOrders = () => getTotalOrdersByType(orderType = "SELL")
+  @scoped def getTotalInvestment = computeTotalInvestment
 
   /////////////////////////////////////////////////////////////////////
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def getFundsAvailable = mySession.cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]).getOrElse(0d)
+  private def computeFundsAvailable = mySession.cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]).getOrElse(0d)
 
-  private def getTotalInvestment = {
+  private def computeTotalInvestment = {
     var total = 0d
     mySession.participant foreach (_.positions.asArray[js.Dynamic] filter (_.accountType === "CASH") foreach (total += _.netValue.as[Double]))
     total
   }
 
-  private def getTotalOrdersByType(orderType: String) = {
+  private def computeTotalOrdersByType(orderType: String) = {
     var total = 0d
     mySession.participant foreach (_.orders.asArray[js.Dynamic] filter (o => o.orderType === orderType && o.accountType === "CASH") foreach { o =>
       total += o.price.as[Double] * o.quantity.as[Double] + o.commission.as[Double]
@@ -55,3 +55,9 @@ class CashAccountController($scope: js.Dynamic, toaster: Toaster, @injected("MyS
   }
 
 }
+
+/**
+ * Cash Account Controller Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait CashAccountScope extends js.Object

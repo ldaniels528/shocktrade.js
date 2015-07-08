@@ -38,8 +38,9 @@ lazy val appScalaJs = (project in file("app-js"))
     persistLauncher := true,
     persistLauncher in Test := false,
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "com.ldaniels528" %%% "scalascript" % "0.1.1",
+      "com.ldaniels528" %%% "scalascript" % "0.1.0",
       "com.github.benhutchison" %%% "prickle" % "1.1.5",
 //    "org.scala-js" %% "scalajs-library" % "0.6.3",
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
