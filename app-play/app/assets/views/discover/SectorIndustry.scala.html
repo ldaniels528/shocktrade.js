@@ -56,7 +56,7 @@
 
 		<!-- Trade button -->
 		<i class="fa fa-cart-plus clickable sector_cart st_control"
-		   ng-show="!MySession.contestIsEmpty() && q.active"
+		   ng-show="!contestIsEmpty() && q.active"
 		   ng-click="popupNewOrderDialog(q.symbol)"
 		   popover="Buy or Sell this security"
 		   popover-trigger="mouseenter"></i>

@@ -1,9 +1,9 @@
 @()
-<div ng-show="MySession.contestIsEmpty()">
+<div ng-show="contestIsEmpty()">
     <span class="st_orange bold">No contest selected</span>
 </div>
 
-<div ng-if="!MySession.contestIsEmpty()" class="row">
+<div ng-if="!contestIsEmpty()" class="row">
 
     <!-- Navigation -->
     <div class="col-md-2">
@@ -134,7 +134,7 @@
                 </div>
             </tab>
 
-            <tab ng-if="MySession.isAdmin()">
+            <tab ng-if="isAdmin()">
                 <tab-heading>System</tab-heading>
                 <div class="inspect_tab">
                     <div class="row">
@@ -173,7 +173,7 @@
                 </div>
             </tab>
 
-            <tab ng-if="MySession.isAdmin()">
+            <tab ng-if="isAdmin()">
                 <tab-heading>Open Orders</tab-heading>
                 <div class="inspect_tab">
                     <div>

@@ -64,10 +64,7 @@ object ShockTradeJsMain extends js.JSApp {
     })
 
     // initialize the application
-    module.run({ ($rootScope: Scope, MySession: MySession, WebSocketService: WebSocketService) =>
-      // capture the session and websocket instances
-      $rootScope.dynamic.MySession = MySession.asInstanceOf[js.Object]
-
+    module.run({ ($rootScope: Scope, WebSocketService: WebSocketService) =>
       // inject Facebook's JavaScript SDK
       FacebookInjector.init()
 

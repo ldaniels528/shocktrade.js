@@ -1,5 +1,5 @@
 @()
-<div ng-controller="ChatController" ng-if="MySession.getUserID() && !MySession.contestIsEmpty()">
+<div ng-controller="ChatController" ng-if="getUserID() && !contestIsEmpty()">
     <div class="chat_messages">
         <div ng-bind-html="getMessages()"></div>
     </div>

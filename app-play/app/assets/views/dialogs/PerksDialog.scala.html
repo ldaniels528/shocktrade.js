@@ -23,7 +23,7 @@
                     <img src="/assets/images/status/loading16.gif"> Loading Perks ...
                 </span>
                 <div class="perk_padding" ng-repeat="perk in getPerks() track by $index">
-                    <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && MySession.getFundsAvailable() < perk.cost)">
+                    <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && getFundsAvailable() < perk.cost)">
                     <img ng-src="/assets/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
                     <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
                     <span ng-hide="perk.owned">(<span ng-class="getPerkCostClass(perk)">${{ perk.cost | number }}</span>):</span>

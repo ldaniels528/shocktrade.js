@@ -15,15 +15,15 @@
                     <i class="fa fa-money"></i> {{ getNetWorth() | number:2 }}
                 </div>
                 <div class="emphasis" title="Total investment value">
-                    <i ng-class="MySession.hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
-                       title="{{ MySession.hasNotifications() ? 'New events available' : 'No events available' }}"></i>
+                    <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
+                       title="{{ hasNotifications() ? 'New events available' : 'No events available' }}"></i>
                     <i class="fa fa-line-chart"></i> <span class="pull-right">{{ getTotalInvestment() | number:2 }}</span>
                 </div>
             </div>
             <br style="clear: both">
         </div>
         <div class="col-md-8">
-            <span ng-hide="MySession.contestIsEmpty()" class="middle" style="font-size: 14pt">
+            <span ng-hide="contestIsEmpty()" class="middle" style="font-size: 14pt">
                 Playing <span class="game_title">{{ getContestName() }}</span>
             </span>
 

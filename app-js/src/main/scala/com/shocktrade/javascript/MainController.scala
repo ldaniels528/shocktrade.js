@@ -91,7 +91,13 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //              MySession Functions
   //////////////////////////////////////////////////////////////////////
 
+  $scope.contestIsEmpty = () => mySession.contestIsEmpty()
+
+  $scope.getContestID = () => mySession.getContestID()
+
   $scope.getContestName = () => mySession.getContestName()
+
+  $scope.getContestStatus = () => mySession.getContestStatus()
 
   $scope.getFacebookID = () => mySession.getFacebookID()
 
@@ -101,9 +107,17 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.getNetWorth = () => mySession.getNetWorth()
 
+  $scope.getUserID = () => mySession.getUserID()
+
   $scope.getUserName = () => mySession.getUserName()
 
   $scope.getUserProfile = () => mySession.getUserProfile()
+
+  $scope.hasNotifications = () => mySession.hasNotifications()
+
+  $scope.hasPerk = (perkCode: String) => mySession.hasPerk(perkCode)
+
+  $scope.isAdmin = () => mySession.isAdmin()
 
   $scope.isAuthenticated = () => mySession.isAuthenticated()
 
