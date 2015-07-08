@@ -88,6 +88,26 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   $scope.signUp = () => signUp()
 
   //////////////////////////////////////////////////////////////////////
+  //              MySession Functions
+  //////////////////////////////////////////////////////////////////////
+
+  $scope.getContestName = () => mySession.getContestName()
+
+  $scope.getFacebookID = () => mySession.getFacebookID()
+
+  $scope.getFacebookProfile = () => mySession.getFacebookProfile()
+
+  $scope.getFundsAvailable = () => mySession.getFundsAvailable()
+
+  $scope.getNetWorth = () => mySession.getNetWorth()
+
+  $scope.getUserName = () => mySession.getUserName()
+
+  $scope.getUserProfile = () => mySession.getUserProfile()
+
+  $scope.isAuthenticated = () => mySession.isAuthenticated()
+
+  //////////////////////////////////////////////////////////////////////
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 

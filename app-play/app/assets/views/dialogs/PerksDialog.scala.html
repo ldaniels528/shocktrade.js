@@ -10,7 +10,7 @@
                 <span class="st_sub_heading bold st_bkg_color">Total Purchase Cost:
                     <span ng-class="hasSufficientFunds() ? 'positive' : 'negative'">
                         $ {{ getTotalCost() | number:2 }}
-                    </span> / {{ MySession.getFundsAvailable() | number:2 }}
+                    </span> / {{ getFundsAvailable() | number:2 }}
                 </span>
                 <span ng-hide="hasSufficientFunds()">
                     &#8212;

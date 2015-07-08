@@ -20,17 +20,17 @@
             </div>
             <div class="col-md-offset-5 col-md-4">
                 <span class="title_color pull-right" style="margin-right: 20px">
-                    <avatar ng-show="MySession.getFacebookID()" id="{{ MySession.getFacebookID() }}" class="avatar-24"></avatar>
-					<span ng-show="MySession.nonMember" class="clickable" ng-click="signUp()">
+                    <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-24"></avatar>
+					<span ng-show="nonMember" class="clickable" ng-click="signUp()">
 						<i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign Up
 					</span>
-                    <span ng-hide="MySession.isAuthenticated()" class="clickable" ng-click="login()">
-                        <span ng-show="MySession.nonMember"> / </span>
+                    <span ng-hide="isAuthenticated()" class="clickable" ng-click="login()">
+                        <span ng-show="nonMember"> / </span>
                         <i class="fa fa-lg fa-facebook-square fb_icon"></i> Login
                     </span>
-                    <span ng-show="MySession.isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-                    <span ng-show="MySession.getFacebookProfile().name"
-                        class="title_color">&#8212; {{ MySession.getFacebookProfile().name }}</span>
+                    <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
+                    <span ng-show="getFacebookProfile().name"
+                        class="title_color">&#8212; {{ getFacebookProfile().name }}</span>
                 </span>
             </div>
         </div>
@@ -40,7 +40,7 @@
 
         <!-- main view -->
         <div ng-controller="NavigationController" ng-init="initNav()">
-			<div ng-if="MySession.isAuthenticated()"> @assets.views.html.app.InformationBar() </div>
+			<div ng-if="isAuthenticated()"> @assets.views.html.app.InformationBar() </div>
 			<div class="row">
 				<div class="col-md-1" style="width: 60px"> @assets.views.html.app.NavigationBar() </div>
 				<div class="col-md-11 pull-left" ng-view ng-cloak></div>

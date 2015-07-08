@@ -6,13 +6,13 @@
             <div class="inline pull-left">
                 <i class="fa fa-2x fa-chevron-circle-left st_control middle" ng-click="toggleVisibility()" title="Hide the information bar"></i>
                 <img ng-show="isLoading()" src="/assets/images/status/loading32.gif" class="avatar-32">
-                <avatar ng-hide="isLoading()" id="{{ MySession.getFacebookID() }}" class="avatar-32"></avatar>
+                <avatar ng-hide="isLoading()" id="{{ getFacebookID() }}" class="avatar-32"></avatar>
             </div>
             <div class="inline pull-left pad-left-10 pi_bar_cash">
                 <div class="positive" title="Liquid cash available">
                     <img ng-src="/assets/images/status/{{ webSockectConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
                          title="{{ webSockectConnected() ? 'Connected' : 'Not Connected' }}">
-                    <i class="fa fa-money"></i> {{ MySession.getNetWorth() | number:2 }}
+                    <i class="fa fa-money"></i> {{ getNetWorth() | number:2 }}
                 </div>
                 <div class="emphasis" title="Total investment value">
                     <i ng-class="MySession.hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-8">
             <span ng-hide="MySession.contestIsEmpty()" class="middle" style="font-size: 14pt">
-                Playing <span class="game_title">{{MySession.getContestName()}}</span>
+                Playing <span class="game_title">{{ getContestName() }}</span>
             </span>
 
             <span ng-controller="AwardsController" class="middle pull-right">

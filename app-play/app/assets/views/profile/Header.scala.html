@@ -25,7 +25,7 @@
         <div class="col-md-5 inline pull-right">
             <div class="col-md-12 pull-left">
                 <span class="pull-left">Cash</span>
-                <span class="pull-right st_green">{{ MySession.getNetWorth() | number:2 }}</span>
+                <span class="pull-right st_green">{{ getNetWorth() | number:2 }}</span>
             </div>
             <div class="col-md-12 pull-left">
                 <span class="pull-left">Assets</span>
@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-12 pull-left">
                 <span class="pull-left">Total</span>
-                <span class="pull-right st_orange">{{ MySession.getNetWorth() + getTotalInvestment() | number:2 }}</span>
+                <span class="pull-right st_orange">{{ getNetWorth() + getTotalInvestment() | number:2 }}</span>
             </div>
         </div>
         <br style="clear: both">
