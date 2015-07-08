@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
 import org.scalajs.dom.console
 import prickle.Unpickle
@@ -58,9 +57,16 @@ class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalIns
 
   private def accept(form: js.Dynamic) {
     if (isValidated(form)) {
-      dialog.transferFunds(mySession.getContestID(), mySession.getUserID(), form) onComplete {
-        case Success(response) => $modalInstance.close(response)
-        case Failure(e) => messages.push("Failed to deposit funds")
+      (for {
+        contestId <- mySession.contest.flatMap(_.OID_?)
+        userId <- mySession.userProfile.OID_?
+      } yield {
+          dialog.transferFunds(contestId, userId, form) onComplete {
+            case Success(response) => $modalInstance.close(response)
+            case Failure(e) => messages.push("Failed to deposit funds")
+          }
+        }) getOrElse {
+        toaster.error("No game selected")
       }
     }
   }

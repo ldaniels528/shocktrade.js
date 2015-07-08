@@ -60,11 +60,13 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   /////////////////////////////////////////////////////////////////////////////
 
   private def addFavoriteSymbol(symbol: String) = {
-    profileService.addFavoriteSymbol(mySession.getUserID(), symbol) onComplete {
-      case Success(response) =>
-      case Failure(e) =>
-        toaster.error("Failed to add favorite symbol")
-        g.console.error(s"Failed to add favorite symbol: ${e.getMessage}")
+    mySession.userProfile.OID_? foreach { userId =>
+      profileService.addFavoriteSymbol(userId, symbol) onComplete {
+        case Success(response) =>
+        case Failure(e) =>
+          toaster.error("Failed to add favorite symbol")
+          g.console.error(s"Failed to add favorite symbol: ${e.getMessage}")
+      }
     }
   }
 
@@ -121,11 +123,13 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   }
 
   private def removeFavoriteSymbol(symbol: String) = {
-    profileService.removeFavoriteSymbol(mySession.getUserID(), symbol) onComplete {
-      case Success(response) =>
-      case Failure(e) =>
-        toaster.error("Failed to remove favorite symbol")
-        g.console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
+    mySession.userProfile.OID_? foreach { userId =>
+      profileService.removeFavoriteSymbol(userId, symbol) onComplete {
+        case Success(response) =>
+        case Failure(e) =>
+          toaster.error("Failed to remove favorite symbol")
+          g.console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
+      }
     }
   }
 

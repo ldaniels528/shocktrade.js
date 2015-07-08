@@ -1,12 +1,11 @@
 package com.shocktrade.javascript.social
 
-import com.shocktrade.javascript.{ScalaJsHelper, GlobalLoading, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.{GlobalLoading, MySession, ScalaJsHelper}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -149,7 +148,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    */
   private def deleteMessages(userName: String) {
     // gather the records to delete
-    val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).map(_.OID)
+    val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).flatMap(_.OID_?)
     console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
 
     // delete the records

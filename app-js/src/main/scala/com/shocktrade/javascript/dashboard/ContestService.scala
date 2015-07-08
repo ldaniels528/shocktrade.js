@@ -1,15 +1,14 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.ScalaJsHelper
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
+import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
@@ -72,7 +71,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   }
 
   def getCashAvailable(contest: js.Dynamic, playerId: String) = {
-    contest.participants.asArray[js.Dynamic].find(_.OID == playerId) map (_.cashAccount.cashFunds.as[Double]) getOrElse 0.0d
+    contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId)) map (_.cashAccount.cashFunds.as[Double]) getOrElse 0.0d
   }
 
   def getRankings(contestId: String) = {
@@ -118,20 +117,22 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
           player = null
         )
         console.log(s"Loading Contest Rankings for '${contest.name}'...")
-        getRankings(contest.OID) onComplete {
-          case Success(participants) =>
-            contest.rankings.participants = participants
-            contest.rankings.leader = participants.headOption.orNull
-            contest.rankings.player = participants.find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
-          case Failure(e) =>
-            toaster.error("Error loading play rankings")
-            e.printStackTrace()
+        contest.OID_?.foreach { contestId =>
+          getRankings(contestId) onComplete {
+            case Success(participants) =>
+              contest.rankings.participants = participants
+              contest.rankings.leader = participants.headOption.orNull
+              contest.rankings.player = participants.find(p => p.OID_?.contains(playerID) || p.name === playerID || p.facebookID === playerID).orNull
+            case Failure(e) =>
+              toaster.error("Error loading play rankings")
+              e.printStackTrace()
+          }
         }
       }
 
       // if the rankings were loaded, but the player is not set
       else if (isDefined(contest.rankings) && !isDefined(contest.rankings.player)) {
-        contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(p => p.OID == playerID || p.name === playerID || p.facebookID === playerID).orNull
+        contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(p => p.OID_?.contains(playerID) || p.name === playerID || p.facebookID === playerID).orNull
       }
 
       contest.rankings

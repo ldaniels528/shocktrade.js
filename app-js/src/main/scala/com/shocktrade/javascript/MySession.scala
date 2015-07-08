@@ -1,10 +1,10 @@
 package com.shocktrade.javascript
 
-import ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.{HttpPromise, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
@@ -12,7 +12,7 @@ import org.scalajs.dom.console
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
@@ -57,7 +57,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the user ID for the current user's ID
    * @return {*}
    */
-  def getUserID: js.Function0[String] = () => userProfile.OID
+  def getUserID: js.Function0[String] = () => userProfile.OID_?.orNull
 
   /**
    * Returns the user ID for the current user's name
@@ -75,7 +75,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID != null
+  def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID_?.isDefined
 
   def getFacebookID: js.Function0[String] = () => facebookID.orNull
 
@@ -158,7 +158,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getContest: js.Function0[js.Dynamic] = () => contest getOrElse JS()
 
-  def getContestID: js.Function0[String] = () => contest.map(_.OID).orNull
+  def getContestID: js.Function0[String] = () => contest.flatMap(_.OID_?).orNull
 
   def getContestName: js.Function0[String] = () => contest.map(_.name).orNull.as[String]
 
@@ -202,12 +202,12 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getMarginAccount: js.Function0[js.Dynamic] = () => marginAccount_? getOrElse JS()
 
-  def setMessages: js.Function1[js.Array[js.Dynamic], Unit] = (messages: js.Array[js.Dynamic]) => {
-    contest.foreach(_.messages = messages)
-  }
-
   def getMessages: js.Function0[js.Array[js.Dynamic]] = () => {
     contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  }
+
+  def setMessages: js.Function1[js.Array[js.Dynamic], Unit] = (messages: js.Array[js.Dynamic]) => {
+    contest.foreach(_.messages = messages)
   }
 
   def getMyAwards: js.Function0[js.Array[String]] = () => userProfile.awards.asArray[String]
@@ -261,7 +261,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def findPlayerByID: js.Function2[js.Dynamic, String, Option[js.Dynamic]] = (contest: js.Dynamic, playerId: String) => {
     if (isDefined(contest) && isDefined(contest.participants))
-      contest.participants.asArray[js.Dynamic].find(_.OID == playerId)
+      contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId))
     else
       None
   }
@@ -305,17 +305,16 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   private[javascript] def marginAccount_? = participant.flatMap(p => Option(p.marginAccount))
 
   private[javascript] def participant: Option[js.Dynamic] = {
-    var userId = userProfile.OID
-    if (userId == null) None
-    else for {
+    for {
+      userId <- userProfile.OID_?
       c <- contest
       participants = if (isDefined(c.participants)) c.participants.asArray[js.Dynamic] else emptyArray[js.Dynamic]
-      me = participants.find(_.OID == userProfile.OID) getOrElse JS()
+      me = participants.find(_.OID_?.contains(userId)) getOrElse JS()
     } yield me
   }
 
   private def lookupParticipant(contest: js.Dynamic, playerId: String) = {
-    contest.participants.asArray[js.Dynamic].find(_.OID == playerId)
+    contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId))
   }
 
   ////////////////////////////////////////////////////////////
@@ -334,7 +333,8 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     // lookup our local participant
     for {
       myParticipant <- participant
-      foreignPlayer <- lookupParticipant(updatedContest, myParticipant.OID)
+      myParticipantId <- myParticipant.OID_?
+      foreignPlayer <- lookupParticipant(updatedContest, myParticipantId)
     } {
       // update each object (if present)
       if (isDefined(foreignPlayer.cashAccount)) updateContest_CashAccount(updatedContest, myParticipant, foreignPlayer)
@@ -384,15 +384,21 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   $rootScope.$on(ContestDeleted, { (event: js.Dynamic, deletedContest: js.Dynamic) =>
     info(deletedContest, "Contest deleted event received...")
-    contest foreach { c =>
-      if (c.OID == deletedContest.OID) resetContest()
-    }
+    for {
+      contestId <- contest.flatMap(_.OID_?)
+      deletedId <- deletedContest.OID_?
+    } if (contestId == deletedId) resetContest()
   })
 
   $rootScope.$on(ContestUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
     info(updatedContest, "Contest updated event received...")
-    contest foreach { c => if (c.OID == updatedContest.OID) setContest(updatedContest) }
     if (contest.isEmpty) setContest(updatedContest)
+    else {
+      for {
+        contestId <- contest.flatMap(_.OID_?)
+        updatedId <- updatedContest.OID_?
+      } if (contestId == updatedId) setContest(updatedContest)
+    }
   })
 
   $rootScope.$on(MessagesUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
@@ -417,7 +423,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: js.Dynamic) =>
     console.log(s"User Profile for ${profile.name} updated")
-    if (userProfile.OID == profile.OID) {
+    for {
+      userId <- userProfile.OID_?
+      otherId <- profile.OID_?
+    } if (userId == otherId) {
       userProfile.netWorth = profile.netWorth
       toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5.seconds, "trustedHtml")
     }

@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
+import com.ldaniels528.scalascript.Controller
 import com.ldaniels528.scalascript.core.Location
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.Controller
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -19,7 +18,7 @@ abstract class GameController($scope: js.Dynamic, $location: Location, toaster: 
   def enterGame(contest: js.Dynamic) {
     if (isDefined(contest) && isParticipant(contest)) {
       mySession.setContest(contest)
-      $location.path(s"/dashboard/${contest.OID}")
+      contest.OID_?.foreach(contestId => $location.path(s"/dashboard/$contestId"))
     }
     else {
       toaster.error("You must join the contest first")

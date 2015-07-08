@@ -88,7 +88,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
   // if a contest ID was passed ...
   $routeParams.contestId foreach { contestId =>
     // if the current contest is not the chosen contest ...
-    if (!mySession.contest.exists(_.OID == contestId)) {
+    if (!mySession.contest.exists(_.OID_?.contains(contestId))) {
       console.log(s"Loading contest $contestId...")
       contestService.getContestByID(contestId) onComplete {
         case Success(loadedContest) => mySession.setContest(loadedContest)

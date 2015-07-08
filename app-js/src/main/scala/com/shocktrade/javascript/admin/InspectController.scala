@@ -67,11 +67,13 @@ class InspectController($scope: js.Dynamic, $http: Http, $routeParams: InspectRo
   }
 
   private def updateContestHost(host: js.Dynamic) = {
-    $http.post[js.Dynamic](s"/api/contest/${$scope.contest.OID}/host", JS(host = host)) onComplete {
-      case Success(response) =>
-        toaster.success("Processing host updated")
-      case Failure(e) =>
-        toaster.error("Failed to update processing host")
+    $scope.contest.OID_? foreach { contestId =>
+      $http.post[js.Dynamic](s"/api/contest/$contestId/host", JS(host = host)) onComplete {
+        case Success(response) =>
+          toaster.success("Processing host updated")
+        case Failure(e) =>
+          toaster.error("Failed to update processing host")
+      }
     }
   }
 

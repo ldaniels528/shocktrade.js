@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.news
 
-import com.shocktrade.javascript.{ScalaJsHelper, GlobalLoading}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
-import com.shocktrade.javascript.GlobalLoading
+import com.shocktrade.javascript.{GlobalLoading, ScalaJsHelper}
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.news.NewsController._
 import org.scalajs.dom.console
 
@@ -57,7 +56,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
         newsSources = sources
 
         // select the ID of the first feed
-        sources.headOption.map(_.OID) foreach { feed =>
+        sources.headOption.flatMap(_.OID_?) foreach { feed =>
           $scope.selection.feed = feed
           findNewsFeed(feed)
         }
