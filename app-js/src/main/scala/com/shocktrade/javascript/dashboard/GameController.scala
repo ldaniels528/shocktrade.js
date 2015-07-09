@@ -16,7 +16,7 @@ abstract class GameController($scope: js.Dynamic, $location: Location, toaster: 
   extends Controller {
 
   def enterGame(contest: js.Dynamic) {
-    if (isDefined(contest) && isParticipant(contest)) {
+    if (isParticipant(contest)) {
       mySession.setContest(contest)
       contest.OID_?.foreach(contestId => $location.path(s"/dashboard/$contestId"))
     }

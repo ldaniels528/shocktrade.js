@@ -24,7 +24,7 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
   private val messages = emptyArray[String]
   private var loading = false
 
-  console.log(s"facebook.profile = ${angular.toJson(facebook.profile.dynamic)}")
+  console.log(s"facebook.profile = ${angular.toJson(facebook.profile)}")
 
   $scope.form = JS(
     name = facebook.profile.name,

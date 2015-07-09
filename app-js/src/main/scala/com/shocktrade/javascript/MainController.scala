@@ -230,7 +230,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
             mySession.setUserProfile(profile, fbProfile, facebookID)
         }
       case _ =>
-        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull.dynamic)}")
+        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
         toaster.info("Sign-in to Facebook, then Sign-up here")
     }
   }

@@ -14,7 +14,6 @@ import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
-import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
 /**
@@ -37,10 +36,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
+  def getUserProfile = userProfile
 
   def setUserProfile(profile: js.Dynamic, fbProfile: FacebookProfile, facebookID: String) {
-    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile.dynamic)}")
+    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
 
     this.fbProfile = Some(fbProfile)
     this.facebookID = Some(facebookID)

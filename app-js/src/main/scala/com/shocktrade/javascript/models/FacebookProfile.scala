@@ -19,15 +19,3 @@ trait FacebookProfile extends js.Object {
   var verified: Boolean = js.native
 
 }
-
-/**
- * Facebook Profile Singleton
- */
-object FacebookProfile {
-
-  implicit class EnrichedFacebookProfile(val profile: FacebookProfile) extends AnyVal {
-
-    def dynamic = profile.asInstanceOf[js.Dynamic]
-
-  }
-}
