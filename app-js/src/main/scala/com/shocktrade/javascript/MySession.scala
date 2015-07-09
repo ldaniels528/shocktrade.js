@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.{HttpPromise, Timeout}
+import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -56,27 +56,27 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the user ID for the current user's ID
    * @return {*}
    */
-  def getUserID: js.Function0[String] = () => userProfile.OID_?.orNull
+  def getUserID = userProfile.OID_?.orNull
 
   /**
    * Returns the user ID for the current user's name
    * @return {*}
    */
-  def getUserName: js.Function0[String] = () => userProfile.name.as[String]
+  def getUserName = userProfile.name.as[String]
 
   /**
    * Indicates whether the given user is an administrator
    * @return {boolean}
    */
-  def isAdmin: js.Function0[Boolean] = () => userProfile.admin.asOpt[Boolean].getOrElse(false)
+  def isAdmin = userProfile.admin.asOpt[Boolean].getOrElse(false)
 
   /**
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID_?.isDefined
+  def isAuthenticated = userProfile.OID_?.isDefined
 
-  def getFacebookID() = facebookID.orNull
+  def getFacebookID = facebookID.orNull
 
   def setFacebookID(fbId: String) = facebookID = Option(fbId)
 
@@ -84,7 +84,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def setFacebookProfile(profile: FacebookProfile) = fbProfile = Option(profile)
 
-  def isFbAuthenticated() = fbProfile.isDefined
+  def isFbAuthenticated = fbProfile.isDefined
 
   /**
    * Logout function
@@ -123,47 +123,39 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
-    profileService.addFavoriteSymbol(getUserID(), symbol)
-  }
+  def addFavoriteSymbol(symbol: String) = profileService.addFavoriteSymbol(getUserID, symbol)
 
-  def getFavoriteSymbols: js.Function0[js.Array[String]] = () => userProfile.favorites.asArray[String]
+  def getFavoriteSymbols = userProfile.favorites.asArray[String]
 
-  def isFavoriteSymbol: js.Function1[String, Boolean] = (symbol: String) => getFavoriteSymbols().contains(symbol)
+  def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.contains(symbol)
 
-  def removeFavoriteSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
-    profileService.removeFavoriteSymbol(getUserID(), symbol)
-  }
+  def removeFavoriteSymbol(symbol: String) = profileService.removeFavoriteSymbol(getUserID, symbol)
 
-  def addRecentSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
-    profileService.addRecentSymbol(getUserID(), symbol)
-  }
+  def addRecentSymbol(symbol: String) = profileService.addRecentSymbol(getUserID, symbol)
 
-  def getRecentSymbols: js.Function0[js.Array[String]] = () => userProfile.recentSymbols.asArray[String]
+  def getRecentSymbols = userProfile.recentSymbols.asArray[String]
 
-  def isRecentSymbol: js.Function1[String, Boolean] = (symbol: String) => getRecentSymbols().contains(symbol)
+  def isRecentSymbol(symbol: String) = getRecentSymbols.contains(symbol)
 
-  def removeRecentSymbol: js.Function1[String, HttpPromise[js.Dynamic]] = (symbol: String) => {
-    profileService.removeRecentSymbol(getUserID(), symbol)
-  }
+  def removeRecentSymbol(symbol: String) = profileService.removeRecentSymbol(getUserID, symbol)
 
-  def getMostRecentSymbol: js.Function0[String] = () => getRecentSymbols().lastOption getOrElse "AAPL"
+  def getMostRecentSymbol = getRecentSymbols.lastOption getOrElse "AAPL"
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
 
-  def contestIsEmpty: js.Function0[Boolean] = () => contest.isEmpty
+  def contestIsEmpty = contest.isEmpty
 
-  def getContest: js.Function0[js.Dynamic] = () => contest getOrElse JS()
+  def getContest = contest getOrElse JS()
 
-  def getContestID: js.Function0[String] = () => contest.flatMap(_.OID_?).orNull
+  def getContestID = contest.flatMap(_.OID_?).orNull
 
-  def getContestName: js.Function0[String] = () => contest.map(_.name).orNull.as[String]
+  def getContestName = contest.map(_.name).orNull.as[String]
 
-  def getContestStatus: js.Function0[String] = () => contest.map(_.status).orNull.as[String]
+  def getContestStatus = contest.map(_.status).orNull.as[String]
 
-  def setContest: js.Function1[js.Dynamic, Unit] = (aContest: js.Dynamic) => {
+  def setContest(aContest: js.Dynamic) = {
     // if null or undefined, just reset the contest
     if (!isDefined(aContest)) resetContest()
 
@@ -180,13 +172,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   /**
    * Returns the combined total funds for both the cash and margin accounts
    */
-  def getCompleteFundsAvailable: js.Function0[Double] = () => {
+  def getCompleteFundsAvailable = {
     (cashAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d)
   }
 
-  def getFundsAvailable: js.Function0[Double] = () => cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]) getOrElse 0.00d
+  def getFundsAvailable = cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]) getOrElse 0.00d
 
-  def deductFundsAvailable: js.Function1[Double, Unit] = (amount: Double) => {
+  def deductFundsAvailable(amount: Double) = {
     participant.foreach { player =>
       console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
       player.cashAccount.cashFunds -= amount
@@ -195,47 +187,33 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     ()
   }
 
-  def hasMarginAccount: js.Function0[Boolean] = () => marginAccount_?.isDefined
+  def hasMarginAccount = marginAccount_?.isDefined
 
-  def getCashAccount: js.Function0[js.Dynamic] = () => cashAccount_? getOrElse JS()
+  def getCashAccount = cashAccount_? getOrElse JS()
 
-  def getMarginAccount: js.Function0[js.Dynamic] = () => marginAccount_? getOrElse JS()
+  def getMarginAccount = marginAccount_? getOrElse JS()
 
-  def getMessages: js.Function0[js.Array[js.Dynamic]] = () => {
-    contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
-  }
+  def getMessages = contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def setMessages: js.Function1[js.Array[js.Dynamic], Unit] = (messages: js.Array[js.Dynamic]) => {
-    contest.foreach(_.messages = messages)
-  }
+  def setMessages(messages: js.Array[js.Dynamic]) = contest.foreach(_.messages = messages)
 
-  def getMyAwards: js.Function0[js.Array[String]] = () => userProfile.awards.asArray[String]
+  def getMyAwards = userProfile.awards.asArray[String]
 
-  def getOrders: js.Function0[js.Array[js.Dynamic]] = () => {
-    participant.flatMap(p => Option(p.orders).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
-  }
+  def getOrders = participant.flatMap(p => Option(p.orders).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def getClosedOrders: js.Function0[js.Array[js.Dynamic]] = () => {
-    participant.flatMap(p => Option(p.closedOrders.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
-  }
+  def getClosedOrders = participant.flatMap(p => Option(p.closedOrders.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def participantIsEmpty: js.Function0[Boolean] = () => participant.isEmpty
+  def participantIsEmpty = participant.isEmpty
 
-  def getParticipant: js.Function0[js.Dynamic] = () => participant getOrElse JS()
+  def getParticipant = participant getOrElse JS()
 
-  def getPerformance: js.Function0[js.Array[js.Dynamic]] = () => {
-    participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
-  }
+  def getPerformance = participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def getPerks: js.Function0[js.Array[String]] = () => {
-    participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
-  }
+  def getPerks = participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
 
-  def hasPerk: js.Function1[String, Boolean] = (perkCode: String) => getPerks().contains(perkCode)
+  def hasPerk: js.Function1[String, Boolean] = (perkCode: String) => getPerks.contains(perkCode)
 
-  def getPositions: js.Function0[js.Array[js.Dynamic]] = () => {
-    participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
-  }
+  def getPositions =  participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
   def resetContest: js.Function0[Unit] = () => contest = None
 
@@ -243,7 +221,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Notification Methods
   ////////////////////////////////////////////////////////////
 
-  def addNotification: js.Function1[String, js.Array[String]] = (message: String) => {
+  def addNotification(message: String) = {
     if (notifications.push(message) > 20) {
       notifications.shift()
     }
@@ -258,14 +236,14 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Participant Methods
   ////////////////////////////////////////////////////////////
 
-  def findPlayerByID: js.Function2[js.Dynamic, String, Option[js.Dynamic]] = (contest: js.Dynamic, playerId: String) => {
+  def findPlayerByID(contest: js.Dynamic, playerId: String) = {
     if (isDefined(contest) && isDefined(contest.participants))
       contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId))
     else
       None
   }
 
-  def findPlayerByName: js.Function2[js.Dynamic, String, js.Dynamic] = (contest: js.Dynamic, playerName: String) => {
+  def findPlayerByName(contest: js.Dynamic, playerName: String) = {
     required("contest", contest)
     required("playerName", playerName)
     contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()

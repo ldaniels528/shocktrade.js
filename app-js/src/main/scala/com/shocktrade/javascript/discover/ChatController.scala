@@ -47,7 +47,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
    * @return an HTML string
    */
   private def getMessages: String = {
-    val messages = mySession.getMessages()
+    val messages = mySession.getMessages
     if ((messages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 1000) cachedHtml
     else {
       // capture the start time
@@ -95,13 +95,13 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
         text = messageText,
         //"recipient": null,
         sender = JS(
-          _id = JS($oid = mySession.getUserID()),
-          name = mySession.getUserName(),
-          facebookID = mySession.getFacebookID()
+          _id = JS($oid = mySession.getUserID),
+          name = mySession.getUserName,
+          facebookID = mySession.getFacebookID
         ))
 
       // transmit the message
-      contestService.sendChatMessage(mySession.getContestID(), message) onComplete {
+      contestService.sendChatMessage(mySession.getContestID, message) onComplete {
         case Success(messages) =>
           $scope.chatMessage = ""
           mySession.setMessages(messages)

@@ -1,20 +1,19 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, GlobalLoading, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController
+import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -66,7 +65,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
     ))
   }
 
-  private def getActiveOrders = mySession.getOrders() filter (_.accountType === $scope.getAccountType())
+  private def getActiveOrders = mySession.getOrders filter (_.accountType === $scope.getAccountType())
 
   private def selectedOrder = Option($scope.selectedOrder) map (_.as[js.Dynamic])
 
@@ -84,7 +83,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
 
   $scope.orderCost = (o: js.Dynamic) => o.price * o.quantity + o.commission
 
-  private def getClosedOrders = mySession.getClosedOrders().filter(_.accountType === $scope.getAccountType())
+  private def getClosedOrders = mySession.getClosedOrders.filter(_.accountType === $scope.getAccountType())
 
   private def selectedClosedOrder = Option($scope.selectedClosedOrder) map (_.as[js.Dynamic])
 
@@ -110,7 +109,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
 
   private def cost(tx: js.Dynamic): Double = tx.pricePaid.as[Double] * tx.quantity.as[Double] + tx.commissions.as[Double]
 
-  private def getPerformance = mySession.getPerformance()
+  private def getPerformance = mySession.getPerformance
 
   private def proceeds(tx: js.Dynamic): Double = soldValue(tx) - cost(tx)
 
@@ -138,7 +137,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
 
   private def getPositions = {
     mySession.participant foreach enrichPositions
-    mySession.getPositions() filter (_.accountType === $scope.getAccountType())
+    mySession.getPositions filter (_.accountType === $scope.getAccountType())
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -146,10 +145,10 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   /////////////////////////////////////////////////////////////////////
 
   private def enrichOrders(participant: js.Dynamic) {
-    if (!mySession.participantIsEmpty()) {
+    if (!mySession.participantIsEmpty) {
       if (!isDefined(participant.enrichedOrders)) {
         participant.enrichedOrders = true
-        contestService.getEnrichedOrders(mySession.getContestID(), participant.OID) onComplete {
+        contestService.getEnrichedOrders(mySession.getContestID, participant.OID) onComplete {
           case Success(enrichedOrders) => mySession.getParticipant().orders = enrichedOrders
           case Failure(e) =>
             toaster.error("Error!", "Error loading enriched orders")
@@ -159,10 +158,10 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   }
 
   private def enrichPositions(participant: js.Dynamic) {
-    if (!mySession.participantIsEmpty()) {
+    if (!mySession.participantIsEmpty) {
       if (!isDefined(participant.enrichedPositions)) {
         participant.enrichedPositions = true
-        contestService.getEnrichedPositions(mySession.getContestID(), participant.OID) onComplete {
+        contestService.getEnrichedPositions(mySession.getContestID, participant.OID) onComplete {
           case Success(enrichedPositions) => mySession.getParticipant().positions = enrichedPositions
           case Failure(e) => toaster.error("Error loading enriched positions")
         }

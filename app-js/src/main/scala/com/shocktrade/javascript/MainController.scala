@@ -76,7 +76,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.getTabIndex = () => determineTableIndex
 
-  $scope.isVisible = (tab: js.Dynamic) => (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated()))
+  $scope.isVisible = (tab: js.Dynamic) => (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated))
 
   $scope.login = () => login()
 
@@ -92,27 +92,27 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //              MySession Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.contestIsEmpty = () => mySession.contestIsEmpty()
+  $scope.contestIsEmpty = () => mySession.contestIsEmpty
 
-  $scope.getContestID = () => mySession.getContestID()
+  $scope.getContestID = () => mySession.getContestID
 
-  $scope.getContestName = () => mySession.getContestName()
+  $scope.getContestName = () => mySession.getContestName
 
-  $scope.getContestStatus = () => mySession.getContestStatus()
+  $scope.getContestStatus = () => mySession.getContestStatus
 
-  $scope.getFacebookID = () => mySession.getFacebookID()
+  $scope.getFacebookID = () => mySession.getFacebookID
 
   $scope.getFacebookProfile = () => mySession.getFacebookProfile
 
   $scope.getFacebookFriends = () => mySession.fbFriends
 
-  $scope.getFundsAvailable = () => mySession.getFundsAvailable()
+  $scope.getFundsAvailable = () => mySession.getFundsAvailable
 
   $scope.getNetWorth = () => mySession.getNetWorth()
 
-  $scope.getUserID = () => mySession.getUserID()
+  $scope.getUserID = () => mySession.getUserID
 
-  $scope.getUserName = () => mySession.getUserName()
+  $scope.getUserName = () => mySession.getUserName
 
   $scope.getUserProfile = () => mySession.getUserProfile()
 
@@ -120,9 +120,9 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.hasPerk = (perkCode: String) => mySession.hasPerk(perkCode)
 
-  $scope.isAdmin = () => mySession.isAdmin()
+  $scope.isAdmin = () => mySession.isAdmin
 
-  $scope.isAuthenticated = () => mySession.isAuthenticated()
+  $scope.isAuthenticated = () => mySession.isAuthenticated
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
@@ -275,7 +275,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   private def performTabSwitch(tabIndex: Int): Unit = {
     val tab = appTabs(tabIndex)
-    console.log(s"Changing location for ${mySession.getUserName()} to ${tab.url}")
+    console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
     $location.url(tab.url.as[String])
   }
 

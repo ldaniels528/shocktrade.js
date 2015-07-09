@@ -76,9 +76,9 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
       if (obj.expanded.isTrue && !isDefined(obj.quotes)) {
         obj.quotes = emptyArray[js.Dynamic]
         name match {
-          case Favorites => loadQuotes(name, mySession.getFavoriteSymbols(), obj)
+          case Favorites => loadQuotes(name, mySession.getFavoriteSymbols, obj)
           case Held => loadHeldSecurities(obj)
-          case Recents => loadQuotes(name, mySession.getRecentSymbols(), obj)
+          case Recents => loadQuotes(name, mySession.getRecentSymbols, obj)
           case _ =>
             g.console.error(s"$name is not a recognized list")
         }

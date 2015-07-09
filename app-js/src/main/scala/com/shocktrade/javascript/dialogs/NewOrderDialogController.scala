@@ -90,8 +90,8 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
     if (isValid(form)) {
       processing = true
 
-      val contestId = mySession.getContestID()
-      val playerId = mySession.getUserID()
+      val contestId = mySession.getContestID
+      val playerId = mySession.getUserID
       console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
 
       contestService.createOrder(contestId, playerId, $scope.form) onComplete {
@@ -116,7 +116,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
 
     // perform the validations
     if (!isDefined(form.accountType)) messages.push("Please selected the account to use (Cash or Margin)")
-    if (isDefined(form.accountType) && form.accountType === "MARGIN" && !mySession.hasMarginAccount()) messages.push("You do not have a Margin Account (must buy the Perk)")
+    if (isDefined(form.accountType) && form.accountType === "MARGIN" && !mySession.hasMarginAccount) messages.push("You do not have a Margin Account (must buy the Perk)")
     if (!isDefined(form.orderType)) messages.push("No Order Type (BUY or SELL) specified")
     if (!isDefined(form.priceType)) messages.push("No Pricing Method specified")
     if (!isDefined(form.orderTerm)) messages.push("No Order Term specified")
@@ -129,8 +129,8 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
   ///////////////////////////////////////////////////////////////////////////
 
   for {
-    contestId <- Option(mySession.getContestID())
-    playerId <- Option(mySession.getUserID())
+    contestId <- Option(mySession.getContestID)
+    playerId <- Option(mySession.getUserID)
   } {
     // load the player"s perks
     perksDialog.getMyPerks(contestId, playerId) onComplete {

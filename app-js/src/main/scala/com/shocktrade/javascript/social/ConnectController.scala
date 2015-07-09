@@ -85,7 +85,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    */
   private def composeMessage() = {
     messageDialog.popup() onComplete {
-      case Success(response) => loadMyUpdates(mySession.getUserName())
+      case Success(response) => loadMyUpdates(mySession.getUserName)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -173,8 +173,8 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    * Listen for changes to the player's profile
    */
   scope.$on(UserProfileChanged, { (profile: js.Dynamic) =>
-    if (mySession.getRecentSymbols().nonEmpty) {
-      loadMyUpdates(mySession.getUserName())
+    if (mySession.getRecentSymbols.nonEmpty) {
+      loadMyUpdates(mySession.getUserName)
       //$scope.chooseFirstContact()
     }
   })

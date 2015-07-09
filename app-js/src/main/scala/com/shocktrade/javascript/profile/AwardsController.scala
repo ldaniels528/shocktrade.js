@@ -1,12 +1,11 @@
 package com.shocktrade.javascript.profile
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Http
 import com.shocktrade.core.Award
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.profile.AwardsController._
 import org.scalajs.dom.console
 
@@ -37,13 +36,13 @@ class AwardsController($scope: js.Dynamic, $http: Http, @injected("MySession") m
   /////////////////////////////////////////////////////////////////////////////
 
   private def getMyAwards: js.Array[js.Dynamic] = {
-    mySession.getMyAwards() map (code => AwardsByCode.get(code).orNull)
+    mySession.getMyAwards map (code => AwardsByCode.get(code).orNull)
   }
 
   private def setupAwards() {
     console.log("Setting up awards....")
     AvailableAwards foreach { award =>
-      award.owned = mySession.getMyAwards().contains(award.code.as[String])
+      award.owned = mySession.getMyAwards.contains(award.code.as[String])
     }
   }
 

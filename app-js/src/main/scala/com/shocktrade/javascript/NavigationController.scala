@@ -36,7 +36,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
 
   $scope.initNav = () => init()
 
-  $scope.isAuthenticated = () => mySession.isAuthenticated()
+  $scope.isAuthenticated = () => mySession.isAuthenticated
 
   $scope.getMyRanking = () => getMyRanking getOrElse JS()
 

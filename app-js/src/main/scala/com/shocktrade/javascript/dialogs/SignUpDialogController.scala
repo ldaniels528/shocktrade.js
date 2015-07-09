@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, angular, injected}
+import com.ldaniels528.scalascript.{Controller, angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
  * Sign-Up Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout, toaster: Toaster,
+class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout, toaster: Toaster,
                              @injected("Facebook") facebook: FacebookService,
                              @injected("SignUpDialog") dialog: SignUpDialogService)
   extends Controller {
@@ -31,13 +31,13 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
     facebookID = facebook.facebookID
   )
 
-  $scope.cancel = () => $modalInstance.dismiss("cancel")
+  @scoped def cancel() = $modalInstance.dismiss("cancel")
 
-  $scope.createAccount = (form: js.Dynamic) => registerUser(form)
+  @scoped def createAccount(form: js.Dynamic) = registerUser(form)
 
-  $scope.getMessages = () => messages
+  @scoped def getMessages = messages
 
-  $scope.isLoading = () => loading
+  @scoped def isLoading = loading
 
   /**
    * Validates the form
@@ -88,5 +88,14 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
   private def startLoading() = loading = true
 
   private def stopLoading() = $timeout(() => loading = false, 1000)
+
+}
+
+/**
+ * Sign-Up Dialog Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait SignUpDialogScope extends js.Object {
+  var form: js.Dynamic = js.native
 
 }

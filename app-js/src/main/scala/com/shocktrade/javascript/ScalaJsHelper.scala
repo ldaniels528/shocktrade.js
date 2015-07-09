@@ -62,32 +62,10 @@ object ScalaJsHelper {
   ////////////////////////////////////////////////////////////////////////
 
   /**
-   * Convenience method for transforming Scala Sequences into js.Arrays
-   * @param items the given sequence of objects
-   * @tparam T the parameter type
-   */
-  implicit class JsArrayExtensionsA[T](val items: Seq[T]) extends AnyVal {
-
-    def toJsArray: js.Array[T] = items.asInstanceOf[js.Array[T]]
-
-  }
-
-  /**
-   * Convenience method for transforming Scala Sequences into js.Arrays
-   * @param items the given sequence of objects
-   * @tparam T the parameter type
-   */
-  implicit class JsArrayExtensionsB[T](val items: Array[T]) extends AnyVal {
-
-    def toJsArray: js.Array[T] = items.asInstanceOf[js.Array[T]]
-
-  }
-
-  /**
    * js.Dynamic to Value Extensions
    * @param obj the given [[js.Dynamic object]]
    */
-  implicit class JsDynamicExtensionsA(val obj: js.Any) extends AnyVal {
+  implicit class JsAnyExtensions(val obj: js.Any) extends AnyVal {
 
     def ===[T](value: T): Boolean = {
       if (value == null) !isDefined(obj)
@@ -114,17 +92,21 @@ object ScalaJsHelper {
     def isTrue = isDefined(obj) && Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
 
     @inline
+    def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
+
+  }
+
+  /**
+   * js.Dynamic to Value Extensions
+   * @param obj the given [[js.Dynamic object]]
+   */
+  implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
+
+    @inline
     def OID: String = OID_?.orNull
 
     @inline
-    def OID_? : Option[String] = for {
-      obj <- obj.asInstanceOf[js.UndefOr[js.Dynamic]].toOption
-      _id <- obj._id.asInstanceOf[js.UndefOr[js.Dynamic]].toOption
-      $oid <- _id.$oid.asInstanceOf[js.UndefOr[String]].toOption
-    } yield $oid
-
-    @inline
-    def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
+    def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
 
   }
 

@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 import org.scalajs.dom.console
 
@@ -36,7 +35,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
 
   $scope.getTotalCost = () => getSelectedPerksCost
 
-  $scope.hasSufficientFunds = () => getSelectedPerksCost <= mySession.getFundsAvailable()
+  $scope.hasSufficientFunds = () => getSelectedPerksCost <= mySession.getFundsAvailable
 
   $scope.perksSelected = () => perks.exists(p => p.selected.isTrue && !p.owned.isTrue)
 
@@ -44,21 +43,21 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
 
   $scope.getPerkCostClass = (perkJs: js.Dynamic) => {
     perkJs.toPerk map { perk =>
-      if (perk.selected || mySession.getFundsAvailable() >= perk.cost) "positive"
-      else if (mySession.getFundsAvailable() < perk.cost) "negative"
+      if (perk.selected || mySession.getFundsAvailable >= perk.cost) "positive"
+      else if (mySession.getFundsAvailable < perk.cost) "negative"
       else "null"
     } getOrElse "null"
   }
 
   $scope.getPerkNameClass = (perkJs: js.Dynamic) => {
     perkJs.toPerk map { perk =>
-      if (perk.selected || mySession.getFundsAvailable() >= perk.cost) "st_bkg_color" else "null"
+      if (perk.selected || mySession.getFundsAvailable >= perk.cost) "st_bkg_color" else "null"
     } getOrElse "null"
   }
 
   $scope.getPerkDescClass = (perkJs: js.Dynamic) => {
     perkJs.toPerk map { perk =>
-      if (perk.selected || mySession.getFundsAvailable() >= perk.cost) "" else "null"
+      if (perk.selected || mySession.getFundsAvailable >= perk.cost) "" else "null"
     } getOrElse "null"
   }
 
@@ -78,7 +77,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
 
   private def loadPerks() {
     // load the player's perks
-    dialog.getMyPerks(mySession.getContestID(), mySession.getUserID()) onComplete {
+    dialog.getMyPerks(mySession.getContestID, mySession.getUserID) onComplete {
       case Success(response) =>
         console.log(s"loadPerks: response = $response")
         myFunds = response.fundsAvailable
@@ -90,7 +89,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
     }
 
     // load all contest perks
-    dialog.getPerks(mySession.getContestID()) onComplete {
+    dialog.getPerks(mySession.getContestID) onComplete {
       case Success(loadedPerks) =>
         perks = loadedPerks
         perkMapping = js.Dictionary(perks.map(p => p.code.as[String] -> p): _*)
@@ -102,14 +101,14 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
 
   private def purchasePerks() {
     // the contest must be defined
-    if (mySession.contestIsEmpty()) toaster.error("No game selected")
+    if (mySession.contestIsEmpty) toaster.error("No game selected")
     else {
       // build the list of perks to purchase
       val perkCodes = getSelectedPerkCodes
       val totalCost = getSelectedPerksCost
 
       // send the purchase order
-      dialog.purchasePerks(mySession.getContestID(), mySession.getUserID(), perkCodes) onComplete {
+      dialog.purchasePerks(mySession.getContestID, mySession.getUserID, perkCodes) onComplete {
         case Success(contest) => $modalInstance.close(contest)
         case Failure(e) =>
           toaster.error(s"Failed to purchase ${perkCodes.length} Perk(s)")

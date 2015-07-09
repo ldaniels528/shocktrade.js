@@ -155,7 +155,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $timeout: Ti
       splitScreen = true
 
       if (!isDefined(contest.rankings)) {
-        contestService.getPlayerRankings(contest, mySession.getUserID())
+        contestService.getPlayerRankings(contest, mySession.getUserID)
       }
     }
   }
@@ -197,14 +197,14 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $timeout: Ti
   }
 
   $scope.isJoinable = { (contest: js.Dynamic) =>
-    mySession.isAuthenticated() && isDefined(contest) &&
+    mySession.isAuthenticated && isDefined(contest) &&
       (!isDefined(contest.invitationOnly) || !contest.invitationOnly.isTrue) &&
       !isContestOwner(contest) && !isParticipant(contest)
   }
 
   $scope.joinContest = (contest: js.Dynamic) => {
     contest.joining = true
-    val playerInfo = JS(player = JS(id = mySession.userProfile.OID, name = mySession.userProfile.name, facebookID = mySession.getFacebookID()))
+    val playerInfo = JS(player = JS(id = mySession.userProfile.OID, name = mySession.userProfile.name, facebookID = mySession.getFacebookID))
     asyncLoading($scope)(contestService.joinContest(contest.OID, playerInfo)) onComplete {
       case Success(joinedContest) =>
         if (!js.isUndefined(joinedContest.error)) {
@@ -230,7 +230,7 @@ class GameSearchController($scope: js.Dynamic, $location: Location, $timeout: Ti
 
   $scope.quitContest = { (contest: js.Dynamic) =>
     contest.quitting = true
-    asyncLoading($scope)(contestService.quitContest(contest.OID, mySession.getUserID())) onComplete {
+    asyncLoading($scope)(contestService.quitContest(contest.OID, mySession.getUserID)) onComplete {
       case Success(updatedContest) =>
         if (js.isUndefined(updatedContest.error)) {
           $scope.contest = updatedContest

@@ -50,7 +50,7 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   private def getMyRankings(contest: js.Dynamic) = {
     if (!isDefined(contest)) null
     else if (!isDefined(contest.ranking)) {
-      val rankings = contestService.getPlayerRankings(contest, mySession.getUserID())
+      val rankings = contestService.getPlayerRankings(contest, mySession.getUserID)
       rankings.player
     }
     else contest.ranking.player

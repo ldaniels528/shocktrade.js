@@ -76,7 +76,7 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
 
   $scope.getRankings = () => mySession.contest match {
     case Some(c) =>
-      val rankings = contestService.getPlayerRankings(c, mySession.getUserID())
+      val rankings = contestService.getPlayerRankings(c, mySession.getUserID)
       rankings.participants
     case None => emptyArray[js.Dynamic]
   }

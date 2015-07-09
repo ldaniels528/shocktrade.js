@@ -126,25 +126,25 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
   //          Symbols - Favorites
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.addFavoriteSymbol = (symbol: String) => profileService.addFavoriteSymbol(mySession.getUserID(), symbol)
+  $scope.addFavoriteSymbol = (symbol: String) => profileService.addFavoriteSymbol(mySession.getUserID, symbol)
 
   $scope.isFavorite = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isFavoriteSymbol)
 
-  $scope.removeFavoriteSymbol = (symbol: String) => profileService.removeFavoriteSymbol(mySession.getUserID(), symbol)
+  $scope.removeFavoriteSymbol = (symbol: String) => profileService.removeFavoriteSymbol(mySession.getUserID, symbol)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Symbols - Recent
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.addRecentSymbol = (symbol: String) => {
-    if (mySession.isAuthenticated() && !mySession.isRecentSymbol(symbol)) {
-      profileService.addRecentSymbol(mySession.getUserID(), symbol)
+    if (mySession.isAuthenticated && !mySession.isRecentSymbol(symbol)) {
+      profileService.addRecentSymbol(mySession.getUserID, symbol)
     }
   }
 
   $scope.isRecentSymbol = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isRecentSymbol)
 
-  $scope.removeRecentSymbol = (symbol: String) => profileService.removeRecentSymbol(mySession.getUserID(), symbol)
+  $scope.removeRecentSymbol = (symbol: String) => profileService.removeRecentSymbol(mySession.getUserID, symbol)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Risk Functions
@@ -218,7 +218,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
   // load the symbol
   if (!isDefined($scope.q.symbol)) {
     // get the symbol
-    val symbol = $routeParams.symbol getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol())
+    val symbol = $routeParams.symbol getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol)
 
     // load the symbol
     updateQuote(symbol)

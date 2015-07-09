@@ -69,9 +69,9 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
 
       // add the player info
       $scope.form.player = JS(
-        id = mySession.getUserID(),
-        name = mySession.getUserName(),
-        facebookID = mySession.getFacebookID()
+        id = mySession.getUserID,
+        name = mySession.getUserName,
+        facebookID = mySession.getFacebookID
       )
 
       // create the new game
@@ -91,7 +91,7 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
   private def isValidForm(form: js.Dynamic) = {
     errors.remove(0, errors.length)
 
-    if (!mySession.isAuthenticated()) errors.push("You must login to create games")
+    if (!mySession.isAuthenticated) errors.push("You must login to create games")
     if (!isDefined(form.name) || form.name.as[String].isEmpty) errors.push("Game Title is required")
     if (!isDefined(form.duration)) errors.push("Game Duration is required")
     errors.isEmpty
