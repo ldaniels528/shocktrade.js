@@ -1,16 +1,15 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.ScalaJsHelper
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.ldaniels528.scalascript.{Controller, angular, injected}
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -25,7 +24,7 @@ class SignUpDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[j
   private val messages = emptyArray[String]
   private var loading = false
 
-  console.log(s"facebook.profile = ${angular.toJson(facebook.profile)}")
+  console.log(s"facebook.profile = ${angular.toJson(facebook.profile.dynamic)}")
 
   $scope.form = JS(
     name = facebook.profile.name,

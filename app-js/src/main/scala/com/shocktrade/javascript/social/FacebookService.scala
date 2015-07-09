@@ -4,6 +4,7 @@ import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
 import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Q
+import com.shocktrade.javascript.models.FacebookProfile
 import org.scalajs.dom.console
 
 import scala.beans.BeanProperty
@@ -27,7 +28,7 @@ class FacebookService($q: Q) extends Service {
   var facebookID: String = null
   var auth: js.Dynamic = null
   var accessToken: String = null
-  var profile: js.Dynamic = null
+  var profile: FacebookProfile = null
 
   /**
    * Initializes the Facebook service

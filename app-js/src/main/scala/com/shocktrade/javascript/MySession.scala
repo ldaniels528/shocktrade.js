@@ -6,6 +6,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.models.FacebookProfile
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
 
@@ -20,7 +21,6 @@ import scala.util.{Failure, Success}
  * My Session Facade
  * @author lawrence.daniels@gmail.com
  */
-@JSExportAll
 class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
                 @injected("ContestService") contestService: ContestService,
                 @injected("ProfileService") profileService: ProfileService)
@@ -29,7 +29,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   val notifications = emptyArray[String]
   var facebookID: Option[String] = None
   var fbFriends = emptyArray[js.Dynamic]
-  var fbProfile: Option[js.Dynamic] = None
+  var fbProfile: Option[FacebookProfile] = None
   var contest: Option[js.Dynamic] = None
   var userProfile: js.Dynamic = createSpectatorProfile()
 
@@ -39,8 +39,8 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getUserProfile: js.Function0[js.Dynamic] = () => userProfile
 
-  def setUserProfile(profile: js.Dynamic, fbProfile: js.Dynamic, facebookID: String) {
-    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
+  def setUserProfile(profile: js.Dynamic, fbProfile: FacebookProfile, facebookID: String) {
+    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile.dynamic)}")
 
     this.fbProfile = Some(fbProfile)
     this.facebookID = Some(facebookID)
@@ -77,15 +77,15 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    */
   def isAuthenticated: js.Function0[Boolean] = () => userProfile.OID_?.isDefined
 
-  def getFacebookID: js.Function0[String] = () => facebookID.orNull
+  def getFacebookID() = facebookID.orNull
 
-  def setFacebookID: js.Function1[String, Unit] = (fbId: String) => facebookID = Option(fbId)
+  def setFacebookID(fbId: String) = facebookID = Option(fbId)
 
-  def getFacebookProfile: js.Function0[js.Dynamic] = () => fbProfile getOrElse JS()
+  def getFacebookProfile = fbProfile
 
-  def setFacebookProfile: js.Function1[js.Dynamic, Unit] = (profile: js.Dynamic) => fbProfile = Option(profile)
+  def setFacebookProfile(profile: FacebookProfile) = fbProfile = Option(profile)
 
-  def isFbAuthenticated: js.Function0[Boolean] = () => fbProfile.isDefined
+  def isFbAuthenticated() = fbProfile.isDefined
 
   /**
    * Logout function

@@ -1,15 +1,16 @@
 package com.shocktrade.javascript
 
+import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.TimerConversions._
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript._
 import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
+import com.shocktrade.javascript.models.FacebookProfile
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
@@ -101,7 +102,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   $scope.getFacebookID = () => mySession.getFacebookID()
 
-  $scope.getFacebookProfile = () => mySession.getFacebookProfile()
+  $scope.getFacebookProfile = () => mySession.getFacebookProfile
 
   $scope.getFacebookFriends = () => mySession.fbFriends
 
@@ -196,8 +197,8 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     facebook.getUserProfile() onComplete {
       case Success(response) =>
-        mySession.setFacebookProfile(response)
-        facebook.profile = response
+        mySession.setFacebookProfile(response.as[FacebookProfile])
+        facebook.profile = response.as[FacebookProfile]
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -221,15 +222,15 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   private def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
 
-  private def signUpPopup(facebookID: String, fbProfile_? : Option[js.Dynamic]) {
+  private def signUpPopup(facebookID: String, fbProfile_? : Option[FacebookProfile]) {
     fbProfile_? match {
       case Some(fbProfile) =>
         signUpDialog.popup(facebookID, fbProfile) onSuccess {
-          case profile: js.Dynamic =>
+          case profile =>
             mySession.setUserProfile(profile, fbProfile, facebookID)
         }
       case _ =>
-        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
+        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull.dynamic)}")
         toaster.info("Sign-in to Facebook, then Sign-up here")
     }
   }
