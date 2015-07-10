@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.social
 
-import com.shocktrade.javascript.ScalaJsHelper
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.angular
+import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.console
 import org.scalajs.jquery._
 
