@@ -13,6 +13,10 @@ a:visited { cursor: pointer; text-decoration: none; }
 a:hover   { cursor: pointer; text-decoration: none; }
 a:active  { cursor: pointer; text-decoration: none; }
 
+.opaque {
+	opacity: 0.5;
+}
+
 .avatar-16 {
 	width: 16px;
 	height: 16px;
