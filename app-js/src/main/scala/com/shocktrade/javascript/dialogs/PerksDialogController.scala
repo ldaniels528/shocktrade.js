@@ -25,7 +25,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
   private var perks = emptyArray[js.Dynamic]
   private var perkMapping = js.Dictionary[js.Dynamic]()
   private var myPerks = emptyArray[String]
-  private var myFunds = mySession.getCashAccount().cashFunds.as[Double]
+  private var myFunds = mySession.getCashAccount.cashFunds
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 

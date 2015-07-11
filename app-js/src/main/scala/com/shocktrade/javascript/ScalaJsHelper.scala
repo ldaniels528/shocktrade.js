@@ -20,6 +20,9 @@ object ScalaJsHelper {
   @inline
   def emptyArray[T] = js.Array[T]()
 
+  @inline
+  def makeNew[T] = new js.Object().asInstanceOf[T]
+
   def params(values: (String, Any)*): String = {
     val queryString = values map { case (k, v) => s"$k=${g.encodeURI(String.valueOf(v))}" } mkString "&"
     val fullQuery = if (queryString.nonEmpty) "?" + queryString else queryString
@@ -50,7 +53,7 @@ object ScalaJsHelper {
   def required(name: String, value: String) = if (value == null || value.trim.isEmpty) die(s"Required property '$name' is missing")
 
   @inline
-  def required(name: String, value: js.Dynamic) = if (!isDefined(value)) die(s"Required property '$name' is missing")
+  def required(name: String, value: js.Any) = if (!isDefined(value)) die(s"Required property '$name' is missing")
 
   @inline
   def required[T](name: String, value: js.Array[T], allowEmpty: Boolean = false) = {
@@ -97,7 +100,7 @@ object ScalaJsHelper {
   }
 
   /**
-   * js.Dynamic to Value Extensions
+   * js.Object Extensions
    * @param obj the given [[js.Dynamic object]]
    */
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
@@ -106,8 +109,9 @@ object ScalaJsHelper {
     def OID: String = OID_?.orNull
 
     @inline
-    def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
-
+    def OID_? : Option[String] = {
+      if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
+    }
   }
 
   /**
@@ -124,6 +128,22 @@ object ScalaJsHelper {
           console.log(s"JsDynamicExtensionsB: value '$value': ${e.getMessage}")
           false
       }
+    }
+  }
+
+  /**
+   * js.Object Extensions
+   * @param obj the given [[js.Dynamic object]]
+   */
+  implicit class JsObjectExtensions(val obj: js.Object) extends AnyVal {
+
+    @inline
+    def dynamic = obj.asInstanceOf[js.Dynamic]
+
+    @inline
+    def OID_? : Option[String] = {
+      val dyn = obj.asInstanceOf[js.Dynamic]
+      if (isDefined(dyn._id)) Option(dyn._id.$oid.asInstanceOf[String]) else None
     }
 
   }

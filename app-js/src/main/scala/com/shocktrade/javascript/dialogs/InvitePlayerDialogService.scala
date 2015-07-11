@@ -4,6 +4,7 @@ import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.models.Participant
 
 import scala.scalajs.js
 
@@ -16,7 +17,7 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @injected("MySession
   /**
    * Invite a player via pop-up dialog
    */
-  def popup(participant: js.Dynamic) = {
+  def popup(participant: Participant) = {
     /*
     function(selectedFriends) {
       if (selectedFriends.length) {

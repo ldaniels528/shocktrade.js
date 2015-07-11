@@ -9,9 +9,6 @@ trait FacebookFriend extends js.Object {
   var id: String = js.native
   var name: String = js.native
   var picture: FacebookPicture = js.native
-
-  def dynamic: js.Dynamic = this.asInstanceOf[js.Dynamic]
-
 }
 
 /**

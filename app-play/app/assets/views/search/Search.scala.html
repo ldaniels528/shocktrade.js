@@ -1,5 +1,5 @@
 @()
-<div class="row" ng-controller="GameSearchController" ng-init="searchTerm = ''; initGames()">
+<div class="row" ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
     <div ng-hide="isSplitScreen()" style="margin-bottom: 20px">
         <!-- Game Filtering Options -->
         <div class="col-md-6">@assets.views.html.search.GameFilters()</div>

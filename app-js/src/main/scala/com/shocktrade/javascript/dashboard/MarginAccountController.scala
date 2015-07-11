@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Timeout
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -87,7 +86,7 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def cashFunds = mySession.marginAccount_?.flatMap(a => Option(a.cashFunds).map(_.as[Double])) getOrElse 0.0d
+  private def cashFunds = mySession.marginAccount_?.map(_.cashFunds) getOrElse 0.0d
 
   private def investmentCost = {
     var total = 0d

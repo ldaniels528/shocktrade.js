@@ -3,6 +3,7 @@ package com.shocktrade.javascript.dialogs
 import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{ModalOptions, Modal}
+import com.shocktrade.javascript.models.Contest
 
 import scala.scalajs.js
 
@@ -16,7 +17,7 @@ class TransferFundsDialogService($http: Http, $modal: Modal) extends Service {
    * Transfer Funds pop-up dialog
    */
   def popup() = {
-    val modalInstance = $modal.open[js.Dynamic](ModalOptions(
+    val modalInstance = $modal.open[Contest](ModalOptions(
       templateUrl = "transfer_funds_dialog.htm",
       controller = classOf[TransferFundsDialogController].getSimpleName
     ))

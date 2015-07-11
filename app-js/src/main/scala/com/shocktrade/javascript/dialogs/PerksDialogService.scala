@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
+import com.shocktrade.javascript.models.Contest
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
@@ -24,7 +24,7 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
    */
   def popup()(implicit ec: ExecutionContext) = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[js.Dynamic](ModalOptions(
+    val $modalInstance = $modal.open[Contest](ModalOptions(
       templateUrl = "perks_dialog.htm",
       controller = classOf[PerksDialogController].getSimpleName
     ))

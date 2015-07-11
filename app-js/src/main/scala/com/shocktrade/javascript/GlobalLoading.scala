@@ -1,5 +1,6 @@
 package com.shocktrade.javascript
 
+import com.ldaniels528.scalascript.Scope
 import com.ldaniels528.scalascript.core.Timeout
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,6 +23,15 @@ trait GlobalLoading {
     task onComplete {
       case Success(_) => $scope.stopLoading(promise)
       case Failure(_) => $scope.stopLoading(promise)
+    }
+    task
+  }
+
+  def asyncLoading[T]($scope: Scope)(task: => Future[T])(implicit ec: ExecutionContext): Future[T] = {
+    val promise = $scope.dynamic.startLoading()
+    task onComplete {
+      case Success(_) => $scope.dynamic.stopLoading(promise)
+      case Failure(_) => $scope.dynamic.stopLoading(promise)
     }
     task
   }

@@ -4,6 +4,7 @@ import com.ldaniels528.scalascript.Service
 import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -36,13 +37,13 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   def joinContest(contestId: String, playerInfo: js.Dynamic) = {
     required("contestId", contestId)
     required("playerInfo", playerInfo)
-    $http.put[js.Dynamic](s"/api/contest/$contestId/player", playerInfo)
+    $http.put[Contest](s"/api/contest/$contestId/player", playerInfo)
   }
 
   def quitContest(contestId: String, playerId: String) = {
     required("contestId", contestId)
     required("playerId", playerId)
-    $http.delete[js.Dynamic](s"/api/contest/$contestId/player/$playerId")
+    $http.delete[Contest](s"/api/contest/$contestId/player/$playerId")
   }
 
   def startContest(contestId: String) = {
@@ -54,14 +55,14 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def findContests(searchOptions: js.Dynamic) = {
+  def findContests(searchOptions: ContestSearchOptions) = {
     required("searchOptions", searchOptions)
-    $http.post[js.Array[js.Dynamic]]("/api/contests/search", searchOptions)
+    $http.post[js.Array[Contest]]("/api/contests/search", searchOptions)
   }
 
   def getContestByID(contestId: String) = {
     required("contestId", contestId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId")
+    $http.get[Contest](s"/api/contest/$contestId")
   }
 
   def getParticipantByID(contestId: String, playerId: String) = {
@@ -76,24 +77,24 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
   def getRankings(contestId: String) = {
     required("contestId", contestId)
-    $http.get[js.Array[js.Dynamic]](s"/api/contest/$contestId/rankings")
+    $http.get[js.Array[Ranking]](s"/api/contest/$contestId/rankings")
   }
 
   def getContestsByPlayerID(playerId: String) = {
     required("playerId", playerId)
-    $http.get[js.Array[js.Dynamic]](s"/api/contests/player/$playerId")
+    $http.get[js.Array[Contest]](s"/api/contests/player/$playerId")
   }
 
   def getEnrichedOrders(contestId: String, playerId: String) = {
     required("contestId", contestId)
     required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId/orders/$playerId")
+    $http.get[js.Array[Order]](s"/api/contest/$contestId/orders/$playerId")
   }
 
   def getEnrichedPositions(contestId: String, playerId: String) = {
     required("contestId", contestId)
     required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId/positions/$playerId")
+    $http.get[js.Array[Position]](s"/api/contest/$contestId/positions/$playerId")
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -106,7 +107,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings(contest: js.Dynamic, playerID: String) = {
+  def getPlayerRankings(contest: Contest, playerID: String) = {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -122,7 +123,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
             case Success(participants) =>
               contest.rankings.participants = participants
               contest.rankings.leader = participants.headOption.orNull
-              contest.rankings.player = participants.find(p => p.OID_?.contains(playerID) || p.name === playerID || p.facebookID === playerID).orNull
+              contest.rankings.player = participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orNull
             case Failure(e) =>
               toaster.error("Error loading play rankings")
               e.printStackTrace()
@@ -146,7 +147,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   }
 
   /////////////////////////////////////////////////////////////////////////////
-  //			Chat and Charts
+  //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
   def getExposureChartData(exposure: String, contestId: String, userID: String) = {
@@ -168,10 +169,14 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestId/$participantName")
   }
 
-  def sendChatMessage(contestId: String, message: js.Dynamic) = {
+  /////////////////////////////////////////////////////////////////////////////
+  //			Chat
+  /////////////////////////////////////////////////////////////////////////////
+
+  def sendChatMessage(contestId: String, message: Message) = {
     required("contestId", contestId)
     required("message", message)
-    $http.put[js.Array[js.Dynamic]](s"/api/contest/$contestId/chat", message)
+    $http.put[js.Array[Message]](s"/api/contest/$contestId/chat", message)
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -189,7 +194,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     required("contestId", contestId)
     required("playerId", playerId)
     required("orderId", orderId)
-    $http.delete[js.Dynamic](s"/api/order/$contestId/$playerId/$orderId")
+    $http.delete[Contest](s"/api/order/$contestId/$playerId/$orderId")
   }
 
   def getHeldSecurities(playerId: String) = {

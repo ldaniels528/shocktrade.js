@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.{Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Scope, angular, injected}
+import com.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogService
+import com.shocktrade.javascript.models.Contest
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -25,7 +25,7 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
                         @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
   extends GameController($scope, $location, toaster, mySession) {
 
-  private var myContests = js.Array[js.Dynamic]()
+  private var myContests = js.Array[Contest]()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Scope Functions
@@ -33,11 +33,9 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
 
   $scope.initMyGames = () => init()
 
-  $scope.enterGame = (contest: js.Dynamic) => enterGame(contest)
-
   $scope.getMyContests = () => myContests
 
-  $scope.getMyRankings = (contest: js.Dynamic) => getMyRankings(contest)
+  $scope.getMyRankings = (contest: Contest) => getMyRankings(contest)
 
   $scope.newGamePopup = () => newGamePopup()
 
@@ -47,13 +45,13 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
 
   private def init(): Unit = mySession.userProfile.OID_? foreach loadMyContests
 
-  private def getMyRankings(contest: js.Dynamic) = {
+  private def getMyRankings(contest: Contest) = {
     if (!isDefined(contest)) null
-    else if (!isDefined(contest.ranking)) {
+    else if (!isDefined(contest.rankings)) {
       val rankings = contestService.getPlayerRankings(contest, mySession.getUserID)
       rankings.player
     }
-    else contest.ranking.player
+    else contest.rankings.player
   }
 
   private def loadMyContests(userID: String) {
@@ -88,21 +86,19 @@ class MyGamesController($scope: js.Dynamic, $location: Location, $timeout: Timeo
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
 
-  private val scope = $scope.asInstanceOf[Scope]
-
   /**
    * Listen for contest creation events
    */
-  scope.$on(ContestCreated, (event: js.Dynamic, contest: js.Dynamic) => init())
+  $scope.$on(ContestCreated, (event: js.Dynamic, contest: Contest) => init())
 
   /**
    * Listen for contest deletion events
    */
-  scope.$on(ContestDeleted, (event: js.Dynamic, contest: js.Dynamic) => init())
+  $scope.$on(ContestDeleted, (event: js.Dynamic, contest: Contest) => init())
 
   /**
    * Listen for user profile changes
    */
-  scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => init())
+  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => init())
 
 }

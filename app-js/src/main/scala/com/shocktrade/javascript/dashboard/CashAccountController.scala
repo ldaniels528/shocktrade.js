@@ -38,7 +38,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster, @injecte
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def computeFundsAvailable = mySession.cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]).getOrElse(0d)
+  private def computeFundsAvailable = mySession.cashAccount_?.map(_.cashFunds).getOrElse(0d)
 
   private def computeTotalInvestment = {
     var total = 0d

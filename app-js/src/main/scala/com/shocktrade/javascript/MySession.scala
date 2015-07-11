@@ -6,7 +6,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile}
+import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
 
@@ -29,7 +29,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   var facebookID: Option[String] = None
   var fbFriends = emptyArray[FacebookFriend]
   var fbProfile: Option[FacebookProfile] = None
-  var contest: Option[js.Dynamic] = None
+  var contest: Option[Contest] = None
   var userProfile: js.Dynamic = createSpectatorProfile()
 
   /////////////////////////////////////////////////////////////////////
@@ -151,19 +151,19 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getContestID = contest.flatMap(_.OID_?).orNull
 
-  def getContestName = contest.map(_.name).orNull.as[String]
+  def getContestName = contest.map(_.name).orNull
 
-  def getContestStatus = contest.map(_.status).orNull.as[String]
+  def getContestStatus = contest.map(_.status).orNull
 
-  def setContest(aContest: js.Dynamic) = {
+  def setContest(aContest: Contest) = {
     // if null or undefined, just reset the contest
     if (!isDefined(aContest)) resetContest()
 
     // if the contest contained an error, show it
-    else if (isDefined(aContest.error)) toaster.error(aContest.error)
+    else if (isDefined(aContest.dynamic.error)) toaster.error(aContest.dynamic.error)
 
     // is it a delta?
-    else if (aContest.`type` === "delta") updateContestDelta(aContest)
+    else if (aContest.dynamic.`type` === "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
     else contest = Option(aContest)
@@ -173,10 +173,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the combined total funds for both the cash and margin accounts
    */
   def getCompleteFundsAvailable = {
-    (cashAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds.as[Double]) getOrElse 0.00d)
+    (cashAccount_?.map(_.cashFunds) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds) getOrElse 0.00d)
   }
 
-  def getFundsAvailable = cashAccount_?.flatMap(a => Option(a.cashFunds)).map(_.as[Double]) getOrElse 0.00d
+  def getFundsAvailable = cashAccount_?.map(_.cashFunds) getOrElse 0.00d
 
   def deductFundsAvailable(amount: Double) = {
     participant.foreach { player =>
@@ -189,13 +189,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def hasMarginAccount = marginAccount_?.isDefined
 
-  def getCashAccount = cashAccount_? getOrElse JS()
+  def getCashAccount = cashAccount_? getOrElse makeNew
 
-  def getMarginAccount = marginAccount_? getOrElse JS()
+  def getMarginAccount = marginAccount_? getOrElse makeNew
 
-  def getMessages = contest.flatMap(c => Option(c.messages).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getMessages = contest.flatMap(c => Option(c.messages)) getOrElse emptyArray[Message]
 
-  def setMessages(messages: js.Array[js.Dynamic]) = contest.foreach(_.messages = messages)
+  def setMessages(messages: js.Array[Message]) = contest.foreach(_.messages = messages)
 
   def getMyAwards = userProfile.awards.asArray[String]
 
@@ -205,7 +205,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def participantIsEmpty = participant.isEmpty
 
-  def getParticipant = participant getOrElse JS()
+  def getParticipant = participant getOrElse makeNew[Participant]
 
   def getPerformance = participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
@@ -213,7 +213,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def hasPerk: js.Function1[String, Boolean] = (perkCode: String) => getPerks.contains(perkCode)
 
-  def getPositions =  participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getPositions = participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
   def resetContest: js.Function0[Unit] = () => contest = None
 
@@ -234,17 +234,17 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Participant Methods
   ////////////////////////////////////////////////////////////
 
-  def findPlayerByID(contest: js.Dynamic, playerId: String) = {
+  def findPlayerByID(contest: Contest, playerId: String) = {
     if (isDefined(contest) && isDefined(contest.participants))
-      contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId))
+      contest.participants.find(_.OID_?.contains(playerId))
     else
       None
   }
 
-  def findPlayerByName(contest: js.Dynamic, playerName: String) = {
+  def findPlayerByName(contest: Contest, playerName: String) = {
     required("contest", contest)
     required("playerName", playerName)
-    contest.participants.asArray[js.Dynamic].find(_.name === playerName) getOrElse JS()
+    contest.participants.find(_.name == playerName) getOrElse makeNew
   }
 
   ////////////////////////////////////////////////////////////
@@ -275,30 +275,30 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     )
   }
 
-  private[javascript] def cashAccount_? = participant.flatMap(p => Option(p.cashAccount))
+  private[javascript] def cashAccount_? = participant.map(_.cashAccount)
 
-  private[javascript] def marginAccount_? = participant.flatMap(p => Option(p.marginAccount))
+  private[javascript] def marginAccount_? = participant.flatMap(_.marginAccount.toOption)
 
-  private[javascript] def participant: Option[js.Dynamic] = {
+  private[javascript] def participant: Option[Participant] = {
     for {
       userId <- userProfile.OID_?
       c <- contest
-      participants = if (isDefined(c.participants)) c.participants.asArray[js.Dynamic] else emptyArray[js.Dynamic]
-      me = participants.find(_.OID_?.contains(userId)) getOrElse JS()
+      participants = if (isDefined(c.participants)) c.participants else emptyArray
+      me = participants.find(_.OID_?.contains(userId)) getOrElse makeNew[Participant]
     } yield me
   }
 
-  private def lookupParticipant(contest: js.Dynamic, playerId: String) = {
-    contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId))
+  private def lookupParticipant(contest: Contest, playerId: String) = {
+    contest.participants.find(_.OID_?.contains(playerId))
   }
 
   ////////////////////////////////////////////////////////////
   //          Event Functions
   ////////////////////////////////////////////////////////////
 
-  private def info(contest: js.Dynamic, message: String) = console.log(s"${contest.name}: $message")
+  private def info(contest: Contest, message: String) = console.log(s"${contest.name}: $message")
 
-  private def updateContestDelta(updatedContest: js.Dynamic) {
+  private def updateContestDelta(updatedContest: Contest) {
     // update the messages (if present)
     if (isDefined(updatedContest.messages)) {
       info(updatedContest, s"Updating messages")
@@ -322,42 +322,42 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     }
   }
 
-  private def updateContest_CashAccount(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_CashAccount(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating cash account for ${foreignPlayer.name}")
     myParticipant.cashAccount = foreignPlayer.cashAccount
   }
 
-  private def updateContest_MarginAccount(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_MarginAccount(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating margin account for ${foreignPlayer.name}")
     myParticipant.marginAccount = foreignPlayer.marginAccount
   }
 
-  private def updateContest_ActiveOrders(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_ActiveOrders(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating active orders for ${foreignPlayer.name}")
     myParticipant.orders = foreignPlayer.orders
   }
 
-  private def updateContest_ClosedOrders(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_ClosedOrders(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating closed orders for ${foreignPlayer.name}")
     myParticipant.closedOrders = foreignPlayer.closedOrders
   }
 
-  private def updateContest_Performance(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_Performance(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating performance for ${foreignPlayer.name}")
     myParticipant.performance = foreignPlayer.performance
   }
 
-  private def updateContest_Perks(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_Perks(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating perks for ${foreignPlayer.name}")
     myParticipant.perks = foreignPlayer.perks
   }
 
-  private def updateContest_Positions(contest: js.Dynamic, myParticipant: js.Dynamic, foreignPlayer: js.Dynamic) {
+  private def updateContest_Positions(contest: Contest, myParticipant: Participant, foreignPlayer: Participant) {
     info(contest, s"Updating positions for ${foreignPlayer.name}")
     myParticipant.positions = foreignPlayer.positions
   }
 
-  $rootScope.$on(ContestDeleted, { (event: js.Dynamic, deletedContest: js.Dynamic) =>
+  $rootScope.$on(ContestDeleted, { (event: js.Dynamic, deletedContest: Contest) =>
     info(deletedContest, "Contest deleted event received...")
     for {
       contestId <- contest.flatMap(_.OID_?)
@@ -365,7 +365,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     } if (contestId == deletedId) resetContest()
   })
 
-  $rootScope.$on(ContestUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(ContestUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
     info(updatedContest, "Contest updated event received...")
     if (contest.isEmpty) setContest(updatedContest)
     else {
@@ -376,22 +376,22 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     }
   })
 
-  $rootScope.$on(MessagesUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(MessagesUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
     info(updatedContest, "Messages updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on(OrderUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(OrderUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
     info(updatedContest, "Orders updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on(PerksUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(PerksUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
     info(updatedContest, "Perks updated event received...")
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on(ParticipantUpdated, { (event: js.Dynamic, updatedContest: js.Dynamic) =>
+  $rootScope.$on(ParticipantUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
     info(updatedContest, "Participant updated event received...")
     updateContestDelta(updatedContest)
   })

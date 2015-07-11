@@ -8,6 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController
+import com.shocktrade.javascript.models.Participant
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
@@ -144,26 +145,30 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def enrichOrders(participant: js.Dynamic) {
+  private def enrichOrders(participant: Participant) {
     if (!mySession.participantIsEmpty) {
-      if (!isDefined(participant.enrichedOrders)) {
-        participant.enrichedOrders = true
-        contestService.getEnrichedOrders(mySession.getContestID, participant.OID) onComplete {
-          case Success(enrichedOrders) => mySession.getParticipant().orders = enrichedOrders
-          case Failure(e) =>
-            toaster.error("Error!", "Error loading enriched orders")
+      if (!isDefined(participant.dynamic.enrichedOrders)) {
+        participant.dynamic.enrichedOrders = true
+        participant.OID_? foreach { playerId =>
+          contestService.getEnrichedOrders(mySession.getContestID, playerId) onComplete {
+            case Success(enrichedOrders) => mySession.getParticipant.orders = enrichedOrders
+            case Failure(e) =>
+              toaster.error("Error!", "Error loading enriched orders")
+          }
         }
       }
     }
   }
 
-  private def enrichPositions(participant: js.Dynamic) {
+  private def enrichPositions(participant: Participant) {
     if (!mySession.participantIsEmpty) {
-      if (!isDefined(participant.enrichedPositions)) {
-        participant.enrichedPositions = true
-        contestService.getEnrichedPositions(mySession.getContestID, participant.OID) onComplete {
-          case Success(enrichedPositions) => mySession.getParticipant().positions = enrichedPositions
-          case Failure(e) => toaster.error("Error loading enriched positions")
+      if (!isDefined(participant.dynamic.enrichedPositions)) {
+        participant.OID_? foreach { playerId =>
+          participant.dynamic.enrichedPositions = true
+          contestService.getEnrichedPositions(mySession.getContestID, playerId) onComplete {
+            case Success(enrichedPositions) => mySession.getParticipant.positions = enrichedPositions
+            case Failure(e) => toaster.error("Error loading enriched positions")
+          }
         }
       }
     }

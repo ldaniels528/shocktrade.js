@@ -70,15 +70,15 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
   //          Participant Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.isRankingsShown = () => !mySession.contest.exists(_.rankingsHidden.isTrue)
+  $scope.isRankingsShown = () => !mySession.contest.exists(_.dynamic.rankingsHidden.isTrue)
 
-  $scope.toggleRankingsShown = () => mySession.contest.foreach(c => c.rankingsHidden = !c.rankingsHidden)
+  $scope.toggleRankingsShown = () => mySession.contest.foreach(c => c.dynamic.rankingsHidden = !c.dynamic.rankingsHidden)
 
   $scope.getRankings = () => mySession.contest match {
     case Some(c) =>
       val rankings = contestService.getPlayerRankings(c, mySession.getUserID)
       rankings.participants
-    case None => emptyArray[js.Dynamic]
+    case None => emptyArray
   }
 
   ///////////////////////////////////////////////////////////////////////////

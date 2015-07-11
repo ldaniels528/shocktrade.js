@@ -28,9 +28,9 @@ class TransferFundsDialogController($scope: js.Dynamic, $modalInstance: ModalIns
   $scope.actions = transferActions
 
   $scope.form = JS(
-    cashFunds = mySession.getCashAccount().cashFunds,
-    marginFunds = mySession.getMarginAccount().cashFunds,
-    initialMargin = mySession.getMarginAccount().initialMargin,
+    cashFunds = mySession.getCashAccount.cashFunds,
+    marginFunds = mySession.getMarginAccount.cashFunds,
+    initialMargin = mySession.getMarginAccount.initialMargin,
     action = null,
     amount = null
   )

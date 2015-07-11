@@ -8,6 +8,7 @@ import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.ChatController._
+import com.shocktrade.javascript.models.{Message, PlayerRef}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -59,13 +60,13 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
       // build an HTML string with emoticons
       val html = sortMessagesByTime(messages).foldLeft[String]("") { (html, msg) =>
         // replace the symbols with icon images
-        var text = msg.text.as[String]
+        var text = msg.text
         Emoticons.foreach { emo =>
           text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
         }
 
         html + s"""<img src="http://graph.facebook.com/${msg.sender.facebookID}/picture" class="chat_icon">
-                   <span class="bold" style="color: ${colorOf(msg.sender.name.as[String])}">${msg.sender.name}</span>&nbsp;
+                   <span class="bold" style="color: ${colorOf(msg.sender.name)}">${msg.sender.name}</span>&nbsp;
                    [<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripPrefix(" ")
       }
 
@@ -76,7 +77,9 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
     }
   }
 
-  private def sortMessagesByTime(messages: js.Array[js.Dynamic]) = messages.sort({ (a: js.Dynamic, b: js.Dynamic) =>
+  private def sortMessagesByTime(messages: js.Array[Message]) = messages.sort({ (aa: Message, bb: Message) =>
+    val a = aa.dynamic
+    val b = bb.dynamic
     val timeA = if (!js.isUndefined(a.sentTime.$date)) a.sentTime.$date else a.sentTime
     val timeB = if (!js.isUndefined(b.sentTime.$date)) b.sentTime.$date else b.sentTime
     (timeB.asInstanceOf[Double] - timeA.asInstanceOf[Double]).toInt
@@ -91,14 +94,13 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
   private def sendChatMessage(messageText: String) {
     if (messageText.trim.nonEmpty) {
       // build the message blob
-      var message = JS(
-        text = messageText,
-        //"recipient": null,
-        sender = JS(
-          _id = JS($oid = mySession.getUserID),
-          name = mySession.getUserName,
-          facebookID = mySession.getFacebookID
-        ))
+      val message = makeNew[Message]
+      message.text = messageText
+      //message.recipient = null
+      message.sender = makeNew[PlayerRef]
+      message.sender.dynamic._id = JS($oid = mySession.getUserID)
+      message.sender.name = mySession.getUserName
+      message.sender.facebookID = mySession.getFacebookID
 
       // transmit the message
       contestService.sendChatMessage(mySession.getContestID, message) onComplete {

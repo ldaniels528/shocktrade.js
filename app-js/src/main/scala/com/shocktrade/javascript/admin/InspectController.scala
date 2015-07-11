@@ -6,6 +6,7 @@ import com.ldaniels528.scalascript.{Controller, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.models.Contest
 import org.scalajs.dom.console
 
 import scala.language.postfixOps
@@ -91,7 +92,7 @@ class InspectController($scope: InspectScope, $http: Http, $routeParams: Inspect
  * @author lawrence.daniels@gmail.com
  */
 trait InspectScope extends js.Object {
-  var contest: js.Dynamic = js.native
+  var contest: Contest = js.native
 
 }
 
