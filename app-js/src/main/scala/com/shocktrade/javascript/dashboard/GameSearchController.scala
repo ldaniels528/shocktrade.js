@@ -158,13 +158,13 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def isDeletable(contest: Contest) = {
-    isDefined(contest) && isDefined(contest.creator) && contest.creator.name === mySession.userProfile.name &&
+    isDefined(contest) && isDefined(contest.creator) && contest.creator.name == mySession.userProfile.name &&
       (!isDefined(contest.startTime) || contest.participants.length == 1)
   }
 
   @scoped
   def isContestOwner(contest: Contest) = {
-    isDefined(contest) && isDefined(contest.creator) && contest.creator.name === mySession.userProfile.name
+    isDefined(contest) && isDefined(contest.creator) && contest.creator.name == mySession.userProfile.name
   }
 
   @scoped
@@ -188,15 +188,18 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   def isJoinable(contest: Contest) = {
     mySession.isAuthenticated && isDefined(contest) &&
       (!isDefined(contest.invitationOnly) || !contest.invitationOnly) &&
-      !(isDefined(contest.creator) && contest.creator.name === mySession.userProfile.name) && // !isContestOwner(...)
+      !(isDefined(contest.creator) && contest.creator.name == mySession.userProfile.name) && // !isContestOwner(...)
       !hasParticipant(contest)
   }
 
   @scoped
   def joinContest(contest: Contest) = {
-    contest.OID_? foreach { contestId =>
+    for {
+      contestId <- contest.OID_?
+      userId <- mySession.userProfile.OID_?
+    } {
       contest.dynamic.joining = true
-      val playerInfo = JS(player = JS(id = mySession.userProfile.OID, name = mySession.userProfile.name, facebookID = mySession.getFacebookID))
+      val playerInfo = JS(player = JS(id = userId, name = mySession.userProfile.name, facebookID = mySession.getFacebookID))
       asyncLoading($scope)(contestService.joinContest(contestId, playerInfo)) onComplete {
         case Success(joinedContest) =>
           $scope.contest = joinedContest

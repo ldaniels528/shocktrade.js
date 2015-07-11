@@ -207,14 +207,14 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
     // load the user"s ShockTrade profile
     console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
     profileService.getProfileByFacebookID(facebookID) onComplete {
-      case Success(profile) if isDefined(profile.error) =>
+      case Success(profile) if isDefined(profile.dynamic.error) =>
         nonMember = true
         console.log("Non-member identified.")
         if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
       case Success(profile) =>
         nonMember = false
         console.log("ShockTrade user profile loaded...")
-        mySession.setUserProfile(profile, facebook.profile, facebookID)
+        mySession.setUserProfile(profile, facebook.profile)
         loadFacebookFriends()
       case Failure(e) =>
         toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
@@ -228,7 +228,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
       case Some(fbProfile) =>
         signUpDialog.popup(facebookID, fbProfile) onSuccess {
           case profile =>
-            mySession.setUserProfile(profile, fbProfile, facebookID)
+            mySession.setUserProfile(profile, fbProfile)
         }
       case _ =>
         console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")

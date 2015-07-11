@@ -39,15 +39,15 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   $scope.getFriends = () => mySession.fbFriends
 
-  $scope.getNextLevelXP = () => mySession.userProfile.nextLevelXP.asOpt[Double].getOrElse(0d)
+  $scope.getNextLevelXP = () => mySession.userProfile.nextLevelXP.getOrElse(0)
 
   $scope.getSelectedFriend = () => selectedFriend
 
   $scope.selectFriend = (friend: FacebookFriend) => selectFriend(friend)
 
-  $scope.getStars = () => js.Array(1 to mySession.userProfile.rep.asOpt[Int].getOrElse(3): _*)
+  $scope.getStars = () => js.Array(1 to mySession.userProfile.rep.getOrElse(3): _*)
 
-  $scope.getTotalXP = () => mySession.userProfile.totalXP.asOpt[Double].getOrElse(0d)
+  $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions

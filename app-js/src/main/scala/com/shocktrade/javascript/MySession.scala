@@ -30,7 +30,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   var fbFriends = emptyArray[FacebookFriend]
   var fbProfile: Option[FacebookProfile] = None
   var contest: Option[Contest] = None
-  var userProfile: js.Dynamic = createSpectatorProfile()
+  var userProfile: UserProfile = createSpectatorProfile()
 
   /////////////////////////////////////////////////////////////////////
   //          Authentication & Authorization Functions
@@ -38,11 +38,11 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getUserProfile = userProfile
 
-  def setUserProfile(profile: js.Dynamic, fbProfile: FacebookProfile, facebookID: String) {
+  def setUserProfile(profile: UserProfile, fbProfile: FacebookProfile) {
     console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
 
     this.fbProfile = Some(fbProfile)
-    this.facebookID = Some(facebookID)
+    this.facebookID = Some(fbProfile.id)
 
     console.log(s"profile = ${angular.toJson(profile)}")
     this.userProfile = profile
@@ -62,13 +62,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Returns the user ID for the current user's name
    * @return {*}
    */
-  def getUserName = userProfile.name.as[String]
+  def getUserName = userProfile.name
 
   /**
    * Indicates whether the given user is an administrator
    * @return {boolean}
    */
-  def isAdmin = userProfile.admin.asOpt[Boolean].getOrElse(false)
+  def isAdmin = userProfile.admin.getOrElse(false)
 
   /**
    * Indicates whether the user is logged in
@@ -117,7 +117,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     userProfile.netWorth -= amount
   }
 
-  def getNetWorth() = userProfile.netWorth.as[Double]
+  def getNetWorth = userProfile.netWorth
 
   /////////////////////////////////////////////////////////////////////
   //          Symbols - Favorites, Recent, etc.
@@ -125,7 +125,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def addFavoriteSymbol(symbol: String) = profileService.addFavoriteSymbol(getUserID, symbol)
 
-  def getFavoriteSymbols = userProfile.favorites.asArray[String]
+  def getFavoriteSymbols = userProfile.favorites
 
   def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.contains(symbol)
 
@@ -133,7 +133,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def addRecentSymbol(symbol: String) = profileService.addRecentSymbol(getUserID, symbol)
 
-  def getRecentSymbols = userProfile.recentSymbols.asArray[String]
+  def getRecentSymbols = userProfile.recentSymbols
 
   def isRecentSymbol(symbol: String) = getRecentSymbols.contains(symbol)
 
@@ -262,16 +262,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     fbProfile = None
     contest = None
 
-    JS(
+    UserProfile(
       name = "Spectator",
       country = "us",
-      level = 1,
-      lastSymbol = "AAPL",
-      netWorth = 0.00,
-      totalXP = 0,
-      awards = emptyArray[String],
-      favorites = emptyArray[String],
-      recentSymbols = emptyArray[String]
+      lastSymbol = "AAPL"
     )
   }
 
@@ -396,7 +390,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     updateContestDelta(updatedContest)
   })
 
-  $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: js.Dynamic) =>
+  $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: UserProfile) =>
     console.log(s"User Profile for ${profile.name} updated")
     for {
       userId <- userProfile.OID_?

@@ -4,7 +4,7 @@ import com.ldaniels528.scalascript.Service
 import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
-import com.shocktrade.javascript.models.OnlinePlayerState
+import com.shocktrade.javascript.models.{UserProfile, OnlinePlayerState}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic._
@@ -26,7 +26,7 @@ class ProfileService($http: Http) extends Service {
    */
   def getProfileByFacebookID(facebookID: String) = {
     required("facebookID", facebookID)
-    $http.get[js.Dynamic](s"/api/profile/facebook/$facebookID")
+    $http.get[UserProfile](s"/api/profile/facebook/$facebookID")
   }
 
   //////////////////////////////////////////////////////////////////////

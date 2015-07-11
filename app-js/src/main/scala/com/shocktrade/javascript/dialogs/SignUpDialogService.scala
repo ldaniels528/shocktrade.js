@@ -4,7 +4,7 @@ import com.ldaniels528.scalascript.core.Http
 import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.models.FacebookProfile
+import com.shocktrade.javascript.models.{FacebookProfile, UserProfile}
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -13,13 +13,14 @@ import scala.scalajs.js
  * Sign-Up Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class SignUpDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession) extends Service {
+class SignUpDialogService($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
+  extends Service {
 
   /**
    * Sign-up Modal Dialog
    */
   def popup(facebookID: String, fbProfile: FacebookProfile)(implicit ec: ExecutionContext) = {
-    val modalInstance = $modal.open[js.Dynamic](ModalOptions(
+    val modalInstance = $modal.open[UserProfile](ModalOptions(
       templateUrl = "sign_up_dialog.htm",
       controller = classOf[SignUpDialogController].getSimpleName
     ))
