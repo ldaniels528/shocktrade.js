@@ -5,11 +5,10 @@ import com.ldaniels528.scalascript.core.{Location, Q, Timeout}
 import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService
 import com.shocktrade.javascript.discover.DiscoverController._
-import com.shocktrade.javascript.discover.MarketStatusService.MarketStatus
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.{AutoCompletionController, GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -291,39 +290,40 @@ object DiscoverController {
 
   // define the Quote module expanders
   val Expanders = js.Array(
-    JS(title = "Performance & Risk",
+    ModuleExpander(title = "Performance & Risk",
       url = "/assets/views/discover/quotes/expanders/price_performance.htm",
       icon = "fa-line-chart",
       expanded = false,
       visible = isPerformanceRisk),
-    JS(title = "Income Statement",
+    ModuleExpander(title = "Income Statement",
       url = "/assets/views/discover/quotes/expanders/income_statement.htm",
       icon = "fa-money",
       expanded = false,
       visible = isIncomeStatement),
-    JS(title = "Balance Sheet",
+    ModuleExpander(title = "Balance Sheet",
       url = "/assets/views/discover/quotes/expanders/balanace_sheet.htm",
       icon = "fa-calculator",
       expanded = false,
       visible = isBalanceSheet),
-    JS(title = "Valuation Measures",
+    ModuleExpander(title = "Valuation Measures",
       url = "/assets/views/discover/quotes/expanders/valuation_measures.htm",
       icon = "fa-gears",
       expanded = false,
       visible = isValuationMeasures),
-    JS(title = "Share Statistics",
+    ModuleExpander(title = "Share Statistics",
       url = "/assets/views/discover/quotes/expanders/share_statistics.htm",
       icon = "fa-bar-chart",
       expanded = false,
       visible = isShareStatistics),
-    JS(title = "Dividends & Splits",
+    ModuleExpander(title = "Dividends & Splits",
       url = "/assets/views/discover/quotes/expanders/dividends_splits.htm",
       icon = "fa-cut",
       expanded = false,
       visible = isDividendsSplits),
-    JS(title = "Historical Quotes",
+    ModuleExpander(title = "Historical Quotes",
       url = "/assets/views/discover/quotes/trading_history.htm",
       icon = "fa-calendar",
       expanded = false))
 
 }
+

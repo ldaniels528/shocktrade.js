@@ -20,6 +20,14 @@ trait Contest extends js.Object {
   var invitationOnly: Boolean = js.native
 }
 
+/**
+ * Contest Singleton
+ */
+object Contest {
+  val MaxPlayers = 24
+
+}
+
 trait ContestCreator extends js.Object {
   var _id: js.Dynamic = js.native
   var name: String = js.native

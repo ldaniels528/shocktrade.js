@@ -6,6 +6,7 @@ import com.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
+import com.shocktrade.javascript.models.Contest.MaxPlayers
 import com.shocktrade.javascript.models.{Contest, ContestSearchOptions}
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
@@ -26,11 +27,9 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
                            @injected("MySession") mySession: MySession)
   extends GameController($scope.dynamic, $location, toaster, mySession) with GlobalLoading {
 
-  val MaxPlayers = 24 // TODO
-
   // public variables
   var searchResults = js.Array[Contest]()
-  var selectedContest: Contest = null
+  var selectedContest: Option[Contest] = None
   var splitScreen = false
 
   $scope.contest = null
@@ -43,15 +42,15 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped def getSearchResults = searchResults
 
-  @scoped def getSelectedContest = selectedContest
+  @scoped def getSelectedContest = selectedContest.orNull
 
   @scoped
-  def invitePlayerPopup(contest: Contest, playerID: String) = {
+  def invitePlayerPopup(contest: Contest, playerID: String) {
     mySession.findPlayerByID(contest, playerID) match {
       case Some(participant) =>
         invitePlayerDialog.popup(participant)
       case _ =>
-        toaster.error("You must join tghe game to use this feature")
+        toaster.error("You must join the game to use this feature")
     }
   }
 
@@ -127,7 +126,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   //          Contest Selection Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def isSplitScreen = splitScreen && (selectedContest != null)
+  @scoped def isSplitScreen = splitScreen && selectedContest.isDefined
 
   @scoped def toggleSplitScreen() = splitScreen = false
 
@@ -136,7 +135,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     if (isDefined(contest)) {
       contest.OID_? foreach { contestId =>
         console.log(s"Selecting contest '${contest.name}' ($contestId)")
-        selectedContest = contest
+        selectedContest = Option(contest)
         splitScreen = true
 
         if (!isDefined(contest.rankings)) {
@@ -146,7 +145,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     }
   }
 
-  private def isContestSelected(contestId: String) = Option(selectedContest).exists(_.OID_?.contains(contestId))
+  private def isContestSelected(contestId: String) = selectedContest.exists(_.OID_?.contains(contestId))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Contest Management Functions
@@ -257,7 +256,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def getSelectionClass(c: Contest) = {
-    if (isDefined(selectedContest) && selectedContest.OID_?.exists(c.OID_?.contains)) "selected"
+    if (selectedContest.exists(_.OID_?.exists(c.OID_?.contains))) "selected"
     else if (c.status == "ACTIVE") ""
     else "null"
   }
@@ -287,9 +286,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       searchResults.splice(index, 1)
     }
 
-    if (selectedContest != null && selectedContest.OID_?.contains(contestId)) {
-      selectedContest = null
-    }
+    if (selectedContest.exists(_.OID_?.contains(contestId))) selectedContest = None
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -310,7 +307,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
    */
   $scope.$on(ContestDeleted, { (event: js.Dynamic, contest: Contest) =>
     console.log(s"Contest '${contest.name}' deleted")
-    selectedContest = null
+    selectedContest = None
     searchResults = searchResults.filterNot(_.OID_?.exists(contest.OID_?.contains))
   })
 
@@ -324,7 +321,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       updateContestInList(searchResults, contestId)
 
       // make sure we"re pointing at the updated contest
-      if (isContestSelected(contestId)) selectedContest = contest
+      if (isContestSelected(contestId)) selectedContest = Option(contest)
     }
   })
 

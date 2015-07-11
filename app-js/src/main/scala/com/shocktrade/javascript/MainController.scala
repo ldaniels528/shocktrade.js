@@ -4,7 +4,6 @@ import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.TimerConversions._
 import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.ldaniels528.scalascript.extensions.Toaster
-import com.shocktrade.core.GameLevels
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -18,7 +17,7 @@ import org.scalajs.dom.console
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
@@ -26,7 +25,7 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author lawrence.daniels@gmail.com
  */
-class MainController($scope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
+class MainController($scope: MainScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @injected("ContestService") contestService: ContestService,
                      @injected("Facebook") facebook: FacebookService,
                      @injected("MySession") mySession: MySession,
@@ -38,97 +37,98 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   private var nonMember = true
   private val onlinePlayers = js.Dictionary[OnlinePlayerState]()
 
+  $scope.appTabs = MainTab.Tabs
+  $scope.levels = GameLevel.Levels
+
   ///////////////////////////////////////////////////////////////////////////
   //          Loading Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isLoading = () => loadingIndex > 0
+  @scoped def isLoading = loadingIndex > 0
 
-  $scope.startLoading = (timeout: js.UndefOr[Int]) => startLoading(timeout)
+  @scoped
+  def startLoading(timeout: js.UndefOr[Int]): CancellablePromise = {
+    loadingIndex += 1
+    val _timeout = timeout getOrElse DEFAULT_TIMEOUT
 
-  $scope.stopLoading = (promise: js.UndefOr[CancellablePromise]) => stopLoading(promise)
+    // set loading timeout
+    $timeout(() => {
+      console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
+      loadingIndex = 0
+    }, _timeout)
+  }
+
+  @scoped
+  def stopLoading(promise: js.UndefOr[CancellablePromise]) = {
+    $timeout.cancel(promise)
+    $timeout(() => if (loadingIndex > 0) loadingIndex -= 1, 500.millis)
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.appTabs = appTabs
+  @scoped def mainInit = (uuid: String) => console.log(s"Session UUID is $uuid")
 
-  $scope.levels = GameLevels.Levels
+  @scoped def getAssetCode(q: js.Dynamic) = MainController.getAssetCode(q)
 
-  $scope.mainInit = (uuid: String) => console.log(s"Session UUID is $uuid")
+  @scoped def getAssetIcon(q: js.Dynamic) = MainController.getAssetIcon(q)
 
-  $scope.changeAppTab = (tabIndex: js.UndefOr[Int]) => changeAppTab(tabIndex)
+  @scoped def getDate(date: js.Dynamic) = if (isDefined(date) && isDefined(date.$date)) date.$date else date
 
-  $scope.getAssetCode = (q: js.Dynamic) => getAssetCode(q)
+  @scoped def getExchangeClass(exchange: js.UndefOr[String]) = s"${normalizeExchange(exchange)} bold"
 
-  $scope.getAssetIcon = (q: js.Dynamic) => getAssetIcon(q)
+  @scoped def getHtmlQuote(q: js.Dynamic) = if (!isDefined(q)) "" else s"<i class='${MainController.getAssetIcon(q)}'></i> ${q.symbol} - ${q.name}"
 
-  $scope.getDate = (date: js.Dynamic) => if (isDefined(date) && isDefined(date.$date)) date.$date else date
+  @scoped def getTabIndex = determineTableIndex
 
-  $scope.getExchangeClass = (exchange: js.UndefOr[String]) => s"${normalizeExchange(exchange)} bold"
+  @scoped def isVisible(tab: js.Dynamic) = (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated))
 
-  $scope.getHtmlQuote = (q: js.Dynamic) => if (!isDefined(q)) "" else s"<i class='${$scope.getAssetIcon(q)}'></i> ${q.symbol} - ${q.name}"
+  @scoped def normalizeExchange(market: js.UndefOr[String]) = MainController.normalizeExchange(market)
 
-  $scope.isOnline = (player: js.Dynamic) => isOnline(player)
-
-  $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
-
-  $scope.getTabIndex = () => determineTableIndex
-
-  $scope.isVisible = (tab: js.Dynamic) => (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated))
-
-  $scope.login = () => login()
-
-  $scope.logout = () => logout()
-
-  $scope.normalizeExchange = (market: js.UndefOr[String]) => normalizeExchange(market)
-
-  $scope.postLoginUpdates = (facebookID: String, userInitiated: Boolean) => postLoginUpdates(facebookID, userInitiated)
-
-  $scope.signUp = () => signUp()
+  @scoped def postLoginUpdates(facebookID: String, userInitiated: Boolean) = doPostLoginUpdates(facebookID, userInitiated)
 
   //////////////////////////////////////////////////////////////////////
   //              MySession Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.contestIsEmpty = () => mySession.contestIsEmpty
+  @scoped def contestIsEmpty = mySession.contestIsEmpty
 
-  $scope.getContestID = () => mySession.getContestID
+  @scoped def getContestID = mySession.getContestID
 
-  $scope.getContestName = () => mySession.getContestName
+  @scoped def getContestName = mySession.getContestName
 
-  $scope.getContestStatus = () => mySession.getContestStatus
+  @scoped def getContestStatus = mySession.getContestStatus
 
-  $scope.getFacebookID = () => mySession.getFacebookID
+  @scoped def getFacebookID = mySession.getFacebookID
 
-  $scope.getFacebookProfile = () => mySession.getFacebookProfile
+  @scoped def getFacebookProfile = mySession.getFacebookProfile
 
-  $scope.getFacebookFriends = () => mySession.fbFriends
+  @scoped def getFacebookFriends = mySession.fbFriends
 
-  $scope.getFundsAvailable = () => mySession.getFundsAvailable
+  @scoped def getFundsAvailable = mySession.getFundsAvailable
 
-  $scope.getNetWorth = () => mySession.getNetWorth()
+  @scoped def getNetWorth = mySession.getNetWorth
 
-  $scope.getUserID = () => mySession.getUserID
+  @scoped def getUserID = mySession.getUserID
 
-  $scope.getUserName = () => mySession.getUserName
+  @scoped def getUserName = mySession.getUserName
 
-  $scope.getUserProfile = () => mySession.getUserProfile()
+  @scoped def getUserProfile = mySession.getUserProfile
 
-  $scope.hasNotifications = () => mySession.hasNotifications()
+  @scoped def hasNotifications = mySession.hasNotifications
 
-  $scope.hasPerk = (perkCode: String) => mySession.hasPerk(perkCode)
+  @scoped def hasPerk(perkCode: String) = mySession.hasPerk(perkCode)
 
-  $scope.isAdmin = () => mySession.isAdmin
+  @scoped def isAdmin = mySession.isAdmin
 
-  $scope.isAuthenticated = () => mySession.isAuthenticated
+  @scoped def isAuthenticated = mySession.isAuthenticated
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def isOnline(player: js.Dynamic): Boolean = {
+  @scoped def isOnline(player: js.Dynamic): Boolean = {
     player.OID_? exists { playerID =>
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = OnlinePlayerState(connected = false)
@@ -143,7 +143,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     }
   }
 
-  private def getPreferenceIcon(q: js.Dynamic): String = {
+  @scoped def getPreferenceIcon(q: js.Dynamic): String = {
     // fail-safe
     if (!isDefined(q) || !isDefined(q.symbol)) ""
     else {
@@ -167,26 +167,28 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     })
   }
 
-  private def login() {
+  @scoped
+  def login() {
     facebook.login() onComplete {
       case Success(response) =>
         nonMember = true
 
         // load the profile
-        postLoginUpdates(facebook.facebookID, userInitiated = true)
+        doPostLoginUpdates(facebook.facebookID, userInitiated = true)
       case Failure(e) =>
         g.console.error(s"main:login error")
         e.printStackTrace()
     }
   }
 
-  private def logout() {
+  @scoped
+  def logout() {
     nonMember = false
     facebook.logout()
     mySession.logout()
   }
 
-  private def postLoginUpdates(facebookID: String, userInitiated: Boolean) = {
+  private def doPostLoginUpdates(facebookID: String, userInitiated: Boolean) = {
     console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
 
     // capture the Facebook user ID
@@ -219,7 +221,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     }
   }
 
-  private def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
+  @scoped def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
 
   private def signUpPopup(facebookID: String, fbProfile_? : Option[FacebookProfile]) {
     fbProfile_? match {
@@ -234,27 +236,11 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     }
   }
 
-  private def startLoading(timeout: js.UndefOr[Int]): CancellablePromise = {
-    loadingIndex += 1
-    val _timeout = timeout getOrElse DEFAULT_TIMEOUT
-
-    // set loading timeout
-    $timeout(() => {
-      console.log(s"Disabling the loading animation due to time-out (${_timeout} msec)...")
-      loadingIndex = 0
-    }, _timeout)
-  }
-
-  private def stopLoading(promise: js.UndefOr[CancellablePromise] = js.undefined) = {
-    $timeout.cancel(promise)
-    $timeout(() => if (loadingIndex > 0) loadingIndex -= 1, 500.millis)
-  }
-
   //////////////////////////////////////////////////////////////////////
   //              Tab Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def changeAppTab(index: js.UndefOr[Int]) = index foreach { tabIndex =>
+  @scoped def changeAppTab(index: js.UndefOr[Int]) = index foreach { tabIndex =>
     mySession.userProfile.OID_? match {
       case Some(userID) =>
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
@@ -273,9 +259,9 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   }
 
   private def performTabSwitch(tabIndex: Int): Unit = {
-    val tab = appTabs(tabIndex)
+    val tab = MainTab.Tabs(tabIndex)
     console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
-    $location.url(tab.url.as[String])
+    $location.url(tab.url)
   }
 
   private def determineTableIndex: Int = $location.path() match {
@@ -293,7 +279,8 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) => console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
+  $scope.$on(UserStatusChanged, (event: js.Dynamic, newState: js.Dynamic) =>
+    console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
 
 }
 
@@ -302,6 +289,8 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
  * @author lawrence.daniels@gmail.com
  */
 trait MainScope extends Scope {
+  var appTabs: js.Array[MainTab] = js.native
+  var levels: js.Array[GameLevel] = js.native
 
 }
 
@@ -312,7 +301,7 @@ trait MainScope extends Scope {
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
 
-  private def getAssetCode(q: js.Dynamic): String = {
+  private[javascript] def getAssetCode(q: js.Dynamic): String = {
     if (!isDefined(q) || !isDefined(q.assetType)) ""
     else q.assetType.as[String] match {
       case "Crypto-Currency" => "&#xf15a" // fa-bitcoin
@@ -322,7 +311,7 @@ object MainController {
     }
   }
 
-  private def getAssetIcon(q: js.Dynamic): String = {
+  private[javascript] def getAssetIcon(q: js.Dynamic): String = {
     if (!isDefined(q) || !isDefined(q.assetType)) "fa fa-globe st_blue"
     else q.assetType.as[String] match {
       case "Crypto-Currency" => "fa fa-bitcoin st_blue"
@@ -355,14 +344,5 @@ object MainController {
       }
     } getOrElse ""
   }
-
-  private val appTabs = js.Array(
-    JS(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),
-    JS(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
-    JS(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
-    JS(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
-    JS(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
-    JS(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
-    JS(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"))
 
 }
