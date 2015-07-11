@@ -4,6 +4,7 @@ import com.ldaniels528.scalascript.Service
 import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
 import com.ldaniels528.scalascript.core.Http
+import com.shocktrade.javascript.models.OnlinePlayerState
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic._
@@ -34,7 +35,7 @@ class ProfileService($http: Http) extends Service {
 
   def getOnlineStatus(userID: String) = {
     required("userID", userID)
-    $http.get[js.Dynamic](s"/api/online/$userID")
+    $http.get[OnlinePlayerState](s"/api/online/$userID")
   }
 
   def setIsOnline(userID: String) = {

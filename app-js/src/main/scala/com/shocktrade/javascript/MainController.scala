@@ -10,7 +10,7 @@ import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
-import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile}
+import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile, OnlinePlayerState}
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
@@ -36,7 +36,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
 
   private var loadingIndex = 0
   private var nonMember = true
-  private val onlinePlayers = js.Dictionary[js.Dynamic]()
+  private val onlinePlayers = js.Dictionary[OnlinePlayerState]()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Loading Functions
@@ -131,7 +131,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
   private def isOnline(player: js.Dynamic): Boolean = {
     player.OID_? exists { playerID =>
       if (!onlinePlayers.contains(playerID)) {
-        onlinePlayers(playerID) = JS(connected = false)
+        onlinePlayers(playerID) = OnlinePlayerState(connected = false)
         profileService.getOnlineStatus(playerID) onComplete {
           case Success(newState) =>
             onlinePlayers(playerID) = newState
@@ -139,8 +139,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
             g.console.error(s"Error retrieving online state for user $playerID")
         }
       }
-      val state = onlinePlayers(playerID)
-      isDefined(state) && isDefined(state.connected) && state.connected.isTrue
+      onlinePlayers(playerID).toUndefOr[OnlinePlayerState].exists(_.connected)
     }
   }
 
