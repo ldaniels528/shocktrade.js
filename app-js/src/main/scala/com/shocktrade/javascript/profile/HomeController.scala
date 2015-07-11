@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript.core.TimerConversions._
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.ldaniels528.scalascript._
 import com.ldaniels528.scalascript.core.Timeout
+import com.ldaniels528.scalascript.core.TimerConversions._
 import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.models.FacebookFriend
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -22,7 +22,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                      @injected("ProfileService") profileService: ProfileService)
   extends Controller {
 
-  private var selectedFriend: js.Dynamic = null
+  private var selectedFriend: FacebookFriend = null
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
@@ -43,7 +43,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   $scope.getSelectedFriend = () => selectedFriend
 
-  $scope.selectFriend = (friend: js.Dynamic) => selectFriend(friend)
+  $scope.selectFriend = (friend: FacebookFriend) => selectFriend(friend)
 
   $scope.getStars = () => js.Array(1 to mySession.userProfile.rep.asOpt[Int].getOrElse(3): _*)
 
@@ -53,15 +53,15 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def selectFriend = (friend: js.Dynamic) => {
+  private def selectFriend = (friend: FacebookFriend) => {
     if (isDefined(friend)) {
       console.log(s"selecting friend ${angular.toJson(friend)}")
       selectedFriend = friend
 
-      if (!isDefined(friend.profile)) {
+      if (!isDefined(friend.dynamic.profile)) {
         $timeout({ () =>
-          friend.profile = JS()
-          friend.error = "Failure to load status information"
+          friend.dynamic.profile = JS()
+          friend.dynamic.error = "Failure to load status information"
         }, 3.seconds)
         /*
         profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {

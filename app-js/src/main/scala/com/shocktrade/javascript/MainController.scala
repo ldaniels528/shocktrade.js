@@ -10,7 +10,7 @@ import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
-import com.shocktrade.javascript.models.FacebookProfile
+import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile}
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
@@ -160,7 +160,7 @@ class MainController($scope: js.Dynamic, $http: Http, $location: Location, $time
     console.log("Loading Facebook friends...")
     facebook.getTaggableFriends({ (response: js.Dynamic) =>
       if (isDefined(response.data)) {
-        val friends = response.data.asArray[js.Dynamic]
+        val friends = response.data.asArray[FacebookFriend]
         console.log(s"${friends.length} friend(s) loaded")
         friends.foreach(mySession.fbFriends.push(_))
       }

@@ -6,7 +6,7 @@ import com.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.FacebookProfile
+import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile}
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
 
@@ -27,7 +27,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   val notifications = emptyArray[String]
   var facebookID: Option[String] = None
-  var fbFriends = emptyArray[js.Dynamic]
+  var fbFriends = emptyArray[FacebookFriend]
   var fbProfile: Option[FacebookProfile] = None
   var contest: Option[js.Dynamic] = None
   var userProfile: js.Dynamic = createSpectatorProfile()
@@ -89,15 +89,15 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   /**
    * Logout function
    */
-  def logout: js.Function0[Unit] = () => {
+  def logout() = {
     facebookID = None
-    fbFriends = js.Array[js.Dynamic]()
+    fbFriends = js.Array[FacebookFriend]()
     fbProfile = None
     userProfile = createSpectatorProfile()
     contest = None
   }
 
-  def refresh: js.Function0[Unit] = () => {
+  def refresh() = {
     facebookID.foreach { fbId =>
       profileService.getProfileByFacebookID(fbId) onComplete {
         case Success(profile) =>
@@ -112,12 +112,12 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          NetWorth Functions
   /////////////////////////////////////////////////////////////////////
 
-  def deduct: js.Function1[Double, js.Dynamic] = (amount: Double) => {
+  def deduct(amount: Double) = {
     console.log(f"Deducting $amount%.2f from ${userProfile.netWorth}")
     userProfile.netWorth -= amount
   }
 
-  def getNetWorth: js.Function0[Double] = () => userProfile.netWorth.as[Double]
+  def getNetWorth() = userProfile.netWorth.as[Double]
 
   /////////////////////////////////////////////////////////////////////
   //          Symbols - Favorites, Recent, etc.
@@ -180,7 +180,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def deductFundsAvailable(amount: Double) = {
     participant.foreach { player =>
-      console.log("Deducting funds: " + amount + " from " + player.cashAccount.cashFunds)
+      console.log(s"Deducting funds: $amount from ${player.cashAccount.cashFunds}")
       player.cashAccount.cashFunds -= amount
       // TODO rethink this
     }
@@ -222,15 +222,13 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   ////////////////////////////////////////////////////////////
 
   def addNotification(message: String) = {
-    if (notifications.push(message) > 20) {
-      notifications.shift()
-    }
+    if (notifications.push(message) > 20) notifications.shift()
     notifications
   }
 
-  def getNotifications: js.Function0[js.Array[String]] = () => notifications
+  def getNotifications() = notifications
 
-  def hasNotifications: js.Function0[Boolean] = () => notifications.nonEmpty
+  def hasNotifications() = notifications.nonEmpty
 
   ////////////////////////////////////////////////////////////
   //          Participant Methods
@@ -260,7 +258,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   private def createSpectatorProfile() = {
     notifications.remove(0, notifications.length)
     facebookID = None
-    fbFriends = emptyArray[js.Dynamic]
+    fbFriends = emptyArray[FacebookFriend]
     fbProfile = None
     contest = None
 
