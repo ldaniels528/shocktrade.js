@@ -8,6 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.profile.ProfileService
+import com.shocktrade.javascript.social.{TaggableFriend, FacebookProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -27,7 +28,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   val notifications = emptyArray[String]
   var facebookID: Option[String] = None
-  var fbFriends = emptyArray[FacebookFriend]
+  var fbFriends = emptyArray[TaggableFriend]
   var fbProfile: Option[FacebookProfile] = None
   var contest: Option[Contest] = None
   var userProfile: UserProfile = createSpectatorProfile()
@@ -38,11 +39,11 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getUserProfile = userProfile
 
-  def setUserProfile(profile: UserProfile, fbProfile: FacebookProfile) {
-    console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile)}")
+  def setUserProfile(profile: UserProfile, profileFB: FacebookProfile) {
+    console.log(s"facebookID = $facebookID, profileFB = ${angular.toJson(profileFB)}")
 
-    this.fbProfile = Some(fbProfile)
-    this.facebookID = Some(fbProfile.id)
+    this.fbProfile = Option(profileFB)
+    this.facebookID = fbProfile.map(_.id)
 
     console.log(s"profile = ${angular.toJson(profile)}")
     this.userProfile = profile
@@ -91,7 +92,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    */
   def logout() = {
     facebookID = None
-    fbFriends = js.Array[FacebookFriend]()
+    fbFriends = js.Array[TaggableFriend]()
     fbProfile = None
     userProfile = createSpectatorProfile()
     contest = None
@@ -228,9 +229,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     notifications
   }
 
-  def getNotifications() = notifications
+  def getNotifications = notifications
 
-  def hasNotifications() = notifications.nonEmpty
+  def hasNotifications = notifications.nonEmpty
 
   ////////////////////////////////////////////////////////////
   //          Participant Methods
@@ -260,7 +261,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   private def createSpectatorProfile() = {
     notifications.remove(0, notifications.length)
     facebookID = None
-    fbFriends = emptyArray[FacebookFriend]
+    fbFriends = emptyArray[TaggableFriend]
     fbProfile = None
     contest = None
 

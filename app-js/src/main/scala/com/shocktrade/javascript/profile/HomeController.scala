@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.models.FacebookFriend
+import com.shocktrade.javascript.social.TaggableFriend
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -22,7 +22,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
                      @injected("ProfileService") profileService: ProfileService)
   extends Controller {
 
-  private var selectedFriend: FacebookFriend = null
+  private var selectedFriend: TaggableFriend = null
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
@@ -43,7 +43,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
 
   $scope.getSelectedFriend = () => selectedFriend
 
-  $scope.selectFriend = (friend: FacebookFriend) => selectFriend(friend)
+  $scope.selectFriend = (friend: TaggableFriend) => selectFriend(friend)
 
   $scope.getStars = () => js.Array(1 to mySession.userProfile.rep.getOrElse(3): _*)
 
@@ -53,7 +53,7 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def selectFriend = (friend: FacebookFriend) => {
+  private def selectFriend = (friend: TaggableFriend) => {
     if (isDefined(friend)) {
       console.log(s"selecting friend ${angular.toJson(friend)}")
       selectedFriend = friend

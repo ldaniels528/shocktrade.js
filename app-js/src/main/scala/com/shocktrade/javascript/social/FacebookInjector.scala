@@ -52,20 +52,19 @@ object FacebookInjector {
     // capture the user ID and access token
     val rootElem = jQuery(elemName)
     val injector = angular.element(rootElem).injector()
-    injector.get[FacebookService]("Facebook") foreach { facebook =>
+    injector.get[Facebook]("Facebook") foreach { facebook =>
       facebook.init(g.FB) onComplete {
-        case Success(_) =>
+        case Success(response) =>
           console.log("Facebook login successful.")
 
           // react the the login status
-          val scope = angular.element(rootElem).scope()
-          if (scope != null) {
-            val $scope = scope.asInstanceOf[js.Dynamic]
-            $scope.postLoginUpdates(facebook.facebookID, false)
+          val $scope = angular.element(rootElem).scope()
+          if ($scope != null) {
+            $scope.dynamic.postLoginUpdates(facebook.facebookID, false)
           }
-          else
+          else {
             console.log(s"Scope for '$elemName' could not be retrieved")
-
+          }
         case Failure(e) =>
           console.log(s"Facebook Service: ${e.getMessage}")
       }

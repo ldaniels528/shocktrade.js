@@ -9,9 +9,9 @@ import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
-import com.shocktrade.javascript.models.{FacebookFriend, FacebookProfile, OnlinePlayerState}
+import com.shocktrade.javascript.models.OnlinePlayerState
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.social.FacebookService
+import com.shocktrade.javascript.social.{Facebook, FacebookProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -27,7 +27,7 @@ import scala.util.{Failure, Success}
  */
 class MainController($scope: MainScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @injected("ContestService") contestService: ContestService,
-                     @injected("Facebook") facebook: FacebookService,
+                     @injected("Facebook") facebook: Facebook,
                      @injected("MySession") mySession: MySession,
                      @injected("ProfileService") profileService: ProfileService,
                      @injected("SignUpDialog") signUpDialog: SignUpDialogService)
@@ -156,18 +156,6 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
     }
   }
 
-  private def loadFacebookFriends() {
-    console.log("Loading Facebook friends...")
-    facebook.getTaggableFriends({ (response: js.Dynamic) =>
-      if (isDefined(response.data)) {
-        val friends = response.data.asArray[FacebookFriend]
-        console.log(s"${friends.length} friend(s) loaded")
-        friends.foreach(mySession.fbFriends.push(_))
-      }
-      ()
-    })
-  }
-
   @scoped
   def login() {
     facebook.login() onComplete {
@@ -185,8 +173,13 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
   @scoped
   def logout() {
     nonMember = false
-    facebook.logout()
-    mySession.logout()
+    facebook.logout() onComplete {
+      case Success(_) => mySession.logout()
+      case Failure(e) =>
+        toaster.error("An error occurred during logout")
+        mySession.logout()
+        e.printStackTrace()
+    }
   }
 
   private def doPostLoginUpdates(facebookID: String, userInitiated: Boolean) = {
@@ -195,28 +188,31 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
     // capture the Facebook user ID
     mySession.setFacebookID(facebookID)
 
+    val outcome = for {
     // load the user"s Facebook profile
-    console.log(s"Retrieving Facebook profile for FBID $facebookID...")
-    facebook.getUserProfile() onComplete {
-      case Success(response) =>
-        mySession.setFacebookProfile(response.as[FacebookProfile])
-        facebook.profile = response.as[FacebookProfile]
-      case Failure(e) =>
-        toaster.error(e.getMessage)
-    }
+      fbProfile <- {
+        console.log(s"Retrieving Facebook profile for FBID $facebookID...")
+        facebook.getUserProfile
+      }
 
-    // load the user"s ShockTrade profile
-    console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
-    profileService.getProfileByFacebookID(facebookID) onComplete {
-      case Success(profile) if isDefined(profile.dynamic.error) =>
-        nonMember = true
-        console.log("Non-member identified.")
-        if (userInitiated) signUpPopup(facebookID, mySession.fbProfile)
-      case Success(profile) =>
+      fbFriends <- {
+        console.log(s"Loading Facebook friends for FBID $facebookID...")
+        facebook.getTaggableFriends
+      }
+
+      // load the user"s ShockTrade profile
+      profile <- {
+        console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
+        profileService.getProfileByFacebookID(facebookID)
+      }
+    } yield (fbProfile, fbFriends, profile)
+
+    outcome onComplete {
+      case Success((fbProfile, fbFriends, profile)) =>
+        console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
         nonMember = false
-        console.log("ShockTrade user profile loaded...")
-        mySession.setUserProfile(profile, facebook.profile)
-        loadFacebookFriends()
+        mySession.setUserProfile(profile, fbProfile)
+        mySession.fbFriends = fbFriends
       case Failure(e) =>
         toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
     }

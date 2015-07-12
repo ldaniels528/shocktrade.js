@@ -9,14 +9,12 @@ import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
 /**
  * Contest Service
  * @author lawrence.daniels@gmail.com
  */
-@JSExportAll
 class ContestService($http: Http, toaster: Toaster) extends Service {
 
   ///////////////////////////////////////////////////////////////

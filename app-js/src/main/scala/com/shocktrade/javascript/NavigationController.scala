@@ -53,7 +53,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
 
   $scope.toggleVisibility = () => isVisible = !isVisible
 
-  $scope.webSockectConnected = () => webSocket.isConnected()
+  $scope.webSockectConnected = () => webSocket.isConnected
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions

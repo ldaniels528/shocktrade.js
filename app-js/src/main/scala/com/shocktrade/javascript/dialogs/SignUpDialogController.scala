@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.social.FacebookService
+import com.shocktrade.javascript.social.Facebook
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout, toaster: Toaster,
-                             @injected("Facebook") facebook: FacebookService,
+                             @injected("Facebook") facebook: Facebook,
                              @injected("SignUpDialog") dialog: SignUpDialogService)
   extends Controller {
 

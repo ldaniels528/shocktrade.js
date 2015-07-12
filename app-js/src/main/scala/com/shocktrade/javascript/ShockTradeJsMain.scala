@@ -76,7 +76,7 @@ object ShockTradeJsMain extends js.JSApp {
   private def configureServices(module: Module) {
     module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
-    module.serviceOf[FacebookService]("Facebook")
+    module.serviceOf[Facebook]("Facebook")
     module.serviceOf[MarketStatusService]("MarketStatus")
     module.serviceOf[MySession]("MySession")
     module.serviceOf[NewsService]("NewsService")

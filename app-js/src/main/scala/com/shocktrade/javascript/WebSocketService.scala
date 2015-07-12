@@ -1,23 +1,20 @@
 package com.shocktrade.javascript
 
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Service, injected}
+import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
-import org.scalajs.dom.{Event, WebSocket}
-import org.scalajs.dom.console
+import org.scalajs.dom.{Event, WebSocket, console}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
-import scala.scalajs.js.annotation.JSExportAll
 
 /**
  * Web Socket Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-@JSExportAll
 class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                        @injected("MySession") mySession: MySession)
   extends Service {
@@ -44,12 +41,12 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
   /**
    * Indicates whether a connection is established
    */
-  def isConnected: js.Function0[Boolean] = () => connected
+  def isConnected = connected
 
   /**
    * Transmits the message to the server via web-socket
    */
-  def send: js.Function = (message: String) => {
+  def send(message: String) = {
     if (!isDefined(g.window.WebSocket)) {
       toaster.error("Web socket closed")
       false

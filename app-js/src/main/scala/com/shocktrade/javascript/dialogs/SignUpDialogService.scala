@@ -4,7 +4,8 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.models.{FacebookProfile, UserProfile}
+import com.shocktrade.javascript.models.UserProfile
+import com.shocktrade.javascript.social.FacebookProfile
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
