@@ -2,9 +2,9 @@ package com.shocktrade.javascript.dialogs
 
 import com.shocktrade.javascript.{ScalaJsHelper, AutoCompletionController, MySession}
 import ScalaJsHelper._
-import com.ldaniels528.scalascript.core.Q
-import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{angular, injected}
+import com.github.ldaniels528.scalascript.core.Q
+import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.github.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.{AutoCompletionController, MySession}

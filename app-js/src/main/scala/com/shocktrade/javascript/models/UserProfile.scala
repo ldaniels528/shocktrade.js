@@ -9,7 +9,7 @@ import scala.scalajs.js
  * @author lawrence.daniels@gmail.com
  */
 trait UserProfile extends js.Object {
-  var id: js.Dynamic = js.native
+  var _id: js.Dynamic = js.native
   var name: String = js.native
   var facebookID: js.UndefOr[String] = js.native
   var email: js.UndefOr[String] = js.native
@@ -26,7 +26,6 @@ trait UserProfile extends js.Object {
   var lastSymbol: String = js.native
   var country: js.UndefOr[String] = js.native
   var lastLoginTime: js.UndefOr[js.Date] = js.native
-
 }
 
 object UserProfile {

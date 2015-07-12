@@ -106,9 +106,6 @@ object ScalaJsHelper {
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
 
     @inline
-    def OID: String = OID_?.orNull
-
-    @inline
     def OID_? : Option[String] = {
       if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
     }

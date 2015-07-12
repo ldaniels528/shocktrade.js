@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript.Service
+import com.github.ldaniels528.scalascript.Service
 import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
-import com.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.core.Http
 import com.shocktrade.javascript.models.{UserProfile, OnlinePlayerState}
 
 import scala.scalajs.js

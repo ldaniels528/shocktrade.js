@@ -2,11 +2,12 @@ package com.shocktrade.javascript.models
 
 import java.util.Date
 
+import com.shocktrade.javascript.ScalaJsHelper._
+
 import scala.scalajs.js
 
 /**
- * Represents a Contest
- * @author lawrence.daniels@gmail.com
+ * Contest Model
  */
 trait Contest extends js.Object {
   var _id: js.Dynamic = js.native
@@ -14,14 +15,14 @@ trait Contest extends js.Object {
   var creator: ContestCreator = js.native
   var startTime: js.Date = js.native
   var status: String = js.native
-  var rankings: js.Dynamic = js.native
+  var rankings: Rankings = js.native
   var messages: js.Array[Message] = js.native
   var participants: js.Array[Participant] = js.native
   var invitationOnly: Boolean = js.native
 }
 
 /**
- * Contest Singleton
+ * Contest Model Singleton
  */
 object Contest {
   val MaxPlayers = 24
@@ -33,7 +34,7 @@ trait ContestCreator extends js.Object {
   var name: String = js.native
 }
 
-trait Ranking extends js.Object {
+trait ParticipantRanking extends js.Object {
   var _id: js.Dynamic = js.native
   var facebookID: String = js.native
   var name: String = js.native
@@ -42,10 +43,29 @@ trait Ranking extends js.Object {
   var gainLoss: Double = js.native
 }
 
+/**
+ * Contest Participant Rankings
+ */
 trait Rankings extends js.Object {
-  var participants: js.Array[js.Dynamic] = js.native
-  var leader: js.Dynamic = js.native
-  var player: js.Dynamic = js.native
+  var participants: js.Array[ParticipantRanking] = js.native
+  var leader: ParticipantRanking = js.native
+  var player: ParticipantRanking = js.native
+}
+
+/**
+ * Contest Participant Rankings Singleton
+ */
+object Rankings {
+
+  def apply(participants: js.Array[ParticipantRanking] = emptyArray,
+            leader: ParticipantRanking = null,
+            player: ParticipantRanking = null) = {
+    val rankings = makeNew[Rankings]
+    rankings.participants = participants
+    rankings.leader = leader
+    rankings.player = player
+    rankings
+  }
 }
 
 trait Message extends js.Object {
@@ -86,7 +106,6 @@ trait MarginAccount extends js.Object {
   var initialMargin: Double = js.native
   var interestPaid: Double = js.native
   var asOfDate: js.Date = js.native
-
 }
 
 trait Order extends js.Object {

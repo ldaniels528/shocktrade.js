@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.core.Timeout
-import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.core.Timeout
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 

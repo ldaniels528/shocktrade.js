@@ -2,7 +2,7 @@ package com.shocktrade.javascript
 
 import ScalaJsHelper._
 
-import com.ldaniels528.scalascript.angular
+import com.github.ldaniels528.scalascript.angular
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Any._
@@ -114,7 +114,8 @@ object Filters {
       case value if angular.isNumber(value) => value.asInstanceOf[Double]
       case value if angular.isObject(value) =>
         val obj = value.asInstanceOf[js.Dynamic]
-        if(angular.isDefined(obj.$date)) obj.$date.as[Double] else js.Date.now()
+        if(angular.isDefined(obj.$date)) obj.$date.asOpt[Double].getOrElse(js.Date.now())
+        else js.Date.now()
       case _ => js.Date.now()
     } getOrElse js.Date.now()
 

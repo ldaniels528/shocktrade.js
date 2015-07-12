@@ -1,15 +1,14 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.Service
-import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Service, angular}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
 
@@ -26,7 +25,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
   def createContest(form: js.Dynamic) = {
     required("form", form)
-    $http.put[js.Dynamic]("/api/contest", form)
+    $http.put[Contest]("/api/contest", form)
   }
 
   def deleteContest(contestId: String) = {
@@ -48,7 +47,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
   def startContest(contestId: String) = {
     required("contestId", contestId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId/start")
+    $http.get[Contest](s"/api/contest/$contestId/start")
   }
 
   ///////////////////////////////////////////////////////////////
@@ -77,7 +76,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
   def getRankings(contestId: String) = {
     required("contestId", contestId)
-    $http.get[js.Array[Ranking]](s"/api/contest/$contestId/rankings")
+    $http.get[js.Array[ParticipantRanking]](s"/api/contest/$contestId/rankings")
   }
 
   def getContestsByPlayerID(playerId: String) = {
@@ -112,20 +111,19 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
         // create the rankings object: { participants: [], leader:null, player:null }
-        contest.rankings = JS(
-          participants = js.Array[js.Dynamic](),
-          leader = null,
-          player = null
-        )
+        contest.rankings = Rankings()
+
         console.log(s"Loading Contest Rankings for '${contest.name}'...")
         contest.OID_?.foreach { contestId =>
           getRankings(contestId) onComplete {
-            case Success(participants) =>
-              contest.rankings.participants = participants
-              contest.rankings.leader = participants.headOption.orNull
-              contest.rankings.player = participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orNull
+            case Success(participantRankings) =>
+              console.log(s"participantRankings = ${angular.toJson(participantRankings)}")
+              contest.rankings.participants = participantRankings
+              contest.rankings.leader = participantRankings.headOption.orNull
+              contest.rankings.player = participantRankings.find(p => p.OID_?.contains(playerID) || p.facebookID == playerID).orNull
             case Failure(e) =>
-              toaster.error("Error loading play rankings")
+              toaster.error("Error loading player rankings")
+              console.error(s"Error loading player rankings: ${e.getMessage}")
               e.printStackTrace()
           }
         }
@@ -133,12 +131,12 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
       // if the rankings were loaded, but the player is not set
       else if (isDefined(contest.rankings) && !isDefined(contest.rankings.player)) {
-        contest.rankings.player = contest.rankings.participants.asArray[js.Dynamic].find(p => p.OID_?.contains(playerID) || p.name === playerID || p.facebookID === playerID).orNull
+        contest.rankings.player = contest.rankings.participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orNull
       }
 
       contest.rankings
     }
-    else JS()
+    else makeNew[Rankings]
   }
 
   def getTotalInvestment(playerId: String) = {

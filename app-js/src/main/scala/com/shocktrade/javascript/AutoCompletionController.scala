@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.Controller
-import com.ldaniels528.scalascript.core.Q
+import com.github.ldaniels528.scalascript.Controller
+import com.github.ldaniels528.scalascript.core.Q
 import com.shocktrade.javascript.discover.QuoteService
 
 import scala.concurrent.ExecutionContext

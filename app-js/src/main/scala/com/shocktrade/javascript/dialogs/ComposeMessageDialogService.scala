@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.Service
-import com.ldaniels528.scalascript.core.{Http, Q}
-import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
+import com.github.ldaniels528.scalascript.Service
+import com.github.ldaniels528.scalascript.core.{Http, Q}
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 
 import scala.scalajs.js
 

@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.core.{Location, Timeout}
-import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.core.{Location, Timeout}
+import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.console
 

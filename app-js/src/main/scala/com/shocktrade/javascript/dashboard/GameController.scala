@@ -1,26 +1,26 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.core.Location
-import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, scoped}
+import com.github.ldaniels528.scalascript.core.Location
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Controller, Scope, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.models.Contest
 
-import scala.scalajs.js
-
 /**
- * Game Controller Trait
+ * Abstract Game Controller
  * @author lawrence.daniels@gmail.com
  */
-abstract class GameController($scope: js.Dynamic, $location: Location, toaster: Toaster, mySession: MySession)
+abstract class GameController($scope: Scope, $location: Location, toaster: Toaster, mySession: MySession)
   extends Controller {
 
   @scoped
   def enterGame(contest: Contest) {
-    if ($scope.isParticipant(contest).as[Boolean]) {
-      mySession.setContest(contest)
-      contest.OID_?.foreach(contestId => $location.path(s"/dashboard/$contestId"))
+    if (hasParticipant(contest)) {
+      contest.OID_?.foreach { contestId =>
+        mySession.setContest(contest)
+        $location.path(s"/dashboard/$contestId")
+      }
     }
     else {
       toaster.error("You must join the contest first")

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.{Service, injected}
+import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 

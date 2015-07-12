@@ -1,13 +1,14 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.TimerConversions._
-import com.ldaniels528.scalascript.core.{Http, Timeout}
-import com.ldaniels528.scalascript.extensions.ModalInstance
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.core.{Http, Timeout}
+import com.github.ldaniels528.scalascript.extensions.ModalInstance
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewGameDialogController._
+import com.shocktrade.javascript.models.Contest
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -19,7 +20,7 @@ import scala.util.{Failure, Success}
  * New Game Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http, $modalInstance: ModalInstance[js.Dynamic], $timeout: Timeout,
+class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http, $modalInstance: ModalInstance[Contest], $timeout: Timeout,
                               @injected("ContestService") ContestService: ContestService,
                               @injected("MySession") mySession: MySession,
                               @injected("NewGameDialogService") newGameDialog: NewGameDialogService)

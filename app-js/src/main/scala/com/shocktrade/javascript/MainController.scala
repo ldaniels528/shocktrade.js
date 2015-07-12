@@ -1,9 +1,9 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.TimerConversions._
-import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
-import com.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
+import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -148,10 +148,11 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
     if (!isDefined(q) || !isDefined(q.symbol)) ""
     else {
       // check for favorite and held securities
-      val symbol = q.symbol.as[String]
-      //if (heldSecurities.isHeld(symbol)) "fa fa-star"
-      if (mySession.isFavoriteSymbol(symbol)) "fa fa-heart"
-      else ""
+      q.symbol.asOpt[String] map { symbol =>
+        if (mySession.isFavoriteSymbol(symbol)) "fa fa-heart"
+        //else if (heldSecurities.isHeld(symbol)) "fa fa-star"
+        else ""
+      } getOrElse ""
     }
   }
 

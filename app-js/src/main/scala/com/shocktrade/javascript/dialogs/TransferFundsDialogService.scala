@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.Service
-import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.extensions.{ModalOptions, Modal}
+import com.github.ldaniels528.scalascript.Service
+import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.extensions.{ModalOptions, Modal}
 import com.shocktrade.javascript.models.Contest
 
 import scala.scalajs.js
@@ -24,8 +24,8 @@ class TransferFundsDialogService($http: Http, $modal: Modal) extends Service {
     modalInstance.result
   }
 
-  def transferFunds(contestId: String, playerId: String, form: js.Dynamic) = {
-    $http.post[js.Dynamic](s"/api/contest/$contestId/margin/$playerId", form)
+  def transferFunds(contestId: String, playerId: String, form: TransferFundsForm) = {
+    $http.post[Contest](s"/api/contest/$contestId/margin/$playerId", form)
   }
 
 }

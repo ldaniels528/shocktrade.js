@@ -2,8 +2,8 @@ package com.shocktrade.javascript.social
 
 import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
-import com.ldaniels528.scalascript.Service
-import com.ldaniels528.scalascript.core.Q
+import com.github.ldaniels528.scalascript.Service
+import com.github.ldaniels528.scalascript.core.Q
 import com.shocktrade.javascript.models.FacebookProfile
 import org.scalajs.dom.console
 

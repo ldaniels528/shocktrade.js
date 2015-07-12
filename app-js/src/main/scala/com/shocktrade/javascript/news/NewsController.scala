@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.news
 
-import com.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.{GlobalLoading, ScalaJsHelper}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.news.NewsController._

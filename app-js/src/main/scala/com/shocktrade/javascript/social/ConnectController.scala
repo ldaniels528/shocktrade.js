@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.social
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService

@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.core.Http
-import com.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
-import com.ldaniels528.scalascript.{Service, injected}
+import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
+import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.dashboard.ContestService
+import com.shocktrade.javascript.models.Contest
 
 import scala.scalajs.js
 
@@ -19,7 +20,7 @@ class NewGameDialogService($http: Http, $modal: Modal, @injected("ContestService
    */
   def popup() = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[js.Dynamic](ModalOptions(
+    val $modalInstance = $modal.open[Contest](ModalOptions(
       templateUrl = "new_game_dialog.htm",
       controller = classOf[NewGameDialogController].getSimpleName
     ))

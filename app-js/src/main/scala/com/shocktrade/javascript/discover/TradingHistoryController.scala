@@ -2,8 +2,8 @@ package com.shocktrade.javascript.discover
 
 import com.shocktrade.javascript.ScalaJsHelper
 import ScalaJsHelper._
-import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Controller, injected}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js

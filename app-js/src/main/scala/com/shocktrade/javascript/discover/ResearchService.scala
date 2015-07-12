@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.Service
-import com.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.Service
+import com.github.ldaniels528.scalascript.core.Http
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.concurrent.ExecutionContext

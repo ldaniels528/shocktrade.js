@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.ldaniels528.scalascript.core.{Location, Timeout}
-import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Scope, angular, injected, scoped}
+import com.github.ldaniels528.scalascript.core.{Location, Timeout}
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
@@ -25,7 +25,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
                            @injected("ContestService") contestService: ContestService,
                            @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
                            @injected("MySession") mySession: MySession)
-  extends GameController($scope.dynamic, $location, toaster, mySession) with GlobalLoading {
+  extends GameController($scope, $location, toaster, mySession) with GlobalLoading {
 
   // public variables
   var searchResults = js.Array[Contest]()
@@ -239,11 +239,11 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       contest.dynamic.starting = true
       asyncLoading($scope)(contestService.startContest(contestId)) onComplete {
         case Success(theContest) =>
-          if (!js.isUndefined(theContest.error)) {
-            toaster.error(theContest.error)
-            g.console.error(theContest.error)
+          if (!js.isUndefined(theContest.dynamic.error)) {
+            toaster.error(theContest.dynamic.error)
+            g.console.error(theContest.dynamic.error)
           }
-          $timeout(() => theContest.starting = false, 500)
+          $timeout(() => theContest.dynamic.starting = false, 500)
 
         case Failure(e) =>
           toaster.error("An error occurred while starting the contest")

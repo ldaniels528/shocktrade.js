@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.Timeout
-import com.ldaniels528.scalascript.core.TimerConversions._
-import com.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.core.Timeout
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.models.FacebookFriend

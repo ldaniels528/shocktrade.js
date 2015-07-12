@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript.extensions.{Route, RouteProvider}
-import com.ldaniels528.scalascript.{Module, Scope, angular}
+import com.github.ldaniels528.scalascript.extensions.{Route, RouteProvider}
+import com.github.ldaniels528.scalascript.{Module, Scope, angular}
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._

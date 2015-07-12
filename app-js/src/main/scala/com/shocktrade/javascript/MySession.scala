@@ -1,8 +1,8 @@
 package com.shocktrade.javascript
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.Timeout
-import com.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.core.Timeout
+import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -156,6 +156,8 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getContestStatus = contest.map(_.status).orNull
 
   def setContest(aContest: Contest) = {
+    console.log(s"contest = ${angular.toJson(aContest)}")
+
     // if null or undefined, just reset the contest
     if (!isDefined(aContest)) resetContest()
 

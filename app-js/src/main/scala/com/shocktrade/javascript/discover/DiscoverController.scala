@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.discover
 
-import com.ldaniels528.scalascript.core.TimerConversions._
-import com.ldaniels528.scalascript.core.{Location, Q, Timeout}
-import com.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.ldaniels528.scalascript.{angular, injected}
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.core.{Location, Q, Timeout}
+import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
+import com.github.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript._
 import com.shocktrade.javascript.dialogs.NewOrderDialogService

@@ -1,9 +1,9 @@
 package com.shocktrade.javascript
 
 import ScalaJsHelper._
-import com.ldaniels528.scalascript.core.{Http, Location, Timeout}
-import com.ldaniels528.scalascript.extensions.Toaster
-import com.ldaniels528.scalascript.{Service, injected}
+import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
+import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.{Service, injected}
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket}
 import org.scalajs.dom.console

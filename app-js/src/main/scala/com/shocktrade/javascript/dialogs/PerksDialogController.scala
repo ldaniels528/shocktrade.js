@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._

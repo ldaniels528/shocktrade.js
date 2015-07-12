@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.extensions.ModalInstance
-import com.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.extensions.ModalInstance
+import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.dashboard.ContestService
 
 import scala.language.postfixOps

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import com.ldaniels528.scalascript._
-import com.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript._
+import com.github.ldaniels528.scalascript.core.Http
 import com.shocktrade.javascript.profile.AwardsController._
 import com.shocktrade.javascript.{Award, MySession}
 

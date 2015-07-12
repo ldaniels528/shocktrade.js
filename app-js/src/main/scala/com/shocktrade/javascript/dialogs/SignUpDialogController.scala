@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dialogs
 
-import com.ldaniels528.scalascript.core.Timeout
-import com.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.ldaniels528.scalascript.{Controller, angular, injected, scoped}
+import com.github.ldaniels528.scalascript.core.Timeout
+import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.social.FacebookService
 import org.scalajs.dom.console
