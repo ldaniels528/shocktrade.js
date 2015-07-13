@@ -5,7 +5,6 @@ import com.github.ldaniels528.scalascript.core.Q
 import com.shocktrade.javascript.ScalaJsHelper._
 import org.scalajs.dom.console
 
-import scala.beans.BeanProperty
 import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
@@ -19,104 +18,72 @@ class Facebook($q: Q) extends Service {
   type PaginationCallback[T] = js.Function1[FacebookPagination[T], Unit]
 
   // define the API version and App ID properties
-  @BeanProperty val appID: String = FacebookInjector.getShockTradeAppID()
-  @BeanProperty val version = "v2.3"
+  var appID: String = _
+  var version = "v2.3"
 
   // define the Facebook state variables
-  var FB: js.Dynamic = null
+  private lazy val FB = Facebook.SDK
   var facebookID: String = null
   var auth: AuthResponse = null
-  var profile: FacebookProfile = null
-
-  /**
-   * Initializes the Facebook service
-   */
-  def init(fbSDK: js.Dynamic): Future[LoginStatusResponse] = {
-    // capture the Facebook SDK
-    FB = fbSDK
-
-    // attempt to login
-    getLoginStatus
-  }
 
   def getLoginStatus: Future[LoginStatusResponse] = {
     val deferred = $q.defer[LoginStatusResponse]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      // get the login status
-      FB.getLoginStatus((response: LoginStatusResponse) => {
-        if (response.status == "connected") {
-          // capture the Facebook login status
-          if (isDefined(response.authResponse)) {
-            auth = response.authResponse
-            facebookID = auth.userID
-            deferred.resolve(response)
-          }
-          else deferred.reject("Facebook response was undefined")
+    FB.getLoginStatus((response: LoginStatusResponse) => {
+      if (response.status == "connected") {
+        if (isDefined(response.authResponse)) {
+          auth = response.authResponse
+          facebookID = auth.userID
+          deferred.resolve(response)
         }
-        else deferred.reject(s"Facebook is not connected (status: ${response.status})")
-      })
-    }
+        else deferred.reject("Facebook response was undefined")
+      }
+      else deferred.reject(s"Facebook is not connected (status: ${response.status})")
+    })
     deferred.promise
   }
 
   def login(): Future[LoginStatusResponse] = {
     val deferred = $q.defer[LoginStatusResponse]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.login((response: LoginStatusResponse) => {
-        if (isDefined(response.authResponse)) {
-          auth = response.authResponse
-          facebookID = response.authResponse.userID
-          deferred.resolve(response)
-        } else {
-          deferred.reject("Could not login into Facebook")
-        }
-      })
-    }
+    FB.login((response: LoginStatusResponse) => {
+      if (isDefined(response.authResponse)) {
+        auth = response.authResponse
+        facebookID = response.authResponse.userID
+        deferred.resolve(response)
+      } else {
+        deferred.reject("Could not login into Facebook")
+      }
+    })
     deferred.promise
   }
 
   def createFriendList(friendListId: String) = {
     val deferred = $q.defer[js.Dynamic]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.api(s"/$version/me/$friendListId/members&access_token=${auth.accessToken}", { (response: js.Dynamic) =>
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
-        else deferred.reject("Failed to create friends list")
-      })
-    }
+    FB.api(s"/$version/me/$friendListId/members&access_token=${auth.accessToken}", { (response: js.Dynamic) =>
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+      else deferred.reject("Failed to create friends list")
+    })
     deferred.promise
   }
 
   def getFriends(callback: CallbackObject) {
-    if (!isDefined(FB)) die("Facebook SDK is not loaded")
-    else {
-      FB.api(s"/$version/me/friends?access_token=${auth.accessToken}", (response: js.Dynamic) => callback(response))
-    }
+    FB.api(s"/$version/me/friends?access_token=${auth.accessToken}", (response: js.Dynamic) => callback(response))
   }
 
   def getFriendList(listType: js.UndefOr[String]) = {
     val deferred = $q.defer[js.Dynamic]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.api(s"/$version/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=${auth.accessToken}", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
-        else deferred.reject(s"Failed to retrieve friends list (type $listType)")
-      })
-    }
+    FB.api(s"/$version/me/friendlists?list_type=${listType getOrElse "close_friends"}&access_token=${auth.accessToken}", (response: js.Dynamic) => {
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+      else deferred.reject(s"Failed to retrieve friends list (type $listType)")
+    })
     deferred.promise
   }
 
   def getFriendListMembers(friendListId: String) = {
     val deferred = $q.defer[js.Dynamic]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.api(s"/$version/me/$friendListId/members&access_token=${auth.accessToken}", (response: js.Dynamic) => {
-        if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
-        else deferred.reject("Failed to retrieve friend list members")
-      })
-    }
+    FB.api(s"/$version/me/$friendListId/members&access_token=${auth.accessToken}", (response: js.Dynamic) => {
+      if (isDefined(response) && !isDefined(response.error)) deferred.resolve(response)
+      else deferred.reject("Failed to retrieve friend list members")
+    })
     deferred.promise
   }
 
@@ -126,20 +93,17 @@ class Facebook($q: Q) extends Service {
    */
   def getTaggableFriends: Future[js.Array[TaggableFriend]] = {
     val deferred = $q.defer[js.Array[TaggableFriend]]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      val friends = emptyArray[TaggableFriend]
-      val callback: PaginationCallback[TaggableFriend] = (response: FacebookPagination[TaggableFriend]) => {
-        val results = response.data.asArray[TaggableFriend]
-        friends.push(results: _*)
-        console.log(s"${friends.length} friend(s) loaded")
-        ()
-      }
-      FB.api(s"/$version/me/taggable_friends?access_token=${auth.accessToken}", { (response: TaggleFriendsResponse) =>
-        paginatedResults(response, callback)
-        deferred.resolve(friends)
-      })
+    val friends = emptyArray[TaggableFriend]
+    val callback: PaginationCallback[TaggableFriend] = (response: FacebookPagination[TaggableFriend]) => {
+      val results = response.data.asArray[TaggableFriend]
+      friends.push(results: _*)
+      console.log(s"${friends.length} friend(s) loaded")
+      ()
     }
+    FB.api(s"/$version/me/taggable_friends?access_token=${auth.accessToken}", { (response: TaggleFriendsResponse) =>
+      paginatedResults(response, callback)
+      deferred.resolve(friends)
+    })
     deferred.promise
   }
 
@@ -148,71 +112,81 @@ class Facebook($q: Q) extends Service {
     callback(response)
 
     // if there are more results, recursively extract them
-    if (isDefined(response.paging) && isDefined(response.paging.next)) {
-      FB.api(response.paging.next, (response: FacebookPagination[T]) => paginatedResults(response, callback))
+    response.paging.next foreach { url =>
+      FB.api(url, (response: FacebookPagination[T]) => paginatedResults(response, callback))
     }
   }
 
   def getUserProfile: Future[FacebookProfile] = {
     val deferred = $q.defer[FacebookProfile]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: js.Dynamic) =>
-        if (isDefined(response.error)) deferred.reject(response.error)
-        else {
-          profile = response.as[FacebookProfile]
-          deferred.resolve(profile)
-        })
-    }
+    FB.api(s"/$version/me?access_token=${auth.accessToken}", (response: FacebookProfile) =>
+      if (isDefined(response.dynamic.error)) deferred.reject(response.dynamic.error) else deferred.resolve(response)
+    )
     deferred.promise
   }
 
   def logout(): Future[LoginStatusResponse] = {
     val deferred = $q.defer[LoginStatusResponse]()
-    if (!isDefined(FB)) deferred.reject("Facebook SDK is not loaded")
-    else {
-      FB.logout((response: LoginStatusResponse) => {
-        if (isDefined(response)) {
-          auth = null
-          deferred.resolve(response)
-        } else {
-          deferred.reject("Error logging out of Facebook")
-        }
-      })
-    }
+    FB.logout((response: LoginStatusResponse) => {
+      if (isDefined(response)) {
+        auth = null
+        deferred.resolve(response)
+      } else deferred.reject("Error logging out of Facebook")
+    })
     deferred.promise
   }
 
   def feed(caption: String, link: String) = {
     val deferred = $q.defer[js.Dynamic]()
-    FB.ui(JS(
-      app_id = appID,
-      method = "feed",
-      link = link,
-      caption = caption
-    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    FB.ui(
+      JS(app_id = appID, method = "feed", link = link, caption = caption),
+      (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     deferred.promise
   }
 
   def send(message: String, link: String) = {
     val deferred = $q.defer[js.Dynamic]()
-    FB.ui(JS(
-      app_id = appID,
-      method = "send",
-      link = link
-    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    FB.ui(
+      JS(app_id = appID, method = "send", link = link),
+      (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     deferred.promise
   }
 
   def share(link: String) = {
     val deferred = $q.defer[js.Dynamic]()
-    FB.ui(JS(
-      app_id = appID,
-      method = "share",
-      href = link
-    ), (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
+    FB.ui(
+      JS(app_id = appID, method = "share", href = link),
+      (response: js.Dynamic) => if (isDefined(response.error)) deferred.reject(response.error) else deferred.resolve(response))
     deferred.promise
   }
+}
+
+/**
+ * Facebook Singleton
+ */
+object Facebook {
+  lazy val SDK = js.Dynamic.global.FB.asInstanceOf[js.UndefOr[FacebookSDK]]
+    .getOrElse(throw new IllegalStateException("Facebook SDK is not loaded"))
+
+}
+
+/**
+ * Facebook SDK
+ */
+trait FacebookSDK extends js.Object {
+
+  def api(url: String, callback: js.Function): Unit = js.native
+
+  def getLoginStatus(callback: js.Function1[LoginStatusResponse, Any]): Unit = js.native
+
+  def init(config: js.Object): Unit = js.native
+
+  def login(callback: js.Function1[LoginStatusResponse, Any]): Unit = js.native
+
+  def logout(callback: js.Function1[LoginStatusResponse, Any]): Unit = js.native
+
+  def ui(command: js.Dynamic, callback: js.Function): Unit = js.native
+
 }
 
 /*
@@ -292,13 +266,14 @@ trait FacebookPagination[T] extends js.Object {
  */
 trait FacebookPaging extends js.Object {
   var cursors: FacebookCursor = js.native
-  var next: String = js.native
+  var previous: js.UndefOr[String] = js.native
+  var next: js.UndefOr[String] = js.native
 }
 
 /**
  * Facebook Cursor Trait
  */
 trait FacebookCursor extends js.Object {
-  var before: String = js.native
-  var after: String = js.native
+  var before: js.UndefOr[String] = js.native
+  var after: js.UndefOr[String] = js.native
 }

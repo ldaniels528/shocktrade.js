@@ -15,7 +15,8 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 object FacebookInjector {
-  val elemName = "#ShockTradeMain"
+  private val elemName = "#ShockTradeMain"
+  private lazy val FB = Facebook.SDK
 
   /**
    * Returns the Facebook application ID based on the running host
@@ -43,7 +44,7 @@ object FacebookInjector {
   g.fbAsyncInit = (() => {
     val appId = getShockTradeAppID()
     console.log(s"Initializing Facebook SDK (App ID $appId)...")
-    g.FB.init(JS(
+    FB.init(JS(
       appId = appId,
       status = true,
       xfbml = true
@@ -53,7 +54,8 @@ object FacebookInjector {
     val rootElem = jQuery(elemName)
     val injector = angular.element(rootElem).injector()
     injector.get[Facebook]("Facebook") foreach { facebook =>
-      facebook.init(g.FB) onComplete {
+      facebook.appID = getShockTradeAppID()
+      facebook.getLoginStatus onComplete {
         case Success(response) =>
           console.log("Facebook login successful.")
 
