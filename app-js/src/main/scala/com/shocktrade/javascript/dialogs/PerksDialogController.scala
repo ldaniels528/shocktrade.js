@@ -5,6 +5,7 @@ import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
+import com.shocktrade.javascript.models.Contest
 import org.scalajs.dom.console
 
 import scala.language.postfixOps
@@ -17,7 +18,7 @@ import scala.util.{Failure, Success}
  * Perks Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], toaster: Toaster,
+class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[PerksDialogResult], toaster: Toaster,
                             @injected("MySession") mySession: MySession,
                             @injected("PerksDialog") dialog: PerksDialogService)
   extends Controller {
@@ -25,7 +26,7 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
   private var perks = emptyArray[js.Dynamic]
   private var perkMapping = js.Dictionary[js.Dynamic]()
   private var myPerks = emptyArray[String]
-  private var myFunds = mySession.getCashAccount.cashFunds
+  private var myFunds = mySession.cashAccount_?.map(_.cashFunds).getOrElse(0.0d)
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
@@ -143,6 +144,8 @@ class PerksDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js
  * @author lawrence.daniels@gmail.com
  */
 object PerksDialogController {
+
+  type PerksDialogResult = Contest
 
   /**
    * Perk Extensions

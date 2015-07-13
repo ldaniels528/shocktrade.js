@@ -6,7 +6,6 @@ import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.ModalInstance
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewGameDialogController._
 import com.shocktrade.javascript.models.Contest
 
@@ -20,8 +19,8 @@ import scala.util.{Failure, Success}
  * New Game Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http, $modalInstance: ModalInstance[Contest], $timeout: Timeout,
-                              @injected("ContestService") ContestService: ContestService,
+class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
+                              $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout,
                               @injected("MySession") mySession: MySession,
                               @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
   extends Controller {
@@ -33,37 +32,25 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
   //			Public Data Structures
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.durations = durations
-  $scope.startingBalances = startingBalances
+  $scope.durations = Durations
+  $scope.startingBalances = StartingBalances
   $scope.restrictionTypes = emptyArray[js.Dynamic]
 
-  $scope.form = JS(
-    duration = null,
+  $scope.form = NewGameForm(
     perksAllowed = true,
     robotsAllowed = true,
     startAutomatically = true,
-    startingBalance = startingBalances.head
+    startingBalance = StartingBalances.head
   )
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.cancel = () => $modalInstance.dismiss("cancel")
+  @scoped def cancel() = $modalInstance.dismiss("cancel")
 
-  $scope.createGame = (form: js.Dynamic) => createGame(form)
-
-  $scope.enforceInvitationOnly = () => $scope.form.friendsOnly = false
-
-  $scope.isProcessing = () => processing
-
-  $scope.getMessages = () => errors
-
-  /////////////////////////////////////////////////////////////////////////////
-  //			Private Functions
-  /////////////////////////////////////////////////////////////////////////////
-
-  private def createGame(form: js.Dynamic) = {
+  @scoped 
+  def createGame(form: NewGameForm) = {
     if (isValidForm(form)) {
       processing = true
       val promise = $timeout(() => processing = false, 30.seconds)
@@ -89,11 +76,21 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
     }
   }
 
-  private def isValidForm(form: js.Dynamic) = {
-    errors.remove(0, errors.length)
+  @scoped def enforceInvitationOnly() = $scope.form.friendsOnly = false
+
+  @scoped def isProcessing = processing
+
+  @scoped def getMessages = errors
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Private Functions
+  /////////////////////////////////////////////////////////////////////////////
+
+  private def isValidForm(form: NewGameForm) = {
+    errors.removeAll()
 
     if (!mySession.isAuthenticated) errors.push("You must login to create games")
-    if (!isDefined(form.name) || form.name.as[String].isEmpty) errors.push("Game Title is required")
+    if (!isDefined(form.name) || form.name.exists(_.isEmpty)) errors.push("Game Title is required")
     if (!isDefined(form.duration)) errors.push("Game Duration is required")
     errors.isEmpty
   }
@@ -106,11 +103,78 @@ class NewGameDialogController($rootScope: Scope, $scope: js.Dynamic, $http: Http
  */
 object NewGameDialogController {
 
-  val durations = js.Array(
-    JS(label = "1 Week", value = 7),
-    JS(label = "2 Weeks", value = 14),
-    JS(label = "1 Month", value = 30))
+  type NewGameDialogResult = Contest
 
-  val startingBalances = js.Array(1000, 2500, 5000, 10000, 25000, 50000, 100000)
+  val Durations = js.Array(
+    GameDuration(label = "1 Week", value = 7),
+    GameDuration(label = "2 Weeks", value = 14),
+    GameDuration(label = "1 Month", value = 30))
 
+  val StartingBalances = js.Array(1000, 2500, 5000, 10000, 25000, 50000, 100000)
+
+}
+
+/**
+ * Game Duration
+ */
+trait GameDuration extends js.Object {
+  var label: String = js.native
+  var value: Int = js.native
+}
+
+/**
+ * Game Duration Singleton
+ */
+object GameDuration {
+
+  def apply(label: String, value: Int) = {
+    val duration = makeNew[GameDuration]
+    duration.label = label
+    duration.value = value
+    duration
+  }
+}
+
+/**
+ * New Game Dialog Scope
+ */
+trait NewGameDialogScope extends Scope {
+  var durations: js.Array[GameDuration] = js.native
+  var form: NewGameForm = js.native
+  var restrictionTypes: js.Array[js.Dynamic] = js.native
+  var startingBalances: js.Array[Int] = js.native
+}
+
+/**
+ * New Game Dialog Form
+ */
+trait NewGameForm extends js.Object {
+  var name: js.UndefOr[String] = js.native
+  var duration: js.UndefOr[GameDuration] = js.native
+  var friendsOnly: js.UndefOr[Boolean] = js.native
+  var perksAllowed: js.UndefOr[Boolean] = js.native
+  var player: js.Dynamic = js.native
+  var robotsAllowed: js.UndefOr[Boolean] = js.native
+  var startAutomatically: js.UndefOr[Boolean] = js.native
+  var startingBalance: js.UndefOr[Int] = js.native
+}
+
+/**
+ * New Game Dialog Form Singleton
+ */
+object NewGameForm {
+
+  def apply(duration: js.UndefOr[GameDuration] = js.undefined,
+            perksAllowed: js.UndefOr[Boolean] = js.undefined,
+            robotsAllowed: js.UndefOr[Boolean] = js.undefined,
+            startAutomatically: js.UndefOr[Boolean] = js.undefined,
+            startingBalance: js.UndefOr[Int] = js.undefined) = {
+    val form = makeNew[NewGameForm]
+    form.duration = duration
+    form.perksAllowed = perksAllowed
+    form.robotsAllowed = robotsAllowed
+    form.startAutomatically = startAutomatically
+    form.startingBalance = startingBalance
+    form
+  }
 }

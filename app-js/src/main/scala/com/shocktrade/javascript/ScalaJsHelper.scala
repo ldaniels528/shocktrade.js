@@ -82,20 +82,21 @@ object ScalaJsHelper {
       }
     }
 
-    @inline
-    def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
+    @inline def as[T] = if (isDefined(obj)) obj.asInstanceOf[T] else null.asInstanceOf[T]
 
-    @inline
-    def asOpt[T] = obj.asInstanceOf[js.UndefOr[T]].toOption
+    @inline def asOpt[T] = obj.asInstanceOf[js.UndefOr[T]].toOption
 
-    @inline
-    def asArray[T] = obj.asInstanceOf[js.Array[T]]
+    @inline def asArray[T] = obj.asInstanceOf[js.Array[T]]
 
-    @inline
-    def isTrue = isDefined(obj) && Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
+    @inline def isTrue = isDefined(obj) && Try(obj.asInstanceOf[Boolean]).toOption.contains(true)
 
-    @inline
-    def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
+    @inline def toUndefOr[T]: js.UndefOr[T] = obj.asInstanceOf[js.UndefOr[T]]
+
+  }
+
+  implicit class JsArrayExtensions[A](val array: js.Array[A]) extends AnyVal {
+
+    @inline def removeAll(): Unit = array.remove(0, array.length)
 
   }
 
@@ -105,10 +106,8 @@ object ScalaJsHelper {
    */
   implicit class JsDynamicExtensionsA(val obj: js.Dynamic) extends AnyVal {
 
-    @inline
-    def OID_? : Option[String] = {
-      if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
-    }
+    @inline def OID_? : Option[String] = if (isDefined(obj._id)) Option(obj._id.$oid.asInstanceOf[String]) else None
+
   }
 
   /**
@@ -134,8 +133,7 @@ object ScalaJsHelper {
    */
   implicit class JsObjectExtensions(val obj: js.Object) extends AnyVal {
 
-    @inline
-    def dynamic = obj.asInstanceOf[js.Dynamic]
+    @inline def dynamic = obj.asInstanceOf[js.Dynamic]
 
     @inline
     def OID_? : Option[String] = {
@@ -147,7 +145,7 @@ object ScalaJsHelper {
 
   implicit class OptionExtensions[T](val optA: Option[T]) extends AnyVal {
 
-    def ??(optB: => Option[T]): Option[T] = if (optA.isDefined) optA else optB
+    @inline def ??(optB: => Option[T]): Option[T] = if (optA.isDefined) optA else optB
 
   }
 
@@ -157,11 +155,17 @@ object ScalaJsHelper {
    */
   implicit class StringExtensions(val string: String) extends AnyVal {
 
-    def isBlank: Boolean = string == null && string.trim.isEmpty
+    @inline
+    def indexOfOpt(substring: String): Option[Int] = Option(string).map(_.indexOf(substring)) flatMap {
+      case -1 => None
+      case index => Some(index)
+    }
 
-    def nonBlank: Boolean = string != null && string.trim.nonEmpty
+    @inline def isBlank: Boolean = string == null && string.trim.isEmpty
 
-    def isValidEmail: Boolean = !string.matches( """/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i""")
+    @inline def nonBlank: Boolean = string != null && string.trim.nonEmpty
+
+    @inline def isValidEmail: Boolean = !string.matches( """/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i""")
 
   }
 

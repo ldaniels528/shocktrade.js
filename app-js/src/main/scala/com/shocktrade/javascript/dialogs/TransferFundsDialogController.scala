@@ -9,28 +9,27 @@ import com.shocktrade.javascript.models.Contest
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
  * Transfer Funds Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: ModalInstance[Contest], toaster: Toaster,
+class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: ModalInstance[TransferFundsResult],
+                                    toaster: Toaster,
                                     @injected("MySession") mySession: MySession,
                                     @injected("TransferFundsDialog") dialog: TransferFundsDialogService)
   extends Controller {
 
   private val messages = emptyArray[String]
 
-  $scope.actions = transferActions
+  $scope.actions = TransferActions
 
-  $scope.form = {
-    val form = TransferFundsForm()
-    form.cashFunds = mySession.getCashAccount.cashFunds
-    form.marginFunds = mySession.getMarginAccount.cashFunds
-    form.initialMargin = mySession.getMarginAccount.initialMargin
-    form
-  }
+  $scope.form = TransferFundsForm(
+    cashFunds = mySession.cashAccount_?.map(_.cashFunds).orUndefined,
+    marginFunds = mySession.marginAccount_?.map(_.cashFunds).orUndefined
+  )
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -45,10 +44,6 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
   @scoped def hasMessages = messages.nonEmpty
 
   @scoped def cancel() = $modalInstance.dismiss("cancel")
-
-  /////////////////////////////////////////////////////////////////////
-  //          Private Functions
-  /////////////////////////////////////////////////////////////////////
 
   @scoped
   def accept(form: TransferFundsForm) {
@@ -65,6 +60,10 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
     }
   }
 
+  /////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  /////////////////////////////////////////////////////////////////////
+
   /**
    * Validates the given transfer funds form
    * @param form the given [[TransferFundsForm transfer funds form]]
@@ -72,10 +71,10 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
    */
   private def isValidated(form: TransferFundsForm) = {
     // clear the messages
-    messages.remove(0, messages.length)
+    messages.removeAll()
 
     // first, perform coarse validation
-    if (form.action == null) messages.push("Please select an Action")
+    if (form.action.isEmpty) messages.push("Please select an Action")
     else if (form.amount.isEmpty) messages.push("Please enter the desired amount")
     else {
       // next, perform fine-grained validation
@@ -89,15 +88,15 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
 
   private def isInsufficientCashFunds(form: TransferFundsForm): Boolean = {
     (for {
-      action <- Option(form.action) if action.source == CASH
+      action <- form.action.toOption if action.source == CASH
       amount <- form.amount.toOption
       cashFunds <- form.cashFunds.toOption
     } yield amount > cashFunds).contains(true)
   }
 
-  private def isInsufficientMarginFunds(form: TransferFundsForm) = {
+  private def isInsufficientMarginFunds(form: TransferFundsForm): Boolean = {
     (for {
-      action <- Option(form.action) if action.source == MARGIN
+      action <- form.action.toOption if action.source == MARGIN
       amount <- form.amount.toOption
       marginFunds <- form.marginFunds.toOption
     } yield amount > marginFunds).contains(true)
@@ -110,29 +109,23 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
  * @author lawrence.daniels@gmail.com
  */
 object TransferFundsDialogController {
+
+  type TransferFundsResult = Contest
+
   private val CASH = "CASH"
   private val MARGIN = "MARGIN"
 
-  private val transferActions = js.Array(
+  private val TransferActions = js.Array(
     TransferFundsAction(label = "Cash to Margin Account", source = CASH),
     TransferFundsAction(label = "Margin Account to Cash", source = MARGIN))
 
 }
 
 /**
- * Transfer Funds Scope
- */
-trait TransferFundsScope extends Scope {
-  var actions: js.Array[TransferFundsAction] = js.native
-  var form: TransferFundsForm = js.native
-}
-
-/**
  * Transfer Funds Form
  */
 trait TransferFundsForm extends js.Object {
-  var action: TransferFundsAction = js.native
-  var initialMargin: Double = js.native
+  var action: js.UndefOr[TransferFundsAction] = js.native
   var amount: js.UndefOr[Double] = js.native
   var cashFunds: js.UndefOr[Double] = js.native
   var marginFunds: js.UndefOr[Double] = js.native
@@ -143,7 +136,17 @@ trait TransferFundsForm extends js.Object {
  */
 object TransferFundsForm {
 
-  def apply() = makeNew[TransferFundsForm]
+  def apply(action: js.UndefOr[TransferFundsAction] = js.undefined,
+            amount: js.UndefOr[Double] = js.undefined,
+            cashFunds: js.UndefOr[Double] = js.undefined,
+            marginFunds: js.UndefOr[Double] = js.undefined) = {
+    val form = makeNew[TransferFundsForm]
+    form.action = action
+    form.amount = amount
+    form.cashFunds = cashFunds
+    form.marginFunds = marginFunds
+    form
+  }
 }
 
 /**
@@ -165,4 +168,12 @@ object TransferFundsAction {
     action.source = source
     action
   }
+}
+
+/**
+ * Transfer Funds Scope
+ */
+trait TransferFundsScope extends Scope {
+  var actions: js.Array[TransferFundsAction] = js.native
+  var form: TransferFundsForm = js.native
 }

@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
-import com.shocktrade.javascript.dialogs.NewOrderDialogService
+import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialogService}
 import com.shocktrade.javascript.discover.DiscoverController
 import com.shocktrade.javascript.models.Participant
 import com.shocktrade.javascript.{GlobalLoading, MySession}
@@ -60,7 +60,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   }
 
   private def popupNewOrderDialog(accountType: js.UndefOr[String]) = {
-    newOrderDialog.popup(JS(
+    newOrderDialog.popup(NewOrderParams(
       symbol = $cookies.getOrElse(DiscoverController.LastSymbolCookie, "AAPL"),
       accountType = accountType
     ))
@@ -127,7 +127,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   $scope.selectPosition = (position: js.Dynamic) => $scope.selectedPosition = position
 
   $scope.sellPosition = (symbol: js.UndefOr[String], quantity: js.UndefOr[Int]) => {
-    newOrderDialog.popup(JS(symbol = symbol, quantity = quantity))
+    newOrderDialog.popup(NewOrderParams(symbol = symbol, quantity = quantity))
   }
 
   $scope.toggleSelectedPosition = () => $scope.selectedPosition = null

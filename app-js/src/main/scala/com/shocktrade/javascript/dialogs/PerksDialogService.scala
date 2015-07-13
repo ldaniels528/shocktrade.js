@@ -8,7 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 import com.shocktrade.javascript.models.Contest
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Future, ExecutionContext}
 import scala.language.postfixOps
 import scala.scalajs.js
 
@@ -22,9 +22,9 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
   /**
    * Perks Modal Dialog
    */
-  def popup()(implicit ec: ExecutionContext) = {
+  def popup()(implicit ec: ExecutionContext): Future[PerksDialogResult] = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[Contest](ModalOptions(
+    val $modalInstance = $modal.open[PerksDialogResult](ModalOptions(
       templateUrl = "perks_dialog.htm",
       controller = classOf[PerksDialogController].getSimpleName
     ))
@@ -65,7 +65,7 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
     required("playerId", playerId)
     required("perkCodes", perkCodes)
 
-    $http.put[js.Dynamic](s"/api/contest/$contestId/perks/$playerId", perkCodes)
+    $http.put[Contest](s"/api/contest/$contestId/perks/$playerId", perkCodes)
   }
 
 }

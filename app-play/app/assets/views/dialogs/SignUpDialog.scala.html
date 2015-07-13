@@ -4,10 +4,10 @@
     <div class="modal-header st_modal_header">
         <h4>Sign Up &#8212; It's simple and free!</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" ng-init="loadFacebookProfile()">
         <div class="row">
             <div class="col-md-12">
-                Hello <span class="bold">{{ getFacebookProfile().name }}</span> and welcome to <span class="emphasis">ShockTrade</span>.
+                Hello <span class="bold">{{ form.name }}</span> and welcome to <span class="emphasis">ShockTrade</span>.
             </div>
             <div class="col-md-12">
                 <img class="profile_pic" ng-src="http://graph.facebook.com/{{ form.facebookID }}/picture">

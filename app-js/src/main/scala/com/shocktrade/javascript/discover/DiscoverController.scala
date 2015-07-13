@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.github.ldaniels528.scalascript.{angular, injected}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript._
-import com.shocktrade.javascript.dialogs.NewOrderDialogService
+import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialogService}
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
@@ -28,7 +28,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                          @injected("ProfileService") profileService: ProfileService,
                          @injected("QuoteService") quoteService: QuoteService)
-  extends AutoCompletionController($q, quoteService) with GlobalLoading {
+  extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 
@@ -44,8 +44,6 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
   //          Public Function
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
-
   $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
 
   $scope.getBetaClass = (beta: js.UndefOr[java.lang.Double]) => getBetaClass(beta)
@@ -58,7 +56,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
 
   $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
 
-  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(JS(symbol = symbol))
+  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(NewOrderParams(symbol = symbol))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions

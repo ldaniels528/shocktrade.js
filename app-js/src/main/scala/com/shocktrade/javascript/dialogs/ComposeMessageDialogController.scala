@@ -1,21 +1,61 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.Controller
 import com.github.ldaniels528.scalascript.extensions.ModalInstance
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
+import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.ComposeMessageDialogController.ComposeMessageResult
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
  * Compose Message Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class ComposeMessageDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic]) extends Controller {
+class ComposeMessageDialogController($scope: ComposeMessageScope, $modalInstance: ModalInstance[ComposeMessageResult],
+                                     @injected("ComposeMessageDialog") composeMessageDialog: ComposeMessageDialogService)
+  extends Controller {
 
-  $scope.form = JS()
+  $scope.form = ComposeMessageForm()
 
-  $scope.ok = (form: js.Dynamic) => $modalInstance.close(form)
+  @scoped def ok(form: ComposeMessageForm) = {
+    $modalInstance.close(form)
+  }
 
-  $scope.cancel = () => $modalInstance.dismiss("cancel")
+  @scoped def cancel() = $modalInstance.dismiss("cancel")
 
+}
+
+/**
+ * Compose Message Dialog Controller Singleton
+ * @author lawrence.daniels@gmail.com
+ */
+object ComposeMessageDialogController {
+
+  type ComposeMessageResult = ComposeMessageForm
+
+}
+
+/**
+ * Compose Message Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait ComposeMessageScope extends Scope {
+  var form: ComposeMessageForm = js.native
+}
+
+/**
+ * Compose Message Form
+ * @author lawrence.daniels@gmail.com
+ */
+trait ComposeMessageForm extends js.Object {
+
+}
+
+/**
+ * Compose Message Form Singleton
+ * @author lawrence.daniels@gmail.com
+ */
+object ComposeMessageForm {
+
+  def apply() = makeNew[ComposeMessageForm]
 }

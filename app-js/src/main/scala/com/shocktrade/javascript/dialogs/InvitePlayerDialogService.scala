@@ -4,8 +4,10 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.javascript.models.Participant
 
+import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
@@ -17,7 +19,7 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @injected("MySession
   /**
    * Invite a player via pop-up dialog
    */
-  def popup(participant: Participant) = {
+  def popup(participant: Participant): Future[InvitePlayerDialogResult] = {
     /*
     function(selectedFriends) {
       if (selectedFriends.length) {
@@ -30,7 +32,7 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @injected("MySession
     }
      */
 
-    val modalInstance = $modal.open[js.Dynamic](ModalOptions(
+    val modalInstance = $modal.open[InvitePlayerDialogResult](ModalOptions(
       templateUrl = "invite_player_dialog.htm",
       controller = classOf[InvitePlayerDialogController].getSimpleName,
       resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))

@@ -11,7 +11,7 @@ import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialogService
 import com.shocktrade.javascript.models.OnlinePlayerState
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.social.{Facebook, FacebookProfile}
+import com.shocktrade.javascript.social.Facebook
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -218,18 +218,12 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
     }
   }
 
-  @scoped def signUp(): Unit = signUpPopup(facebook.facebookID, Option(facebook.profile))
-
-  private def signUpPopup(facebookID: String, fbProfile_? : Option[FacebookProfile]) {
-    fbProfile_? match {
-      case Some(fbProfile) =>
-        signUpDialog.popup(facebookID, fbProfile) onSuccess {
-          case profile =>
-            mySession.setUserProfile(profile, fbProfile)
-        }
-      case _ =>
-        console.log(s"facebookID = $facebookID, fbProfile = ${angular.toJson(fbProfile_?.orNull)}")
-        toaster.info("Sign-in to Facebook, then Sign-up here")
+  @scoped def signUp(): Unit = {
+    signUpDialog.popup() onComplete {
+      case Success((profile, fbProfile)) =>
+        mySession.setUserProfile(profile, fbProfile)
+      case Failure(e) =>
+        toaster.error(e.getMessage)
     }
   }
 

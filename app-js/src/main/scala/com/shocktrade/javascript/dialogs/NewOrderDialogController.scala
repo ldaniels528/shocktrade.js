@@ -1,79 +1,76 @@
 package com.shocktrade.javascript.dialogs
 
-import com.shocktrade.javascript.{ScalaJsHelper, AutoCompletionController, MySession}
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.Q
 import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.github.ldaniels528.scalascript.{angular, injected}
-import com.shocktrade.javascript.dashboard.ContestService
+import com.github.ldaniels528.scalascript.{angular, injected, scoped}
+import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dashboard.OrderQuote
+import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
+import com.shocktrade.javascript.models.Contest
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
 
 /**
  * New Order Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance[js.Dynamic], $q: Q, toaster: Toaster,
-                               @injected("ContestService") contestService: ContestService,
+class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
+                               $q: Q, toaster: Toaster,
                                @injected("MySession") mySession: MySession,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                                @injected("PerksDialog") perksDialog: PerksDialogService,
                                @injected("QuoteService") quoteService: QuoteService,
-                               @injected("params") params: js.Dynamic)
-  extends AutoCompletionController($q, quoteService) {
+                               @injected("params") params: NewOrderParams)
+  extends AutoCompletionController($scope, $q, quoteService) {
 
   private val messages = emptyArray[String]
   private var processing = false
 
-  $scope.form = JS(
-    emailNotify = true,
-    accountType = params.accountType,
-    symbol = params.symbol,
-    quantity = params.quantity
-  )
-  $scope.quote = JS(symbol = $scope.form.symbol)
+  $scope.form = {
+    val form = makeNew[NewOrderForm]
+    form.emailNotify = true
+    form.accountType = params.accountType
+    form.symbol = params.symbol
+    form.quantity = params.quantity
+    form
+  }
+
+  $scope.quote = {
+    val quote = makeNew[OrderQuote]
+    quote.symbol = $scope.form.symbol.orNull
+    quote
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.init = () => $scope.orderQuote($scope.form.symbol)
+  @scoped def init() = $scope.form.symbol foreach lookupQuote
 
-  $scope.autoCompleteSymbols = (searchTerm: String) => autoCompleteSymbols(searchTerm)
+  @scoped def cancel() = $modalInstance.dismiss("cancel")
 
-  $scope.cancel = () => $modalInstance.dismiss("cancel")
+  @scoped def getMessages = messages
 
-  $scope.getMessages = () => messages
+  @scoped def isProcessing = processing
 
-  $scope.isProcessing = () => processing
+  @scoped def ok(form: NewOrderForm) = accept(form)
 
-  $scope.ok = (form: js.Dynamic) => accept(form)
+  @scoped def orderQuote(ticker: js.UndefOr[String]) = ticker foreach lookupQuote
 
-  $scope.orderQuote = (ticker: js.Dynamic) => orderQuote(ticker)
-
-  $scope.getTotal = (form: js.Dynamic) => getTotal(form)
+  @scoped def getTotal(form: NewOrderForm) = form.limitPrice.getOrElse(0d) * form.quantity.getOrElse(0)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def orderQuote(ticker: js.Dynamic) = {
-    // determine the symbol
-    var symbol: String = if (isDefined(ticker.symbol)) ticker.symbol.as[String]
-    else {
-      val _ticker = ticker.as[String]
-      val index = _ticker.indexOf(" ")
-      if (index == -1) _ticker else _ticker.substring(0, index)
-    }
-
-    if (symbol.nonBlank) {
-      symbol = symbol.trim.toUpperCase
+  private def lookupQuote(ticker: String) = {
+    if (ticker.nonBlank) {
+      val symbol = (ticker.indexOfOpt(" ") map (index => ticker.substring(0, index - 1)) getOrElse ticker).trim
       newOrderDialog.lookupQuote(symbol) onComplete {
         case Success(quote) =>
           $scope.quote = quote
@@ -86,7 +83,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
     }
   }
 
-  private def accept(form: js.Dynamic) = {
+  private def accept(form: NewOrderForm) = {
     if (isValid(form)) {
       processing = true
 
@@ -94,7 +91,7 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
       val playerId = mySession.getUserID
       console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
 
-      contestService.createOrder(contestId, playerId, $scope.form) onComplete {
+      newOrderDialog.createOrder(contestId, playerId, $scope.form) onComplete {
         case Success(contest) =>
           processing = false
           $modalInstance.close(contest)
@@ -105,22 +102,18 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
     }
   }
 
-  private def getTotal(form: js.Dynamic) = {
-    val price = if (isDefined(form.limitPrice)) form.limitPrice.as[Double] else 0.00
-    val quantity = if (isDefined(form.quantity)) form.quantity.as[Double] else 0.00
-    price * quantity
-  }
-
-  private def isValid(form: js.Dynamic) = {
+  private def isValid(form: NewOrderForm) = {
     messages.remove(0, messages.length)
 
     // perform the validations
     if (!isDefined(form.accountType)) messages.push("Please selected the account to use (Cash or Margin)")
-    if (isDefined(form.accountType) && form.accountType === "MARGIN" && !mySession.hasMarginAccount) messages.push("You do not have a Margin Account (must buy the Perk)")
+    if (isDefined(form.accountType) && form.accountType.toOption.contains("MARGIN") && mySession.marginAccount_?.isEmpty) {
+      messages.push("You do not have a Margin Account (must buy the Perk)")
+    }
     if (!isDefined(form.orderType)) messages.push("No Order Type (BUY or SELL) specified")
     if (!isDefined(form.priceType)) messages.push("No Pricing Method specified")
     if (!isDefined(form.orderTerm)) messages.push("No Order Term specified")
-    if (!isDefined(form.quantity) || form.quantity === 0d) messages.push("No quantity specified")
+    if (!isDefined(form.quantity) || form.quantity.exists(_ == 0d)) messages.push("No quantity specified")
     messages.isEmpty
   }
 
@@ -140,4 +133,61 @@ class NewOrderDialogController($scope: js.Dynamic, $modalInstance: ModalInstance
     }
   }
 
+}
+
+/**
+ * New Order Dialog Controller Singleton
+ */
+object NewOrderDialogController {
+
+  type NewOrderDialogResult = Contest
+}
+
+/**
+ * New Order Dialog Form
+ */
+trait NewOrderForm extends js.Object {
+  var symbol: js.UndefOr[String] = js.native
+  var exchange: js.UndefOr[String] = js.native
+  var accountType: js.UndefOr[String] = js.native
+  var orderType: js.UndefOr[String] = js.native
+  var orderTerm: js.UndefOr[String] = js.native
+  var priceType: js.UndefOr[String] = js.native
+  var quantity: js.UndefOr[Int] = js.native
+  var limitPrice: js.UndefOr[Double] = js.native
+  var perks: js.Array[String] = js.native
+  var emailNotify: js.UndefOr[Boolean] = js.native
+}
+
+/**
+ * New Order Dialog Parameters
+ */
+trait NewOrderParams extends js.Object {
+  var accountType: js.UndefOr[String] = js.native
+  var symbol: js.UndefOr[String] = js.native
+  var quantity: js.UndefOr[Int] = js.native
+}
+
+/**
+ * New Order Dialog Parameters Singleton
+ */
+object NewOrderParams {
+
+  def apply(accountType: js.UndefOr[String] = js.undefined,
+            symbol: js.UndefOr[String] = js.undefined,
+            quantity: js.UndefOr[Int] = js.undefined) = {
+    val params = makeNew[NewOrderParams]
+    params.accountType = accountType
+    params.symbol = symbol
+    params.quantity = quantity
+    params
+  }
+}
+
+/**
+ * New Order Dialog Scope
+ */
+trait NewOrderScope extends js.Object {
+  var form: NewOrderForm = js.native
+  var quote: OrderQuote = js.native
 }

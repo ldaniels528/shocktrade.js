@@ -4,6 +4,7 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Service, angular}
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.dialogs.NewGameForm
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
@@ -20,11 +21,6 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   ///////////////////////////////////////////////////////////////
   //          Basic C.R.U.D.
   ///////////////////////////////////////////////////////////////
-
-  def createContest(form: js.Dynamic) = {
-    required("form", form)
-    $http.put[Contest]("/api/contest", form)
-  }
 
   def deleteContest(contestId: String) = {
     required("contestId", contestId)
@@ -179,13 +175,6 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def createOrder(contestId: String, playerId: String, order: js.Dynamic) = {
-    required("contestId", contestId)
-    required("playerId", playerId)
-    required("order", order)
-    $http.put[js.Dynamic](s"/api/order/$contestId/$playerId", order)
-  }
-
   def deleteOrder(contestId: String, playerId: String, orderId: String) = {
     required("contestId", contestId)
     required("playerId", playerId)
@@ -200,7 +189,22 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
   def orderQuote(symbol: String) = {
     required("symbol", symbol)
-    $http.get[js.Dynamic](s"/api/quotes/order/symbol/$symbol")
+    $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
   }
 
+}
+
+trait OrderQuote extends js.Object {
+  var symbol: String = js.native
+  var name: String = js.native
+  var exchange: String = js.native
+  var lastTrade: js.UndefOr[Double] = js.native
+  var open: js.UndefOr[Double] = js.native
+  var prevClose: js.UndefOr[Double] = js.native
+  var high: js.UndefOr[Double] = js.native
+  var low: js.UndefOr[Double] = js.native
+  var high52Week: js.UndefOr[Double] = js.native
+  var low52Week: js.UndefOr[Double] = js.native
+  var volume: js.UndefOr[Long] = js.native
+  var spread: js.UndefOr[Double] = js.native
 }
