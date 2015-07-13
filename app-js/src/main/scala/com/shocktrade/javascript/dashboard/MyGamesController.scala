@@ -7,12 +7,13 @@ import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogService
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{ParticipantRanking, Contest}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
@@ -31,28 +32,28 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   //          Scope Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def initMyGames() = init()
+  @scoped def initMyGames() = reload()
 
   @scoped def getMyContests = myContests
 
   @scoped
-  def getMyRankings(contest: Contest) = {
+  def getMyRankings(contest: Contest): UndefOr[ParticipantRanking] = {
     if (!isDefined(contest)) null
     else if (!isDefined(contest.rankings)) {
       val rankings = contestService.getPlayerRankings(contest, mySession.getUserID)
-      rankings.player
+      rankings.flatMap(_.player)
     }
-    else contest.rankings.player
+    else contest.rankings.flatMap(_.player)
   }
 
   @scoped
-  def newGamePopup() {
+  def popupNewGameDialog() {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        if (isDefined(contest.dynamic.error)) toaster.error(contest.dynamic.error)
+        if (contest.error.nonEmpty) toaster.error(contest.error)
         else {
           // TODO add to Contests
-          init()
+          reload()
         }
 
       case Failure(e) =>
@@ -65,7 +66,7 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def init(): Unit = mySession.userProfile.OID_? foreach loadMyContests
+  private def reload(): Unit = mySession.userProfile.OID_? foreach loadMyContests
 
   private def loadMyContests(userID: String) {
     console.log(s"Loading 'My Contests' for user '$userID'...")
@@ -86,16 +87,16 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   /**
    * Listen for contest creation events
    */
-  $scope.$on(ContestCreated, (event: js.Dynamic, contest: Contest) => init())
+  $scope.$on(ContestCreated, (event: js.Dynamic, contest: Contest) => reload())
 
   /**
    * Listen for contest deletion events
    */
-  $scope.$on(ContestDeleted, (event: js.Dynamic, contest: Contest) => init())
+  $scope.$on(ContestDeleted, (event: js.Dynamic, contest: Contest) => reload())
 
   /**
    * Listen for user profile changes
    */
-  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => init())
+  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => reload())
 
 }

@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
  * Dashboard Controller
  * @author lawrence.daniels@gmail.com
  */
-class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
+class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
                           @injected("MySession") mySession: MySession,
                           @injected("PerksDialog") perksDialog: PerksDialogService,
@@ -30,31 +30,21 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
   //          Account Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.isCashAccount = () => !accountMode
+  @scoped def isCashAccount = !accountMode
 
-  $scope.isMarginAccount = () => accountMode
+  @scoped def isMarginAccount = accountMode
 
-  $scope.toggleAccountMode = () => accountMode = !accountMode
+  @scoped def toggleAccountMode() = accountMode = !accountMode
 
-  $scope.getAccountMode = () => accountMode
+  @scoped def getAccountMode = accountMode
 
-  $scope.getAccountType = () => if (accountMode) "MARGIN" else "CASH"
+  @scoped def getAccountType = if (accountMode) "MARGIN" else "CASH"
 
   /////////////////////////////////////////////////////////////////////
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.marginAccountDialog = () => {
-    transferFundsDialog.popup() onComplete {
-      case Success(contest) => mySession.setContest(contest)
-      case Failure(e) =>
-        if (e.getMessage != "cancel") {
-          e.printStackTrace()
-        }
-    }
-  }
-
-  $scope.perksDialog = () => {
+  @scoped def popupPerksDialog() = {
     perksDialog.popup() onComplete {
       case Success(contest) =>
         console.log(s"Settings contest")
@@ -66,18 +56,28 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
     }
   }
 
+  @scoped def popupTransferFundsDialog() = {
+    transferFundsDialog.popup() onComplete {
+      case Success(contest) => mySession.setContest(contest)
+      case Failure(e) =>
+        if (e.getMessage != "cancel") {
+          e.printStackTrace()
+        }
+    }
+  }
+
   /////////////////////////////////////////////////////////////////////
   //          Participant Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.isRankingsShown = () => !mySession.contest.exists(_.dynamic.rankingsHidden.isTrue)
+  @scoped def isRankingsShown = !mySession.contest.exists(_.rankingsHidden.exists(_ == true))
 
-  $scope.toggleRankingsShown = () => mySession.contest.foreach(c => c.dynamic.rankingsHidden = !c.dynamic.rankingsHidden)
+  @scoped def toggleRankingsShown() = mySession.contest.foreach(c => c.rankingsHidden = c.rankingsHidden.map(!_))
 
-  $scope.getRankings = () => mySession.contest match {
+  @scoped def getRankings = mySession.contest match {
     case Some(c) =>
       val rankings = contestService.getPlayerRankings(c, mySession.getUserID)
-      rankings.participants
+      rankings.map(_.participants) getOrElse emptyArray
     case None => emptyArray
   }
 
@@ -99,6 +99,14 @@ class DashboardController($scope: js.Dynamic, $routeParams: DashboardRouteParams
       }
     }
   }
+
+}
+
+/**
+ * Dashboard Controller Scope
+ * @author lawrence.daniels@gmail.com
+ */
+trait DashboardScope extends Scope {
 
 }
 

@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.dialogs
 
+import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.extensions.{Toaster, ModalInstance}
-import com.github.ldaniels528.scalascript.{scoped, Scope, Controller, injected}
-import com.shocktrade.javascript.dashboard.{OrderQuote, ContestService}
+import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
+import com.shocktrade.javascript.models.OrderQuote
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow

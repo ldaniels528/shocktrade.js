@@ -1,31 +1,33 @@
 package com.shocktrade.javascript
 
-import ScalaJsHelper._
+import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
+import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.ParticipantRanking
+import com.shocktrade.javascript.models.{ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
-import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
  * Player Information Bar Controller
  * @author lawrence.daniels@gmail.com
  */
-class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
+class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("MySession") mySession: MySession,
                            @injected("WebSocketService") webSocket: WebSocketService)
   extends Controller {
 
-  private val scope = $scope.asInstanceOf[Scope]
   private var totalInvestmentStatus: Option[String] = None
   private var totalInvestment: Option[Double] = None
   private var attemptsLeft = 3
@@ -35,31 +37,37 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.initNav = () => init()
+  @scoped def initNav() = retrieveTotalInvestment()
 
-  $scope.isAuthenticated = () => mySession.isAuthenticated
+  @scoped def isAuthenticated = mySession.isAuthenticated
 
-  $scope.getMyRanking = () => getMyRanking getOrElse JS()
+  @scoped def isBarVisible = isVisible
 
-  $scope.getTotalInvestment = () => getTotalInvestment
+  @scoped def getMyRanking: UndefOr[ParticipantRanking] = {
+    (for {
+      contest <- mySession.contest
+      playerID <- mySession.userProfile.OID_?
+      rankings <- contestService.getPlayerRankings(contest, playerID).flatMap(_.player).toOption
+    } yield rankings).orUndefined
+  }
 
-  $scope.getTotalInvestmentStatus = totalInvestmentStatus getOrElse LOADING
+  @scoped def getTotalInvestment = totalInvestment getOrElse 0.00d
 
-  $scope.isTotalInvestmentLoaded = () => isTotalInvestmentLoaded
+  @scoped def getTotalInvestmentStatus = totalInvestmentStatus getOrElse LOADING
 
-  $scope.reloadTotalInvestment = () => reloadTotalInvestment()
+  @scoped def isTotalInvestmentLoaded = totalInvestment.isDefined
 
-  $scope.isBarVisible = () => isVisible
+  @scoped def reloadTotalInvestment() = totalInvestmentStatus = None
 
-  $scope.toggleVisibility = () => isVisible = !isVisible
+  @scoped def toggleVisibility() = isVisible = !isVisible
 
-  $scope.webSockectConnected = () => webSocket.isConnected
+  @scoped def isWebSocketConnected = webSocket.isConnected
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def init() {
+  private def retrieveTotalInvestment() {
     mySession.userProfile.OID_? match {
       case Some(userID) =>
         console.log(s"Loading player information for user ID $userID")
@@ -72,34 +80,18 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
         attemptsLeft -= 1
         if (attemptsLeft > 0) {
           console.log("No user ID found... awaiting re-try (5 seconds)")
-          $timeout(() => init(), 5000)
+          $timeout(() => retrieveTotalInvestment(), 5.seconds)
         }
     }
   }
 
-  private def getMyRanking: Option[ParticipantRanking] = {
-    for {
-      contest <- mySession.contest
-      playerID <- mySession.userProfile.OID_?
-    } yield {
-      contestService.getPlayerRankings(contest, playerID).player
-    }
-  }
-
-  private def getTotalInvestment = totalInvestment getOrElse 0.00d
-
-  private def isTotalInvestmentLoaded = totalInvestment.isDefined
-
-  private def reloadTotalInvestment() = totalInvestmentStatus = None
-
   private def loadTotalInvestment(playerId: String) = {
     // set a timeout so that loading doesn't persist
-    $timeout({ () =>
+    $timeout(() =>
       if (totalInvestment.isEmpty) {
         g.console.error("Total investment call timed out")
         totalInvestmentStatus = Option(TIMEOUT)
-      }
-    }, delay = 20000)
+      }, 20.seconds)
 
     // retrieve the total investment
     console.log("Loading Total investment...")
@@ -122,7 +114,7 @@ class NavigationController($scope: js.Dynamic, $http: Http, $timeout: Timeout, t
   /**
    * Listen for changes to the player's profile
    */
-  scope.$on(UserProfileChanged, (profile: js.Dynamic) => init())
+  $scope.$on(UserProfileChanged, (profile: UserProfile) => retrieveTotalInvestment())
 
 }
 

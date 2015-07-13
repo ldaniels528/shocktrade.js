@@ -5,11 +5,10 @@ import com.github.ldaniels528.scalascript.extensions.{Modal, ModalOptions}
 import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dashboard.OrderQuote
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{Contest, OrderQuote}
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**

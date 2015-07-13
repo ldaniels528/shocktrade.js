@@ -4,10 +4,9 @@ import com.github.ldaniels528.scalascript.core.Q
 import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.github.ldaniels528.scalascript.{angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dashboard.OrderQuote
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{Contest, OrderQuote}
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 

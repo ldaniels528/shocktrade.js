@@ -22,7 +22,7 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
   /**
    * Perks Modal Dialog
    */
-  def popup()(implicit ec: ExecutionContext): Future[PerksDialogResult] = {
+  def popup(): Future[PerksDialogResult] = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[PerksDialogResult](ModalOptions(
       templateUrl = "perks_dialog.htm",

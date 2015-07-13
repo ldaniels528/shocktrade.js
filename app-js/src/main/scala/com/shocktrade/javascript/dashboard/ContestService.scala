@@ -4,12 +4,13 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Service, angular}
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.NewGameForm
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
@@ -100,7 +101,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings(contest: Contest, playerID: String) = {
+  def getPlayerRankings(contest: Contest, playerID: String): UndefOr[Rankings] = {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -112,9 +113,11 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
           getRankings(contestId) onComplete {
             case Success(participantRankings) =>
               console.log(s"participantRankings = ${angular.toJson(participantRankings)}")
-              contest.rankings.participants = participantRankings
-              contest.rankings.leader = participantRankings.headOption.orNull
-              contest.rankings.player = participantRankings.find(p => p.OID_?.contains(playerID) || p.facebookID == playerID).orNull
+              contest.rankings.foreach { rankings =>
+                rankings.participants = participantRankings
+                rankings.leader = participantRankings.headOption.orUndefined
+                rankings.player = participantRankings.find(p => p.OID_?.contains(playerID) || p.facebookID == playerID).orUndefined
+              }
             case Failure(e) =>
               toaster.error("Error loading player rankings")
               console.error(s"Error loading player rankings: ${e.getMessage}")
@@ -124,12 +127,15 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
       }
 
       // if the rankings were loaded, but the player is not set
-      else if (isDefined(contest.rankings) && !isDefined(contest.rankings.player)) {
-        contest.rankings.player = contest.rankings.participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orNull
+      else if (contest.rankings.nonEmpty && contest.rankings.exists(_.player.isEmpty)) {
+        contest.rankings.foreach { rankings =>
+          rankings.player = rankings.participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orUndefined
+        }
       }
 
       contest.rankings
     }
+
     else makeNew[Rankings]
   }
 
@@ -194,17 +200,3 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
 }
 
-trait OrderQuote extends js.Object {
-  var symbol: String = js.native
-  var name: String = js.native
-  var exchange: String = js.native
-  var lastTrade: js.UndefOr[Double] = js.native
-  var open: js.UndefOr[Double] = js.native
-  var prevClose: js.UndefOr[Double] = js.native
-  var high: js.UndefOr[Double] = js.native
-  var low: js.UndefOr[Double] = js.native
-  var high52Week: js.UndefOr[Double] = js.native
-  var low52Week: js.UndefOr[Double] = js.native
-  var volume: js.UndefOr[Long] = js.native
-  var spread: js.UndefOr[Double] = js.native
-}

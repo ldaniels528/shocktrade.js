@@ -1,10 +1,9 @@
 package com.shocktrade.javascript.models
 
-import java.util.Date
-
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
+import scala.scalajs.js.UndefOr
 
 /**
  * Contest Model
@@ -13,12 +12,20 @@ trait Contest extends js.Object {
   var _id: js.Dynamic = js.native
   var name: String = js.native
   var creator: ContestCreator = js.native
-  var startTime: js.Date = js.native
+  var startTime: UndefOr[js.Date] = js.native
   var status: String = js.native
-  var rankings: Rankings = js.native
+  var rankings: UndefOr[Rankings] = js.native
   var messages: js.Array[Message] = js.native
   var participants: js.Array[Participant] = js.native
   var invitationOnly: Boolean = js.native
+
+  // administrative fields
+  var error: UndefOr[String] = js.native
+  var rankingsHidden: UndefOr[Boolean] = js.native
+  var deleting: Boolean = js.native
+  var joining: Boolean = js.native
+  var quitting: Boolean = js.native
+  var starting: Boolean = js.native
 }
 
 /**
@@ -48,8 +55,8 @@ trait ParticipantRanking extends js.Object {
  */
 trait Rankings extends js.Object {
   var participants: js.Array[ParticipantRanking] = js.native
-  var leader: ParticipantRanking = js.native
-  var player: ParticipantRanking = js.native
+  var leader: UndefOr[ParticipantRanking] = js.native
+  var player: UndefOr[ParticipantRanking] = js.native
 }
 
 /**
@@ -72,7 +79,7 @@ trait Message extends js.Object {
   var _id: js.Dynamic = js.native
   var sender: PlayerRef = js.native
   var text: String = js.native
-  var recipient: js.UndefOr[PlayerRef] = js.native
+  var recipient: UndefOr[PlayerRef] = js.native
   var sentTime: js.Date = js.native
 }
 
@@ -87,7 +94,7 @@ trait Participant extends js.Object {
   var name: String = js.native
   var facebookID: String = js.native
   var cashAccount: CashAccount = js.native
-  var marginAccount: js.UndefOr[MarginAccount] = js.native
+  var marginAccount: UndefOr[MarginAccount] = js.native
   var orders: js.Array[Order] = js.native
   var closedOrders: js.Array[ClosedOrder] = js.native
   var performance: js.Array[Performance] = js.native
@@ -130,6 +137,6 @@ trait Position extends js.Object {
   var pricePaid: BigDecimal = js.native
   var quantity: Long = js.native
   var commission: BigDecimal = js.native
-  var processedTime: Date = js.native
+  var processedTime: js.Date = js.native
   var accountType: String = js.native
 }
