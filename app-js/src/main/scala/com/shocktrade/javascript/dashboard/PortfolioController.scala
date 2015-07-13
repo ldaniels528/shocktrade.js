@@ -146,12 +146,12 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   /////////////////////////////////////////////////////////////////////
 
   private def enrichOrders(participant: Participant) {
-    if (!mySession.participantIsEmpty) {
+    if (mySession.participant.nonEmpty) {
       if (!isDefined(participant.dynamic.enrichedOrders)) {
         participant.dynamic.enrichedOrders = true
         participant.OID_? foreach { playerId =>
           contestService.getEnrichedOrders(mySession.getContestID, playerId) onComplete {
-            case Success(enrichedOrders) => mySession.getParticipant.orders = enrichedOrders
+            case Success(enrichedOrders) => mySession.participant.foreach(_.orders = enrichedOrders)
             case Failure(e) =>
               toaster.error("Error!", "Error loading enriched orders")
           }
@@ -161,12 +161,12 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   }
 
   private def enrichPositions(participant: Participant) {
-    if (!mySession.participantIsEmpty) {
+    if (mySession.participant.nonEmpty) {
       if (!isDefined(participant.dynamic.enrichedPositions)) {
         participant.OID_? foreach { playerId =>
           participant.dynamic.enrichedPositions = true
           contestService.getEnrichedPositions(mySession.getContestID, playerId) onComplete {
-            case Success(enrichedPositions) => mySession.getParticipant.positions = enrichedPositions
+            case Success(enrichedPositions) => mySession.participant.foreach(_.positions = enrichedPositions)
             case Failure(e) => toaster.error("Error loading enriched positions")
           }
         }

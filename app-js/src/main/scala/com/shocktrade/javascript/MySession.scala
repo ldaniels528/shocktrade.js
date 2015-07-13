@@ -190,12 +190,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     ()
   }
 
-  def hasMarginAccount = marginAccount_?.isDefined
-
-  def getCashAccount = cashAccount_? getOrElse makeNew
-
-  def getMarginAccount = marginAccount_? getOrElse makeNew
-
   def getMessages = contest.flatMap(c => Option(c.messages)) getOrElse emptyArray[Message]
 
   def setMessages(messages: js.Array[Message]) = contest.foreach(_.messages = messages)
@@ -206,10 +200,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getClosedOrders = participant.flatMap(p => Option(p.closedOrders.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def participantIsEmpty = participant.isEmpty
-
-  def getParticipant = participant getOrElse makeNew[Participant]
-
   def getPerformance = participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
   def getPerks = participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
@@ -218,7 +208,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getPositions = participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 
-  def resetContest: js.Function0[Unit] = () => contest = None
+  def resetContest() = contest = None
 
   ////////////////////////////////////////////////////////////
   //          Notification Methods
@@ -280,8 +270,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     for {
       userId <- userProfile.OID_?
       c <- contest
-      participants = if (isDefined(c.participants)) c.participants else emptyArray
-      me = participants.find(_.OID_?.contains(userId)) getOrElse makeNew[Participant]
+      me <- c.participants.find(_.OID_?.contains(userId))
     } yield me
   }
 
@@ -310,7 +299,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     } {
       // update each object (if present)
       if (isDefined(foreignPlayer.cashAccount)) updateContest_CashAccount(updatedContest, myParticipant, foreignPlayer)
-      if (isDefined(foreignPlayer.marginAccount)) updateContest_MarginAccount(updatedContest, myParticipant, foreignPlayer)
+      foreignPlayer.marginAccount.foreach(_ => updateContest_MarginAccount(updatedContest, myParticipant, foreignPlayer))
       if (isDefined(foreignPlayer.orders)) updateContest_ActiveOrders(updatedContest, myParticipant, foreignPlayer)
       if (isDefined(foreignPlayer.closedOrders)) updateContest_ClosedOrders(updatedContest, myParticipant, foreignPlayer)
       if (isDefined(foreignPlayer.performance)) updateContest_Performance(updatedContest, myParticipant, foreignPlayer)
