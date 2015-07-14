@@ -287,6 +287,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
             // create the enriched products
             enrichedProducts = pm map {
               case (symbol, product: JsObject) => product ++ pqm.getOrElse(symbol, JS())
+              case (symbol, product) => pqm.getOrElse(symbol, JS())
             }
 
           } yield enrichedProducts

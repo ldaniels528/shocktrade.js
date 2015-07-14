@@ -1,6 +1,7 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.Q
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.core.{Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
 import com.github.ldaniels528.scalascript.{angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -10,6 +11,7 @@ import com.shocktrade.javascript.models.{Contest, OrderQuote}
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -19,7 +21,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
-                               $q: Q, toaster: Toaster,
+                               $q: Q, $timeout: Timeout, toaster: Toaster,
                                @injected("MySession") mySession: MySession,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
                                @injected("PerksDialog") perksDialog: PerksDialogService,
@@ -41,7 +43,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
 
   $scope.quote = {
     val quote = makeNew[OrderQuote]
-    quote.symbol = $scope.form.symbol.orNull
+    quote.symbol = $scope.form.symbol
     quote
   }
 
@@ -82,27 +84,34 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     }
   }
 
-  private def accept(form: NewOrderForm) = {
+  private def accept(form: NewOrderForm) {
     if (isValid(form)) {
-      processing = true
+      val outcome = for {
+        playerId <- mySession.userProfile.OID_?
+        contestId <- mySession.contest.flatMap(_.OID_?)
+      } yield (playerId, contestId)
 
-      val contestId = mySession.getContestID
-      val playerId = mySession.getUserID
-      console.log(s"contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
-
-      newOrderDialog.createOrder(contestId, playerId, $scope.form) onComplete {
-        case Success(contest) =>
-          processing = false
-          $modalInstance.close(contest)
-        case Failure(e) =>
-          processing = false
-          messages.push(s"The order could not be processed (error code ${e.getMessage})")
+      outcome match {
+        case Some((playerId, contestId)) =>
+          processing = true
+          newOrderDialog.createOrder(contestId, playerId, $scope.form) onComplete {
+            case Success(contest) =>
+              $timeout(() => processing = false, 0.5.seconds)
+              $modalInstance.close(contest)
+            case Failure(e) =>
+              $timeout(() => processing = false, 0.5.seconds)
+              messages.push(s"The order could not be processed")
+              console.error(s"order processing error: contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
+              e.printStackTrace()
+          }
+        case None =>
+          toaster.error("User session error")
       }
     }
   }
 
   private def isValid(form: NewOrderForm) = {
-    messages.remove(0, messages.length)
+    messages.removeAll()
 
     // perform the validations
     if (!isDefined(form.accountType)) messages.push("Please selected the account to use (Cash or Margin)")
@@ -121,8 +130,8 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   ///////////////////////////////////////////////////////////////////////////
 
   for {
-    contestId <- Option(mySession.getContestID)
-    playerId <- Option(mySession.getUserID)
+    contestId <- mySession.contest.flatMap(_.OID_?)
+    playerId <- mySession.userProfile.OID_?
   } {
     // load the player"s perks
     perksDialog.getMyPerks(contestId, playerId) onComplete {

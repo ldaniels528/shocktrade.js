@@ -92,24 +92,32 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
    * @param messageText the given chat message text
    */
   private def sendChatMessage(messageText: String) {
-    if (messageText.trim.nonEmpty) {
-      // build the message blob
-      val message = makeNew[Message]
-      message.text = messageText
-      //message.recipient = null
-      message.sender = makeNew[PlayerRef]
-      message.sender.dynamic._id = JS($oid = mySession.getUserID)
-      message.sender.name = mySession.getUserName
-      message.sender.facebookID = mySession.getFacebookID
+    val outcome = for {
+      playerId <- mySession.userProfile.OID_?
+      facebookID <- mySession.facebookID
+      contestId <- mySession.contest.flatMap(_.OID_?)
+    } yield (playerId, facebookID, contestId)
 
-      // transmit the message
-      contestService.sendChatMessage(mySession.getContestID, message) onComplete {
-        case Success(messages) =>
-          $scope.chatMessage = ""
-          mySession.setMessages(messages)
-        case Failure(e) =>
-          toaster.error("Failed to send message")
-      }
+    outcome match {
+      case Some((playerId, facebookID, contestId)) =>
+        if (messageText.trim.nonEmpty) {
+          // build the message blob
+          val message = makeNew[Message]
+          message.text = messageText
+          //message.recipient = null
+          message.sender = PlayerRef(userId = playerId, name = mySession.getUserName, facebookID = facebookID)
+
+          // transmit the message
+          contestService.sendChatMessage(contestId, message) onComplete {
+            case Success(messages) =>
+              $scope.chatMessage = ""
+              mySession.setMessages(messages)
+            case Failure(e) =>
+              toaster.error("Failed to send message")
+          }
+        }
+      case None =>
+        toaster.error("No game selected")
     }
   }
 

@@ -37,8 +37,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def getUserProfile = userProfile
-
   def setUserProfile(profile: UserProfile, profileFB: FacebookProfile) {
     console.log(s"facebookID = $facebookID, profileFB = ${angular.toJson(profileFB)}")
 
@@ -52,12 +50,6 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     $rootScope.$broadcast(UserProfileChanged, profile)
     ()
   }
-
-  /**
-   * Returns the user ID for the current user's ID
-   * @return {*}
-   */
-  def getUserID = userProfile.OID_?.orNull
 
   /**
    * Returns the user ID for the current user's name
@@ -75,7 +67,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthenticated = userProfile.OID_?.isDefined
+  def isAuthenticated = userProfile.OID_?.nonEmpty
 
   def getFacebookID = facebookID.orNull
 
@@ -124,29 +116,27 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(symbol: String) = profileService.addFavoriteSymbol(getUserID, symbol)
+  def addFavoriteSymbol(symbol: String) = userProfile.OID_? foreach(profileService.addFavoriteSymbol(_, symbol))
 
   def getFavoriteSymbols = userProfile.favorites
 
   def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.contains(symbol)
 
-  def removeFavoriteSymbol(symbol: String) = profileService.removeFavoriteSymbol(getUserID, symbol)
+  def removeFavoriteSymbol(symbol: String) = userProfile.OID_? foreach(profileService.removeFavoriteSymbol(_, symbol))
 
-  def addRecentSymbol(symbol: String) = profileService.addRecentSymbol(getUserID, symbol)
+  def addRecentSymbol(symbol: String) = userProfile.OID_? foreach(profileService.addRecentSymbol(_, symbol))
 
   def getRecentSymbols = userProfile.recentSymbols
 
   def isRecentSymbol(symbol: String) = getRecentSymbols.contains(symbol)
 
-  def removeRecentSymbol(symbol: String) = profileService.removeRecentSymbol(getUserID, symbol)
+  def removeRecentSymbol(symbol: String) = userProfile.OID_? foreach(profileService.removeRecentSymbol(_, symbol))
 
   def getMostRecentSymbol = getRecentSymbols.lastOption getOrElse "AAPL"
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
-
-  def contestIsEmpty = contest.isEmpty
 
   def getContest = contest getOrElse JS()
 
@@ -204,7 +194,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getPerks = participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
 
-  def hasPerk: js.Function1[String, Boolean] = (perkCode: String) => getPerks.contains(perkCode)
+  def hasPerk(perkCode: String) = getPerks.contains(perkCode)
 
   def getPositions = participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
 

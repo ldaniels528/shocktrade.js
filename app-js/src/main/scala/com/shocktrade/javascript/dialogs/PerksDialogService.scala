@@ -6,9 +6,9 @@ import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{Contest, Perk}
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.scalajs.js
 
@@ -38,19 +38,18 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
   def getPerks(contestId: String) = {
     required("contestId", contestId)
 
-    $http.get[js.Array[js.Dynamic]](s"/api/contest/$contestId/perks")
+    $http.get[js.Array[Perk]](s"/api/contest/$contestId/perks")
   }
 
   /**
    * Retrieves the promise of an option of a perks response
    * @return the promise of an option of a [[PerksResponse perks response]]
    */
-  def getMyPerks(contestId: String, playerId: String)(implicit ec: ExecutionContext) = {
+  def getMyPerks(contestId: String, playerId: String) = {
     required("contestId", contestId)
     required("userId", playerId)
 
-    val task = $http.get[js.Dynamic](s"/api/contest/$contestId/perks/$playerId")
-    task.map(_.toPerksResponse)
+    $http.get[PerksResponse](s"/api/contest/$contestId/perks/$playerId")
   }
 
   /**
@@ -68,4 +67,25 @@ class PerksDialogService($http: Http, $modal: Modal, @injected("MySession") mySe
     $http.put[Contest](s"/api/contest/$contestId/perks/$playerId", perkCodes)
   }
 
+}
+
+/**
+ * Represents a player's perk and available funds
+ */
+trait PerksResponse extends js.Object {
+  var perkCodes: js.Array[String] = js.native
+  var fundsAvailable: Double = js.native
+}
+
+/**
+ * Perks Response Singleton
+ */
+object PerksResponse {
+
+  def apply(perkCodes: js.Array[String], fundsAvailable: Double) = {
+    val resp = makeNew[PerksResponse]
+    resp.perkCodes = perkCodes
+    resp.fundsAvailable = fundsAvailable
+    resp
+  }
 }

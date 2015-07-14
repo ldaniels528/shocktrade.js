@@ -92,7 +92,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
   //              MySession Functions
   //////////////////////////////////////////////////////////////////////
 
-  @scoped def contestIsEmpty = mySession.contestIsEmpty
+  @scoped def contestIsEmpty = mySession.contest.isEmpty
 
   @scoped def getContestID = mySession.getContestID
 
@@ -110,11 +110,11 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
 
   @scoped def getNetWorth = mySession.getNetWorth
 
-  @scoped def getUserID = mySession.getUserID
+  @scoped def getUserID = mySession.userProfile.OID_?.orNull
 
   @scoped def getUserName = mySession.getUserName
 
-  @scoped def getUserProfile = mySession.getUserProfile
+  @scoped def getUserProfile = mySession.userProfile
 
   @scoped def hasNotifications = mySession.hasNotifications
 

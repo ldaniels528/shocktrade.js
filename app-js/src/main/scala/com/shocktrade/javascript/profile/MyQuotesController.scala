@@ -8,6 +8,7 @@ import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
+import com.shocktrade.javascript.models.UserProfile
 import com.shocktrade.javascript.profile.MyQuotesController._
 import org.scalajs.dom.console
 
@@ -142,7 +143,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   /**
    * Listen for changes to the player's profile
    */
-  scope.$on(UserProfileChanged, (profile: js.Dynamic) => reloadQuotes())
+  scope.$on(UserProfileChanged, (profile: UserProfile) => reloadQuotes())
 
 }
 

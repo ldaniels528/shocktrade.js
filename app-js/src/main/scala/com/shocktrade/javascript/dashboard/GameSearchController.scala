@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
+import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
@@ -7,10 +8,11 @@ import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
 import com.shocktrade.javascript.models.Contest.MaxPlayers
-import com.shocktrade.javascript.models.{Contest, ContestSearchOptions}
+import com.shocktrade.javascript.models.{Contest, ContestSearchOptions, PlayerInfo, UserProfile}
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
+import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
@@ -139,7 +141,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
         splitScreen = true
 
         if (!isDefined(contest.rankings)) {
-          contestService.getPlayerRankings(contest, mySession.getUserID)
+          mySession.userProfile.OID_?.foreach(contestService.getPlayerRankings(contest, _))
         }
       }
     }
@@ -152,7 +154,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   ///////////////////////////////////////////////////////////////////////////
 
   @scoped
-  def containsPlayer(contest: Contest, userProfile: js.Dynamic) = {
+  def containsPlayer(contest: Contest, userProfile: UserProfile) = {
     isDefined(contest) && userProfile.OID_?.exists(mySession.findPlayerByID(contest, _).isDefined)
   }
 
@@ -175,11 +177,11 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       asyncLoading($scope)(contestService.deleteContest(contestId)) onComplete {
         case Success(response) =>
           removeContestFromList(searchResults, contestId)
-          $timeout(() => contest.deleting = false, 500)
+          $timeout(() => contest.deleting = false, 0.5.seconds)
         case Failure(e) =>
           toaster.error("Error!", "Failed to delete contest")
           g.console.error("An error occurred while deleting the contest")
-          $timeout(() => contest.deleting = false, 500)
+          $timeout(() => contest.deleting = false, 0.5.seconds)
       }
     }
   }
@@ -196,39 +198,43 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   def joinContest(contest: Contest) = {
     for {
       contestId <- contest.OID_?
+      facebookID <- mySession.facebookID
       userId <- mySession.userProfile.OID_?
     } {
       contest.joining = true
-      val playerInfo = JS(player = JS(id = userId, name = mySession.userProfile.name, facebookID = mySession.getFacebookID))
+      val playerInfo = JS(player = PlayerInfo(id = userId, name = mySession.userProfile.name, facebookID = facebookID))
       asyncLoading($scope)(contestService.joinContest(contestId, playerInfo)) onComplete {
         case Success(joinedContest) =>
           $scope.contest = joinedContest
           mySession.setContest(joinedContest)
           //mySession.deduct(contest.startingBalance)
           //updateWithRankings(user.name, contest)
-          $timeout(() => contest.joining = false, 500)
+          $timeout(() => contest.joining = false, 0.5.seconds)
 
         case Failure(e) =>
           toaster.error("Error!", "Failed to join contest")
           g.console.error("An error occurred while joining the contest")
-          $timeout(() => contest.joining = false, 500)
+          $timeout(() => contest.joining = false, 0.5.seconds)
       }
     }
   }
 
   @scoped
   def quitContest(contest: Contest) = {
-    contest.OID_? foreach { contestId =>
+    for {
+      userId <- mySession.userProfile.OID_?
+      contestId <- contest.OID_?
+    } {
       contest.quitting = true
-      asyncLoading($scope)(contestService.quitContest(contestId, mySession.getUserID)) onComplete {
+      asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
         case Success(updatedContest) =>
           $scope.contest = updatedContest
           mySession.setContest(updatedContest)
-          $timeout(() => contest.quitting = false, 500)
+          $timeout(() => contest.quitting = false, 0.5.seconds)
 
         case Failure(e) =>
           g.console.error("An error occurred while joining the contest")
-          $timeout(() => contest.quitting = false, 500)
+          $timeout(() => contest.quitting = false, 0.5.seconds)
       }
     }
   }
@@ -239,16 +245,16 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       contest.starting = true
       asyncLoading($scope)(contestService.startContest(contestId)) onComplete {
         case Success(theContest) =>
-          if (!js.isUndefined(theContest.dynamic.error)) {
-            toaster.error(theContest.dynamic.error)
-            g.console.error(theContest.dynamic.error)
+          theContest.error foreach { error =>
+            toaster.error(error)
+            console.error(error)
           }
-          $timeout(() => theContest.dynamic.starting = false, 500)
+          $timeout(() => theContest.starting = false, 0.5.seconds)
 
         case Failure(e) =>
           toaster.error("An error occurred while starting the contest")
-          g.console.error("An error occurred while starting the contest")
-          $timeout(() => contest.starting = false, 500)
+          g.console.error(s"Error starting contest: ${e.getMessage}")
+          $timeout(() => contest.starting = false, 0.5.seconds)
       }
     }
   }

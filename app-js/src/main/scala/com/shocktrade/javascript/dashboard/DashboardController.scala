@@ -6,6 +6,7 @@ import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
+import com.shocktrade.javascript.models.ParticipantRanking
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -47,7 +48,6 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   @scoped def popupPerksDialog() = {
     perksDialog.popup() onComplete {
       case Success(contest) =>
-        console.log(s"Settings contest")
         mySession.setContest(contest)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
@@ -74,11 +74,16 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 
   @scoped def toggleRankingsShown() = mySession.contest.foreach(c => c.rankingsHidden = c.rankingsHidden.map(!_))
 
-  @scoped def getRankings = mySession.contest match {
+  @scoped
+  def getRankings: js.Array[ParticipantRanking] = mySession.contest match {
     case Some(c) =>
-      val rankings = contestService.getPlayerRankings(c, mySession.getUserID)
-      rankings.map(_.participants) getOrElse emptyArray
-    case None => emptyArray
+      (for {
+        userId <- mySession.userProfile.OID_?
+        rankings <- contestService.getPlayerRankings(c, userId).toOption
+        participants = rankings.participants
+      } yield participants) getOrElse emptyArray
+    case None =>
+      emptyArray
   }
 
   ///////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@ package com.shocktrade.javascript.models
 import com.shocktrade.javascript.ScalaJsHelper._
 
 import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.UndefOr
 
 /**
@@ -65,8 +66,8 @@ trait Rankings extends js.Object {
 object Rankings {
 
   def apply(participants: js.Array[ParticipantRanking] = emptyArray,
-            leader: ParticipantRanking = null,
-            player: ParticipantRanking = null) = {
+            leader: UndefOr[ParticipantRanking] = js.undefined,
+            player: UndefOr[ParticipantRanking] = js.undefined) = {
     val rankings = makeNew[Rankings]
     rankings.participants = participants
     rankings.leader = leader
@@ -87,6 +88,17 @@ trait PlayerRef extends js.Object {
   var _id: js.Dynamic = js.native
   var name: String = js.native
   var facebookID: String = js.native
+}
+
+object PlayerRef {
+
+  def apply(userId: String, facebookID: String, name: String) = {
+    val ref = makeNew[PlayerRef]
+    ref._id = JS($oid = userId)
+    ref.facebookID = facebookID
+    ref.name = name
+    ref
+  }
 }
 
 trait Participant extends js.Object {

@@ -3,25 +3,26 @@ package com.shocktrade.javascript.discover
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Location, Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.github.ldaniels528.scalascript.{angular, injected}
+import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript._
-import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialogService}
+import com.shocktrade.javascript.dialogs.{NewOrderDialogService, NewOrderParams}
 import com.shocktrade.javascript.discover.DiscoverController._
+import com.shocktrade.javascript.models.{FullQuote, OrderQuote}
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
  * Discover Controller
- * @author lawrence.daniels@gmail.com
  */
-class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Location, $q: Q,
+class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Location, $q: Q,
                          $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
                          @injected("MarketStatus") marketStatus: MarketStatusService,
                          @injected("MySession") mySession: MySession,
@@ -34,35 +35,28 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
 
   // setup the public variables
   $scope.ticker = null
-  $scope.q = JS(active = true)
+  $scope.q = FullQuote(active = true)
 
   // define the display options
-  $scope.options = JS(range = $cookies.getOrElse("chart_range", "5d"))
+  $scope.options = DiscoverOptions(range = $cookies.getOrElse("chart_range", "5d"))
   $scope.expanders = Expanders
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Function
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.expandSection = (module: js.Dynamic) => module.expanded = !module.expanded
+  @scoped def expandSection(module: ModuleExpander) = _expandSection(module)
 
-  $scope.getBetaClass = (beta: js.UndefOr[java.lang.Double]) => getBetaClass(beta)
+  private def _expandSection(module: ModuleExpander) = module.expanded = !module.expanded
 
-  $scope.getRiskClass = (riskLevel: js.UndefOr[String]) => getRiskClass(riskLevel)
-
-  $scope.getRiskDescription = (riskLevel: js.UndefOr[String]) => getRiskDescription(riskLevel)
-
-  $scope.isUSMarketsOpen = () => isUSMarketsOpen
-
-  $scope.loadQuote = (ticker: js.Dynamic) => loadQuote(ticker)
-
-  $scope.popupNewOrderDialog = (symbol: js.UndefOr[String]) => newOrderDialog.popup(NewOrderParams(symbol = symbol))
+  @scoped def popupNewOrderDialog(symbol: UndefOr[String]) = newOrderDialog.popup(NewOrderParams(symbol = symbol))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def loadQuote(ticker: js.Dynamic) = {
+  @scoped
+  def loadQuote(ticker: js.Dynamic) = {
     console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
 
     // determine the symbol
@@ -98,14 +92,13 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
 
         // load the trading history
         $scope.tradingHistory = null
-        val expanders = $scope.expanders.asArray[js.Dynamic]
-        if (expanders(6).expanded.isTrue) {
-          $scope.expandSection(expanders(6))
+        if ($scope.expanders(6).expanded) {
+          _expandSection($scope.expanders(6))
         }
 
       case Success(quote) =>
         console.log(s"quote = ${angular.toJson(quote)}")
-        toaster.warning(s"Symbol $symbol not found")
+        toaster.warning(s"Symbol not found")
 
       case Failure(e) =>
         g.console.error(s"Failed to retrieve quote: ${e.getMessage}")
@@ -117,65 +110,85 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
   //          ETF Holdings / Products
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.hasHoldings = (q: js.Dynamic) => isDefined(q) && isDefined(q.products) && (q.legalType === "ETF") && q.products.asArray[js.Dynamic].nonEmpty
+  @scoped def hasHoldings(q: FullQuote) = q.legalType.exists(_ == "ETF") && q.products.exists(_.nonEmpty)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Symbols - Favorites
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.addFavoriteSymbol = (symbol: String) => profileService.addFavoriteSymbol(mySession.getUserID, symbol)
+  @scoped
+  def addFavoriteSymbol(aSymbol: UndefOr[String]) = {
+    for {
+      symbol <- aSymbol.toOption
+      userId <- mySession.userProfile.OID_?
+    } yield profileService.addFavoriteSymbol(userId, symbol)
+  }
 
-  $scope.isFavorite = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isFavoriteSymbol)
+  @scoped def isFavorite(symbol: UndefOr[String]) = symbol.exists(mySession.isFavoriteSymbol)
 
-  $scope.removeFavoriteSymbol = (symbol: String) => profileService.removeFavoriteSymbol(mySession.getUserID, symbol)
+  @scoped
+  def removeFavoriteSymbol(aSymbol: UndefOr[String]) = {
+    for {
+      symbol <- aSymbol.toOption
+      userId <- mySession.userProfile.OID_?
+    } yield profileService.removeFavoriteSymbol(userId, symbol)
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Symbols - Recent
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.addRecentSymbol = (symbol: String) => {
-    if (mySession.isAuthenticated && !mySession.isRecentSymbol(symbol)) {
-      profileService.addRecentSymbol(mySession.getUserID, symbol)
-    }
+  @scoped
+  def addRecentSymbol(aSymbol: UndefOr[String]) = {
+    for {
+      symbol <- aSymbol.toOption
+      userId <- mySession.userProfile.OID_?
+    } yield profileService.addRecentSymbol(userId, symbol)
   }
 
-  $scope.isRecentSymbol = (symbol: js.UndefOr[String]) => symbol.exists(mySession.isRecentSymbol)
+  @scoped def isRecentSymbol(symbol: UndefOr[String]) = symbol.exists(mySession.isRecentSymbol)
 
-  $scope.removeRecentSymbol = (symbol: String) => profileService.removeRecentSymbol(mySession.getUserID, symbol)
+  @scoped
+  def removeRecentSymbol(aSymbol: UndefOr[String]) = {
+    for {
+      symbol <- aSymbol.toOption
+      userId <- mySession.userProfile.OID_?
+    } yield profileService.removeRecentSymbol(userId, symbol)
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Risk Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def getBetaClass(beta: js.UndefOr[java.lang.Double]) = {
-    beta map {
-      case b if b > 1.3 || b < -1.3 => "volatile_red"
-      case b if b >= 0.0 => "volatile_green"
-      case b if b < 0 => "volatile_yellow"
-      case _ => ""
-    } getOrElse ""
-  }
+  @scoped
+  def getBetaClass(beta: UndefOr[Double]) = beta map {
+    case b if b > 1.3 || b < -1.3 => "volatile_red"
+    case b if b >= 0.0 => "volatile_green"
+    case b if b < 0 => "volatile_yellow"
+    case _ => js.undefined
+  } getOrElse js.undefined
 
-  private def getRiskClass(riskLevel: js.UndefOr[String]) = riskLevel map {
-    case rs if rs != null && rs.nonBlank => s"risk_${rs.toLowerCase}"
-    case _ => null
-  }
+  @scoped
+  def getRiskClass(riskLevel: UndefOr[String]) = riskLevel map {
+    case rs if isDefined(rs) && rs.nonBlank => s"risk_${rs.toLowerCase}"
+    case _ => js.undefined
+  } getOrElse js.undefined
 
-  private def getRiskDescription(riskLevel: js.UndefOr[String]) = {
-    riskLevel map {
-      case "Low" => "Generally recommended for investment"
-      case "Medium" => "Not recommended for inexperienced investors"
-      case "High" => "Not recommended for investment"
-      case "Unknown" => "The risk level could not be determined"
-      case _ => "The risk level could not be determined"
-    } getOrElse ""
-  }
+  @scoped
+  def getRiskDescription(riskLevel: UndefOr[String]) = riskLevel map {
+    case "Low" => "Generally recommended for investment"
+    case "Medium" => "Not recommended for inexperienced investors"
+    case "High" => "Not recommended for investment"
+    case "Unknown" => "The risk level could not be determined"
+    case _ => "The risk level could not be determined"
+  } getOrElse js.undefined
 
   ///////////////////////////////////////////////////////////////////////////
   //          Market Status Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def isUSMarketsOpen: java.lang.Boolean = {
+  @scoped
+  def isUSMarketsOpen: UndefOr[Boolean] = {
     usMarketStatus match {
       case Left(status) => status.active
       case Right(loading) =>
@@ -204,7 +217,7 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
               g.console.error(s"Failed to retrieve market status: ${e.getMessage}")
           }
         }
-        null
+        js.undefined
     }
   }
 
@@ -226,22 +239,12 @@ class DiscoverController($scope: js.Dynamic, $cookies: Cookies, $location: Locat
   ///////////////////////////////////////////////////////////////////////////
 
   // setup the chart range
-  $scope.$watch("options.range", (newValue: js.UndefOr[Any], oldValue: js.Any) => newValue.foreach($cookies.put("chart_range", _)))
-
-}
-
-/**
- * Discover Route Parameters
- * @author lawrence.daniels@gmail.com
- */
-trait DiscoverRouteParams extends js.Object {
-  var symbol: js.UndefOr[String] = js.native
+  $scope.$watch("options.range", (newValue: UndefOr[Any], oldValue: js.Any) => newValue.foreach($cookies.put("chart_range", _)))
 
 }
 
 /**
  * Discover Controller
- * @author lawrence.daniels@gmail.com
  */
 object DiscoverController {
   val LastSymbolCookie = "QuoteService_lastSymbol"
@@ -325,3 +328,42 @@ object DiscoverController {
 
 }
 
+/**
+ * Discover Options
+ */
+trait DiscoverOptions extends js.Object {
+  var range: String = js.native
+}
+
+/**
+ * Discover Options Singleton
+ */
+object DiscoverOptions {
+
+  def apply(range: String) = {
+    val options = makeNew[DiscoverOptions]
+    options.range = range
+    options
+  }
+
+}
+
+/**
+ * Discover Route Parameters
+ */
+trait DiscoverRouteParams extends js.Object {
+  var symbol: UndefOr[String] = js.native
+
+}
+
+/**
+ * Discover Scope
+ */
+trait DiscoverScope extends Scope {
+  var expanders: js.Array[ModuleExpander] = js.native
+  var options: DiscoverOptions = js.native
+  var q: OrderQuote = js.native
+  var ticker: String = js.native
+  var tradingHistory: js.Array[js.Object] = js.native
+
+}

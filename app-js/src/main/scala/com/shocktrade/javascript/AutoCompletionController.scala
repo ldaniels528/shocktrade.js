@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
  * Represents a symbol auto-completion controller
  * @author lawrence.daniels@gmail.com
  */
-abstract class AutoCompletionController($scope: js.Any, $q: Q, quoteService: QuoteService)
+abstract class AutoCompletionController($scope: js.Object, $q: Q, quoteService: QuoteService)
   extends Controller {
 
   @scoped

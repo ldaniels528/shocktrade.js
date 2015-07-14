@@ -2,17 +2,18 @@ package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{scoped, Scope, injected}
+import com.github.ldaniels528.scalascript.{Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogService
-import com.shocktrade.javascript.models.{ParticipantRanking, Contest}
+import com.shocktrade.javascript.models.{Contest, ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
@@ -40,8 +41,10 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   def getMyRankings(contest: Contest): UndefOr[ParticipantRanking] = {
     if (!isDefined(contest)) null
     else if (!isDefined(contest.rankings)) {
-      val rankings = contestService.getPlayerRankings(contest, mySession.getUserID)
-      rankings.flatMap(_.player)
+      (for {
+        userId <- mySession.userProfile.OID_?
+        player <- contestService.getPlayerRankings(contest, userId).flatMap(_.player).toOption
+      } yield player).orUndefined
     }
     else contest.rankings.flatMap(_.player)
   }
@@ -97,6 +100,6 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   /**
    * Listen for user profile changes
    */
-  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: js.Dynamic) => reload())
+  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: UserProfile) => reload())
 
 }

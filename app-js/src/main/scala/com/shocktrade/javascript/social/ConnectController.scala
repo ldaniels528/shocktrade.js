@@ -5,7 +5,8 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
-import com.shocktrade.javascript.{GlobalLoading, MySession, ScalaJsHelper}
+import com.shocktrade.javascript.models.UserProfile
+import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -172,7 +173,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   /**
    * Listen for changes to the player's profile
    */
-  scope.$on(UserProfileChanged, { (profile: js.Dynamic) =>
+  scope.$on(UserProfileChanged, { (profile: UserProfile) =>
     if (mySession.getRecentSymbols.nonEmpty) {
       loadMyUpdates(mySession.getUserName)
       //$scope.chooseFirstContact()

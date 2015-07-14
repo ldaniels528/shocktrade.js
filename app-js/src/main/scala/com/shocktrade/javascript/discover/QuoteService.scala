@@ -4,6 +4,7 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.{Service, injected}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.models.OrderQuote
 
 import scala.scalajs.js
 
@@ -43,7 +44,7 @@ class QuoteService($http: Http, @injected("MySession") mySession: MySession) ext
 
   def getStockQuote(symbol: String) = {
     required("symbol", symbol)
-    $http.get[js.Dynamic](s"/api/quotes/symbol/$symbol")
+    $http.get[OrderQuote](s"/api/quotes/symbol/$symbol")
   }
 
   def getTradingHistory(symbol: String) = {
