@@ -60,7 +60,10 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
     if (perk.selected || mySession.getFundsAvailable >= perk.cost) "" else "null"
   }
 
-  $scope.dynamic.loadPerks = () => {
+  @scoped
+  def loadPerks() = initPerks()
+
+  private def initPerks() = {
     val outcome = for {
       playerId <- mySession.userProfile.OID_?
       contestId <- mySession.contest.flatMap(_.OID_?)
