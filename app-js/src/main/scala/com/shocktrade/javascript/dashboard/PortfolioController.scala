@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
-import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialogService}
+import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialog}
 import com.shocktrade.javascript.discover.DiscoverController
 import com.shocktrade.javascript.models.Participant
 import com.shocktrade.javascript.{GlobalLoading, MySession}
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                           @injected("MySession") mySession: MySession,
                           @injected("ContestService") contestService: ContestService,
-                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService)
+                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialog)
   extends Controller with GlobalLoading {
 
   $scope.selectedClosedOrder = null

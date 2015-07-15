@@ -1,16 +1,40 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
+import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.TransferFundsDialogController._
+import com.shocktrade.javascript.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
 import com.shocktrade.javascript.models.Contest
 
+import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
+
+/**
+ * Transfer Funds Dialog Service
+ * @author lawrence.daniels@gmail.com
+ */
+class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
+
+  /**
+   * Transfer Funds pop-up dialog
+   */
+  def popup(): Future[TransferFundsResult] = {
+    val modalInstance = $modal.open[TransferFundsResult](ModalOptions(
+      templateUrl = "transfer_funds_dialog.htm",
+      controllerClass = classOf[TransferFundsDialogController]
+    ))
+    modalInstance.result
+  }
+
+  def transferFunds(contestId: String, playerId: String, form: TransferFundsForm): Future[Contest] = {
+    $http.post[Contest](s"/api/contest/$contestId/margin/$playerId", form)
+  }
+}
 
 /**
  * Transfer Funds Dialog Controller
@@ -19,13 +43,12 @@ import scala.util.{Failure, Success}
 class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: ModalInstance[TransferFundsResult],
                                     toaster: Toaster,
                                     @injected("MySession") mySession: MySession,
-                                    @injected("TransferFundsDialog") dialog: TransferFundsDialogService)
+                                    @injected("TransferFundsDialog") dialog: TransferFundsDialog)
   extends Controller {
 
   private val messages = emptyArray[String]
 
   $scope.actions = TransferActions
-
   $scope.form = TransferFundsForm(
     cashFunds = mySession.cashAccount_?.map(_.cashFunds).orUndefined,
     marginFunds = mySession.marginAccount_?.map(_.cashFunds).orUndefined
@@ -177,3 +200,4 @@ trait TransferFundsScope extends Scope {
   var actions: js.Array[TransferFundsAction] = js.native
   var form: TransferFundsForm = js.native
 }
+

@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.InvitePlayerDialogService
+import com.shocktrade.javascript.dialogs.InvitePlayerDialog
 import com.shocktrade.javascript.models.Contest.MaxPlayers
 import com.shocktrade.javascript.models.{Contest, ContestSearchOptions, PlayerInfo, UserProfile}
 import com.shocktrade.javascript.{GlobalLoading, MySession}
@@ -25,7 +25,7 @@ import scala.util.{Failure, Success}
  */
 class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
-                           @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialogService,
+                           @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                            @injected("MySession") mySession: MySession)
   extends GameController($scope, $location, toaster, mySession) with GlobalLoading {
 

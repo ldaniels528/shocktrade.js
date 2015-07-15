@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript._
-import com.shocktrade.javascript.dialogs.{NewOrderDialogService, NewOrderParams}
+import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
 import com.shocktrade.javascript.discover.DiscoverController._
 import com.shocktrade.javascript.models.{FullQuote, OrderQuote}
 import com.shocktrade.javascript.profile.ProfileService
@@ -26,7 +26,7 @@ class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Lo
                          $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
                          @injected("MarketStatus") marketStatus: MarketStatusService,
                          @injected("MySession") mySession: MySession,
-                         @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
+                         @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                          @injected("ProfileService") profileService: ProfileService,
                          @injected("QuoteService") quoteService: QuoteService)
   extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading {

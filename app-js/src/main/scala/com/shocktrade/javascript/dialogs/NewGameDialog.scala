@@ -1,19 +1,49 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.{Service, _}
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
+import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.NewGameDialogController._
+import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
+
+/**
+ * New Game Dialog Service
+ * @author lawrence.daniels@gmail.com
+ */
+class NewGameDialog($http: Http, $modal: Modal) extends Service {
+
+  /**
+   * Sign-up Modal Dialog
+   */
+  def popup(): Future[NewGameDialogResult] = {
+    // create an instance of the dialog
+    val $modalInstance = $modal.open[NewGameDialogResult](ModalOptions(
+      templateUrl = "new_game_dialog.htm",
+      controllerClass = classOf[NewGameDialogController]
+    ))
+    $modalInstance.result
+  }
+
+  /**
+   * Creates a new game
+   * @return the promise of the result of creating a new game
+   */
+  def createNewGame(form: NewGameForm): Future[Contest] = {
+    required("form", form)
+    $http.put[Contest]("/api/contest", form)
+  }
+
+}
 
 /**
  * New Game Dialog Controller
@@ -22,7 +52,7 @@ import scala.util.{Failure, Success}
 class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
                               $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout, toaster: Toaster,
                               @injected("MySession") mySession: MySession,
-                              @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
+                              @injected("NewGameDialogService") newGameDialog: NewGameDialog)
   extends Controller {
 
   private val errors = emptyArray[String]

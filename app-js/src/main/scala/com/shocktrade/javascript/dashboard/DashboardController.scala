@@ -5,7 +5,7 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.{PerksDialogService, TransferFundsDialogService}
+import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.javascript.models.ParticipantRanking
 import org.scalajs.dom.console
 
@@ -21,8 +21,8 @@ import scala.util.{Failure, Success}
 class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
                           @injected("MySession") mySession: MySession,
-                          @injected("PerksDialog") perksDialog: PerksDialogService,
-                          @injected("TransferFundsDialog") transferFundsDialog: TransferFundsDialogService)
+                          @injected("PerksDialog") perksDialog: PerksDialog,
+                          @injected("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
   extends Controller {
 
   private var accountMode = false

@@ -1,19 +1,40 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.github.ldaniels528.scalascript.{Controller, angular, injected, scoped}
+import com.github.ldaniels528.scalascript.core.{Http, Timeout}
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
+import com.github.ldaniels528.scalascript.{Controller, Service, angular, injected, scoped}
+import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.javascript.models.UserProfile
 import com.shocktrade.javascript.social.{Facebook, FacebookProfile}
 import org.scalajs.dom.console
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.util.{Failure, Success}
+
+/**
+ * Sign-Up Dialog Service
+ * @author lawrence.daniels@gmail.com
+ */
+class SignUpDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
+  extends Service {
+
+  def popup()(implicit ec: ExecutionContext) = {
+    val modalInstance = $modal.open[SignUpDialogResult](ModalOptions(
+      templateUrl = "sign_up_dialog.htm",
+      controllerClass = classOf[SignUpDialogController]
+    ))
+    modalInstance.result
+  }
+
+  def createAccount(form: SignUpForm)(implicit ec: ExecutionContext) = $http.post[UserProfile]("/api/profile/create", form)
+
+}
 
 /**
  * Sign-Up Dialog Controller
@@ -22,7 +43,7 @@ import scala.util.{Failure, Success}
 class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalInstance[SignUpDialogResult],
                              $timeout: Timeout, toaster: Toaster,
                              @injected("Facebook") facebook: Facebook,
-                             @injected("SignUpDialog") dialog: SignUpDialogService)
+                             @injected("SignUpDialog") dialog: SignUpDialog)
   extends Controller {
 
   private val messages = emptyArray[String]
@@ -145,3 +166,4 @@ object SignUpForm {
 
   def apply() = makeNew[SignUpForm]
 }
+

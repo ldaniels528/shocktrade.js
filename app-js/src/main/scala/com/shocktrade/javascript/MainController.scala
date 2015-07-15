@@ -8,7 +8,7 @@ import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.dialogs.SignUpDialogService
+import com.shocktrade.javascript.dialogs.SignUpDialog
 import com.shocktrade.javascript.models.OnlinePlayerState
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.Facebook
@@ -30,7 +30,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
                      @injected("Facebook") facebook: Facebook,
                      @injected("MySession") mySession: MySession,
                      @injected("ProfileService") profileService: ProfileService,
-                     @injected("SignUpDialog") signUpDialog: SignUpDialogService)
+                     @injected("SignUpDialog") signUpDialog: SignUpDialog)
   extends Controller with GlobalLoading {
 
   private var loadingIndex = 0

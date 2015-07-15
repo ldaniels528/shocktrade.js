@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.ComposeMessageDialogService
+import com.shocktrade.javascript.dialogs.ComposeMessageDialog
 import com.shocktrade.javascript.models.UserProfile
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class ConnectController($scope: js.Dynamic, toaster: Toaster,
-                        @injected("ComposeMessageDialog") messageDialog: ComposeMessageDialogService,
+                        @injected("ComposeMessageDialog") messageDialog: ComposeMessageDialog,
                         @injected("ConnectService") connectService: ConnectService,
                         @injected("MySession") mySession: MySession)
   extends Controller with GlobalLoading {

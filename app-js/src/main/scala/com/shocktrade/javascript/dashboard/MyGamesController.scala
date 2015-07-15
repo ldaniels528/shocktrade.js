@@ -6,7 +6,7 @@ import com.github.ldaniels528.scalascript.{Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dialogs.NewGameDialogService
+import com.shocktrade.javascript.dialogs.NewGameDialog
 import com.shocktrade.javascript.models.{Contest, ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
                         @injected("MySession") mySession: MySession,
-                        @injected("NewGameDialogService") newGameDialog: NewGameDialogService)
+                        @injected("NewGameDialogService") newGameDialog: NewGameDialog)
   extends GameController($scope, $location, toaster, mySession) {
 
   private var myContests = js.Array[Contest]()

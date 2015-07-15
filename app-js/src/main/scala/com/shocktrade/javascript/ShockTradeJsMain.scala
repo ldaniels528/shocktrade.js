@@ -85,14 +85,14 @@ object ShockTradeJsMain extends js.JSApp {
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[WebSocketService]("WebSocketService")
 
-    module.serviceOf[ComposeMessageDialogService]("ComposeMessageDialog")
-    module.serviceOf[InvitePlayerDialogService]("InvitePlayerDialog")
-    module.serviceOf[NewGameDialogService]("NewGameDialogService")
-    module.serviceOf[NewOrderDialogService]("NewOrderDialog")
-    module.serviceOf[NewsQuoteDialogService]("NewsQuoteDialog")
-    module.serviceOf[PerksDialogService]("PerksDialog")
-    module.serviceOf[SignUpDialogService]("SignUpDialog")
-    module.serviceOf[TransferFundsDialogService]("TransferFundsDialog")
+    module.serviceOf[ComposeMessageDialog]("ComposeMessageDialog")
+    module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
+    module.serviceOf[NewGameDialog]("NewGameDialogService")
+    module.serviceOf[NewOrderDialog]("NewOrderDialog")
+    module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
+    module.serviceOf[PerksDialog]("PerksDialog")
+    module.serviceOf[SignUpDialog]("SignUpDialog")
+    module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
   }
 
   private def configureControllers(module: Module) {

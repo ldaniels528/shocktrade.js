@@ -1,20 +1,52 @@
 package com.shocktrade.javascript.dialogs
 
 import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Q, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{ModalInstance, Toaster}
-import com.github.ldaniels528.scalascript.{angular, injected, scoped}
+import com.github.ldaniels528.scalascript.core.{Http, Q, Timeout}
+import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
+import com.github.ldaniels528.scalascript.{Service, angular, injected, scoped}
+import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{Contest, OrderQuote}
-import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.util.{Failure, Success}
+
+/**
+ * New Order Dialog Service
+ * @author lawrence.daniels@gmail.com
+ */
+class NewOrderDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
+  extends Service {
+
+  /**
+   * Opens a new Order Entry Pop-up Dialog
+   */
+  def popup(params: NewOrderParams): Future[NewOrderDialogResult] = {
+    // create an instance of the dialog
+    val $modalInstance = $modal.open[NewOrderDialogResult](ModalOptions(
+      templateUrl = "new_order_dialog.htm",
+      controllerClass = classOf[NewOrderDialogController],
+      resolve = js.Dictionary("params" -> (() => params))
+    ))
+    $modalInstance.result
+  }
+
+  def createOrder(contestId: String, playerId: String, order: NewOrderForm): Future[Contest] = {
+    required("contestId", contestId)
+    required("playerId", playerId)
+    required("order", order)
+    $http.put[Contest](s"/api/order/$contestId/$playerId", order)
+  }
+
+  def lookupQuote(symbol: String): Future[OrderQuote] = $http.get[OrderQuote](s"/api/quotes/cached/$symbol")
+
+}
 
 /**
  * New Order Dialog Controller
@@ -23,8 +55,8 @@ import scala.util.{Failure, Success}
 class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
                                @injected("MySession") mySession: MySession,
-                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialogService,
-                               @injected("PerksDialog") perksDialog: PerksDialogService,
+                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                               @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("QuoteService") quoteService: QuoteService,
                                @injected("params") params: NewOrderParams)
   extends AutoCompletionController($scope, $q, quoteService) {
@@ -121,7 +153,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     if (!isDefined(form.orderType)) messages.push("No Order Type (BUY or SELL) specified")
     if (!isDefined(form.priceType)) messages.push("No Pricing Method specified")
     if (!isDefined(form.orderTerm)) messages.push("No Order Term specified")
-    if (!isDefined(form.quantity) || form.quantity.exists(_ == 0d)) messages.push("No quantity specified")
+    if (!isDefined(form.quantity) || form.quantity.exists(_ == 0)) messages.push("No quantity specified")
     messages.isEmpty
   }
 
