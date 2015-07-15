@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.discover
 
+import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.{Service, injected}
-import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.models.OrderQuote
 
@@ -12,12 +11,12 @@ import scala.scalajs.js
  * Quote Services
  * @author lawrence.daniels@gmail.com
  */
-class QuoteService($http: Http, @injected("MySession") mySession: MySession) extends Service {
+class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
     required("searchTerm", searchTerm)
     val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
-    $http.get[js.Array[js.Dynamic]](s"/api/quotes/autocomplete$queryString")
+    $http.get[js.Array[AutoCompletedQuote]](s"/api/quotes/autoComplete$queryString")
   }
 
   def getExchangeCounts = $http.get[js.Array[js.Dynamic]]("/api/exchanges")
@@ -86,12 +85,16 @@ class QuoteService($http: Http, @injected("MySession") mySession: MySession) ext
     $http.get[js.Array[js.Dynamic]](s"/api/explore/quotes$queryString")
   }
 
-  private def setFavorites(updatedQuotes: js.Array[js.Dynamic]) = {
-    required("updatedQuotes", updatedQuotes)
-    updatedQuotes.foreach { quote =>
-      quote.favorite = mySession.isFavoriteSymbol(quote.symbol.as[String])
-    }
-    updatedQuotes
-  }
+}
 
+/**
+ * Auto-Completed Quote
+ */
+trait AutoCompletedQuote extends js.Object {
+  var _id: js.Dynamic = js.native
+  var symbol: js.UndefOr[String] = js.native
+  var name: js.UndefOr[String] = js.native
+  var exchange: js.UndefOr[String] = js.native
+  var assetType: js.UndefOr[String] = js.native
+  var icon: js.UndefOr[String] = js.native
 }

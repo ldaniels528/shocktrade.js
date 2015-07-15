@@ -147,6 +147,8 @@ object ScalaJsHelper {
 
     @inline def ??(optB: => Option[T]): Option[T] = if (optA.isDefined) optA else optB
 
+    @inline def orDie(message: String): Option[T] = throw new IllegalArgumentException(message)
+
   }
 
   /**

@@ -6,7 +6,7 @@
                placeholder="Enter Symbol or Company name"
                typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue)"
                typeahead-template-url="symbol_lookup_dialog.htm"
-               typeahead-loading="loadingLocations"
+               typeahead-loading="loading"
                typeahead-on-select="loadQuote(ticker)"
                popover="Enter a Symbol or Business here"
                popover-trigger="focus">

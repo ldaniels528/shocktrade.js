@@ -100,7 +100,7 @@ POST          /api/profile/facebook/friends                         com.shocktra
 
 # Quotes
 GET           /api/exchanges                                        com.shocktrade.controllers.QuotesController.getExchangeCounts
-GET           /api/quotes/autocomplete                              com.shocktrade.controllers.QuotesController.autocomplete(searchTerm, maxResults:Int)
+GET           /api/quotes/autoComplete                              com.shocktrade.controllers.QuotesController.autoComplete(searchTerm, maxResults:Int)
 GET           /api/quotes/cached/:symbol                            com.shocktrade.controllers.QuotesController.getCachedQuote(symbol)
 POST          /api/quotes/list                                      com.shocktrade.controllers.QuotesController.getQuotes
 GET           /api/quotes/order/symbol/:symbol                      com.shocktrade.controllers.QuotesController.getOrderQuote(symbol)

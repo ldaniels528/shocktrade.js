@@ -19,7 +19,6 @@ import scala.util.{Failure, Success}
 
 /**
  * New Order Dialog Service
- * @author lawrence.daniels@gmail.com
  */
 class NewOrderDialog($http: Http, $modal: Modal) extends Service {
 
@@ -51,7 +50,6 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
 
 /**
  * New Order Dialog Controller
- * @author lawrence.daniels@gmail.com
  */
 class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,

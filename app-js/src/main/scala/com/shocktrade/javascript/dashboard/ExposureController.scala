@@ -1,16 +1,15 @@
 package com.shocktrade.javascript.dashboard
 
-import com.shocktrade.javascript.{ScalaJsHelper, MySession}
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.ScalaJsHelper._
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
-import scala.scalajs.js.JSON
+import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
@@ -46,7 +45,7 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
   $scope.getChartData = () => chartData
 
   $scope.exposurePieChart = (exposure: js.UndefOr[String], contestID: js.UndefOr[String], userID: js.UndefOr[String]) => {
-    exposurePieChart(exposure, contestID, userID)
+    exposurePieChart(contestID, userID, exposure)
   }
 
   $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
@@ -59,18 +58,11 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def exposurePieChart(exposure: js.UndefOr[String], contestID: js.UndefOr[String], userID: js.UndefOr[String]) = {
-    for {
-      exp <- exposure.toOption
-      cid <- contestID.toOption
-      uid <- userID.toOption
-    } {
-      contestService.getExposureChartData(exp, cid, uid) onComplete {
-        case Success(data) =>
-          chartData = data
-        case Failure(e) =>
-          g.console.error(s"Failed to load ${JSON.stringify(exposure)} data")
-      }
+  private def exposurePieChart(contestID: js.UndefOr[String], userID: js.UndefOr[String], exposure: js.UndefOr[String]) = {
+    contestService.getExposureChartData(contestID, userID, exposure) onComplete {
+      case Success(data) => chartData = data
+      case Failure(e) =>
+        console.error(s"Failed to load exposure data for $exposure")
     }
   }
 

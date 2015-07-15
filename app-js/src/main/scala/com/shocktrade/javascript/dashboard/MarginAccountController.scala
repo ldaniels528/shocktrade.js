@@ -1,5 +1,6 @@
 package com.shocktrade.javascript.dashboard
 
+import com.github.ldaniels528.scalascript.core.HttpPromise._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected}
@@ -10,7 +11,6 @@ import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
 import scala.scalajs.js.Date
-import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
 /**
@@ -42,7 +42,7 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
       // load the margin accounts market value
       contestService.getMarginMarketValue(contestID, userID) onComplete {
         case Success(contest) =>
-          investmentMarketValue = contest.marginMarketValue.as[Double]
+          investmentMarketValue = contest.marginMarketValue
         case Failure(e) =>
           toaster.error("Failed to retrieve the Margin Account's market value")
           attemptsLeft -= 1

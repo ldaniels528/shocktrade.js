@@ -78,8 +78,6 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
 
   @scoped def getExchangeClass(exchange: js.UndefOr[String]) = s"${normalizeExchange(exchange)} bold"
 
-  @scoped def getHtmlQuote(q: js.Dynamic) = if (!isDefined(q)) "" else s"<i class='${MainController.getAssetIcon(q)}'></i> ${q.symbol} - ${q.name}"
-
   @scoped def getTabIndex = determineTableIndex
 
   @scoped def isVisible(tab: js.Dynamic) = (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated))

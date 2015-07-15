@@ -54,7 +54,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   /**
    * Auto-completes symbols and company names
    */
-  def autocomplete(searchTerm: String, maxResults: Int) = Action.async { implicit request =>
+  def autoComplete(searchTerm: String, maxResults: Int) = Action.async { implicit request =>
     mcQ.find(
       // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ?0, $options:'i' }} ] }
       JS(/*"active" -> true,*/ "$or" -> JsArray(Seq(

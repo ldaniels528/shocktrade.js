@@ -23,24 +23,24 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //          Basic C.R.U.D.
   ///////////////////////////////////////////////////////////////
 
-  def deleteContest(contestId: String) = {
+  def deleteContest(contestId: UndefOr[String]) = {
     required("contestId", contestId)
     $http.delete[js.Dynamic](s"/api/contest/$contestId")
   }
 
-  def joinContest(contestId: String, playerInfo: js.Dynamic) = {
+  def joinContest(contestId: UndefOr[String], playerInfo: js.Dynamic) = {
     required("contestId", contestId)
     required("playerInfo", playerInfo)
     $http.put[Contest](s"/api/contest/$contestId/player", playerInfo)
   }
 
-  def quitContest(contestId: String, playerId: String) = {
+  def quitContest(contestId: UndefOr[String], playerId: UndefOr[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.delete[Contest](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def startContest(contestId: String) = {
+  def startContest(contestId: UndefOr[String]) = {
     required("contestId", contestId)
     $http.get[Contest](s"/api/contest/$contestId/start")
   }
@@ -54,38 +54,38 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.post[js.Array[Contest]]("/api/contests/search", searchOptions)
   }
 
-  def getContestByID(contestId: String) = {
+  def getContestByID(contestId: UndefOr[String]) = {
     required("contestId", contestId)
     $http.get[Contest](s"/api/contest/$contestId")
   }
 
-  def getParticipantByID(contestId: String, playerId: String) = {
+  def getParticipantByID(contestId: UndefOr[String], playerId: UndefOr[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def getCashAvailable(contest: js.Dynamic, playerId: String) = {
-    contest.participants.asArray[js.Dynamic].find(_.OID_?.contains(playerId)) map (_.cashAccount.cashFunds.as[Double]) getOrElse 0.0d
+  def getCashAvailable(contest: Contest, playerId: UndefOr[String]) = {
+    contest.participants.find(_.OID_?.exists(playerId.toOption.contains)) map (_.cashAccount.cashFunds) getOrElse 0.0d
   }
 
-  def getRankings(contestId: String) = {
+  def getRankings(contestId: UndefOr[String]) = {
     required("contestId", contestId)
     $http.get[js.Array[ParticipantRanking]](s"/api/contest/$contestId/rankings")
   }
 
-  def getContestsByPlayerID(playerId: String) = {
+  def getContestsByPlayerID(playerId: UndefOr[String]) = {
     required("playerId", playerId)
     $http.get[js.Array[Contest]](s"/api/contests/player/$playerId")
   }
 
-  def getEnrichedOrders(contestId: String, playerId: String) = {
+  def getEnrichedOrders(contestId: UndefOr[String], playerId: UndefOr[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Array[Order]](s"/api/contest/$contestId/orders/$playerId")
   }
 
-  def getEnrichedPositions(contestId: String, playerId: String) = {
+  def getEnrichedPositions(contestId: UndefOr[String], playerId: UndefOr[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Array[Position]](s"/api/contest/$contestId/positions/$playerId")
@@ -95,13 +95,13 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Participants
   /////////////////////////////////////////////////////////////////////////////
 
-  def getMarginMarketValue(contestId: String, playerId: String) = {
+  def getMarginMarketValue(contestId: UndefOr[String], playerId: UndefOr[String]) = {
     required("contestId", contestId)
     required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/contest/$contestId/margin/$playerId/marketValue")
+    $http.get[MarginMarketValue](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings(contest: Contest, playerID: String): UndefOr[Rankings] = {
+  def getPlayerRankings(contest: Contest, playerID: UndefOr[String]): UndefOr[Rankings] = {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -109,14 +109,17 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
         contest.rankings = Rankings()
 
         console.log(s"Loading Contest Rankings for '${contest.name}'...")
-        contest.OID_?.foreach { contestId =>
+        for {
+          contestId <- contest.OID_?
+          userID <- playerID
+        } {
           getRankings(contestId) onComplete {
             case Success(participantRankings) =>
               console.log(s"participantRankings = ${angular.toJson(participantRankings)}")
               contest.rankings.foreach { rankings =>
                 rankings.participants = participantRankings
                 rankings.leader = participantRankings.headOption.orUndefined
-                rankings.player = participantRankings.find(p => p.OID_?.contains(playerID) || p.facebookID == playerID).orUndefined
+                rankings.player = participantRankings.find(p => p.OID_?.contains(userID) || p.facebookID == userID).orUndefined
               }
             case Failure(e) =>
               toaster.error("Error loading player rankings")
@@ -128,8 +131,11 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
       // if the rankings were loaded, but the player is not set
       else if (contest.rankings.nonEmpty && contest.rankings.exists(_.player.isEmpty)) {
-        contest.rankings.foreach { rankings =>
-          rankings.player = rankings.participants.find(p => p.OID_?.contains(playerID) || p.name == playerID || p.facebookID == playerID).orUndefined
+        for {
+          rankings <- contest.rankings
+          userID <- playerID
+        } {
+          rankings.player = rankings.participants.find(p => p.OID_?.contains(userID) || p.facebookID == userID).orUndefined
         }
       }
 
@@ -139,32 +145,32 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     else makeNew[Rankings]
   }
 
-  def getTotalInvestment(playerId: String) = {
-    required("playerId", playerId)
-    $http.get[js.Dynamic](s"/api/contests/player/$playerId/totalInvestment")
+  def getTotalInvestment(playerID: UndefOr[String]) = {
+    required("playerID", playerID)
+    $http.get[js.Dynamic](s"/api/contests/player/$playerID/totalInvestment")
   }
 
   /////////////////////////////////////////////////////////////////////////////
   //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getExposureChartData(exposure: String, contestId: String, userID: String) = {
+  def getExposureChartData(contestID: UndefOr[String], playerID: UndefOr[String], exposure: UndefOr[String]) = {
+    required("contestID", contestID)
+    required("playerID", playerID)
     required("exposure", exposure)
-    required("contestId", contestId)
-    required("userID", userID)
-    $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/$contestId/$userID")
+    $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/$contestID/$playerID")
   }
 
-  def getChart(contestId: String, participantName: String, chartName: String) = {
-    required("contestId", contestId)
-    required("participantName", participantName)
+  def getChart(contestID: UndefOr[String], playerName: UndefOr[String], chartName: UndefOr[String]) = {
+    required("contestID", contestID)
+    required("playerName", playerName)
     required("chartName", chartName)
 
     // determine the chart type
-    val chartType = if (chartName == "gains" || chartName == "losses") "performance" else "exposure"
+    val chartType = if (chartName.exists(s => s == "gains" || s == "losses")) "performance" else "exposure"
 
     // load the chart representing the securities
-    $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestId/$participantName")
+    $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestID/$playerName")
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -195,3 +201,8 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
 }
 
+trait MarginMarketValue extends js.Object {
+  var _id: js.Dynamic = js.native
+  var name: String = js.native
+  var marginMarketValue: Double = js.native
+}
