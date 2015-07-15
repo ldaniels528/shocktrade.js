@@ -4,7 +4,6 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.javascript.models.OrderQuote
 
@@ -33,6 +32,11 @@ class NewsQuoteDialog($http: Http, $modal: Modal) extends Service {
     ))
     $modalInstance.result
   }
+
+  def getQuote(symbol: String): Future[OrderQuote] = {
+    required("symbol", symbol)
+    $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
+  }
 }
 
 /**
@@ -41,7 +45,7 @@ class NewsQuoteDialog($http: Http, $modal: Modal) extends Service {
  */
 class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalInstance[NewsQuoteDialogResult],
                                 toaster: Toaster,
-                                @injected("ContestService") contestService: ContestService,
+                                @injected("NewsQuoteDialog") newsQuoteDialog: NewsQuoteDialog,
                                 @injected("symbol") symbol: String)
   extends Controller {
 
@@ -49,7 +53,7 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
   $scope.quote.symbol = symbol
 
   @scoped def init(symbol: String) {
-    contestService.orderQuote(symbol) onComplete {
+    newsQuoteDialog.getQuote(symbol) onComplete {
       case Success(quote) => $scope.quote = quote
       case Failure(e) =>
         toaster.error(e.getMessage)

@@ -4,7 +4,6 @@ import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Service, angular, injected, scoped}
-import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.javascript.models.UserProfile
@@ -21,8 +20,7 @@ import scala.util.{Failure, Success}
  * Sign-Up Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class SignUpDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
-  extends Service {
+class SignUpDialog($http: Http, $modal: Modal) extends Service {
 
   def popup()(implicit ec: ExecutionContext) = {
     val modalInstance = $modal.open[SignUpDialogResult](ModalOptions(

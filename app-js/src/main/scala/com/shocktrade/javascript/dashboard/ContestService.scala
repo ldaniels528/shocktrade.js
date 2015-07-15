@@ -193,10 +193,5 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.get[js.Array[String]](s"/api/positions/$playerId")
   }
 
-  def orderQuote(symbol: String) = {
-    required("symbol", symbol)
-    $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
-  }
-
 }
 

@@ -2,7 +2,7 @@ package com.shocktrade.javascript.dialogs
 
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
+import com.github.ldaniels528.scalascript.{Controller, Scope, Service, angular, injected, scoped}
 import com.shocktrade.javascript.MySession
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
@@ -13,14 +13,15 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
  * Perks Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class PerksDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
-  extends Service {
+class PerksDialog($http: Http, $modal: Modal) extends Service {
 
   /**
    * Perks Modal Dialog
@@ -38,9 +39,8 @@ class PerksDialog($http: Http, $modal: Modal, @injected("MySession") mySession: 
    * Retrieves the promise of a sequence of perks
    * @return the promise of a sequence of [[Perk perks]]
    */
-  def getPerks(contestId: String) = {
+  def getPerks(contestId: String): Future[js.Array[Perk]] = {
     required("contestId", contestId)
-
     $http.get[js.Array[Perk]](s"/api/contest/$contestId/perks")
   }
 
@@ -48,10 +48,9 @@ class PerksDialog($http: Http, $modal: Modal, @injected("MySession") mySession: 
    * Retrieves the promise of an option of a perks response
    * @return the promise of an option of a [[PerksResponse perks response]]
    */
-  def getMyPerks(contestId: String, playerId: String) = {
+  def getMyPerkCodes(contestId: String, playerId: String): Future[PerksResponse] = {
     required("contestId", contestId)
     required("userId", playerId)
-
     $http.get[PerksResponse](s"/api/contest/$contestId/perks/$playerId")
   }
 
@@ -60,16 +59,14 @@ class PerksDialog($http: Http, $modal: Modal, @injected("MySession") mySession: 
    * @param contestId the given contest ID
    * @param playerId the given player ID
    * @param perkCodes the given perk codes to purchase
-   * @return {*}
+   * @return the promise of a [[Contest contest]]
    */
-  def purchasePerks(contestId: String, playerId: String, perkCodes: js.Array[String]) = {
+  def purchasePerks(contestId: String, playerId: String, perkCodes: js.Array[String]): Future[Contest] = {
     required("contestId", contestId)
     required("playerId", playerId)
     required("perkCodes", perkCodes)
-
     $http.put[Contest](s"/api/contest/$contestId/perks/$playerId", perkCodes)
   }
-
 }
 
 /**
@@ -81,10 +78,10 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
                             @injected("PerksDialog") perksSvc: PerksDialog)
   extends Controller {
 
-  private var perks = emptyArray[Perk]
+  private var myFunds: UndefOr[Double] = mySession.cashAccount_?.map(_.cashFunds).orUndefined
+  private var myPerks = emptyArray[Perk]
+  private var myPerkCodes = emptyArray[String]
   private var perkMapping = js.Dictionary[Perk]()
-  private var myPerks = emptyArray[String]
-  private var myFunds = mySession.cashAccount_?.map(_.cashFunds).getOrElse(0.0d)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -92,15 +89,17 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
 
   @scoped def cancel(): Unit = $modalInstance.dismiss("cancel")
 
-  @scoped def countOwnedPerks: Int = perks.count(_.owned)
+  @scoped def countOwnedPerks: Int = myPerks.count(_.owned)
 
-  @scoped def getPerks: js.Array[Perk] = perks
+  @scoped def getFundsAvailable: UndefOr[Double] = myFunds
 
-  @scoped def getTotalCost: Double = getSelectedPerksCost
+  @scoped def getPerks: js.Array[Perk] = myPerks
 
-  @scoped def hasSufficientFunds: Boolean = getSelectedPerksCost <= mySession.getFundsAvailable
+  @scoped def getTotalCost: Double = computeSelectedPerksCost
 
-  @scoped def perksSelected: Boolean = perks.exists(p => p.selected && !p.owned)
+  @scoped def hasSufficientFunds: Boolean = computeSelectedPerksCost <= mySession.getFundsAvailable
+
+  @scoped def perksSelected: Boolean = myPerks.exists(p => p.selected && !p.owned)
 
   @scoped
   def getPerkCostClass(perk: Perk): String = {
@@ -121,41 +120,6 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
 
   @scoped
   def loadPerks() = initPerks()
-
-  private def initPerks() = {
-    val outcome = for {
-      playerId <- mySession.userProfile.OID_?
-      contestId <- mySession.contest.flatMap(_.OID_?)
-    } yield (playerId, contestId)
-
-    // load the player's perks
-    outcome match {
-      case Some((playerId, contestId)) =>
-        perksSvc.getMyPerks(contestId, playerId) onComplete {
-          case Success(response) =>
-            console.log(s"loadPerks: response = $response")
-            myFunds = response.fundsAvailable
-            myPerks = response.perkCodes
-            setupPerks()
-          case Failure(e) =>
-            toaster.error("Error loading player perks")
-            console.error(s"Error loading player perks: ${e.getMessage}")
-        }
-
-        // load all contest perks
-        perksSvc.getPerks(contestId) onComplete {
-          case Success(loadedPerks) =>
-            perks = loadedPerks
-            perkMapping = js.Dictionary(perks.map(p => p.code -> p): _*)
-            setupPerks()
-          case Failure(e) =>
-            toaster.error("Error loading available perks")
-        }
-
-      case None =>
-        toaster.error("User session error")
-    }
-  }
 
   @scoped
   def purchasePerks(): Unit = {
@@ -186,22 +150,57 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
 
   private def getSelectedPerkCodes: js.Array[String] = getSelectedPerks map (_.code)
 
-  private def getSelectedPerks: js.Array[Perk] = perks.filter(perk => perk.selected && !perk.owned)
+  private def getSelectedPerks: js.Array[Perk] = myPerks.filter(perk => perk.selected && !perk.owned)
 
-  private def getSelectedPerksCost: Double = getSelectedPerks map (_.cost) sum
+  private def computeSelectedPerksCost: Double = getSelectedPerks map (_.cost) sum
+
+  private def initPerks() = {
+    val outcome = for {
+      playerId <- mySession.userProfile.OID_?
+      contestId <- mySession.contest.flatMap(_.OID_?)
+    } yield (playerId, contestId)
+
+    // load the player's perks
+    outcome match {
+      case Some((playerId, contestId)) =>
+        perksSvc.getMyPerkCodes(contestId, playerId) onComplete {
+          case Success(response) =>
+            console.log(s"loadPerks: response = ${angular.toJson(response)}")
+            myFunds = response.fundsAvailable
+            myPerkCodes = response.perkCodes
+            setupPerks()
+          case Failure(e) =>
+            toaster.error("Error loading player perks")
+            console.error(s"Error loading player perks: ${e.getMessage}")
+        }
+
+        // load all contest perks
+        perksSvc.getPerks(contestId) onComplete {
+          case Success(loadedPerks) =>
+            myPerks = loadedPerks
+            perkMapping = js.Dictionary(myPerks.map(p => p.code -> p): _*)
+            setupPerks()
+          case Failure(e) =>
+            toaster.error("Error loading available perks")
+        }
+
+      case None =>
+        toaster.error("User session error")
+    }
+  }
 
   /**
    * Setup the perks state; indicating which perks are owned
    */
   private def setupPerks() {
     // pre-set all perks
-    perks.foreach { perk =>
+    myPerks.foreach { perk =>
       perk.owned = false
       perk.selected = false
     }
 
     // select the owned perks
-    myPerks.foreach { perkCode =>
+    myPerkCodes.foreach { perkCode =>
       perkMapping.get(perkCode) foreach { perk =>
         perk.owned = true
         perk.selected = true
@@ -231,18 +230,5 @@ trait PerksDialogScope extends Scope
  */
 trait PerksResponse extends js.Object {
   var perkCodes: js.Array[String] = js.native
-  var fundsAvailable: Double = js.native
-}
-
-/**
- * Perks Response Singleton
- */
-object PerksResponse {
-
-  def apply(perkCodes: js.Array[String], fundsAvailable: Double) = {
-    val resp = makeNew[PerksResponse]
-    resp.perkCodes = perkCodes
-    resp.fundsAvailable = fundsAvailable
-    resp
-  }
+  var fundsAvailable: js.UndefOr[Double] = js.native
 }

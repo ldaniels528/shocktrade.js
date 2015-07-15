@@ -42,7 +42,6 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
     required("form", form)
     $http.put[Contest]("/api/contest", form)
   }
-
 }
 
 /**
@@ -52,7 +51,7 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
 class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
                               $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout, toaster: Toaster,
                               @injected("MySession") mySession: MySession,
-                              @injected("NewGameDialogService") newGameDialog: NewGameDialog)
+                              @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends Controller {
 
   private val errors = emptyArray[String]

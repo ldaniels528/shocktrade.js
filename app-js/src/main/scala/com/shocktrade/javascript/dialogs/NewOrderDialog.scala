@@ -4,11 +4,11 @@ import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Service, angular, injected, scoped}
-import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{Contest, OrderQuote}
+import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
@@ -21,8 +21,7 @@ import scala.util.{Failure, Success}
  * New Order Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class NewOrderDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
-  extends Service {
+class NewOrderDialog($http: Http, $modal: Modal) extends Service {
 
   /**
    * Opens a new Order Entry Pop-up Dialog
@@ -44,8 +43,10 @@ class NewOrderDialog($http: Http, $modal: Modal, @injected("MySession") mySessio
     $http.put[Contest](s"/api/order/$contestId/$playerId", order)
   }
 
-  def lookupQuote(symbol: String): Future[OrderQuote] = $http.get[OrderQuote](s"/api/quotes/cached/$symbol")
-
+  def getQuote(symbol: String): Future[OrderQuote] = {
+    required("symbol", symbol)
+    $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
+  }
 }
 
 /**
@@ -83,7 +84,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def init() = $scope.form.symbol foreach lookupQuote
+  @scoped def init() = $scope.form.symbol foreach lookupSymbolQuote
 
   @scoped def cancel() = $modalInstance.dismiss("cancel")
 
@@ -93,7 +94,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
 
   @scoped def ok(form: NewOrderForm) = accept(form)
 
-  @scoped def orderQuote(ticker: js.UndefOr[String]) = ticker foreach lookupQuote
+  @scoped def orderQuote(ticker: js.Dynamic) = lookupTickerQuote(ticker)
 
   @scoped def getTotal(form: NewOrderForm) = form.limitPrice.getOrElse(0d) * form.quantity.getOrElse(0)
 
@@ -101,18 +102,24 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def lookupQuote(ticker: String) = {
-    if (ticker.nonBlank) {
-      val symbol = (ticker.indexOfOpt(" ") map (index => ticker.substring(0, index - 1)) getOrElse ticker).trim
-      newOrderDialog.lookupQuote(symbol) onComplete {
-        case Success(quote) =>
-          $scope.quote = quote
-          $scope.form.symbol = quote.symbol
-          $scope.form.limitPrice = quote.lastTrade
-          $scope.form.exchange = quote.exchange
-        case Failure(e) =>
-          messages.push(s"The order could not be processed (error code ${e.getMessage})")
-      }
+  private def lookupTickerQuote(ticker: js.Dynamic) = {
+    console.log(s"ticker = ${angular.toJson(ticker)}")
+    val _ticker = if (isDefined(ticker.symbol)) ticker.symbol.as[String] else ticker.as[String]
+    if (_ticker.nonBlank) {
+      val symbol = (_ticker.indexOfOpt(" ") map (index => _ticker.substring(0, index - 1)) getOrElse _ticker).trim
+      lookupSymbolQuote(symbol)
+    }
+  }
+
+  private def lookupSymbolQuote(symbol: String) = {
+    newOrderDialog.getQuote(symbol) onComplete {
+      case Success(quote) =>
+        $scope.quote = quote
+        $scope.form.symbol = quote.symbol
+        $scope.form.limitPrice = quote.lastTrade
+        $scope.form.exchange = quote.exchange
+      case Failure(e) =>
+        messages.push(s"The order could not be processed (error code ${e.getMessage})")
     }
   }
 
@@ -166,7 +173,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     playerId <- mySession.userProfile.OID_?
   } {
     // load the player"s perks
-    perksDialog.getMyPerks(contestId, playerId) onComplete {
+    perksDialog.getMyPerkCodes(contestId, playerId) onComplete {
       case Success(contest) => $scope.form.perks = contest.perkCodes
       case Failure(e) =>
         toaster.error("Error retrieving perks")

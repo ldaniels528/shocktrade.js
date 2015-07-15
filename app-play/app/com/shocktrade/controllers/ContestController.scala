@@ -446,7 +446,7 @@ object ContestController extends Controller with ErrorHandler {
 
     result map {
       case Some(participant) =>
-        Ok(JS("perks" -> participant.perks, "fundsAvailable" -> participant.cashAccount.cashFunds))
+        Ok(JS("perkCodes" -> participant.perks, "fundsAvailable" -> participant.cashAccount.cashFunds))
       case None =>
         Ok(JS("error" -> "Perks could not be retrieved"))
     } recover {

@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.{Http, Q}
+import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
@@ -13,7 +13,7 @@ import scala.scalajs.js
  * Compose Message Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class ComposeMessageDialog($http: Http, $modal: Modal, $q: Q) extends Service {
+class ComposeMessageDialog($http: Http, $modal: Modal) extends Service {
 
   def popup(): Future[ComposeMessageResult] = {
     // create an instance of the dialog
@@ -29,7 +29,8 @@ class ComposeMessageDialog($http: Http, $modal: Modal, $q: Q) extends Service {
  * Compose Message Dialog Controller
  * @author lawrence.daniels@gmail.com
  */
-class ComposeMessageDialogController($scope: ComposeMessageScope, $modalInstance: ModalInstance[ComposeMessageResult],
+class ComposeMessageDialogController($scope: ComposeMessageScope,
+                                     $modalInstance: ModalInstance[ComposeMessageResult],
                                      @injected("ComposeMessageDialog") composeMessageDialog: ComposeMessageDialog)
   extends Controller {
 
@@ -48,7 +49,6 @@ class ComposeMessageDialogController($scope: ComposeMessageScope, $modalInstance
 object ComposeMessageDialogController {
 
   type ComposeMessageResult = ComposeMessageForm
-
 }
 
 /**
@@ -63,9 +63,7 @@ trait ComposeMessageScope extends Scope {
  * Compose Message Form
  * @author lawrence.daniels@gmail.com
  */
-trait ComposeMessageForm extends js.Object {
-
-}
+trait ComposeMessageForm extends js.Object
 
 /**
  * Compose Message Form Singleton

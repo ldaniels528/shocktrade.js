@@ -16,8 +16,7 @@ import scala.scalajs.js
  * Invite Player Dialog Service
  * @author lawrence.daniels@gmail.com
  */
-class InvitePlayerDialog($http: Http, $modal: Modal, @injected("MySession") mySession: MySession)
-  extends Service {
+class InvitePlayerDialog($http: Http, $modal: Modal) extends Service {
 
   /**
    * Invite a player via pop-up dialog
@@ -25,8 +24,7 @@ class InvitePlayerDialog($http: Http, $modal: Modal, @injected("MySession") mySe
   def popup(participant: Participant): Future[InvitePlayerDialogResult] = {
     val modalInstance = $modal.open[InvitePlayerDialogResult](ModalOptions(
       templateUrl = "invite_player_dialog.htm",
-      controllerClass = classOf[InvitePlayerDialogController],
-      resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))
+      controllerClass = classOf[InvitePlayerDialogController]
     ))
     modalInstance.result
   }
@@ -37,17 +35,17 @@ class InvitePlayerDialog($http: Http, $modal: Modal, @injected("MySession") mySe
  * @author lawrence.daniels@gmail.com
  */
 class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: ModalInstance[InvitePlayerDialogResult],
-                                   @injected("MySession") mySession: MySession,
-                                   @injected("myFriends") myFriends: js.Array[TaggableFriend])
+                                   @injected("MySession") mySession: MySession)
   extends Controller {
 
+  private val myFriends = mySession.fbFriends
   private val invites = emptyArray[TaggableFriend]
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  @scoped def getFriends = mySession.fbFriends
+  @scoped def getFriends = myFriends
 
   @scoped def getInvitedCount = invites.count(invitee => isDefined(invitee))
 
@@ -78,13 +76,10 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
 object InvitePlayerDialogController {
 
   type InvitePlayerDialogResult = js.Array[TaggableFriend]
-
 }
 
 /**
  * Invite Player Dialog Scope
  * @author lawrence.daniels@gmail.com
  */
-trait InvitePlayerScope extends Scope {
-
-}
+trait InvitePlayerScope extends Scope
