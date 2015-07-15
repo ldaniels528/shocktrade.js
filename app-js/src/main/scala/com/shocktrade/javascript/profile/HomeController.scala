@@ -51,7 +51,7 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
       $scope.selectedFriend = friend
 
       if (!isDefined(friend.dynamic.profile)) {
-        $timeout({ () =>
+        $timeout(() => {
           friend.dynamic.profile = JS()
           friend.dynamic.error = "Failure to load status information"
         }, 3.seconds)
@@ -70,6 +70,9 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
 
 }
 
+/**
+ * Home Controller Scope
+ */
 trait HomeScope extends Scope {
   var selectedFriend: TaggableFriend = js.native
 }
