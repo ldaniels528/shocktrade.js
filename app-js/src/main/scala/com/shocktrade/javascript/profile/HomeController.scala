@@ -12,51 +12,43 @@ import org.scalajs.dom.console
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
+import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.UndefOr
 
 /**
  * Home Controller
  * @author lawrence.daniels@gmail.com
  */
-class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySession") mySession: MySession,
                      @injected("ProfileService") profileService: ProfileService)
   extends Controller {
 
-  private var selectedFriend: TaggableFriend = null
+  $scope.selectedFriend = null
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.initHome = () => {
-    $timeout(() =>
-      if (selectedFriend == null) {
-        mySession.fbFriends.headOption foreach (selectedFriend = _)
-      }, 5.seconds)
+  @scoped def initHome() {
+    $timeout(() => if ($scope.selectedFriend == null) $scope.selectedFriend = mySession.fbFriends.headOption.orNull, 5.seconds)
+    ()
   }
 
-  $scope.getAwards = () => mySession.userProfile.awards.asArray[js.Dynamic]
+  @scoped def getAwards = mySession.userProfile.awards
 
-  $scope.getFriends = () => mySession.fbFriends
+  @scoped def getFriends = mySession.fbFriends
 
-  $scope.getNextLevelXP = () => mySession.userProfile.nextLevelXP.getOrElse(0)
+  @scoped def getNextLevelXP = mySession.userProfile.nextLevelXP
 
-  $scope.getSelectedFriend = () => selectedFriend
+  @scoped def getStars = (1 to mySession.userProfile.rep.getOrElse(3)).toJSArray
 
-  $scope.selectFriend = (friend: TaggableFriend) => selectFriend(friend)
+  @scoped def getTotalXP = mySession.userProfile.totalXP.getOrElse(0)
 
-  $scope.getStars = () => js.Array(1 to mySession.userProfile.rep.getOrElse(3): _*)
-
-  $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
-
-  /////////////////////////////////////////////////////////////////////////////
-  //			Private Functions
-  /////////////////////////////////////////////////////////////////////////////
-
-  private def selectFriend = (friend: TaggableFriend) => {
-    if (isDefined(friend)) {
+  @scoped def selectFriend(friendMaybe: UndefOr[TaggableFriend]) = {
+    friendMaybe foreach { friend =>
       console.log(s"selecting friend ${angular.toJson(friend)}")
-      selectedFriend = friend
+      $scope.selectedFriend = friend
 
       if (!isDefined(friend.dynamic.profile)) {
         $timeout({ () =>
@@ -76,4 +68,8 @@ class HomeController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
     }
   }
 
+}
+
+trait HomeScope extends Scope {
+  var selectedFriend: TaggableFriend = js.native
 }

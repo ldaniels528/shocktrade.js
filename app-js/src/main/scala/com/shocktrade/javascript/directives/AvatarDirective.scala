@@ -23,6 +23,7 @@ class AvatarDirective extends Directive[AvatarDirectiveScope] {
 
   override def link(scope: AvatarDirectiveScope, element: JQLite, attrs: Attributes) = {
     scope.$watch("id", (newValue: Any, oldValue: Any) => populateScope(scope, newValue, oldValue))
+    scope.$watch("link", (newValue: Any, oldValue: Any) => populateScope(scope, newValue, oldValue))
   }
 
   private def populateScope(scope: AvatarDirectiveScope, newValue: Any, oldValue: Any) {
