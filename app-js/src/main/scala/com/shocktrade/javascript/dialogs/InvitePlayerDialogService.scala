@@ -34,7 +34,7 @@ class InvitePlayerDialogService($http: Http, $modal: Modal, @injected("MySession
 
     val modalInstance = $modal.open[InvitePlayerDialogResult](ModalOptions(
       templateUrl = "invite_player_dialog.htm",
-      controller = classOf[InvitePlayerDialogController].getSimpleName,
+      controllerClass = classOf[InvitePlayerDialogController],
       resolve = js.Dictionary[js.Any]("myFriends" -> (() => mySession.fbFriends))
     ))
     modalInstance.result

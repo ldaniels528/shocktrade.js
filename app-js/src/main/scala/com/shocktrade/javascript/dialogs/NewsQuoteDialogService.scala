@@ -21,7 +21,7 @@ class NewsQuoteDialogService($http: Http, $modal: Modal) extends Service {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewsQuoteDialogResult](ModalOptions(
       templateUrl = "news_quote_dialog.htm",
-      controller = classOf[NewsQuoteDialogController].getSimpleName,
+      controllerClass = classOf[NewsQuoteDialogController],
       resolve = js.Dictionary("symbol" -> (() => symbol))
     ))
     $modalInstance.result

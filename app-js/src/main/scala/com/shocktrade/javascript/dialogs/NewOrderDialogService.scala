@@ -8,7 +8,7 @@ import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.models.{Contest, OrderQuote}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
@@ -21,23 +21,23 @@ class NewOrderDialogService($http: Http, $modal: Modal, @injected("MySession") m
   /**
    * Opens a new Order Entry Pop-up Dialog
    */
-  def popup(params: NewOrderParams)(implicit ec: ExecutionContext): Future[NewOrderDialogResult] = {
+  def popup(params: NewOrderParams): Future[NewOrderDialogResult] = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewOrderDialogResult](ModalOptions(
       templateUrl = "new_order_dialog.htm",
-      controller = classOf[NewOrderDialogController].getSimpleName,
+      controllerClass = classOf[NewOrderDialogController],
       resolve = js.Dictionary("params" -> (() => params))
     ))
     $modalInstance.result
   }
 
-  def createOrder(contestId: String, playerId: String, order: NewOrderForm) = {
+  def createOrder(contestId: String, playerId: String, order: NewOrderForm): Future[Contest] = {
     required("contestId", contestId)
     required("playerId", playerId)
     required("order", order)
     $http.put[Contest](s"/api/order/$contestId/$playerId", order)
   }
 
-  def lookupQuote(symbol: String) = $http.get[OrderQuote](s"/api/quotes/cached/$symbol")
+  def lookupQuote(symbol: String): Future[OrderQuote] = $http.get[OrderQuote](s"/api/quotes/cached/$symbol")
 
 }

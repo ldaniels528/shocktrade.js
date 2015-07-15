@@ -125,11 +125,11 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def getSelectedPerkCodes = getSelectedPerks map (_.code)
+  private def getSelectedPerkCodes: js.Array[String] = getSelectedPerks map (_.code)
 
-  private def getSelectedPerks = perks.filter(perk => perk.selected && !perk.owned)
+  private def getSelectedPerks: js.Array[Perk] = perks.filter(perk => perk.selected && !perk.owned)
 
-  private def getSelectedPerksCost = getSelectedPerks map (_.cost) sum
+  private def getSelectedPerksCost: Double = getSelectedPerks map (_.cost) sum
 
   /**
    * Setup the perks state; indicating which perks are owned

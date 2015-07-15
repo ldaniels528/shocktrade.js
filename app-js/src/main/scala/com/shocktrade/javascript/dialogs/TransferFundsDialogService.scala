@@ -20,7 +20,7 @@ class TransferFundsDialogService($http: Http, $modal: Modal) extends Service {
   def popup(): Future[TransferFundsResult] = {
     val modalInstance = $modal.open[TransferFundsResult](ModalOptions(
       templateUrl = "transfer_funds_dialog.htm",
-      controller = classOf[TransferFundsDialogController].getSimpleName
+      controllerClass = classOf[TransferFundsDialogController]
     ))
     modalInstance.result
   }

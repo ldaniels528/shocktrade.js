@@ -22,7 +22,7 @@ class NewGameDialogService($http: Http, $modal: Modal) extends Service {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewGameDialogResult](ModalOptions(
       templateUrl = "new_game_dialog.htm",
-      controller = classOf[NewGameDialogController].getSimpleName
+      controllerClass = classOf[NewGameDialogController]
     ))
     $modalInstance.result
   }

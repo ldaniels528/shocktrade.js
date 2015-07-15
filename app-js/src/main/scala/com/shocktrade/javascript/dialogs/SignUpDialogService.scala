@@ -19,7 +19,7 @@ class SignUpDialogService($http: Http, $modal: Modal, @injected("MySession") myS
   def popup()(implicit ec: ExecutionContext) = {
     val modalInstance = $modal.open[SignUpDialogResult](ModalOptions(
       templateUrl = "sign_up_dialog.htm",
-      controller = classOf[SignUpDialogController].getSimpleName
+      controllerClass = classOf[SignUpDialogController]
     ))
     modalInstance.result
   }

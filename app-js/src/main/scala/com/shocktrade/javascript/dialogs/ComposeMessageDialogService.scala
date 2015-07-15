@@ -17,7 +17,7 @@ class ComposeMessageDialogService($http: Http, $modal: Modal, $q: Q) extends Ser
     // create an instance of the dialog
     val $modalInstance = $modal.open[ComposeMessageResult](ModalOptions(
       templateUrl = "compose_message.htm",
-      controller = classOf[ComposeMessageDialogController].getSimpleName
+      controllerClass = classOf[ComposeMessageDialogController]
     ))
     $modalInstance.result
   }

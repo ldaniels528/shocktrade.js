@@ -3,7 +3,7 @@ package com.shocktrade.javascript.discover
 import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -16,7 +16,9 @@ class MarketStatusService($http: Http) extends Service {
    * Retrieves the current stock market status
    * @return the current U.S. Stock [[MarketStatus market status]]
    */
-  def getMarketStatus(implicit ec: ExecutionContext) = $http.get[MarketStatus]("/api/tradingClock/status/0")
+  def getMarketStatus(implicit ec: ExecutionContext): Future[MarketStatus] = {
+    $http.get[MarketStatus]("/api/tradingClock/status/0")
+  }
 
 }
 
