@@ -1,5 +1,7 @@
 package com.shocktrade.models.profile
 
+import com.shocktrade.models.profile.AwardCodes.{AwardCode, _}
+
 /**
  * Represents the collection award
  * @author lawrence.daniels@gmail.com
