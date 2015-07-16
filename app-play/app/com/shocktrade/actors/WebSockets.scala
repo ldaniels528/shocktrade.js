@@ -2,12 +2,12 @@ package com.shocktrade.actors
 
 import java.util.UUID
 
-import akka.actor._
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.routing.RoundRobinPool
 import com.shocktrade.models.contest.{Contest, Participant}
 import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
-import play.api.libs.json.Json.{obj => JS, _}
+import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject, JsValue}
 import play.libs.Akka
 import play.modules.reactivemongo.json.BSONFormats._
@@ -32,8 +32,8 @@ object WebSockets {
 
   /**
    * Registers the given actor reference
-   * @param uuid the given [[UUID unique identifier]]
-   * @param actor the given [[ActorRef]]
+   * @param uuid the given [[java.util.UUID unique identifier]]
+   * @param actor the given [[akka.actor.ActorRef]]
    */
   def register(uuid: UUID, actor: ActorRef) = {
     Logger.info(s"Registering web socket actor for session # $uuid...")
@@ -42,8 +42,8 @@ object WebSockets {
 
   /**
    * Unregisters the given actor reference
-   * @param uuid the given [[UUID unique identifier]]
-   * @return the option of the [[ActorRef]] being removed
+   * @param uuid the given [[java.util.UUID unique identifier]]
+   * @return the option of the [[akka.actor.ActorRef]] being removed
    */
   def unregister(uuid: UUID): Option[ActorRef] = actors.remove(uuid)
 
