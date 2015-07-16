@@ -34,12 +34,18 @@ object ContestDAO {
 
   /**
    * Creates a new contest
-   * @param c the given [[Contest]]
+   * @param c the given [[Contest contest]]
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the [[LastError outcome]]
    */
   def createContest(c: Contest)(implicit ec: ExecutionContext) = mc.insert(c)
 
+  /**
+   * Closes the given contest
+   * @param c the given [[Contest contest]]
+   * @param ec the implicit [[ExecutionContext execution context]]
+   * @return a promise of the [[Contest updated contest]]
+   */
   def closeContest(c: Contest)(implicit ec: ExecutionContext) = {
     db.command(FindAndModify(
       collection = "Contests",
