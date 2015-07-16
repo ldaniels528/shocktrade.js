@@ -1,6 +1,7 @@
 package com.shocktrade.server.trading.robots
 
 import java.util.Date
+import java.util.concurrent.atomic.AtomicBoolean
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
@@ -19,7 +20,7 @@ import play.api.libs.json.JsObject
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * Represents an autonomous Trading Robot
@@ -27,52 +28,56 @@ import scala.util.{Failure, Success, Try}
  */
 case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor with ActorLogging {
   implicit val timeout: Timeout = 10.seconds
+  private val processing = new AtomicBoolean(false)
   private val tabular = new Tabular()
 
   import context.dispatcher
 
   override def receive = {
     case Invest =>
-      log.info(s"$name is attempting to invest...")
-      invest()
+      if (processing.compareAndSet(false, true)) {
+        log.info(s"$name is attempting to invest...")
+        invest() onComplete {
+          case Success(_) => processing.set(false)
+          case Failure(e) =>
+            processing.set(false)
+            log.error(s"Robot $name failed during investment operations", e)
+        }
+      }
 
     case message =>
       log.info(s"Unhandled message: $message (${message.getClass.getName})")
       unhandled(message)
   }
 
-  private def invest() {
-    Try {
-      for {
-      // lookup my user profile
-        profile <- UserProfiles.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
+  private def invest() = {
+    for {
+    // lookup the robot's user profile
+      profile <- UserProfiles.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
 
-        // find contests to join
-        _ <- findContestsToJoin(profile)
+      // find contests to join
+      _ <- findContestsToJoin(profile)
 
-        // lookup the quotes using our trading strategy
-        jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
+      // lookup the quotes using our trading strategy
+      jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
 
-        // first let's retrieve the contests I've involved in ...
-        contests <- Contests.findContestsByPlayerName(name)()
-      } {
-        // process each contest
-        contests.foreach { contest =>
-          // the contest must be active and started
-          if (contest.isEligible) {
-            //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
-            contest.participants.find(_.name == name) foreach (operateRobot(contest, _, jsQuotes))
-          }
+      // first let's retrieve the contests I've involved in ...
+      contests <- Contests.findContestsByPlayerName(name)()
+    } yield {
+      // process each contest
+      contests.flatMap { contest =>
+        // the contest must be active and started
+        if (contest.isEligible) {
+          //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
+          contest.participants.find(_.name == name) foreach (operateRobot(contest, _, jsQuotes))
+          Some(contest)
         }
+        else None
       }
-    } match {
-      case Success(_) =>
-      case Failure(e) =>
-        log.error(s"$name: Error while attempting to invest", e)
     }
   }
 
-  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[JsObject]) {
+  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[JsObject]) = {
     log.info(s"$name: Looking for investment opportunities in '${contest.name}'...")
 
     // compute the funds available (subtract what we already have on order)
