@@ -12,7 +12,7 @@ class DataLoadingPlugin(app: Application) extends Plugin {
   /**
    * Called when the application starts.
    */
-  override def onStart() = {
+  override def onStart() {
     Logger.info("Data Loading Plugin starting...")
 
     // if production, start the Stock Quote Update and Trade Claiming processes

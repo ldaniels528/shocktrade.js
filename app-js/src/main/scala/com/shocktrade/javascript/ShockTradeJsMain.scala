@@ -87,7 +87,7 @@ object ShockTradeJsMain extends js.JSApp {
 
     module.serviceOf[ComposeMessageDialog]("ComposeMessageDialog")
     module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
-    module.serviceOf[NewGameDialog]("NewGameDialogService")
+    module.serviceOf[NewGameDialog]("NewGameDialog")
     module.serviceOf[NewOrderDialog]("NewOrderDialog")
     module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
     module.serviceOf[PerksDialog]("PerksDialog")

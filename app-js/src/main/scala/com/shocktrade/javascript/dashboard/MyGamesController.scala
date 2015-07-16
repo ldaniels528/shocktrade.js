@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
                         @injected("MySession") mySession: MySession,
-                        @injected("NewGameDialogService") newGameDialog: NewGameDialog)
+                        @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends GameController($scope, $location, toaster, mySession) {
 
   private var myContests = js.Array[Contest]()

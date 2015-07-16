@@ -1,6 +1,6 @@
 package com.shocktrade.plugins
 
-import com.shocktrade.server.trading.{TradingEngine, Contests}
+import com.shocktrade.server.trading.TradingEngine
 import com.shocktrade.server.trading.robots.TradingRobots
 import play.api.{Application, Logger, Play, Plugin}
 
@@ -13,7 +13,7 @@ class TradingEnginePlugin(app: Application) extends Plugin {
   /**
    * Called when the application starts.
    */
-  override def onStart() = {
+  override def onStart() {
     Logger.info("Trading Engine Plugin starting...")
 
     // if production, start the Stock Quote Update and Trade Claiming processes

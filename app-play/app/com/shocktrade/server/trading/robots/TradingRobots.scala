@@ -26,7 +26,7 @@ object TradingRobots {
    */
   def start() {
     Logger.info("Starting Trading Robots ...")
-    system.scheduler.schedule(5.seconds, 15.minutes) {
+    system.scheduler.schedule(1.minute, 15.minutes) {
       robots.foreach(_ ! Invest)
     }
     ()

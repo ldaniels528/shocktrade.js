@@ -11,9 +11,10 @@ import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
-import com.shocktrade.server.trading.Contests
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
+import com.shocktrade.server.trading.{ContestDAO, Contests}
 import org.joda.time.DateTime
+import play.api.libs.json.JsObject
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -31,7 +32,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
   import context.dispatcher
 
   override def receive = {
-    case Invest => invest()
+    case Invest =>
+      log.info(s"$name is attempting to invest...")
+      invest()
 
     case message =>
       log.info(s"Unhandled message: $message (${message.getClass.getName})")
@@ -44,60 +47,21 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       // lookup my user profile
         profile <- UserProfiles.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
 
+        // find contests to join
+        _ <- findContestsToJoin(profile)
+
         // lookup the quotes using our trading strategy
         jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
 
         // first let's retrieve the contests I've involved in ...
         contests <- Contests.findContestsByPlayerName(name)()
-
       } {
-        // find contests to join
-        findContestsToJoin(profile, contests)
-
         // process each contest
         contests.foreach { contest =>
           // the contest must be active and started
           if (contest.isEligible) {
-            contest.participants.find(_.name == name) foreach { participant =>
-              log.info(s"$name: Looking for investment opportunities for ${contest.name}...")
-
-              // always purchase the 'Fee Waiver' Perk
-              ensurePerk(contest, participant, PerkTypes.FEEWAIVR)
-
-              // compute the funds available (subtract what we already have on order)
-              val totalBuyOrdersCost = participant.orders.map(_.cost).sum
-              val cashAvailable = participant.cashAccount.cashFunds - totalBuyOrdersCost
-              log.info(f"$name: I've got $$$cashAvailable%.2f to spend ($$${participant.cashAccount.cashFunds}%.2f cash and $$$totalBuyOrdersCost%.2f in orders)...")
-              if (cashAvailable > 500) {
-                // let's filter the quotes retrieved for the strategy including the ones we've ordered or already own
-                val orderedSymbols = participant.orders.map(_.symbol)
-                val ownedSymbols = participant.positions.map(_.symbol)
-                val orderedOrOwned = (orderedSymbols ++ ownedSymbols).distinct
-
-                //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
-
-                val quotes = jsQuotes map (_.as[CompleteQuote]) filterNot (q => orderedOrOwned.contains(q.symbol))
-                log.info(s"$name: Identified ${quotes.size} of ${jsQuotes.size} quote(s) for potential investment...")
-
-                // let's get $1000 worth of each
-                val targetSpend: BigDecimal = if (cashAvailable > MINIMUM_SPEND) MINIMUM_SPEND else cashAvailable
-                val stocks = quotes map (q => Security(q.symbol, q.exchange, q.lastTrade, q.lastTrade.map(targetSpend / _).map(_.toInt), q.spreadPct, q.volume))
-                tabular.transform(stocks) foreach log.info
-
-                // how much can I buy?
-                val numOfSecuritiesToBuy = (cashAvailable / targetSpend).toInt
-                log.info(s"$name: I can buy up to $numOfSecuritiesToBuy securities")
-
-                // place the orders
-                implicit val timeout: Timeout = 5.seconds
-                stocks.take(numOfSecuritiesToBuy) foreach { stock =>
-                  createOrder(stock) foreach { order =>
-                    log.info(s"$name: Creating order ${order.orderType} ${order.symbol} @ ${order.price} x ${order.quantity} ${order.priceType}")
-                    Contests.createOrder(contest.id, participant.id, order)
-                  }
-                }
-              }
-            }
+            //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
+            contest.participants.find(_.name == name) foreach (operateRobot(contest, _, jsQuotes))
           }
         }
       }
@@ -108,12 +72,61 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     }
   }
 
-  private def findContestsToJoin(u: UserProfile, contests: Seq[Contest]): Unit = {
-    contests.foreach { contest =>
-      // if robots are allowed, and I have not already joined ...
-      if (contest.robotsAllowed && !contest.participants.exists(_.id == u.id)) {
-        log.info(s"$name: Joining '${contest.name}' ...")
-        Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, cashAccount = CashAccount(cashFunds = contest.startingBalance)))
+  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[JsObject]) {
+    log.info(s"$name: Looking for investment opportunities in '${contest.name}'...")
+
+    // compute the funds available (subtract what we already have on order)
+    val totalBuyOrdersCost = participant.orders.map(_.cost).sum
+    val cashAvailable = participant.cashAccount.cashFunds - totalBuyOrdersCost
+    log.info(f"$name: I've got $$$cashAvailable%.2f to spend ($$${participant.cashAccount.cashFunds}%.2f cash and $$$totalBuyOrdersCost%.2f in orders)...")
+    if (cashAvailable > 500) {
+      // let's filter the quotes retrieved for the strategy including the ones we've ordered or already own
+      val orderedSymbols = participant.orders.map(_.symbol)
+      val ownedSymbols = participant.positions.map(_.symbol)
+      val orderedOrOwned = (orderedSymbols ++ ownedSymbols).distinct
+      val quotes = jsQuotes map (_.as[CompleteQuote]) filterNot (q => orderedOrOwned.contains(q.symbol))
+      log.info(s"$name: Identified ${quotes.size} of ${jsQuotes.size} quote(s) for potential investment...")
+
+      // let's get $1000 worth of each
+      val targetSpend: BigDecimal = if (cashAvailable > MINIMUM_SPEND) MINIMUM_SPEND else cashAvailable
+      val stocks = quotes map (q => Security(q.symbol, q.exchange, q.lastTrade, q.lastTrade.map(targetSpend / _).map(_.toInt), q.spreadPct, q.volume))
+      tabular.transform(stocks) foreach log.info
+
+      // how much can I buy?
+      val numOfSecuritiesToBuy = (cashAvailable / targetSpend).toInt
+      log.info(s"$name: I can buy up to $numOfSecuritiesToBuy securities")
+
+      // place the orders
+      implicit val timeout: Timeout = 5.seconds
+      stocks.take(numOfSecuritiesToBuy) foreach { stock =>
+        createOrder(stock) foreach { order =>
+          log.info(s"$name: Creating order ${order.orderType} ${order.symbol} @ ${order.price} x ${order.quantity} ${order.priceType}")
+          Contests.createOrder(contest.id, participant.id, order)
+        }
+      }
+    }
+  }
+
+  private def findContestsToJoin(u: UserProfile) = {
+    log.info(s"$name is looking for contests to join...")
+    ContestDAO.findContests(SearchOptions(activeOnly = Some(true))) map { contests =>
+      contests.foreach { contest =>
+        log.info(s"$name is considering joining '${contest.name}'...")
+        // if robots are allowed, and I have not already joined ...
+        if (contest.robotsAllowed && !contest.participants.exists(_.id == u.id)) {
+          log.info(s"$name: Joining '${contest.name}' ...")
+          for {
+          // join the contest
+            contest_? <- Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, cashAccount = CashAccount(cashFunds = contest.startingBalance)))
+
+            // always purchase the 'Fee Waiver' Perk
+            _ = for {
+              c <- contest_?
+              p <- c.participants.find(_.name == name)
+            } yield ensurePerk(c, p, PerkTypes.FEEWAIVR)
+
+          } yield contest_?
+        }
       }
     }
   }
@@ -141,7 +154,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
   }
 
   private def ensurePerk(contest: Contest, participant: Participant, perkType: PerkType) = {
-    if (contest.perksAllowed && !participant.perks.contains(perkType)) Future.successful(None)
+    if (!contest.perksAllowed || participant.perks.contains(perkType)) Future.successful(None)
     else {
       log.info(s"$name: Attempting to purchase perk $perkType [${contest.name}}]...")
       for {
