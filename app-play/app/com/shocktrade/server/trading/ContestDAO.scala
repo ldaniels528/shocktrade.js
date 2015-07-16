@@ -34,7 +34,7 @@ object ContestDAO {
 
   /**
    * Creates a new contest
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the [[LastError outcome]]
    */
@@ -42,7 +42,7 @@ object ContestDAO {
 
   /**
    * Closes the given contest
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the [[Contest updated contest]]
    */
@@ -50,9 +50,7 @@ object ContestDAO {
     db.command(FindAndModify(
       collection = "Contests",
       query = BS("_id" -> c.id),
-      modify = new Update(BS(
-        "$set" -> BS("status" -> ContestStatuses.CLOSED)),
-        fetchNewObject = true),
+      modify = new Update(BS("$set" -> BS("status" -> ContestStatuses.CLOSED)), fetchNewObject = true),
       upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
@@ -143,7 +141,6 @@ object ContestDAO {
   }
 
   def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit ec: ExecutionContext): Future[LastError] = {
-    Logger.info(s"host = $host")
     mc.update(
       selector = BS("_id" -> contestId),
       update = host.map(name => BS("$set" -> BS("host" -> name))) getOrElse BS("$unset" -> BS("host" -> "")),
@@ -265,7 +262,7 @@ object ContestDAO {
 
   /**
    * Closes all expired orders; resulting in closed orders in order history
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of orders updated
@@ -315,7 +312,7 @@ object ContestDAO {
 
   /**
    * Fails the given work order; creating a new closed order in the process
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param wo the given [[WorkOrder work order]]
    * @param message the given error message
    * @param asOfDate the given [[Date effective date]]
@@ -422,7 +419,7 @@ object ContestDAO {
 
   /**
    * Attempts to retrieve a position matching the given criteria
-   * @param contest the given [[Contest contest]]
+   * @param contest the given [[com.shocktrade.models.contest.Contest contest]]
    * @param claim the given [[Claim claim]]
    * @param minimumQty the minimum number of shares required to fullfill the claim
    * @return an option of a [[Position position]]
@@ -462,7 +459,7 @@ object ContestDAO {
 
   /**
    * Increases a position by creating or updating a position
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param claim the given [[Claim claim]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
@@ -477,7 +474,7 @@ object ContestDAO {
 
   /**
    * Increases a position by creating a new position
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param claim the given [[Claim claim]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
@@ -513,7 +510,7 @@ object ContestDAO {
 
   /**
    * Increases a position by updating an existing position
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param claim the given [[Claim claim]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
@@ -562,7 +559,7 @@ object ContestDAO {
 
   /**
    * Reduces a position
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param claim the given [[Claim claim]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
@@ -622,7 +619,7 @@ object ContestDAO {
   /**
    * Performs a secondary update because MongoDB doesn't allow a record to be pulled and added to the sub-document
    * in a single atomic operation
-   * @param c the given [[Contest contest]]
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
    * @param wo the given [[WorkOrder work order]]
    * @param tmpPos the given ephemeral [[Position position]]
    * @param ec the implicit [[ExecutionContext execution context]]

@@ -22,14 +22,6 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7",
 
 val scalajsOutputDir = Def.settingKey[File]("Directory for Javascript files output by ScalaJS")
 
-// define the projects: Shared, Scala.js and Scala JVM (Play)
-/*
-lazy val appShared = (project in file("app-core"))
-  .settings(
-    name := "shocktrade-shared",
-    scalaVersion := myScalaVersion
-  )*/
-
 lazy val appScalaJs = (project in file("app-js"))
   .settings(
     name := "shocktrade-scalajs",
