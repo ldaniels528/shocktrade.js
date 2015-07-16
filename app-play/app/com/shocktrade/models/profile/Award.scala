@@ -1,6 +1,4 @@
-package com.shocktrade.core
-
-import com.shocktrade.core.AwardCodes._
+package com.shocktrade.models.profile
 
 /**
  * Represents the collection award

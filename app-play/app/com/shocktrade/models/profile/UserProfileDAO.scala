@@ -1,7 +1,7 @@
 package com.shocktrade.models.profile
 
 import com.shocktrade.controllers.ProfileController._
-import com.shocktrade.core.AwardCodes.AwardCode
+import AwardCodes.AwardCode
 import com.shocktrade.util.BSONHelper._
 import reactivemongo.api.collections.default.BSONCollection
 import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}

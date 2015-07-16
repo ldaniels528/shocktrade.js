@@ -1,4 +1,4 @@
-package com.shocktrade.core
+package com.shocktrade.models.profile
 
 /**
  * Contest Award Codes

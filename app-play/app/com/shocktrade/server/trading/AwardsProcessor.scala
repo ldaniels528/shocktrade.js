@@ -1,6 +1,7 @@
 package com.shocktrade.server.trading
 
-import com.shocktrade.core.AwardCodes._
+import com.shocktrade.models.profile.AwardCodes
+import AwardCodes._
 import com.shocktrade.models.contest.{Contest, Participant, PerkTypes}
 import play.api.Logger
 
