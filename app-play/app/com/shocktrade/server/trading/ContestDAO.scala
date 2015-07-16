@@ -89,12 +89,16 @@ object ContestDAO {
     )).cursor[Contest]
   }
 
+  def findActiveContests(implicit ec: ExecutionContext) = {
+    mc.find(BS("status" -> ContestStatuses.ACTIVE)).cursor[Contest]
+  }
+
   def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
-    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[T].headOption
+    mc.find(BS("_id" -> contestId), fields.toBsonFields).one[T]
   }
 
   def findContestByID(contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.find(BS("_id" -> contestId), fields.toBsonFields).cursor[Contest].headOption
+    mc.find(BS("_id" -> contestId), fields.toBsonFields).one[Contest]
   }
 
   def findContests(searchOptions: SearchOptions, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
@@ -188,21 +192,27 @@ object ContestDAO {
   //        Margin Account
   /////////////////////////////////////////////////////////////////////////////////
 
-  def applyMarginInterest(contest: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
+  def applyMarginInterest(contest: Contest)(implicit ec: ExecutionContext) = Future.sequence {
     // update all of the margin accounts for each player
-    val participants = contest.participants map { player =>
-      player.copy(marginAccount = player.marginAccount map { acct =>
-        val interest = MarginAccount.InterestRate * acct.borrowedFunds
-        acct.copy(interestPaid = acct.interestPaid + interest, cashFunds = acct.cashFunds - interest, asOfDate = asOfDate)
-      })
+    contest.participants flatMap { player =>
+      player.marginAccount map { acct =>
+        val currentTime = System.currentTimeMillis()
+        val interest = acct.borrowedFunds * MarginAccount.InterestRate / (currentTime - acct.asOfDate.getMillis)
+        Logger.info(f"${contest.name} - ${player.name}: margin interest - $interest%.2f (${acct.borrowedFunds * MarginAccount.InterestRate})")
+        if (interest >= .01) {
+          // update the entire contest
+          db.command(FindAndModify(
+            collection = "Contests",
+            query = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
+            modify = new Update(BS(
+              "$inc" -> BS("participants.$.marginAccounts.cashFunds" -> -interest),
+              "$inc" -> BS("participants.$.marginAccounts.interestPaid" -> interest),
+              "$set" -> BS("participants.$.marginAccounts.asOfDate" -> new Date(currentTime))), fetchNewObject = true),
+            upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+        }
+        else Future.successful(None)
+      }
     }
-
-    // update the entire contest
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contest.id),
-      modify = new Update(BS("$set" -> BS("participants" -> participants)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {

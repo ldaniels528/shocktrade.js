@@ -56,7 +56,7 @@ object ContestActor {
    * @author lawrence.daniels@gmail.com
    */
   sealed trait ContestSpecificAction extends ContestAgnosticAction {
-    
+
     def contestId: BSONObjectID
 
   }
@@ -65,14 +65,17 @@ object ContestActor {
   //      Actor Messages
   ///////////////////////////////////////////////////////////////////////////////
 
-  case class ApplyMarginInterest(contest: Contest, asOfDate: Date) extends ContestSpecificAction {
+  case class ApplyMarginInterest(contest: Contest) extends ContestSpecificAction {
     override def contestId = contest.id
+
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
-      ContestDAO.applyMarginInterest(contest, asOfDate) onComplete {
+      ContestDAO.applyMarginInterest(contest) onComplete {
         case Success(contest_?) =>
           mySender ! contest_?
           contest_?.foreach {
-            WebSockets ! ContestUpdated(_)
+            _ foreach {
+              WebSockets ! ContestUpdated(_)
+            }
           }
         case Failure(e) => mySender ! e
       }
@@ -81,6 +84,7 @@ object ContestActor {
 
   case class CreateContest(contest: Contest) extends ContestSpecificAction {
     override def contestId = contest.id
+
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.createContest(contest) onComplete {
         case Success(lastError) =>
@@ -235,6 +239,7 @@ object ContestActor {
 
   case class ProcessOrders(contest: Contest, asOfDate: DateTime) extends ContestSpecificAction {
     override def contestId = contest.id
+
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       val startTime = System.currentTimeMillis()
 

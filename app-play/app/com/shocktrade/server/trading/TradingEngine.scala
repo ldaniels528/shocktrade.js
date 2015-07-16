@@ -10,6 +10,7 @@ import play.api.Logger
 import play.api.libs.iteratee.Iteratee
 import play.libs.Akka
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
@@ -19,7 +20,7 @@ import scala.language.implicitConversions
  */
 object TradingEngine {
   private val system = Akka.system
-  private implicit val timeout: Timeout = 5.second
+  private implicit val timeout: Timeout = 5.seconds
   private var lastEffectiveDate: DateTime = computeInitialFulfillmentDate
   private val frequency = 1.minute // TODO should be 5 (in minutes)
 
@@ -33,27 +34,21 @@ object TradingEngine {
     system.scheduler.schedule(5.seconds, frequency)(processOrders())
 
     // process orders once per hour
-    system.scheduler.schedule(1.hour, frequency)(applyMarginInterest())
+    system.scheduler.schedule(1.minute, 4.hours)(applyMarginInterest())
     ()
   }
 
-  def applyMarginInterest()(implicit timeout: Timeout) = {
-    /*
+  def applyMarginInterest()(implicit ec: ExecutionContext, timeout: Timeout) = {
     try {
-      val currentTime = new Date()
-
       Logger.info(s"Applying interest charges for margin accounts...")
-      ContestDAO.getActiveContests(lastEffectiveDate, lastEffectiveDate.minusMinutes(60)).enumerate().apply(Iteratee.foreach { contest =>
-        Contests ! ApplyMarginInterest(contest, lastEffectiveDate)
+      ContestDAO.findActiveContests.enumerate().apply(Iteratee.foreach { contest =>
+        Contests ! ApplyMarginInterest(contest)
       })
-
-      // update the effective date
-      lastEffectiveDate = currentTime;
 
     } catch {
       case e: Exception =>
         Logger.error("Error processing orders", e)
-    }*/
+    }
   }
 
   private def processOrders() {
