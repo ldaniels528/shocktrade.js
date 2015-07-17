@@ -39,7 +39,7 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
   extends Controller {
 
   private val myFriends = mySession.fbFriends
-  private val invites = emptyArray[TaggableFriend]
+  $scope.invites = emptyArray[TaggableFriend]
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
@@ -47,9 +47,9 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
 
   @scoped def getFriends = myFriends
 
-  @scoped def getInvitedCount = invites.count(invitee => isDefined(invitee))
+  @scoped def getInvitedCount = $scope.invites.count(invitee => isDefined(invitee))
 
-  @scoped def getInvites = invites
+  @scoped def getInvites = $scope.invites
 
   @scoped def ok() = $modalInstance.close(getSelectedFriends)
 
@@ -61,8 +61,8 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
 
   private def getSelectedFriends = {
     val selectedFriends = emptyArray[TaggableFriend]
-    for (n <- 0 to invites.length) {
-      if (isDefined(invites(n))) selectedFriends.push(myFriends(n))
+    for (n <- 0 to $scope.invites.length) {
+      if (isDefined($scope.invites(n))) selectedFriends.push(myFriends(n))
     }
     selectedFriends
   }
@@ -74,12 +74,15 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
  * @author lawrence.daniels@gmail.com
  */
 object InvitePlayerDialogController {
-
   type InvitePlayerDialogResult = js.Array[TaggableFriend]
+
 }
 
 /**
  * Invite Player Dialog Scope
  * @author lawrence.daniels@gmail.com
  */
-trait InvitePlayerScope extends Scope
+trait InvitePlayerScope extends Scope {
+  var invites: js.Array[TaggableFriend] = js.native
+
+}

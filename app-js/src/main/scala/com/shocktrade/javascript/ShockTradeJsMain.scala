@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.extensions.{Route, RouteProvider}
+import com.github.ldaniels528.scalascript.extensions.{RouteProvider, RouteTo}
 import com.github.ldaniels528.scalascript.{Module, Scope, angular}
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
@@ -19,7 +19,7 @@ import scala.scalajs.js
  */
 object ShockTradeJsMain extends js.JSApp {
 
-  def main() {
+  override def main() {
     // create the application
     val module = angular.createModule("shocktrade",
       js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3ChartDirectives", "toaster", "ui.bootstrap"))
@@ -46,20 +46,20 @@ object ShockTradeJsMain extends js.JSApp {
     // define the routes
     module.config({ ($routeProvider: RouteProvider) =>
       $routeProvider
-        .when("/about/investors", Route(templateUrl = "/assets/views/about/investors.htm"))
-        .when("/about/me", Route(templateUrl = "/assets/views/about/me.htm"))
-        .when("/about/us", Route(templateUrl = "/assets/views/about/us.htm"))
-        .when("/dashboard", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
-        .when("/dashboard/:contestId", Route(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
-        .when("/discover", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
-        .when("/discover/:symbol", Route(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
-        .when("/explore", Route(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
-        .when("/home", Route(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
-        .when("/inspect/:contestId", Route(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
-        .when("/news", Route(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
-        .when("/research", Route(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
-        .when("/search", Route(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
-        .otherwise(Route(redirectTo = "/about/us"))
+        .when("/about/investors", RouteTo(templateUrl = "/assets/views/about/investors.htm"))
+        .when("/about/me", RouteTo(templateUrl = "/assets/views/about/me.htm"))
+        .when("/about/us", RouteTo(templateUrl = "/assets/views/about/us.htm"))
+        .when("/dashboard", RouteTo(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/dashboard/:contestId", RouteTo(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
+        .when("/discover", RouteTo(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/discover/:symbol", RouteTo(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
+        .when("/explore", RouteTo(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
+        .when("/home", RouteTo(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
+        .when("/inspect/:contestId", RouteTo(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
+        .when("/news", RouteTo(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
+        .when("/research", RouteTo(templateUrl = "/assets/views/research/research.htm", controller = "ResearchController"))
+        .when("/search", RouteTo(templateUrl = "/assets/views/play/search.htm", controller = "GameSearchController"))
+        .otherwise(RouteTo(redirectTo = "/about/us"))
       ()
     })
 

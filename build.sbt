@@ -5,10 +5,6 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 
-name := "shocktrade.js"
-
-organization := "shocktrade.com"
-
 val myScalaVersion = "2.11.6"
 val myAkkaVersion = "2.3.9"
 val myPlayVersion = "2.3.8" //2.4.0-M3"
@@ -18,13 +14,12 @@ scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7", "-target", "1.7", "-g:vars")
 
-//val clients = Seq(appScalaJs)
-
 val scalajsOutputDir = Def.settingKey[File]("Directory for Javascript files output by ScalaJS")
 
 lazy val appScalaJs = (project in file("app-js"))
   .settings(
     name := "shocktrade-scalajs",
+    organization := "shocktrade.com",
     scalaVersion := myScalaVersion,
     relativeSourceMaps := true,
     persistLauncher := true,
@@ -32,17 +27,16 @@ lazy val appScalaJs = (project in file("app-js"))
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalascript" % "0.1.1",
-//    "org.scala-js" %% "scalajs-library" % "0.6.3",
+      "com.github.ldaniels528" %%% "scalascript" % "0.1",
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
       "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
     ))
   .enablePlugins(ScalaJSPlugin)
-//.aggregate(appShared)
 
 lazy val appScalaJvm = (project in file("app-play"))
   .settings(
     name := "shocktrade.js",
+    organization := "shocktrade.com",
     version := "0.8.0",
     scalaVersion := myScalaVersion,
     relativeSourceMaps := true,
