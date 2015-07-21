@@ -7,7 +7,7 @@ import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.commons.helpers.StringHelper._
-import com.ldaniels528.tabular.Tabular
+import com.github.ldaniels528.tabular.Tabular
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}

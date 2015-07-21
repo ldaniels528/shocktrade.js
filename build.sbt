@@ -19,7 +19,7 @@ val scalajsOutputDir = Def.settingKey[File]("Directory for Javascript files outp
 lazy val appScalaJs = (project in file("app-js"))
   .settings(
     name := "shocktrade-scalajs",
-    organization := "shocktrade.com",
+    organization := "com.shocktrade",
     scalaVersion := myScalaVersion,
     relativeSourceMaps := true,
     persistLauncher := true,
@@ -27,7 +27,7 @@ lazy val appScalaJs = (project in file("app-js"))
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalascript" % "0.1",
+      "com.github.ldaniels528" %%% "scalascript" % "0.2",
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
       "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
     ))
@@ -36,7 +36,7 @@ lazy val appScalaJs = (project in file("app-js"))
 lazy val appScalaJvm = (project in file("app-play"))
   .settings(
     name := "shocktrade.js",
-    organization := "shocktrade.com",
+    organization := "com.shocktrade",
     version := "0.8.0",
     scalaVersion := myScalaVersion,
     relativeSourceMaps := true,
@@ -55,8 +55,8 @@ lazy val appScalaJvm = (project in file("app-play"))
       //
       "com.ldaniels528" %% "commons-helpers" % "0.1.0",
       "com.ldaniels528" %% "play-json-compat" % "0.1.0",
-      "com.ldaniels528" %% "shocktrade-services" % "0.4.4",
-      "com.ldaniels528" %% "tabular" % "0.1.2",
+      "com.github.ldaniels528" %% "tabular" % "0.1.3",
+      "com.shocktrade" %% "shocktrade-services" % "0.5",
       //
       // TypeSafe dependencies
       //

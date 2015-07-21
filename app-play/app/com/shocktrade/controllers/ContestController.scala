@@ -4,7 +4,7 @@ import java.util.Date
 
 import akka.util.Timeout
 import com.ldaniels528.commons.helpers.OptionHelper._
-import com.ldaniels528.tabular.Tabular
+import com.github.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._

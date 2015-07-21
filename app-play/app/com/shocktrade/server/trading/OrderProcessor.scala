@@ -3,8 +3,8 @@ package com.shocktrade.server.trading
 import java.util.Date
 
 import com.ldaniels528.commons.helpers.OptionHelper._
-import com.ldaniels528.tabular.Tabular
-import com.ldaniels528.tabular.formatters.FormatHandler
+import com.github.ldaniels528.tabular.Tabular
+import com.github.ldaniels528.tabular.formatters.FormatHandler
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
