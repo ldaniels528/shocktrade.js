@@ -2,21 +2,22 @@ package com.shocktrade.controllers
 
 import java.util.Date
 
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.commons.helpers.StringHelper._
-import com.shocktrade.models.quote.StockQuotes
+import com.shocktrade.models.quote._
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
+import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.functional.syntax._
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc.{Controller, _}
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands._
 
@@ -26,26 +27,18 @@ import scala.concurrent.Future
  * Quotes Controller
  * @author lawrence.daniels@gmail.com
  */
-object QuotesController extends Controller with MongoController with ProfileFiltering {
-  private lazy val naicsCodes = loadNaicsMappings()
-  private lazy val sicCodes = loadSicsMappings()
+object QuotesController extends Controller with MongoController with ProfileFiltering with Classifications {
   private val Stocks = "Stocks"
-  lazy val mcQ = db.collection[JSONCollection]("Stocks")
-  lazy val mcN = db.collection[JSONCollection]("NAICS")
-  lazy val mcP = db.collection[JSONCollection]("Players")
-  lazy val mcS = db.collection[JSONCollection]("SIC")
+  lazy val mcQ = db.collection[BSONCollection](Stocks)
+  lazy val mcP = db.collection[BSONCollection]("Players")
 
-  val limitFields = JS(
+  val limitFields = BS(
     "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1,
     "change" -> 1, "changePct" -> 1, "spread" -> 1, "volume" -> 1)
 
-  val searchFields = JS(
+  val searchFields = BS(
     "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "change" -> 1, "changePct" -> 1,
     "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1, "tradeDate" -> 1, "spread" -> 1, "volume" -> 1)
-
-  // preload the quotes
-  // TODO reinstate this later ...
-  // StockQuotes.init(searchFields)
 
   ////////////////////////////////////////////////////////////////////////////
   //      API Functions
@@ -57,111 +50,30 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   def autoComplete(searchTerm: String, maxResults: Int) = Action.async { implicit request =>
     mcQ.find(
       // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ?0, $options:'i' }} ] }
-      JS(/*"active" -> true,*/ "$or" -> JsArray(Seq(
-        JS("symbol" -> JS("$regex" -> s"^$searchTerm", "$options" -> "i")),
-        JS("name" -> JS("$regex" -> s"^$searchTerm", "$options" -> "i"))))),
+      BS(/*"active" -> true,*/ "$or" -> BSONArray(Seq(
+        BS("symbol" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i")),
+        BS("name" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i"))))),
       // fields
-      JS("symbol" -> 1, "name" -> 1, "exchange" -> 1, "assetType" -> 1))
-      .sort(JS("symbol" -> 1))
-      .cursor[JsObject]
-      .collect[Seq](maxResults) map { jsa =>
-      val enriched = jsa map (js => js ++ JS("icon" -> getIcon(js)))
+      BS("symbol" -> 1, "name" -> 1, "exchange" -> 1, "assetType" -> 1))
+      .sort(BS("symbol" -> 1))
+      .cursor[AutoCompleteQuote]()
+      .collect[Seq](maxResults) map { quotes =>
+      val enriched = quotes map (quote => Json.toJson(quote.copy(icon = getIcon(quote))))
       Ok(JsArray(enriched))
     }
   }
 
-  private def getIcon(js: JsObject): String = {
-    val assetType = (js \ "assetType").asOpt[String]
-    assetType match {
-      case Some("Crypto-Currency") => "fa fa-bitcoin st_blue"
-      case Some("Currency") => "fa fa-dollar st_blue"
-      case Some("ETF") => "fa fa-stack-exchange st_blue"
+  private def getIcon(quote: AutoCompleteQuote): Option[String] = {
+    (quote.assetType map {
+      case "Crypto-Currency" => "fa fa-bitcoin st_blue"
+      case "Currency" => "fa fa-dollar st_blue"
+      case "ETF" => "fa fa-stack-exchange st_blue"
       case _ => "fa fa-globe st_blue"
-    }
-  }
-
-  def exploreSectors(userID: String) = Action.async {
-    import reactivemongo.core.commands._
-
-    val results = for {
-      quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> BS("$ne" -> BSONNull))),
-        GroupField("sector")("total" -> SumValue(1))))) map { results =>
-        results.toSeq map (Json.toJson(_))
-      }
-    } yield quotes
-    results map (js => Ok(JsArray(js)))
-  }
-
-  def exploreIndustries(userID: String, sector: String) = Action.async {
-    import reactivemongo.core.commands._
-
-    val results = for {
-      quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> BS("$ne" -> BSONNull))),
-        GroupField("industry")("total" -> SumValue(1))))) map { results =>
-        results.toSeq map (Json.toJson(_))
-      }
-    } yield quotes
-    results map (js => Ok(JsArray(js)))
-  }
-
-  def exploreSubIndustries(userID: String, sector: String, industry: String) = Action.async {
-    import reactivemongo.core.commands._
-
-    val results = for {
-      quotes <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "assetType" -> BS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> BS("$ne" -> BSONNull))),
-        GroupField("subIndustry")("total" -> SumValue(1))))) map { results =>
-        results.toSeq map (Json.toJson(_))
-      }
-    } yield quotes
-    results map (js => Ok(JsArray(js)))
-  }
-
-  def exploreQuotesBySubIndustry(userID: String, sector: String, industry: String, subIndustry: String) = Action.async {
-    val results = for {
-      quotes <- mcQ.find(JS("active" -> true, "assetType" -> JS("$in" -> Seq("Common Stock", "ETF")), "sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry), searchFields)
-        .cursor[JsObject]
-        .collect[Seq]()
-    } yield quotes
-    results map (js => Ok(JsArray(js)))
-  }
-
-  def exploreNAICSSectors = Action.async {
-    (for {
-      codes <- naicsCodes
-      results <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "naicsNumber" -> BS("$ne" -> BSONNull))),
-        GroupField("naicsNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
-        Json.toJson(bs) match {
-          case jo: JsObject =>
-            val naicsNumber = (jo \ "_id").asOpt[Int].getOrElse(0)
-            jo ++ JS("label" -> codes.get(naicsNumber))
-          case jv => jv
-        }
-      })
-    } yield results) map (js => Ok(JsArray(js)))
-  }
-
-  def exploreSICSectors = Action.async {
-    (for {
-      codes <- sicCodes
-      results <- db.command(new Aggregate(Stocks, Seq(
-        Match(BS("active" -> true, "sicNumber" -> BS("$ne" -> BSONNull))),
-        GroupField("sicNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
-        Json.toJson(bs) match {
-          case jo: JsObject =>
-            val sicNumber = (jo \ "_id").asOpt[Int].getOrElse(0)
-            jo ++ JS("label" -> codes.get(sicNumber))
-          case jv => jv
-        }
-      })
-    } yield results) map (js => Ok(JsArray(js)))
+    }) ?? Some("fa fa-globe st_blue")
   }
 
   def getExchangeCounts = Action.async {
-    db.command(new Aggregate(Stocks, Seq(
+    db.command(Aggregate(Stocks, Seq(
       Match(BS("active" -> true, "exchange" -> BS("$ne" -> BSONNull), "assetType" -> BS("$in" -> BSONArray("Common Stock", "ETF")))),
       GroupField("exchange")("total" -> SumValue(1))))) map { results =>
       results.toSeq map (Json.toJson(_))
@@ -170,21 +82,15 @@ object QuotesController extends Controller with MongoController with ProfileFilt
 
   def getCachedQuote(symbol: String) = Action.async {
     StockQuotes.findRealTimeQuote(symbol) map {
-      case Some(js) => Ok(js)
+      case Some(quote) => Ok(Json.toJson(quote))
       case None =>
         NotFound(s"No quote found for ticker $symbol")
     }
   }
 
-  def getSectorInfo(symbol: String) = Action.async {
-    mcQ.find(JS("symbol" -> symbol), JS("symbol" -> 1, "exchange" -> 1, "sector" -> 1, "industry" -> 1, "subIndustry" -> 1))
-      .cursor[JsObject]
-      .collect[Seq]() map (js => Ok(JsArray(js)))
-  }
-
   def getOrderQuote(symbol: String) = Action.async {
     StockQuotes.findRealTimeQuote(symbol) map {
-      case Some(result) => Ok(result)
+      case Some(quote) => Ok(Json.toJson(quote))
       case None => NotFound(JS("symbol" -> symbol, "status" -> "error", "message" -> "Symbol not found"))
     }
   }
@@ -197,18 +103,11 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     val results = for {
       js <- request.body.asJson
       symbols <- js.asOpt[Array[String]]
-    } yield StockQuotes.findDBaseQuotes(symbols)
-
-    def toPriceQuote(js: JsValue) = (for {
-      symbol <- (js \ "symbol").asOpt[String]
-      lastTrade <- (js \ "lastTrade").asOpt[Double]
-    } yield JS(symbol -> JS("lastTrade" -> lastTrade))) getOrElse JS()
+    } yield StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
     results match {
       case Some(futureQuotes) =>
-        futureQuotes map { case JsArray(quotes) =>
-          Ok(JsArray(quotes map toPriceQuote))
-        }
+        futureQuotes map (quotes => Ok(Json.toJson(quotes)))
       case None =>
         Future.successful(BadRequest("JSON request expected"))
     }
@@ -216,28 +115,32 @@ object QuotesController extends Controller with MongoController with ProfileFilt
 
   def getQuote(symbol: String) = Action.async {
     val results = for {
-      quote <- StockQuotes.findFullQuote(symbol)
-      productQuotes <- getEnrichedProducts(quote.getOrElse(JS()))
+      quote_? <- StockQuotes.findFullQuote(symbol)
+      quoteBs = quote_?.getOrElse(BS())
+      productsJs <- getEnrichedProducts(quoteBs)
       naicsMap <- naicsCodes
       sicMap <- sicCodes
-      enhanced = quote map { q =>
+      enhanced = quote_? map { quote =>
+        // start building the enriched JSON quote
+        val quoteJs = Json.toJson(quote).asInstanceOf[JsObject]
+
         // lookup the OTC advisory
         val advisoryTuple = for {
-          symbol <- (q \ "symbol").asOpt[String]
-          exchange <- (q \ "exchange").asOpt[String]
+          symbol <- quote.getAs[String]("symbol")
+          exchange <- quote.getAs[String]("exchange")
           (advisory, advisoryType) <- getAdvisory(symbol, exchange)
         } yield (advisory, advisoryType)
 
         // lookup the SIC and NAICS code
-        val sicNumber = Option(q \ "sicNumber") flatMap (_.asOpt[Int])
-        val naicsNumber = Option(q \ "naicsNumber") flatMap (_.asOpt[Int])
-        val sicDescription = sicNumber flatMap sicMap.get
-        val naicsDescription = naicsNumber flatMap naicsMap.get
-        val beta = (q \ "beta").asOpt[Double]
+        val beta = quote.getAs[Double]("beta")
         val betaDescription = getBetaDescription(beta)
+        val naicsNumber = quote.getAs[Int]("naicsNumber")
+        val naicsDescription = naicsNumber flatMap naicsMap.get
+        val sicNumber = quote.getAs[Int]("sicNumber")
+        val sicDescription = sicNumber flatMap sicMap.get
         val riskLevel = beta.map {
-          case b if b >= 0 && b <= 1.25 => "Low";
-          case b if b > 1.25 && b <= 1.9 => "Medium";
+          case b if b >= 0 && b <= 1.25 => "Low"
+          case b if b > 1.25 && b <= 1.9 => "Medium"
           case _ => "High"
         } getOrElse "Unknown"
 
@@ -248,26 +151,23 @@ object QuotesController extends Controller with MongoController with ProfileFilt
           "betaDescription" -> betaDescription,
           "riskLevel" -> riskLevel,
           "advisory" -> (advisoryTuple map (_._1)),
-          "advisoryType" -> (advisoryTuple map (_._2))) ++ q ++
-          (if (productQuotes.nonEmpty) JS("products" -> productQuotes) else JS())
+          "advisoryType" -> (advisoryTuple map (_._2))) ++
+          quoteJs ++
+          (if (productsJs.nonEmpty) JS("products" -> JsArray(productsJs)) else JS())
       }
     } yield enhanced
 
     results map {
-      case Some(quote) => Ok(quote)
+      case Some(quote) => Ok(Json.toJson(quote))
       case None => Ok(JS())
     }
   }
 
-  private def getEnrichedProducts(baseQuote: JsObject): Future[Seq[JsObject]] = {
-    baseQuote \ "products" match {
-      case JsArray(products) =>
+  private def getEnrichedProducts(baseQuote: BS): Future[Seq[JsObject]] = {
+    baseQuote.get("products").flatMap(_.seeAsOpt[Seq[ProductQuote]]) match {
+      case Some(products) =>
         // get the product mapping
-        val pm = products flatMap { p =>
-          for {
-            symbol <- (p \ "symbol").asOpt[String]
-          } yield (symbol, p)
-        }
+        val pm = products map { p => (p.symbol, p) }
 
         // if products exist, load the quotes for each product's symbol
         if (pm.isEmpty) Future.successful(Nil)
@@ -275,25 +175,19 @@ object QuotesController extends Controller with MongoController with ProfileFilt
           val symbols = pm.map(_._1)
           for {
           // retrieve the product quotes
-            productsQuotes <- mcQ.find(JS("symbol" -> JS("$in" -> symbols)), limitFields).cursor[JsObject].collect[Seq]()
+            productsQuotes <- StockQuotes.findQuotes[ProductQuote](symbols)(ProductQuote.Fields: _*)
 
             // get the product quote mapping
-            pqm = Map(productsQuotes flatMap { pq =>
-              for {
-                symbol <- (pq \ "symbol").asOpt[String]
-              } yield (symbol, pq)
-            }: _*)
+            pqm = Map(productsQuotes map { pq => (pq.symbol, pq) }: _*)
 
-            // create the enriched products
-            enrichedProducts = pm map {
-              case (symbol, product: JsObject) => product ++ pqm.getOrElse(symbol, JS())
-              case (symbol, product) => pqm.getOrElse(symbol, JS())
+            // enrich the products
+            enrichedProducts = pm.map { case (symbol, p) =>
+              val productJs = Json.toJson(p).asInstanceOf[JsObject]
+              pqm.get(symbol).map(q => Json.toJson(q).asInstanceOf[JsObject] ++ productJs) getOrElse productJs
             }
-
           } yield enrichedProducts
         }
-
-      case _ =>
+      case None =>
         Future.successful(Nil)
     }
   }
@@ -305,12 +199,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     // return the promise of the quotes
     result match {
       case Some(symbols) if symbols.nonEmpty =>
-        mcQ.find(JS("symbol" -> JS("$in" -> symbols)),
-          JS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "open" -> 1, "close" -> 1, "lastTrade" -> 1, "tradeDateTime" -> 1,
-            "high" -> 1, "low" -> 1, "high52Week" -> 1, "low52Week" -> 1, "spread" -> 1, "changePct" -> 1, "volume" -> 1))
-          .cursor[JsObject]
-          .collect[Seq]()
-          .map(docs => Ok(JsArray(docs)))
+        StockQuotes.findQuotes[BasicQuote](symbols)(BasicQuote.Fields: _*).map(quotes => Ok(Json.toJson(quotes)))
       case _ =>
         Future.successful(Ok(JsArray()))
     }
@@ -318,18 +207,18 @@ object QuotesController extends Controller with MongoController with ProfileFilt
 
   def getRealtimeQuote(symbol: String) = Action.async {
     StockQuotes.findRealTimeQuote(symbol) map {
-      case Some(js) => Ok(js)
+      case Some(quote) => Ok(Json.toJson(quote))
       case None => Ok(JS())
     }
   }
 
   def getRiskLevel(symbol: String) = Action.async {
     val results = for {
-      quote_? <- mcQ.find(JS("symbol" -> symbol)).cursor[JsObject].collect[Seq](1) map (_.headOption)
+      quote_? <- mcQ.find(BS("symbol" -> symbol)).one[BS]
       result = quote_? match {
         case None => "Unknown"
         case Some(quote) =>
-          val beta_? = (quote \ "beta").asOpt[Double]
+          val beta_? = quote.getAs[Double]("beta")
           beta_? match {
             case Some(beta) if beta >= 0 && beta <= 1.25 => "Low";
             case Some(beta) if beta > 1.25 && beta <= 1.9 => "Medium";
@@ -448,9 +337,9 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     }
   }
 
-  def findQuotesBySymbols(symbols: Seq[String]): Future[Seq[Quote]] = {
-    mcQ.find(JS("symbol" -> JS("$in" -> symbols)), JS("symbol" -> 1, "exchange" -> 1, "industry" -> 1, "sector" -> 1, "lastTrade" -> 1))
-      .cursor[Quote]
+  def findQuotesBySymbols(symbols: Seq[String]): Future[Seq[SectorQuote]] = {
+    mcQ.find(BS("symbol" -> BS("$in" -> symbols)), SectorQuote.Fields.toBsonFields)
+      .cursor[SectorQuote]()
       .collect[Seq]()
   }
 
@@ -469,60 +358,6 @@ object QuotesController extends Controller with MongoController with ProfileFilt
         case _ => "The volatility could not be determined"
       }
     }
-  }
-
-  /**
-   * Loads the NAICS codes mapping
-   */
-  private def loadNaicsMappings(): Future[Map[Int, String]] = {
-    mcN.find(JS()).cursor[JsObject].collect[Seq]() map {
-      _ flatMap { js =>
-        for {
-          code <- (js \ "naicsNumber").asOpt[Int]
-          description <- (js \ "description").asOpt[String]
-        } yield (code, description)
-      }
-    } map (f => Map(f: _*))
-  }
-
-  /**
-   * Loads the SIC codes mapping
-   */
-  private def loadSicsMappings(): Future[Map[Int, String]] = {
-    mcS.find(JS()).cursor[JsObject].collect[Seq]() map {
-      _ flatMap { js =>
-        for {
-          code <- (js \ "sicNumber").asOpt[Int]
-          description <- (js \ "description").asOpt[String]
-        } yield (code, description)
-      }
-    } map (f => Map(f: _*))
-  }
-
-  implicit val quoteReads: Reads[Quote] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "exchange").readNullable[String] and
-      (__ \ "sector").readNullable[String] and
-      (__ \ "industry").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double])(Quote.apply _)
-
-  case class Quote(symbol: String,
-                   market: Option[String],
-                   sector: Option[String],
-                   industry: Option[String],
-                   lastTrade: Option[Double]) {
-
-    def exchange: Option[String] = {
-      market map (_.toUpperCase) map {
-        case s if s.startsWith("NASD") || s.startsWith("NCM") || s.startsWith("NMS") => "NASDAQ"
-        case s if s.startsWith("NYS") || s.startsWith("NYQ") => "NYSE"
-        case s if s.startsWith("OTC") => "OTCBB"
-        case s if s.startsWith("OTHER") => "OTCBB"
-        case s if s == "PNK" => "OTCBB"
-        case other => other
-      }
-    }
-
   }
 
 }

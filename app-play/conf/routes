@@ -63,13 +63,13 @@ GET           /api/contests/player/:playerId/totalInvestment        com.shocktra
 POST          /api/contests/search                                  com.shocktrade.controllers.ContestController.contestSearch
 
 # Explore
-GET           /api/explore/symbol/:symbol                           com.shocktrade.controllers.QuotesController.getSectorInfo(symbol)
-GET           /api/explore/sectors                                  com.shocktrade.controllers.QuotesController.exploreSectors(userId ?= null)
-GET           /api/explore/industries                               com.shocktrade.controllers.QuotesController.exploreIndustries(userId ?= null, sector)
-GET           /api/explore/subIndustries                            com.shocktrade.controllers.QuotesController.exploreSubIndustries(userId ?= null, sector, industry)
-GET           /api/explore/quotes                                   com.shocktrade.controllers.QuotesController.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
-GET           /api/explore/naics                                    com.shocktrade.controllers.QuotesController.exploreNAICSSectors
-GET           /api/explore/sic                                      com.shocktrade.controllers.QuotesController.exploreSICSectors
+GET           /api/explore/symbol/:symbol                           com.shocktrade.controllers.ExploreController.getSectorInfo(symbol)
+GET           /api/explore/sectors                                  com.shocktrade.controllers.ExploreController.exploreSectors(userId ?= null)
+GET           /api/explore/industries                               com.shocktrade.controllers.ExploreController.exploreIndustries(userId ?= null, sector)
+GET           /api/explore/subIndustries                            com.shocktrade.controllers.ExploreController.exploreSubIndustries(userId ?= null, sector, industry)
+GET           /api/explore/quotes                                   com.shocktrade.controllers.ExploreController.exploreQuotesBySubIndustry(userId ?= null, sector, industry, subIndustry)
+GET           /api/explore/naics                                    com.shocktrade.controllers.ExploreController.exploreNAICSSectors
+GET           /api/explore/sic                                      com.shocktrade.controllers.ExploreController.exploreSICSectors
 
 # News
 GET           /api/news/sources                                     com.shocktrade.controllers.NewsController.getSources

@@ -7,11 +7,10 @@ import akka.util.Timeout
 import com.shocktrade.actors.UserProfileActor
 import com.shocktrade.actors.UserProfileActor._
 import com.shocktrade.controllers.ProfileController._
-import com.shocktrade.util.BSONHelper._
 import play.libs.Akka
-import reactivemongo.api.collections.default.BSONCollection
-import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID}
-import reactivemongo.core.commands.LastError
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.api.commands.WriteResult
+import reactivemongo.bson.{BSONDocument => BS, BSONObjectID}
 
 import scala.collection.concurrent.TrieMap
 import scala.concurrent.duration._
@@ -32,10 +31,10 @@ object UserProfiles {
   /**
    * Creates the given user profile
    * @param profile the given user profile
-   * @return a promise of the [[LastError outcome]]
+   * @return a promise of the [[WriteResult outcome]]
    */
-  def createProfile(profile: UserProfile): Future[LastError] = {
-    (UserProfiles ? CreateProfile(profile)).mapTo[LastError]
+  def createProfile(profile: UserProfile): Future[WriteResult] = {
+    (UserProfiles ? CreateProfile(profile)).mapTo[WriteResult]
   }
 
   /**

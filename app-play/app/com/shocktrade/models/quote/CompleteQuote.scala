@@ -24,13 +24,13 @@ case class CompleteQuote(symbol: String,
                          close: Option[Double] = None,
                          low: Option[Double] = None,
                          high: Option[Double] = None,
-                         low52Week: Option[Double] = None,
-                         high52Week: Option[Double] = None,
+                         //low52Week: Option[Double] = None,
+                         //high52Week: Option[Double] = None,
                          volume: Option[Long] = None,
                          avgVol3m: Option[Long] = None,
                          marketCap: Option[Double] = None,
                          active: Option[Boolean] = None,
-                         //products: List[ETFProduct] = Nil,
+                         products: List[ETFProduct] = Nil,
                          askBid: AskBid = AskBid(),
                          industryCodes: IndustryCodes = IndustryCodes(),
                          valuation: Valuation = Valuation()) {
@@ -61,13 +61,13 @@ object CompleteQuote {
       (__ \ "close").readNullable[Double] and
       (__ \ "low").readNullable[Double] and
       (__ \ "high").readNullable[Double] and
-      (__ \ "low52Week").readNullable[Double] and
-      (__ \ "high52Week").readNullable[Double] and
+      //(__ \ "low52Week").readNullable[Double] and
+      //(__ \ "high52Week").readNullable[Double] and
       (__ \ "volume").readNullable[Long] and
       (__ \ "avgVol3m").readNullable[Long] and
       (__ \ "marketCap").readNullable[Double] and
       (__ \ "active").readNullable[Boolean] and
-      //(__ \ "products").read[List[ETFProduct]] and
+      (__ \ "products").readNullable[List[ETFProduct]].map(_.getOrElse(Nil)) and
       __.read[AskBid] and
       __.read[IndustryCodes] and
       __.read[Valuation])(CompleteQuote.apply _)
@@ -86,13 +86,13 @@ object CompleteQuote {
       (__ \ "close").writeNullable[Double] and
       (__ \ "low").writeNullable[Double] and
       (__ \ "high").writeNullable[Double] and
-      (__ \ "low52Week").writeNullable[Double] and
-      (__ \ "high52Week").writeNullable[Double] and
+      //(__ \ "low52Week").writeNullable[Double] and
+      //(__ \ "high52Week").writeNullable[Double] and
       (__ \ "volume").writeNullable[Long] and
       (__ \ "avgVol3m").writeNullable[Long] and
       (__ \ "marketCap").writeNullable[Double] and
       (__ \ "active").writeNullable[Boolean] and
-      //(__ \ "products").write[List[ETFProduct]] and
+      (__ \ "products").write[List[ETFProduct]] and
       __.write[AskBid] and
       __.write[IndustryCodes] and
       __.write[Valuation])(unlift(CompleteQuote.unapply))
@@ -111,13 +111,13 @@ object CompleteQuote {
       doc.getAs[Double]("close"),
       doc.getAs[Double]("low"),
       doc.getAs[Double]("high"),
-      doc.getAs[Double]("low52Week"),
-      doc.getAs[Double]("high52Week"),
+      //doc.getAs[Double]("low52Week"),
+      //doc.getAs[Double]("high52Week"),
       doc.getAs[Long]("volume"),
       doc.getAs[Long]("avgVol3m"),
       doc.getAs[Double]("marketCap"),
       doc.getAs[Boolean]("active"),
-      //doc.getAs[List[ETFProduct]]("products").getOrElse(Nil),
+      doc.getAs[List[ETFProduct]]("products").getOrElse(Nil),
       AskBid.AskBidReader.read(doc),
       IndustryCodes.IndustryCodesReader.read(doc),
       Valuation.ValuationReader.read(doc)
@@ -138,14 +138,14 @@ object CompleteQuote {
       "close" -> quote.close,
       "low" -> quote.low,
       "high" -> quote.high,
-      "low52Week" -> quote.low52Week,
-      "high52Week" -> quote.high52Week,
+      //"low52Week" -> quote.low52Week,
+      //"high52Week" -> quote.high52Week,
       "volume" -> quote.volume,
       "avgVol3m" -> quote.avgVol3m,
       "marketCap" -> quote.marketCap,
       "active" -> quote.active,
       // collections
-      //"products" -> quote.products,
+      "products" -> quote.products,
       "ask" -> quote.askBid.ask,
       "askSize" -> quote.askBid.askSize,
       "bid" -> quote.askBid.bid,

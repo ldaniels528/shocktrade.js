@@ -11,7 +11,7 @@ import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsArray, JsObject, JsValue}
 import play.libs.Akka
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
 
 import scala.collection.concurrent.TrieMap
 
@@ -119,7 +119,7 @@ object WebSockets {
       ))
   }
 
-  case class QuoteUpdated(quote: JsValue) extends WsRelayMessage {
+  case class QuoteUpdated(quote: BSONDocument) extends WsRelayMessage {
     def toJsonMessage = JS("action" -> "quote_updated", "data" -> quote)
   }
 

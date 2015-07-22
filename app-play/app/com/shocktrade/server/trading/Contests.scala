@@ -12,13 +12,13 @@ import com.shocktrade.models.contest.AccountTypes._
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import play.libs.Akka
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.bson.BSONObjectID
-import reactivemongo.core.commands.LastError
 
 import scala.collection.concurrent.TrieMap
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.{postfixOps, implicitConversions}
+import scala.language.{implicitConversions, postfixOps}
 
 /**
  * Contest Management Proxy
@@ -36,7 +36,7 @@ object Contests {
   }
 
   def createContest(contest: Contest)(implicit timeout: Timeout) = {
-    (Contests ? CreateContest(contest)).mapTo[LastError]
+    (Contests ? CreateContest(contest)).mapTo[WriteResult]
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit timeout: Timeout) = {
@@ -52,7 +52,7 @@ object Contests {
   }
 
   def deleteContestByID(id: BSONObjectID)(implicit timeout: Timeout) = {
-    (Contests ? DeleteContestByID(id)).mapTo[LastError]
+    (Contests ? DeleteContestByID(id)).mapTo[WriteResult]
   }
 
   /**
@@ -121,7 +121,7 @@ object Contests {
   }
 
   def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit timeout: Timeout) = {
-    (Contests ? UpdateProcessingHost(contestId, host)).mapTo[LastError]
+    (Contests ? UpdateProcessingHost(contestId, host)).mapTo[WriteResult]
   }
 
   def !(action: ContestAgnosticAction) = finderActor ! action

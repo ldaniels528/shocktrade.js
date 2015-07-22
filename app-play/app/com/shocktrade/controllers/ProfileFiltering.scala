@@ -1,10 +1,7 @@
 package com.shocktrade.controllers
 
-import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json._
-import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocument => BS, BSONObjectID}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -18,7 +15,7 @@ trait ProfileFiltering {
   /**
    * Players collection
    */
-  def mcP: JSONCollection
+  def mcP: BSONCollection
 
   /**
    * Retrieves the exchanges for the given player
@@ -31,18 +28,15 @@ trait ProfileFiltering {
       case Some(userID) =>
         for {
         // attempt to retrieve the user's profile
-          profile_? <- mcP.find(JS("_id" -> BSONObjectID(userID)), JS("exchanges" -> 1))
-            .cursor[JsObject]
+          profile_? <- mcP.find(BS("_id" -> BSONObjectID(userID)), BS("exchanges" -> 1))
+            .cursor[BS]()
             .headOption
 
           // attempt to extract the exchanges
           exchanges = (for {
             profile <- profile_?
-            exchanges = profile \ "exchanges" match {
-              case JsArray(seq) => seq flatMap (_.asOpt[String])
-              case js => EXCHANGES
-            }
-          } yield exchanges) getOrElse Seq.empty
+            exchanges <- profile.getAs[Seq[String]]("exchanges")
+          } yield exchanges) getOrElse Nil
         } yield exchanges
     }
   }

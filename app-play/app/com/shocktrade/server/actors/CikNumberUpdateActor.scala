@@ -11,7 +11,7 @@ import com.shocktrade.server.actors.CikNumberUpdateActor._
 import com.shocktrade.services.CikCompanySearchService
 import com.shocktrade.services.CikCompanySearchService.CikInfo
 import play.libs.Akka
-import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, BSONNull}
 
 import scala.concurrent.ExecutionContext
@@ -52,7 +52,7 @@ class CikNumberUpdateActor extends Actor with ActorLogging {
     val missingCiks = mc.find(
       BS("active" -> true, "assetType" -> "Common Stock", "name" -> BS("$ne" -> BSONNull), "cikNumber" -> BS("$exists" -> false)),
       BS("symbol" -> 1, "name" -> 1))
-      .cursor[MissingCik]
+      .cursor[MissingCik]()
       .collect[Seq]()
 
     missingCiks.map { records =>

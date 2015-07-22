@@ -1,6 +1,6 @@
 package com.shocktrade.server.trading
 
-import reactivemongo.core.commands.LastError
+import reactivemongo.api.commands.WriteResult
 
 /**
  * Represents the Outcome of a Trading Operation
@@ -20,8 +20,8 @@ trait Outcome {
  */
 object Outcome {
 
-  def apply(result: LastError): Outcome = {
-    if(result.inError) Failed(result.message) else Succeeded(result.n)
+  def apply(result: WriteResult): Outcome = {
+    if (result.inError) Failed(result.message) else Succeeded(result.n)
   }
 
   /**

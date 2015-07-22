@@ -1,14 +1,14 @@
 package com.shocktrade.controllers
 
 import com.shocktrade.controllers.QuotesController._
-import com.shocktrade.models.quote.QuoteFilter
+import com.shocktrade.models.quote.{QuoteFilter, ResearchQuote}
+import com.shocktrade.util.BSONHelper._
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.Reads._
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
-import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -18,12 +18,8 @@ import scala.util.{Failure, Success, Try}
  * @author lawrence.daniels@gmail.com
  */
 object ResearchController extends Controller {
-  private lazy val mcQ = db.collection[JSONCollection]("Stocks")
+  private lazy val mcQ = db.collection[BSONCollection]("Stocks")
   private val MaxResults = 250
-  private val fields = JS(
-    "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "prevClose" -> 1, "open" -> 1,
-    "changePct" -> 1, "low" -> 1, "high" -> 1, "spread" -> 1, "volume" -> 1
-  )
 
   ////////////////////////////////////////////////////////////////////////////
   //      API Functions
@@ -33,8 +29,9 @@ object ResearchController extends Controller {
     Try(request.body.asJson.map(_.as[QuoteFilter])) match {
       case Success(Some(form)) =>
         val maxResults = form.maxResults.map(Math.min(_, MaxResults)).getOrElse(MaxResults)
-        mcQ.find(form.makeQuery, fields)
-          .cursor[JsObject].collect[Seq](maxResults) map (js => Ok(Json.toJson(js)))
+        mcQ.find(form.makeQuery, ResearchQuote.Fields.toBsonFields)
+          .cursor[ResearchQuote]()
+          .collect[Seq](maxResults) map (quotes => Ok(Json.toJson(quotes)))
       case Success(None) =>
         Future.successful(BadRequest("Proper JSON body expected"))
       case Failure(e) =>

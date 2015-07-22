@@ -8,14 +8,12 @@ import com.shocktrade.controllers.QuotesController._
 import com.shocktrade.util.BSONHelper._
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.Reads._
-import play.api.libs.json.{JsArray, JsObject}
 import play.api.mvc.{Action, Controller}
 import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
-import reactivemongo.core.commands._
 
 import scala.concurrent.Future
 
@@ -25,7 +23,7 @@ import scala.concurrent.Future
  */
 object OnlineStatusController extends Controller with ErrorHandler {
   private val CollectionName = "OnlineStatuses"
-  private val mc = db.collection[JSONCollection](CollectionName)
+  private val mc = db.collection[BSONCollection](CollectionName)
 
   // This collection requires a TTL index to function properly
   // db.OnlineStatuses.createIndex({updatedTime:1}, {expireAfterSeconds:1800})
@@ -37,7 +35,7 @@ object OnlineStatusController extends Controller with ErrorHandler {
   def getGroupStatus = Action.async { request =>
     request.body.asText.map(_.split("[,]")) match {
       case Some(userIDs) =>
-        mc.find(JS("_id" -> JS("$in" -> userIDs))).cursor[JsObject].collect[Seq]() map (results => Ok(JsArray(results))) recover {
+        mc.find(BS("_id" -> BS("$in" -> userIDs))).cursor[BS]().collect[Seq]() map (results => Ok(Json.toJson(results))) recover {
           case e => Ok(createError(e))
         }
       case None =>
@@ -46,8 +44,8 @@ object OnlineStatusController extends Controller with ErrorHandler {
   }
 
   def getStatus(userID: String) = Action.async {
-    mc.find(JS("_id" -> userID.toBSID)).one[JsObject] map {
-      case Some(status) => Ok(status)
+    mc.find(BS("_id" -> userID.toBSID)).one[BS] map {
+      case Some(status) => Ok(Json.toJson(status))
       case None => Ok(JS("_id" -> userID.toBSID, "connected" -> false))
     } recover {
       case e => Ok(createError(e))
@@ -67,20 +65,22 @@ object OnlineStatusController extends Controller with ErrorHandler {
   }
 
   private def setConnectedStatus(userID: String, newState: Boolean): Future[Boolean] = {
-    db.command(FindAndModify(
-      collection = CollectionName,
-      query = BS("_id" -> userID.toBSID),
-      modify = new Update(BS("$set" -> BS("connected" -> newState, "updatedTime" -> new Date())), fetchNewObject = false),
-      upsert = true)) map {
-      case Some(oldStatus) =>
-        if (!oldStatus.getAs[Boolean]("connected").contains(newState)) {
-          Logger.info(s"User $userID is now ${if (newState) "Online" else "Offline"}")
+    mc.findAndUpdate(
+      selector = BS("_id" -> userID.toBSID),
+      update = BS("$set" -> BS("connected" -> newState, "updatedTime" -> new Date())),
+      fetchNewObject = false, upsert = true
+    ) map { outcome =>
+      outcome.result[BS] match {
+        case Some(oldStatus) =>
+          if (!oldStatus.getAs[Boolean]("connected").contains(newState)) {
+            Logger.info(s"User $userID is now ${if (newState) "Online" else "Offline"}")
+            WebSockets ! UserStateChanged(userID, newState)
+          }
+          newState
+        case None =>
           WebSockets ! UserStateChanged(userID, newState)
-        }
-        newState
-      case None =>
-        WebSockets ! UserStateChanged(userID, newState)
-        newState
+          newState
+      }
     }
   }
 

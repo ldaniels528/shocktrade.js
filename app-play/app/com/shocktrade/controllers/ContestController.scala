@@ -3,15 +3,14 @@ package com.shocktrade.controllers
 import java.util.Date
 
 import akka.util.Timeout
-import com.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.tabular.Tabular
+import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
-import com.shocktrade.controllers.QuotesController.Quote
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
-import com.shocktrade.models.quote.StockQuotes
+import com.shocktrade.models.quote.{SectorQuote, MarketQuote, QuoteSnapshot, StockQuotes}
 import com.shocktrade.server.trading.{Contests, OrderProcessor}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
@@ -211,7 +210,7 @@ object ContestController extends Controller with ErrorHandler {
 
   private def computeMarketValue(positions: Seq[Position]): Future[Double] = {
     val symbols = positions.map(_.symbol).distinct
-    StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade", "close") map (_ flatMap (_.asOpt[MarketQuote])) map { quotes =>
+    StockQuotes.findQuotes[MarketQuote](symbols)(MarketQuote.Fields: _*) map { quotes =>
       val mapping = Map(quotes.map(q => (q.symbol, q)): _*)
       (positions flatMap { pos =>
         for {
@@ -360,13 +359,13 @@ object ContestController extends Controller with ErrorHandler {
 
       // load the quotes for all order symbols
       symbols = quantities.map(_._1)
-      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
+      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
-      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
+      quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
 
       // compute the total net worth
-      netWorth = (quantities flatMap { case (symbol, quantity) => quotes.get(symbol).map(_.lastTrade * quantity) }).sum
+      netWorth = (quantities flatMap { case (symbol, quantity) => quoteMap.get(symbol).map(_.lastTrade.getOrElse(0.0d) * quantity) }).sum
 
     } yield netWorth
 
@@ -521,10 +520,10 @@ object ContestController extends Controller with ErrorHandler {
       //_ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes
-      mapping = Map(quotes map (q => (q.symbol, q)): _*)
+      quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
 
       // get the participants' net worth and P&L
-      totalWorths = participants map (asRanking(startingBalance, mapping, _))
+      totalWorths = participants map (asRanking(startingBalance, quoteMap, _))
 
       _ = tabular.transform(totalWorths) foreach (s => Logger.info(s))
 
@@ -538,15 +537,15 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // load the quotes for all order symbols
-      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
+      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
-      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
+      quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
 
       // enrich the orders
       enrichedOrders = player.orders flatMap { order =>
         for {
-          quote <- quotes.get(order.symbol)
+          quote <- quoteMap.get(order.symbol)
         } yield Json.toJson(order).asInstanceOf[JsObject] ++ JS(
           "companyName" -> quote.name,
           "lastTrade" -> quote.lastTrade)
@@ -562,16 +561,16 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // load the quotes for all position symbols
-      quotesJs <- StockQuotes.findQuotes(symbols)("name", "symbol", "lastTrade")
+      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
-      quotes = Map(quotesJs map (_.as[QuoteSnapshot]) map (q => (q.symbol, q)): _*)
+      quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
 
       // enrich the positions
       enrichedPositions = player.positions flatMap { pos =>
         for {
-          quote <- quotes.get(pos.symbol)
-          netValue = quote.lastTrade * pos.quantity
+          quote <- quoteMap.get(pos.symbol)
+          netValue = quote.lastTrade.map(_ * pos.quantity) getOrElse 0.0d
           gainLoss = netValue - pos.cost
           gainLossPct = 100d * (gainLoss / pos.cost)
         } yield Json.toJson(pos).asInstanceOf[JsObject] ++ JS(
@@ -587,7 +586,7 @@ object ContestController extends Controller with ErrorHandler {
     } yield Json.toJson(player).asInstanceOf[JsObject] ++ JS("positions" -> JsArray(enrichedPositions))
   }
 
-  private def asRanking(startingBalance: BigDecimal, mapping: Map[String, Quote], p: Participant) = {
+  private def asRanking(startingBalance: BigDecimal, mapping: Map[String, SectorQuote], p: Participant) = {
 
     def computeInvestment(positions: Seq[Position]) = {
       positions flatMap { p =>

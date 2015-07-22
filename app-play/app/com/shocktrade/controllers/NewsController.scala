@@ -11,8 +11,8 @@ import play.api.libs.ws.WS
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocument => BS, BSONObjectID, _}
 
 import scala.concurrent.Future
 
@@ -21,8 +21,8 @@ import scala.concurrent.Future
  * @author lawrence.daniels@gmail.com
  */
 object NewsController extends Controller with MongoController with ParsingCapabilities {
-  private lazy val mcQ = db.collection[JSONCollection]("Stocks")
-  private lazy val mcR = db.collection[JSONCollection]("RssFeeds")
+  private lazy val mcQ = db.collection[BSONCollection]("Stocks")
+  private lazy val mcR = db.collection[BSONCollection]("RssFeeds")
 
   ////////////////////////////////////////////////////////////////////////////
   //      API Functions
@@ -35,10 +35,10 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   def getFeed(id: String) = Action.async { request =>
     for {
     // load the source
-      source_? <- mcR.find(JS("_id" -> BSONObjectID(id))).cursor[JsObject].headOption
+      source_? <- mcR.find(BS("_id" -> BSONObjectID(id))).one[BS]
 
       // extract the URL
-      url = source_? map (_ \ "url") map (_.as[String]) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
+      url = source_? flatMap (_.getAs[String]("url")) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
 
       // get the content from the news service
       ws <- WS.url(url).get()
@@ -54,7 +54,7 @@ object NewsController extends Controller with MongoController with ParsingCapabi
    * Retrieves the sources
    */
   def getSources = Action.async {
-    mcR.find(JS()).sort(JS("priority" -> 1)).cursor[JsObject].collect[Seq]() map (r => Ok(JsArray(r)))
+    mcR.find(BS()).sort(BS("priority" -> 1)).cursor[BS]().collect[Seq]() map (docs => Ok(Json.toJson(docs)))
   }
 
   /**
@@ -91,7 +91,7 @@ object NewsController extends Controller with MongoController with ParsingCapabi
       loadChangeQuotes(symbols) map { quotes =>
         JS("title" -> extract(item, "title"),
           "description" -> description,
-          "quotes" -> JsArray(quotes),
+          "quotes" -> Json.toJson(quotes),
           "link" -> extract(item, "link"),
           "category" -> extract(item, "category"),
           "pubDate" -> (extract(item, "pubDate") map parseDate)) ++ parseRSSThumbNail(item)
@@ -132,13 +132,13 @@ object NewsController extends Controller with MongoController with ParsingCapabi
     degunk((xml \ name) map (_.text) mkString " ")
   }
 
-  private def loadChangeQuotes(symbols: Seq[String]): Future[Seq[JsObject]] = {
+  private def loadChangeQuotes(symbols: Seq[String]): Future[Seq[BS]] = {
     if (symbols.isEmpty) Future.successful(Seq.empty)
     else {
       mcQ.find(
-        JS("symbol" -> JS("$in" -> symbols)),
-        JS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "changePct" -> 1, "volume" -> 1, "sector" -> 1, "industry" -> 1))
-        .cursor[JsObject].collect[Seq]()
+        BS("symbol" -> BS("$in" -> symbols)),
+        BS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "changePct" -> 1, "volume" -> 1, "sector" -> 1, "industry" -> 1))
+        .cursor[BS]().collect[Seq]()
     }
   }
 
@@ -194,7 +194,7 @@ object NewsController extends Controller with MongoController with ParsingCapabi
     }
   }
 
-  private def allCaps(s: String): Boolean = s.forall(c => Character.isUpperCase(c))
+  private def allCaps(s: String): Boolean = s.forall(_.isUpper)
 
   private def parseDate(s: String): Date = {
     import scala.util.Try

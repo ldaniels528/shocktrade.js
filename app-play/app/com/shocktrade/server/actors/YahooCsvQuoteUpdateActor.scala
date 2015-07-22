@@ -32,7 +32,7 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
 
         counter.set(0)
         var count = 0
-        StockQuotes.getSymbolsForCsvUpdate foreach { docs =>
+        StockQuotes.getSymbolsForCsvUpdate.collect[Seq]() foreach { docs =>
           docs.flatMap(_.getAs[String]("symbol")).sliding(32, 32) foreach { symbols =>
             count += symbols.length
             self ! RefreshQuotes(symbols)

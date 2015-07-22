@@ -69,7 +69,7 @@ lazy val appScalaJvm = (project in file("app-play"))
       // Third Party dependencies
       //
       "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1",
-      "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
+      "org.reactivemongo" %% "play2-reactivemongo" % "0.11.3.play23",
       "com.vmunier" %% "play-scalajs-scripts" % "0.1.0",
       //
       // Web Jar dependencies

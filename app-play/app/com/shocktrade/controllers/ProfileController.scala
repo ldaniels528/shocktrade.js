@@ -11,8 +11,8 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.bson.{BSONDocument => BS, BSONObjectID}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success, Try}
  * @author lawrence.daniels@gmail.com
  */
 object ProfileController extends Controller with MongoController with ErrorHandler {
-  lazy val mcU = db.collection[JSONCollection]("PlayerUpdates")
+  lazy val mcU = db.collection[BSONCollection]("PlayerUpdates")
 
   ////////////////////////////////////////////////////////////////////////////
   //      API functions
@@ -91,7 +91,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: PUT /api/profile/:id/favorite/:symbol
    */
   def addFavoriteSymbol(id: String, symbol: String) = Action.async {
-    UserProfileDAO.addFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
+    UserProfileDAO.addFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errmsg)))
   }
 
   /**
@@ -99,7 +99,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: DELETE /api/profile/:id/favorite/:symbol
    */
   def removeFavoriteSymbol(id: String, symbol: String) = Action.async {
-    UserProfileDAO.removeFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
+    UserProfileDAO.removeFavoriteSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errmsg)))
   }
 
   /**
@@ -107,7 +107,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: PUT /api/profile/:id/recent/:symbol
    */
   def addRecentSymbol(id: String, symbol: String) = Action.async {
-    UserProfileDAO.addRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
+    UserProfileDAO.addRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errmsg)))
   }
 
   /**
@@ -115,7 +115,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
    * REST: DELETE /api/profile/:id/recent/:symbol
    */
   def removeRecentSymbol(id: String, symbol: String) = Action.async {
-    UserProfileDAO.removeRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errMsg)))
+    UserProfileDAO.removeRecentSymbol(id, symbol) map (outcome => Ok(JS("symbol" -> symbol, "error" -> outcome.errmsg)))
   }
 
   /**
@@ -126,7 +126,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
     request.body.asText match {
       case Some(msg) if msg.startsWith("[") && msg.endsWith("]") =>
         val messageIDs = msg.drop(1).dropRight(1).split(",").map(s => s.drop(1).dropRight(1)).toSeq
-        val task = Future.sequence(messageIDs map (id => mcU.remove(JS("_id" -> BSONObjectID(id)))))
+        val task = Future.sequence(messageIDs map (id => mcU.remove(BS("_id" -> BSONObjectID(id)))))
         task map (r => Ok(""))
       case _ =>
         System.out.println(s"request = ${request.body.asText}")
@@ -135,7 +135,7 @@ object ProfileController extends Controller with MongoController with ErrorHandl
   }
 
   def getNotifications(userName: String, limit: Int) = Action.async {
-    mcU.find(JS("userName" -> userName)).cursor[JsObject].collect[Seq](limit) map (o => Ok(JsArray(o)))
+    mcU.find(BS("userName" -> userName)).cursor[BS]().collect[Seq](limit) map (o => Ok(Json.toJson(o)))
   }
 
   def toExchangeUpdate(js: JsValue): ExchangeUpdate = {

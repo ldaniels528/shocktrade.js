@@ -83,14 +83,6 @@ object ContestControllerForms {
       (__ \ "recipient").readNullable[PlayerRef] and
       (__ \ "text").read[String])(MessageForm.apply _)
 
-  case class MarketQuote(symbol: String, name: Option[String], lastTrade: Option[Double], close: Option[Double])
-
-  implicit val marketQuoteReads: Reads[MarketQuote] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "name").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double] and
-      (__ \ "close").readNullable[Double]) (MarketQuote.apply _)
-
   /**
    * contestId = 553aa9f15dd0bcf00087f6ea, playerId = 51a308ac50c70a97d375a6b2,
    * form = {"emailNotify":true,"symbol":"AMD","limitPrice":2.3,"exchange":"NasdaqCM","volumeAtOrderTime":15001242,"orderType":"BUY",
@@ -120,13 +112,6 @@ object ContestControllerForms {
       (__ \ "emailNotify").readNullable[Boolean] and
       (__ \ "partialFulfillment").readNullable[Boolean] and
       (__ \ "accountType").read[AccountType])(OrderForm.apply _)
-
-  case class QuoteSnapshot(name: String, symbol: String, lastTrade: Double)
-
-  implicit val quoteSnapshotReads: Reads[QuoteSnapshot] = (
-    (__ \ "name").read[String] and
-      (__ \ "symbol").read[String] and
-      (__ \ "lastTrade").read[Double])(QuoteSnapshot.apply _)
 
   case class TransferFundsForm(source: AccountType, amount: Double)
 

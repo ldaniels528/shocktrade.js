@@ -14,9 +14,8 @@ import com.shocktrade.server.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSH
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.libs.Akka
-import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS}
-import reactivemongo.core.commands.LastError
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
@@ -57,7 +56,7 @@ class FinraRegShoUpdateActor() extends Actor with ActorLogging {
         val dataSet = lines map (line => Map(header zip line.tokenize: _*)) map { dataMap =>
           RegSHO(
             dataMap.get("Symbol") orDie "Security Symbol not found",
-            dataMap.get("Security Name") map (_.truncate("New Common Stock")) map (_.truncate("Common Stock")) orDie ("Security Name not found"),
+            dataMap.get("Security Name") map (_.truncate("New Common Stock")) map (_.truncate("Common Stock")) orDie "Security Name not found",
             dataMap.get("Market Category"),
             dataMap.get("Reg SHO Threshold Flag") map (_ == "Y"),
             dataMap.get("Rule 4320") map (_ == "Y")
@@ -73,8 +72,8 @@ class FinraRegShoUpdateActor() extends Actor with ActorLogging {
 
         // display the results
         task.foreach {
-          _ foreach { case (reg, lastError) =>
-            log.info(s"${reg.symbol}: updateCount = ${lastError.n}, error = ${lastError.errMsg.orNull}")
+          _ foreach { case (reg, writeResult) =>
+            log.info(s"${reg.symbol}: updateCount = ${writeResult.n}, error = ${writeResult.errmsg.orNull}")
           }
         }
         dataSet.length
@@ -86,7 +85,7 @@ class FinraRegShoUpdateActor() extends Actor with ActorLogging {
     }
   }
 
-  private def persistData(reg: RegSHO): Future[LastError] = {
+  private def persistData(reg: RegSHO) = {
     mc.update(BS("symbol" -> reg.symbol),
       BS(
         "baseSymbol" -> reg.symbol.take(4),

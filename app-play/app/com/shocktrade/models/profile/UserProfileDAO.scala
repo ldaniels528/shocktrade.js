@@ -1,11 +1,11 @@
 package com.shocktrade.models.profile
 
 import com.shocktrade.controllers.ProfileController._
-import AwardCodes.AwardCode
+import com.shocktrade.models.profile.AwardCodes.AwardCode
 import com.shocktrade.util.BSONHelper._
-import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONArray, BSONDocument => BS, BSONObjectID, _}
-import reactivemongo.core.commands.{FindAndModify, LastError, Update}
+import reactivemongo.core.commands.LastError
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
@@ -22,7 +22,7 @@ object UserProfileDAO {
    * @param userID the given user ID
    * @param awards the given collection of awards
    */
-  def applyAwards(userID: BSONObjectID, awards: Seq[AwardCode])(implicit ec: ExecutionContext): Future[LastError] = {
+  def applyAwards(userID: BSONObjectID, awards: Seq[AwardCode])(implicit ec: ExecutionContext) = {
     mc.update(BS("_id" -> userID), BS("$addToSet" -> BS("awards" -> BS("$each" -> awards.map(_.toString)))), upsert = false, multi = false)
   }
 
@@ -31,9 +31,7 @@ object UserProfileDAO {
    * @param profile the given user profile
    * @return a promise of the [[LastError outcome]]
    */
-  def createProfile(profile: UserProfile)(implicit ec: ExecutionContext): Future[LastError] = {
-    mc.insert(profile)
-  }
+  def createProfile(profile: UserProfile)(implicit ec: ExecutionContext) = mc.insert(profile)
 
   /**
    * Retrieves a user profile by the user's name
@@ -41,14 +39,16 @@ object UserProfileDAO {
    * @param amountToDeduct the amount to deduct
    * @return a promise of an option of a user profile
    */
-  def deductFunds(userID: BSONObjectID, amountToDeduct: BigDecimal)(implicit ec: ExecutionContext): Future[Option[UserProfile]] = {
-    val q = BS("_id" -> userID /*, "networth" -> BS("$gte" -> amountToDeduct)*/)
-    val u = BS("$inc" -> BS("netWorth" -> -amountToDeduct))
-    db.command(FindAndModify("Players", q, Update(u, fetchNewObject = true), upsert = false)) map (_ flatMap (_.seeAsOpt[UserProfile]))
+  def deductFunds(userID: BSONObjectID, amountToDeduct: BigDecimal)(implicit ec: ExecutionContext) = {
+    mc.findAndUpdate(
+      selector = BS("_id" -> userID /*, "networth" -> BS("$gte" -> amountToDeduct)*/),
+      update = BS("$inc" -> BS("netWorth" -> -amountToDeduct)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[UserProfile])
   }
 
-  def findExchanges(userID: String)(implicit ec: ExecutionContext): Future[Seq[BS]] = {
-    mc.find(BS("_id" -> userID.toBSID), BS("exchanges" -> 1)).cursor[BS].collect[Seq]()
+  def findExchanges(userID: String)(implicit ec: ExecutionContext) = {
+    mc.find(BS("_id" -> userID.toBSID), BS("exchanges" -> 1)).cursor[BS]().collect[Seq]()
   }
 
   def setExchanges(userID: String, exchange: Seq[String])(implicit ec: ExecutionContext) = {
@@ -61,7 +61,7 @@ object UserProfileDAO {
 
   def findFacebookFriends(fbIds: Seq[String])(implicit ec: ExecutionContext) = {
     // db.Players.find({facebookID:{$in:["100001920054300", "100001992439064"]}}, {name:1})
-    mc.find(BS("facebookID" -> BS("$in" -> fbIds)), BS("name" -> 1, "facebookID" -> 1)).cursor[BS].collect[Seq]()
+    mc.find(BS("facebookID" -> BS("$in" -> fbIds)), BS("name" -> 1, "facebookID" -> 1)).cursor[BS]().collect[Seq]()
   }
 
   /**

@@ -1,7 +1,7 @@
 package com.shocktrade.actors
 
 import com.shocktrade.models.quote.QuoteFilter
-import play.api.libs.json.JsObject
+import reactivemongo.bson.BSONDocument
 
 /**
  * Represents the collection of messages shared by Stock Quote actors
@@ -17,6 +17,6 @@ object QuoteMessages {
 
   case class GetQuotes(symbols: Seq[String])
 
-  case class SaveQuote(symbol: String, quote: JsObject)
+  case class SaveQuote(symbol: String, quote: BSONDocument)
 
 }

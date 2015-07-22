@@ -12,7 +12,7 @@ import com.shocktrade.server.trading.Outcome.Failed
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import play.api.Logger
-import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands._
 
@@ -47,11 +47,11 @@ object ContestDAO {
    * @return a promise of the [[Contest updated contest]]
    */
   def closeContest(c: Contest)(implicit ec: ExecutionContext) = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> c.id),
-      modify = new Update(BS("$set" -> BS("status" -> ContestStatuses.CLOSED)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> c.id),
+      update = BS("$set" -> BS("status" -> ContestStatuses.CLOSED)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   /**
@@ -84,11 +84,11 @@ object ContestDAO {
       "$or" -> BSONArray(Seq(
         BS("host" -> BS("$exists" -> false)),
         BS("host" -> hostName)))
-    )).cursor[Contest]
+    )).cursor[Contest]()
   }
 
   def findActiveContests(implicit ec: ExecutionContext) = {
-    mc.find(BS("status" -> ContestStatuses.ACTIVE)).cursor[Contest]
+    mc.find(BS("status" -> ContestStatuses.ACTIVE)).cursor[Contest]()
   }
 
   def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
@@ -100,47 +100,46 @@ object ContestDAO {
   }
 
   def findContests(searchOptions: SearchOptions, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest].collect[Seq]()
+    mc.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest]().collect[Seq]()
   }
 
   def findContestsByPlayerName(playerName: String)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatuses.ACTIVE)).cursor[Contest].collect[Seq]()
+    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
   }
 
   def findContestsByPlayerID(playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatuses.ACTIVE)).cursor[Contest].collect[Seq]()
+    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
   }
 
   def joinContest(contestId: BSONObjectID, participant: Participant)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "playerCount" -> BS("$lt" -> Contest.MaxPlayers) /*, "invitationOnly" -> false*/),
-      modify = new Update(
-        BS("$inc" -> BS("playerCount" -> 1),
-          "$addToSet" -> BS("participants" -> participant)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("$inc" -> BS("playerCount" -> 1)),
+      update = BS(
+        "$inc" -> BS("playerCount" -> 1),
+        "$addToSet" -> BS("participants" -> participant)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   def quitContest(contestId: BSONObjectID, playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId),
-      modify = new Update(
-        BS("$inc" -> BS("playerCount" -> -1),
-          "$pull" -> BS("participants" -> BS("_id" -> playerId))), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId),
+      update = BS(
+        "$inc" -> BS("playerCount" -> -1),
+        "$pull" -> BS("participants" -> BS("_id" -> playerId))),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   def startContest(contestId: BSONObjectID, startTime: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
-      modify = new Update(BS("$set" -> BS("startTime" -> startTime)), fetchNewObject = true),
-      fields = None,
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
+      update = BS("$set" -> BS("startTime" -> startTime)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
-  def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit ec: ExecutionContext): Future[LastError] = {
+  def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit ec: ExecutionContext) = {
     mc.update(
       selector = BS("_id" -> contestId),
       update = host.map(name => BS("$set" -> BS("host" -> name))) getOrElse BS("$unset" -> BS("host" -> "")),
@@ -150,7 +149,7 @@ object ContestDAO {
   def updateProcessingStats(contestId: BSONObjectID,
                             executionTime: Long,
                             asOfDate: Date,
-                            lastMarketClose: Option[Date] = None)(implicit ec: ExecutionContext): Future[LastError] = {
+                            lastMarketClose: Option[Date] = None)(implicit ec: ExecutionContext) = {
     var myUpdate = BS(
       "asOfDate" -> asOfDate,
       "executionTime" -> executionTime,
@@ -198,14 +197,14 @@ object ContestDAO {
         Logger.info(f"${contest.name} - ${player.name}: margin interest - $interest%.2f (${acct.borrowedFunds * MarginAccount.InterestRate})")
         if (interest >= .01) {
           // update the entire contest
-          db.command(FindAndModify(
-            collection = "Contests",
-            query = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
-            modify = new Update(BS(
+          mc.findAndUpdate(
+            selector = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
+            update = BS(
               "$inc" -> BS("participants.$.marginAccounts.cashFunds" -> -interest),
               "$inc" -> BS("participants.$.marginAccounts.interestPaid" -> interest),
-              "$set" -> BS("participants.$.marginAccounts.asOfDate" -> new Date(currentTime))), fetchNewObject = true),
-            upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+              "$set" -> BS("participants.$.marginAccounts.asOfDate" -> new Date(currentTime))),
+            fetchNewObject = true, upsert = false
+          ) map (_.result[Contest])
         }
         else Future.successful(None)
       }
@@ -213,11 +212,11 @@ object ContestDAO {
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "participants._id" -> playerId),
-      modify = new Update(BS("$set" -> BS("participants.$.marginAccount" -> account)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId, "participants._id" -> playerId),
+      update = BS("$set" -> BS("participants.$.marginAccount" -> account)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   def marginCashPortion(amount: BigDecimal) = amount * MarginAccount.InitialMargin
@@ -230,18 +229,17 @@ object ContestDAO {
                                    amount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     val asOfDate = new Date()
     val funds = if (source == AccountTypes.CASH) amount else -amount
-
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> fundingSource(playerId, source, amount))),
-      modify = new Update(BS(
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> fundingSource(playerId, source, amount))),
+      update = BS(
         "$set" -> BS(
           "participants.$.cashAccount.asOfDate" -> asOfDate,
           "participants.$.marginAccount.asOfDate" -> asOfDate),
         "$inc" -> BS(
           "participants.$.cashAccount.cashFunds" -> -funds,
-          "participants.$.marginAccount.cashFunds" -> funds)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+          "participants.$.marginAccount.cashFunds" -> funds)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -249,11 +247,11 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   def createMessage(contestId: BSONObjectID, message: Message)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId),
-      modify = new Update(BS("$addToSet" -> BS("messages" -> message)), fetchNewObject = true), upsert = false))
-      .map(_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId),
+      update = BS("$addToSet" -> BS("messages" -> message)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -289,25 +287,24 @@ object ContestDAO {
   }
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    (for {
+    for {
       order <- ContestDAO.findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
-      contest_? <- db.command(FindAndModify(
-        collection = "Contests",
-        query = BS("_id" -> contestId, "participants._id" -> playerId),
-        modify = new Update(BS(
+      contest_? <- mc.findAndUpdate(
+        selector = BS("_id" -> contestId, "participants._id" -> playerId),
+        update = BS(
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> orderId)),
           "$addToSet" -> BS("participants.$.closedOrders" -> order)),
-          fetchNewObject = true),
-        upsert = false))
-    } yield contest_?) map (_ flatMap (_.seeAsOpt[Contest]))
+        fetchNewObject = true, upsert = false
+      ) map (_.result[Contest])
+    } yield contest_?
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    db.command(FindAndModify(
-      collection = "Contests",
-      query = BS("_id" -> contestId, "participants._id" -> playerId),
-      modify = new Update(BS("$addToSet" -> BS("participants.$.orders" -> order)), fetchNewObject = true),
-      upsert = false)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS("_id" -> contestId, "participants._id" -> playerId),
+      update = BS("$addToSet" -> BS("participants.$.orders" -> order)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   /**
@@ -319,7 +316,7 @@ object ContestDAO {
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of orders updated
    */
-  def failOrder(c: Contest, wo: WorkOrder, message: String, asOfDate: Date)(implicit ec: ExecutionContext): Future[LastError] = {
+  def failOrder(c: Contest, wo: WorkOrder, message: String, asOfDate: Date)(implicit ec: ExecutionContext) = {
     mc.update(
       // find the matching the record
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
@@ -337,7 +334,7 @@ object ContestDAO {
 
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Order]] = {
     mc.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))))
-      .cursor[Contest].headOption map (_ flatMap (_.participants.flatMap(_.orders.find(_.id == orderId)).headOption))
+      .one[Contest] map (_ flatMap (_.participants.flatMap(_.orders.find(_.id == orderId)).headOption))
   }
 
   def getExpiredWorkOrders(c: Contest, asOfDate: Date): Seq[WorkOrder] = {
@@ -363,7 +360,7 @@ object ContestDAO {
    * @return a promise of a sequence of perks
    */
   def findAvailablePerks(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Perk]] = {
-    mc.find(BS("_id" -> contestId)).cursor[Contest].headOption map {
+    mc.find(BS("_id" -> contestId)).one[Contest] map {
       case None => Nil
       case Some(contest) =>
         val startingBalance = contest.startingBalance.toDouble
@@ -404,13 +401,15 @@ object ContestDAO {
    * @return a promise of an option of a contest
    */
   def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double)(implicit ec: ExecutionContext) = {
-    val q = BS(
-      "_id" -> contestId,
-      "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> totalCost))))
-    val u = BS(
-      "$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)),
-      "$inc" -> BS("participants.$.cashAccount.cashFunds" -> -totalCost))
-    db.command(FindAndModify("Contests", q, Update(u, fetchNewObject = true), upsert = false, sort = None)) map (_ flatMap (_.seeAsOpt[Contest]))
+    mc.findAndUpdate(
+      selector = BS(
+        "_id" -> contestId,
+        "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> totalCost)))),
+      update = BS(
+        "$addToSet" -> BS("participants.$.perks" -> BS("$each" -> perkCodes)),
+        "$inc" -> BS("participants.$.cashAccount.cashFunds" -> -totalCost)),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   /////////////////////////////////////////////////////////////////////////////////

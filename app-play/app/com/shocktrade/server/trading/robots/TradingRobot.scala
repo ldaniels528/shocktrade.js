@@ -5,9 +5,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
+import com.github.ldaniels528.tabular.Tabular
 import com.ldaniels528.commons.helpers.OptionHelper._
 import com.ldaniels528.commons.helpers.StringHelper._
-import com.github.ldaniels528.tabular.Tabular
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}
@@ -15,7 +15,7 @@ import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
 import com.shocktrade.server.trading.{ContestDAO, Contests}
 import org.joda.time.DateTime
-import play.api.libs.json.JsObject
+import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -59,7 +59,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       _ <- findContestsToJoin(profile)
 
       // lookup the quotes using our trading strategy
-      jsQuotes <- StockQuotes.findQuotes(strategy.getFilter)
+      quotes <- StockQuotes.findQuotes(strategy.getFilter)
 
       // first let's retrieve the contests I've involved in ...
       contests <- Contests.findContestsByPlayerName(name)()
@@ -69,7 +69,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
         // the contest must be active and started
         if (contest.isEligible) {
           //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
-          contest.participants.find(_.name == name) foreach (operateRobot(contest, _, jsQuotes))
+          contest.participants.find(_.name == name) foreach (operateRobot(contest, _, quotes))
           Some(contest)
         }
         else None
@@ -77,7 +77,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     }
   }
 
-  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[JsObject]) = {
+  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[BS]) = {
     log.info(s"$name: Looking for investment opportunities in '${contest.name}'...")
 
     // compute the funds available (subtract what we already have on order)

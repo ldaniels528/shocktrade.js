@@ -3,8 +3,8 @@ package com.shocktrade.actors
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.actors.QuoteMessages._
 import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
-import play.api.libs.json.JsObject
-import play.api.libs.json.Json.{obj => JS, _}
+import com.shocktrade.util.BSONHelper._
+import reactivemongo.bson.BSONDocument
 
 /**
  * Real-time Stock Quote Actor
@@ -22,10 +22,10 @@ class RealTimeQuoteActor() extends Actor with ActorLogging {
       unhandled(message)
   }
 
-  private def getQuoteFromService(symbol: String): Option[JsObject] = {
+  private def getQuoteFromService(symbol: String): Option[BSONDocument] = {
     val q = YFRealtimeStockQuoteService.getQuoteSync(symbol)
-    if(q.error.isDefined) None
-    else Some(JS(
+    if (q.error.isDefined) None
+    else Some(BSONDocument(
       "symbol" -> q.symbol,
       "name" -> q.name,
       "exchange" -> q.exchange,

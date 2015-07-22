@@ -31,7 +31,7 @@ class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
 
       counter.set(0)
       var count = 0
-      StockQuotes.getSymbolsForKeyStatisticsUpdate foreach { docs =>
+      StockQuotes.getSymbolsForKeyStatisticsUpdate.collect[Seq]() foreach { docs =>
         docs.flatMap(_.getAs[String]("symbol")) foreach { symbol =>
           count += 1
           YahooKeyStatisticsUpdateActor ! RefreshKeyStatics(symbol)
