@@ -9,7 +9,7 @@
 		<span class="qm_header">Change / %</span>
 		<span ng-if="q.change !== null && q.change !== undefined" class="plain pull-right">
 			<span ng-class="q.change < 0 ? 'negative' : ''">{{ q.change | quoteNumber }}</span>
-			<change-arrow value="{{ q.changePct }}"></change-arrow>
+			<changearrow value="{{ q.changePct }}"></changearrow>
 			<span ng-class="q.change < 0 ? 'negative' : 'positive'">{{ q.changePct | quoteChange }}%</span>
 		</span>
 	</div>

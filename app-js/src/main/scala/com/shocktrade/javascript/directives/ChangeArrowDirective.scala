@@ -11,7 +11,7 @@ import scala.util.Try
 /**
  * Change Arrow Directive
  * @author lawrence.daniels@gmail.com
- * @example <change-arrow value="{{ q.change }}"></change-arrow>
+ * @example <changearrow value="{{ q.change }}"></changearrow>
  */
 class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
   override val restrict = "E"

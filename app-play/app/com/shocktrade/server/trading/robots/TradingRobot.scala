@@ -14,7 +14,6 @@ import com.shocktrade.models.profile.{UserProfile, UserProfiles}
 import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
 import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
 import com.shocktrade.server.trading.{ContestDAO, Contests}
-import org.joda.time.DateTime
 import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.Future
@@ -63,13 +62,14 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 
       // first let's retrieve the contests I've involved in ...
       contests <- Contests.findContestsByPlayerName(name)()
+
     } yield {
       // process each contest
       contests.flatMap { contest =>
         // the contest must be active and started
         if (contest.isEligible) {
           //log.info(s"jsQuotes = ${Json.prettyPrint(jsQuotes.head)}")
-          contest.participants.find(_.name == name) foreach (operateRobot(contest, _, quotes))
+          contest.participants.find(_.id == profile.id) foreach (operateRobot(contest, _, quotes))
           Some(contest)
         }
         else None
@@ -117,6 +117,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     ContestDAO.findContests(SearchOptions(activeOnly = Some(true))) map { contests =>
       contests.foreach { contest =>
         log.info(s"$name is considering joining '${contest.name}'...")
+
         // if robots are allowed, and I have not already joined ...
         if (contest.robotsAllowed && !contest.participants.exists(_.id == u.id)) {
           log.info(s"$name: Joining '${contest.name}' ...")
@@ -148,8 +149,8 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
         accountType = AccountTypes.CASH, // TODO robots can also buy on Margin ...
         symbol = stock.symbol,
         exchange = exchange,
-        creationTime = new DateTime().minusDays(4).toDate, // TODO remove this after testing
-        orderTerm = OrderTerms.GOOD_FOR_7_DAYS,  // TODO change to GOOD_FOR_7_DAYS after testing
+        creationTime = new Date(),
+        orderTerm = OrderTerms.GOOD_FOR_DAY,
         orderType = OrderTypes.BUY,
         price = price,
         priceType = priceType,

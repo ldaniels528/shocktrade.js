@@ -15,7 +15,7 @@
             template:
             '<div class="{{ class }}">' +
             '<a href="" ng-click="loadNewsQuote(\'{{symbol}}\')">' +
-            '<nobr><span class="{{exchange}}">{{symbol}} {{change-arrow(change)}</span>' +
+            '<nobr><span class="{{exchange}}">{{symbol}} {{changearrow(change)}</span>' +
             '<span class="{{ changeClass(changePct) }}">{{ changePct }}</span></nobr>' +
             '</a>' +
             '</div>',
@@ -52,7 +52,7 @@
                 console.log("symbol = " + symbol + ", exchange = " + exchange + ", changePct = " + changePct);
                 encodedText = replace(encodedText, start, end + 2,
                     '<a href="" ng-click="loadNewsQuote(\'${symbol}\')">' +
-                    '<nobr><span class="${exchange}">${symbol} ${change-arrow(change)}</span>' +
+                    '<nobr><span class="${exchange}">${symbol} ${changearrow(change)}</span>' +
                     '<span class="${changeClass(changePct)}">${changePct}</span></nobr>' +
                     '</a>');
             }
