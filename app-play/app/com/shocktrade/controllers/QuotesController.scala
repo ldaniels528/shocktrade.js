@@ -50,7 +50,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   def autoComplete(searchTerm: String, maxResults: Int) = Action.async { implicit request =>
     mcQ.find(
       // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ?0, $options:'i' }} ] }
-      BS(/*"active" -> true,*/ "$or" -> BSONArray(Seq(
+      BS("symbol" -> BS("$ne" -> BSONNull), "$or" -> BSONArray(Seq(
         BS("symbol" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i")),
         BS("name" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i"))))),
       // fields
