@@ -97,7 +97,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
   private def expandSector(info: SectorInfo): Future[Option[Sector]] = {
     val result = for {
       sectorName <- info.sector.toOption
-      sector <- findLabel($scope.sectors, sectorName)
+      sector <- $scope.sectors.find(_.label == sectorName)
       expanded = sector.expanded.exists(_ == true)
     } yield (sector, expanded)
 
@@ -117,7 +117,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
   private def expandIndustry(info: SectorInfo, sector: Sector): Future[Option[Industry]] = {
     val result = for {
       industryName <- info.industry.toOption
-      industry <- findLabel(sector.industries, industryName)
+      industry <- sector.industries.find(_.label == industryName)
       expanded = industry.expanded.exists(_ == true)
     } yield (industry, expanded)
 
@@ -137,7 +137,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
   private def expandSubIndustry(info: SectorInfo, sector: Sector, industry: Industry): Future[Option[SubIndustry]] = {
     val result = for {
       subIndustryName <- info.subIndustry.toOption
-      subIndustry <- findLabel(industry.subIndustries, subIndustryName)
+      subIndustry <- industry.subIndustries.find(_.label == subIndustryName)
       expanded = subIndustry.expanded.exists(_ == true)
     } yield (subIndustry, expanded)
 
@@ -196,8 +196,6 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     }
     else subIndustry.expanded = false
   }
-
-  private def findLabel[T <: QuoteContainer](array: js.Array[T], label: String): Option[T] = array.find(_.label == label)
 
 }
 
