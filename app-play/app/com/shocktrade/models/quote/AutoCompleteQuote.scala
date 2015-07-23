@@ -1,6 +1,5 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
@@ -17,21 +16,8 @@ case class AutoCompleteQuote(symbol: String,
  * Auto-Complete Quote Singleton
  */
 object AutoCompleteQuote {
-
-  implicit val autoCompleteQuoteReads: Reads[AutoCompleteQuote] = {
-    ((__ \ "symbol").read[String] and
-      (__ \ "name").readNullable[String] and
-      (__ \ "exchange").readNullable[String] and
-      (__ \ "assetType").readNullable[String] and
-      (__ \ "icon").readNullable[String])(AutoCompleteQuote.apply _)
-  }
-
-  implicit val autoCompleteQuoteWrites: Writes[AutoCompleteQuote] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "name").writeNullable[String] and
-      (__ \ "exchange").writeNullable[String] and
-      (__ \ "assetType").writeNullable[String] and
-      (__ \ "icon").writeNullable[String])(unlift(AutoCompleteQuote.unapply))
+  implicit val autoCompleteQuoteReads = Json.reads[AutoCompleteQuote]
+  implicit val autoCompleteQuoteWrites = Json.writes[AutoCompleteQuote]
 
   implicit object AutoCompleteQuoteReader extends BSONDocumentReader[AutoCompleteQuote] {
     def read(doc: BSONDocument) = AutoCompleteQuote(

@@ -3,9 +3,7 @@ package com.shocktrade.models.quote
 import java.util.Date
 
 import com.shocktrade.util.BSONHelper._
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json.{Reads, Writes, __}
+import play.api.libs.json.Json
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 import scala.language.{implicitConversions, postfixOps}
@@ -25,17 +23,8 @@ case class QuoteSnapshot(symbol: String, name: Option[String], lastTrade: Option
 object QuoteSnapshot {
   val Fields = Seq("symbol", "name", "lastTrade", "tradeDateTime")
 
-  implicit val quoteSnapshotReads: Reads[QuoteSnapshot] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "name").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double] and
-      (__ \ "tradeDateTime").readNullable[Date])(QuoteSnapshot.apply _)
-
-  implicit val quoteSnapshotWrites: Writes[QuoteSnapshot] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "name").writeNullable[String] and
-      (__ \ "lastTrade").writeNullable[Double] and
-      (__ \ "tradeDateTime").writeNullable[Date])(unlift(QuoteSnapshot.unapply))
+  implicit val quoteSnapshotReads = Json.reads[QuoteSnapshot]
+  implicit val quoteSnapshotWrites = Json.writes[QuoteSnapshot]
 
   implicit object QuoteSnapshotReader extends BSONDocumentReader[QuoteSnapshot] {
     def read(doc: BSONDocument) = QuoteSnapshot(

@@ -1,9 +1,7 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
 import play.api.libs.json._
-import reactivemongo.bson.{BSONDocumentWriter, BSONDocument, BSONDocumentReader}
+import reactivemongo.bson.Macros
 
 /**
  * Sector Quote
@@ -39,42 +37,8 @@ case class SectorQuote(symbol: String,
 object SectorQuote {
   val Fields = Seq("symbol", "exchange", "lastTrade", "industry", "sector", "subIndustry")
 
-  implicit val sectorQuoteReads: Reads[SectorQuote] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "exchange").readNullable[String] and
-      (__ \ "sector").readNullable[String] and
-      (__ \ "industry").readNullable[String] and
-      (__ \ "subIndustry").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double])(SectorQuote.apply _)
-
-  implicit val sectorQuoteWrites: Writes[SectorQuote] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "exchange").writeNullable[String] and
-      (__ \ "sector").writeNullable[String] and
-      (__ \ "industry").writeNullable[String] and
-      (__ \ "subIndustry").writeNullable[String] and
-      (__ \ "lastTrade").writeNullable[Double])(unlift(SectorQuote.unapply))
-
-  implicit object SectorQuoteReader extends BSONDocumentReader[SectorQuote] {
-    override def read(doc: BSONDocument) = SectorQuote(
-      doc.getAs[String]("symbol").get,
-      doc.getAs[String]("exchange"),
-      doc.getAs[String]("sector"),
-      doc.getAs[String]("industry"),
-      doc.getAs[String]("subIndustry"),
-      doc.getAs[Double]("lastTrade")
-    )
-  }
-
-  implicit object SectorQuoteWriter extends BSONDocumentWriter[MarketQuote] {
-    override def write(quote: MarketQuote) = BSONDocument(
-      "symbol" -> quote.symbol,
-      "exchange" -> quote.name,
-      "sector" -> quote.name,
-      "industry" -> quote.name,
-      "subIndustry" -> quote.name,
-      "lastTrade" -> quote.lastTrade
-    )
-  }
+  implicit val sectorQuoteReads = Json.reads[SectorQuote]
+  implicit val sectorQuoteWrites = Json.writes[SectorQuote]
+  implicit val sectorQuoteReader = Macros.handler[SectorQuote]
 
 }

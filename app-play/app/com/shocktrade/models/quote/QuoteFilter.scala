@@ -2,10 +2,8 @@ package com.shocktrade.models.quote
 
 import org.joda.time.DateTime
 import play.api.Logger
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json.{Reads, _}
-import reactivemongo.bson.{BSONDocument => BS, BSONNull, BSONDocumentReader}
+import play.api.libs.json._
+import reactivemongo.bson.{BSONDocument => BS, BSONDocumentReader, BSONNull}
 
 /**
  * Represents a Stock Quote Filter
@@ -53,19 +51,8 @@ case class QuoteFilter(changeMin: Option[Double] = None,
  * @author lawrence.daniels@gmail.com
  */
 object QuoteFilter {
-
-  implicit val quoteFilterReads: Reads[QuoteFilter] = (
-    (__ \ "changeMin").readNullable[Double] and
-      (__ \ "changeMax").readNullable[Double] and
-      (__ \ "spreadMin").readNullable[Double] and
-      (__ \ "spreadMax").readNullable[Double] and
-      (__ \ "marketCapMin").readNullable[Double] and
-      (__ \ "marketCapMax").readNullable[Double] and
-      (__ \ "priceMin").readNullable[Double] and
-      (__ \ "priceMax").readNullable[Double] and
-      (__ \ "volumeMin").readNullable[Long] and
-      (__ \ "volumeMax").readNullable[Long] and
-      (__ \ "maxResults").readNullable[Int])(QuoteFilter.apply _)
+  implicit val quoteFilterReads = Json.reads[QuoteFilter]
+  implicit val quoteFilterWrites = Json.writes[QuoteFilter]
 
   implicit object QuoteFilterReader extends BSONDocumentReader[QuoteFilter] {
     override def read(doc: BS) = QuoteFilter(

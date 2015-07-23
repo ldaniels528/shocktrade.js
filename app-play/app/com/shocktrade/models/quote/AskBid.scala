@@ -1,6 +1,5 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
@@ -18,18 +17,8 @@ case class AskBid(ask: Option[Double] = None,
  * @author lawrence.daniels@gmail.com
  */
 object AskBid {
-
-  implicit val askBidReads: Reads[AskBid] = (
-    (__ \ "ask").readNullable[Double] and
-      (__ \ "askSize").readNullable[Int] and
-      (__ \ "bid").readNullable[Double] and
-      (__ \ "bidSize").readNullable[Int])(AskBid.apply _)
-
-  implicit val askBidWrites: Writes[AskBid] = (
-    (__ \ "ask").writeNullable[Double] and
-      (__ \ "askSize").writeNullable[Int] and
-      (__ \ "bid").writeNullable[Double] and
-      (__ \ "bidSize").writeNullable[Int])(unlift(AskBid.unapply))
+  implicit val askBidReads = Json.reads[AskBid]
+  implicit val askBidWrites = Json.writes[AskBid]
 
   implicit object AskBidReader extends BSONDocumentReader[AskBid] {
     def read(doc: BSONDocument) = AskBid(

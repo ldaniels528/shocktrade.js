@@ -1,8 +1,7 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import reactivemongo.bson.{BSONDocumentWriter, BSONDocument, BSONDocumentReader}
+import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 /**
  * Represents a NAICS Code
@@ -13,14 +12,8 @@ case class NaicsCode(naicsNumber: Int, description: String)
  * NAICS Code Singleton
  */
 object NaicsCode {
-
-  implicit val naicsCodeReads: Reads[NaicsCode] = (
-    (__ \ 'naicsNumber).read[Int] and
-      (__ \ 'description).read[String])(NaicsCode.apply _)
-
-  implicit val naicsCodeWrites: Writes[NaicsCode] = (
-    (__ \ 'naicsNumber).write[Int] and
-      (__ \ 'description).write[String])(unlift(NaicsCode.unapply))
+  implicit val naicsCodeReads = Json.reads[NaicsCode]
+  implicit val naicsCodeWrites = Json.writes[NaicsCode]
 
   implicit object NaicsCodeReader extends BSONDocumentReader[NaicsCode] {
     override def read(doc: BSONDocument) = NaicsCode(

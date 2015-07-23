@@ -1,6 +1,5 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
@@ -23,28 +22,8 @@ case class ProductQuote(symbol: String,
 object ProductQuote {
   val Fields = Seq("name", "symbol", "exchange", "lastTrade", "change", "changePct", "spread", "volume")
 
-  implicit val productQuoteReads: Reads[ProductQuote] = {
-    ((__ \ "symbol").read[String] and
-      (__ \ "name").readNullable[String] and
-      (__ \ "exchange").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double] and
-      (__ \ "change").readNullable[Double] and
-      (__ \ "changePct").readNullable[Double] and
-      (__ \ "spread").readNullable[Double] and
-      (__ \ "volume").readNullable[Long] and
-      (__ \ "active").readNullable[Boolean])(ProductQuote.apply _)
-  }
-
-  implicit val productQuoteWrites: Writes[ProductQuote] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "name").writeNullable[String] and
-      (__ \ "exchange").writeNullable[String] and
-      (__ \ "lastTrade").writeNullable[Double] and
-      (__ \ "change").writeNullable[Double] and
-      (__ \ "changePct").writeNullable[Double] and
-      (__ \ "spread").writeNullable[Double] and
-      (__ \ "volume").writeNullable[Long] and
-      (__ \ "active").writeNullable[Boolean])(unlift(ProductQuote.unapply))
+  implicit val productQuoteReads = Json.reads[ProductQuote]
+  implicit val productQuoteWrites = Json.writes[ProductQuote]
 
   implicit object ProductQuoteReader extends BSONDocumentReader[ProductQuote] {
     def read(doc: BSONDocument) = ProductQuote(

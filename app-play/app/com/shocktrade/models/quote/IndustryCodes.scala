@@ -1,6 +1,5 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
@@ -19,17 +18,8 @@ case class IndustryCodes(sector: Option[String] = None,
  */
 object IndustryCodes {
 
-  implicit val industryCodesReads: Reads[IndustryCodes] = (
-    (__ \ "sector").readNullable[String] and
-      (__ \ "industry").readNullable[String] and
-      (__ \ "sicNumber").readNullable[Int] and
-      (__ \ "naicsNumber").readNullable[Int])(IndustryCodes.apply _)
-
-  implicit val industryCodesWrites: Writes[IndustryCodes] = (
-    (__ \ "sector").writeNullable[String] and
-      (__ \ "industry").writeNullable[String] and
-      (__ \ "sicNumber").writeNullable[Int] and
-      (__ \ "naicsNumber").writeNullable[Int])(unlift(IndustryCodes.unapply))
+  implicit val industryCodesReads = Json.reads[IndustryCodes]
+  implicit val industryCodesWrites = Json.writes[IndustryCodes]
 
   implicit object IndustryCodesReader extends BSONDocumentReader[IndustryCodes] {
     def read(doc: BSONDocument) = IndustryCodes(

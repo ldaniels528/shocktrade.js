@@ -5,7 +5,7 @@ import java.util.Date
 import com.shocktrade.util.BSONHelper._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
-import play.api.libs.json.{Reads, Writes, __}
+import play.api.libs.json.{Json, Reads, __}
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, _}
 
 /**
@@ -54,23 +54,7 @@ object BasicQuote {
       (__ \ "active").readNullable[Boolean])(BasicQuote.apply _)
   }
 
-  implicit val basicQuoteWrites: Writes[BasicQuote] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "name").writeNullable[String] and
-      (__ \ "exchange").writeNullable[String] and
-      (__ \ "lastTrade").writeNullable[Double] and
-      (__ \ "tradeDateTime").writeNullable[Date] and
-      (__ \ "changePct").writeNullable[Double] and
-      (__ \ "prevClose").writeNullable[Double] and
-      (__ \ "open").writeNullable[Double] and
-      (__ \ "close").writeNullable[Double] and
-      (__ \ "low").writeNullable[Double] and
-      (__ \ "high").writeNullable[Double] and
-      (__ \ "spread").writeNullable[Double] and
-      (__ \ "low52Week").writeNullable[Double] and
-      (__ \ "high52Week").writeNullable[Double] and
-      (__ \ "volume").writeNullable[Long] and
-      (__ \ "active").writeNullable[Boolean])(unlift(BasicQuote.unapply))
+  implicit val basicQuoteWrites = Json.writes[BasicQuote]
 
   implicit object BasicQuoteReader extends BSONDocumentReader[BasicQuote] {
     override def read(doc: BSONDocument) = BasicQuote(

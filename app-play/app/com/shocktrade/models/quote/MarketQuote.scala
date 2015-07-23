@@ -1,8 +1,6 @@
 package com.shocktrade.models.quote
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json.{Reads, Writes, __}
+import play.api.libs.json.Json
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
 
 import scala.language.{implicitConversions, postfixOps}
@@ -18,17 +16,8 @@ case class MarketQuote(symbol: String, name: Option[String], lastTrade: Option[D
 object MarketQuote {
   val Fields = Seq("name", "symbol", "lastTrade", "close")
 
-  implicit val marketQuoteReads: Reads[MarketQuote] = (
-    (__ \ "symbol").read[String] and
-      (__ \ "name").readNullable[String] and
-      (__ \ "lastTrade").readNullable[Double] and
-      (__ \ "close").readNullable[Double])(MarketQuote.apply _)
-
-  implicit val marketQuoteWrites: Writes[MarketQuote] = (
-    (__ \ "symbol").write[String] and
-      (__ \ "name").writeNullable[String] and
-      (__ \ "lastTrade").writeNullable[Double] and
-      (__ \ "close").writeNullable[Double])(unlift(MarketQuote.unapply))
+  implicit val marketQuoteReads = Json.reads[MarketQuote]
+  implicit val marketQuoteWrites = Json.writes[MarketQuote]
 
   implicit object MarketQuoteReader extends BSONDocumentReader[MarketQuote] {
     override def read(doc: BSONDocument) = MarketQuote(
