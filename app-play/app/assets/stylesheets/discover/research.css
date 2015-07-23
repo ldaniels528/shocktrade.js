@@ -60,6 +60,7 @@ div.research {
 
 table.results {
 	border-collapse: collapse;
+	border-top: 1px solid #888888;
 	width: 100%; 
 }
 
