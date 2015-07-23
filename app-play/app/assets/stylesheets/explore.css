@@ -1,8 +1,12 @@
-.drill_down_title {
+.explore_title {
 	border: 1px solid #aaaaaa; 
 	border-radius: 4px 4px 4px 4px;
 	padding-left: 5px;
 	height: 24px;
 	font-weight: bold;
 	color: #000080
+}
+
+.explore_selected {
+	background: #ffff00;
 }

@@ -14,6 +14,7 @@ import reactivemongo.core.commands.{Aggregate, GroupField, Match, SumValue}
 
 /**
  * Explore Controller
+ * @author lawrence.daniels@gmail.com
  */
 object ExploreController extends Controller with MongoController with Classifications {
   private val Stocks = "Stocks"

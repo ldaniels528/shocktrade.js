@@ -7,6 +7,7 @@ import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
 import com.shocktrade.javascript.directives.{AvatarDirective, ChangeArrowDirective}
 import com.shocktrade.javascript.discover._
+import com.shocktrade.javascript.explore.{ExploreService, ExploreController}
 import com.shocktrade.javascript.news._
 import com.shocktrade.javascript.profile._
 import com.shocktrade.javascript.social._
@@ -53,7 +54,7 @@ object ShockTradeJsMain extends js.JSApp {
         .when("/dashboard/:contestId", RouteTo(templateUrl = "/assets/views/dashboard/dashboard.htm", controller = "DashboardController"))
         .when("/discover", RouteTo(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
         .when("/discover/:symbol", RouteTo(templateUrl = "/assets/views/discover/discover.htm", controller = "DiscoverController"))
-        .when("/explore", RouteTo(templateUrl = "/assets/views/explore/drill_down.htm", controller = "DrillDownController"))
+        .when("/explore", RouteTo(templateUrl = "/assets/views/explore/drill_down.htm", controller = "ExploreController"))
         .when("/home", RouteTo(templateUrl = "/assets/views/profile/home.htm", controller = "HomeController"))
         .when("/inspect/:contestId", RouteTo(templateUrl = "/assets/views/admin/inspect.htm", controller = "InspectController"))
         .when("/news", RouteTo(templateUrl = "/assets/views/news/news_center.htm", controller = "NewsController"))
@@ -76,6 +77,7 @@ object ShockTradeJsMain extends js.JSApp {
   private def configureServices(module: Module) {
     module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
+    module.serviceOf[ExploreService]("ExploreService")
     module.serviceOf[Facebook]("Facebook")
     module.serviceOf[MarketStatusService]("MarketStatus")
     module.serviceOf[MySession]("MySession")
@@ -102,7 +104,7 @@ object ShockTradeJsMain extends js.JSApp {
     module.controllerOf[ConnectController]("ConnectController")
     module.controllerOf[DashboardController]("DashboardController")
     module.controllerOf[DiscoverController]("DiscoverController")
-    module.controllerOf[DrillDownController]("DrillDownController")
+    module.controllerOf[ExploreController]("ExploreController")
     module.controllerOf[ExposureController]("ExposureController")
     module.controllerOf[GameSearchController]("GameSearchController")
     module.controllerOf[HomeController]("HomeController")

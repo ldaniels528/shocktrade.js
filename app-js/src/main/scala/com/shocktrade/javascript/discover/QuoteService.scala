@@ -51,40 +51,6 @@ class QuoteService($http: Http) extends Service {
     $http.get[js.Array[js.Dynamic]](s"/api/quotes/tradingHistory/$symbol")
   }
 
-  ////////////////////////////////////////////////////////////////////
-  //			Sector Exploration Functions
-  ///////////////////////////////////////////////////////////////////
-
-  def loadSectorInfo(symbol: String) = {
-    required("symbol", symbol)
-    $http.get[js.Array[js.Dynamic]](s"/api/explore/symbol/$symbol")
-  }
-
-  def loadSectors() = $http.get[js.Array[js.Dynamic]]("/api/explore/sectors")
-
-  def loadNAICSSectors() = $http.get[js.Array[js.Dynamic]]("/api/explore/naics/sectors")
-
-  def loadIndustries(sector: String) = {
-    required("sector", sector)
-    val queryString = params("sector" -> sector)
-    $http.get[js.Array[js.Dynamic]](s"/api/explore/industries$queryString")
-  }
-
-  def loadSubIndustries(sector: String, industry: String) = {
-    required("sector", sector)
-    required("industry", industry)
-    val queryString = params("sector" -> sector, "industry" -> industry)
-    $http.get[js.Array[js.Dynamic]](s"/api/explore/subIndustries$queryString")
-  }
-
-  def loadIndustryQuotes(sector: String, industry: String, subIndustry: String) = {
-    required("sector", sector)
-    required("industry", industry)
-    required("subIndustry", subIndustry)
-    val queryString = params("sector" -> sector, "industry" -> industry, "subIndustry" -> subIndustry)
-    $http.get[js.Array[js.Dynamic]](s"/api/explore/quotes$queryString")
-  }
-
 }
 
 /**
@@ -98,3 +64,4 @@ trait AutoCompletedQuote extends js.Object {
   var assetType: js.UndefOr[String] = js.native
   var icon: js.UndefOr[String] = js.native
 }
+

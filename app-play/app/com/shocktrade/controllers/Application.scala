@@ -74,7 +74,7 @@ object Application extends Controller with MongoController {
   //    Explore Views
   ///////////////////////////////////////////////////////////////////////////////
 
-  def exploreView = Action(Ok(assets.views.html.discover.Explore()))
+  def exploreView = Action(Ok(assets.views.html.explore.Explore()))
 
   ///////////////////////////////////////////////////////////////////////////////
   //    Research Views
