@@ -10,11 +10,7 @@ import reactivemongo.bson.BSONObjectID
  * Represents a contest player ranking
  * @author lawrence.daniels@gmail.com
  */
-case class Ranking(id: BSONObjectID,
-                   name: String,
-                   facebookID: String,
-                   totalEquity: BigDecimal,
-                   gainLoss_% : BigDecimal)
+case class Ranking(id: BSONObjectID, name: String, facebookID: String, totalEquity: BigDecimal, gainLoss_% : BigDecimal)
 
 /**
  * Ranking Singleton

@@ -94,6 +94,10 @@ object ScalaJsHelper {
 
   }
 
+  /**
+   * js.Array Extensions
+   * @param array the given [[js.Array array]]
+   */
   implicit class JsArrayExtensions[A](val array: js.Array[A]) extends AnyVal {
 
     @inline def removeAll(): Unit = array.remove(0, array.length)
@@ -143,6 +147,10 @@ object ScalaJsHelper {
 
   }
 
+  /**
+   * Option Extensions
+   * @param optA the given [[Option option]]
+   */
   implicit class OptionExtensions[T](val optA: Option[T]) extends AnyVal {
 
     @inline def ??(optB: => Option[T]): Option[T] = if (optA.isDefined) optA else optB
