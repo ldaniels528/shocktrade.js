@@ -21,14 +21,16 @@
         <th class="results_num">Spread %</th>
         <th class="results_bignum">Volume</th>
     </tr>
-    <tr ng-repeat="quote in subIndustry.quotes | orderBy:'symbol'" ng-class="quote.symbol === selectedSymbol ? 'explore_selected' : ''">
+    <tr ng-repeat="quote in subIndustry.quotes | orderBy:'symbol'"
+        ng-class="quote.symbol === selectedSymbol ? 'explore_selected' : ''">
         <td class="results">
             <a class="links" ng-href="#/discover/{{ quote.symbol }}">
                 <i ng-class="getPreferenceIcon(row)"></i>
-                <span ng-class="quote.exchange"
-                popover="{{ quote.name }}"
-                popover-placement="right"
-                popover-trigger="mouseenter">{{ quote.symbol }}</span>
+                <div id="{{ quote.symbol }}"
+                    ng-class="quote.exchange"
+                    popover="{{ quote.name }}"
+                    popover-placement="right"
+                    popover-trigger="mouseenter">{{ quote.symbol }}</div>
             </a>
         </td>
         <td class="results_num">

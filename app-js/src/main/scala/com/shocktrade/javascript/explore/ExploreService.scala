@@ -66,11 +66,11 @@ object ExploreService {
    */
   trait SectorInfo extends js.Object {
     var _id: js.Object = js.native
-    var exchange: String = js.native
-    var sector: String = js.native
-    var industry: String = js.native
-    var subIndustry: String = js.native
-    var symbol: String = js.native
+    var symbol: js.UndefOr[String] = js.native
+    var exchange: js.UndefOr[String] = js.native
+    var sector: js.UndefOr[String] = js.native
+    var industry: js.UndefOr[String] = js.native
+    var subIndustry: js.UndefOr[String] = js.native
   }
 
 }

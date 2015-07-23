@@ -5,12 +5,12 @@ import com.github.ldaniels528.scalascript.extensions.{AnchorScroll, Cookies, Toa
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.explore.ExploreController._
-import com.shocktrade.javascript.explore.ExploreService.SectorQuote
+import com.shocktrade.javascript.explore.ExploreService.{SectorInfo, SectorQuote}
 import org.scalajs.dom.console
 
+import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
 /**
@@ -22,11 +22,6 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
                         @injected("ExploreService") exploreService: ExploreService)
   extends Controller {
 
-  // define the callback signatures
-  type SectorCallBackType = js.Function2[Sector, js.Array[Industry], Unit]
-  type IndustryCallBackType = js.Function3[Sector, Industry, js.Array[SubIndustry], Unit]
-  type SubIndustryCallBackType = js.Function4[Sector, Industry, SubIndustry, js.Array[SectorQuote], Unit]
-
   // initialize scope variables
   $scope.sectors = emptyArray[Sector]
   $scope.selectedSymbol = $routeParams.symbol getOrElse $cookies.getOrElse("symbol", "AAPL")
@@ -36,38 +31,31 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
   /////////////////////////////////////////////////////////////////////
 
   @scoped
-  def expandOrCollapseSector(aSector: js.UndefOr[Sector], callback: js.UndefOr[SectorCallBackType]) = {
-    aSector.toOption.foreach(_expandOrCollapseSector(_, callback))
-  }
+  def expandSectorForSymbol(aSymbol: js.UndefOr[String]) = aSymbol foreach expandSymbolsSector
 
   @scoped
-  def expandOrCollapseIndustry(aSector: js.UndefOr[Sector],
-                               aIndustry: js.UndefOr[Industry],
-                               callback: js.UndefOr[IndustryCallBackType]) = {
+  def expandOrCollapseSector(aSector: js.UndefOr[Sector]) = aSector foreach toggleSector
+
+  @scoped
+  def expandOrCollapseIndustry(aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry]) = {
     for {
       sector <- aSector.toOption
       industry <- aIndustry.toOption
     } {
-      _expandOrCollapseIndustry(sector, industry, callback)
+      toggleIndustry(sector, industry)
     }
   }
 
   @scoped
-  def expandOrCollapseSubIndustry(aSector: js.UndefOr[Sector],
-                                  aIndustry: js.UndefOr[Industry],
-                                  aSubIndustry: js.UndefOr[SubIndustry],
-                                  callback: js.UndefOr[SubIndustryCallBackType]) = {
+  def expandOrCollapseSubIndustry(aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry], aSubIndustry: js.UndefOr[SubIndustry]) = {
     for {
       sector <- aSector.toOption
       industry <- aIndustry.toOption
       subIndustry <- aSubIndustry.toOption
     } {
-      _expandOrCollapseSubIndustry(sector, industry, subIndustry, callback)
+      toggleSubIndustry(sector, industry, subIndustry)
     }
   }
-
-  @scoped
-  def expandSectorForSymbol(aSymbol: js.UndefOr[String]) = aSymbol foreach _expandSectorForSymbol
 
   @scoped
   def refreshTree() {
@@ -77,7 +65,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
         console.log(s"Loaded ${data.length} sectors")
 
         // expand the sector, industry, sub-industry for the current symbol
-        $timeout(() => _expandSectorForSymbol($scope.selectedSymbol), 1000)
+        $timeout(() => expandSymbolsSector($scope.selectedSymbol), 500)
       case Failure(e) =>
         toaster.error("Failed to refresh sector information")
     }
@@ -87,41 +75,86 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def _expandSectorForSymbol(symbol: String) {
-    // lookup the symbol"s sector information
-    exploreService.loadSectorInfo(symbol) onComplete {
-      case Success(info) =>
-        console.log(s"Attempting to expand symbol $symbol - ${JSON.stringify(info)}")
+  private def expandSymbolsSector(symbol: String) = {
+    console.log(s"Attempting to expand sectors for symbol $symbol...")
+    for {
+      info <- exploreService.loadSectorInfo(symbol)
 
-        // find the symbol (expand: sector >> industry >> sub-industry >> symbol)
-        console.log(s"Expanding sector '${info.sector}'...")
-        findLabel($scope.sectors, info.sector) foreach { mySector =>
-          console.log(s"mySector is '${JSON.stringify(mySector)}'...")
-          _expandOrCollapseSector(mySector, { (sector: Sector, industries: js.Array[Industry]) =>
+      _ = console.log(s"Expanding sector ${info.sector}...")
+      sector <- expandSector(info)
 
-            console.log(s"Expanding industry '${info.sector}' >> '${info.industry}'...")
-            findLabel(industries, info.industry) foreach { myIndustry =>
-              console.log(s"myIndustry is '${JSON.stringify(myIndustry)}'...")
-              _expandOrCollapseIndustry(sector, myIndustry, { (sector: Sector, industry: Industry, subIndustries: js.Array[SubIndustry]) =>
+      _ = console.log(s"Expanding industry ${info.industry}...")
+      industry <- expandIndustry(info, sector.get) if sector.isDefined
 
-                console.log(s"Expanding sub-industry '${info.sector}' >> '${info.industry}' >> '${info.subIndustry}'...")
-                findLabel(subIndustries, info.subIndustry) foreach { mySubIndustry =>
-                  _expandOrCollapseSubIndustry(sector, industry, mySubIndustry, { (sector: Sector, industry: Industry, subIndustry: SubIndustry, quotes: js.Array[SectorQuote]) =>
-                    $location.hash("10000")
-                    $anchorScroll()
-                    ()
-                  }: SubIndustryCallBackType)
-                }
-              }: IndustryCallBackType)
-            }
-          }: SectorCallBackType)
-        }
-      case Failure(e) =>
-        toaster.error("Error loading sector information")
+      _ = console.log(s"Expanding subIndustry ${info.subIndustry}...")
+      subIndustry <- expandSubIndustry(info, sector.get, industry.get) if industry.isDefined
+    } {
+      //$location.hash(symbol)
+      $anchorScroll(symbol)
     }
   }
 
-  private def _expandOrCollapseSector(sector: Sector, callback: js.UndefOr[SectorCallBackType]) {
+  private def expandSector(info: SectorInfo): Future[Option[Sector]] = {
+    val result = for {
+      sectorName <- info.sector.toOption
+      sector <- findLabel($scope.sectors, sectorName)
+      expanded = sector.expanded.exists(_ == true)
+    } yield (sector, expanded)
+
+    result match {
+      case Some((sector, expanded)) if !expanded =>
+        sector.loading = true
+        exploreService.loadIndustries(sector.label) map { data =>
+          sector.loading = false
+          sector.industries = data.map { v => Industry(label = v._id, total = v.total) }
+          sector.expanded = true
+          Some(sector)
+        }
+      case _ => Future.successful(None)
+    }
+  }
+
+  private def expandIndustry(info: SectorInfo, sector: Sector): Future[Option[Industry]] = {
+    val result = for {
+      industryName <- info.industry.toOption
+      industry <- findLabel(sector.industries, industryName)
+      expanded = industry.expanded.exists(_ == true)
+    } yield (industry, expanded)
+
+    result match {
+      case Some((industry, expanded)) if !expanded =>
+        industry.loading = true
+        exploreService.loadSubIndustries(sector.label, industry.label) map { data =>
+          industry.loading = false
+          industry.subIndustries = data.map { v => SubIndustry(label = v._id, total = v.total) }
+          industry.expanded = true
+          Some(industry)
+        }
+      case _ => Future.successful(None)
+    }
+  }
+
+  private def expandSubIndustry(info: SectorInfo, sector: Sector, industry: Industry): Future[Option[SubIndustry]] = {
+    val result = for {
+      subIndustryName <- info.subIndustry.toOption
+      subIndustry <- findLabel(industry.subIndustries, subIndustryName)
+      expanded = subIndustry.expanded.exists(_ == true)
+    } yield (subIndustry, expanded)
+
+    result match {
+      case Some((subIndustry, expanded)) if !expanded =>
+        subIndustry.loading = true
+        exploreService.loadIndustryQuotes(sector.label, industry.label, subIndustry.label) map { quotes =>
+          subIndustry.loading = false
+          subIndustry.quotes = quotes
+          subIndustry.expanded = true
+          Some(subIndustry)
+        }
+      case _ => Future.successful(None)
+    }
+  }
+
+  private def toggleSector(sector: Sector) {
     if (!sector.expanded.exists(_ == true)) {
       sector.loading = true
       exploreService.loadIndustries(sector.label) onComplete {
@@ -129,14 +162,13 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
           sector.loading = false
           sector.industries = data.map { v => Industry(label = v._id, total = v.total) }
           sector.expanded = true
-          callback.foreach(_(sector, sector.industries))
         case Failure(e) => sector.loading = false
       }
     }
     else sector.expanded = false
   }
 
-  private def _expandOrCollapseIndustry(sector: Sector, industry: Industry, callback: js.UndefOr[IndustryCallBackType]) {
+  private def toggleIndustry(sector: Sector, industry: Industry) {
     if (!industry.expanded.exists(_ == true)) {
       industry.loading = true
       exploreService.loadSubIndustries(sector.label, industry.label) onComplete {
@@ -144,17 +176,13 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
           industry.loading = false
           industry.subIndustries = data.map { v => SubIndustry(label = v._id, total = v.total) }
           industry.expanded = true
-          callback.foreach(_(sector, industry, industry.subIndustries))
         case Failure(e) => industry.loading = false
       }
     }
     else industry.expanded = false
   }
 
-  private def _expandOrCollapseSubIndustry(sector: Sector,
-                                           industry: Industry,
-                                           subIndustry: SubIndustry,
-                                           callback: js.UndefOr[SubIndustryCallBackType]) {
+  private def toggleSubIndustry(sector: Sector, industry: Industry, subIndustry: SubIndustry) {
     if (!subIndustry.expanded.exists(_ == true)) {
       subIndustry.loading = true
       val mySubIndustry = if (isDefined(subIndustry)) subIndustry.label else null
@@ -163,7 +191,6 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
           subIndustry.loading = false
           subIndustry.quotes = quotes
           subIndustry.expanded = true
-          callback.foreach(_(sector, industry, subIndustry, subIndustry.quotes))
         case Failure(e) => subIndustry.loading = false
       }
     }
