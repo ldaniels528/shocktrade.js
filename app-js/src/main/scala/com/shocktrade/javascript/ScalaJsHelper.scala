@@ -24,7 +24,7 @@ object ScalaJsHelper {
   def makeNew[T] = new js.Object().asInstanceOf[T]
 
   def params(values: (String, Any)*): String = {
-    val queryString = values map { case (k, v) => s"$k=${g.encodeURI(String.valueOf(v))}" } mkString "&"
+    val queryString = values map { case (k, v) => s"$k=${g.encodeURI(String.valueOf(v))}" } map(_.replaceAllLiterally("&", "%26")) mkString "&"
     val fullQuery = if (queryString.nonEmpty) "?" + queryString else queryString
     console.log(s"query is $fullQuery")
     fullQuery
