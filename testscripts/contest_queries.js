@@ -41,3 +41,43 @@ db.Contests.update(
         }}
     });
 
+
+db.Contests.update({
+    name: "Me vs Gadget",
+    "participants.name": "gadget"
+}, {
+    "$set": { "participants.$.closedOrders": [] }
+});
+
+db.Contests.update({
+    name: "Me vs Gadget",
+    "participants.name": "Fugitive528"
+}, {
+    "$set": {
+        "participants.$.marginAccount.interestPaid" : 0.0,
+        "participants.$.marginAccount.interestPaidAsOfDate": ISODate("2015-07-14T04:30:24.352Z")
+    }
+});
+
+db.Contests.update({
+    name: "The World is Mine",
+    "participants.name": "Fugitive528"
+}, {
+    "$set": {
+        "participants.$.marginAccount.interestPaid" : 0.0,
+        "participants.$.marginAccount.interestPaidAsOfDate": ISODate("2015-07-14T04:30:24.352Z")
+    }
+});
+
+db.Contests.update({
+    name: "Me vs Gadget",
+    "participants.name": "Fugitive528"
+}, {
+    "$inc": {
+        "participants.$.marginAccount.cashFunds" : 1469.71
+    }
+});
+
+
+db.Contests.findOne({name:"Me vs Gadget"}, {"participants.marginAccount":1});
+db.Contests.findOne({name:"The World is Mine"}, {"participants.marginAccount":1});

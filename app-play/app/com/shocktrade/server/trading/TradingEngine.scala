@@ -30,14 +30,17 @@ object TradingEngine {
   def start() {
     Logger.info("Starting Order Processing System ...")
 
+    // process margin account interest once per hour
+    system.scheduler.schedule(1.minute, 1.hours)(applyMarginInterest())
+
     // process orders once every 5 minutes
     system.scheduler.schedule(5.seconds, frequency)(processOrders())
-
-    // process orders once per hour
-    system.scheduler.schedule(1.minute, 4.hours)(applyMarginInterest())
     ()
   }
 
+  /**
+   * Apply margin account interest
+   */
   def applyMarginInterest()(implicit ec: ExecutionContext, timeout: Timeout) = {
     try {
       Logger.info(s"Applying interest charges for margin accounts...")
@@ -47,7 +50,7 @@ object TradingEngine {
 
     } catch {
       case e: Exception =>
-        Logger.error("Error processing orders", e)
+        Logger.error("Error processing margin account interest", e)
     }
   }
 

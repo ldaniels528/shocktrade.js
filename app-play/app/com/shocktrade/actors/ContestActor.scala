@@ -70,9 +70,9 @@ object ContestActor {
 
     override def execute(mySender: ActorRef)(implicit ec: ExecutionContext) {
       ContestDAO.applyMarginInterest(contest) onComplete {
-        case Success(contest_?) =>
-          mySender ! contest_?
-          contest_?.foreach {
+        case Success(contests_?) =>
+          mySender ! contests_?
+          contests_?.foreach {
             _ foreach {
               WebSockets ! ContestUpdated(_)
             }

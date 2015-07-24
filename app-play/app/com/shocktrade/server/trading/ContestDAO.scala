@@ -16,6 +16,7 @@ import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.Try
@@ -189,26 +190,36 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   def applyMarginInterest(contest: Contest)(implicit ec: ExecutionContext) = Future.sequence {
+    for {
+      player <- contest.participants
+      acct <- player.marginAccount
+
+      asOfDate = new Date()
+      elapsedHours = (asOfDate.getTime - acct.interestPaidAsOfDate.getTime) / 1.hour.toMillis.toDouble
+
+      dailyInterest = (acct.borrowedFunds * MarginAccount.InterestRate) / 30d
+      interestPerHour = dailyInterest / 24d
+      interest = interestPerHour * elapsedHours if interest >= 0.01
+      _ = Logger.info(f"${contest.name} - ${player.name}: margin interest - $interest%.2f (interest/hour = $interestPerHour%.2f, hours = $elapsedHours)")
+
     // update all of the margin accounts for each player
-    contest.participants flatMap { player =>
-      player.marginAccount map { acct =>
-        val currentTime = System.currentTimeMillis()
-        val interest = acct.borrowedFunds * MarginAccount.InterestRate / (currentTime - acct.asOfDate.getMillis)
-        Logger.info(f"${contest.name} - ${player.name}: margin interest - $interest%.2f (${acct.borrowedFunds * MarginAccount.InterestRate})")
-        if (interest >= .01) {
-          // update the entire contest
-          mc.findAndUpdate(
-            selector = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
-            update = BS(
-              "$inc" -> BS("participants.$.marginAccounts.cashFunds" -> -interest),
-              "$inc" -> BS("participants.$.marginAccounts.interestPaid" -> interest),
-              "$set" -> BS("participants.$.marginAccounts.asOfDate" -> new Date(currentTime))),
-            fetchNewObject = true, upsert = false
-          ) map (_.result[Contest])
-        }
-        else Future.successful(None)
-      }
-    }
+    } yield updateMarginInterest(contest, player, interest, asOfDate)
+  }
+
+  private def updateMarginInterest(contest: Contest, player: Participant, interest: BigDecimal, asOfDate: Date)(implicit ec: ExecutionContext) = {
+    mc.findAndUpdate(
+      selector = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
+      update = BS(
+        "$inc" -> BS(
+          "participants.$.marginAccount.cashFunds" -> -interest,
+          "participants.$.marginAccount.interestPaid" -> interest
+        ),
+        "$set" -> BS(
+          "participants.$.marginAccount.interestPaidAsOfDate" -> asOfDate
+        )
+      ),
+      fetchNewObject = true, upsert = false
+    ) map (_.result[Contest])
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
@@ -305,6 +316,21 @@ object ContestDAO {
       update = BS("$addToSet" -> BS("participants.$.orders" -> order)),
       fetchNewObject = true, upsert = false
     ) map (_.result[Contest])
+  }
+
+  /**
+   * Removes all closed orders
+   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
+   * @param p the given [[com.shocktrade.models.contest.Participant participant]]
+   * @param ec the implicit [[ExecutionContext execution context]]
+   * @return a promise of the [[reactivemongo.api.commands.WriteResult write result]]
+   */
+  def deleteClosedOrders(c: Contest, p: Participant)(implicit ec: ExecutionContext) = {
+    mc.update(
+      BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> p.id))),
+      BS("$set" -> BS("participants.$.closedOrders" -> BSONArray())),
+      upsert = false, multi = false
+    )
   }
 
   /**
@@ -474,7 +500,7 @@ object ContestDAO {
   /**
    * Increases a position by creating a new position
    * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[Claim claim]]
+   * @param claim the given [[com.shocktrade.server.trading.Claim claim]]
    * @param asOfDate the given [[Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
    * @return a promise of the number of positions updated
@@ -510,10 +536,10 @@ object ContestDAO {
   /**
    * Increases a position by updating an existing position
    * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[Claim claim]]
-   * @param asOfDate the given [[Date effective date]]
+   * @param claim the given [[com.shocktrade.server.trading.Claim claim]]
+   * @param asOfDate the given [[java.util.Date effective date]]
    * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of positions updated
+   * @return a promise of the [[com.shocktrade.server.trading.Outcome outcome]]
    */
   private def updatePosition(c: Contest, claim: Claim, pos: Position, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // create the increased position
@@ -535,11 +561,10 @@ object ContestDAO {
         // deduct funds
         "$inc" -> fundingTarget(wo, -claim.cost),
 
-        // set the "As Of" date
-        "$set" -> fundingAsOfDate(wo, asOfDate),
-
         // remove the order and existing position
-        "$pull" -> BS("participants.$.orders" -> BS("_id" -> wo.id), "participants.$.positions" -> BS("_id" -> pos.id)),
+        "$pull" -> BS(
+          "participants.$.orders" -> BS("_id" -> wo.id),
+          "participants.$.positions" -> BS("_id" -> pos.id)),
 
         // add the new position (Phase 1) the order history records
         "$addToSet" -> BS(
