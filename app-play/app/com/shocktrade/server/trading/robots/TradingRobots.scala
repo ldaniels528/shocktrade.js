@@ -5,6 +5,7 @@ import com.shocktrade.server.trading.robots.TradingRobot.Invest
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 
 import scala.concurrent.duration._
 
@@ -12,13 +13,13 @@ import scala.concurrent.duration._
  * Trading Robots
  * @author lawrence.daniels@gmail.com
  */
-object TradingRobots {
+case class TradingRobots(reactiveMongoApi: ReactiveMongoApi) {
   private val system = Akka.system
 
   import system.dispatcher
 
   private val robots = Seq(("gadget", DayTradingStrategy) /*, ("daisy", DayTradingStrategy)*/) map { case (name, strategy) =>
-    system.actorOf(Props(new TradingRobot(name, strategy)), name)
+    system.actorOf(Props(new TradingRobot(name, strategy, reactiveMongoApi)), name)
   }
 
   /**

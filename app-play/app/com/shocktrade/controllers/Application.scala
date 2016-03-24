@@ -1,18 +1,27 @@
 package com.shocktrade.controllers
 
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
 import com.shocktrade.actors.WebSocketHandler
+import com.shocktrade.controllers.Application.initialized
+import com.shocktrade.server.trading.DataLoadingProcesses
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._
-import play.modules.reactivemongo.MongoController
+import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 
 /**
- * Application Resources
- * @author lawrence.daniels@gmail.com
- */
-object Application extends Controller with MongoController {
+  * Application Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class Application @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends MongoController with ReactiveMongoComponents {
+
+  // one-time initialization
+  if (initialized.compareAndSet(false, true)) {
+    DataLoadingProcesses(reactiveMongoApi)
+  }
 
   def index = Action(Ok(assets.views.html.index(UUID.randomUUID().toString)))
 
@@ -89,5 +98,14 @@ object Application extends Controller with MongoController {
   def connectView = Action(Ok(assets.views.html.connect.Connect()))
 
   def homeView = Action(Ok(assets.views.html.profile.Home()))
+
+}
+
+/**
+  * Application Controller Companion Object
+  * @author lawrence.daniels@gmail.com
+  */
+object Application {
+  private val initialized = new AtomicBoolean(false)
 
 }

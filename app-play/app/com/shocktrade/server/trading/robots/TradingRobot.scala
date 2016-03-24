@@ -5,16 +5,17 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
-import com.github.ldaniels528.tabular.Tabular
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.StringHelper._
+import com.github.ldaniels528.tabular.Tabular
+import com.shocktrade.dao.{SecuritiesDAO, UserProfileDAO}
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
-import com.shocktrade.models.profile.{UserProfile, UserProfiles}
-import com.shocktrade.models.quote.{CompleteQuote, StockQuotes}
-import com.shocktrade.server.trading.robots.TradingRobot.{Invest, _}
-import com.shocktrade.server.trading.{ContestDAO, Contests}
-import reactivemongo.bson.{BSONDocument => BS}
+import com.shocktrade.models.profile.UserProfile
+import com.shocktrade.models.quote.{CompleteQuote, ResearchQuote}
+import com.shocktrade.server.trading.ContestDAO
+import com.shocktrade.server.trading.robots.TradingRobot._
+import play.modules.reactivemongo.ReactiveMongoApi
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -22,12 +23,15 @@ import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 /**
- * Represents an autonomous Trading Robot
- * @author lawrence.daniels@gmail.com
- */
-case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor with ActorLogging {
+  * Represents an autonomous Trading Robot
+  * @author lawrence.daniels@gmail.com
+  */
+case class TradingRobot(name: String, strategy: TradingStrategy, reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val timeout: Timeout = 10.seconds
   private val processing = new AtomicBoolean(false)
+  private val contestDAO = ContestDAO(reactiveMongoApi)
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val userProfileDAO = UserProfileDAO(reactiveMongoApi)
   private val tabular = new Tabular()
 
   import context.dispatcher
@@ -52,16 +56,16 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
   private def invest() = {
     for {
     // lookup the robot's user profile
-      profile <- UserProfiles.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
+      profile <- userProfileDAO.findProfileByName(name) map (_ orDie s"The user profile for robot $name could not be found")
 
       // find contests to join
       _ <- findContestsToJoin(profile)
 
       // lookup the quotes using our trading strategy
-      quotes <- StockQuotes.findQuotes(strategy.getFilter)
+      quotes <- securitiesDAO.findByFilter(strategy.getFilter)
 
       // first let's retrieve the contests I've involved in ...
-      contests <- Contests.findContestsByPlayerName(name)()
+      contests <- contestDAO.findContestsByPlayerName(name)
 
     } yield {
       // process each contest
@@ -77,7 +81,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     }
   }
 
-  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[BS]) = {
+  private def operateRobot(contest: Contest, participant: Participant, jsQuotes: Seq[ResearchQuote]) = {
     log.info(s"$name: Looking for investment opportunities in '${contest.name}'...")
 
     // compute the funds available (subtract what we already have on order)
@@ -89,12 +93,12 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       val orderedSymbols = participant.orders.map(_.symbol)
       val ownedSymbols = participant.positions.map(_.symbol)
       val orderedOrOwned = (orderedSymbols ++ ownedSymbols).distinct
-      val quotes = jsQuotes map (_.as[CompleteQuote]) filterNot (q => orderedOrOwned.contains(q.symbol))
+      val quotes = jsQuotes filterNot (q => orderedOrOwned.contains(q.symbol))
       log.info(s"$name: Identified ${quotes.size} of ${jsQuotes.size} quote(s) for potential investment...")
 
       // let's get $1000 worth of each
       val targetSpend: BigDecimal = if (cashAvailable > MINIMUM_SPEND) MINIMUM_SPEND else cashAvailable
-      val stocks = quotes map (q => Security(q.symbol, q.exchange, q.lastTrade, q.lastTrade.map(targetSpend / _).map(_.toInt), q.spreadPct, q.volume))
+      val stocks = quotes map (q => Security(q.symbol, q.exchange, q.lastTrade, q.lastTrade.map(targetSpend / _).map(_.toInt), q.spread, q.volume))
       tabular.transform(stocks) foreach log.info
 
       // how much can I buy?
@@ -106,7 +110,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
       stocks.take(numOfSecuritiesToBuy) foreach { stock =>
         createOrder(stock) foreach { order =>
           log.info(s"$name: Creating order ${order.orderType} ${order.symbol} @ ${order.price} x ${order.quantity} ${order.priceType}")
-          Contests.createOrder(contest.id, participant.id, order)
+          contestDAO.createOrder(contest.id, participant.id, order)
         }
       }
     }
@@ -114,7 +118,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 
   private def findContestsToJoin(u: UserProfile) = {
     log.info(s"$name is looking for contests to join...")
-    ContestDAO.findContests(SearchOptions(activeOnly = Some(true))) map { contests =>
+    contestDAO.findContests(SearchOptions(activeOnly = Some(true))) map { contests =>
       contests.foreach { contest =>
         log.info(s"$name is considering joining '${contest.name}'...")
 
@@ -123,7 +127,7 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
           log.info(s"$name: Joining '${contest.name}' ...")
           for {
           // join the contest
-            contest_? <- Contests.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, cashAccount = CashAccount(cashFunds = contest.startingBalance)))
+            contest_? <- contestDAO.joinContest(contest.id, Participant(id = u.id, u.name, u.facebookID, cashAccount = CashAccount(cashFunds = contest.startingBalance)))
 
             // always purchase the 'Fee Waiver' Perk
             _ = for {
@@ -164,9 +168,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
     else {
       log.info(s"$name: Attempting to purchase perk $perkType [${contest.name}}]...")
       for {
-        perks <- Contests.findAvailablePerks(contest.id)
+        perks <- contestDAO.findAvailablePerks(contest.id)
         feeWaiverPerk = perks.find(_.code == perkType) orDie s"Perk $perkType not found"
-        updated <- Contests.purchasePerks(contest.id, participant.id, Seq(perkType), feeWaiverPerk.cost)
+        updated <- contestDAO.purchasePerks(contest.id, participant.id, Seq(perkType), feeWaiverPerk.cost)
       } yield updated
     }
   }
@@ -174,9 +178,9 @@ case class TradingRobot(name: String, strategy: TradingStrategy) extends Actor w
 }
 
 /**
- * Trading Robot Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Trading Robot Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object TradingRobot {
   val MINIMUM_SPEND = 1000d
 

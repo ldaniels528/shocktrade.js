@@ -1,16 +1,16 @@
 package com.shocktrade.util
 
-import java.util.Date
-
 import org.joda.time.DateTime
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.{JsObject, JsValue}
-import reactivemongo.bson.{BSONDateTime, BSONDocument => BS, BSONDouble, BSONHandler, BSONObjectID}
+import reactivemongo.bson.{BSONDateTime, BSONDouble, BSONHandler, BSONObjectID, BSONDocument => BS}
+
+import scala.language.implicitConversions
 
 /**
- * BSON Helper
- * @author lawrence.daniels@gmail.com
- */
+  * BSON Helper
+  * @author lawrence.daniels@gmail.com
+  */
 object BSONHelper {
 
   implicit class JsonExtensions(val json: JsValue) extends AnyVal {
@@ -26,9 +26,9 @@ object BSONHelper {
   }
 
   /**
-   * Big Decimal to BSON Double Handler
-   * @author lawrence.daniels@gmail.com
-   */
+    * Big Decimal to BSON Double Handler
+    * @author lawrence.daniels@gmail.com
+    */
   implicit object BigDecimalHandler extends BSONHandler[BSONDouble, BigDecimal] {
 
     def read(double: BSONDouble) = BigDecimal(double.value)
@@ -37,20 +37,9 @@ object BSONHelper {
   }
 
   /**
-   * Date to BSON Date Time Handler
-   * @author lawrence.daniels@gmail.com
-   */
-  implicit object DateHandler extends BSONHandler[BSONDateTime, Date] {
-
-    def read(date: BSONDateTime) = new Date(date.value)
-
-    def write(date: Date) = BSONDateTime(date.getTime)
-  }
-
-  /**
-   * Joda DateTime to BSON Date Time Handler
-   * @author lawrence.daniels@gmail.com
-   */
+    * Joda DateTime to BSON Date Time Handler
+    * @author lawrence.daniels@gmail.com
+    */
   implicit object JodaDateTimeHandler extends BSONHandler[BSONDateTime, DateTime] {
 
     def read(date: BSONDateTime) = new DateTime(date.value)
@@ -59,9 +48,9 @@ object BSONHelper {
   }
 
   /**
-   * JSON/BSON Extension for generating field lists
-   * @param fields the given field names
-   */
+    * JSON/BSON Extension for generating field lists
+    * @param fields the given field names
+    */
   implicit class JsonBsonFieldExtensions(val fields: Seq[String]) extends AnyVal {
 
     // TODO revisit the reduced field logic
@@ -73,9 +62,9 @@ object BSONHelper {
   }
 
   /**
-   * BSON Extension for converting a String-based identifier to a BSON Object ID
-   * @param id the string representation of the BSON Object ID
-   */
+    * BSON Extension for converting a String-based identifier to a BSON Object ID
+    * @param id the string representation of the BSON Object ID
+    */
   implicit class BSONObjectIDExtensions(val id: String) extends AnyVal {
 
     def toBSID = BSONObjectID(id)

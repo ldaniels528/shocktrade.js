@@ -1,27 +1,23 @@
-package com.shocktrade.server.actors
+package com.shocktrade.server.trading.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.routing.RoundRobinPool
-import akka.util.Timeout
-import com.shocktrade.models.quote.StockQuotes
-import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor._
+import akka.actor.{Actor, ActorLogging}
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.server.trading.actors.YahooKeyStatisticsUpdateActor._
 import com.shocktrade.services.yahoofinance.YFKeyStatisticsService
 import com.shocktrade.util.BSONHelper._
-import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDocument => BS}
 
-import scala.concurrent.ExecutionContext
-
 /**
- * Yahoo! Key Statistics Update Actor
- * @author lawrence.daniels@gmail.com
- */
-class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
+  * Yahoo! Key Statistics Update Actor
+  * @author lawrence.daniels@gmail.com
+  */
+class YahooKeyStatisticsUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
   val counter = new AtomicInteger()
 
   override def receive = {
@@ -31,10 +27,10 @@ class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
 
       counter.set(0)
       var count = 0
-      StockQuotes.getSymbolsForKeyStatisticsUpdate.collect[Seq]() foreach { docs =>
+      securitiesDAO.getSymbolsForKeyStatisticsUpdate.collect[Seq]() foreach { docs =>
         docs.flatMap(_.getAs[String]("symbol")) foreach { symbol =>
           count += 1
-          YahooKeyStatisticsUpdateActor ! RefreshKeyStatics(symbol)
+          self ! RefreshKeyStatics(symbol)
         }
         mySender ! count
       }
@@ -43,7 +39,7 @@ class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
       val ks = YFKeyStatisticsService.getKeyStatisticsSync(symbol)
       import ks._
 
-      StockQuotes.updateQuote(ks.symbol, BS(
+      securitiesDAO.updateQuote(ks.symbol, BS(
         "pctHeldByInsiders" -> pctHeldByInsiders,
         "pctHeldByInstitutions" -> pctHeldByInstitutions,
         "dividendYield5YearAvg" -> dividendYield5YearAvg,
@@ -120,15 +116,10 @@ class YahooKeyStatisticsUpdateActor() extends Actor with ActorLogging {
 }
 
 /**
- * Yahoo! Key Statistics Update Actor Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Yahoo! Key Statistics Update Actor Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object YahooKeyStatisticsUpdateActor {
-  private val myActor = Akka.system.actorOf(Props[YahooKeyStatisticsUpdateActor].withRouter(RoundRobinPool(nrOfInstances = 10)), name = "KeyStatisticsUpdate")
-
-  def !(message: Any) = myActor ! message
-
-  def ?(message: Any)(implicit ec: ExecutionContext, timeout: Timeout) = myActor ? message
 
   case object RefreshAllKeyStatistics
 

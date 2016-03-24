@@ -1,10 +1,10 @@
-package com.shocktrade.util
+package com.shocktrade.dao
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import com.shocktrade.dao.RSSReader._
 import play.api.Logger
-import RSSReader._
 
 import scala.beans.BeanProperty
 import scala.concurrent.{ExecutionContext, Future}

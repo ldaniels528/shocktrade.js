@@ -1,88 +1,24 @@
 package com.shocktrade.controllers
 
-import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-import akka.util.Timeout
-import com.shocktrade.server.actors.CikNumberUpdateActor.UpdateMissingCikNumbers
-import com.shocktrade.server.actors.FinraRegShoUpdateActor.ProcessRegSHO
-import com.shocktrade.server.actors.NasdaqImportActor.NasdaqImport
-import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor.RefreshAllQuotes
-import com.shocktrade.server.actors.YahooKeyStatisticsUpdateActor.RefreshAllKeyStatistics
-import com.shocktrade.server.actors._
 import com.shocktrade.server.trading.TradingClock
 import com.shocktrade.util.DateUtil
 import play.api.libs.json.Json.{obj => JS}
 import play.api.mvc._
 import play.libs.Akka
-
-import scala.concurrent.duration._
+import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 
 /**
- * Trading Resources
- * @author lawrence.daniels@gmail.com
- */
-object TradingController extends Controller {
-  private val system = Akka.system
-  implicit val ec = system.dispatcher
+  * Trading Resources
+  * @author lawrence.daniels@gmail.com
+  */
+class TradingController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends MongoController with ReactiveMongoComponents {
+  implicit val ec = Akka.system.dispatcher
 
   /**
-   * Starts the CIK Update process
-   */
-  def startCikUpdate = Action.async {
-    implicit val timeout: Timeout = 10.minutes
-
-    (CikNumberUpdateActor ? UpdateMissingCikNumbers).mapTo[Int] map { count =>
-      Ok(JS("symbol_count" -> count))
-    }
-  }
-
-  /**
-   * Starts the Key Statistics Update process
-   */
-  def startKeyStatisticsUpdate = Action.async {
-    implicit val timeout: Timeout = 10.minutes
-
-    (YahooKeyStatisticsUpdateActor ? RefreshAllKeyStatistics).mapTo[Int] map { count =>
-      Ok(JS("symbol_count" -> count))
-    }
-  }
-
-  /**
-   * Starts the NASDAQ import process
-   */
-  def startNasdaqImport = Action.async {
-    implicit val timeout: Timeout = 10.minutes
-
-    (NasdaqImportActor ? NasdaqImport).mapTo[(Int, Int, Int)] map { case (updates, skipped, errors) =>
-      Ok(JS("updates" -> updates, "skipped" -> skipped, "errors" -> errors))
-    }
-  }
-
-  /**
-   * Starts the FINRA/OTCBB Registration Update process
-   */
-  def startRegSHOUpdate(dateString: String) = Action.async {
-    implicit val timeout: Timeout = 10.minutes
-
-    (FinraRegShoUpdateActor ? ProcessRegSHO(new SimpleDateFormat("yyyyMMdd").parse(dateString))).mapTo[Int] map { count =>
-      Ok(JS("symbol_count" -> count))
-    }
-  }
-
-  /**
-   * Starts the Stock Quote Update process
-   */
-  def startStockQuoteUpdate = Action.async {
-    implicit val timeout: Timeout = 10.minutes
-
-    (YahooCsvQuoteUpdateActor ? RefreshAllQuotes).mapTo[Int] map { count =>
-      Ok(JS("symbol_count" -> count))
-    }
-  }
-
-  /**
-   * Returns a trading clock state object
-   */
+    * Returns a trading clock state object
+    */
   def status(lastUpdateTimeMillis: Long) = Action {
     val active = DateUtil.isTradingActive(System.currentTimeMillis())
     val delay = DateUtil.getDelayUntilTradingStartInMillis
@@ -95,9 +31,6 @@ object TradingController extends Controller {
       stateChanged = active != TradingClock.isTradingActive(lastUpdateTimeMillis)
     }
 
-    // capture the system time
-    val sysTime = System.currentTimeMillis()
-
     Ok(JS(
       "stateChanged" -> stateChanged,
       "active" -> active,
@@ -108,8 +41,8 @@ object TradingController extends Controller {
   }
 
   /**
-   * Returns the delay (in milliseconds) until trading starts
-   */
+    * Returns the delay (in milliseconds) until trading starts
+    */
   def delayUntilTradingStart = Action {
     Ok(JS("delayInMillis" -> TradingClock.getDelayUntilTradingStartInMillis))
   }

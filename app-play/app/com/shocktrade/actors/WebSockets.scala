@@ -8,7 +8,7 @@ import com.shocktrade.models.contest.{Contest, Participant}
 import com.shocktrade.models.profile.UserProfile
 import play.api.Logger
 import play.api.libs.json.Json.{obj => JS}
-import play.api.libs.json.{JsArray, JsObject, JsValue}
+import play.api.libs.json.{JsArray, JsObject}
 import play.libs.Akka
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
@@ -16,41 +16,41 @@ import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import scala.collection.concurrent.TrieMap
 
 /**
- * Web Sockets Proxy
- * @author lawrence.daniels@gmail.com
- */
+  * Web Sockets Proxy
+  * @author lawrence.daniels@gmail.com
+  */
 object WebSockets {
   private val actors = TrieMap[UUID, ActorRef]()
   private val system = Akka.system
   private val relayActor = system.actorOf(Props[WsRelayActor].withRouter(RoundRobinPool(nrOfInstances = 50)), name = "WsRelay")
 
   /**
-   * Broadcasts the given message to all connected users
-   * @param message the given message
-   */
+    * Broadcasts the given message to all connected users
+    * @param message the given message
+    */
   def !(message: Any) = relayActor ! message
 
   /**
-   * Registers the given actor reference
-   * @param uuid the given [[java.util.UUID unique identifier]]
-   * @param actor the given [[akka.actor.ActorRef]]
-   */
+    * Registers the given actor reference
+    * @param uuid  the given [[java.util.UUID unique identifier]]
+    * @param actor the given [[akka.actor.ActorRef]]
+    */
   def register(uuid: UUID, actor: ActorRef) = {
     Logger.info(s"Registering web socket actor for session # $uuid...")
     actors(uuid) = actor
   }
 
   /**
-   * Unregisters the given actor reference
-   * @param uuid the given [[java.util.UUID unique identifier]]
-   * @return the option of the [[akka.actor.ActorRef]] being removed
-   */
+    * Unregisters the given actor reference
+    * @param uuid the given [[java.util.UUID unique identifier]]
+    * @return the option of the [[akka.actor.ActorRef]] being removed
+    */
   def unregister(uuid: UUID): Option[ActorRef] = actors.remove(uuid)
 
   /**
-   * Web Socket Relay Actor
-   * @author lawrence.daniels@gmail.com
-   */
+    * Web Socket Relay Actor
+    * @author lawrence.daniels@gmail.com
+    */
   class WsRelayActor() extends Actor with ActorLogging {
     override def receive = {
       case msg: WsRelayMessage =>
@@ -65,8 +65,8 @@ object WebSockets {
   }
 
   /**
-   * Base trait for all Web Socket Replay Messages
-   */
+    * Base trait for all Web Socket Replay Messages
+    */
   trait WsRelayMessage {
     def toJsonMessage: JsObject
   }

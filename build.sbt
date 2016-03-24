@@ -10,8 +10,7 @@ val myAkkaVersion = "2.3.14"
 val myPlayVersion = "2.4.6"
 val myAppVersion = "0.8.1"
 
-scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.7", "-unchecked",
-  "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
+scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.7", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.7", "-target", "1.7", "-g:vars")
 
@@ -36,7 +35,7 @@ lazy val appScalaJs = (project in file("app-js"))
     ))
   .enablePlugins(ScalaJSPlugin)
 
-lazy val appScalaJvm = (project in file("app-play"))
+lazy val appPlay = (project in file("app-play"))
   .settings(
     name := "shocktrade.js",
     organization := "com.shocktrade",
@@ -66,8 +65,11 @@ lazy val appScalaJvm = (project in file("app-play"))
       //
       // Third Party dependencies
       //
+      "com.github.jsonld-java" % "jsonld-java" % "0.7.0",
       "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1",
-      "org.reactivemongo" %% "play2-reactivemongo" % "0.11.3.play23",
+      "org.imgscalr" % "imgscalr-lib" % "4.2",
+      "org.reactivemongo" %% "play2-reactivemongo" % "0.11.7.play24",
+      "org.mindrot" % "jbcrypt" % "0.3m",
       //
       // Web Jar dependencies
       //
@@ -93,4 +95,4 @@ lazy val appScalaJvm = (project in file("app-play"))
   .aggregate(appScalaJs)
 
 // loads the jvm project at sbt startup
-onLoad in Global := (Command.process("project appScalaJvm", _: State)) compose (onLoad in Global).value
+onLoad in Global := (Command.process("project appPlay", _: State)) compose (onLoad in Global).value

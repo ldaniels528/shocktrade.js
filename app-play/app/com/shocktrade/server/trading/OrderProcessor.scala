@@ -5,10 +5,11 @@ import java.util.Date
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.tabular.Tabular
 import com.github.ldaniels528.tabular.formatters.FormatHandler
+import com.shocktrade.dao.UserProfileDAO
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
-import com.shocktrade.models.profile.{UserProfileDAO, UserProfiles}
+import com.shocktrade.server.trading.OrderProcessor.{BSONObjectIDHandler, _}
 import com.shocktrade.server.trading.Outcome.{Failed, Succeeded}
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
@@ -17,6 +18,7 @@ import com.shocktrade.util.{ConcurrentCache, DateUtil}
 import org.joda.time.DateTime
 import play.api.Logger
 import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
@@ -24,18 +26,20 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 
 /**
- * Trading Order Processor
- * @author lawrence.daniels@gmail.com
- */
-object OrderProcessor {
+  * Trading Order Processor
+  * @author lawrence.daniels@gmail.com
+  */
+case class OrderProcessor(reactiveMongoApi: ReactiveMongoApi) {
   private val tabular = new Tabular().add(BSONObjectIDHandler)
   private val daysCloseLabels = Map(false -> "Open", true -> "Closed")
   private val quoteCache = ConcurrentCache[String, Seq[YFIntraDayQuote]](2.hours)
+  private val contestDAO = ContestDAO(reactiveMongoApi)
+  private val userProfileDAO = UserProfileDAO(reactiveMongoApi)
   private implicit val ec = Akka.system().dispatcher
 
   /**
-   * Processes the given contest
-   */
+    * Processes the given contest
+    */
   def processContest(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext): Future[Int] = {
     // compute the market close time (+20 minutes for margin of error)
     val tradingClose = new DateTime(getTradeStopTime()).plusMinutes(20).toDate
@@ -46,7 +50,7 @@ object OrderProcessor {
       claimOutcomes <- processOrders(c, asOfDate, isDaysClose = isTradingActive(asOfDate))
 
       // close any expired orders
-      closeOrders <- ContestDAO.closeExpiredOrders(c, asOfDate)
+      closeOrders <- contestDAO.closeExpiredOrders(c, asOfDate)
 
       // compute the updated count
       updatedCount = (claimOutcomes map { case (_, outcome) => if (outcome.isSuccess) 1 else 0 } sum) + closeOrders
@@ -74,7 +78,7 @@ object OrderProcessor {
       closeOrders <- closeAllOpenOrders(c)
       prices <- priceAllHeldSecurities(c)
       sellOff <- liquidateAllHeldSecurities(c, prices, asOfDate)
-      closedContest <- ContestDAO.closeContest(c) map (_ orDie "Contest could not be closed")
+      closedContest <- contestDAO.closeContest(c) map (_ orDie "Contest could not be closed")
       refunds <- refundTheProceedsToParticipants(closedContest)
       awards <- applyAwards(closedContest)
     } yield (sellOff, closedContest)
@@ -90,14 +94,14 @@ object OrderProcessor {
   private def applyAwards(c: Contest)(implicit ec: ExecutionContext) = {
     Future.sequence {
       AwardsProcessor.qualifyAwards(c) map { case (participant, awards) =>
-        UserProfileDAO.applyAwards(participant.id, awards)
+        userProfileDAO.applyAwards(participant.id, awards)
       }
     }
   }
 
   private def closeAllOpenOrders(c: Contest)(implicit ec: ExecutionContext) = {
     info(c, "[1] Close all active orders")
-    Future.sequence(c.participants.flatMap(participant => participant.orders map (order => ContestDAO.closeOrder(c.id, participant.id, order.id))))
+    Future.sequence(c.participants.flatMap(participant => participant.orders map (order => contestDAO.closeOrder(c.id, participant.id, order.id))))
   }
 
   private def priceAllHeldSecurities(c: Contest)(implicit ec: ExecutionContext) = {
@@ -150,7 +154,7 @@ object OrderProcessor {
           workOrder = workOrder)
 
         // liquidate the asset
-        ContestDAO.reducePosition(c, claim, asOfDate) map { outcome =>
+        contestDAO.reducePosition(c, claim, asOfDate) map { outcome =>
           Liquidation(participant.name, pos.symbol, pos.pricePaid, pos.quantity, workOrder.price, outcome)
         }
       }
@@ -160,18 +164,18 @@ object OrderProcessor {
   private def refundTheProceedsToParticipants(c: Contest)(implicit ec: ExecutionContext) = {
     Future.sequence(c.participants map { participant =>
       val totalCash = participant.cashAccount.cashFunds + participant.marginAccount.map(_.cashFunds).getOrElse(BigDecimal(0.0))
-      UserProfiles.deductFunds(participant.id, -totalCash)
+      userProfileDAO.deductFunds(participant.id, -totalCash)
     })
   }
 
   /**
-   * Processes the given orders
-   */
+    * Processes the given orders
+    */
   private def processOrders(c: Contest, asOfDate: Date, isDaysClose: Boolean)(implicit ec: ExecutionContext) = {
     info(c, s"Processing Orders as of ${new DateTime(asOfDate).toString("MM/dd/yyyy hh:mm:ss")} [Market ${daysCloseLabels(isDaysClose)}]")
 
     // if it's day's close, grab all orders; otherwise, all non-Market Close orders
-    val orders = ContestDAO.getOpenWorkOrders(c, asOfDate)
+    val orders = contestDAO.getOpenWorkOrders(c, asOfDate)
     if (orders.nonEmpty) {
       info(c, s"${orders.size} eligible order(s) found")
       showOrders(c, orders)
@@ -371,20 +375,20 @@ object OrderProcessor {
         outcome <- claim.workOrder.orderType match {
           case OrderTypes.BUY =>
             info(c, s"[${claim.workOrder.playerId}] Increasing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.increasePosition(c, claim, asOfDate) map {
+            contestDAO.increasePosition(c, claim, asOfDate) map {
               case o@Failed(error, _) if error.contains("qualifying position") =>
                 if (!claim.workOrder.participant.perks.contains(PerkTypes.PRFCTIMG)) {
-                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                  contestDAO.failOrder(c, claim.workOrder, error, asOfDate)
                 }
                 o
               case outcome => outcome
             }
           case OrderTypes.SELL =>
             info(c, s"[${claim.workOrder.playerId}] Reducing position of ${claim.symbol} x ${claim.quantity}")
-            ContestDAO.reducePosition(c, claim, asOfDate) map {
+            contestDAO.reducePosition(c, claim, asOfDate) map {
               case o@Failed(error, _) if error.contains("qualifying position") =>
                 if (!claim.workOrder.participant.perks.contains(PerkTypes.PRCHEMNT)) {
-                  ContestDAO.failOrder(c, claim.workOrder, error, asOfDate)
+                  contestDAO.failOrder(c, claim.workOrder, error, asOfDate)
                 }
                 o
               case outcome => outcome
@@ -400,10 +404,18 @@ object OrderProcessor {
 
   private def error(c: Contest, message: String, e: Throwable = null) = Logger.error(s"${c.name}: $message", e)
 
+}
+
+/**
+  * Trading Order Processor
+  * @author lawrence.daniels@gmail.com
+  */
+object OrderProcessor {
+
   /**
-   * BSON Object ID Handler for Tabular
-   * @author lawrence.daniels@gmail.com
-   */
+    * BSON Object ID Handler for Tabular
+    * @author lawrence.daniels@gmail.com
+    */
   object BSONObjectIDHandler extends FormatHandler {
     override def handles(value: Any) = value match {
       case id: BSONObjectID => true
@@ -421,9 +433,9 @@ object OrderProcessor {
   case class Pricing(symbol: String, exchange: Option[String], lastTrade: Option[Double], tradeDate: Option[Date])
 
   /**
-   * Generically represents the common elements of a stock quote
-   * @author lawrence.daniels@gmail.com
-   */
+    * Generically represents the common elements of a stock quote
+    * @author lawrence.daniels@gmail.com
+    */
   case class WorkQuote(symbol: String,
                        exchange: String,
                        price: Double,

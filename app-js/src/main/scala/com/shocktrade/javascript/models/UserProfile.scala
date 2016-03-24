@@ -29,6 +29,10 @@ trait UserProfile extends js.Object {
   var lastLoginTime: js.UndefOr[js.Date] = js.native
 }
 
+/**
+  * User Profile Companion Object
+  * @author lawrence.daniels@gmail.com
+  */
 object UserProfile {
 
   def apply(name: String = null,

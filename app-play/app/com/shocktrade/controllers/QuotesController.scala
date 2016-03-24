@@ -1,63 +1,44 @@
 package com.shocktrade.controllers
 
 import java.util.Date
+import javax.inject.Inject
 
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.StringHelper._
+import com.shocktrade.dao.SecuritiesDAO
 import com.shocktrade.models.quote._
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService
 import com.shocktrade.services.googlefinance.GoogleFinanceTradingHistoryService.GFHistoricalQuote
-import com.shocktrade.util.BSONHelper._
+import com.shocktrade.services.yahoofinance.YFRealtimeStockQuoteService
 import org.joda.time.DateTime
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json.Reads._
 import play.api.libs.json._
-import play.api.mvc.{Controller, _}
-import play.modules.reactivemongo.MongoController
+import play.api.mvc._
+import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
-import reactivemongo.core.commands._
 
 import scala.concurrent.Future
 
 /**
- * Quotes Controller
- * @author lawrence.daniels@gmail.com
- */
-object QuotesController extends Controller with MongoController with ProfileFiltering with Classifications {
-  private val Stocks = "Stocks"
-  lazy val mcQ = db.collection[BSONCollection](Stocks)
-  lazy val mcP = db.collection[BSONCollection]("Players")
-
-  val limitFields = BS(
-    "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1,
-    "change" -> 1, "changePct" -> 1, "spread" -> 1, "volume" -> 1)
-
-  val searchFields = BS(
-    "name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "change" -> 1, "changePct" -> 1,
-    "open" -> 1, "close" -> 1, "high" -> 1, "low" -> 1, "tradeDate" -> 1, "spread" -> 1, "volume" -> 1)
+  * Quotes Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends MongoController with ReactiveMongoComponents {
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
 
   ////////////////////////////////////////////////////////////////////////////
   //      API Functions
   ////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Auto-completes symbols and company names
-   */
+    * Auto-completes symbols and company names
+    */
   def autoComplete(searchTerm: String, maxResults: Int) = Action.async { implicit request =>
-    mcQ.find(
-      // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ?0, $options:'i' }} ] }
-      BS("symbol" -> BS("$ne" -> BSONNull), "$or" -> BSONArray(Seq(
-        BS("symbol" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i")),
-        BS("name" -> BS("$regex" -> s"^$searchTerm", "$options" -> "i"))))),
-      // fields
-      BS("symbol" -> 1, "name" -> 1, "exchange" -> 1, "assetType" -> 1))
-      .sort(BS("symbol" -> 1))
-      .cursor[AutoCompleteQuote]()
-      .collect[Seq](maxResults) map { quotes =>
+    securitiesDAO.autoComplete(searchTerm, maxResults) map { quotes =>
       val enriched = quotes map (quote => Json.toJson(quote.copy(icon = getIcon(quote))))
       Ok(JsArray(enriched))
     }
@@ -73,37 +54,33 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   }
 
   def getExchangeCounts = Action.async {
-    db.command(Aggregate(Stocks, Seq(
-      Match(BS("active" -> true, "exchange" -> BS("$ne" -> BSONNull), "assetType" -> BS("$in" -> BSONArray("Common Stock", "ETF")))),
-      GroupField("exchange")("total" -> SumValue(1))))) map { results =>
-      results.toSeq map (Json.toJson(_))
-    } map (js => Ok(JsArray(js)))
+    securitiesDAO.getExchangeCounts map (_ map (Json.toJson(_))) map (js => Ok(JsArray(js)))
   }
 
-  def getCachedQuote(symbol: String) = Action.async {
-    StockQuotes.findRealTimeQuote(symbol) map {
-      case Some(quote) => Ok(Json.toJson(quote))
+  def getCachedQuote(symbol: String) = Action {
+    getQuoteFromService(symbol) match {
+      case Some(jsQuote) => Ok(jsQuote)
       case None =>
         NotFound(s"No quote found for ticker $symbol")
     }
   }
 
-  def getOrderQuote(symbol: String) = Action.async {
-    StockQuotes.findRealTimeQuote(symbol) map {
+  def getOrderQuote(symbol: String) = Action {
+    getQuoteFromService(symbol) match {
       case Some(quote) => Ok(Json.toJson(quote))
       case None => NotFound(JS("symbol" -> symbol, "status" -> "error", "message" -> "Symbol not found"))
     }
   }
 
   /**
-   * Retrieves pricing for a collection of symbols
-   * POST http://localhost:9000/api/quotes/pricing <JsArray>
-   */
+    * Retrieves pricing for a collection of symbols
+    * POST http://localhost:9000/api/quotes/pricing <JsArray>
+    */
   def getPricing = Action.async { request =>
     val results = for {
       js <- request.body.asJson
       symbols <- js.asOpt[Array[String]]
-    } yield StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+    } yield securitiesDAO.getPricing(symbols)
 
     results match {
       case Some(futureQuotes) =>
@@ -115,11 +92,11 @@ object QuotesController extends Controller with MongoController with ProfileFilt
 
   def getQuote(symbol: String) = Action.async {
     val results = for {
-      quote_? <- StockQuotes.findFullQuote(symbol)
+      quote_? <- securitiesDAO.findFullQuote(symbol)
       quoteBs = quote_?.getOrElse(BS())
       productsJs <- getEnrichedProducts(quoteBs)
-      naicsMap <- naicsCodes
-      sicMap <- sicCodes
+      naicsMap <- securitiesDAO.naicsCodes
+      sicMap <- securitiesDAO.sicCodes
       enhanced = quote_? map { quote =>
         // start building the enriched JSON quote
         val quoteJs = Json.toJson(quote).asInstanceOf[JsObject]
@@ -175,7 +152,7 @@ object QuotesController extends Controller with MongoController with ProfileFilt
           val symbols = pm.map(_._1)
           for {
           // retrieve the product quotes
-            productsQuotes <- StockQuotes.findQuotes[ProductQuote](symbols)(ProductQuote.Fields: _*)
+            productsQuotes <- securitiesDAO.findQuotes[ProductQuote](symbols)(ProductQuote.Fields: _*)
 
             // get the product quote mapping
             pqm = Map(productsQuotes map { pq => (pq.symbol, pq) }: _*)
@@ -199,41 +176,26 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     // return the promise of the quotes
     result match {
       case Some(symbols) if symbols.nonEmpty =>
-        StockQuotes.findQuotes[BasicQuote](symbols)(BasicQuote.Fields: _*).map(quotes => Ok(Json.toJson(quotes)))
+        securitiesDAO.findQuotes[BasicQuote](symbols)(BasicQuote.Fields: _*).map(quotes => Ok(Json.toJson(quotes)))
       case _ =>
         Future.successful(Ok(JsArray()))
     }
   }
 
-  def getRealtimeQuote(symbol: String) = Action.async {
-    StockQuotes.findRealTimeQuote(symbol) map {
+  def getRealtimeQuote(symbol: String) = Action {
+    getQuoteFromService(symbol) match {
       case Some(quote) => Ok(Json.toJson(quote))
       case None => Ok(JS())
     }
   }
 
   def getRiskLevel(symbol: String) = Action.async {
-    val results = for {
-      quote_? <- mcQ.find(BS("symbol" -> symbol)).one[BS]
-      result = quote_? match {
-        case None => "Unknown"
-        case Some(quote) =>
-          val beta_? = quote.getAs[Double]("beta")
-          beta_? match {
-            case Some(beta) if beta >= 0 && beta <= 1.25 => "Low";
-            case Some(beta) if beta > 1.25 && beta <= 1.9 => "Medium";
-            case Some(beta) => "High"
-            case None => "Unknown"
-          }
-      }
-
-    } yield result
-    results map { r => Ok(r) }
+    securitiesDAO.getRiskLevel(symbol) map (r => Ok(r))
   }
 
   /**
-   * Retrieve the historical quotes for the given symbol
-   */
+    * Retrieve the historical quotes for the given symbol
+    */
   def getTradingHistory(symbol: String) = Action {
     // define the start and end dates
     val endDate = new Date()
@@ -253,8 +215,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
   }
 
   /**
-   * Returns the OTC advisory for the given symbol
-   */
+    * Returns the OTC advisory for the given symbol
+    */
   private def getAdvisory(symbol: String, exchange: String): Option[(String, String)] = {
     for {
       sym <- Option(symbol) if sym.length > 4
@@ -262,7 +224,8 @@ object QuotesController extends Controller with MongoController with ProfileFilt
       advisory <- Option(sym.last match {
         case 'A' => "Class A asset"
         case 'B' => "Class BS asset"
-        case 'C' => if (exchange == "NASDAQ") "Exception" else "Continuance"
+        case 'C' if exchange == "NASDAQ" => "Exception"
+        case 'C' => "Continuance"
         case 'D' => "New issue or reverse split"
         case 'E' => "Delinquent in required SEC filings"
         case 'F' => "Foreign security"
@@ -337,15 +300,9 @@ object QuotesController extends Controller with MongoController with ProfileFilt
     }
   }
 
-  def findQuotesBySymbols(symbols: Seq[String]): Future[Seq[SectorQuote]] = {
-    mcQ.find(BS("symbol" -> BS("$in" -> symbols)), SectorQuote.Fields.toBsonFields)
-      .cursor[SectorQuote]()
-      .collect[Seq]()
-  }
-
   /**
-   * Returns the beta description
-   */
+    * Returns the beta description
+    */
   private def getBetaDescription(beta_? : Option[Double]): String = {
     beta_? match {
       case None => "The volatility is unknown"
@@ -358,6 +315,44 @@ object QuotesController extends Controller with MongoController with ProfileFilt
         case _ => "The volatility could not be determined"
       }
     }
+  }
+
+  private def getQuoteFromService(symbol: String) = {
+    val q = YFRealtimeStockQuoteService.getQuoteSync(symbol)
+    if (q.error.exists(_.nonEmpty)) None
+    else Some(JS(
+      "symbol" -> q.symbol,
+      "name" -> q.name,
+      "exchange" -> q.exchange,
+      "lastTrade" -> q.lastTrade,
+      "time" -> q.time,
+      "tradeDateTime" -> q.tradeDateTime,
+      "change" -> q.change,
+      "changePct" -> q.changePct,
+      "prevClose" -> q.prevClose,
+      "open" -> q.open,
+      "close" -> q.close,
+      "ask" -> q.ask,
+      "askSize" -> q.askSize,
+      "bid" -> q.bid,
+      "bidSize" -> q.bidSize,
+      "target1Yr" -> q.target1Yr,
+      "beta" -> q.beta,
+      "nextEarningsDate" -> q.nextEarningsDate,
+      "low" -> q.low,
+      "high" -> q.high,
+      "spread" -> q.spread,
+      "low52Week" -> q.low52Week,
+      "high52Week" -> q.high52Week,
+      "volume" -> q.volume,
+      "avgVol3m" -> q.avgVol3m,
+      "marketCap" -> q.marketCap,
+      "peRatio" -> q.peRatio,
+      "eps" -> q.eps,
+      "dividend" -> q.dividend,
+      "divYield" -> q.divYield,
+      "responseTimeMsec" -> q.responseTimeMsec,
+      "active" -> true))
   }
 
 }

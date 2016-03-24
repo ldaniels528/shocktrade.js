@@ -2,40 +2,40 @@ package com.shocktrade.controllers
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import javax.inject.Inject
 
+import com.shocktrade.dao.{RssFeedsDAO, SecuritiesDAO}
 import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json._
 import play.api.libs.ws.WS
 import play.api.mvc._
-import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS, BSONObjectID, _}
+import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 
 import scala.concurrent.Future
 
 /**
- * News REST Resources
- * @author lawrence.daniels@gmail.com
- */
-object NewsController extends Controller with MongoController with ParsingCapabilities {
-  private lazy val mcQ = db.collection[BSONCollection]("Stocks")
-  private lazy val mcR = db.collection[BSONCollection]("RssFeeds")
+  * News REST Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class NewsController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends MongoController with ReactiveMongoComponents with ParsingCapabilities {
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val rssFeedsDAO = RssFeedsDAO(reactiveMongoApi)
 
   ////////////////////////////////////////////////////////////////////////////
   //      API Functions
   ////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Returns the RSS feed for the given URL
-   * @param id the given feed ID
-   */
+    * Returns the RSS feed for the given URL
+    * @param id the given feed ID
+    */
   def getFeed(id: String) = Action.async { request =>
     for {
     // load the source
-      source_? <- mcR.find(BS("_id" -> BSONObjectID(id))).one[BS]
+      source_? <- rssFeedsDAO.findFeed(id)
 
       // extract the URL
       url = source_? flatMap (_.getAs[String]("url")) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
@@ -51,15 +51,15 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   }
 
   /**
-   * Retrieves the sources
-   */
+    * Retrieves the sources
+    */
   def getSources = Action.async {
-    mcR.find(BS()).sort(BS("priority" -> 1)).cursor[BS]().collect[Seq]() map (docs => Ok(Json.toJson(docs)))
+    rssFeedsDAO.findSources map (docs => Ok(Json.toJson(docs)))
   }
 
   /**
-   * Parses an RSS channels
-   */
+    * Parses an RSS channels
+    */
   private def parseRSS(rss: scala.xml.Elem): Future[JsArray] = {
     Future.sequence((rss \ "channel") map { channel =>
       for {
@@ -88,7 +88,7 @@ object NewsController extends Controller with MongoController with ParsingCapabi
       val tickers = extractTickers(description)
       val symbols = (tickers map (_.symbol)).distinct
 
-      loadChangeQuotes(symbols) map { quotes =>
+      securitiesDAO.findChangeQuotes(symbols) map { quotes =>
         JS("title" -> extract(item, "title"),
           "description" -> description,
           "quotes" -> Json.toJson(quotes),
@@ -100,8 +100,8 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   }
 
   /**
-   * Parses a RSS Thumb nail image
-   */
+    * Parses a RSS Thumb nail image
+    */
   private def parseRSSThumbNail(item: scala.xml.NodeSeq): JsObject = {
     ((item \ "thumbnail") map { xml =>
       JS("thumbNail" ->
@@ -119,27 +119,17 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   }
 
   /**
-   * Extracts the text from the given XML sequence
-   */
+    * Extracts the text from the given XML sequence
+    */
   private def extract(xml: scala.xml.NodeSeq, name: String): Option[String] = {
     (xml \ name).headOption map (_.text) map degunk
   }
 
   /**
-   * Extracts the text from the given XML sequence
-   */
+    * Extracts the text from the given XML sequence
+    */
   private def extractText(xml: scala.xml.NodeSeq, name: String): String = {
     degunk((xml \ name) map (_.text) mkString " ")
-  }
-
-  private def loadChangeQuotes(symbols: Seq[String]): Future[Seq[BS]] = {
-    if (symbols.isEmpty) Future.successful(Seq.empty)
-    else {
-      mcQ.find(
-        BS("symbol" -> BS("$in" -> symbols)),
-        BS("name" -> 1, "symbol" -> 1, "exchange" -> 1, "lastTrade" -> 1, "changePct" -> 1, "volume" -> 1, "sector" -> 1, "industry" -> 1))
-        .cursor[BS]().collect[Seq]()
-    }
   }
 
   private def extractTickers(text: String): Seq[Ticker] = {
@@ -161,8 +151,8 @@ object NewsController extends Controller with MongoController with ParsingCapabi
   }
 
   /**
-   * Removes HTML junk from a description
-   */
+    * Removes HTML junk from a description
+    */
   private def degunk(html: String): String = {
     val sb = new StringBuilder(html)
     var result: Option[(String, Int, Int)] = None
@@ -208,8 +198,8 @@ object NewsController extends Controller with MongoController with ParsingCapabi
     val d = s.replaceAllLiterally("EDT", "GMT-08:00")
     Try(sdf1.parse(d))
       .getOrElse(Try(sdf2.parse(d))
-      .getOrElse(Try(sdf3.parse(d))
-      .getOrElse(throw new IllegalArgumentException(s"Could not parse date '$s'"))))
+        .getOrElse(Try(sdf3.parse(d))
+          .getOrElse(throw new IllegalArgumentException(s"Could not parse date '$s'"))))
   }
 
   private def toNewsQuote(js: JsObject): NewsQuote = {

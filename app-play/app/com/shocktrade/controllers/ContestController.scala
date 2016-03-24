@@ -1,6 +1,7 @@
 package com.shocktrade.controllers
 
 import java.util.Date
+import javax.inject.Inject
 
 import akka.util.Timeout
 import com.github.ldaniels528.commons.helpers.OptionHelper._
@@ -8,10 +9,10 @@ import com.github.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
+import com.shocktrade.dao.{SecuritiesDAO, UserProfileDAO}
 import com.shocktrade.models.contest.{PlayerRef, _}
-import com.shocktrade.models.profile.UserProfiles
-import com.shocktrade.models.quote.{MarketQuote, QuoteSnapshot, SectorQuote, StockQuotes}
-import com.shocktrade.server.trading.{Contests, OrderProcessor}
+import com.shocktrade.models.quote.{MarketQuote, QuoteSnapshot, SectorQuote}
+import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api._
@@ -20,6 +21,7 @@ import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.json.BSONFormats._
+import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -30,12 +32,16 @@ import scala.util.{Failure, Success, Try}
   * Contest Controller
   * @author lawrence.daniels@gmail.com
   */
-object ContestController extends Controller with ErrorHandler {
+class ContestController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends MongoController with ReactiveMongoComponents with ErrorHandler {
   private val tabular = new Tabular()
   private val DisplayColumns = Seq(
     "name", "creator", "startTime", "expirationTime", "startingBalance", "status",
     "ranked", "playerCount", "levelCap", "perksAllowed", "maxParticipants",
     "participants._id", "participants.name", "participants.facebookID")
+  private val contestDAO = ContestDAO(reactiveMongoApi)
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val userProfileDAO = UserProfileDAO(reactiveMongoApi)
+  private val orderProcessor = OrderProcessor(reactiveMongoApi)
 
   implicit val timeout: Timeout = 20.seconds
 
@@ -51,7 +57,7 @@ object ContestController extends Controller with ErrorHandler {
     */
   def cancelOrder(contestId: String, playerId: String, orderId: String) = Action.async {
     // pull the order, add it to closedOrders, and return the participant
-    Contests.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)("participants.name", "participants.orders", "participants.closedOrders")
+    contestDAO.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)
       .map(_.orDie(s"Order $orderId could not be canceled"))
       .map(contest => Ok(Json.toJson(contest)))
       .recover { case e: Exception => Ok(createError(e)) }
@@ -59,8 +65,8 @@ object ContestController extends Controller with ErrorHandler {
 
   def closeContest(contestId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
-      result <- OrderProcessor.closeContest(contest, contest.asOfDate.getOrElse(new Date()))
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found")
+      result <- orderProcessor.closeContest(contest, contest.asOfDate.getOrElse(new Date()))
     } yield result
 
     outcome map { case (liquidations, contest) =>
@@ -82,7 +88,7 @@ object ContestController extends Controller with ErrorHandler {
           levelCap = for {allowed <- form.levelCapAllowed; cap <- form.levelCap if allowed} yield cap,
           perksAllowed = form.perksAllowed,
           robotsAllowed = form.robotsAllowed)
-        Contests.findContests(searchOptions)() map (contests => Ok(Json.toJson(contests))) recover {
+        contestDAO.findContests(searchOptions) map (contests => Ok(Json.toJson(contests))) recover {
           case e: Exception => Ok(createError(e))
         }
       case Success(None) =>
@@ -97,7 +103,7 @@ object ContestController extends Controller with ErrorHandler {
     request.body.asJson map (_.as[MessageForm]) match {
       case Some(form) =>
         val message = Message(sender = form.sender, recipient = form.recipient, text = form.text)
-        Contests.createMessage(contestId.toBSID, message)("messages") map {
+        contestDAO.createMessage(contestId.toBSID, message) map {
           case Some(contest) => Ok(Json.toJson(contest.messages))
           case None => Ok(JsArray())
         } recover {
@@ -118,11 +124,11 @@ object ContestController extends Controller with ErrorHandler {
       case Success(Some(form)) =>
         val outcome = for {
         // deduct the buy-in cost from the profile
-          profile <- UserProfiles.deductFunds(form.playerId.toBSID, form.startingBalance) map (_ orDie "Insufficient funds")
+          profile <- userProfileDAO.deductFunds(form.playerId.toBSID, form.startingBalance) map (_ orDie "Insufficient funds")
           newContest = makeContest(form)
 
           // create the contest
-          lastError <- Contests.createContest(newContest)
+          lastError <- contestDAO.createContest(newContest)
         } yield (newContest, lastError)
 
         outcome map { case (newContest, lastError) =>
@@ -149,15 +155,15 @@ object ContestController extends Controller with ErrorHandler {
   def deleteContestByID(contestId: String) = Action.async {
     val outcome = for {
     // retrieve the contest
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found")
 
       // update each participant
       updatedParticipants <- Future.sequence(contest.participants map { participant =>
-        UserProfiles.deductFunds(participant.id, -participant.cashAccount.cashFunds) map (_ orDie "Failed to refund game cash")
+        userProfileDAO.deductFunds(participant.id, -participant.cashAccount.cashFunds) map (_ orDie "Failed to refund game cash")
       })
 
       // delete the contest
-      lastError <- Contests.deleteContestByID(contestId.toBSID)
+      lastError <- contestDAO.deleteContestByID(contestId.toBSID)
     } yield lastError
 
     outcome map { lastError =>
@@ -168,7 +174,7 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   def createMarginAccount(contestId: String, playerId: String) = Action.async {
-    Contests.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount()) map {
+    contestDAO.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount()) map {
       case Some(contest) => Ok(Json.toJson(contest))
       case None => Ok(JS("error" -> "Game or player not found"))
     } recover {
@@ -180,7 +186,7 @@ object ContestController extends Controller with ErrorHandler {
     Try(request.body.asJson.map(_.as[TransferFundsForm])) match {
       case Success(Some(form)) =>
         // perform the atomic update
-        Contests.transferFundsBetweenAccounts(contestId.toBSID, playerId.toBSID, form.source, form.amount) map {
+        contestDAO.transferFundsBetweenAccounts(contestId.toBSID, playerId.toBSID, form.source, form.amount) map {
           case Some(contest) => Ok(Json.toJson(contest))
           case None => Ok(JS("error" -> "Game or player not found"))
         } recover {
@@ -197,7 +203,7 @@ object ContestController extends Controller with ErrorHandler {
 
   def getMarginMarketValue(contestId: String, playerId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Game not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Game not found")
       participant = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
       positions = participant.positions.filter(_.accountType == AccountTypes.MARGIN)
       marketValue <- computeMarketValue(positions)
@@ -210,7 +216,7 @@ object ContestController extends Controller with ErrorHandler {
 
   private def computeMarketValue(positions: Seq[Position]): Future[Double] = {
     val symbols = positions.map(_.symbol).distinct
-    StockQuotes.findQuotes[MarketQuote](symbols)(MarketQuote.Fields: _*) map { quotes =>
+    securitiesDAO.findQuotes[MarketQuote](symbols)(MarketQuote.Fields: _*) map { quotes =>
       val mapping = Map(quotes.map(q => (q.symbol, q)): _*)
       (positions flatMap { pos =>
         for {
@@ -253,7 +259,7 @@ object ContestController extends Controller with ErrorHandler {
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[OrderForm])) match {
       case Success(Some(form)) =>
-        Contests.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(playerId, form)) map {
+        contestDAO.createOrder(contestId.toBSID, playerId.toBSID, makeOrder(playerId, form)) map {
           case Some(contest) => Ok(Json.toJson(contest))
           case None => Ok(createError(s"Contest $contestId not found"))
         } recover {
@@ -285,7 +291,7 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   def getContestByID(contestId: String) = Action.async {
-    Contests.findContestByID(contestId.toBSID)() map {
+    contestDAO.findContestByID(contestId.toBSID) map {
       case Some(contest) => Ok(Json.toJson(contest))
       case None => Ok(createError(s"Contest $contestId not found"))
     } recover {
@@ -295,7 +301,7 @@ object ContestController extends Controller with ErrorHandler {
 
   def getContestRankings(contestId: String) = Action.async {
     (for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie s"Contest $contestId not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie s"Contest $contestId not found")
       rankings <- produceRankings(contest)
     } yield rankings) map (Ok(_)) recover {
       case e: Exception => Ok(createError(e))
@@ -304,7 +310,7 @@ object ContestController extends Controller with ErrorHandler {
 
   def getContestParticipant(contestId: String, playerId: String) = Action.async {
     (for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie s"Contest $contestId not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie s"Contest $contestId not found")
       player = contest.participants.find(_.id == playerId) orDie s"Player $playerId not found"
       enrichedPlayer <- enrichPositions(player)
     } yield enrichedPlayer).map(p => Ok(JsArray(Seq(p)))) recover {
@@ -316,12 +322,12 @@ object ContestController extends Controller with ErrorHandler {
     * Returns a trading clock state object
     */
   def getContestsByPlayerID(playerId: String) = Action.async {
-    Contests.findContestsByPlayerID(playerId.toBSID)(DisplayColumns: _*) map (contests => Ok(Json.toJson(contests)))
+    contestDAO.findContestsByPlayerID(playerId.toBSID) map (contests => Ok(Json.toJson(contests)))
   }
 
   def getEnrichedOrders(contestId: String, playerId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found")
       player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
       enriched <- enrichOrders(player)
     } yield enriched \ "orders"
@@ -336,7 +342,7 @@ object ContestController extends Controller with ErrorHandler {
 
   def getEnrichedPositions(contestId: String, playerId: String) = Action.async {
     val outcome = for {
-      contest <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+      contest <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found")
       player = contest.participants.find(_.id == playerId.toBSID) orDie "Player not found"
       enriched <- enrichPositions(player)
     } yield enriched \ "positions"
@@ -350,7 +356,7 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   def getHeldSecurities(playerId: String) = Action.async {
-    Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map {
+    contestDAO.findContestsByPlayerID(playerId.toBSID) map {
       _.flatMap(_.participants.flatMap(_.positions.map(_.symbol)))
     } map (symbols => Ok(JsArray(symbols.distinct.map(JsString)))) recover {
       case e: Exception => Ok(createError(e))
@@ -360,12 +366,12 @@ object ContestController extends Controller with ErrorHandler {
   def getTotalInvestment(playerId: String) = Action.async {
     val outcome = for {
     // calculate the symbol-quantity tuples
-      quantities <- Contests.findContestsByPlayerID(playerId.toBSID)("participants.$") map (
+      quantities <- contestDAO.findContestsByPlayerID(playerId.toBSID) map (
         _.flatMap(_.participants.flatMap(_.positions.map(p => (p.symbol, p.quantity)))))
 
       // load the quotes for all order symbols
       symbols = quantities.map(_._1)
-      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
@@ -386,10 +392,10 @@ object ContestController extends Controller with ErrorHandler {
     Try(request.body.asJson map (_.as[JoinContestForm])) match {
       case Success(Some(js)) =>
         (for {
-          startingBalance <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found") map (_.startingBalance)
+          startingBalance <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found") map (_.startingBalance)
           participant = Participant(id = js.playerId.toBSID, js.playerName, js.facebookId, CashAccount(cashFunds = startingBalance))
-          userProfile <- UserProfiles.deductFunds(participant.id, startingBalance) map (_ orDie "Insufficient funds")
-          contest <- Contests.joinContest(contestId.toBSID, participant)
+          userProfile <- userProfileDAO.deductFunds(participant.id, startingBalance) map (_ orDie "Insufficient funds")
+          contest <- contestDAO.joinContest(contestId.toBSID, participant)
         } yield (userProfile, contest)) map { case (userProfile, contest_?) =>
           WebSockets ! UserProfileUpdated(userProfile)
           Ok(Json.toJson(contest_?))
@@ -406,10 +412,10 @@ object ContestController extends Controller with ErrorHandler {
 
   def quitContest(contestId: String, playerId: String) = Action.async { implicit request =>
     (for {
-      c <- Contests.findContestByID(contestId.toBSID)() map (_ orDie "Contest not found")
+      c <- contestDAO.findContestByID(contestId.toBSID) map (_ orDie "Contest not found")
       p = c.participants.find(_.id.stringify == playerId) orDie "Player not found"
-      u <- UserProfiles.deductFunds(playerId.toBSID, -p.cashAccount.cashFunds)
-      updatedContest <- Contests.quitContest(contestId.toBSID, playerId.toBSID)
+      u <- userProfileDAO.deductFunds(playerId.toBSID, -p.cashAccount.cashFunds)
+      updatedContest <- contestDAO.quitContest(contestId.toBSID, playerId.toBSID)
     } yield (u, updatedContest)) map { case (profile_?, contest_?) =>
       profile_?.foreach(WebSockets ! UserProfileUpdated(_))
       contest_? match {
@@ -422,7 +428,7 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   def startContest(contestId: String) = Action.async {
-    Contests.startContest(contestId.toBSID, startTime = new Date()) map {
+    contestDAO.startContest(contestId.toBSID, startTime = new Date()) map {
       case Some(contest) => Ok(Json.toJson(contest))
       case None => Ok(createError("No qualifying contest found"))
     } recover {
@@ -432,17 +438,17 @@ object ContestController extends Controller with ErrorHandler {
 
   def updateProcessingHost(contestId: String) = Action.async { implicit request =>
     val host = request.body.asJson flatMap (js => (js \ "host").asOpt[String])
-    Contests.updateProcessingHost(contestId.toBSID, host) map (_ => Ok(JS()))
+    contestDAO.updateProcessingHost(contestId.toBSID, host) map (_ => Ok(JS()))
   }
 
   def getAvailablePerks(contestId: String) = Action.async {
-    Contests.findAvailablePerks(contestId.toBSID) map (perks => Ok(Json.toJson(perks)))
+    contestDAO.findAvailablePerks(contestId.toBSID) map (perks => Ok(Json.toJson(perks)))
   }
 
   def getPlayerPerks(id: String, playerId: String) = Action.async {
     // retrieve the participant
     val result = for {
-      contest_? <- Contests.findContestByID(id.toBSID)()
+      contest_? <- contestDAO.findContestByID(id.toBSID)
       participant_? = for {
         contest <- contest_?
         participant <- contest.participants.find(_.id.stringify == playerId)
@@ -472,18 +478,18 @@ object ContestController extends Controller with ErrorHandler {
         val perkCodes = perkCodeIDs.map(PerkTypes.withName)
         val result = for {
         // retrieve the mapping of perk codes to perk costs
-          perkCostsByCode <- Contests.findAvailablePerks(contestId.toBSID) map (perks => Map(perks map (p => (p.code, p.cost)): _*))
+          perkCostsByCode <- contestDAO.findAvailablePerks(contestId.toBSID) map (perks => Map(perks map (p => (p.code, p.cost)): _*))
 
           // compute the total cost of the perks
           totalCost = (perkCodes flatMap perkCostsByCode.get).sum
 
           // perform the purchase
-          perks_? <- Contests.purchasePerks(contestId.toBSID, playerId.toBSID, perkCodes, totalCost)
+          perks_? <- contestDAO.purchasePerks(contestId.toBSID, playerId.toBSID, perkCodes, totalCost)
 
           // was a margin account purchased?
           margin_? <- {
             if (perkCodes.contains(PerkTypes.MARGIN))
-              Contests.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount())
+              contestDAO.createMarginAccount(contestId.toBSID, playerId.toBSID, MarginAccount())
             else
               Future.successful(None)
           }
@@ -522,7 +528,7 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // query the quotes for all symbols
-      quotes <- QuotesController.findQuotesBySymbols(allSymbols)
+      quotes <- securitiesDAO.findQuotesBySymbols(allSymbols)
       //_ = tabular.transform(quotes) foreach (s => Logger.info(s))
 
       // create the mapping of symbols to quotes
@@ -543,7 +549,7 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // load the quotes for all order symbols
-      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
@@ -567,7 +573,7 @@ object ContestController extends Controller with ErrorHandler {
 
     for {
     // load the quotes for all position symbols
-      quotes <- StockQuotes.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)

@@ -1,16 +1,14 @@
-package com.shocktrade.server.actors
+package com.shocktrade.server.trading.actors
 
 import java.util.Date
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.util.Timeout
-import com.shocktrade.models.quote.StockQuotes
-import com.shocktrade.server.actors.NasdaqImportActor.{NasdaqImport, NasdaqQuote}
+import akka.actor.{Actor, ActorLogging}
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.server.trading.actors.NasdaqImportActor.{NasdaqImport, NasdaqQuote}
 import com.shocktrade.util.BSONHelper._
 import play.api.Play.current
 import play.api.libs.ws.WS
-import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,10 +16,11 @@ import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 /**
- * NASDAQ Import Actor
- * @author lawrence.daniels@gmail.com
- */
-class NasdaqImportActor() extends Actor with ActorLogging {
+  * NASDAQ Import Actor
+  * @author lawrence.daniels@gmail.com
+  */
+class NasdaqImportActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
 
   import context.dispatcher
 
@@ -37,8 +36,8 @@ class NasdaqImportActor() extends Actor with ActorLogging {
   }
 
   /**
-   * Processes the data from the NASDAQ site
-   */
+    * Processes the data from the NASDAQ site
+    */
   private def processData()(implicit ec: ExecutionContext): Future[(Int, Int, Int)] = {
     Future.sequence {
       ('A' to 'Z') map { letter =>
@@ -85,7 +84,7 @@ class NasdaqImportActor() extends Actor with ActorLogging {
   }
 
   private def updateQuote(q: NasdaqQuote): Unit = {
-    StockQuotes.updateQuote(q.symbol, BS(
+    securitiesDAO.updateQuote(q.symbol, BS(
       "name" -> q.name,
       "lastTrade" -> q.lastSale,
       "marketCap" -> q.marketCap,
@@ -100,10 +99,10 @@ class NasdaqImportActor() extends Actor with ActorLogging {
   }
 
   /**
-   * Parses the given line of text
-   * "Symbol","Name","LastSale","MarketCap","ADR TSO","IPOyear","Sector","Industry","Summary Quote"
-   * @param line the given line of text
-   */
+    * Parses the given line of text
+    * "Symbol","Name","LastSale","MarketCap","ADR TSO","IPOyear","Sector","Industry","Summary Quote"
+    * @param line the given line of text
+    */
   private def parse(headers: List[String], line: String) = Try {
     val values = parseCSV(line) map (_.trim)
     val kvps = Map(headers zip values: _*)
@@ -158,15 +157,10 @@ class NasdaqImportActor() extends Actor with ActorLogging {
 }
 
 /**
- * NASDAQ Import Actor Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * NASDAQ Import Actor Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object NasdaqImportActor {
-  private val myActor = Akka.system.actorOf(Props[NasdaqImportActor], name = "NasdaqImport")
-
-  def !(message: Any) = myActor ! message
-
-  def ?(message: Any)(implicit ec: ExecutionContext, timeout: Timeout) = myActor ? message
 
   case object NasdaqImport
 

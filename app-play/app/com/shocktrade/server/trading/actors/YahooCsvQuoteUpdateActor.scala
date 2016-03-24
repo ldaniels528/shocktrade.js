@@ -1,27 +1,24 @@
-package com.shocktrade.server.actors
+package com.shocktrade.server.trading.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.util.Timeout
-import com.shocktrade.models.quote.StockQuotes
-import com.shocktrade.server.actors.YahooCsvQuoteUpdateActor._
+import akka.actor.{Actor, ActorLogging}
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.server.trading.actors.YahooCsvQuoteUpdateActor._
 import com.shocktrade.server.trading.TradingClock
 import com.shocktrade.services.yahoofinance.YFStockQuoteService
 import com.shocktrade.util.BSONHelper._
-import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDateTime, BSONDocument => BS}
 
-import scala.concurrent.ExecutionContext
-
 /**
- * Yahoo! Finance CSV Quote Update Actor
- * @author lawrence.daniels@gmail.com
- */
-class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
+  * Yahoo! Finance CSV Quote Update Actor
+  * @author lawrence.daniels@gmail.com
+  */
+class YahooCsvQuoteUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -32,7 +29,7 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
 
         counter.set(0)
         var count = 0
-        StockQuotes.getSymbolsForCsvUpdate.collect[Seq]() foreach { docs =>
+        securitiesDAO.getSymbolsForCsvUpdate.collect[Seq]() foreach { docs =>
           docs.flatMap(_.getAs[String]("symbol")).sliding(32, 32) foreach { symbols =>
             count += symbols.length
             self ! RefreshQuotes(symbols)
@@ -43,7 +40,7 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
 
     case RefreshQuotes(symbols) =>
       YFStockQuoteService.getQuotesSync(symbols, Parameters) foreach { q =>
-        StockQuotes.updateQuote(q.symbol, BS(
+        securitiesDAO.updateQuote(q.symbol, BS(
           "name" -> q.name,
           "exchange" -> q.exchange,
           "lastTrade" -> q.lastTrade,
@@ -81,19 +78,13 @@ class YahooCsvQuoteUpdateActor() extends Actor with ActorLogging {
 }
 
 /**
- * Yahoo! Finance CSV Quote Update Actor Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Yahoo! Finance CSV Quote Update Actor Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object YahooCsvQuoteUpdateActor {
   private val Parameters = YFStockQuoteService.getParams(
     "symbol", "exchange", "name", "lastTrade", "tradeDate", "tradeTime", "change", "changePct", "prevClose", "open", "close", "high", "low",
     "high52Week", "low52Week", "volume", "marketCap", "errorMessage", "ask", "askSize", "bid", "bidSize")
-
-  private val myActor = Akka.system.actorOf(Props[YahooCsvQuoteUpdateActor], name = "CsvQuote")
-
-  def !(message: Any) = myActor ! message
-
-  def ?(message: Any)(implicit ec: ExecutionContext, timeout: Timeout) = myActor ? message
 
   case object RefreshAllQuotes
 

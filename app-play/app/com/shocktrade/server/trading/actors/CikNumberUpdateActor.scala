@@ -1,29 +1,24 @@
-package com.shocktrade.server.actors
+package com.shocktrade.server.trading.actors
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.routing.RoundRobinPool
-import akka.util.Timeout
-import com.shocktrade.controllers.QuotesController._
-import com.shocktrade.server.actors.CikNumberUpdateActor._
+import akka.actor.{Actor, ActorLogging}
+import com.shocktrade.server.trading.actors.CikNumberUpdateActor._
 import com.shocktrade.services.CikCompanySearchService
 import com.shocktrade.services.CikCompanySearchService.CikInfo
-import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS, BSONNull}
+import reactivemongo.bson.{BSONNull, BSONDocument => BS}
 
-import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
 /**
- * CIK Number Update Actor
- * @author lawrence.daniels@gmail.com
- */
-class CikNumberUpdateActor extends Actor with ActorLogging {
+  * CIK Number Update Actor
+  * @author lawrence.daniels@gmail.com
+  */
+class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private lazy val mc = db.collection[BSONCollection]("Stocks")
+  private lazy val mc = reactiveMongoApi.db.collection[BSONCollection]("Stocks")
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -34,7 +29,7 @@ class CikNumberUpdateActor extends Actor with ActorLogging {
       counter.set(0)
       val mySender = sender()
       findMissingCikSymbols() foreach { symbols =>
-        symbols foreach (CikNumberUpdateActor ! _)
+        symbols foreach (self ! _)
         mySender ! symbols.length
       }
 
@@ -79,8 +74,8 @@ class CikNumberUpdateActor extends Actor with ActorLogging {
   }
 
   /**
-   * Writes the updated CIK information to the data store
-   */
+    * Writes the updated CIK information to the data store
+    */
   private def persistCik(symbol: String, name: String, cik: CikInfo) {
     import cik._
 
@@ -101,15 +96,10 @@ class CikNumberUpdateActor extends Actor with ActorLogging {
 }
 
 /**
- * CIK Number Update Actor
- * @author lawrence.daniels@gmail.com
- */
+  * CIK Number Update Actor
+  * @author lawrence.daniels@gmail.com
+  */
 object CikNumberUpdateActor {
-  private val myActor = Akka.system.actorOf(Props[CikNumberUpdateActor].withRouter(RoundRobinPool(nrOfInstances = 5)), name = "CikNumberUpdate")
-
-  def !(message: Any) = myActor ! message
-
-  def ?(message: Any)(implicit ec: ExecutionContext, timeout: Timeout) = myActor ? message
 
   case object UpdateMissingCikNumbers
 

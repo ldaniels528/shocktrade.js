@@ -1,18 +1,19 @@
 package com.shocktrade.controllers
 
+import javax.inject.Inject
+
 import akka.util.Timeout
 import com.github.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.server.trading.Contests
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.server.trading.ContestDAO
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.ConcurrentCache
-import play.api.Play._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.{obj => JS}
 import play.api.libs.json._
-import play.api.libs.ws.WS
+import play.api.libs.ws.WSClient
 import play.api.mvc._
-import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.collection.JSONCollection
+import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
@@ -20,13 +21,16 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 /**
- * Chart Resources
- * @author lawrence.daniels@gmail.com
- */
-object ChartController extends Controller with MongoController {
+  * Chart Resources
+  * @author lawrence.daniels@gmail.com
+  */
+class ChartController @Inject()(val reactiveMongoApi: ReactiveMongoApi, val ws: WSClient)
+  extends MongoController with ReactiveMongoComponents {
+
+  private val contestDAO = ContestDAO(reactiveMongoApi)
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
   private val analystCharts = ConcurrentCache[String, Future[Result]](3.days)
   private val stockCharts = ConcurrentCache[String, Future[Result]](15.minutes)
-  lazy val mcQ: JSONCollection = db.collection[JSONCollection]("Stocks")
 
   def getAnalystRatings(symbol: String) = Action.async {
     analystCharts.getOrElseUpdate(symbol, getImageBinary(s"http://www.barchart.com/stocks/ratingsimg.php?sym=$symbol")).get
@@ -48,7 +52,7 @@ object ChartController extends Controller with MongoController {
   }
 
   private def getImageBinary(chartURL: String): Future[Result] = {
-    WS.url(chartURL).getStream().map { case (response, body) =>
+    ws.url(chartURL).getStream().map { case (response, body) =>
       // check that the response was successful
       if (response.status == 200) {
         // get the content type
@@ -82,7 +86,7 @@ object ChartController extends Controller with MongoController {
     implicit val timeout: Timeout = 10.seconds
     for {
     // lookup the contest by ID
-      contest <- Contests.findContestByID(contestId)() map (_ orDie "Game not found")
+      contest <- contestDAO.findContestByID(contestId) map (_ orDie "Game not found")
 
       // lookup the participant
       participant = contest.participants.find(_.id == userId) orDie s"Player '${userId.stringify}' not found"
@@ -91,7 +95,7 @@ object ChartController extends Controller with MongoController {
       quantities = participant.positions map (pos => (pos.symbol, pos.quantity))
 
       // query the symbols for the current market price
-      quotes <- QuotesController.findQuotesBySymbols(quantities map (_._1))
+      quotes <- securitiesDAO.findQuotesBySymbols(quantities map (_._1))
 
       // create the mapping of symbols to quotes
       mappingQ = Map(quotes map (q => (q.symbol, q)): _*)

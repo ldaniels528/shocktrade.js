@@ -4,7 +4,6 @@ import java.net.InetAddress
 import java.util.Date
 
 import com.github.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.controllers.Application._
 import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
@@ -12,6 +11,7 @@ import com.shocktrade.server.trading.Outcome.Failed
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import play.api.Logger
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS, _}
 import reactivemongo.core.commands._
@@ -22,11 +22,11 @@ import scala.language.{implicitConversions, postfixOps}
 import scala.util.Try
 
 /**
- * Contest Data Access Object
- * @author lawrence.daniels@gmail.com
- */
-object ContestDAO {
-  private lazy implicit val mc = db.collection[BSONCollection]("Contests")
+  * Contest Data Access Object
+  * @author lawrence.daniels@gmail.com
+  */
+case class ContestDAO(reactiveMongoApi: ReactiveMongoApi) {
+  private val mcC = reactiveMongoApi.db.collection[BSONCollection]("Contests")
   private val hostName = Try(InetAddress.getLocalHost.getHostName).toOption.orNull
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -34,21 +34,21 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new contest
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[LastError outcome]]
-   */
-  def createContest(c: Contest)(implicit ec: ExecutionContext) = mc.insert(c)
+    * Creates a new contest
+    * @param c  the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param ec the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[LastError outcome]]
+    */
+  def createContest(c: Contest)(implicit ec: ExecutionContext) = mcC.insert(c)
 
   /**
-   * Closes the given contest
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[Contest updated contest]]
-   */
+    * Closes the given contest
+    * @param c  the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param ec the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[Contest updated contest]]
+    */
   def closeContest(c: Contest)(implicit ec: ExecutionContext) = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> c.id),
       update = BS("$set" -> BS("status" -> ContestStatuses.CLOSED)),
       fetchNewObject = true, upsert = false
@@ -56,27 +56,27 @@ object ContestDAO {
   }
 
   /**
-   * Deletes a contest by ID
-   * @param contestId the given contest ID
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[LastError outcome]]
-   */
+    * Deletes a contest by ID
+    * @param contestId the given contest ID
+    * @param ec        the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[LastError outcome]]
+    */
   def deleteContestByID(contestId: BSONObjectID)(implicit ec: ExecutionContext) = {
-    mc.remove(query = BS("_id" -> contestId), firstMatchOnly = true)
+    mcC.remove(query = BS("_id" -> contestId), firstMatchOnly = true)
   }
 
   /**
-   * Queries all active contests that haven't been update in 5 minutes
-   * <pre>
-   * db.Contests.count({"status": "ACTIVE",
-   * "$or" : [ { asOfDate : { "$lte" : new Date() } }, { asOfDate : { "$exists" : false } } ],
-   * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
-   * </pre>
-   * @param lastProcessedTime the last time an update was performed
-   * @return a [[reactivemongo.api.Cursor]] of [[Contest]] instances
-   */
+    * Queries all active contests that haven't been update in 5 minutes
+    * <pre>
+    * db.Contests.count({"status": "ACTIVE",
+    * "$or" : [ { asOfDate : { "$lte" : new Date() } }, { asOfDate : { "$exists" : false } } ],
+    * "$or" : [ { expirationTime : { "$lte" : new Date() } }, { expirationTime : { "$exists" : false } } ] })
+    * </pre>
+    * @param lastProcessedTime the last time an update was performed
+    * @return a [[reactivemongo.api.Cursor]] of [[Contest]] instances
+    */
   def getActiveContests(asOfDate: Date, lastProcessedTime: Date)(implicit ec: ExecutionContext) = {
-    mc.find(BS(
+    mcC.find(BS(
       "status" -> ContestStatuses.ACTIVE,
       "startTime" -> BS("$lte" -> asOfDate),
       "$or" -> BSONArray(Seq(
@@ -89,31 +89,31 @@ object ContestDAO {
   }
 
   def findActiveContests(implicit ec: ExecutionContext) = {
-    mc.find(BS("status" -> ContestStatuses.ACTIVE)).cursor[Contest]()
+    mcC.find(BS("status" -> ContestStatuses.ACTIVE)).cursor[Contest]()
   }
 
   def findTypedContestByID[T](contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit reader: BSONDocumentReader[T], ec: ExecutionContext): Future[Option[T]] = {
-    mc.find(BS("_id" -> contestId), fields.toBsonFields).one[T]
+    mcC.find(BS("_id" -> contestId), fields.toBsonFields).one[T]
   }
 
   def findContestByID(contestId: BSONObjectID, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.find(BS("_id" -> contestId), fields.toBsonFields).one[Contest]
+    mcC.find(BS("_id" -> contestId), fields.toBsonFields).one[Contest]
   }
 
   def findContests(searchOptions: SearchOptions, fields: Seq[String] = Nil)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest]().collect[Seq]()
+    mcC.find(createQuery(searchOptions), fields.toBsonFields).cursor[Contest]().collect[Seq]()
   }
 
   def findContestsByPlayerName(playerName: String)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants.name" -> playerName, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
+    mcC.find(BS("participants.name" -> playerName, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
   }
 
   def findContestsByPlayerID(playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Contest]] = {
-    mc.find(BS("participants._id" -> playerId, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
+    mcC.find(BS("participants._id" -> playerId, "status" -> ContestStatuses.ACTIVE)).cursor[Contest]().collect[Seq]()
   }
 
   def joinContest(contestId: BSONObjectID, participant: Participant)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("$inc" -> BS("playerCount" -> 1)),
       update = BS(
         "$inc" -> BS("playerCount" -> 1),
@@ -123,7 +123,7 @@ object ContestDAO {
   }
 
   def quitContest(contestId: BSONObjectID, playerId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId),
       update = BS(
         "$inc" -> BS("playerCount" -> -1),
@@ -133,7 +133,7 @@ object ContestDAO {
   }
 
   def startContest(contestId: BSONObjectID, startTime: Date)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId, "startTime" -> BS("$exists" -> false)),
       update = BS("$set" -> BS("startTime" -> startTime)),
       fetchNewObject = true, upsert = false
@@ -141,7 +141,7 @@ object ContestDAO {
   }
 
   def updateProcessingHost(contestId: BSONObjectID, host: Option[String])(implicit ec: ExecutionContext) = {
-    mc.update(
+    mcC.update(
       selector = BS("_id" -> contestId),
       update = host.map(name => BS("$set" -> BS("host" -> name))) getOrElse BS("$unset" -> BS("host" -> "")),
       upsert = false, multi = false)
@@ -158,7 +158,7 @@ object ContestDAO {
 
     lastMarketClose.foreach(t => myUpdate = myUpdate ++ BS("lastMarketClose" -> t))
 
-    mc.update(
+    mcC.update(
       selector = BS("_id" -> contestId),
       update = BS("$set" -> myUpdate),
       upsert = false, multi = false)
@@ -207,7 +207,7 @@ object ContestDAO {
   }
 
   private def updateMarginInterest(contest: Contest, player: Participant, interest: BigDecimal, asOfDate: Date)(implicit ec: ExecutionContext) = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contest.id, "participants" -> BS("$elemMatch" -> BS("_id" -> player.id))),
       update = BS(
         "$inc" -> BS(
@@ -223,7 +223,7 @@ object ContestDAO {
   }
 
   def createMarginAccount(contestId: BSONObjectID, playerId: BSONObjectID, account: MarginAccount)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId, "participants._id" -> playerId),
       update = BS("$set" -> BS("participants.$.marginAccount" -> account)),
       fetchNewObject = true, upsert = false
@@ -240,7 +240,7 @@ object ContestDAO {
                                    amount: Double)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     val asOfDate = new Date()
     val funds = if (source == AccountTypes.CASH) amount else -amount
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId, "participants" -> BS("$elemMatch" -> fundingSource(playerId, source, amount))),
       update = BS(
         "$set" -> BS(
@@ -258,7 +258,7 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   def createMessage(contestId: BSONObjectID, message: Message)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId),
       update = BS("$addToSet" -> BS("messages" -> message)),
       fetchNewObject = true, upsert = false
@@ -270,19 +270,19 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Closes all expired orders; resulting in closed orders in order history
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of orders updated
-   */
+    * Closes all expired orders; resulting in closed orders in order history
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param asOfDate the given [[Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the number of orders updated
+    */
   def closeExpiredOrders(c: Contest, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // find the expired orders
     val expiredOrders = getExpiredWorkOrders(c, asOfDate)
 
     // perform the updates
     Future.sequence(expiredOrders map { order =>
-      mc.update(
+      mcC.update(
         BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> order.playerId))),
         BS(
           // set the lastMarketClose and lastUpdatedTime properties
@@ -299,8 +299,8 @@ object ContestDAO {
 
   def closeOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
     for {
-      order <- ContestDAO.findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
-      contest_? <- mc.findAndUpdate(
+      order <- findOrderByID(contestId, orderId) map (_ orDie s"Order not found")
+      contest_? <- mcC.findAndUpdate(
         selector = BS("_id" -> contestId, "participants._id" -> playerId),
         update = BS(
           "$pull" -> BS("participants.$.orders" -> BS("_id" -> orderId)),
@@ -311,7 +311,7 @@ object ContestDAO {
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: Order)(implicit ec: ExecutionContext): Future[Option[Contest]] = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS("_id" -> contestId, "participants._id" -> playerId),
       update = BS("$addToSet" -> BS("participants.$.orders" -> order)),
       fetchNewObject = true, upsert = false
@@ -319,14 +319,14 @@ object ContestDAO {
   }
 
   /**
-   * Removes all closed orders
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param p the given [[com.shocktrade.models.contest.Participant participant]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[reactivemongo.api.commands.WriteResult write result]]
-   */
+    * Removes all closed orders
+    * @param c  the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param p  the given [[com.shocktrade.models.contest.Participant participant]]
+    * @param ec the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[reactivemongo.api.commands.WriteResult write result]]
+    */
   def deleteClosedOrders(c: Contest, p: Participant)(implicit ec: ExecutionContext) = {
-    mc.update(
+    mcC.update(
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> p.id))),
       BS("$set" -> BS("participants.$.closedOrders" -> BSONArray())),
       upsert = false, multi = false
@@ -334,16 +334,16 @@ object ContestDAO {
   }
 
   /**
-   * Fails the given work order; creating a new closed order in the process
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param wo the given [[WorkOrder work order]]
-   * @param message the given error message
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of orders updated
-   */
+    * Fails the given work order; creating a new closed order in the process
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param wo       the given [[WorkOrder work order]]
+    * @param message  the given error message
+    * @param asOfDate the given [[Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the number of orders updated
+    */
   def failOrder(c: Contest, wo: WorkOrder, message: String, asOfDate: Date)(implicit ec: ExecutionContext) = {
-    mc.update(
+    mcC.update(
       // find the matching the record
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
       BS(
@@ -359,7 +359,7 @@ object ContestDAO {
   }
 
   def findOrderByID(contestId: BSONObjectID, orderId: BSONObjectID)(implicit ec: ExecutionContext): Future[Option[Order]] = {
-    mc.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))))
+    mcC.find(BS("_id" -> contestId, "participants.orders" -> BS("$elemMatch" -> BS("_id" -> orderId))))
       .one[Contest] map (_ flatMap (_.participants.flatMap(_.orders.find(_.id == orderId)).headOption))
   }
 
@@ -382,11 +382,11 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Retrieves all of the system-defined perks
-   * @return a promise of a sequence of perks
-   */
+    * Retrieves all of the system-defined perks
+    * @return a promise of a sequence of perks
+    */
   def findAvailablePerks(contestId: BSONObjectID)(implicit ec: ExecutionContext): Future[Seq[Perk]] = {
-    mc.find(BS("_id" -> contestId)).one[Contest] map {
+    mcC.find(BS("_id" -> contestId)).one[Contest] map {
       case None => Nil
       case Some(contest) =>
         val startingBalance = contest.startingBalance.toDouble
@@ -419,15 +419,15 @@ object ContestDAO {
   }
 
   /**
-   * Purchases the passed perks
-   * @param contestId the [[BSONObjectID contest ID]] which represents the contest
-   * @param playerId the [[BSONObjectID player ID]] which represents the player whom is purchasing the perks
-   * @param perkCodes the given perk codes
-   * @param totalCost the total cost of the perks
-   * @return a promise of an option of a contest
-   */
+    * Purchases the passed perks
+    * @param contestId the [[BSONObjectID contest ID]] which represents the contest
+    * @param playerId  the [[BSONObjectID player ID]] which represents the player whom is purchasing the perks
+    * @param perkCodes the given perk codes
+    * @param totalCost the total cost of the perks
+    * @return a promise of an option of a contest
+    */
   def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: Seq[PerkType], totalCost: Double)(implicit ec: ExecutionContext) = {
-    mc.findAndUpdate(
+    mcC.findAndUpdate(
       selector = BS(
         "_id" -> contestId,
         "participants" -> BS("$elemMatch" -> BS("_id" -> playerId, "cashAccount.cashFunds" -> BS("$gte" -> totalCost)))),
@@ -443,12 +443,12 @@ object ContestDAO {
   /////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Attempts to retrieve a position matching the given criteria
-   * @param contest the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[Claim claim]]
-   * @param minimumQty the minimum number of shares required to fullfill the claim
-   * @return an option of a [[Position position]]
-   */
+    * Attempts to retrieve a position matching the given criteria
+    * @param contest    the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param claim      the given [[Claim claim]]
+    * @param minimumQty the minimum number of shares required to fullfill the claim
+    * @return an option of a [[Position position]]
+    */
   def findPosition(contest: Contest, claim: Claim, minimumQty: BigDecimal): Option[Position] = {
     for {
     // find the player by name
@@ -483,13 +483,13 @@ object ContestDAO {
   }
 
   /**
-   * Increases a position by creating or updating a position
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[Claim claim]]
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of positions updated
-   */
+    * Increases a position by creating or updating a position
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param claim    the given [[Claim claim]]
+    * @param asOfDate the given [[Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the number of positions updated
+    */
   def increasePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     findPosition(c, claim, 0.0d) match {
       case Some(position) => updatePosition(c, claim, position, asOfDate)
@@ -498,19 +498,19 @@ object ContestDAO {
   }
 
   /**
-   * Increases a position by creating a new position
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[com.shocktrade.server.trading.Claim claim]]
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of positions updated
-   */
+    * Increases a position by creating a new position
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param claim    the given [[com.shocktrade.server.trading.Claim claim]]
+    * @param asOfDate the given [[Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the number of positions updated
+    */
   private def createNewPosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // cache the work order
     val wo = claim.workOrder
 
     // attempt to update the matching the record
-    mc.update(
+    mcC.update(
       // find the matching the record
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost))),
       BS(
@@ -534,13 +534,13 @@ object ContestDAO {
   }
 
   /**
-   * Increases a position by updating an existing position
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[com.shocktrade.server.trading.Claim claim]]
-   * @param asOfDate the given [[java.util.Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[com.shocktrade.server.trading.Outcome outcome]]
-   */
+    * Increases a position by updating an existing position
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param claim    the given [[com.shocktrade.server.trading.Claim claim]]
+    * @param asOfDate the given [[java.util.Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[com.shocktrade.server.trading.Outcome outcome]]
+    */
   private def updatePosition(c: Contest, claim: Claim, pos: Position, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // create the increased position
     val increasedPos = claim.toPositionIncrease(pos)
@@ -549,7 +549,7 @@ object ContestDAO {
     val wo = claim.workOrder
 
     // perform the update
-    mc.update(
+    mcC.update(
       // find the matching the record
       BS("_id" -> c.id,
         "participants" -> BS("$elemMatch" -> fundingSource(wo.playerId, wo.accountType, claim.cost)),
@@ -582,13 +582,13 @@ object ContestDAO {
   }
 
   /**
-   * Reduces a position
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param claim the given [[Claim claim]]
-   * @param asOfDate the given [[Date effective date]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the number of positions updated
-   */
+    * Reduces a position
+    * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param claim    the given [[Claim claim]]
+    * @param asOfDate the given [[Date effective date]]
+    * @param ec       the implicit [[ExecutionContext execution context]]
+    * @return a promise of the number of positions updated
+    */
   def reducePosition(c: Contest, claim: Claim, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // cache the work order
     val wo = claim.workOrder
@@ -600,7 +600,7 @@ object ContestDAO {
         val reducedPosition = claim.toPositionDecrease(existingPos)
 
         // perform the atomic update
-        mc.update(
+        mcC.update(
           // find the matching the record
           BS("_id" -> c.id,
             "participants._id" -> wo.playerId,
@@ -641,16 +641,16 @@ object ContestDAO {
   }
 
   /**
-   * Performs a secondary update because MongoDB doesn't allow a record to be pulled and added to the sub-document
-   * in a single atomic operation
-   * @param c the given [[com.shocktrade.models.contest.Contest contest]]
-   * @param wo the given [[WorkOrder work order]]
-   * @param tmpPos the given ephemeral [[Position position]]
-   * @param ec the implicit [[ExecutionContext execution context]]
-   * @return a promise of the [[reactivemongo.core.commands.LastError last error]] result
-   */
+    * Performs a secondary update because MongoDB doesn't allow a record to be pulled and added to the sub-document
+    * in a single atomic operation
+    * @param c      the given [[com.shocktrade.models.contest.Contest contest]]
+    * @param wo     the given [[WorkOrder work order]]
+    * @param tmpPos the given ephemeral [[Position position]]
+    * @param ec     the implicit [[ExecutionContext execution context]]
+    * @return a promise of the [[reactivemongo.core.commands.LastError last error]] result
+    */
   private def commitUpdatedPosition(c: Contest, wo: WorkOrder, tmpPos: Position)(implicit ec: ExecutionContext) = {
-    mc.update(
+    mcC.update(
       BS("_id" -> c.id, "participants" -> BS("$elemMatch" -> BS("_id" -> wo.playerId))),
 
       BS("$pull" -> BS("participants.$.POSITIONS" -> BS("_id" -> tmpPos.id))) ++

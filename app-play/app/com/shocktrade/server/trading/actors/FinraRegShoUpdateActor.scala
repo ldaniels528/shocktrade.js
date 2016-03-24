@@ -1,33 +1,30 @@
-package com.shocktrade.server.actors
+package com.shocktrade.server.trading.actors
 
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.util.Timeout
+import akka.actor.{Actor, ActorLogging}
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.ResourceHelper._
-import com.shocktrade.controllers.QuotesController._
-import com.shocktrade.server.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSHO, _}
+import com.shocktrade.server.trading.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSHO, _}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
-import play.libs.Akka
+import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson.{BSONDocument => BS}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.io.Source
 import scala.language.postfixOps
 
 /**
- * Finra Registration SHO Update Actor
- * @author lawrence.daniels@gmail.com
- */
-class FinraRegShoUpdateActor() extends Actor with ActorLogging {
+  * Finra Registration SHO Update Actor
+  * @author lawrence.daniels@gmail.com
+  */
+class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private lazy val mc = db.collection[BSONCollection]("Stocks")
+  private lazy val mc = reactiveMongoApi.db.collection[BSONCollection]("Stocks")
 
   override def receive = {
     case ProcessRegSHO(processDate) =>
@@ -39,13 +36,13 @@ class FinraRegShoUpdateActor() extends Actor with ActorLogging {
   }
 
   /**
-   * Symbol|Security Name|Market Category|Reg SHO Threshold Flag|Rule 4320
-   * IWSY|ImageWare Systems, Inc. Common Stock|u|Y|N
-   * XIDEQ|Exide Technologies New Common Stock|u|Y|N
-   * EPAZ|Epazz, Inc. NEW Common Stock|u|Y|N
-   * SFOR|Strikeforce Technologies, Inc. Common Stock|u|Y|N
-   * @return the number of records scheduled for processing
-   */
+    * Symbol|Security Name|Market Category|Reg SHO Threshold Flag|Rule 4320
+    * IWSY|ImageWare Systems, Inc. Common Stock|u|Y|N
+    * XIDEQ|Exide Technologies New Common Stock|u|Y|N
+    * EPAZ|Epazz, Inc. NEW Common Stock|u|Y|N
+    * SFOR|Strikeforce Technologies, Inc. Common Stock|u|Y|N
+    * @return the number of records scheduled for processing
+    */
   private def processData(processDate: Date) = {
     val url = getDataURL(processDate)
 
@@ -107,15 +104,10 @@ class FinraRegShoUpdateActor() extends Actor with ActorLogging {
 }
 
 /**
- * Finra Registration SHO Update Actor Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Finra Registration SHO Update Actor Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object FinraRegShoUpdateActor {
-  private val myActor = Akka.system.actorOf(Props[FinraRegShoUpdateActor], name = "RegSHOUpdate")
-
-  def !(message: Any) = myActor ! message
-
-  def ?(message: Any)(implicit ec: ExecutionContext, timeout: Timeout) = myActor ? message
 
   case class ProcessRegSHO(processDate: Date)
 
@@ -126,9 +118,9 @@ object FinraRegShoUpdateActor {
                     rule4320: Option[Boolean])
 
   /**
-   * String Extensions
-   * @param src the host string
-   */
+    * String Extensions
+    * @param src the host string
+    */
   implicit class MyStringExtensions(val src: String) extends AnyVal {
 
     def tokenize: Seq[String] = src.split("[|]") map (_.trim)
