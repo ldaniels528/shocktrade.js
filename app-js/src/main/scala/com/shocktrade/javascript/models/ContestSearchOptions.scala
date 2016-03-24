@@ -1,12 +1,13 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
 /**
  * Contest Search Options
  */
+@js.native
 trait ContestSearchOptions extends js.Object {
   var activeOnly: Boolean = js.native
   var available: Boolean = js.native

@@ -3,7 +3,7 @@ package com.shocktrade.server.trading
 import java.net.InetAddress
 import java.util.Date
 
-import com.ldaniels528.commons.helpers.OptionHelper._
+import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.controllers.Application._
 import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._

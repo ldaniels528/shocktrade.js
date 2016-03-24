@@ -1,8 +1,8 @@
 package com.shocktrade.javascript
 
-import ScalaJsHelper._
-
 import com.github.ldaniels528.scalascript.angular
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.Any._
@@ -10,16 +10,16 @@ import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.Try
 
 /**
- * ShockTrade Filters
- * @author lawrence.daniels@gmail.com
- */
+  * ShockTrade Filters
+  * @author lawrence.daniels@gmail.com
+  */
 object Filters {
   private val timeUnits = Seq("min", "hour", "day", "month", "year")
   private val timeFactors = Seq(60, 24, 30, 12)
 
   /**
-   * Absolute Value
-   */
+    * Absolute Value
+    */
   val abs: js.Function = () => { (value: js.UndefOr[Any]) =>
     value map {
       case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
@@ -29,8 +29,8 @@ object Filters {
   }: js.Function
 
   /**
-   * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
-   */
+    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
+    */
   val bigNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
@@ -46,30 +46,30 @@ object Filters {
   }: js.Function
 
   /**
-   * Capitalize: Returns the capitalize representation of a given string
-   */
+    * Capitalize: Returns the capitalize representation of a given string
+    */
   val capitalize: js.Function = () => { (value: js.UndefOr[String]) =>
     value map { s => if (s.nonEmpty) s.head.toUpper + s.tail else "" }
   }: js.Function
 
   /**
-   * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
-   */
+    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
+    */
   val duration: js.Function = () => { (time: js.Dynamic) => toDuration(time, noFuture = false) }: js.Function
 
   /**
-   * Escape: Performs an escape
-   */
+    * Escape: Performs an escape
+    */
   val escape: js.Function = () => { () => g.window.escape }: js.Function
 
   /**
-   * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
-   */
+    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
+    */
   val newsDuration: js.Function = () => { (time: js.Dynamic) => toDuration(time, noFuture = true) }: js.Function
 
   /**
-   * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
-   */
+    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
+    */
   val quoteChange: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => s
@@ -83,8 +83,8 @@ object Filters {
   }: js.Function
 
   /**
-   * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
-   */
+    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
+    */
   val quoteNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => s
@@ -98,15 +98,15 @@ object Filters {
   }: js.Function
 
   /**
-   * Yes/No: Converts a boolean value into 'Yes' or 'No'
-   */
+    * Yes/No: Converts a boolean value into 'Yes' or 'No'
+    */
   val yesNo: js.Function = () => ((state: Boolean) => if (state) "Yes" else "No"): js.Function
 
   /**
-   * Converts the given time expression to a textual duration
-   * @param time the given time stamp (in milliseconds)
-   * @return the duration (e.g. "10 mins ago")
-   */
+    * Converts the given time expression to a textual duration
+    * @param time the given time stamp (in milliseconds)
+    * @return the duration (e.g. "10 mins ago")
+    */
   def toDuration(time: js.UndefOr[js.Any], noFuture: Boolean = false) = {
     // get the time in milliseconds
     val myTime = time.toOption map {
@@ -114,7 +114,7 @@ object Filters {
       case value if angular.isNumber(value) => value.asInstanceOf[Double]
       case value if angular.isObject(value) =>
         val obj = value.asInstanceOf[js.Dynamic]
-        if(angular.isDefined(obj.$date)) obj.$date.asOpt[Double].getOrElse(js.Date.now())
+        if (angular.isDefined(obj.$date)) obj.$date.asOpt[Double].getOrElse(js.Date.now())
         else js.Date.now()
       case _ => js.Date.now()
     } getOrElse js.Date.now()

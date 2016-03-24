@@ -4,12 +4,12 @@ import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
-import com.shocktrade.javascript.models.ParticipantRanking
+import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking}
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
@@ -78,7 +78,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   def getRankings: js.Array[ParticipantRanking] = mySession.contest match {
     case Some(c) =>
       (for {
-        userId <- mySession.userProfile.OID_?
+        userId <- mySession.userProfile._id.toOption
         rankings <- contestService.getPlayerRankings(c, userId).toOption
         participants = rankings.participants
       } yield participants) getOrElse emptyArray
@@ -93,7 +93,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   // if a contest ID was passed ...
   $routeParams.contestId foreach { contestId =>
     // if the current contest is not the chosen contest ...
-    if (!mySession.contest.exists(_.OID_?.contains(contestId))) {
+    if (!mySession.contest.exists(c => BSONObjectID.isEqual(c._id, contestId))) {
       console.log(s"Loading contest $contestId...")
       contestService.getContestByID(contestId) onComplete {
         case Success(loadedContest) => mySession.setContest(loadedContest)
@@ -111,6 +111,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
  * Dashboard Controller Scope
  * @author lawrence.daniels@gmail.com
  */
+@js.native
 trait DashboardScope extends Scope {
 
 }
@@ -119,7 +120,8 @@ trait DashboardScope extends Scope {
  * Dashboard Route Params
  * @author lawrence.daniels@gmail.com
  */
+@js.native
 trait DashboardRouteParams extends js.Object {
-  var contestId: js.UndefOr[String] = js.native
+  var contestId: js.UndefOr[BSONObjectID] = js.native
 
 }

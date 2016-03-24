@@ -4,14 +4,14 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, angular, injected, scoped}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
-import com.shocktrade.javascript.models.{Contest, Perk}
+import com.shocktrade.javascript.models.{BSONObjectID, Contest, Perk}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
 import scala.language.postfixOps
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
@@ -39,19 +39,19 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
    * Retrieves the promise of a sequence of perks
    * @return the promise of a sequence of [[Perk perks]]
    */
-  def getPerks(contestId: String): Future[js.Array[Perk]] = {
+  def getPerks(contestId: BSONObjectID): Future[js.Array[Perk]] = {
     required("contestId", contestId)
-    $http.get[js.Array[Perk]](s"/api/contest/$contestId/perks")
+    $http.get[js.Array[Perk]](s"/api/contest/${contestId.$oid}/perks")
   }
 
   /**
    * Retrieves the promise of an option of a perks response
    * @return the promise of an option of a [[PerksResponse perks response]]
    */
-  def getMyPerkCodes(contestId: String, playerId: String): Future[PerksResponse] = {
+  def getMyPerkCodes(contestId: BSONObjectID, playerId: BSONObjectID): Future[PerksResponse] = {
     required("contestId", contestId)
     required("userId", playerId)
-    $http.get[PerksResponse](s"/api/contest/$contestId/perks/$playerId")
+    $http.get[PerksResponse](s"/api/contest/${contestId.$oid}/perks/${playerId.$oid}")
   }
 
   /**
@@ -61,11 +61,11 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
    * @param perkCodes the given perk codes to purchase
    * @return the promise of a [[Contest contest]]
    */
-  def purchasePerks(contestId: String, playerId: String, perkCodes: js.Array[String]): Future[Contest] = {
+  def purchasePerks(contestId: BSONObjectID, playerId: BSONObjectID, perkCodes: js.Array[String]): Future[Contest] = {
     required("contestId", contestId)
     required("playerId", playerId)
     required("perkCodes", perkCodes)
-    $http.put[Contest](s"/api/contest/$contestId/perks/$playerId", perkCodes)
+    $http.put[Contest](s"/api/contest/${contestId.$oid}/perks/${playerId.$oid}", perkCodes)
   }
 }
 
@@ -124,8 +124,8 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
   @scoped
   def purchasePerks(): Unit = {
     val outcome = for {
-      playerId <- mySession.userProfile.OID_?
-      contestId <- mySession.contest.flatMap(_.OID_?)
+      playerId <- mySession.userProfile._id.toOption
+      contestId <- mySession.contest.flatMap(_._id.toOption)
     } yield (playerId, contestId)
 
     outcome match {
@@ -156,8 +156,8 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
 
   private def initPerks() = {
     val outcome = for {
-      playerId <- mySession.userProfile.OID_?
-      contestId <- mySession.contest.flatMap(_.OID_?)
+      playerId <- mySession.userProfile._id.toOption
+      contestId <- mySession.contest.flatMap(_._id.toOption)
     } yield (playerId, contestId)
 
     // load the player's perks

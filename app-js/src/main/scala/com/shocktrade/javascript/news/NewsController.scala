@@ -2,12 +2,13 @@ package com.shocktrade.javascript.news
 
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, injected}
-import com.shocktrade.javascript.{GlobalLoading, ScalaJsHelper}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.GlobalLoading
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.shocktrade.javascript.models.{BSONObjectID, NewsFeed, NewsQuote, NewsSource}
 import com.shocktrade.javascript.news.NewsController._
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
@@ -20,9 +21,9 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
                      @injected("NewsService") newsService: NewsService)
   extends Controller with GlobalLoading {
 
-  private var newsSymbols = emptyArray[js.Dynamic]
-  private var channels = emptyArray[js.Dynamic]
-  private var newsSources = emptyArray[js.Dynamic]
+  private var newsSymbols = emptyArray[NewsQuote]
+  private var channels = emptyArray[NewsFeed]
+  private var newsSources = emptyArray[NewsSource]
 
   // define the scope variables
   // view: get the previously selected view from the cookie
@@ -35,7 +36,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
 
   $scope.getChannels = () => channels
 
-  $scope.getNewsFeed = (feedId: String) => findNewsFeed(feedId)
+  $scope.getNewsFeed = (feedId: String) => findNewsFeed(BSONObjectID(feedId))
 
   $scope.getNewsSources = () => loadNewsSources()
 
@@ -56,7 +57,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
         newsSources = sources
 
         // select the ID of the first feed
-        sources.headOption.flatMap(_.OID_?) foreach { feed =>
+        sources.headOption.flatMap(_._id.toOption) foreach { feed =>
           $scope.selection.feed = feed
           findNewsFeed(feed)
         }
@@ -65,7 +66,7 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
     }
   }
 
-  private def findNewsFeed(feedId: String) = {
+  private def findNewsFeed(feedId: BSONObjectID) = {
     console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
@@ -127,11 +128,11 @@ class NewsController($scope: js.Dynamic, $cookies: Cookies, $sce: Sce, toaster: 
         """.stripPrefix(" ").stripSuffix(" ")
   }
 
-  private def populateQuotes(channels: js.Array[js.Dynamic]) = {
+  private def populateQuotes(channels: js.Array[NewsFeed]) = {
     // gather the quotes
     val myQuotes = channels.flatMap { channel =>
-      val items = channel.items.asArray[js.Dynamic]
-      items.flatMap(_.quotes.asArray[js.Dynamic])
+      val items = channel.items
+      items.flatMap(_.quotes)
     }
 
     // set the quotes

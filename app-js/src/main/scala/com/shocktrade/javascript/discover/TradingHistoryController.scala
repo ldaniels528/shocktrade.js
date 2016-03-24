@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.discover
 
-import com.shocktrade.javascript.ScalaJsHelper
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper
 import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected}
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}

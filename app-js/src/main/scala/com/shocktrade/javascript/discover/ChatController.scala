@@ -5,12 +5,12 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.ChatController._
 import com.shocktrade.javascript.models.{Message, PlayerRef}
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
@@ -93,9 +93,9 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
    */
   private def sendChatMessage(messageText: String) {
     val outcome = for {
-      playerId <- mySession.userProfile.OID_?
+      playerId <- mySession.userProfile._id.toOption
       facebookID <- mySession.facebookID
-      contestId <- mySession.contest.flatMap(_.OID_?)
+      contestId <- mySession.contest.flatMap(_._id.toOption)
     } yield (playerId, facebookID, contestId)
 
     outcome match {

@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -8,8 +8,9 @@ import scala.scalajs.js
  * User Profile
  * @author lawrence.daniels@gmail.com
  */
+@js.native
 trait UserProfile extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
   var facebookID: js.UndefOr[String] = js.native
   var email: js.UndefOr[String] = js.native

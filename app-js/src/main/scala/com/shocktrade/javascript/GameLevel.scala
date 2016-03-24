@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
 

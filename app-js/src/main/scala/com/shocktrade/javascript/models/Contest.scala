@@ -1,16 +1,16 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.UndefOr
 
 /**
- * Contest Model
- */
+  * Contest Model
+  */
+@js.native
 trait Contest extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
   var creator: ContestCreator = js.native
   var startTime: UndefOr[js.Date] = js.native
@@ -30,20 +30,22 @@ trait Contest extends js.Object {
 }
 
 /**
- * Contest Model Singleton
- */
+  * Contest Model Singleton
+  */
 object Contest {
   val MaxPlayers = 24
 
 }
 
+@js.native
 trait ContestCreator extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
 }
 
+@js.native
 trait ParticipantRanking extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var facebookID: String = js.native
   var name: String = js.native
   var rank: String = js.native
@@ -52,8 +54,9 @@ trait ParticipantRanking extends js.Object {
 }
 
 /**
- * Contest Participant Rankings
- */
+  * Contest Participant Rankings
+  */
+@js.native
 trait Rankings extends js.Object {
   var participants: js.Array[ParticipantRanking] = js.native
   var leader: UndefOr[ParticipantRanking] = js.native
@@ -61,8 +64,8 @@ trait Rankings extends js.Object {
 }
 
 /**
- * Contest Participant Rankings Singleton
- */
+  * Contest Participant Rankings Singleton
+  */
 object Rankings {
 
   def apply(participants: js.Array[ParticipantRanking] = emptyArray,
@@ -76,33 +79,36 @@ object Rankings {
   }
 }
 
+@js.native
 trait Message extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var sender: PlayerRef = js.native
   var text: String = js.native
   var recipient: UndefOr[PlayerRef] = js.native
   var sentTime: js.Date = js.native
 }
 
+@js.native
 trait PlayerRef extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
   var facebookID: String = js.native
 }
 
 object PlayerRef {
 
-  def apply(userId: String, facebookID: String, name: String) = {
+  def apply(userId: BSONObjectID, facebookID: String, name: String) = {
     val ref = makeNew[PlayerRef]
-    ref._id = JS($oid = userId)
+    ref._id = userId
     ref.facebookID = facebookID
     ref.name = name
     ref
   }
 }
 
+@js.native
 trait Participant extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
   var facebookID: String = js.native
   var cashAccount: CashAccount = js.native
@@ -114,11 +120,13 @@ trait Participant extends js.Object {
   var positions: js.Array[Position] = js.native
 }
 
+@js.native
 trait CashAccount extends js.Object {
   var cashFunds: Double = js.native
   var asOfDate: js.Date = js.native
 }
 
+@js.native
 trait MarginAccount extends js.Object {
   var cashFunds: Double = js.native
   var borrowedFunds: Double = js.native
@@ -127,23 +135,27 @@ trait MarginAccount extends js.Object {
   var asOfDate: js.Date = js.native
 }
 
+@js.native
 trait Order extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var symbol: String = js.native
 }
 
+@js.native
 trait ClosedOrder extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var symbol: String = js.native
 }
 
+@js.native
 trait Performance extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var symbol: String = js.native
 }
 
+@js.native
 trait Position extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var symbol: String = js.native
   var exchange: String = js.native
   var pricePaid: BigDecimal = js.native

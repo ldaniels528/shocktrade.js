@@ -4,13 +4,13 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected, scoped}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{BSONObjectID, Contest}
 import org.scalajs.dom.console
 
 import scala.language.postfixOps
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
@@ -58,7 +58,7 @@ class InspectController($scope: InspectScope, $http: Http, $routeParams: Inspect
   }
 
   @scoped def updateContestHost(host: js.Dynamic) = {
-    $scope.contest.OID_? foreach { contestId =>
+    $scope.contest._id foreach { contestId =>
       $http.post[js.Dynamic](s"/api/contest/$contestId/host", JS(host = host)) onComplete {
         case Success(response) =>
           toaster.success("Processing host updated")
@@ -76,7 +76,7 @@ class InspectController($scope: InspectScope, $http: Http, $routeParams: Inspect
     console.log(s"Attempting to load contest $contestId")
 
     // load the contest
-    contestService.getContestByID(contestId) onComplete {
+    contestService.getContestByID(BSONObjectID(contestId)) onComplete {
       case Success(contest) =>
         $scope.contest = contest
         mySession.setContest(contest)

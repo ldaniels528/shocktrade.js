@@ -1,12 +1,14 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
 /**
- * Represents a perk
- */
+  * Represents a perk
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait Perk extends js.Object {
   var name: String = js.native
   var code: String = js.native
@@ -17,8 +19,8 @@ trait Perk extends js.Object {
 }
 
 /**
- * Perk Singleton
- */
+  * Perk Singleton
+  */
 object Perk {
 
   def apply(name: String,

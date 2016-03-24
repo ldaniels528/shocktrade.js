@@ -5,10 +5,10 @@ import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.language.postfixOps
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Date
 import scala.util.{Failure, Success}
@@ -36,8 +36,8 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
     investmentMarketValue = investmentCost
 
     for {
-      contestID <- mySession.contest.flatMap(_.OID_?)
-      userID <- mySession.userProfile.OID_?
+      contestID <- mySession.contest.flatMap(_._id.toOption)
+      userID <- mySession.userProfile._id.toOption
     } {
       // load the margin accounts market value
       contestService.getMarginMarketValue(contestID, userID) onComplete {

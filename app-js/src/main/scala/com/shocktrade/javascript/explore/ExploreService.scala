@@ -2,7 +2,7 @@ package com.shocktrade.javascript.explore
 
 import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.explore.ExploreService._
 
 import scala.scalajs.js
@@ -59,11 +59,13 @@ object ExploreService {
   /**
    * Sector/Industry Quote
    */
+  @js.native
   trait SectorQuote extends js.Object
 
   /**
    * Sector Information
    */
+  @js.native
   trait SectorInfo extends js.Object {
     var _id: js.Object = js.native
     var symbol: js.UndefOr[String] = js.native

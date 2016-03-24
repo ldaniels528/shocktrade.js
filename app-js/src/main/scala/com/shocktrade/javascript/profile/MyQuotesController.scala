@@ -5,14 +5,14 @@ import com.github.ldaniels528.scalascript.core.Location
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.UserProfile
 import com.shocktrade.javascript.profile.MyQuotesController._
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -61,7 +61,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   /////////////////////////////////////////////////////////////////////////////
 
   private def addFavoriteSymbol(symbol: String) = {
-    mySession.userProfile.OID_? foreach { userId =>
+    mySession.userProfile._id foreach { userId =>
       profileService.addFavoriteSymbol(userId, symbol) onComplete {
         case Success(response) =>
         case Failure(e) =>
@@ -99,7 +99,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   }
 
   private def loadHeldSecurities(obj: js.Dynamic): Unit = {
-    mySession.userProfile.OID_? foreach { playerId =>
+    mySession.userProfile._id foreach { playerId =>
       val outcome = for {
         symbols <- contestService.getHeldSecurities(playerId)
         quotes <- quoteService.getStockQuoteList(symbols)
@@ -124,7 +124,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   }
 
   private def removeFavoriteSymbol(symbol: String) = {
-    mySession.userProfile.OID_? foreach { userId =>
+    mySession.userProfile._id foreach { userId =>
       profileService.removeFavoriteSymbol(userId, symbol) onComplete {
         case Success(response) =>
         case Failure(e) =>

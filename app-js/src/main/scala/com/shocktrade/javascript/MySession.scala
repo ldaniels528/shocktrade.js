@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.profile.ProfileService
@@ -12,7 +12,7 @@ import com.shocktrade.javascript.social.{TaggableFriend, FacebookProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
@@ -67,7 +67,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
    * Indicates whether the user is logged in
    * @return {boolean}
    */
-  def isAuthenticated = userProfile.OID_?.nonEmpty
+  def isAuthenticated = userProfile._id.exists(_.$oid.nonEmpty)
 
   def getFacebookID = facebookID.orNull
 
@@ -116,21 +116,21 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(symbol: String) = userProfile.OID_? foreach(profileService.addFavoriteSymbol(_, symbol))
+  def addFavoriteSymbol(symbol: String) = userProfile._id foreach(id => profileService.addFavoriteSymbol(id, symbol))
 
   def getFavoriteSymbols = userProfile.favorites
 
   def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.contains(symbol)
 
-  def removeFavoriteSymbol(symbol: String) = userProfile.OID_? foreach(profileService.removeFavoriteSymbol(_, symbol))
+  def removeFavoriteSymbol(symbol: String) = userProfile._id foreach(id => profileService.removeFavoriteSymbol(id, symbol))
 
-  def addRecentSymbol(symbol: String) = userProfile.OID_? foreach(profileService.addRecentSymbol(_, symbol))
+  def addRecentSymbol(symbol: String) = userProfile._id foreach(id => profileService.addRecentSymbol(id, symbol))
 
   def getRecentSymbols = userProfile.recentSymbols
 
   def isRecentSymbol(symbol: String) = getRecentSymbols.contains(symbol)
 
-  def removeRecentSymbol(symbol: String) = userProfile.OID_? foreach(profileService.removeRecentSymbol(_, symbol))
+  def removeRecentSymbol(symbol: String) = userProfile._id foreach(id => profileService.removeRecentSymbol(id, symbol))
 
   def getMostRecentSymbol = getRecentSymbols.lastOption getOrElse "AAPL"
 
@@ -140,7 +140,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def getContest = contest getOrElse JS()
 
-  def getContestID = contest.flatMap(_.OID_?).orNull
+  def getContestID = contest.map(_._id).orNull
 
   def getContestName = contest.map(_.name).orNull
 
@@ -217,9 +217,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Participant Methods
   ////////////////////////////////////////////////////////////
 
-  def findPlayerByID(contest: Contest, playerId: String) = {
+  def findPlayerByID(contest: Contest, playerId: BSONObjectID) = {
     if (isDefined(contest) && isDefined(contest.participants))
-      contest.participants.find(_.OID_?.contains(playerId))
+      contest.participants.find(_._id.exists(_.$oid.contains(playerId)))
     else
       None
   }
@@ -258,14 +258,14 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   private[javascript] def participant: Option[Participant] = {
     for {
-      userId <- userProfile.OID_?
+      userId <- userProfile._id.toOption
       c <- contest
-      me <- c.participants.find(_.OID_?.contains(userId))
+      me <- c.participants.find(p => BSONObjectID.isEqual(p._id, userId))
     } yield me
   }
 
   private def lookupParticipant(contest: Contest, playerId: String) = {
-    contest.participants.find(_.OID_?.contains(playerId))
+    contest.participants.find(_._id.exists(_.$oid.contains(playerId)))
   }
 
   ////////////////////////////////////////////////////////////
@@ -284,7 +284,7 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     // lookup our local participant
     for {
       myParticipant <- participant
-      myParticipantId <- myParticipant.OID_?
+      myParticipantId <- myParticipant._id.map(_.$oid)
       foreignPlayer <- lookupParticipant(updatedContest, myParticipantId)
     } {
       // update each object (if present)
@@ -336,9 +336,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   $rootScope.$on(ContestDeleted, { (event: js.Dynamic, deletedContest: Contest) =>
     info(deletedContest, "Contest deleted event received...")
     for {
-      contestId <- contest.flatMap(_.OID_?)
-      deletedId <- deletedContest.OID_?
-    } if (contestId == deletedId) resetContest()
+      contestId <- contest.flatMap(_._id.toOption)
+      deletedId <- deletedContest._id.toOption
+    } if (BSONObjectID.isEqual(contestId, deletedId)) resetContest()
   })
 
   $rootScope.$on(ContestUpdated, { (event: js.Dynamic, updatedContest: Contest) =>
@@ -346,9 +346,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     if (contest.isEmpty) setContest(updatedContest)
     else {
       for {
-        contestId <- contest.flatMap(_.OID_?)
-        updatedId <- updatedContest.OID_?
-      } if (contestId == updatedId) setContest(updatedContest)
+        contestId <- contest.flatMap(_._id.toOption)
+        updatedId <- updatedContest._id.toOption
+      } if (BSONObjectID.isEqual(contestId, updatedId)) setContest(updatedContest)
     }
   })
 
@@ -375,9 +375,9 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   $rootScope.$on(UserProfileUpdated, { (event: js.Dynamic, profile: UserProfile) =>
     console.log(s"User Profile for ${profile.name} updated")
     for {
-      userId <- userProfile.OID_?
-      otherId <- profile.OID_?
-    } if (userId == otherId) {
+      userId <- userProfile._id
+      otherId <- profile._id
+    } if (BSONObjectID.isEqual(userId, otherId)) {
       userProfile.netWorth = profile.netWorth
       toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5.seconds, "trustedHtml")
     }

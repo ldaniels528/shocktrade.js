@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.directives
 
-import com.github.ldaniels528.scalascript.core.{Attributes, JQLite}
-import com.github.ldaniels528.scalascript.{Directive, Scope}
+import com.github.ldaniels528.scalascript.core.Attributes
+import com.github.ldaniels528.scalascript.{Directive, JQLite, Scope}
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -9,10 +9,10 @@ import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.Try
 
 /**
- * Change Arrow Directive
- * @author lawrence.daniels@gmail.com
- * @example <changearrow value="{{ q.change }}"></changearrow>
- */
+  * Change Arrow Directive
+  * @author lawrence.daniels@gmail.com
+  * @example <changearrow value="{{ q.change }}"></changearrow>
+  */
 class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
   override val restrict = "E"
   override val scope = JS(value = "@value")
@@ -39,9 +39,10 @@ class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
 }
 
 /**
- * Change Arrow Directive Scope
- * @author lawrence.daniels@gmail.com
- */
+  * Change Arrow Directive Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait ChangeArrowDirectiveScope extends Scope {
   var value: js.UndefOr[Any] = js.native
   var icon: String = js.native
@@ -49,9 +50,9 @@ trait ChangeArrowDirectiveScope extends Scope {
 }
 
 /**
- * Change Arrow Directive Scope Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Change Arrow Directive Scope Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object ChangeArrowDirectiveScope {
 
   def apply(): ChangeArrowDirectiveScope = {

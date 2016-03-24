@@ -3,13 +3,13 @@ package com.shocktrade.javascript.social
 import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialog
-import com.shocktrade.javascript.models.UserProfile
+import com.shocktrade.javascript.models.{MyUpdate, UserProfile}
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.scalajs.js.JSON
@@ -26,7 +26,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
   extends Controller with GlobalLoading {
 
   private val scope = $scope.asInstanceOf[Scope]
-  private var myUpdates = emptyArray[js.Dynamic]
+  private var myUpdates = emptyArray[MyUpdate]
   private var myUpdate: js.Dynamic = null
   private var contact: js.Dynamic = JS()
 
@@ -149,7 +149,7 @@ class ConnectController($scope: js.Dynamic, toaster: Toaster,
    */
   private def deleteMessages(userName: String) {
     // gather the records to delete
-    val messageIDs = myUpdates.filter(update => isDefined(update.selected) && update.selected.isTrue).flatMap(_.OID_?)
+    val messageIDs = myUpdates.filter(_.selected.contains(true)).flatMap(_._id.toOption)
     console.log(s"messageIDs = ${JSON.stringify(messageIDs)}")
 
     // delete the records

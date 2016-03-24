@@ -3,14 +3,14 @@ package com.shocktrade.controllers
 import java.util.Date
 
 import akka.util.Timeout
+import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.tabular.Tabular
-import com.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.profile.UserProfiles
-import com.shocktrade.models.quote.{SectorQuote, MarketQuote, QuoteSnapshot, StockQuotes}
+import com.shocktrade.models.quote.{MarketQuote, QuoteSnapshot, SectorQuote, StockQuotes}
 import com.shocktrade.server.trading.{Contests, OrderProcessor}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
@@ -27,9 +27,9 @@ import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 
 /**
- * Contest Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Contest Controller
+  * @author lawrence.daniels@gmail.com
+  */
 object ContestController extends Controller with ErrorHandler {
   private val tabular = new Tabular()
   private val DisplayColumns = Seq(
@@ -44,11 +44,11 @@ object ContestController extends Controller with ErrorHandler {
   ////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Cancels the specified order
-   * @param contestId the given contest ID
-   * @param playerId the given player ID
-   * @param orderId the given order ID
-   */
+    * Cancels the specified order
+    * @param contestId the given contest ID
+    * @param playerId  the given player ID
+    * @param orderId   the given order ID
+    */
   def cancelOrder(contestId: String, playerId: String, orderId: String) = Action.async {
     // pull the order, add it to closedOrders, and return the participant
     Contests.closeOrder(contestId.toBSID, playerId.toBSID, orderId.toBSID)("participants.name", "participants.orders", "participants.closedOrders")
@@ -69,9 +69,9 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Performs a search for contests
-   * @return a JSON array of [[Contest]] instances
-   */
+    * Performs a search for contests
+    * @return a JSON array of [[Contest]] instances
+    */
   def contestSearch = Action.async { implicit request =>
     Try(request.body.asJson map (_.as[ContestSearchForm])) match {
       case Success(Some(form)) =>
@@ -111,8 +111,8 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Creates a new contest
-   */
+    * Creates a new contest
+    */
   def createContest = Action.async { implicit request =>
     Try(request.body.asJson.flatMap(_.asOpt[ContestCreateForm])) match {
       case Success(Some(form)) =>
@@ -142,10 +142,10 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Deletes a contest by ID
-   * @param contestId the given contest ID
-   * @return a contest
-   */
+    * Deletes a contest by ID
+    * @param contestId the given contest ID
+    * @return a contest
+    */
   def deleteContestByID(contestId: String) = Action.async {
     val outcome = for {
     // retrieve the contest
@@ -245,11 +245,11 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Creates a new order
-   * @param contestId the given contest ID
-   * @param playerId the given player ID
-   * @return a [[Contest]] in JSON format
-   */
+    * Creates a new order
+    * @param contestId the given contest ID
+    * @param playerId  the given player ID
+    * @return a [[Contest]] in JSON format
+    */
   def createOrder(contestId: String, playerId: String) = Action.async { implicit request =>
     Try(request.body.asJson.map(_.as[OrderForm])) match {
       case Success(Some(form)) =>
@@ -313,8 +313,8 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Returns a trading clock state object
-   */
+    * Returns a trading clock state object
+    */
   def getContestsByPlayerID(playerId: String) = Action.async {
     Contests.findContestsByPlayerID(playerId.toBSID)(DisplayColumns: _*) map (contests => Ok(Json.toJson(contests)))
   }
@@ -326,7 +326,10 @@ object ContestController extends Controller with ErrorHandler {
       enriched <- enrichOrders(player)
     } yield enriched \ "orders"
 
-    outcome map (js => Ok(js)) recover {
+    outcome map {
+      case JsDefined(js) => Ok(js)
+      case JsUndefined() => InternalServerError("Orders could not be extracted")
+    } recover {
       case e: Exception => Ok(createError(e))
     }
   }
@@ -338,7 +341,10 @@ object ContestController extends Controller with ErrorHandler {
       enriched <- enrichPositions(player)
     } yield enriched \ "positions"
 
-    outcome map (js => Ok(js)) recover {
+    outcome map {
+      case JsDefined(js) => Ok(js)
+      case JsUndefined() => InternalServerError("Positions could not be extracted")
+    } recover {
       case e: Exception => Ok(createError(e))
     }
   }
@@ -456,9 +462,9 @@ object ContestController extends Controller with ErrorHandler {
   }
 
   /**
-   * Facilitates the purchase of perks
-   * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
-   */
+    * Facilitates the purchase of perks
+    * Returns the updated perks (e.g. ['CREATOR', 'PRCHEMNT'])
+    */
   def purchasePerks(contestId: String, playerId: String) = Action.async { request =>
     // get the perks from the request body
     request.body.asJson map (_.as[Seq[String]]) match {
@@ -503,7 +509,7 @@ object ContestController extends Controller with ErrorHandler {
       rankings <- produceNetWorths(contest)
 
       // sort the participants by net-worth
-      rankedPlayers = (1 to rankings.size).toSeq zip rankings.sortBy(-_.totalEquity)
+      rankedPlayers = (1 to rankings.size) zip rankings.sortBy(-_.totalEquity)
 
     } yield JsArray(rankedPlayers map { case (place, p) => JS("rank" -> placeName(place)) ++ Json.toJson(p).asInstanceOf[JsObject] })
   }

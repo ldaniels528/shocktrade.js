@@ -6,13 +6,13 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.{ParticipantRanking, UserProfile}
+import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
@@ -46,7 +46,7 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
   @scoped def getMyRanking: UndefOr[ParticipantRanking] = {
     (for {
       contest <- mySession.contest
-      playerID <- mySession.userProfile.OID_?
+      playerID <- mySession.userProfile._id.toOption
       rankings <- contestService.getPlayerRankings(contest, playerID).flatMap(_.player).toOption
     } yield rankings).orUndefined
   }
@@ -68,7 +68,7 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
   ///////////////////////////////////////////////////////////////////////////
 
   private def retrieveTotalInvestment() {
-    mySession.userProfile.OID_? match {
+    mySession.userProfile._id.toOption match {
       case Some(userID) =>
         console.log(s"Loading player information for user ID $userID")
 
@@ -85,7 +85,7 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
     }
   }
 
-  private def loadTotalInvestment(playerId: String) = {
+  private def loadTotalInvestment(playerId: BSONObjectID) = {
     // set a timeout so that loading doesn't persist
     $timeout(() =>
       if (totalInvestment.isEmpty) {

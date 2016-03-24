@@ -1,19 +1,18 @@
 package com.shocktrade.javascript.directives
 
-import com.shocktrade.javascript.ScalaJsHelper
-import ScalaJsHelper._
-import com.github.ldaniels528.scalascript.core.{Attributes, JQLite}
-import com.github.ldaniels528.scalascript.{Directive, Scope, angular}
+import com.github.ldaniels528.scalascript.core.Attributes
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Directive, JQLite, Scope, angular}
 import com.shocktrade.javascript.directives.AvatarDirective.UNKNOWN_PERSON
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 
 /**
- * Avatar Directive
- * @author lawrence.daniels@gmail.com
- * @example <avatar id="{{ p.facebookID }}" class="avatar-24"></avatar>
- */
+  * Avatar Directive
+  * @author lawrence.daniels@gmail.com
+  * @example <avatar id="{{ p.facebookID }}" class="avatar-24"></avatar>
+  */
 class AvatarDirective extends Directive[AvatarDirectiveScope] {
   override val restrict = "E"
   override val scope = JS(id = "@id", link = "@link", `class` = "@class", style = "@style")
@@ -38,18 +37,19 @@ class AvatarDirective extends Directive[AvatarDirectiveScope] {
 }
 
 /**
- * Avatar Directive Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Avatar Directive Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object AvatarDirective {
   private val UNKNOWN_PERSON = "/assets/images/avatars/avatar100.png"
 
 }
 
 /**
- * Avatar Directive Scope
- * @author lawrence.daniels@gmail.com
- */
+  * Avatar Directive Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait AvatarDirectiveScope extends Scope {
   // input fields
   var id: js.UndefOr[String] = js.native
@@ -64,9 +64,9 @@ trait AvatarDirectiveScope extends Scope {
 }
 
 /**
- * Avatar Directive Scope Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Avatar Directive Scope Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object AvatarDirectiveScope {
 
   def apply(): AvatarDirectiveScope = {

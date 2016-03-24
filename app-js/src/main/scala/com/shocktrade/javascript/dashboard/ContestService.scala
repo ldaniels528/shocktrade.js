@@ -3,11 +3,11 @@ package com.shocktrade.javascript.dashboard
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Service, angular}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
@@ -23,24 +23,24 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //          Basic C.R.U.D.
   ///////////////////////////////////////////////////////////////
 
-  def deleteContest(contestId: UndefOr[String]) = {
+  def deleteContest(contestId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     $http.delete[js.Dynamic](s"/api/contest/$contestId")
   }
 
-  def joinContest(contestId: UndefOr[String], playerInfo: js.Dynamic) = {
+  def joinContest(contestId: UndefOr[BSONObjectID], playerInfo: js.Dynamic) = {
     required("contestId", contestId)
     required("playerInfo", playerInfo)
     $http.put[Contest](s"/api/contest/$contestId/player", playerInfo)
   }
 
-  def quitContest(contestId: UndefOr[String], playerId: UndefOr[String]) = {
+  def quitContest(contestId: UndefOr[BSONObjectID], playerId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.delete[Contest](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def startContest(contestId: UndefOr[String]) = {
+  def startContest(contestId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     $http.get[Contest](s"/api/contest/$contestId/start")
   }
@@ -54,38 +54,38 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     $http.post[js.Array[Contest]]("/api/contests/search", searchOptions)
   }
 
-  def getContestByID(contestId: UndefOr[String]) = {
+  def getContestByID(contestId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     $http.get[Contest](s"/api/contest/$contestId")
   }
 
-  def getParticipantByID(contestId: UndefOr[String], playerId: UndefOr[String]) = {
+  def getParticipantByID(contestId: UndefOr[BSONObjectID], playerId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Dynamic](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def getCashAvailable(contest: Contest, playerId: UndefOr[String]) = {
-    contest.participants.find(_.OID_?.exists(playerId.toOption.contains)) map (_.cashAccount.cashFunds) getOrElse 0.0d
+  def getCashAvailable(contest: Contest, playerId: UndefOr[BSONObjectID]) = {
+    contest.participants.find(p => BSONObjectID.isEqual(p._id, playerId)) map (_.cashAccount.cashFunds) getOrElse 0.0d
   }
 
-  def getRankings(contestId: UndefOr[String]) = {
+  def getRankings(contestId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     $http.get[js.Array[ParticipantRanking]](s"/api/contest/$contestId/rankings")
   }
 
-  def getContestsByPlayerID(playerId: UndefOr[String]) = {
+  def getContestsByPlayerID(playerId: UndefOr[BSONObjectID]) = {
     required("playerId", playerId)
     $http.get[js.Array[Contest]](s"/api/contests/player/$playerId")
   }
 
-  def getEnrichedOrders(contestId: UndefOr[String], playerId: UndefOr[String]) = {
+  def getEnrichedOrders(contestId: UndefOr[BSONObjectID], playerId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Array[Order]](s"/api/contest/$contestId/orders/$playerId")
   }
 
-  def getEnrichedPositions(contestId: UndefOr[String], playerId: UndefOr[String]) = {
+  def getEnrichedPositions(contestId: UndefOr[BSONObjectID], playerId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[js.Array[Position]](s"/api/contest/$contestId/positions/$playerId")
@@ -95,13 +95,13 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Participants
   /////////////////////////////////////////////////////////////////////////////
 
-  def getMarginMarketValue(contestId: UndefOr[String], playerId: UndefOr[String]) = {
+  def getMarginMarketValue(contestId: UndefOr[BSONObjectID], playerId: UndefOr[BSONObjectID]) = {
     required("contestId", contestId)
     required("playerId", playerId)
     $http.get[MarginMarketValue](s"/api/contest/$contestId/margin/$playerId/marketValue")
   }
 
-  def getPlayerRankings(contest: Contest, playerID: UndefOr[String]): UndefOr[Rankings] = {
+  def getPlayerRankings(contest: Contest, playerID: UndefOr[BSONObjectID]): UndefOr[Rankings] = {
     if (isDefined(contest) && isDefined(contest.name)) {
       // if the rankings have never been loaded ...
       if (!isDefined(contest.rankings)) {
@@ -110,8 +110,8 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
 
         console.log(s"Loading Contest Rankings for '${contest.name}'...")
         for {
-          contestId <- contest.OID_?
-          userID <- playerID
+          contestId <- contest._id.toOption
+          userID <- playerID.toOption
         } {
           getRankings(contestId) onComplete {
             case Success(participantRankings) =>
@@ -119,7 +119,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
               contest.rankings.foreach { rankings =>
                 rankings.participants = participantRankings
                 rankings.leader = participantRankings.headOption.orUndefined
-                rankings.player = participantRankings.find(p => p.OID_?.contains(userID) || p.facebookID == userID).orUndefined
+                rankings.player = participantRankings.find(p => p._id.exists(_.$oid.contains(userID)) || p.facebookID == userID.$oid).orUndefined
               }
             case Failure(e) =>
               toaster.error("Error loading player rankings")
@@ -135,7 +135,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
           rankings <- contest.rankings
           userID <- playerID
         } {
-          rankings.player = rankings.participants.find(p => p.OID_?.contains(userID) || p.facebookID == userID).orUndefined
+          rankings.player = rankings.participants.find(p => BSONObjectID.isEqual(p._id, userID) || p.facebookID == userID.$oid).orUndefined
         }
       }
 
@@ -145,7 +145,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
     else makeNew[Rankings]
   }
 
-  def getTotalInvestment(playerID: UndefOr[String]) = {
+  def getTotalInvestment(playerID: UndefOr[BSONObjectID]) = {
     required("playerID", playerID)
     $http.get[js.Dynamic](s"/api/contests/player/$playerID/totalInvestment")
   }
@@ -154,14 +154,14 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getExposureChartData(contestID: UndefOr[String], playerID: UndefOr[String], exposure: UndefOr[String]) = {
+  def getExposureChartData(contestID: UndefOr[BSONObjectID], playerID: UndefOr[BSONObjectID], exposure: UndefOr[String]) = {
     required("contestID", contestID)
     required("playerID", playerID)
     required("exposure", exposure)
     $http.get[js.Array[js.Dynamic]](s"/api/charts/exposure/$exposure/$contestID/$playerID")
   }
 
-  def getChart(contestID: UndefOr[String], playerName: UndefOr[String], chartName: UndefOr[String]) = {
+  def getChart(contestID: UndefOr[BSONObjectID], playerName: UndefOr[String], chartName: UndefOr[String]) = {
     required("contestID", contestID)
     required("playerName", playerName)
     required("chartName", chartName)
@@ -177,9 +177,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Chat
   /////////////////////////////////////////////////////////////////////////////
 
-  def sendChatMessage(contestId: String, message: Message) = {
-    required("contestId", contestId)
-    required("message", message)
+  def sendChatMessage(contestId: BSONObjectID, message: Message) = {
     $http.put[js.Array[Message]](s"/api/contest/$contestId/chat", message)
   }
 
@@ -187,22 +185,19 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def deleteOrder(contestId: String, playerId: String, orderId: String) = {
-    required("contestId", contestId)
-    required("playerId", playerId)
-    required("orderId", orderId)
+  def deleteOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID) = {
     $http.delete[Contest](s"/api/order/$contestId/$playerId/$orderId")
   }
 
-  def getHeldSecurities(playerId: String) = {
-    required("playerId", playerId)
+  def getHeldSecurities(playerId: BSONObjectID) = {
     $http.get[js.Array[String]](s"/api/positions/$playerId")
   }
 
 }
 
+@js.native
 trait MarginMarketValue extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var name: String = js.native
   var marginMarketValue: Double = js.native
 }

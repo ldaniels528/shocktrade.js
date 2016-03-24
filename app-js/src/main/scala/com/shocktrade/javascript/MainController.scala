@@ -6,16 +6,16 @@ import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialog
-import com.shocktrade.javascript.models.OnlinePlayerState
+import com.shocktrade.javascript.models.{BSONObjectID, OnlinePlayerState, UserProfile}
 import com.shocktrade.javascript.profile.ProfileService
 import com.shocktrade.javascript.social.Facebook
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
@@ -108,7 +108,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
 
   @scoped def getNetWorth = mySession.getNetWorth
 
-  @scoped def getUserID = mySession.userProfile.OID_?.orNull
+  @scoped def getUserID = mySession.userProfile._id.orNull
 
   @scoped def getUserName = mySession.getUserName
 
@@ -126,11 +126,11 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  @scoped def isOnline(player: js.Dynamic): Boolean = {
-    player.OID_? exists { playerID =>
+  @scoped def isOnline(player: UserProfile): Boolean = {
+    player._id.map(_.$oid) exists { playerID =>
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = OnlinePlayerState(connected = false)
-        profileService.getOnlineStatus(playerID) onComplete {
+        profileService.getOnlineStatus(BSONObjectID(playerID)) onComplete {
           case Success(newState) =>
             onlinePlayers(playerID) = newState
           case Failure(e) =>
@@ -230,7 +230,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
   //////////////////////////////////////////////////////////////////////
 
   @scoped def changeAppTab(index: js.UndefOr[Int]) = index foreach { tabIndex =>
-    mySession.userProfile.OID_? match {
+    mySession.userProfile._id.toOption match {
       case Some(userID) =>
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
           case Success(outcome) =>

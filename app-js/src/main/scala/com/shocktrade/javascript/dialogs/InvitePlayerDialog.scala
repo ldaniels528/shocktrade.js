@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.javascript.models.Participant
 import com.shocktrade.javascript.social.TaggableFriend

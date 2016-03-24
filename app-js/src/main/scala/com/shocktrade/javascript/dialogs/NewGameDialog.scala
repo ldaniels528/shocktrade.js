@@ -5,13 +5,13 @@ import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
@@ -81,7 +81,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
   @scoped
   def createGame(form: NewGameForm) = {
     if (isValidForm(form)) {
-      mySession.userProfile.OID_? match {
+      mySession.userProfile._id.toOption match {
         case Some(userId) =>
           processing = true
           val promise = $timeout(() => processing = false, 30.seconds)
@@ -152,6 +152,7 @@ object NewGameDialogController {
 /**
  * Game Duration
  */
+@js.native
 trait GameDuration extends js.Object {
   var label: String = js.native
   var value: Int = js.native
@@ -173,6 +174,7 @@ object GameDuration {
 /**
  * New Game Dialog Scope
  */
+@js.native
 trait NewGameDialogScope extends Scope {
   var durations: js.Array[GameDuration] = js.native
   var form: NewGameForm = js.native
@@ -183,6 +185,7 @@ trait NewGameDialogScope extends Scope {
 /**
  * New Game Dialog Form
  */
+@js.native
 trait NewGameForm extends js.Object {
   var name: js.UndefOr[String] = js.native
   var duration: js.UndefOr[GameDuration] = js.native

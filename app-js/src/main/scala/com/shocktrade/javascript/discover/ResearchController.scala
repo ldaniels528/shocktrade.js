@@ -1,23 +1,22 @@
 package com.shocktrade.javascript.discover
 
-import com.shocktrade.javascript.{ScalaJsHelper, GlobalLoading, MainController}
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Controller, angular, injected}
 import com.shocktrade.javascript.discover.ResearchController._
 import com.shocktrade.javascript.{GlobalLoading, MainController}
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
 
 /**
- * Research Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Research Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                          @injected("ResearchService") researchService: ResearchService)
   extends Controller with GlobalLoading {
@@ -164,9 +163,9 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
 }
 
 /**
- * Research Controller Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Research Controller Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object ResearchController {
   private val CookieName = "ShockTrade_Research_SearchOptions"
 

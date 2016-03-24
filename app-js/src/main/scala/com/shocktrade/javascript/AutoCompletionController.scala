@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.Q
 import com.github.ldaniels528.scalascript.{Controller, scoped}
 import com.shocktrade.javascript.discover.{AutoCompletedQuote, QuoteService}
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 

@@ -8,8 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import com.ldaniels528.commons.helpers.OptionHelper._
-import com.ldaniels528.commons.helpers.ResourceHelper._
+import com.github.ldaniels528.commons.helpers.OptionHelper._
+import com.github.ldaniels528.commons.helpers.ResourceHelper._
 import com.shocktrade.models.quote.StockQuotes
 import com.shocktrade.server.actors.EquityShortInterestUpdateActor.{EquityShortInterest, UpdateEquityShortInterest}
 import com.shocktrade.util.BSONHelper._

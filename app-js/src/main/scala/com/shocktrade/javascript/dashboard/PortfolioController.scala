@@ -4,15 +4,15 @@ import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.PortfolioController._
-import com.shocktrade.javascript.dialogs.{NewOrderParams, NewOrderDialog}
+import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
 import com.shocktrade.javascript.discover.DiscoverController
-import com.shocktrade.javascript.models.Participant
+import com.shocktrade.javascript.models.{BSONObjectID, Participant}
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
@@ -39,7 +39,9 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
 
   $scope.getActiveOrders = () => getActiveOrders
 
-  $scope.cancelOrder = (contestId: String, playerId: String, orderId: String) => cancelOrder(contestId, playerId, orderId)
+  $scope.cancelOrder = (contestId: String, playerId: String, orderId: String) => {
+    cancelOrder(contestId = BSONObjectID(contestId), playerId = BSONObjectID(playerId), orderId = BSONObjectID(orderId))
+  }
 
   $scope.isMarketOrder = (order: js.Dynamic) => order.priceType === "MARKET" || order.priceType === "MARKET_ON_CLOSE"
 
@@ -51,7 +53,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
 
   $scope.popupNewOrderDialog = (accountType: js.UndefOr[String]) => popupNewOrderDialog(accountType)
 
-  private def cancelOrder(contestId: String, playerId: String, orderId: String) = {
+  private def cancelOrder(contestId: BSONObjectID, playerId: BSONObjectID, orderId: BSONObjectID) = {
     asyncLoading($scope)(contestService.deleteOrder(contestId, playerId, orderId)) onComplete {
       case Success(contest) => mySession.setContest(contest)
       case Failure(err) =>
@@ -149,7 +151,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
     if (mySession.participant.nonEmpty) {
       if (!isDefined(participant.dynamic.enrichedOrders)) {
         participant.dynamic.enrichedOrders = true
-        participant.OID_? foreach { playerId =>
+        participant._id foreach { playerId =>
           contestService.getEnrichedOrders(mySession.getContestID, playerId) onComplete {
             case Success(enrichedOrders) => mySession.participant.foreach(_.orders = enrichedOrders)
             case Failure(e) =>
@@ -163,7 +165,7 @@ class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeo
   private def enrichPositions(participant: Participant) {
     if (mySession.participant.nonEmpty) {
       if (!isDefined(participant.dynamic.enrichedPositions)) {
-        participant.OID_? foreach { playerId =>
+        participant._id foreach { playerId =>
           participant.dynamic.enrichedPositions = true
           contestService.getEnrichedPositions(mySession.getContestID, playerId) onComplete {
             case Success(enrichedPositions) => mySession.participant.foreach(_.positions = enrichedPositions)

@@ -2,20 +2,21 @@ package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Controller, injected}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.shocktrade.javascript.models.BSONObjectID
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
- * Exposure Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Exposure Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySession") mySession: MySession)
@@ -45,7 +46,11 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
   $scope.getChartData = () => chartData
 
   $scope.exposurePieChart = (exposure: js.UndefOr[String], contestID: js.UndefOr[String], userID: js.UndefOr[String]) => {
-    exposurePieChart(contestID, userID, exposure)
+    for {
+      cid <- contestID
+      uid <- userID
+      eid <- exposure
+    } exposurePieChart(BSONObjectID(cid), BSONObjectID(uid), eid)
   }
 
   $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
@@ -58,7 +63,7 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def exposurePieChart(contestID: js.UndefOr[String], userID: js.UndefOr[String], exposure: js.UndefOr[String]) = {
+  private def exposurePieChart(contestID: js.UndefOr[BSONObjectID], userID: js.UndefOr[BSONObjectID], exposure: js.UndefOr[String]) = {
     contestService.getExposureChartData(contestID, userID, exposure) onComplete {
       case Success(data) => chartData = data
       case Failure(e) =>

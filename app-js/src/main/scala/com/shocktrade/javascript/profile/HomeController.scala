@@ -5,7 +5,7 @@ import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.social.TaggableFriend
 import org.scalajs.dom.console
 
@@ -73,6 +73,7 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
 /**
  * Home Controller Scope
  */
+@js.native
 trait HomeScope extends Scope {
   var selectedFriend: TaggableFriend = js.native
 }

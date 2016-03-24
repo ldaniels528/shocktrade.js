@@ -1,19 +1,22 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+
 import scala.scalajs.js
 
 /**
- * Online Player State
- */
+  * Online Player State
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait OnlinePlayerState extends js.Object {
   var connected: Boolean = js.native
 
 }
 
 /**
- * Online Player State Singleton
- */
+  * Online Player State Singleton
+  */
 object OnlinePlayerState {
 
   def apply(connected: Boolean = false) = {

@@ -4,12 +4,12 @@ import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
-import com.shocktrade.javascript.models.Contest
+import com.shocktrade.javascript.models.{BSONObjectID, Contest}
 
 import scala.concurrent.Future
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
@@ -31,7 +31,7 @@ class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
     modalInstance.result
   }
 
-  def transferFunds(contestId: String, playerId: String, form: TransferFundsForm): Future[Contest] = {
+  def transferFunds(contestId: BSONObjectID, playerId: BSONObjectID, form: TransferFundsForm): Future[Contest] = {
     $http.post[Contest](s"/api/contest/$contestId/margin/$playerId", form)
   }
 }
@@ -72,8 +72,8 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
   def accept(form: TransferFundsForm) {
     if (isValidated(form)) {
       (for {
-        contestId <- mySession.contest.flatMap(_.OID_?)
-        userId <- mySession.userProfile.OID_?
+        contestId <- mySession.contest.flatMap(_._id.toOption)
+        userId <- mySession.userProfile._id.toOption
       } yield {
           dialog.transferFunds(contestId, userId, form) onComplete {
             case Success(response) => $modalInstance.close(response)
@@ -175,6 +175,7 @@ object TransferFundsForm {
 /**
  * Transfer Funds Action
  */
+@js.native
 trait TransferFundsAction extends js.Object {
   var label: String = js.native
   var source: String = js.native

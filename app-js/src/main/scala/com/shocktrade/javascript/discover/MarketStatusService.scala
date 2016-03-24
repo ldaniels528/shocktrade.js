@@ -26,6 +26,7 @@ class MarketStatusService($http: Http) extends Service {
  * Represents the current U.S. Market Status
  * @example {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
  */
+@js.native
 trait MarketStatus extends js.Object {
   var stateChanged: Boolean = js.native
   var active: Boolean = js.native

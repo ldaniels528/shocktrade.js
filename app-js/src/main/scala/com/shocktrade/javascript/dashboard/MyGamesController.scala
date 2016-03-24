@@ -5,12 +5,12 @@ import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySession
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialog
-import com.shocktrade.javascript.models.{Contest, ParticipantRanking, UserProfile}
+import com.shocktrade.javascript.models.{BSONObjectID, Contest, ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSConverters._
@@ -42,7 +42,7 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
     if (!isDefined(contest)) null
     else if (!isDefined(contest.rankings)) {
       (for {
-        userId <- mySession.userProfile.OID_?
+        userId <- mySession.userProfile._id.toOption
         player <- contestService.getPlayerRankings(contest, userId).flatMap(_.player).toOption
       } yield player).orUndefined
     }
@@ -69,9 +69,9 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def reload(): Unit = mySession.userProfile.OID_? foreach loadMyContests
+  private def reload(): Unit = mySession.userProfile._id foreach loadMyContests
 
-  private def loadMyContests(userID: String) {
+  private def loadMyContests(userID: BSONObjectID) {
     console.log(s"Loading 'My Contests' for user '$userID'...")
     contestService.getContestsByPlayerID(userID) onComplete {
       case Success(contests) =>

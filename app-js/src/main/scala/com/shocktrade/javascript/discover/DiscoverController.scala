@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Location, Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript._
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
 import com.shocktrade.javascript.discover.DiscoverController._
@@ -13,7 +13,7 @@ import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.UndefOr
@@ -120,7 +120,7 @@ class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Lo
   def addFavoriteSymbol(aSymbol: UndefOr[String]) = {
     for {
       symbol <- aSymbol.toOption
-      userId <- mySession.userProfile.OID_?
+      userId <- mySession.userProfile._id.toOption
     } yield profileService.addFavoriteSymbol(userId, symbol)
   }
 
@@ -130,7 +130,7 @@ class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Lo
   def removeFavoriteSymbol(aSymbol: UndefOr[String]) = {
     for {
       symbol <- aSymbol.toOption
-      userId <- mySession.userProfile.OID_?
+      userId <- mySession.userProfile._id.toOption
     } yield profileService.removeFavoriteSymbol(userId, symbol)
   }
 
@@ -142,7 +142,7 @@ class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Lo
   def addRecentSymbol(aSymbol: UndefOr[String]) = {
     for {
       symbol <- aSymbol.toOption
-      userId <- mySession.userProfile.OID_?
+      userId <- mySession.userProfile._id.toOption
     } yield profileService.addRecentSymbol(userId, symbol)
   }
 
@@ -152,7 +152,7 @@ class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Lo
   def removeRecentSymbol(aSymbol: UndefOr[String]) = {
     for {
       symbol <- aSymbol.toOption
-      userId <- mySession.userProfile.OID_?
+      userId <- mySession.userProfile._id.toOption
     } yield profileService.removeRecentSymbol(userId, symbol)
   }
 
@@ -331,6 +331,7 @@ object DiscoverController {
 /**
  * Discover Options
  */
+@js.native
 trait DiscoverOptions extends js.Object {
   var range: String = js.native
 }
@@ -351,6 +352,7 @@ object DiscoverOptions {
 /**
  * Discover Route Parameters
  */
+@js.native
 trait DiscoverRouteParams extends js.Object {
   var symbol: UndefOr[String] = js.native
 
@@ -359,6 +361,7 @@ trait DiscoverRouteParams extends js.Object {
 /**
  * Discover Scope
  */
+@js.native
 trait DiscoverScope extends Scope {
   var expanders: js.Array[ModuleExpander] = js.native
   var options: DiscoverOptions = js.native

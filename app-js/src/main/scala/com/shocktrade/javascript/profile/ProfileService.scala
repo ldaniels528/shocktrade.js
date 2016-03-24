@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.profile
 
 import com.github.ldaniels528.scalascript.Service
-import com.shocktrade.javascript.ScalaJsHelper
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper
 import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.Http
-import com.shocktrade.javascript.models.{UserProfile, OnlinePlayerState}
+import com.shocktrade.javascript.models.{BSONObjectID, OnlinePlayerState, UserProfile}
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic._
@@ -33,19 +33,19 @@ class ProfileService($http: Http) extends Service {
   //              Online Status Functions
   //////////////////////////////////////////////////////////////////////
 
-  def getOnlineStatus(userID: String) = {
+  def getOnlineStatus(userID: BSONObjectID) = {
     required("userID", userID)
-    $http.get[OnlinePlayerState](s"/api/online/$userID")
+    $http.get[OnlinePlayerState](s"/api/online/${userID.$oid}")
   }
 
-  def setIsOnline(userID: String) = {
+  def setIsOnline(userID: BSONObjectID) = {
     required("userID", userID)
-    $http.put[js.Dynamic](s"/api/online/$userID")
+    $http.put[js.Dynamic](s"/api/online/${userID.$oid}")
   }
 
-  def setIsOffline(userID: String) = {
+  def setIsOffline(userID: BSONObjectID) = {
     required("userID", userID)
-    $http.delete[js.Dynamic](s"/api/online/$userID")
+    $http.delete[js.Dynamic](s"/api/online/${userID.$oid}")
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -53,47 +53,39 @@ class ProfileService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   @deprecated
-  def getExchanges(userID: String) = {
+  def getExchanges(userID: BSONObjectID) = {
     required("userID", userID)
-    $http.get[js.Dynamic](s"/api/profile/$userID/exchanges")
+    $http.get[js.Dynamic](s"/api/profile/${userID.$oid}/exchanges")
   }
 
   @deprecated
-  def updateExchanges(userID: String, exchanges: js.Array[String]) = {
+  def updateExchanges(userID: BSONObjectID, exchanges: js.Array[String]) = {
     required("userID", userID)
-    $http.post[js.Dynamic]("/api/exchanges", literal(id = userID, exchanges = exchanges))
+    $http.post[js.Dynamic]("/api/exchanges", literal(id = userID.$oid, exchanges = exchanges))
   }
 
   //////////////////////////////////////////////////////////////////////
   //              Favorite Symbols Functions
   //////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(userID: String, symbol: String) = {
-    required("userID", userID)
-    required("symbol", symbol)
-    $http.put[js.Dynamic](s"/api/profile/$userID/favorite/$symbol")
+  def addFavoriteSymbol(userID: BSONObjectID, symbol: String) = {
+    $http.put[js.Dynamic](s"/api/profile/${userID.$oid}/favorite/$symbol")
   }
 
-  def removeFavoriteSymbol(userID: String, symbol: String) = {
-    required("userID", userID)
-    required("symbol", symbol)
-    $http.delete[js.Dynamic](s"/api/profile/$userID/favorite/$symbol")
+  def removeFavoriteSymbol(userID: BSONObjectID, symbol: String) = {
+    $http.delete[js.Dynamic](s"/api/profile/${userID.$oid}/favorite/$symbol")
   }
 
   //////////////////////////////////////////////////////////////////////
   //              Recent Symbols Functions
   //////////////////////////////////////////////////////////////////////
 
-  def addRecentSymbol(userID: String, symbol: String) = {
-    required("userID", userID)
-    required("symbol", symbol)
-    $http.put[js.Dynamic](s"/api/profile/$userID/recent/$symbol")
+  def addRecentSymbol(userID: BSONObjectID, symbol: String) = {
+    $http.put[js.Dynamic](s"/api/profile/${userID.$oid}/recent/$symbol")
   }
 
-  def removeRecentSymbol(userID: String, symbol: String) = {
-    required("userID", userID)
-    required("symbol", symbol)
-    $http.delete[js.Dynamic](s"/api/profile/$userID/recent/$symbol")
+  def removeRecentSymbol(userID: BSONObjectID, symbol: String) = {
+    $http.delete[js.Dynamic](s"/api/profile/${userID.$oid}/recent/$symbol")
   }
 
 }

@@ -1,23 +1,22 @@
 package com.shocktrade.javascript.explore
 
-import com.github.ldaniels528.scalascript.ScalaScriptOps._
 import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{AnchorScroll, Cookies, Toaster}
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
-import com.shocktrade.javascript.ScalaJsHelper._
 import com.shocktrade.javascript.explore.ExploreController._
 import com.shocktrade.javascript.explore.ExploreService.{AggregatedData, SectorInfo, SectorQuote}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
- * Explore Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Explore Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cookies: Cookies,
                         $location: Location, $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
                         @injected("ExploreService") exploreService: ExploreService)
@@ -109,7 +108,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     result match {
       case Some((industry, expanded)) if !expanded =>
         industry.loading = true
-        exploreService.loadSubIndustries(sector.label, industry.label) map(updateIndustry(industry, _))
+        exploreService.loadSubIndustries(sector.label, industry.label) map (updateIndustry(industry, _))
       case _ => Future.successful(None)
     }
   }
@@ -123,7 +122,7 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     result match {
       case Some((subIndustry, expanded)) if !expanded =>
         subIndustry.loading = true
-        exploreService.loadIndustryQuotes(sector.label, industry.label, subIndustry.label) map(updateSubIndustry(subIndustry, _))
+        exploreService.loadIndustryQuotes(sector.label, industry.label, subIndustry.label) map (updateSubIndustry(subIndustry, _))
       case _ => Future.successful(None)
     }
   }
@@ -184,31 +183,34 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 }
 
 /**
- * Explore Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Explore Controller
+  * @author lawrence.daniels@gmail.com
+  */
 object ExploreController {
 
   /**
-   * Explore Scope
-   * @author lawrence.daniels@gmail.com
-   */
+    * Explore Scope
+    * @author lawrence.daniels@gmail.com
+    */
+  @js.native
   trait ExploreScope extends Scope {
     var sectors: js.Array[Sector] = js.native
     var selectedSymbol: String = js.native
   }
 
   /**
-   * Explore Route Params
-   * @author lawrence.daniels@gmail.com
-   */
+    * Explore Route Params
+    * @author lawrence.daniels@gmail.com
+    */
+  @js.native
   trait ExploreRouteParams extends js.Object {
     var symbol: js.UndefOr[String] = js.native
   }
 
   /**
-   * An abstract entity that represents a Sector, Industry or Sub-Industry
-   */
+    * An abstract entity that represents a Sector, Industry or Sub-Industry
+    */
+  @js.native
   trait QuoteContainer extends js.Object {
     var label: String = js.native
     var total: Int = js.native
@@ -217,15 +219,16 @@ object ExploreController {
   }
 
   /**
-   * Sector Definition
-   */
+    * Sector Definition
+    */
+  @js.native
   trait Sector extends QuoteContainer {
     var industries: js.Array[Industry] = js.native
   }
 
   /**
-   * Sector Singleton
-   */
+    * Sector Singleton
+    */
   object Sector {
     def apply(label: String, total: Int) = {
       val sector = makeNew[Sector]
@@ -236,15 +239,16 @@ object ExploreController {
   }
 
   /**
-   * Industry Definition
-   */
+    * Industry Definition
+    */
+  @js.native
   trait Industry extends QuoteContainer {
     var subIndustries: js.Array[SubIndustry] = js.native
   }
 
   /**
-   * Industry Singleton
-   */
+    * Industry Singleton
+    */
   object Industry {
     def apply(label: String, total: Int) = {
       val industry = makeNew[Industry]
@@ -255,15 +259,16 @@ object ExploreController {
   }
 
   /**
-   * Sub-industry Definition
-   */
+    * Sub-industry Definition
+    */
+  @js.native
   trait SubIndustry extends QuoteContainer {
     var quotes: js.Array[SectorQuote] = js.native
   }
 
   /**
-   * Sub-industry Singleton
-   */
+    * Sub-industry Singleton
+    */
   object SubIndustry {
     def apply(label: String, total: Int) = {
       val subIndustry = makeNew[SubIndustry]
@@ -272,4 +277,5 @@ object ExploreController {
       subIndustry
     }
   }
+
 }

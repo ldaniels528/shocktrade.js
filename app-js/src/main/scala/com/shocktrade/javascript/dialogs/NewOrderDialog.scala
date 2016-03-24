@@ -4,16 +4,16 @@ import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Service, angular, injected, scoped}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
-import com.shocktrade.javascript.models.{Contest, OrderQuote}
+import com.shocktrade.javascript.models.{BSONObjectID, Contest, OrderQuote}
 import com.shocktrade.javascript.{AutoCompletionController, MySession}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -35,11 +35,11 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
     $modalInstance.result
   }
 
-  def createOrder(contestId: String, playerId: String, order: NewOrderForm): Future[Contest] = {
+  def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: NewOrderForm): Future[Contest] = {
     required("contestId", contestId)
     required("playerId", playerId)
     required("order", order)
-    $http.put[Contest](s"/api/order/$contestId/$playerId", order)
+    $http.put[Contest](s"/api/order/${contestId.$oid}/${playerId.$oid}", order)
   }
 
   def getQuote(symbol: String): Future[OrderQuote] = {
@@ -124,8 +124,8 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   private def accept(form: NewOrderForm) {
     if (isValid(form)) {
       val outcome = for {
-        playerId <- mySession.userProfile.OID_?
-        contestId <- mySession.contest.flatMap(_.OID_?)
+        playerId <- mySession.userProfile._id.toOption
+        contestId <- mySession.contest.flatMap(_._id.toOption)
       } yield (playerId, contestId)
 
       outcome match {
@@ -167,8 +167,8 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   ///////////////////////////////////////////////////////////////////////////
 
   for {
-    contestId <- mySession.contest.flatMap(_.OID_?)
-    playerId <- mySession.userProfile.OID_?
+    contestId <- mySession.contest.flatMap(_._id.toOption)
+    playerId <- mySession.userProfile._id.toOption
   } {
     // load the player"s perks
     perksDialog.getMyPerkCodes(contestId, playerId) onComplete {

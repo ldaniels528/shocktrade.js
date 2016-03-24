@@ -1,13 +1,15 @@
 package com.shocktrade.javascript.models
 
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 
 /**
- * Order Quote
- */
+  * Order Quote
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait OrderQuote extends js.Object {
   var symbol: UndefOr[String] = js.native
   var name: UndefOr[String] = js.native
@@ -25,8 +27,8 @@ trait OrderQuote extends js.Object {
 }
 
 /**
- * Order Quote Singleton
- */
+  * Order Quote Singleton
+  */
 object OrderQuote {
 
   def apply(symbol: UndefOr[String] = js.undefined,

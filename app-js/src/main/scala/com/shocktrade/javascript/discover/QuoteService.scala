@@ -2,15 +2,15 @@ package com.shocktrade.javascript.discover
 
 import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
-import com.shocktrade.javascript.ScalaJsHelper._
-import com.shocktrade.javascript.models.OrderQuote
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.shocktrade.javascript.models.{BSONObjectID, OrderQuote}
 
 import scala.scalajs.js
 
 /**
- * Quote Services
- * @author lawrence.daniels@gmail.com
- */
+  * Quote Services
+  * @author lawrence.daniels@gmail.com
+  */
 class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
@@ -54,10 +54,12 @@ class QuoteService($http: Http) extends Service {
 }
 
 /**
- * Auto-Completed Quote
- */
+  * Auto-Completed Quote
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait AutoCompletedQuote extends js.Object {
-  var _id: js.Dynamic = js.native
+  var _id: js.UndefOr[BSONObjectID] = js.native
   var symbol: js.UndefOr[String] = js.native
   var name: js.UndefOr[String] = js.native
   var exchange: js.UndefOr[String] = js.native

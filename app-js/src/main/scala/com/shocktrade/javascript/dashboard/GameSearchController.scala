@@ -5,16 +5,16 @@ import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Scope, angular, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialog
 import com.shocktrade.javascript.models.Contest.MaxPlayers
-import com.shocktrade.javascript.models.{Contest, ContestSearchOptions, PlayerInfo, UserProfile}
+import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.{GlobalLoading, MySession}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
@@ -47,7 +47,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   @scoped def getSelectedContest = selectedContest.orNull
 
   @scoped
-  def invitePlayerPopup(contest: Contest, playerID: String) {
+  def invitePlayerPopup(contest: Contest, playerID: BSONObjectID) {
     mySession.findPlayerByID(contest, playerID) match {
       case Some(participant) =>
         invitePlayerDialog.popup(participant)
@@ -135,19 +135,19 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   @scoped
   def selectContest(contest: Contest) = {
     if (isDefined(contest)) {
-      contest.OID_? foreach { contestId =>
+      contest._id foreach { contestId =>
         console.log(s"Selecting contest '${contest.name}' ($contestId)")
         selectedContest = Option(contest)
         splitScreen = true
 
         if (!isDefined(contest.rankings)) {
-          mySession.userProfile.OID_?.foreach(contestService.getPlayerRankings(contest, _))
+          mySession.userProfile._id.foreach(contestService.getPlayerRankings(contest, _))
         }
       }
     }
   }
 
-  private def isContestSelected(contestId: String) = selectedContest.exists(_.OID_?.contains(contestId))
+  private def isContestSelected(contestId: BSONObjectID) = selectedContest.exists(c => BSONObjectID.isEqual(c._id, contestId))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Contest Management Functions
@@ -155,7 +155,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def containsPlayer(contest: Contest, userProfile: UserProfile) = {
-    isDefined(contest) && userProfile.OID_?.exists(mySession.findPlayerByID(contest, _).isDefined)
+    userProfile._id.exists(uid => mySession.findPlayerByID(contest, uid).isDefined)
   }
 
   @scoped
@@ -171,7 +171,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def deleteContest(contest: Contest) = {
-    contest.OID_? foreach { contestId =>
+    contest._id foreach { contestId =>
       contest.deleting = true
       console.log(s"Deleting contest ${contest.name}...")
       asyncLoading($scope)(contestService.deleteContest(contestId)) onComplete {
@@ -197,9 +197,9 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   @scoped
   def joinContest(contest: Contest) = {
     for {
-      contestId <- contest.OID_?
+      contestId <- contest._id.toOption
       facebookID <- mySession.facebookID
-      userId <- mySession.userProfile.OID_?
+      userId <- mySession.userProfile._id.toOption
     } {
       contest.joining = true
       val playerInfo = JS(player = PlayerInfo(id = userId, name = mySession.userProfile.name, facebookID = facebookID))
@@ -222,8 +222,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   @scoped
   def quitContest(contest: Contest) = {
     for {
-      userId <- mySession.userProfile.OID_?
-      contestId <- contest.OID_?
+      userId <- mySession.userProfile._id.toOption
+      contestId <- contest._id.toOption
     } {
       contest.quitting = true
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
@@ -241,7 +241,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def startContest(contest: Contest) = {
-    contest.OID_? foreach { contestId =>
+    contest._id foreach { contestId =>
       contest.starting = true
       asyncLoading($scope)(contestService.startContest(contestId)) onComplete {
         case Success(theContest) =>
@@ -265,7 +265,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
   @scoped
   def getSelectionClass(c: Contest) = {
-    if (selectedContest.exists(_.OID_?.exists(c.OID_?.contains))) "selected"
+    if (selectedContest.exists(r => BSONObjectID.isEqual(r._id, c._id))) "selected"
     else if (c.status == "ACTIVE") ""
     else "null"
   }
@@ -274,10 +274,10 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   //              Broadcast Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  private def indexOfContest(contestId: String) = searchResults.indexWhere(_.OID_?.contains(contestId))
+  private def indexOfContest(contestId: BSONObjectID) = searchResults.indexWhere(r => BSONObjectID.isEqual(r._id, contestId))
 
-  private def updateContestInList(searchResults: js.Array[Contest], contestId: String) {
-    val index = searchResults.indexWhere(_.OID_?.contains(contestId))
+  private def updateContestInList(searchResults: js.Array[Contest], contestId: BSONObjectID) {
+    val index = searchResults.indexWhere(r => BSONObjectID.isEqual(r._id, contestId))
     if (index != -1) {
       asyncLoading($scope)(contestService.getContestByID(contestId)) onComplete {
         case Success(loadedContest) => searchResults(index) = loadedContest
@@ -288,14 +288,14 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     }
   }
 
-  private def removeContestFromList(searchResults: js.Array[_], contestId: String) {
+  private def removeContestFromList(searchResults: js.Array[_], contestId: BSONObjectID) {
     val index = indexOfContest(contestId)
     if (index != -1) {
       console.log(s"Removed contest $contestId from the list...")
       searchResults.splice(index, 1)
     }
 
-    if (selectedContest.exists(_.OID_?.contains(contestId))) selectedContest = None
+    if (selectedContest.exists(c => BSONObjectID.isEqual(c._id, contestId))) selectedContest = None
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -317,7 +317,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   $scope.$on(ContestDeleted, { (event: js.Dynamic, contest: Contest) =>
     console.log(s"Contest '${contest.name}' deleted")
     selectedContest = None
-    searchResults = searchResults.filterNot(_.OID_?.exists(contest.OID_?.contains))
+    searchResults = searchResults.filterNot(c => BSONObjectID.isEqual(c._id, contest._id))
   })
 
   /**
@@ -325,7 +325,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
    */
   $scope.$on(ContestUpdated, { (event: js.Dynamic, contest: Contest) =>
     console.log(s"Contest '${contest.name} updated")
-    contest.OID_? foreach { contestId =>
+    contest._id foreach { contestId =>
       // update the contest in our search results
       updateContestInList(searchResults, contestId)
 
@@ -339,6 +339,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 /**
  * Game Search Controller
  */
+@js.native
 trait GameSearchScope extends Scope {
   var contest: Contest = js.native
   var searchTerm: String = js.native

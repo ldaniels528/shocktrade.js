@@ -3,7 +3,7 @@ package com.shocktrade.javascript
 import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Service, injected}
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket, console}
 
@@ -77,7 +77,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
   }
 
   private def sendState(connected: Boolean) {
-    mySession.userProfile.OID_? match {
+    mySession.userProfile._id.toOption match {
       case Some(userID) =>
         console.log(s"Sending connected status for user $userID ...")
         if (connected) $http.put(s"/api/online/$userID")

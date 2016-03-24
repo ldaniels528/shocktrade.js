@@ -1,7 +1,7 @@
 package com.shocktrade.controllers
 
 import akka.util.Timeout
-import com.ldaniels528.commons.helpers.OptionHelper._
+import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.server.trading.Contests
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.ConcurrentCache

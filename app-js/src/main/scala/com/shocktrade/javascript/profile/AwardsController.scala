@@ -9,8 +9,9 @@ import scala.language.postfixOps
 import scala.scalajs.js
 
 /**
- * Awards Controller
- */
+  * Awards Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class AwardsController($scope: Scope, $http: Http, @injected("MySession") mySession: MySession)
   extends Controller {
 
@@ -31,15 +32,16 @@ class AwardsController($scope: Scope, $http: Http, @injected("MySession") mySess
 }
 
 /**
- * Award with owned information
- */
+  * Award with owned information
+  */
+@js.native
 trait MyAward extends Award {
   var owned: Boolean = js.native
 }
 
 /**
- * Awards Controller Singleton
- */
+  * Awards Controller Singleton
+  */
 object AwardsController {
 
   private val AwardsByCode = js.Dictionary[Award](Award.AvailableAwards map { award => (award.code, award) }: _*)

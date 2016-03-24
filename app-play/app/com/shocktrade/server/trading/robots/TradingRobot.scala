@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 import com.github.ldaniels528.tabular.Tabular
-import com.ldaniels528.commons.helpers.OptionHelper._
-import com.ldaniels528.commons.helpers.StringHelper._
+import com.github.ldaniels528.commons.helpers.OptionHelper._
+import com.github.ldaniels528.commons.helpers.StringHelper._
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.{UserProfile, UserProfiles}

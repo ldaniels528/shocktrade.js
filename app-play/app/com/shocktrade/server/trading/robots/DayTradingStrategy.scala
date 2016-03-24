@@ -1,6 +1,6 @@
 package com.shocktrade.server.trading.robots
 
-import com.ldaniels528.commons.helpers.OptionHelper.Risky._
+import com.github.ldaniels528.commons.helpers.OptionHelper.Risky._
 import com.shocktrade.models.quote.QuoteFilter
 
 /**

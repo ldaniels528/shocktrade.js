@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.social
 
 import com.github.ldaniels528.scalascript.angular
-import com.shocktrade.javascript.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import org.scalajs.dom.console
 import org.scalajs.jquery._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
