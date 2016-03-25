@@ -11,7 +11,7 @@ import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
 import com.shocktrade.dao.{ContestDAO, SecuritiesDAO, UserProfileDAO}
 import com.shocktrade.models.contest.{PlayerRef, _}
-import com.shocktrade.models.quote.{MarketQuote, QuoteSnapshot, SectorQuote}
+import com.shocktrade.models.quote.{MarketQuote, SectorQuote}
 import com.shocktrade.processors.OrderProcessor
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
@@ -216,7 +216,7 @@ class ContestController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
   private def computeMarketValue(positions: Seq[Position]): Future[Double] = {
     val symbols = positions.map(_.symbol).distinct
-    securitiesDAO.findQuotes[MarketQuote](symbols)(MarketQuote.Fields: _*) map { quotes =>
+    securitiesDAO.findProductQuotes(symbols) map { quotes =>
       val mapping = Map(quotes.map(q => (q.symbol, q)): _*)
       (positions flatMap { pos =>
         for {
@@ -371,7 +371,7 @@ class ContestController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
       // load the quotes for all order symbols
       symbols = quantities.map(_._1)
-      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findSnapshotQuotes(symbols)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
@@ -549,7 +549,7 @@ class ContestController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
     for {
     // load the quotes for all order symbols
-      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findSnapshotQuotes(symbols)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)
@@ -573,7 +573,7 @@ class ContestController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
     for {
     // load the quotes for all position symbols
-      quotes <- securitiesDAO.findQuotes[QuoteSnapshot](symbols)(QuoteSnapshot.Fields: _*)
+      quotes <- securitiesDAO.findSnapshotQuotes(symbols)
 
       // build a mapping of symbol to last trade
       quoteMap = Map(quotes map (q => (q.symbol, q)): _*)

@@ -88,7 +88,7 @@ class NewsController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends M
       val tickers = extractTickers(description)
       val symbols = (tickers map (_.symbol)).distinct
 
-      securitiesDAO.findChangeQuotes(symbols) map { quotes =>
+      securitiesDAO.findProductQuotes(symbols) map { quotes =>
         JS("title" -> extract(item, "title"),
           "description" -> description,
           "quotes" -> Json.toJson(quotes),

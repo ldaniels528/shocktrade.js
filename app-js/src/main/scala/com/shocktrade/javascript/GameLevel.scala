@@ -7,10 +7,11 @@ import scala.scalajs.js
 /**
  * Game Level
  */
+@js.native
 trait GameLevel extends js.Object {
-  var number: Int = js.native
-  var nextLevelXP: Int = js.native
-  var description: String = js.native
+  var number: Int
+  var nextLevelXP: Int
+  var description: String
 }
 
 /**

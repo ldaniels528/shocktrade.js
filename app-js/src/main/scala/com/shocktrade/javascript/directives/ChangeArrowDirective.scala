@@ -44,8 +44,8 @@ class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
   */
 @js.native
 trait ChangeArrowDirectiveScope extends Scope {
-  var value: js.UndefOr[Any] = js.native
-  var icon: String = js.native
+  var value: js.UndefOr[Any]
+  var icon: String
 
 }
 

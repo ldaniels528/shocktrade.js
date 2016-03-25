@@ -1,30 +1,30 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.{Service, _}
-import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.core.TimerConversions._
+import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Service, _}
+import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
+import org.scalajs.dom.console
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
 /**
- * New Game Dialog Service
- * @author lawrence.daniels@gmail.com
- */
+  * New Game Dialog Service
+  * @author lawrence.daniels@gmail.com
+  */
 class NewGameDialog($http: Http, $modal: Modal) extends Service {
 
   /**
-   * Sign-up Modal Dialog
-   */
+    * Sign-up Modal Dialog
+    */
   def popup(): Future[NewGameDialogResult] = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewGameDialogResult](ModalOptions(
@@ -35,9 +35,9 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
   }
 
   /**
-   * Creates a new game
-   * @return the promise of the result of creating a new game
-   */
+    * Creates a new game
+    * @return the promise of the result of creating a new game
+    */
   def createNewGame(form: NewGameForm): Future[Contest] = {
     required("form", form)
     $http.put[Contest]("/api/contest", form)
@@ -45,9 +45,9 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
 }
 
 /**
- * New Game Dialog Controller
- * @author lawrence.daniels@gmail.com
- */
+  * New Game Dialog Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
                               $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout, toaster: Toaster,
                               @injected("MySessionService") mySession: MySessionService,
@@ -76,10 +76,9 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  @scoped def cancel() = $modalInstance.dismiss("cancel")
+  $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  @scoped
-  def createGame(form: NewGameForm) = {
+  $scope.createGame = (aForm: js.UndefOr[NewGameForm]) =>  aForm foreach { form =>
     if (isValidForm(form)) {
       mySession.userProfile._id.toOption match {
         case Some(userId) =>
@@ -100,7 +99,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
               $timeout.cancel(promise)
               processing = false
             case Failure(e) =>
-              g.console.error(s"Error creating New Game: ${e.getMessage} => form = ${angular.toJson(form)}")
+              console.error(s"Error creating New Game: ${e.getMessage} => form = ${angular.toJson(form)}")
               $timeout.cancel(promise)
               processing = false
           }
@@ -111,11 +110,11 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
 
   }
 
-  @scoped def enforceInvitationOnly() = $scope.form.friendsOnly = false
+  $scope.enforceInvitationOnly = () => $scope.form.friendsOnly = false
 
-  @scoped def isProcessing = processing
+  $scope.isProcessing = () => processing
 
-  @scoped def getMessages = errors
+  $scope.getMessages = () => errors
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions
@@ -133,9 +132,9 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
 }
 
 /**
- * New Game Dialog Controller Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * New Game Dialog Controller Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object NewGameDialogController {
 
   type NewGameDialogResult = Contest
@@ -150,17 +149,40 @@ object NewGameDialogController {
 }
 
 /**
- * Game Duration
- */
+  * New Game Dialog Scope
+  * @author lawrence.daniels@gmail.com
+  */
 @js.native
-trait GameDuration extends js.Object {
-  var label: String = js.native
-  var value: Int = js.native
+trait NewGameDialogScope extends Scope {
+  // variables
+  var durations: js.Array[GameDuration]
+  var form: NewGameForm
+  var restrictionTypes: js.Array[js.Dynamic]
+  var startingBalances: js.Array[Int]
+
+  // functions
+  var cancel: js.Function0[Unit]
+  var createGame: js.Function1[js.UndefOr[NewGameForm], Unit]
+  var enforceInvitationOnly: js.Function0[Unit]
+  var getMessages : js.Function0[js.Array[String]]
+  var isProcessing: js.Function0[Boolean]
+
 }
 
 /**
- * Game Duration Singleton
- */
+  * Game Duration
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait GameDuration extends js.Object {
+  var label: String
+  var value: Int
+}
+
+/**
+  * Game Duration Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object GameDuration {
 
   def apply(label: String, value: Int) = {
@@ -172,34 +194,25 @@ object GameDuration {
 }
 
 /**
- * New Game Dialog Scope
- */
-@js.native
-trait NewGameDialogScope extends Scope {
-  var durations: js.Array[GameDuration] = js.native
-  var form: NewGameForm = js.native
-  var restrictionTypes: js.Array[js.Dynamic] = js.native
-  var startingBalances: js.Array[Int] = js.native
-}
-
-/**
- * New Game Dialog Form
- */
+  * New Game Dialog Form
+  * @author lawrence.daniels@gmail.com
+  */
 @js.native
 trait NewGameForm extends js.Object {
-  var name: js.UndefOr[String] = js.native
-  var duration: js.UndefOr[GameDuration] = js.native
-  var friendsOnly: js.UndefOr[Boolean] = js.native
-  var perksAllowed: js.UndefOr[Boolean] = js.native
-  var player: PlayerInfo = js.native
-  var robotsAllowed: js.UndefOr[Boolean] = js.native
-  var startAutomatically: js.UndefOr[Boolean] = js.native
-  var startingBalance: js.UndefOr[Int] = js.native
+  var name: js.UndefOr[String]
+  var duration: js.UndefOr[GameDuration]
+  var friendsOnly: js.UndefOr[Boolean]
+  var perksAllowed: js.UndefOr[Boolean]
+  var player: PlayerInfo
+  var robotsAllowed: js.UndefOr[Boolean]
+  var startAutomatically: js.UndefOr[Boolean]
+  var startingBalance: js.UndefOr[Int]
 }
 
 /**
- * New Game Dialog Form Singleton
- */
+  * New Game Dialog Form Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object NewGameForm {
 
   def apply(duration: js.UndefOr[GameDuration] = js.undefined,

@@ -33,7 +33,7 @@
              ng-click="selectPosition(p)">
             <div class="col-md-2 left">
                 <span ng-class="getExchangeClass(p.exchange)">
-                    <span ng-class="selectedPosition.OID() === p.OID() ? 'underlined' : ''">{{ p.symbol }}</span>
+                    <span ng-class="selectedPosition._id.$oid === p._id.$oid ? 'underlined' : ''">{{ p.symbol }}</span>
                 </span>
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">

@@ -13,9 +13,48 @@ import scala.scalajs.js
  */
 class ResearchService($http: Http) extends Service {
 
-  def search(searchOptions: js.Dynamic)(implicit ec: ExecutionContext) = {
-    required("searchOptions", searchOptions)
-    $http.post[js.Array[js.Dynamic]]("/api/research/search", searchOptions)
+  def search(searchOptions: ResearchSearchOptions)(implicit ec: ExecutionContext) = {
+    $http.post[js.Array[ResearchQuote]]("/api/research/search", searchOptions)
   }
 
+}
+
+/**
+  * Research Search Options
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ResearchSearchOptions extends js.Object {
+  var sortBy: js.UndefOr[String]
+  var reverse: js.UndefOr[Boolean]
+  var maxResults: js.UndefOr[Int]
+}
+
+/**
+  * Research Search Options Companion Object
+  * @author lawrence.daniels@gmail.com
+  */
+object ResearchSearchOptions {
+
+  def apply(sortBy: js.UndefOr[String] = js.undefined,
+            reverse: Boolean = false,
+            maxResults: Int) = {
+    val options = makeNew[ResearchSearchOptions]
+    options.sortBy = sortBy
+    options.reverse = reverse
+    options.maxResults = maxResults
+    options
+  }
+
+}
+
+/**
+  * Research Quote
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ResearchQuote extends js.Object {
+  var symbol: js.UndefOr[String]
+  var exchange: js.UndefOr[String]
+  var market: js.UndefOr[String]
 }

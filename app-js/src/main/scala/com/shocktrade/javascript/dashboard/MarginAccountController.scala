@@ -3,21 +3,20 @@ package com.shocktrade.javascript.dashboard
 import com.github.ldaniels528.scalascript.core.HttpPromise._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected}
-import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.shocktrade.javascript.MySessionService
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Date
 import scala.util.{Failure, Success}
 
 /**
- * Margin Account Controller
- * @author lawrence.daniels@gmail.com
- */
-class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: Toaster,
+  * Margin Account Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toaster: Toaster,
                               @injected("ContestService") contestService: ContestService,
                               @injected("MySessionService") mySession: MySessionService) extends Controller {
 
@@ -55,7 +54,7 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.getAsOfDate = () => mySession.marginAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new Date()
+  $scope.getAsOfDate = () => mySession.marginAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new js.Date()
 
   $scope.getBuyingPower = () => cashFunds / initialMargin
 
@@ -105,5 +104,29 @@ class MarginAccountController($scope: js.Dynamic, $timeout: Timeout, toaster: To
     val maintenanceAmount = (investmentCost - marginAccountEquity) * maintenanceMargin
     if (maintenanceAmount > 0) maintenanceAmount else 0.0d
   }
+
+}
+
+/**
+  * Margin Account Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait MarginAccountScope extends Scope {
+  // functions
+  var initMarginAccount: js.Function0[Unit]
+  var getAsOfDate: js.Function0[js.Date]
+  var getBuyingPower: js.Function0[Double]
+  var getCashFunds: js.Function0[Double]
+  var getInterestPaid: js.Function0[Double]
+  var getInterestRate: js.Function0[Double]
+  var getInitialMargin: js.Function0[Double]
+  var getMaintenanceMargin: js.Function0[Double]
+  var getInvestmentCost: js.Function0[Double]
+  var getInvestmentMarketValue: js.Function0[Double]
+  var isAccountInGoodStanding: js.Function0[Boolean]
+  var getMarginAccountEquity: js.Function0[Double]
+  var getMaintenanceMarginAmount: js.Function0[Double]
+  var getMarginCallAmount: js.Function0[Double]
 
 }

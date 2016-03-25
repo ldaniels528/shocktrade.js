@@ -9,11 +9,12 @@ import scala.scalajs.js
  * Represents an Award
  * @author lawrence.daniels@gmail.com
  */
+@js.native
 trait Award extends js.Object {
-  var name: String = js.native
-  var code: String = js.native
-  var icon: String = js.native
-  var description: String = js.native
+  var name: String
+  var code: String
+  var icon: String
+  var description: String
 }
 
 /**

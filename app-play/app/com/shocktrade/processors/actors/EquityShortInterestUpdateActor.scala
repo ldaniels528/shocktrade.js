@@ -8,9 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import akka.actor.{Actor, ActorLogging}
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.ResourceHelper._
-import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.actors.EquityShortInterestUpdateActor.{EquityShortInterest, UpdateEquityShortInterest}
-import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDocument => BS}
@@ -24,7 +23,7 @@ import scala.language.postfixOps
   */
 class EquityShortInterestUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -79,7 +78,7 @@ class EquityShortInterestUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends
   }
 
   private def persistData(esi: EquityShortInterest): Unit = {
-    securitiesDAO.updateQuote(esi.securitySymbol, BS(
+    updateDAO.updateQuote(esi.securitySymbol, BS(
       "name" -> esi.securityName,
       "exchange" -> "OTCBB",
       "volume" -> esi.averageDailyShareVolume,

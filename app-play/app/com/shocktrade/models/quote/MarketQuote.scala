@@ -1,40 +1,25 @@
 package com.shocktrade.models.quote
 
 import play.api.libs.json.Json
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import reactivemongo.bson.Macros
 
 import scala.language.{implicitConversions, postfixOps}
 
 /**
- * Represent a Market Quote
- */
+  * Represent a Market Quote
+  * @author lawrence.daniels@gmail.com
+  */
 case class MarketQuote(symbol: String, name: Option[String], lastTrade: Option[Double], close: Option[Double])
 
 /**
- * Market Quote Singleton
- */
+  * Market Quote Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object MarketQuote {
   val Fields = Seq("name", "symbol", "lastTrade", "close")
 
-  implicit val marketQuoteReads = Json.reads[MarketQuote]
-  implicit val marketQuoteWrites = Json.writes[MarketQuote]
+  implicit val MarketQuoteFormat = Json.format[MarketQuote]
 
-  implicit object MarketQuoteReader extends BSONDocumentReader[MarketQuote] {
-    override def read(doc: BSONDocument) = MarketQuote(
-      doc.getAs[String]("symbol").get,
-      doc.getAs[String]("name"),
-      doc.getAs[Double]("lastTrade"),
-      doc.getAs[Double]("close")
-    )
-  }
-
-  implicit object MarketQuoteWriter extends BSONDocumentWriter[MarketQuote] {
-    override def write(quote: MarketQuote) = BSONDocument(
-      "symbol" -> quote.symbol,
-      "name" -> quote.name,
-      "lastTrade" -> quote.lastTrade,
-      "close" -> quote.close
-    )
-  }
+  implicit val MarketQuoteHandler = Macros.handler[MarketQuote]
 
 }

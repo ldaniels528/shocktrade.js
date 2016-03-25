@@ -4,7 +4,7 @@ import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.actors.YahooKeyStatisticsUpdateActor._
 import com.shocktrade.services.yahoofinance.YFKeyStatisticsService
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -16,7 +16,7 @@ import reactivemongo.bson.{BSONDocument => BS}
   */
 class YahooKeyStatisticsUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   private implicit val ec = context.dispatcher
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -26,7 +26,7 @@ class YahooKeyStatisticsUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends 
 
       counter.set(0)
       var count = 0
-      securitiesDAO.getSymbolsForKeyStatisticsUpdate.collect[Seq]() foreach { docs =>
+      updateDAO.getSymbolsForKeyStatisticsUpdate.collect[Seq]() foreach { docs =>
         docs.flatMap(_.getAs[String]("symbol")) foreach { symbol =>
           count += 1
           self ! RefreshKeyStatics(symbol)
@@ -38,7 +38,7 @@ class YahooKeyStatisticsUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends 
       val ks = YFKeyStatisticsService.getKeyStatisticsSync(symbol)
       import ks._
 
-      securitiesDAO.updateQuote(ks.symbol, BS(
+      updateDAO.updateQuote(ks.symbol, BS(
         "pctHeldByInsiders" -> pctHeldByInsiders,
         "pctHeldByInstitutions" -> pctHeldByInstitutions,
         "dividendYield5YearAvg" -> dividendYield5YearAvg,

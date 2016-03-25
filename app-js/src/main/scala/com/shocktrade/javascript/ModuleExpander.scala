@@ -5,19 +5,22 @@ import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
- * Module Expander
- */
+  * Module Expander
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait ModuleExpander extends js.Object {
-  var title: String = js.native
-  var url: String = js.native
-  var icon: String = js.native
-  var expanded: Boolean = js.native
-  var visible: js.Function = js.native
+  var title: String
+  var url: String
+  var icon: String
+  var expanded: Boolean
+  var visible: js.Function
 }
 
 /**
- * Module Expander Singleton
- */
+  * Module Expander Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object ModuleExpander {
 
   def apply(title: String,

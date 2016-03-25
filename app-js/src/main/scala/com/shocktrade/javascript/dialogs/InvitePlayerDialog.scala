@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
+import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.javascript.models.Participant
@@ -45,26 +45,25 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $modalInstance: Mo
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  @scoped def getFriends = myFriends
+  $scope.getFriends = () => myFriends
 
-  @scoped def getInvitedCount = $scope.invites.count(invitee => isDefined(invitee))
+  $scope.getInvitedCount = () => $scope.invites.count(invitee => isDefined(invitee))
 
-  @scoped def getInvites = $scope.invites
+  $scope.getInvites = () => $scope.invites
 
-  @scoped def ok() = $modalInstance.close(getSelectedFriends)
+  $scope.ok = () => $modalInstance.close(getSelectedFriends)
 
-  @scoped def cancel() = $modalInstance.dismiss("cancel")
+  $scope.cancel = () => $modalInstance.dismiss("cancel")
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
   private def getSelectedFriends = {
-    val selectedFriends = emptyArray[TaggableFriend]
-    for (n <- 0 to $scope.invites.length) {
-      if (isDefined($scope.invites(n))) selectedFriends.push(myFriends(n))
-    }
-    selectedFriends
+    js.Array(
+      $scope.invites.indices flatMap { n =>
+        if (isDefined($scope.invites(n))) Some(myFriends(n)) else None
+      }: _*)
   }
 
 }
@@ -82,7 +81,16 @@ object InvitePlayerDialogController {
   * Invite Player Dialog Scope
   * @author lawrence.daniels@gmail.com
   */
+@js.native
 trait InvitePlayerScope extends Scope {
-  var invites: js.Array[TaggableFriend] = js.native
+  // variables
+  var invites: js.Array[TaggableFriend]
+
+  // functions
+  var cancel: js.Function0[Unit]
+  var getFriends: js.Function0[js.Array[TaggableFriend]]
+  var getInvitedCount: js.Function0[Int]
+  var getInvites: js.Function0[js.Array[TaggableFriend]]
+  var ok: js.Function0[Unit]
 
 }

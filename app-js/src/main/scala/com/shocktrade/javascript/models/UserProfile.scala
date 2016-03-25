@@ -10,23 +10,23 @@ import scala.scalajs.js
  */
 @js.native
 trait UserProfile extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var name: String = js.native
-  var facebookID: js.UndefOr[String] = js.native
-  var email: js.UndefOr[String] = js.native
-  var netWorth: Double = js.native
-  var level: Int = js.native
-  var rep: js.UndefOr[Int] = js.native
-  var admin: js.UndefOr[Boolean] = js.native
-  var totalXP: js.UndefOr[Int] = js.native
-  var nextLevelXP: js.UndefOr[Int] = js.native
-  var awards: js.Array[String] = js.native
-  var favorites: js.Array[String] = js.native
-  var friends: js.Array[String] = js.native
-  var recentSymbols: js.Array[String] = js.native
-  var lastSymbol: String = js.native
-  var country: js.UndefOr[String] = js.native
-  var lastLoginTime: js.UndefOr[js.Date] = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var name: String
+  var facebookID: js.UndefOr[String]
+  var email: js.UndefOr[String]
+  var netWorth: Double
+  var level: Int
+  var rep: js.UndefOr[Int]
+  var admin: js.UndefOr[Boolean]
+  var totalXP: js.UndefOr[Int]
+  var nextLevelXP: js.UndefOr[Int]
+  var awards: js.Array[String]
+  var favorites: js.Array[String]
+  var friends: js.Array[String]
+  var recentSymbols: js.Array[String]
+  var lastSymbol: String
+  var country: js.UndefOr[String]
+  var lastLoginTime: js.UndefOr[js.Date]
 }
 
 /**

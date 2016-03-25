@@ -4,11 +4,10 @@ import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.processors.actors.YahooCsvQuoteUpdateActor._
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.TradingClock
+import com.shocktrade.processors.actors.YahooCsvQuoteUpdateActor._
 import com.shocktrade.services.yahoofinance.YFStockQuoteService
-import com.shocktrade.util.BSONHelper._
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDateTime, BSONDocument => BS}
 
@@ -18,7 +17,7 @@ import reactivemongo.bson.{BSONDateTime, BSONDocument => BS}
   */
 class YahooCsvQuoteUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   private implicit val ec = context.dispatcher
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -29,7 +28,7 @@ class YahooCsvQuoteUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor
 
         counter.set(0)
         var count = 0
-        securitiesDAO.getSymbolsForCsvUpdate.collect[Seq]() foreach { docs =>
+        updateDAO.getSymbolsForCsvUpdate.collect[Seq]() foreach { docs =>
           docs.flatMap(_.getAs[String]("symbol")).sliding(32, 32) foreach { symbols =>
             count += symbols.length
             self ! RefreshQuotes(symbols)
@@ -40,7 +39,7 @@ class YahooCsvQuoteUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor
 
     case RefreshQuotes(symbols) =>
       YFStockQuoteService.getQuotesSync(symbols, Parameters) foreach { q =>
-        securitiesDAO.updateQuote(q.symbol, BS(
+        updateDAO.updateQuote(q.symbol, BS(
           "name" -> q.name,
           "exchange" -> q.exchange,
           "lastTrade" -> q.lastTrade,

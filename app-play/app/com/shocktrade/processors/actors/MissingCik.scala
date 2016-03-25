@@ -1,24 +1,22 @@
 package com.shocktrade.processors.actors
 
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader}
+import play.api.libs.json.Json
+import reactivemongo.bson.Macros
 
 /**
- * Represents a missing CIK information request
- * @author lawrence.daniels@gmail.com
- */
+  * Represents a missing CIK information request
+  * @author lawrence.daniels@gmail.com
+  */
 case class MissingCik(symbol: String, name: String)
 
 /**
- * Missing Cik Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Missing Cik Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object MissingCik {
 
-  implicit object MissingCikReader extends BSONDocumentReader[MissingCik] {
-    def read(doc: BSONDocument) = MissingCik(
-      doc.getAs[String]("symbol").get,
-      doc.getAs[String]("name").get
-    )
-  }
+  implicit val MissingCikFormat = Json.format[MissingCik]
+
+  implicit val MissingCikHandler = Macros.handler[MissingCik]
 
 }

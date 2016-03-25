@@ -7,13 +7,14 @@ import scala.scalajs.js
 /**
  * Represents a Main Tab
  */
+@js.native
 trait MainTab extends js.Object {
-  var name: String = js.native
-  var icon_class: String = js.native
-  var tool_tip: String = js.native
-  var url: String = js.native
-  var contestRequired: Boolean = js.native
-  var authenticationRequired: Boolean = js.native
+  var name: String
+  var icon_class: String
+  var tool_tip: String
+  var url: String
+  var contestRequired: Boolean
+  var authenticationRequired: Boolean
 }
 
 /**

@@ -19,7 +19,7 @@ import scala.scalajs.js.UndefOr
   * Home Controller
   * @author lawrence.daniels@gmail.com
   */
-class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
+class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
                      @injected("ProfileService") profileService: ProfileService)
   extends Controller {
@@ -30,22 +30,22 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  @scoped def initHome() {
+  $scope.initHome = () => {
     $timeout(() => if ($scope.selectedFriend == null) $scope.selectedFriend = mySession.fbFriends.headOption.orNull, 5.seconds)
     ()
   }
 
-  @scoped def getAwards = mySession.userProfile.awards
+  $scope.getAwards = () => mySession.userProfile.awards
 
-  @scoped def getFriends = mySession.fbFriends
+  $scope.getFriends = () => mySession.fbFriends
 
-  @scoped def getNextLevelXP = mySession.userProfile.nextLevelXP
+  $scope.getNextLevelXP = () => mySession.userProfile.nextLevelXP
 
-  @scoped def getStars = (1 to mySession.userProfile.rep.getOrElse(3)).toJSArray
+  $scope.getStars = () => (1 to mySession.userProfile.rep.getOrElse(3)).toJSArray
 
-  @scoped def getTotalXP = mySession.userProfile.totalXP.getOrElse(0)
+  $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
 
-  @scoped def selectFriend(friendMaybe: UndefOr[TaggableFriend]) = {
+  $scope.selectFriend = (friendMaybe: UndefOr[TaggableFriend]) => {
     friendMaybe foreach { friend =>
       console.log(s"selecting friend ${angular.toJson(friend)}")
       $scope.selectedFriend = friend
@@ -62,7 +62,7 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
           case Failure(e) =>
             friend.profile = JS()
             friend.error = e.getMessage
-            g.console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
+            console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
     }*/
       }
     }
@@ -74,6 +74,16 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
   * Home Controller Scope
   */
 @js.native
-trait HomeScope extends Scope {
-  var selectedFriend: TaggableFriend = js.native
+trait HomeControllerScope extends Scope {
+  // variables
+  var selectedFriend: TaggableFriend
+
+  // functions
+  var initHome: js.Function0[Unit]
+  var getAwards: js.Function0[js.Array[String]]
+  var getFriends: js.Function0[js.Array[TaggableFriend]]
+  var getNextLevelXP: js.Function0[js.UndefOr[Int]]
+  var getStars: js.Function0[js.Array[Int]]
+  var getTotalXP: js.Function0[Int]
+  var selectFriend: js.Function1[UndefOr[TaggableFriend], Unit]
 }

@@ -8,7 +8,7 @@
 			<div class="pull-right" style="display: inline">
 				<select 
 					ng-model="selection.feed" 
-					ng-options="source.OID() as source.name for source in newsSources()"
+					ng-options="source._id.$oid as source.name for source in newsSources()"
 					ng-change="getNewsFeed(selection.feed)">
 				</select>
 				<i class="fa fa-th-list st_control"

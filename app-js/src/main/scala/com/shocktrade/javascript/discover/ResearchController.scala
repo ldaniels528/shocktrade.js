@@ -3,34 +3,33 @@ package com.shocktrade.javascript.discover
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, angular, injected}
+import com.github.ldaniels528.scalascript.{Controller, Scope, angular, injected}
 import com.shocktrade.javascript.discover.ResearchController._
 import com.shocktrade.javascript.{GlobalLoading, MainController}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
 import scala.util.{Failure, Success}
 
 /**
   * Research Controller
   * @author lawrence.daniels@gmail.com
   */
-class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                          @injected("ResearchService") researchService: ResearchService)
   extends Controller with GlobalLoading {
 
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()
-  private var filteredResults = emptyArray[js.Dynamic]
-  private var searchResults = emptyArray[js.Dynamic]
+  private var filteredResults = emptyArray[ResearchQuote]
+  private var searchResults = emptyArray[ResearchQuote]
 
   //////////////////////////////////////////////////////////////////////
   //              Public Data
   //////////////////////////////////////////////////////////////////////
 
-  $scope.exchangeSets = js.Dictionary[Boolean](
+  $scope.exchangeSets = js.Dictionary(
     "AMEX" -> true,
     "NASDAQ" -> true,
     "NYSE" -> true,
@@ -39,14 +38,11 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
   )
 
   $scope.maxResultsSet = MaxResultsSet
-
   $scope.priceRanges = PriceRanges
-
   $scope.volumeRanges = VolumeRanges
-
   $scope.percentages = Percentages
-
   $scope.changePercentages = ChangePercentages
+  $scope.searchOptions = ResearchSearchOptions(maxResults = MaxResultsSet(1))
 
   //////////////////////////////////////////////////////////////////////
   //              Public Functions
@@ -56,60 +52,38 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
 
   $scope.getSearchResults = () => searchResults
 
-  $scope.getExchangeCount = (exchange: js.UndefOr[String]) => getExchangeCount(exchange)
+  $scope.getExchangeCount = (aExchange: js.UndefOr[String]) => {
+    (aExchange.map(e => exchangeCounts.getOrElse(e, 0)) getOrElse 0).toDouble
+  }
 
-  $scope.searchOptions = JS(
-    sortBy = null,
-    reverse = false,
-    maxResults = MaxResultsSet(1)
-  )
+  $scope.getExchangeSet = (aExchange: js.UndefOr[String]) => {
+    aExchange.map(e => exchangeSets.getOrElse(e, false)) getOrElse false
+  }
 
-  $scope.getExchangeSet = (exchange: js.UndefOr[String]) => getExchangeSet(exchange)
-
-  $scope.filterExchanges = () => filterExchanges()
-
-  $scope.getSearchResults = () => filteredResults
-
-  $scope.getSearchResultClass = (count: js.UndefOr[Int]) => getSearchResultClass(count)
-
-  $scope.getSearchResultsCount = () => filteredResults.length
-
-  $scope.columnAlign = (column: String) => columnAlign(column)
-
-  $scope.rowClass = (column: String, row: js.Dynamic) => rowClass(column, row)
-
-  $scope.quoteSearch = (searchOptions: js.Dynamic) => quoteSearch(searchOptions)
-
-  //////////////////////////////////////////////////////////////////////
-  //              Private Functions
-  //////////////////////////////////////////////////////////////////////
-
-  private def exchangeSets = $scope.exchangeSets.as[js.Dictionary[Boolean]]
-
-  private def filterExchanges() {
-    syncLoading($scope, $timeout) {
-      filteredResults = searchResults.filter { q =>
-        val exchange = MainController.normalizeExchange(q.exchange.as[String])
-        exchangeSets.getOrElse(exchange, false)
-      }
+  $scope.filterExchanges = () => syncLoading($scope, $timeout) {
+    searchResults filter { q =>
+      val exchange = MainController.normalizeExchange(q.exchange)
+      exchangeSets.getOrElse(exchange, false)
     }
   }
 
-  private def getExchangeSet(exchange: js.UndefOr[String]): Boolean = exchange.map(e => exchangeSets.getOrElse(e, false)) getOrElse false
+  $scope.getSearchResults = () => filteredResults
 
-  private def getExchangeCount(exchange: js.UndefOr[String]): Double = (exchange.map(e => exchangeCounts.getOrElse(e, 0)) getOrElse 0).toDouble
-
-  private def getSearchResultClass(count: js.UndefOr[Int]) = {
-    count.map {
-      case n if n < 250 => "results_small"
-      case n if n < 350 => "results_medium"
-      case _ => "results_large"
-    } getOrElse "results_none"
+  $scope.getSearchResultClass = (aCount: js.UndefOr[Int]) => aCount map { count =>
+    getSearchResultClass(count)
   }
 
-  private def columnAlign(column: String) = if (column == "symbol") "left" else "right"
+  $scope.getSearchResultsCount = () => filteredResults.length
 
-  private def quoteSearch(searchOptions: js.Dynamic) = {
+  $scope.columnAlign = (aColumn: js.UndefOr[String]) => aColumn map { column =>
+    columnAlign(column)
+  }
+
+  $scope.rowClass = (column: js.UndefOr[String], row: js.UndefOr[ResearchQuote]) => {
+    if (column.contains("symbol")) row.flatMap(_.exchange) else column
+  }
+
+  $scope.quoteSearch = (aSearchOptions: js.UndefOr[ResearchSearchOptions]) => aSearchOptions foreach { searchOptions =>
     filteredResults = emptyArray
     searchResults = emptyArray
 
@@ -119,7 +93,7 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
         val exchanges = js.Dictionary[Int]()
         results.foreach { q =>
           // normalize the exchange
-          val exchange = MainController.normalizeExchange(q.exchange.as[String])
+          val exchange = MainController.normalizeExchange(q.exchange)
           q.market = q.exchange
           q.exchange = exchange
 
@@ -141,19 +115,33 @@ class ResearchController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeou
         $cookies.putObject(CookieName, searchOptions)
 
       case Failure(e) =>
-        g.console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
+        console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
         toaster.error("Failed to execute search")
     }
   }
 
-  private def rowClass(column: String, row: js.Dynamic) = if (column == "symbol") row.exchange else column
+  //////////////////////////////////////////////////////////////////////
+  //              Private Functions
+  //////////////////////////////////////////////////////////////////////
+
+  private def exchangeSets = $scope.exchangeSets.as[js.Dictionary[Boolean]]
+
+  private def getSearchResultClass(count: js.UndefOr[Int]) = {
+    count.map {
+      case n if n < 250 => "results_small"
+      case n if n < 350 => "results_medium"
+      case _ => "results_large"
+    } getOrElse "results_none"
+  }
+
+  private def columnAlign(column: String) = if (column == "symbol") "left" else "right"
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
 
   // retrieve the search options cookie
-  $cookies.getObject[js.Dynamic](CookieName) foreach { options =>
+  $cookies.getObject[ResearchSearchOptions](CookieName) foreach { options =>
     if (isDefined(options)) {
       console.log(s"Retrieved search options from cookie '$CookieName': ${angular.toJson(options, pretty = false)}")
       $scope.searchOptions = options
@@ -170,10 +158,39 @@ object ResearchController {
   private val CookieName = "ShockTrade_Research_SearchOptions"
 
   // data collections
-  private val MaxResultsSet = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
-  private val PriceRanges = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
-  private val VolumeRanges = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
-  private val Percentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
-  private val ChangePercentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
+  val MaxResultsSet = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
+  val PriceRanges = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
+  val VolumeRanges = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
+  val Percentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
+  val ChangePercentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
+
+}
+
+/**
+  * Research Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ResearchScope extends Scope {
+  // variables
+  var exchangeSets: js.Dictionary[Boolean]
+  var maxResultsSet: js.Array[Int]
+  var priceRanges: js.Array[Int]
+  var volumeRanges: js.Array[Int]
+  var percentages: js.Array[Int]
+  var changePercentages: js.Array[Int]
+  var searchOptions: ResearchSearchOptions
+
+  // functions
+  var getFilteredResults: js.Function0[js.Array[ResearchQuote]]
+  var getSearchResults: js.Function0[js.Array[ResearchQuote]]
+  var getExchangeCount: js.Function1[js.UndefOr[String], Double]
+  var getExchangeSet: js.Function1[js.UndefOr[String], Boolean]
+  var filterExchanges: js.Function0[js.Array[ResearchQuote]]
+  var getSearchResultClass: js.Function1[js.UndefOr[Int], js.UndefOr[String]]
+  var getSearchResultsCount: js.Function0[Int]
+  var columnAlign: js.Function1[js.UndefOr[String], js.UndefOr[String]]
+  var rowClass: js.Function2[js.UndefOr[String], js.UndefOr[ResearchQuote], js.UndefOr[String]]
+  var quoteSearch: js.Function1[js.UndefOr[ResearchSearchOptions], Unit]
 
 }

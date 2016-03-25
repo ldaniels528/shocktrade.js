@@ -3,39 +3,38 @@ package com.shocktrade.javascript.dashboard
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.BSONObjectID
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
   * Exposure Controller
   * @author lawrence.daniels@gmail.com
   */
-class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
+class ExposureController($scope: ExposureScope, $http: Http, $timeout: Timeout, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
-  private var chartData = emptyArray[js.Dynamic]
+  private var chartData = emptyArray[js.Object]
   private val colors = js.Array("#00ff00", "#88ffff", "#8888ff", "#ff8000", "#88ffaa", "#ff88ff", "#ff8888")
   private val exposures = js.Array(
-    JS(value = "sector", label = "Sector Exposure"),
-    JS(value = "industry", label = "Industry Exposure"),
-    JS(value = "exchange", label = "Exchange Exposure"),
-    JS(value = "market", label = "Exchange Sub-Market Exposure"),
-    JS(value = "securities", label = "Securities Exposure"))
+    Exposure(value = "sector", label = "Sector Exposure"),
+    Exposure(value = "industry", label = "Industry Exposure"),
+    Exposure(value = "exchange", label = "Exchange Exposure"),
+    Exposure(value = "market", label = "Exchange Sub-Market Exposure"),
+    Exposure(value = "securities", label = "Securities Exposure"))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Variables
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.selectedExposure = null
+  $scope.selectedExposure = js.undefined
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -53,22 +52,74 @@ class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toa
     } exposurePieChart(BSONObjectID(cid), BSONObjectID(uid), eid)
   }
 
-  $scope.colorFunction = () => (d: js.Dynamic, i: Double) => colors(i.toInt % colors.length)
+  $scope.colorFunction = () => { (d: Exposure, i: Double) => colors(i.toInt % colors.length) }: js.Function2[Exposure, Double, String]
 
-  $scope.xFunction = () => { (d: js.Dynamic) => d.label }: js.Function1[js.Dynamic, js.Dynamic]
+  $scope.xFunction = () => { (d: Exposure) => d.label }: js.Function1[Exposure, String]
 
-  $scope.yFunction = () => { (d: js.Dynamic) => d.value }: js.Function1[js.Dynamic, js.Dynamic]
+  $scope.yFunction = () => { (d: Exposure) => d.value }: js.Function1[Exposure, String]
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def exposurePieChart(contestID: js.UndefOr[BSONObjectID], userID: js.UndefOr[BSONObjectID], exposure: js.UndefOr[String]) = {
-    contestService.getExposureChartData(contestID, userID, exposure) onComplete {
-      case Success(data) => chartData = data
-      case Failure(e) =>
-        console.error(s"Failed to load exposure data for $exposure")
+  private def exposurePieChart(aContestID: js.UndefOr[BSONObjectID], aUserID: js.UndefOr[BSONObjectID], anExposure: js.UndefOr[String]) = {
+    for {
+      contestID <- aContestID
+      userID <- aUserID
+      exposure <- anExposure
+    } {
+      contestService.getExposureChartData(contestID, userID, exposure) onComplete {
+        case Success(data) => chartData = data
+        case Failure(e) =>
+          console.error(s"Failed to load exposure data for $exposure")
+      }
     }
+  }
+
+}
+
+/**
+  * Exposure Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ExposureScope extends Scope {
+  // variables
+  var selectedExposure: js.UndefOr[String]
+
+  // graph functions
+  var colorFunction: js.Function0[js.Function2[Exposure, Double, String]]
+  var xFunction: js.Function0[js.Function1[Exposure, String]]
+  var yFunction: js.Function0[js.Function1[Exposure, String]]
+
+  // accessors
+  var exposurePieChart: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit]
+  var getChartData: js.Function0[js.Array[js.Object]]
+  var getExposures: js.Function0[js.Array[Exposure]]
+
+}
+
+/**
+  * Exposure Model
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait Exposure extends js.Object {
+  var label: String
+  var value: String
+}
+
+/**
+  * Exposure Model Companion Object
+  * @author lawrence.daniels@gmail.com
+  */
+object Exposure {
+
+  def apply(label: String, value: String) = {
+    val model = makeNew[Exposure]
+    model.label = label
+    model.value = value
+    model
   }
 
 }

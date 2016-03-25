@@ -3,10 +3,11 @@ package com.shocktrade.javascript.models
 import scala.scalajs.js
 
 /**
-  * News Source
+  * Historical Quote Model
   * @author lawrence.daniels@gmail.com
   */
 @js.native
-trait NewsSource extends js.Object {
+trait HistoricalQuote extends js.Object {
   var _id: js.UndefOr[BSONObjectID]
+  var symbol: String
 }

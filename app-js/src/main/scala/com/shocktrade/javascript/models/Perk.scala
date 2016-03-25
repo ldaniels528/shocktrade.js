@@ -10,12 +10,12 @@ import scala.scalajs.js
   */
 @js.native
 trait Perk extends js.Object {
-  var name: String = js.native
-  var code: String = js.native
-  var description: String = js.native
-  var cost: Double = js.native
-  var owned: Boolean = js.native
-  var selected: Boolean = js.native
+  var name: String
+  var code: String
+  var description: String
+  var cost: Double
+  var owned: Boolean
+  var selected: Boolean
 }
 
 /**

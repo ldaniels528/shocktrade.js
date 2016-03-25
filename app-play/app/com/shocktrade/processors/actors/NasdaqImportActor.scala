@@ -3,9 +3,8 @@ package com.shocktrade.processors.actors
 import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.actors.NasdaqImportActor.{NasdaqImport, NasdaqQuote}
-import com.shocktrade.util.BSONHelper._
 import play.api.Play.current
 import play.api.libs.ws.WS
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -20,7 +19,7 @@ import scala.util.{Failure, Success, Try}
   * @author lawrence.daniels@gmail.com
   */
 class NasdaqImportActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
 
   import context.dispatcher
 
@@ -84,7 +83,7 @@ class NasdaqImportActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with A
   }
 
   private def updateQuote(q: NasdaqQuote): Unit = {
-    securitiesDAO.updateQuote(q.symbol, BS(
+    updateDAO.updateQuote(q.symbol, BS(
       "name" -> q.name,
       "lastTrade" -> q.lastSale,
       "marketCap" -> q.marketCap,

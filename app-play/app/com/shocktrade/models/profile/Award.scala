@@ -1,22 +1,28 @@
 package com.shocktrade.models.profile
 
 import com.shocktrade.models.profile.AwardCodes.{AwardCode, _}
+import play.api.libs.json.Json
+import reactivemongo.bson.Macros
 
 /**
- * Represents the collection award
- * @author lawrence.daniels@gmail.com
- */
+  * Represents the collection award
+  * @author lawrence.daniels@gmail.com
+  */
 case class Award(name: String, code: AwardCode, icon: String, description: String)
 
 /**
- * Award Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Award Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object Award {
 
+  implicit val AwardFormat = Json.format[Award]
+
+  implicit val AwardHandler = Macros.handler[Award]
+
   /**
-   * Represents the collection of contest awards
-   */
+    * Represents the collection of contest awards
+    */
   val availableAwards = Seq(
     Award(
       name = "Told your friends!",

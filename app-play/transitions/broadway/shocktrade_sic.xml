@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<story id="ShockTrade_SICS_import">
+
+    <import path="./app-cli/src/test/resources/global_settings.xml" />
+
+    <triggers>
+        <StartUpTrigger id="shocktrade_trigger">
+            <SimpleFlow id="mongo_to_sql_flow" input-source="mongo_input" output-source="sql_output" />
+        </StartUpTrigger>
+    </triggers>
+
+    <data-sources>
+        <MongoInputSource id="mongo_input"
+                          servers="localhost"
+                          database="shocktrade"
+                          collection="SIC"
+                          layout="mongo_layout">
+            <query>{}</query>
+        </MongoInputSource>
+
+        <SQLOutputSource id="sql_output"
+                         table="dbo.sic_codes"
+                         layout="sql_layout"
+                         driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                         url="{{ sqlserver.secret.url }}"
+                         user="{{ sqlserver.secret.user }}" password="{{ sqlserver.secret.password }}" />
+    </data-sources>
+
+    <layouts>
+        <MultiPartLayout id="mongo_layout">
+            <body>
+                <record id="input" format="json">
+                    <field name="sicNumber" type="int" />
+                    <field name="description" type="string" />
+                </record>
+            </body>
+        </MultiPartLayout>
+
+        <MultiPartLayout id="sql_layout">
+            <body>
+                <record id="output" format="none">
+                    <field name="sicNumber" type="int" value="{{ sicsNumber }}"/>
+                    <field name="description" type="string" value="{{ description }}"/>
+                </record>
+            </body>
+        </MultiPartLayout>
+    </layouts>
+</story>

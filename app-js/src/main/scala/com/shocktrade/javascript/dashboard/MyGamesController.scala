@@ -2,26 +2,22 @@ package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Scope, injected, scoped}
+import com.github.ldaniels528.scalascript.injected
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySessionService
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialog
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, ParticipantRanking, UserProfile}
-import org.scalajs.dom.console
+import org.scalajs.dom.{Event, console}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
-import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
- * My Games Controller
- * @author lawrence.daniels@gmail.com
- */
-class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, toaster: Toaster,
+  * My Games Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
                         @injected("MySessionService") mySession: MySessionService,
                         @injected("NewGameDialog") newGameDialog: NewGameDialog)
@@ -33,24 +29,20 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   //          Scope Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def initMyGames() = reload()
+  $scope.initMyGames = () => reload()
 
-  @scoped def getMyContests = myContests
+  $scope.getMyContests = () => myContests
 
-  @scoped
-  def getMyRankings(contest: Contest): UndefOr[ParticipantRanking] = {
-    if (!isDefined(contest)) null
-    else if (!isDefined(contest.rankings)) {
-      (for {
-        userId <- mySession.userProfile._id.toOption
-        player <- contestService.getPlayerRankings(contest, userId).flatMap(_.player).toOption
-      } yield player).orUndefined
+  $scope.getMyRankings = (aContest: js.UndefOr[Contest]) => aContest flatMap { contest =>
+    contest.rankings.map(_.player) getOrElse {
+      for {
+        userId <- mySession.userProfile._id
+        player <- contestService.getPlayerRankings(contest, userId).flatMap(_.player)
+      } yield player
     }
-    else contest.rankings.flatMap(_.player)
   }
 
-  @scoped
-  def popupNewGameDialog() {
+  $scope.popupNewGameDialog = () => {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
         if (contest.error.nonEmpty) toaster.error(contest.error)
@@ -61,7 +53,7 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
 
       case Failure(e) =>
         toaster.error("Failed to create game")
-        g.console.error(s"Failed to create game ${e.getMessage}")
+        console.error(s"Failed to create game ${e.getMessage}")
     }
   }
 
@@ -72,14 +64,14 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   private def reload(): Unit = mySession.userProfile._id foreach loadMyContests
 
   private def loadMyContests(userID: BSONObjectID) {
-    console.log(s"Loading 'My Contests' for user '$userID'...")
+    console.log(s"Loading 'My Contests' for user '${userID.$oid}'...")
     contestService.getContestsByPlayerID(userID) onComplete {
       case Success(contests) =>
         console.log(s"Loaded ${contests.length} contest(s)")
         myContests = contests
       case Failure(e) =>
         toaster.error("Failed to load 'My Contests'")
-        g.console.error(s"Failed to load 'My Contests': ${e.getMessage}")
+        console.error(s"Failed to load 'My Contests': ${e.getMessage}")
     }
   }
 
@@ -88,18 +80,33 @@ class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, t
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-   * Listen for contest creation events
-   */
-  $scope.$on(ContestCreated, (event: js.Dynamic, contest: Contest) => reload())
+    * Listen for contest creation events
+    */
+  $scope.$on(ContestCreated, (event: Event, contest: Contest) => reload())
 
   /**
-   * Listen for contest deletion events
-   */
-  $scope.$on(ContestDeleted, (event: js.Dynamic, contest: Contest) => reload())
+    * Listen for contest deletion events
+    */
+  $scope.$on(ContestDeleted, (event: Event, contest: Contest) => reload())
 
   /**
-   * Listen for user profile changes
-   */
-  $scope.$on(UserProfileChanged, (event: js.Dynamic, profile: UserProfile) => reload())
+    * Listen for user profile changes
+    */
+  $scope.$on(UserProfileChanged, (event: Event, profile: UserProfile) => reload())
+
+}
+
+/**
+  * My Games Controller Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait MyGamesScope extends GameScope {
+
+  // functions
+  var initMyGames: js.Function0[Unit]
+  var getMyContests: js.Function0[js.Array[Contest]]
+  var getMyRankings: js.Function1[js.UndefOr[Contest], js.UndefOr[ParticipantRanking]]
+  var popupNewGameDialog: js.Function0[Unit]
 
 }

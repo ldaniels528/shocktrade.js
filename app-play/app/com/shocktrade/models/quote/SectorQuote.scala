@@ -4,13 +4,14 @@ import play.api.libs.json._
 import reactivemongo.bson.Macros
 
 /**
- * Sector Quote
- * @param symbol the given stock symbol/ticker
- * @param market the market or exchange
- * @param sector the sector for which the security is classified
- * @param industry the industry for which the security is classified
- * @param lastTrade the last sale
- */
+  * Sector Quote
+  * @param symbol    the given stock symbol/ticker
+  * @param market    the market or exchange
+  * @param sector    the sector for which the security is classified
+  * @param industry  the industry for which the security is classified
+  * @param lastTrade the last sale
+  * @author lawrence.daniels@gmail.com
+  */
 case class SectorQuote(symbol: String,
                        market: Option[String],
                        sector: Option[String],
@@ -32,13 +33,14 @@ case class SectorQuote(symbol: String,
 }
 
 /**
- * Sector Quote
- */
+  * Sector Quote Companion Object
+  * @author lawrence.daniels@gmail.com
+  */
 object SectorQuote {
   val Fields = Seq("symbol", "exchange", "lastTrade", "industry", "sector", "subIndustry")
 
-  implicit val sectorQuoteReads = Json.reads[SectorQuote]
-  implicit val sectorQuoteWrites = Json.writes[SectorQuote]
-  implicit val sectorQuoteReader = Macros.handler[SectorQuote]
+  implicit val SectorQuoteFormat = Json.format[SectorQuote]
+
+  implicit val SectorQuoteHandler = Macros.handler[SectorQuote]
 
 }

@@ -1,32 +1,22 @@
 package com.shocktrade.models.quote
 
 import play.api.libs.json._
-import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import reactivemongo.bson.Macros
 
 /**
- * Represents a SIC Code
- */
+  * Represents a SIC Code
+  * @author lawrence.daniels@gmail.com
+  */
 case class SicCode(sicNumber: Int, description: String)
 
 /**
- * SIC Code Singleton
- */
+  * SIC Code Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object SicCode {
-  implicit val sicCodeReads = Json.reads[SicCode]
-  implicit val sicCodeWrites = Json.writes[SicCode]
 
-  implicit object SicCodeReader extends BSONDocumentReader[SicCode] {
-    override def read(doc: BSONDocument) = SicCode(
-      doc.getAs[Int]("sicNumber").getOrElse(-1),
-      doc.getAs[String]("description").orNull
-    )
-  }
+  implicit val SicCodeFormat = Json.format[SicCode]
 
-  implicit object SicCodeWriter extends BSONDocumentWriter[SicCode] {
-    override def write(quote: SicCode) = BSONDocument(
-      "sicNumber" -> quote.sicNumber,
-      "description" -> quote.description
-    )
-  }
+  implicit val SicCodeHandler = Macros.handler[SicCode]
 
 }

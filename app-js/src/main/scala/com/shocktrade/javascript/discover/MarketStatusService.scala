@@ -28,10 +28,10 @@ class MarketStatusService($http: Http) extends Service {
  */
 @js.native
 trait MarketStatus extends js.Object {
-  var stateChanged: Boolean = js.native
-  var active: Boolean = js.native
-  var sysTime: Double = js.native
-  var delay: Double = js.native
-  var start: Double = js.native
-  var end: Double = js.native
+  var stateChanged: Boolean
+  var active: Boolean
+  var sysTime: Double
+  var delay: Double
+  var start: Double
+  var end: Double
 }

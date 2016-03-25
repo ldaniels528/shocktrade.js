@@ -9,13 +9,13 @@ import scala.scalajs.js
  */
 @js.native
 trait ContestSearchOptions extends js.Object {
-  var activeOnly: Boolean = js.native
-  var available: Boolean = js.native
-  var friendsOnly: Boolean = js.native
-  var levelCap: String = js.native
-  var levelCapAllowed: Boolean = js.native
-  var perksAllowed: Boolean = js.native
-  var robotsAllowed: Boolean = js.native
+  var activeOnly: Boolean
+  var available: Boolean
+  var friendsOnly: Boolean
+  var levelCap: String
+  var levelCapAllowed: Boolean
+  var perksAllowed: Boolean
+  var robotsAllowed: Boolean
 }
 
 /**

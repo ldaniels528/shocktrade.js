@@ -54,14 +54,13 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
   }
 
   def getExchangeCounts = Action.async {
-    securitiesDAO.getExchangeCounts map (_ map (Json.toJson(_))) map (js => Ok(JsArray(js)))
+    securitiesDAO.findExchangeSummaries map (_ map (Json.toJson(_))) map (js => Ok(JsArray(js)))
   }
 
   def getCachedQuote(symbol: String) = Action {
     getQuoteFromService(symbol) match {
       case Some(jsQuote) => Ok(jsQuote)
-      case None =>
-        NotFound(s"No quote found for ticker $symbol")
+      case None => NotFound(s"No quote found for ticker $symbol")
     }
   }
 
@@ -80,7 +79,7 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
     val results = for {
       js <- request.body.asJson
       symbols <- js.asOpt[Array[String]]
-    } yield securitiesDAO.getPricing(symbols)
+    } yield securitiesDAO.findSnapshotQuotes(symbols)
 
     results match {
       case Some(futureQuotes) =>
@@ -93,51 +92,68 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
   def getQuote(symbol: String) = Action.async {
     val results = for {
       quote_? <- securitiesDAO.findFullQuote(symbol)
-      quoteBs = quote_?.getOrElse(BS())
-      productsJs <- getEnrichedProducts(quoteBs)
-      naicsMap <- securitiesDAO.findNaicsCodes
-      sicMap <- securitiesDAO.findSicCodes
-      enhanced = quote_? map { quote =>
-        // start building the enriched JSON quote
+      advisory_? = getAdvisoryTuple(quote_?)
+      naicsCode_? <- getNaicsCode(quote_?)
+      products <- getProducts(quote_?)
+      sicCode_? <- getSicCode(quote_?)
+      enrichedQuote_? = quote_? map { quote =>
+        val beta = quote.getAs[Double]("beta")
         val quoteJs = Json.toJson(quote).asInstanceOf[JsObject]
 
-        // lookup the OTC advisory
-        val advisoryTuple = for {
-          symbol <- quote.getAs[String]("symbol")
-          exchange <- quote.getAs[String]("exchange")
-          (advisory, advisoryType) <- getAdvisory(symbol, exchange)
-        } yield (advisory, advisoryType)
-
-        // lookup the SIC and NAICS code
-        val beta = quote.getAs[Double]("beta")
-        val betaDescription = getBetaDescription(beta)
-        val naicsNumber = quote.getAs[Int]("naicsNumber")
-        val naicsDescription = naicsNumber flatMap naicsMap.get
-        val sicNumber = quote.getAs[Int]("sicNumber")
-        val sicDescription = sicNumber flatMap sicMap.get
-        val riskLevel = beta.map {
-          case b if b >= 0 && b <= 1.25 => "Low"
-          case b if b > 1.25 && b <= 1.9 => "Medium"
-          case _ => "High"
-        } getOrElse "Unknown"
-
         // add the values to the JSON object
-        JS("betaDescription" -> betaDescription,
-          "sicDescription" -> sicDescription,
-          "naicsDescription" -> naicsDescription,
-          "betaDescription" -> betaDescription,
-          "riskLevel" -> riskLevel,
-          "advisory" -> (advisoryTuple map (_._1)),
-          "advisoryType" -> (advisoryTuple map (_._2))) ++
-          quoteJs ++
-          (if (productsJs.nonEmpty) JS("products" -> JsArray(productsJs)) else JS())
+        quoteJs ++ JS(
+          "advisory" -> advisory_?.map(_._1),
+          "advisoryType" -> advisory_?.map(_._2),
+          "betaDescription" -> getBetaDescription(beta),
+          "naicsDescription" -> naicsCode_?.map(_.description),
+          "products" -> JsArray(products),
+          "riskLevel" -> getRiskLevel(beta),
+          "sicDescription" -> sicCode_?.map(_.description))
       }
-    } yield enhanced
+    } yield enrichedQuote_?
 
     results map {
-      case Some(quote) => Ok(Json.toJson(quote))
+      case Some(quote) => Ok(quote)
       case None => Ok(JS())
     }
+  }
+
+  private def getAdvisoryTuple(quote_? : Option[BS]) = {
+    for {
+      quote <- quote_?
+      symbol <- quote.getAs[String]("symbol")
+      exchange <- quote.getAs[String]("exchange")
+      (advisory, advisoryType) <- getAdvisory(symbol, exchange)
+    } yield (advisory, advisoryType)
+  }
+
+  private def getProducts(quote_? : Option[BS]) = {
+    quote_? match {
+      case Some(quote) => getEnrichedProducts(quote)
+      case None => Future.successful(Nil)
+    }
+  }
+
+  private def getNaicsCode(quote_? : Option[BS]) = {
+    quote_? flatMap (_.getAs[Int]("naicsNumber")) match {
+      case Some(naicsNumber) => securitiesDAO.findNaicsCodeByNumber(naicsNumber)
+      case None => Future.successful(None)
+    }
+  }
+
+  private def getSicCode(quote_? : Option[BS]) = {
+    quote_? flatMap (_.getAs[Int]("sicNumber")) match {
+      case Some(sicNumber) => securitiesDAO.findSicCodeByNumber(sicNumber)
+      case None => Future.successful(None)
+    }
+  }
+
+  private def getRiskLevel(beta_? : Option[Double]) = {
+    beta_? map {
+      case b if b >= 0 && b <= 1.25 => "Low"
+      case b if b > 1.25 && b <= 1.9 => "Medium"
+      case _ => "High"
+    } getOrElse "Unknown"
   }
 
   private def getEnrichedProducts(baseQuote: BS): Future[Seq[JsObject]] = {
@@ -152,7 +168,7 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
           val symbols = pm.map(_._1)
           for {
           // retrieve the product quotes
-            productsQuotes <- securitiesDAO.findQuotes[ProductQuote](symbols)(ProductQuote.Fields: _*)
+            productsQuotes <- securitiesDAO.findProductQuotes(symbols)
 
             // get the product quote mapping
             pqm = Map(productsQuotes map { pq => (pq.symbol, pq) }: _*)
@@ -170,13 +186,16 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
   }
 
   def getQuotes = Action.async { implicit request =>
+    val fields = Seq("name", "symbol", "exchange", "open", "close", "lastTrade", "tradeDateTime",
+      "high", "low", "high52Week", "low52Week", "spread", "changePct", "volume", "active")
+
     // attempt to retrieve the symbols from the request
     val result = request.body.asJson map (_.as[Seq[String]])
 
     // return the promise of the quotes
     result match {
       case Some(symbols) if symbols.nonEmpty =>
-        securitiesDAO.findQuotes[BasicQuote](symbols)(BasicQuote.Fields: _*).map(quotes => Ok(Json.toJson(quotes)))
+        securitiesDAO.findBasicQuotes(symbols).map(quotes => Ok(Json.toJson(quotes)))
       case _ =>
         Future.successful(Ok(JsArray()))
     }
@@ -187,10 +206,6 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
       case Some(quote) => Ok(Json.toJson(quote))
       case None => Ok(JS())
     }
-  }
-
-  def getRiskLevel(symbol: String) = Action.async {
-    securitiesDAO.getRiskLevel(symbol) map (r => Ok(r))
   }
 
   /**

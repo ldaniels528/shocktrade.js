@@ -3,9 +3,7 @@ package com.shocktrade.javascript.explore
 import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{AnchorScroll, Cookies, Toaster}
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
-import com.shocktrade.javascript.explore.ExploreController._
-import com.shocktrade.javascript.explore.ExploreService.{AggregatedData, SectorInfo, SectorQuote}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
@@ -24,25 +22,21 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 
   // initialize scope variables
   $scope.sectors = emptyArray[Sector]
-  $scope.selectedSymbol = $routeParams.symbol getOrElse $cookies.getOrElse("symbol", "AAPL")
+  $scope.selectedSymbol = if ($routeParams.symbol.nonEmpty) $routeParams.symbol else $cookies.getOrElse("symbol", "AAPL")
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped
-  def expandSectorForSymbol(aSymbol: js.UndefOr[String]) = aSymbol foreach expandSymbolsSector
+  $scope.expandSectorForSymbol = (aSymbol: js.UndefOr[String]) => aSymbol foreach expandSymbolsSector
 
-  @scoped
-  def expandOrCollapseSector(aSector: js.UndefOr[Sector]) = aSector foreach toggleSector
+  $scope.expandOrCollapseSector = (aSector: js.UndefOr[Sector]) => aSector foreach toggleSector
 
-  @scoped
-  def expandOrCollapseIndustry(aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry]) {
+  $scope.expandOrCollapseIndustry = (aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry]) => {
     for {sector <- aSector.toOption; industry <- aIndustry.toOption} toggleIndustry(sector, industry)
   }
 
-  @scoped
-  def expandOrCollapseSubIndustry(aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry], aSubIndustry: js.UndefOr[SubIndustry]) {
+  $scope.expandOrCollapseSubIndustry = (aSector: js.UndefOr[Sector], aIndustry: js.UndefOr[Industry], aSubIndustry: js.UndefOr[SubIndustry]) => {
     for {
       sector <- aSector.toOption
       industry <- aIndustry.toOption
@@ -50,13 +44,12 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     } toggleSubIndustry(sector, industry, subIndustry)
   }
 
-  @scoped
-  def refreshTree() {
+  $scope.refreshTree = () => {
     exploreService.loadSectors() onComplete {
       case Success(data) =>
         $scope.sectors = data.map { v => Sector(label = v._id, total = v.total) }
         console.log(s"Loaded ${data.length} sectors")
-        $timeout(() => expandSymbolsSector($scope.selectedSymbol), 500)
+        $scope.selectedSymbol foreach { symbol => $timeout(() => expandSymbolsSector(symbol), 500) }
       case Failure(e) =>
         toaster.error("Failed to refresh sector information")
     }
@@ -68,7 +61,8 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 
   private def expandSymbolsSector(symbol: String) {
     console.log(s"Attempting to expand sectors for symbol $symbol...")
-    for {
+    val startTime = System.currentTimeMillis()
+    val results = for {
       info <- exploreService.loadSectorInfo(symbol)
 
       _ = console.log(s"Expanding sector ${info.sector}...")
@@ -79,9 +73,16 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 
       _ = console.log(s"Expanding sub-industry ${info.subIndustry}...")
       subIndustry <- expandSubIndustry(info, sector.get, industry.get) if industry.isDefined
-    } {
-      $location.hash(symbol)
-      $anchorScroll(symbol)
+    } yield (info, sector, industry, subIndustry)
+
+    results onComplete {
+      case Success((info, sector, industry, subIndustry)) =>
+        console.log(s"Finished expanding sectors in ${System.currentTimeMillis() - startTime} msecs")
+        $location.hash(symbol)
+        $anchorScroll(symbol)
+      case Failure(e) =>
+        toaster.error(e.getMessage)
+        console.error(e.getMessage)
     }
   }
 
@@ -183,99 +184,99 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 }
 
 /**
-  * Explore Controller
+  * Explore Scope
   * @author lawrence.daniels@gmail.com
   */
-object ExploreController {
+@js.native
+trait ExploreScope extends Scope {
+  // variables
+  var sectors: js.Array[Sector]
+  var selectedSymbol: js.UndefOr[String]
 
-  /**
-    * Explore Scope
-    * @author lawrence.daniels@gmail.com
-    */
-  @js.native
-  trait ExploreScope extends Scope {
-    var sectors: js.Array[Sector] = js.native
-    var selectedSymbol: String = js.native
+  // functions
+  var expandSectorForSymbol: js.Function1[js.UndefOr[String], Unit]
+  var expandOrCollapseSector: js.Function1[js.UndefOr[Sector], Unit]
+  var expandOrCollapseIndustry: js.Function2[js.UndefOr[Sector], js.UndefOr[Industry], Unit]
+  var expandOrCollapseSubIndustry: js.Function3[js.UndefOr[Sector], js.UndefOr[Industry], js.UndefOr[SubIndustry], Unit]
+  var refreshTree: js.Function0[Unit]
+}
+
+/**
+  * Explore Route Params
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ExploreRouteParams extends js.Object {
+  var symbol: js.UndefOr[String]
+}
+
+/**
+  * An abstract entity that represents a Sector, Industry or Sub-Industry
+  */
+@js.native
+trait QuoteContainer extends js.Object {
+  var label: String
+  var total: Int
+  var expanded: js.UndefOr[Boolean]
+  var loading: js.UndefOr[Boolean]
+}
+
+/**
+  * Sector Definition
+  */
+@js.native
+trait Sector extends QuoteContainer {
+  var industries: js.Array[Industry]
+}
+
+/**
+  * Sector Singleton
+  */
+object Sector {
+  def apply(label: String, total: Int) = {
+    val sector = makeNew[Sector]
+    sector.label = label
+    sector.total = total
+    sector
   }
+}
 
-  /**
-    * Explore Route Params
-    * @author lawrence.daniels@gmail.com
-    */
-  @js.native
-  trait ExploreRouteParams extends js.Object {
-    var symbol: js.UndefOr[String] = js.native
+/**
+  * Industry Definition
+  */
+@js.native
+trait Industry extends QuoteContainer {
+  var subIndustries: js.Array[SubIndustry]
+}
+
+/**
+  * Industry Singleton
+  */
+object Industry {
+  def apply(label: String, total: Int) = {
+    val industry = makeNew[Industry]
+    industry.label = label
+    industry.total = total
+    industry
   }
+}
 
-  /**
-    * An abstract entity that represents a Sector, Industry or Sub-Industry
-    */
-  @js.native
-  trait QuoteContainer extends js.Object {
-    var label: String = js.native
-    var total: Int = js.native
-    var expanded: js.UndefOr[Boolean] = js.native
-    var loading: js.UndefOr[Boolean] = js.native
+/**
+  * Sub-industry Definition
+  */
+@js.native
+trait SubIndustry extends QuoteContainer {
+  var quotes: js.Array[SectorQuote]
+}
+
+/**
+  * Sub-industry Singleton
+  */
+object SubIndustry {
+  def apply(label: String, total: Int) = {
+    val subIndustry = makeNew[SubIndustry]
+    subIndustry.label = label
+    subIndustry.total = total
+    subIndustry
   }
-
-  /**
-    * Sector Definition
-    */
-  @js.native
-  trait Sector extends QuoteContainer {
-    var industries: js.Array[Industry] = js.native
-  }
-
-  /**
-    * Sector Singleton
-    */
-  object Sector {
-    def apply(label: String, total: Int) = {
-      val sector = makeNew[Sector]
-      sector.label = label
-      sector.total = total
-      sector
-    }
-  }
-
-  /**
-    * Industry Definition
-    */
-  @js.native
-  trait Industry extends QuoteContainer {
-    var subIndustries: js.Array[SubIndustry] = js.native
-  }
-
-  /**
-    * Industry Singleton
-    */
-  object Industry {
-    def apply(label: String, total: Int) = {
-      val industry = makeNew[Industry]
-      industry.label = label
-      industry.total = total
-      industry
-    }
-  }
-
-  /**
-    * Sub-industry Definition
-    */
-  @js.native
-  trait SubIndustry extends QuoteContainer {
-    var quotes: js.Array[SectorQuote] = js.native
-  }
-
-  /**
-    * Sub-industry Singleton
-    */
-  object SubIndustry {
-    def apply(label: String, total: Int) = {
-      val subIndustry = makeNew[SubIndustry]
-      subIndustry.label = label
-      subIndustry.total = total
-      subIndustry
-    }
-  }
-
 }

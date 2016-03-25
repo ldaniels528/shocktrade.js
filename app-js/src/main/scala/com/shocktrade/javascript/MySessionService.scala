@@ -177,7 +177,7 @@ class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def getFundsAvailable = cashAccount_?.map(_.cashFunds) getOrElse 0.00d
 
   def deductFundsAvailable(amount: Double) = {
-    participant.foreach { player =>
+    participant foreach { player =>
       console.log(s"Deducting funds: $amount from ${player.cashAccount.cashFunds}")
       player.cashAccount.cashFunds -= amount
       // TODO rethink this
@@ -189,19 +189,19 @@ class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
 
   def setMessages(messages: js.Array[Message]) = contest.foreach(_.messages = messages)
 
-  def getMyAwards = userProfile.awards.asArray[String]
+  def getMyAwards = userProfile.awards
 
-  def getOrders = participant.flatMap(p => Option(p.orders).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getOrders = participant.map(_.orders) getOrElse emptyArray
 
-  def getClosedOrders = participant.flatMap(p => Option(p.closedOrders.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getClosedOrders = participant.map(_.closedOrders) getOrElse emptyArray
 
-  def getPerformance = participant.flatMap(p => Option(p.performance).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getPerformance = participant.map(_.performance) getOrElse emptyArray
 
-  def getPerks = participant.flatMap(p => Option(p.perks).map(_.asArray[String])) getOrElse emptyArray[String]
+  def getPerks = participant.map(_.perks) getOrElse emptyArray
 
   def hasPerk(perkCode: String) = getPerks.contains(perkCode)
 
-  def getPositions = participant.flatMap(p => Option(p.positions).map(_.asArray[js.Dynamic])) getOrElse emptyArray[js.Dynamic]
+  def getPositions = participant.map(_.positions) getOrElse emptyArray
 
   def resetContest() = contest = None
 

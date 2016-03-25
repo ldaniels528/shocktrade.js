@@ -183,6 +183,7 @@ object ShockTradeJsMain extends js.JSApp {
 
   private def getFacebookAppID(hostname: String) = hostname match {
     case "localhost" => "522523074535098" // local dev
+    case "shocktrade.southeastasia.cloudapp.azure.com" => "364507947024983"
     case "www.shocktrade.biz" => "616941558381179"
     case "shocktrade.biz" => "616941558381179"
     case "www.shocktrade.com" => "364507947024983"

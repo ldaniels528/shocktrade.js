@@ -30,7 +30,9 @@ class SignUpDialog($http: Http, $modal: Modal) extends Service {
     modalInstance.result
   }
 
-  def createAccount(form: SignUpForm)(implicit ec: ExecutionContext) = $http.post[UserProfile]("/api/profile/create", form)
+  def createAccount(form: SignUpForm)(implicit ec: ExecutionContext) = {
+    $http.post[UserProfile]("/api/profile/create", form)
+  }
 
 }
 
@@ -53,15 +55,30 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
   //    Public Functions
   ///////////////////////////////////////////////////////////////////////
 
-  @scoped def cancel() = $modalInstance.dismiss("cancel")
+  $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  @scoped def createAccount(form: SignUpForm) = registerUser(form)
+  $scope.createAccount = (aForm: js.UndefOr[SignUpForm]) => aForm foreach { form =>
+    if (isValid(form)) {
+      startLoading()
+      dialog.createAccount(form) onComplete {
+        case Success(profile) =>
+          stopLoading()
+          if (!isDefined(profile.dynamic.error)) $modalInstance.close((profile, form.fbProfile))
+          else {
+            messages.push(profile.dynamic.error.as[String])
+          }
 
-  @scoped def getMessages = messages
+        case Failure(e) =>
+          stopLoading()
+          toaster.error(e.getMessage)
+          console.log(s"Error registering user: ${e.getMessage}")
+      }
+    }
+  }
 
-  @scoped def isLoading = loading
+  $scope.isLoading = () => loading
 
-  @scoped def loadFacebookProfile() {
+  $scope.loadFacebookProfile = () => {
     facebook.getUserProfile onComplete {
       case Success(fbProfile) =>
         console.log(s"facebook.profile = ${angular.toJson(fbProfile)}")
@@ -74,6 +91,8 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
         e.printStackTrace()
     }
   }
+
+  $scope.getMessages = () => messages
 
   ///////////////////////////////////////////////////////////////////////
   //    Private Functions
@@ -106,25 +125,6 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
     messages.isEmpty
   }
 
-  private def registerUser(form: SignUpForm) {
-    if (isValid(form)) {
-      startLoading()
-      dialog.createAccount(form) onComplete {
-        case Success(profile) =>
-          stopLoading()
-          if (!isDefined(profile.dynamic.error)) $modalInstance.close((profile, form.fbProfile))
-          else {
-            messages.push(profile.dynamic.error.as[String])
-          }
-
-        case Failure(e) =>
-          stopLoading()
-          toaster.error(e.getMessage)
-          console.log(s"Error registering user: ${e.getMessage}")
-      }
-    }
-  }
-
   private def startLoading() = loading = true
 
   private def stopLoading() = $timeout(() => loading = false, 1.second)
@@ -142,19 +142,30 @@ object SignUpDialogController {
 /**
   * Sign-Up Dialog Scope
   */
+@js.native
 trait SignUpDialogScope extends js.Object {
-  var form: SignUpForm = js.native
+  // variables
+  var form: SignUpForm
+
+  // functions
+  var cancel: js.Function0[Unit]
+  var createAccount: js.Function1[js.UndefOr[SignUpForm], Unit]
+  var getMessages: js.Function0[js.Array[String]]
+  var isLoading: js.Function0[Boolean]
+  var loadFacebookProfile: js.Function0[Unit]
+
 }
 
 /**
   * Sign-Up Dialog Form
   */
+@js.native
 trait SignUpForm extends js.Object {
-  var name: js.UndefOr[String] = js.native
-  var facebookID: js.UndefOr[String] = js.native
-  var userName: js.UndefOr[String] = js.native
-  var email: js.UndefOr[String] = js.native
-  var fbProfile: FacebookProfileResponse = js.native
+  var name: js.UndefOr[String]
+  var facebookID: js.UndefOr[String]
+  var userName: js.UndefOr[String]
+  var email: js.UndefOr[String]
+  var fbProfile: FacebookProfileResponse
 }
 
 /**

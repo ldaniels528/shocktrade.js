@@ -10,7 +10,7 @@ import scala.scalajs.js
   */
 @js.native
 trait OnlinePlayerState extends js.Object {
-  var connected: Boolean = js.native
+  var connected: Boolean
 
 }
 

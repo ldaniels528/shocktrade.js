@@ -7,7 +7,7 @@ import java.util.Date
 import akka.actor.{Actor, ActorLogging}
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.ResourceHelper._
-import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSHO, _}
 import play.modules.reactivemongo.ReactiveMongoApi
 
@@ -21,7 +21,7 @@ import scala.language.postfixOps
   */
 class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
 
   override def receive = {
     case ProcessRegSHO(processDate) =>
@@ -60,14 +60,14 @@ class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor w
         // schedule the data for processing
         val task = Future.sequence(dataSet map { data =>
           for {
-            result <- securitiesDAO.updateRegSHO(data)
+            result <- updateDAO.updateRegSHO(data)
           } yield (data, result)
         })
 
         // display the results
         task.foreach {
           _ foreach { case (reg, writeResult) =>
-            log.info(s"${reg.symbol}: updateCount = ${writeResult.n}, error = ${writeResult.errmsg.orNull}")
+            log.info(s"${reg.symbol}: updateCount = $writeResult")
           }
         }
         dataSet.length

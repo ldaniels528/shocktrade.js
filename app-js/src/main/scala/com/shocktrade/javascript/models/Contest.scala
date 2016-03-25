@@ -10,23 +10,23 @@ import scala.scalajs.js.UndefOr
   */
 @js.native
 trait Contest extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var name: String = js.native
-  var creator: ContestCreator = js.native
-  var startTime: UndefOr[js.Date] = js.native
-  var status: String = js.native
-  var rankings: UndefOr[Rankings] = js.native
-  var messages: js.Array[Message] = js.native
-  var participants: js.Array[Participant] = js.native
-  var invitationOnly: Boolean = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var name: String
+  var creator: ContestCreator
+  var startTime: UndefOr[js.Date]
+  var status: String
+  var rankings: UndefOr[Rankings]
+  var messages: js.Array[Message]
+  var participants: js.Array[Participant]
+  var invitationOnly: Boolean
 
   // administrative fields
-  var error: UndefOr[String] = js.native
-  var rankingsHidden: UndefOr[Boolean] = js.native
-  var deleting: Boolean = js.native
-  var joining: Boolean = js.native
-  var quitting: Boolean = js.native
-  var starting: Boolean = js.native
+  var error: UndefOr[String]
+  var rankingsHidden: UndefOr[Boolean]
+  var deleting: Boolean
+  var joining: Boolean
+  var quitting: Boolean
+  var starting: Boolean
 }
 
 /**
@@ -39,18 +39,18 @@ object Contest {
 
 @js.native
 trait ContestCreator extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var name: String = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var name: String
 }
 
 @js.native
 trait ParticipantRanking extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var facebookID: String = js.native
-  var name: String = js.native
-  var rank: String = js.native
-  var totalEquity: Double = js.native
-  var gainLoss: Double = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var facebookID: String
+  var name: String
+  var rank: String
+  var totalEquity: Double
+  var gainLoss: Double
 }
 
 /**
@@ -58,9 +58,9 @@ trait ParticipantRanking extends js.Object {
   */
 @js.native
 trait Rankings extends js.Object {
-  var participants: js.Array[ParticipantRanking] = js.native
-  var leader: UndefOr[ParticipantRanking] = js.native
-  var player: UndefOr[ParticipantRanking] = js.native
+  var participants: js.Array[ParticipantRanking]
+  var leader: UndefOr[ParticipantRanking]
+  var player: UndefOr[ParticipantRanking]
 }
 
 /**
@@ -81,18 +81,18 @@ object Rankings {
 
 @js.native
 trait Message extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var sender: PlayerRef = js.native
-  var text: String = js.native
-  var recipient: UndefOr[PlayerRef] = js.native
-  var sentTime: js.Date = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var sender: PlayerRef
+  var text: String
+  var recipient: UndefOr[PlayerRef]
+  var sentTime: js.Date
 }
 
 @js.native
 trait PlayerRef extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var name: String = js.native
-  var facebookID: String = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var name: String
+  var facebookID: String
 }
 
 object PlayerRef {
@@ -108,59 +108,42 @@ object PlayerRef {
 
 @js.native
 trait Participant extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var name: String = js.native
-  var facebookID: String = js.native
-  var cashAccount: CashAccount = js.native
-  var marginAccount: UndefOr[MarginAccount] = js.native
-  var orders: js.Array[Order] = js.native
-  var closedOrders: js.Array[ClosedOrder] = js.native
-  var performance: js.Array[Performance] = js.native
-  var perks: js.Array[String] = js.native
-  var positions: js.Array[Position] = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var name: String
+  var facebookID: String
+  var cashAccount: CashAccount
+  var marginAccount: UndefOr[MarginAccount]
+  var orders: js.Array[Order]
+  var closedOrders: js.Array[ClosedOrder]
+  var performance: js.Array[Performance]
+  var perks: js.Array[String]
+  var positions: js.Array[Position]
 }
 
 @js.native
 trait CashAccount extends js.Object {
-  var cashFunds: Double = js.native
-  var asOfDate: js.Date = js.native
+  var cashFunds: Double
+  var asOfDate: js.Date
 }
 
 @js.native
 trait MarginAccount extends js.Object {
-  var cashFunds: Double = js.native
-  var borrowedFunds: Double = js.native
-  var initialMargin: Double = js.native
-  var interestPaid: Double = js.native
-  var asOfDate: js.Date = js.native
-}
-
-@js.native
-trait Order extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var symbol: String = js.native
-}
-
-@js.native
-trait ClosedOrder extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var symbol: String = js.native
-}
-
-@js.native
-trait Performance extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var symbol: String = js.native
+  var cashFunds: Double
+  var borrowedFunds: Double
+  var initialMargin: Double
+  var interestPaid: Double
+  var asOfDate: js.Date
 }
 
 @js.native
 trait Position extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var symbol: String = js.native
-  var exchange: String = js.native
-  var pricePaid: BigDecimal = js.native
-  var quantity: Long = js.native
-  var commission: BigDecimal = js.native
-  var processedTime: js.Date = js.native
-  var accountType: String = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var symbol: String
+  var exchange: String
+  var pricePaid: BigDecimal
+  var quantity: Long
+  var commission: BigDecimal
+  var processedTime: js.Date
+  var accountType: String
+  var netValue: Double
 }

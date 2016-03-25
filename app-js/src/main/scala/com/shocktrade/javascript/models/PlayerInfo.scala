@@ -11,8 +11,8 @@ import scala.scalajs.js
 @js.native
 trait PlayerInfo extends js.Object {
   var _id: js.UndefOr[BSONObjectID]
-  var facebookID: String = js.native
-  var name: String = js.native
+  var facebookID: String
+  var name: String
 }
 
 /**

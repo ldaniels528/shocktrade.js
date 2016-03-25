@@ -3,26 +3,25 @@ package com.shocktrade.javascript
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.NavigationController._
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking, UserProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.scalajs.js.Dynamic.{global => g}
+import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
- * Player Information Bar Controller
- * @author lawrence.daniels@gmail.com
- */
-class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaster: Toaster,
+  * Navigation Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class NavigationController($scope: NavigationControllerScope, $http: Http, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("MySessionService") mySession: MySessionService,
                            @injected("WebSocketService") webSocket: WebSocketService)
@@ -37,13 +36,13 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def initNav() = retrieveTotalInvestment()
+  $scope.initNav = () => retrieveTotalInvestment()
 
-  @scoped def isAuthenticated = mySession.isAuthenticated
+  $scope.isAuthenticated = () => mySession.isAuthenticated
 
-  @scoped def isBarVisible = isVisible
+  $scope.isBarVisible = () => isVisible
 
-  @scoped def getMyRanking: UndefOr[ParticipantRanking] = {
+  $scope.getMyRanking = () => {
     (for {
       contest <- mySession.contest
       playerID <- mySession.userProfile._id.toOption
@@ -51,17 +50,17 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
     } yield rankings).orUndefined
   }
 
-  @scoped def getTotalInvestment = totalInvestment getOrElse 0.00d
+  $scope.getTotalInvestment = () => totalInvestment getOrElse 0.00d
 
-  @scoped def getTotalInvestmentStatus = totalInvestmentStatus getOrElse LOADING
+  $scope.getTotalInvestmentStatus = () => totalInvestmentStatus getOrElse LOADING
 
-  @scoped def isTotalInvestmentLoaded = totalInvestment.isDefined
+  $scope.isTotalInvestmentLoaded = () => totalInvestment.isDefined
 
-  @scoped def reloadTotalInvestment() = totalInvestmentStatus = None
+  $scope.reloadTotalInvestment = () => totalInvestmentStatus = None
 
-  @scoped def toggleVisibility() = isVisible = !isVisible
+  $scope.toggleVisibility = () => isVisible = !isVisible
 
-  @scoped def isWebSocketConnected = webSocket.isConnected
+  $scope.isWebSocketConnected = () => webSocket.isConnected
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
@@ -89,7 +88,7 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
     // set a timeout so that loading doesn't persist
     $timeout(() =>
       if (totalInvestment.isEmpty) {
-        g.console.error("Total investment call timed out")
+        console.error("Total investment call timed out")
         totalInvestmentStatus = Option(TIMEOUT)
       }, 20.seconds)
 
@@ -103,7 +102,7 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
       case Failure(e) =>
         toaster.error("Error loading total investment")
         totalInvestmentStatus = Option(FAILED)
-        g.console.error("Total investment call failed")
+        console.error("Total investment call failed")
     }
   }
 
@@ -112,18 +111,35 @@ class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaste
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-   * Listen for changes to the player's profile
-   */
+    * Listen for changes to the player's profile
+    */
   $scope.$on(UserProfileChanged, (profile: UserProfile) => retrieveTotalInvestment())
 
 }
 
 /**
- * Player Information Bar Controller Singleton
- * @author lawrence.daniels@gmail.com
- */
-object NavigationController {
+  * Navigation Controller Scope
+  */
+@js.native
+trait NavigationControllerScope extends Scope {
+  var initNav: js.Function0[Unit]
+  var isAuthenticated: js.Function0[Boolean]
+  var isBarVisible: js.Function0[Boolean]
+  var isTotalInvestmentLoaded: js.Function0[Boolean]
+  var isWebSocketConnected: js.Function0[Boolean]
 
+  var getMyRanking: js.Function0[js.UndefOr[ParticipantRanking]]
+  var getTotalInvestment: js.Function0[Double]
+  var getTotalInvestmentStatus: js.Function0[String]
+
+  var reloadTotalInvestment: js.Function0[Unit]
+  var toggleVisibility: js.Function0[Unit]
+}
+
+/**
+  * Player Information Bar Controller Singleton
+  */
+object NavigationController {
   val LOADING = "LOADING"
   val LOADED = "LOADED"
   val FAILED = "FAILED"

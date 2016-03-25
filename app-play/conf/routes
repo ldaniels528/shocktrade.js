@@ -114,7 +114,6 @@ POST          /api/quotes/list                                               @co
 GET           /api/quotes/order/symbol/:symbol                               @com.shocktrade.controllers.QuotesController.getOrderQuote(symbol)
 POST          /api/quotes/pricing                                            @com.shocktrade.controllers.QuotesController.getPricing
 GET           /api/quotes/realTime/:symbol                                   @com.shocktrade.controllers.QuotesController.getRealtimeQuote(symbol)
-GET           /api/quotes/riskLevel/:symbol                                  @com.shocktrade.controllers.QuotesController.getRiskLevel(symbol)
 GET           /api/quotes/symbol/:symbol                                     @com.shocktrade.controllers.QuotesController.getQuote(symbol)
 GET           /api/quotes/tradingHistory/:symbol                             @com.shocktrade.controllers.QuotesController.getTradingHistory(symbol)
 

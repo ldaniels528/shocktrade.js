@@ -1,55 +1,48 @@
 package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected, scoped}
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.Date
 
 /**
- * Cash Account Controller
- * @author lawrence.daniels@gmail.com
- */
-class CashAccountController($scope: CashAccountScope, toaster: Toaster, @injected("MySessionService") mySession: MySessionService)
+  * Cash Account Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class CashAccountController($scope: CashAccountScope, toaster: Toaster,
+                            @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped def asOfDate = mySession.cashAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new Date()
+  $scope.asOfDate = () => mySession.cashAccount_?.flatMap(a => Option(a.asOfDate)) getOrElse new js.Date()
 
-  @scoped def getTotalOrders = Seq("BUY", "SELL") map computeTotalOrdersByType sum
+  $scope.getTotalOrders = () => Seq("BUY", "SELL") map computeTotalOrdersByType sum
 
-  @scoped def getTotalEquity = computeTotalInvestment + computeFundsAvailable
+  $scope.getTotalEquity = () => $scope.getTotalInvestment() + $scope.getFundsAvailable()
 
-  @scoped def getTotalBuyOrders = computeTotalOrdersByType(orderType = "BUY")
+  $scope.getTotalBuyOrders = () => computeTotalOrdersByType(orderType = "BUY")
 
-  @scoped def getTotalSellOrders = computeTotalOrdersByType(orderType = "SELL")
+  $scope.getTotalSellOrders = () => computeTotalOrdersByType(orderType = "SELL")
 
-  @scoped def getFundsAvailable = computeFundsAvailable
+  $scope.getFundsAvailable = () => mySession.cashAccount_?.map(_.cashFunds) getOrElse 0d
 
-  @scoped def getTotalInvestment = computeTotalInvestment
+  $scope.getTotalInvestment = () => {
+    mySession.participant.map(_.positions.filter(_.accountType == "CASH")).map(_ map (_.netValue) sum) getOrElse 0d
+  }
 
   /////////////////////////////////////////////////////////////////////
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def computeFundsAvailable = mySession.cashAccount_?.map(_.cashFunds).getOrElse(0d)
-
-  private def computeTotalInvestment = {
-    var total = 0d
-    mySession.participant foreach (_.positions.asArray[js.Dynamic] filter (_.accountType === "CASH") foreach (total += _.netValue.as[Double]))
-    total
-  }
-
   private def computeTotalOrdersByType(orderType: String) = {
     var total = 0d
-    mySession.participant foreach (_.orders.asArray[js.Dynamic] filter (o => o.orderType === orderType && o.accountType === "CASH") foreach { o =>
-      total += o.price.as[Double] * o.quantity.as[Double] + o.commission.as[Double]
+    mySession.participant foreach (_.orders filter (o => o.orderType == orderType && o.accountType == "CASH") foreach { o =>
+      total += o.price * o.quantity + o.commission
     })
     total
   }
@@ -57,7 +50,18 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster, @injecte
 }
 
 /**
- * Cash Account Controller Scope
- * @author lawrence.daniels@gmail.com
- */
-trait CashAccountScope extends js.Object
+  * Cash Account Controller Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait CashAccountScope extends Scope {
+  // functions
+  var asOfDate: js.Function0[js.Date]
+  var getTotalOrders: js.Function0[Double]
+  var getTotalEquity: js.Function0[Double]
+  var getTotalBuyOrders: js.Function0[Double]
+  var getTotalSellOrders: js.Function0[Double]
+  var getFundsAvailable: js.Function0[Double]
+  var getTotalInvestment: js.Function0[Double]
+
+}

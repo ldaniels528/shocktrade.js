@@ -1,8 +1,6 @@
 package com.shocktrade.javascript.profile
 
 import com.github.ldaniels528.scalascript.Service
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.core.Http
 import com.shocktrade.javascript.models.{BSONObjectID, OnlinePlayerState, UserProfile}
 
@@ -11,9 +9,9 @@ import scala.scalajs.js.Dynamic._
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
- * Profile Service
- * @author lawrence.daniels@gmail.com
- */
+  * Profile Service
+  * @author lawrence.daniels@gmail.com
+  */
 @JSExportAll
 class ProfileService($http: Http) extends Service {
 
@@ -22,10 +20,9 @@ class ProfileService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   /**
-   * Retrieves the current user's profile by FaceBook ID
-   */
+    * Retrieves the current user's profile by FaceBook ID
+    */
   def getProfileByFacebookID(facebookID: String) = {
-    required("facebookID", facebookID)
     $http.get[UserProfile](s"/api/profile/facebook/$facebookID")
   }
 
@@ -34,17 +31,14 @@ class ProfileService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   def getOnlineStatus(userID: BSONObjectID) = {
-    required("userID", userID)
     $http.get[OnlinePlayerState](s"/api/online/${userID.$oid}")
   }
 
   def setIsOnline(userID: BSONObjectID) = {
-    required("userID", userID)
     $http.put[js.Dynamic](s"/api/online/${userID.$oid}")
   }
 
   def setIsOffline(userID: BSONObjectID) = {
-    required("userID", userID)
     $http.delete[js.Dynamic](s"/api/online/${userID.$oid}")
   }
 
@@ -54,13 +48,11 @@ class ProfileService($http: Http) extends Service {
 
   @deprecated
   def getExchanges(userID: BSONObjectID) = {
-    required("userID", userID)
     $http.get[js.Dynamic](s"/api/profile/${userID.$oid}/exchanges")
   }
 
   @deprecated
   def updateExchanges(userID: BSONObjectID, exchanges: js.Array[String]) = {
-    required("userID", userID)
     $http.post[js.Dynamic]("/api/exchanges", literal(id = userID.$oid, exchanges = exchanges))
   }
 

@@ -2,22 +2,21 @@ package com.shocktrade.javascript.dashboard
 
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
-import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
 /**
- * Dashboard Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Dashboard Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
                           @injected("MySessionService") mySession: MySessionService,
@@ -31,21 +30,21 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   //          Account Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped def isCashAccount = !accountMode
+  $scope.isCashAccount = () => !accountMode
 
-  @scoped def isMarginAccount = accountMode
+  $scope.isMarginAccount = () => accountMode
 
-  @scoped def toggleAccountMode() = accountMode = !accountMode
+  $scope.toggleAccountMode = () => accountMode = !accountMode
 
-  @scoped def getAccountMode = accountMode
+  $scope.getAccountMode = () => accountMode
 
-  @scoped def getAccountType = if (accountMode) "MARGIN" else "CASH"
+  $scope.getAccountType = () => if (accountMode) "MARGIN" else "CASH"
 
   /////////////////////////////////////////////////////////////////////
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped def popupPerksDialog() = {
+  $scope.popupPerksDialog = () => {
     perksDialog.popup() onComplete {
       case Success(contest) =>
         mySession.setContest(contest)
@@ -56,7 +55,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
     }
   }
 
-  @scoped def popupTransferFundsDialog() = {
+  $scope.popupTransferFundsDialog = () => {
     transferFundsDialog.popup() onComplete {
       case Success(contest) => mySession.setContest(contest)
       case Failure(e) =>
@@ -70,16 +69,15 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   //          Participant Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped def isRankingsShown = !mySession.contest.exists(_.rankingsHidden.exists(_ == true))
+  $scope.isRankingsShown = () => !mySession.contest.exists(_.rankingsHidden.exists(_ == true))
 
-  @scoped def toggleRankingsShown() = mySession.contest.foreach(c => c.rankingsHidden = c.rankingsHidden.map(!_))
+  $scope.toggleRankingsShown = () => mySession.contest.foreach(c => c.rankingsHidden = c.rankingsHidden.map(!_))
 
-  @scoped
-  def getRankings: js.Array[ParticipantRanking] = mySession.contest match {
-    case Some(c) =>
+  $scope.getRankings = () => mySession.contest match {
+    case Some(contest) =>
       (for {
         userId <- mySession.userProfile._id.toOption
-        rankings <- contestService.getPlayerRankings(c, userId).toOption
+        rankings <- contestService.getPlayerRankings(contest, userId).toOption
         participants = rankings.participants
       } yield participants) getOrElse emptyArray
     case None =>
@@ -98,7 +96,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
       contestService.getContestByID(contestId) onComplete {
         case Success(loadedContest) => mySession.setContest(loadedContest)
         case Failure(e) =>
-          g.console.error(s"Error loading contest $contestId")
+          console.error(s"Error loading contest $contestId")
           toaster.error("Error loading game")
           e.printStackTrace()
       }
@@ -108,20 +106,31 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 }
 
 /**
- * Dashboard Controller Scope
- * @author lawrence.daniels@gmail.com
- */
+  * Dashboard Scope
+  * @author lawrence.daniels@gmail.com
+  */
 @js.native
 trait DashboardScope extends Scope {
+  // functions
+  var isCashAccount: js.Function0[Boolean]
+  var isMarginAccount: js.Function0[Boolean]
+  var toggleAccountMode: js.Function0[Unit]
+  var getAccountMode: js.Function0[Boolean]
+  var getAccountType: js.Function0[String]
+  var popupPerksDialog: js.Function0[Unit]
+  var popupTransferFundsDialog: js.Function0[Unit]
+  var isRankingsShown: js.Function0[Boolean]
+  var toggleRankingsShown: js.Function0[Unit]
+  var getRankings: js.Function0[js.Array[_ <: ParticipantRanking]]
 
 }
 
 /**
- * Dashboard Route Params
- * @author lawrence.daniels@gmail.com
- */
+  * Dashboard Route Params
+  * @author lawrence.daniels@gmail.com
+  */
 @js.native
 trait DashboardRouteParams extends js.Object {
-  var contestId: js.UndefOr[BSONObjectID] = js.native
+  var contestId: js.UndefOr[BSONObjectID]
 
 }

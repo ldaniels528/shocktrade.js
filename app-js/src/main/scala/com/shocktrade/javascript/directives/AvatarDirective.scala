@@ -52,14 +52,14 @@ object AvatarDirective {
 @js.native
 trait AvatarDirectiveScope extends Scope {
   // input fields
-  var id: js.UndefOr[String] = js.native
-  var link: js.UndefOr[String] = js.native
-  var `class`: js.UndefOr[String] = js.native
-  var style: js.UndefOr[String] = js.native
+  var id: js.UndefOr[String]
+  var link: js.UndefOr[String]
+  var `class`: js.UndefOr[String]
+  var style: js.UndefOr[String]
 
   // output fields
-  var myClass: String = js.native
-  var url: String = js.native
+  var myClass: String
+  var url: String
 
 }
 

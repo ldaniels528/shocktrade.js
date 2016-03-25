@@ -3,7 +3,7 @@ package com.shocktrade.javascript.discover
 import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.shocktrade.javascript.models.{BSONObjectID, OrderQuote}
+import com.shocktrade.javascript.models.{BSONObjectID, HistoricalQuote, OrderQuote}
 
 import scala.scalajs.js
 
@@ -14,7 +14,6 @@ import scala.scalajs.js
 class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
-    required("searchTerm", searchTerm)
     val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
     $http.get[js.Array[AutoCompletedQuote]](s"/api/quotes/autoComplete$queryString")
   }
@@ -27,28 +26,19 @@ class QuoteService($http: Http) extends Service {
   }
 
   def getPricing(symbols: js.Array[String]) = {
-    required("symbols", symbols)
     $http.post[js.Dynamic]("/api/quotes/pricing", symbols)
   }
 
-  def getRiskLevel(symbol: String) = {
-    required("symbol", symbol)
-    $http.get[js.Dynamic](s"/api/quotes/riskLevel/$symbol")
-  }
-
   def getStockQuoteList(symbols: js.Array[String]) = {
-    required("symbols", symbols)
     $http.post[js.Array[js.Dynamic]]("/api/quotes/list", symbols)
   }
 
   def getStockQuote(symbol: String) = {
-    required("symbol", symbol)
     $http.get[OrderQuote](s"/api/quotes/symbol/$symbol")
   }
 
   def getTradingHistory(symbol: String) = {
-    required("symbol", symbol)
-    $http.get[js.Array[js.Dynamic]](s"/api/quotes/tradingHistory/$symbol")
+    $http.get[js.Array[HistoricalQuote]](s"/api/quotes/tradingHistory/$symbol")
   }
 
 }
@@ -59,11 +49,11 @@ class QuoteService($http: Http) extends Service {
   */
 @js.native
 trait AutoCompletedQuote extends js.Object {
-  var _id: js.UndefOr[BSONObjectID] = js.native
-  var symbol: js.UndefOr[String] = js.native
-  var name: js.UndefOr[String] = js.native
-  var exchange: js.UndefOr[String] = js.native
-  var assetType: js.UndefOr[String] = js.native
-  var icon: js.UndefOr[String] = js.native
+  var _id: js.UndefOr[BSONObjectID]
+  var symbol: js.UndefOr[String]
+  var name: js.UndefOr[String]
+  var exchange: js.UndefOr[String]
+  var assetType: js.UndefOr[String]
+  var icon: js.UndefOr[String]
 }
 

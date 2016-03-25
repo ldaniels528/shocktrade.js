@@ -3,12 +3,12 @@ package com.shocktrade.javascript.dialogs
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Q, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.{Service, angular, injected, scoped}
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Service, angular, injected}
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, OrderQuote}
-import com.shocktrade.javascript.{AutoCompletionController, MySessionService}
+import com.shocktrade.javascript.{AutoCompletionController, AutoCompletionControllerScope, MySessionService}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
@@ -18,14 +18,15 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
- * New Order Dialog Service
- */
+  * New Order Dialog Service
+  * @author lawrence.daniels@gmail.com
+  */
 class NewOrderDialog($http: Http, $modal: Modal) extends Service {
 
   /**
-   * Opens a new Order Entry Pop-up Dialog
-   */
-  def popup(params: NewOrderParams): Future[NewOrderDialogResult] = {
+    * Opens a new Order Entry Pop-up Dialog
+    */
+  def popup(params: NewOrderParams) = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewOrderDialogResult](ModalOptions(
       templateUrl = "new_order_dialog.htm",
@@ -49,8 +50,9 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
 }
 
 /**
- * New Order Dialog Controller
- */
+  * New Order Dialog Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
                                @injected("MySessionService") mySession: MySessionService,
@@ -82,19 +84,45 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  @scoped def init() = $scope.form.symbol foreach lookupSymbolQuote
+  $scope.init = () => $scope.form.symbol foreach lookupSymbolQuote
 
-  @scoped def cancel() = $modalInstance.dismiss("cancel")
+  $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  @scoped def getMessages = messages
+  $scope.getMessages = () => messages
 
-  @scoped def isProcessing = processing
+  $scope.isProcessing = () => processing
 
-  @scoped def ok(form: NewOrderForm) = accept(form)
+  $scope.ok = (aForm: js.UndefOr[NewOrderForm]) => aForm foreach { form =>
+    if (isValid(form)) {
+      val outcome = for {
+        playerId <- mySession.userProfile._id.toOption
+        contestId <- mySession.contest.flatMap(_._id.toOption)
+      } yield (playerId, contestId)
 
-  @scoped def orderQuote(ticker: js.Dynamic) = lookupTickerQuote(ticker)
+      outcome match {
+        case Some((playerId, contestId)) =>
+          processing = true
+          newOrderDialog.createOrder(contestId, playerId, $scope.form) onComplete {
+            case Success(contest) =>
+              $timeout(() => processing = false, 0.5.seconds)
+              $modalInstance.close(contest)
+            case Failure(e) =>
+              $timeout(() => processing = false, 0.5.seconds)
+              messages.push(s"The order could not be processed")
+              console.error(s"order processing error: contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
+              e.printStackTrace()
+          }
+        case None =>
+          toaster.error("User session error")
+      }
+    }
+  }
 
-  @scoped def getTotal(form: NewOrderForm) = form.limitPrice.getOrElse(0d) * form.quantity.getOrElse(0)
+  $scope.orderQuote = (ticker: js.Dynamic) => lookupTickerQuote(ticker)
+
+  $scope.getTotal = (aForm: js.UndefOr[NewOrderForm]) => aForm map { form =>
+    form.limitPrice.getOrElse(0d) * form.quantity.getOrElse(0d)
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
@@ -118,32 +146,6 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
         $scope.form.exchange = quote.exchange
       case Failure(e) =>
         messages.push(s"The order could not be processed (error code ${e.getMessage})")
-    }
-  }
-
-  private def accept(form: NewOrderForm) {
-    if (isValid(form)) {
-      val outcome = for {
-        playerId <- mySession.userProfile._id.toOption
-        contestId <- mySession.contest.flatMap(_._id.toOption)
-      } yield (playerId, contestId)
-
-      outcome match {
-        case Some((playerId, contestId)) =>
-          processing = true
-          newOrderDialog.createOrder(contestId, playerId, $scope.form) onComplete {
-            case Success(contest) =>
-              $timeout(() => processing = false, 0.5.seconds)
-              $modalInstance.close(contest)
-            case Failure(e) =>
-              $timeout(() => processing = false, 0.5.seconds)
-              messages.push(s"The order could not be processed")
-              console.error(s"order processing error: contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
-              e.printStackTrace()
-          }
-        case None =>
-          toaster.error("User session error")
-      }
     }
   }
 
@@ -181,58 +183,77 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
 }
 
 /**
- * New Order Dialog Controller Singleton
- */
+  * New Order Dialog Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait NewOrderScope extends AutoCompletionControllerScope {
+  // variables
+  var form: NewOrderForm
+  var quote: OrderQuote
+
+  // functions
+  var init: js.Function0[Unit]
+  var cancel: js.Function0[Unit]
+  var getMessages: js.Function0[js.Array[String]]
+  var isProcessing: js.Function0[Boolean]
+  var ok: js.Function1[js.UndefOr[NewOrderForm], Unit]
+  var orderQuote: js.Function1[js.Dynamic, Unit]
+  var getTotal: js.Function1[js.UndefOr[NewOrderForm], js.UndefOr[Double]]
+
+}
+
+/**
+  * New Order Dialog Controller Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object NewOrderDialogController {
 
   type NewOrderDialogResult = Contest
 }
 
 /**
- * New Order Dialog Form
- */
+  * New Order Dialog Form
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait NewOrderForm extends js.Object {
-  var symbol: js.UndefOr[String] = js.native
-  var exchange: js.UndefOr[String] = js.native
-  var accountType: js.UndefOr[String] = js.native
-  var orderType: js.UndefOr[String] = js.native
-  var orderTerm: js.UndefOr[String] = js.native
-  var priceType: js.UndefOr[String] = js.native
-  var quantity: js.UndefOr[Int] = js.native
-  var limitPrice: js.UndefOr[Double] = js.native
-  var perks: js.Array[String] = js.native
-  var emailNotify: js.UndefOr[Boolean] = js.native
+  var symbol: js.UndefOr[String]
+  var exchange: js.UndefOr[String]
+  var accountType: js.UndefOr[String]
+  var orderType: js.UndefOr[String]
+  var orderTerm: js.UndefOr[String]
+  var priceType: js.UndefOr[String]
+  var quantity: js.UndefOr[Double]
+  var limitPrice: js.UndefOr[Double]
+  var perks: js.Array[String]
+  var emailNotify: js.UndefOr[Boolean]
 }
 
 /**
- * New Order Dialog Parameters
- */
+  * New Order Dialog Parameters
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait NewOrderParams extends js.Object {
-  var accountType: js.UndefOr[String] = js.native
-  var symbol: js.UndefOr[String] = js.native
-  var quantity: js.UndefOr[Int] = js.native
+  var accountType: js.UndefOr[String]
+  var symbol: js.UndefOr[String]
+  var quantity: js.UndefOr[Double]
 }
 
 /**
- * New Order Dialog Parameters Singleton
- */
+  * New Order Dialog Parameters Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object NewOrderParams {
 
   def apply(accountType: js.UndefOr[String] = js.undefined,
             symbol: js.UndefOr[String] = js.undefined,
-            quantity: js.UndefOr[Int] = js.undefined) = {
+            quantity: js.UndefOr[Double] = js.undefined) = {
     val params = makeNew[NewOrderParams]
     params.accountType = accountType
     params.symbol = symbol
     params.quantity = quantity
     params
   }
-}
-
-/**
- * New Order Dialog Scope
- */
-trait NewOrderScope extends js.Object {
-  var form: NewOrderForm = js.native
-  var quote: OrderQuote = js.native
 }

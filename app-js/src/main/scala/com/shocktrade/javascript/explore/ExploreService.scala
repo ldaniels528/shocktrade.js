@@ -3,14 +3,13 @@ package com.shocktrade.javascript.explore
 import com.github.ldaniels528.scalascript.Service
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.shocktrade.javascript.explore.ExploreService._
 
 import scala.scalajs.js
 
 /**
- * Explore Service
- * @author lawrence.daniels@gmail.com
- */
+  * Explore Service
+  * @author lawrence.daniels@gmail.com
+  */
 class ExploreService($http: Http) extends Service {
 
   def loadSectorInfo(symbol: String) = {
@@ -43,36 +42,30 @@ class ExploreService($http: Http) extends Service {
 }
 
 /**
- * Explore Service
- * @author lawrence.daniels@gmail.com
- */
-object ExploreService {
-
-  /**
-   * Industry Aggregation
-   */
-  trait AggregatedData extends js.Object {
-    var _id: String = js.native
-    var total: Int = js.native
-  }
-
-  /**
-   * Sector/Industry Quote
-   */
-  @js.native
-  trait SectorQuote extends js.Object
-
-  /**
-   * Sector Information
-   */
-  @js.native
-  trait SectorInfo extends js.Object {
-    var _id: js.Object = js.native
-    var symbol: js.UndefOr[String] = js.native
-    var exchange: js.UndefOr[String] = js.native
-    var sector: js.UndefOr[String] = js.native
-    var industry: js.UndefOr[String] = js.native
-    var subIndustry: js.UndefOr[String] = js.native
-  }
-
+  * Industry Aggregation
+  */
+@js.native
+trait AggregatedData extends js.Object {
+  var _id: String
+  var total: Int
 }
+
+/**
+  * Sector/Industry Quote
+  */
+@js.native
+trait SectorQuote extends js.Object
+
+/**
+  * Sector Information
+  */
+@js.native
+trait SectorInfo extends js.Object {
+  var _id: js.Object
+  var symbol: js.UndefOr[String]
+  var exchange: js.UndefOr[String]
+  var sector: js.UndefOr[String]
+  var industry: js.UndefOr[String]
+  var subIndustry: js.UndefOr[String]
+}
+

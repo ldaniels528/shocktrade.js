@@ -66,7 +66,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
         case Success(response) =>
         case Failure(e) =>
           toaster.error("Failed to add favorite symbol")
-          g.console.error(s"Failed to add favorite symbol: ${e.getMessage}")
+          console.error(s"Failed to add favorite symbol: ${e.getMessage}")
       }
     }
   }
@@ -81,7 +81,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
           case Held => loadHeldSecurities(obj)
           case Recents => loadQuotes(name, mySession.getRecentSymbols, obj)
           case _ =>
-            g.console.error(s"$name is not a recognized list")
+            console.error(s"$name is not a recognized list")
         }
       }
     }
@@ -93,7 +93,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
         case Success(updatedQuotes) => obj.quotes = updatedQuotes
         case Failure(e) =>
           toaster.error(s"Failed to load $name")
-          g.console.error(s"Failed to load $name: ${e.getMessage}")
+          console.error(s"Failed to load $name: ${e.getMessage}")
       }
     }
   }
@@ -110,7 +110,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
           obj.quotes = updatedQuotes
         case Failure(e) =>
           toaster.error("Failed to load Held Securities")
-          g.console.error(s"Failed to load Held Securities: ${e.getMessage}")
+          console.error(s"Failed to load Held Securities: ${e.getMessage}")
       }
     }
   }
@@ -129,7 +129,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
         case Success(response) =>
         case Failure(e) =>
           toaster.error("Failed to remove favorite symbol")
-          g.console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
+          console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
       }
     }
   }

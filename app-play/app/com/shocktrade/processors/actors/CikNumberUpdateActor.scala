@@ -3,7 +3,7 @@ package com.shocktrade.processors.actors
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.dao.SecuritiesUpdateDAO
 import com.shocktrade.processors.actors.CikNumberUpdateActor._
 import com.shocktrade.services.CikCompanySearchService
 import com.shocktrade.services.CikCompanySearchService.CikInfo
@@ -17,7 +17,7 @@ import scala.util.{Failure, Success, Try}
   */
 class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
+  private val updateDAO = SecuritiesUpdateDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -39,7 +39,7 @@ class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor wit
 
   private def findMissingCikSymbols() = {
     log.info(s"Searching for records missing CIK information...")
-    val missingCiks = securitiesDAO.findMissingCiks
+    val missingCiks = updateDAO.findMissingCiks
     missingCiks foreach { records =>
       log.info(s"Retrieved ${records.length} securities with missing CIK information")
     }
@@ -67,7 +67,7 @@ class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor wit
     * Writes the updated CIK information to the data store
     */
   private def persistCik(symbol: String, name: String, cik: CikInfo) {
-    securitiesDAO.updateCik(symbol, name, cik) foreach { _ =>
+    updateDAO.updateCik(symbol, name, cik) foreach { _ =>
       // log the statistics
       if (counter.incrementAndGet() % 20 == 0) {
         log.info(s"Processed ${counter.get} CIKs")

@@ -1,24 +1,25 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper
-import ScalaJsHelper._
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.shocktrade.javascript.models.HistoricalQuote
+import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.{Failure, Success}
 
 /**
- * Trading History Controller
- * @author lawrence.daniels@gmail.com
- */
-class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @injected("QuoteService") quoteService: QuoteService)
+  * Trading History Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class TradingHistoryController($scope: TradingHistoryControllerScope, toaster: Toaster,
+                               @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
-  private var tradingHistory: js.Array[js.Dynamic] = null
-  private var selectedTradingHistory: js.Dynamic = null
+  private var tradingHistory: js.Array[HistoricalQuote] = emptyArray
+  private var selectedTradingHistory: js.UndefOr[HistoricalQuote] = js.undefined
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -28,27 +29,43 @@ class TradingHistoryController($scope: js.Dynamic, toaster: Toaster, @injected("
 
   $scope.getSelectedTradingHistory = () => selectedTradingHistory
 
-  $scope.hasSelectedTradingHistory = () => isDefined(selectedTradingHistory)
+  $scope.hasSelectedTradingHistory = () => selectedTradingHistory.nonEmpty
 
-  $scope.isSelectedTradingHistory = (t: js.Dynamic) => selectedTradingHistory == t
+  $scope.isSelectedTradingHistory = (aQuote: js.UndefOr[HistoricalQuote]) => {
+    selectedTradingHistory.exists(t => aQuote.exists(_ == t))
+  }
 
-  $scope.selectTradingHistory = (t: js.Dynamic) => selectedTradingHistory = t
+  $scope.selectTradingHistory = (aQuote: js.UndefOr[HistoricalQuote]) => {
+    selectedTradingHistory = aQuote
+  }
 
-  $scope.loadTradingHistory = (symbol: js.UndefOr[String]) => loadTradingHistory(symbol)
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Private Functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  private def loadTradingHistory(symbol_? : js.UndefOr[String]) = {
-    symbol_?.foreach { symbol =>
+  $scope.loadTradingHistory = (aSymbol: js.UndefOr[String]) => aSymbol.toOption match {
+    case Some(symbol) =>
       quoteService.getTradingHistory(symbol) onComplete {
         case Success(results) => tradingHistory = results
         case Failure(e) =>
           toaster.error(s"Error loading trading history for symbol '$symbol'")
-          g.console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")
+          console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")
       }
-    }
+    case None =>
+      tradingHistory = emptyArray
+      selectedTradingHistory = js.undefined
   }
+
+}
+
+/**
+  * Trading History Controller Scope
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait TradingHistoryControllerScope extends Scope {
+  // functions
+  var getTradingHistory: js.Function0[js.Array[HistoricalQuote]]
+  var getSelectedTradingHistory: js.Function0[js.UndefOr[HistoricalQuote]]
+  var hasSelectedTradingHistory: js.Function0[Boolean]
+  var isSelectedTradingHistory: js.Function1[js.UndefOr[HistoricalQuote], Boolean]
+  var selectTradingHistory: js.Function1[js.UndefOr[HistoricalQuote], Unit]
+  var loadTradingHistory: js.Function1[js.UndefOr[String], Unit]
 
 }

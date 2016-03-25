@@ -2,64 +2,55 @@ package com.shocktrade.javascript.admin
 
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected, scoped}
-import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.models.{BSONObjectID, Contest}
+import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.util.{Failure, Success}
 
 /**
- * Inspect Controller
- * @author lawrence.daniels@gmail.com
- */
-class InspectController($scope: InspectScope, $http: Http, $routeParams: InspectRouteParams, toaster: Toaster,
+  * Inspect Controller
+  * @author lawrence.daniels@gmail.com
+  */
+class InspectController($scope: InspectControllerScope, $http: Http, $routeParams: InspectRouteParams, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
                         @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
-  /////////////////////////////////////////////////////////////////////
-  //          Public Variables
-  /////////////////////////////////////////////////////////////////////
-
-  $scope.contest = null
+  $scope.contest = js.undefined
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  @scoped def expandItem(item: ExpandableItem) = item.expanded = !item.expanded.getOrElse(false)
-
-  @scoped def expandPlayer(player: js.Dynamic) = {
-    player.expanded = !player.expanded
-    if (!isDefined(player.myOpenOrders)) player.myOpenOrders = JS()
-    if (!isDefined(player.myClosedOrders)) player.myClosedOrders = JS()
-    if (!isDefined(player.myPositions)) player.myPositions = JS()
-    if (!isDefined(player.myPerformance)) player.myPerformance = JS()
+  $scope.expandItem = (anItem: js.UndefOr[ExpandableItem]) => anItem foreach { item =>
+    item.expanded = !item.expanded.contains(true)
   }
 
-  @scoped def getOpenOrders(contest: js.Dynamic) = {
-    val orders = emptyArray[js.Dynamic]
-    if (isDefined(contest)) {
-      contest.participants.asArray[js.Dynamic] foreach { participant =>
-        participant.orders.asArray[js.Dynamic] foreach { order =>
-          order.owner = participant
-          orders.push(order)
-        }
-      }
-    }
-    orders
+  $scope.expandPlayer = (aPlayer: js.UndefOr[ExpandablePlayer]) => aPlayer foreach { player =>
+    player.expanded = !player.expanded.contains(true)
+    if (!isDefined(player.myOpenOrders)) player.myOpenOrders = emptyArray[Order]
+    if (!isDefined(player.myClosedOrders)) player.myClosedOrders = emptyArray[ClosedOrder]
+    if (!isDefined(player.myPositions)) player.myPositions = emptyArray[Position]
+    if (!isDefined(player.myPerformance)) player.myPerformance = emptyArray[Performance]
   }
 
-  @scoped def updateContestHost(host: js.Dynamic) = {
-    $scope.contest._id foreach { contestId =>
-      $http.post[js.Dynamic](s"/api/contest/$contestId/host", JS(host = host)) onComplete {
+  $scope.getOpenOrders = (aContest: js.UndefOr[Contest]) => {
+    aContest map (_.participants.flatMap(_.orders))
+  }
+
+  $scope.updateContestHost = (aHost: js.UndefOr[String]) => {
+    for {
+      contestId <- $scope.contest.flatMap(_._id)
+      host <- aHost
+    } {
+      contestService.updateContestHost(contestId, host) onComplete {
         case Success(response) =>
           toaster.success("Processing host updated")
         case Failure(e) =>
@@ -88,24 +79,51 @@ class InspectController($scope: InspectScope, $http: Http, $routeParams: Inspect
 }
 
 /**
- * Inspect Scope Controller
- * @author lawrence.daniels@gmail.com
- */
-trait InspectScope extends js.Object {
-  var contest: Contest = js.native
+  * Inspect Scope Controller
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait InspectControllerScope extends Scope {
+  // variables
+  var contest: js.UndefOr[Contest]
 
-}
-
-trait ExpandableItem extends js.Object {
-  var expanded: js.UndefOr[Boolean] = js.native
+  // functions
+  var expandItem: js.Function1[js.UndefOr[ExpandableItem], Unit]
+  var expandPlayer: js.Function1[js.UndefOr[ExpandablePlayer], Unit]
+  var getOpenOrders: js.Function1[js.UndefOr[Contest], js.UndefOr[js.Array[Order]]]
+  var updateContestHost: js.Function1[js.UndefOr[String], Unit]
 
 }
 
 /**
- * Inspect Route Params
- * @author lawrence.daniels@gmail.com
- */
+  * Inspect Route Params
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
 trait InspectRouteParams extends js.Object {
-  var contestId: js.UndefOr[String] = js.native
+  var contestId: js.UndefOr[String]
 
+}
+
+/**
+  * Expandable Item
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ExpandableItem extends js.Object {
+  var expanded: js.UndefOr[Boolean]
+
+}
+
+/**
+  * Expandable Player
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait ExpandablePlayer extends js.Object {
+  var expanded: js.UndefOr[Boolean]
+  var myOpenOrders: js.UndefOr[js.Array[Order]]
+  var myClosedOrders: js.UndefOr[js.Array[ClosedOrder]]
+  var myPositions: js.UndefOr[js.Array[Position]]
+  var myPerformance: js.UndefOr[js.Array[Performance]]
 }

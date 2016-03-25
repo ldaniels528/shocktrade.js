@@ -31,11 +31,11 @@
 		<div class="col-md-12 clickable" ng-repeat="p in getPerformance() track by $index"
 			 ng-class-even="'contest_even'"
 			 ng-class-odd="'contest_odd'"
-			 ng-class="selectedPerformance.OID() === p.OID() ? 'selected' : ''"
+			 ng-class="selectedPerformance._id.$oid === p._id.$oid ? 'selected' : ''"
 			 ng-click="selectPerformance(p)">
 			<div class="col-md-2">
                 <span class="clickable" ng-class="getExchangeClass(p.exchange)" ng-click="loadQuote(p.symbol, true)">
-                    <span ng-class="selectedPerformance.OID() === p.OID() ? 'underlined' : ''">{{ p.symbol }}</span>
+                    <span ng-class="selectedPerformance._id.$oid === p._id.$oid ? 'underlined' : ''">{{ p.symbol }}</span>
                 </span>
 			</div>
 			<div ng-hide="isPerformanceSelected()" class="col-md-2 right">{{ p.pricePaid | quoteNumber }}</div>
