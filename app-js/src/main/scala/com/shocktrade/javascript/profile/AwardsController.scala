@@ -3,7 +3,7 @@ package com.shocktrade.javascript.profile
 import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Http
 import com.shocktrade.javascript.profile.AwardsController._
-import com.shocktrade.javascript.{Award, MySession}
+import com.shocktrade.javascript.{Award, MySessionService}
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -12,7 +12,7 @@ import scala.scalajs.js
   * Awards Controller
   * @author lawrence.daniels@gmail.com
   */
-class AwardsController($scope: Scope, $http: Http, @injected("MySession") mySession: MySession)
+class AwardsController($scope: Scope, $http: Http, @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
   ///////////////////////////////////////////////////////////////////////////

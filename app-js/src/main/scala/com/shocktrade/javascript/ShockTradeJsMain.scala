@@ -1,23 +1,30 @@
 package com.shocktrade.javascript
 
 import com.github.ldaniels528.scalascript.extensions.{RouteProvider, RouteTo}
+import com.github.ldaniels528.scalascript.social.facebook.Facebook._
+import com.github.ldaniels528.scalascript.social.facebook.{FacebookAppConfig, FacebookService}
+import com.github.ldaniels528.scalascript.social.linkedin.LinkedIn._
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Module, Scope, angular}
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
 import com.shocktrade.javascript.directives.{AvatarDirective, ChangeArrowDirective}
 import com.shocktrade.javascript.discover._
-import com.shocktrade.javascript.explore.{ExploreService, ExploreController}
+import com.shocktrade.javascript.explore.{ExploreController, ExploreService}
 import com.shocktrade.javascript.news._
 import com.shocktrade.javascript.profile._
 import com.shocktrade.javascript.social._
+import org.scalajs.dom._
+import org.scalajs.jquery._
 
 import scala.scalajs.js
+import scala.scalajs.js.Dynamic.{global => g}
 
 /**
- * ShockTrade.js Application Main
- * @author lawrence.daniels@gmail.com
- */
+  * ShockTrade.js Application Main
+  * @author lawrence.daniels@gmail.com
+  */
 object ShockTradeJsMain extends js.JSApp {
 
   override def main() {
@@ -39,6 +46,9 @@ object ShockTradeJsMain extends js.JSApp {
     module.filter("quoteChange", Filters.quoteChange)
     module.filter("quoteNumber", Filters.quoteNumber)
     module.filter("yesno", Filters.yesNo)
+
+    // configure the Social Network callbacks
+    configureSocialNetworkCallbacks()
 
     // add the controllers and services
     configureServices(module)
@@ -66,9 +76,6 @@ object ShockTradeJsMain extends js.JSApp {
 
     // initialize the application
     module.run({ ($rootScope: Scope, WebSocketService: WebSocketService) =>
-      // inject Facebook's JavaScript SDK
-      FacebookInjector.init()
-
       // initialize the web socket service
       WebSocketService.init()
     })
@@ -78,9 +85,9 @@ object ShockTradeJsMain extends js.JSApp {
     module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
-    module.serviceOf[Facebook]("Facebook")
+    module.serviceOf[FacebookService]("Facebook")
     module.serviceOf[MarketStatusService]("MarketStatus")
-    module.serviceOf[MySession]("MySession")
+    module.serviceOf[MySessionService]("MySessionService")
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[ProfileService]("ProfileService")
     module.serviceOf[QuoteService]("QuoteService")
@@ -127,6 +134,64 @@ object ShockTradeJsMain extends js.JSApp {
     module.controllerOf[PerksDialogController]("PerksDialogController")
     module.controllerOf[SignUpDialogController]("SignUpController")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
+  }
+
+  private def configureSocialNetworkCallbacks(): Unit = {
+    // setup the initialization callback for Facebook
+    g.fbAsyncInit = () => {
+      console.log("fbAsyncInit: Setting up Facebook integration...")
+      val config = FacebookAppConfig(appId = getFacebookAppID(g.location.hostname.as[String]), status = true, xfbml = true)
+      FB.init(config)
+      console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
+
+      // asynchronously initialize Facebook
+      onload(
+        success = (mySession: MySessionService) => {
+          console.info("Initializing Facebook API...")
+          mySession.doFacebookLogin()
+        },
+        failure = () => console.error("Facebook: The MySessionService service could not be retrieved.")
+      )
+    }
+
+    // setup the initialization callback for LinkedIn
+    g.linkedInInit = () => {
+      console.log("linkedInInit: Setting up LinkedIn integration...")
+
+      // asynchronously initialize LinkedIn
+      onload(
+        success = (mySession: MySessionService) => {
+          console.info("Initializing LinkedIn API...")
+          mySession.initLinkedIn(IN)
+        },
+        failure = () => console.error("LinkedIn: The MySessionService service could not be retrieved.")
+      )
+    }
+  }
+
+  private def onload(success: js.Function1[MySessionService, Unit], failure: js.Function0[Unit]) = {
+    val mainElem = angular.element(jQuery("#ShockTradeMain"))
+    val $scope = mainElem.scope()
+    val injector = mainElem.injector()
+    injector.get[MySessionService]("MySessionService").toOption match {
+      case Some(mySession) =>
+        $scope.$apply(() => success(mySession))
+      case None =>
+        $scope.$apply(() => failure())
+    }
+  }
+
+  private def getFacebookAppID(hostname: String) = hostname match {
+    case "localhost" => "522523074535098" // local dev
+    case "www.shocktrade.biz" => "616941558381179"
+    case "shocktrade.biz" => "616941558381179"
+    case "www.shocktrade.com" => "364507947024983"
+    case "shocktrade.com" => "364507947024983"
+    case "www.shocktrade.net" => "616569495084446"
+    case "shocktrade.net" => "616569495084446"
+    case _ =>
+      console.log(s"Unrecognized hostname '${g.location.hostname}'")
+      "522523074535098" // unknown, so local dev
   }
 
 }

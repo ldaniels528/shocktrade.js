@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dialogs
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, angular, injected, scoped}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, Perk}
@@ -74,7 +74,7 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
  * @author lawrence.daniels@gmail.com
  */
 class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInstance[PerksDialogResult], toaster: Toaster,
-                            @injected("MySession") mySession: MySession,
+                            @injected("MySessionService") mySession: MySessionService,
                             @injected("PerksDialog") perksSvc: PerksDialog)
   extends Controller {
 

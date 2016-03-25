@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dialogs
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
 import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected, scoped}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
@@ -42,7 +42,7 @@ class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
  */
 class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: ModalInstance[TransferFundsResult],
                                     toaster: Toaster,
-                                    @injected("MySession") mySession: MySession,
+                                    @injected("MySessionService") mySession: MySessionService,
                                     @injected("TransferFundsDialog") dialog: TransferFundsDialog)
   extends Controller {
 

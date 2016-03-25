@@ -3,7 +3,7 @@ package com.shocktrade.javascript.dashboard
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, Scope, injected, scoped}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking}
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
  */
 class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
-                          @injected("MySession") mySession: MySession,
+                          @injected("MySessionService") mySession: MySessionService,
                           @injected("PerksDialog") perksDialog: PerksDialog,
                           @injected("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
   extends Controller {

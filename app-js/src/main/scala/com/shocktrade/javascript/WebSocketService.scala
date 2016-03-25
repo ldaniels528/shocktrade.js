@@ -16,7 +16,7 @@ import scala.scalajs.js.JSON
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
-                       @injected("MySession") mySession: MySession)
+                       @injected("MySessionService") mySession: MySessionService)
   extends Service {
 
   private var socket: WebSocket = null

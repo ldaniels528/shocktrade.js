@@ -25,7 +25,7 @@ import scala.util.{Failure, Success}
 class DiscoverController($scope: DiscoverScope, $cookies: Cookies, $location: Location, $q: Q,
                          $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
                          @injected("MarketStatus") marketStatus: MarketStatusService,
-                         @injected("MySession") mySession: MySession,
+                         @injected("MySessionService") mySession: MySessionService,
                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                          @injected("ProfileService") profileService: ProfileService,
                          @injected("QuoteService") quoteService: QuoteService)

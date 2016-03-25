@@ -6,7 +6,7 @@ import com.shocktrade.javascript.AppEvents._
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialog
 import com.shocktrade.javascript.models.{MyUpdate, UserProfile}
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.{GlobalLoading, MySessionService}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
 class ConnectController($scope: js.Dynamic, toaster: Toaster,
                         @injected("ComposeMessageDialog") messageDialog: ComposeMessageDialog,
                         @injected("ConnectService") connectService: ConnectService,
-                        @injected("MySession") mySession: MySession)
+                        @injected("MySessionService") mySession: MySessionService)
   extends Controller with GlobalLoading {
 
   private val scope = $scope.asInstanceOf[Scope]

@@ -8,7 +8,7 @@ import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, OrderQuote}
-import com.shocktrade.javascript.{AutoCompletionController, MySession}
+import com.shocktrade.javascript.{AutoCompletionController, MySessionService}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
@@ -53,7 +53,7 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
  */
 class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
-                               @injected("MySession") mySession: MySession,
+                               @injected("MySessionService") mySession: MySessionService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("QuoteService") quoteService: QuoteService,

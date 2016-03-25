@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Location
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.QuoteService
@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
  */
 class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
-                         @injected("MySession") mySession: MySession,
+                         @injected("MySessionService") mySession: MySessionService,
                          @injected("ProfileService") profileService: ProfileService,
                          @injected("QuoteService") quoteService: QuoteService)
   extends Controller {

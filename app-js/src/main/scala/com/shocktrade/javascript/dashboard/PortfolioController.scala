@@ -9,7 +9,7 @@ import com.shocktrade.javascript.dashboard.PortfolioController._
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
 import com.shocktrade.javascript.discover.DiscoverController
 import com.shocktrade.javascript.models.{BSONObjectID, Participant}
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.{GlobalLoading, MySessionService}
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
  * @author lawrence.daniels@gmail.com
  */
 class PortfolioController($scope: js.Dynamic, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                          @injected("MySession") mySession: MySession,
+                          @injected("MySessionService") mySession: MySessionService,
                           @injected("ContestService") contestService: ContestService,
                           @injected("NewOrderDialog") newOrderDialog: NewOrderDialog)
   extends Controller with GlobalLoading {

@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
+import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.{Controller, Service, angular, injected, scoped}
+import com.github.ldaniels528.scalascript.social.facebook.{FacebookProfileResponse, FacebookService}
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.javascript.models.UserProfile
-import com.shocktrade.javascript.social.{Facebook, FacebookProfile}
 import org.scalajs.dom.console
 
 import scala.concurrent.ExecutionContext
@@ -17,9 +17,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
- * Sign-Up Dialog Service
- * @author lawrence.daniels@gmail.com
- */
+  * Sign-Up Dialog Service
+  * @author lawrence.daniels@gmail.com
+  */
 class SignUpDialog($http: Http, $modal: Modal) extends Service {
 
   def popup()(implicit ec: ExecutionContext) = {
@@ -35,12 +35,12 @@ class SignUpDialog($http: Http, $modal: Modal) extends Service {
 }
 
 /**
- * Sign-Up Dialog Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Sign-Up Dialog Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalInstance[SignUpDialogResult],
                              $timeout: Timeout, toaster: Toaster,
-                             @injected("Facebook") facebook: Facebook,
+                             @injected("Facebook") facebook: FacebookService,
                              @injected("SignUpDialog") dialog: SignUpDialog)
   extends Controller {
 
@@ -80,10 +80,10 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
   ///////////////////////////////////////////////////////////////////////
 
   /**
-   * Validates the form
-   * @param form the given [[SignUpForm form]]
-   * @return {boolean}
-   */
+    * Validates the form
+    * @param form the given [[SignUpForm form]]
+    * @return {boolean}
+    */
   private def isValid(form: SignUpForm) = {
     // clear messages
     messages.removeAll()
@@ -132,34 +132,34 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
 }
 
 /**
- * Sign-Up Dialog Controller Singleton
- */
+  * Sign-Up Dialog Controller Singleton
+  */
 object SignUpDialogController {
 
-  type SignUpDialogResult = (UserProfile, FacebookProfile)
+  type SignUpDialogResult = (UserProfile, FacebookProfileResponse)
 }
 
 /**
- * Sign-Up Dialog Scope
- */
+  * Sign-Up Dialog Scope
+  */
 trait SignUpDialogScope extends js.Object {
   var form: SignUpForm = js.native
 }
 
 /**
- * Sign-Up Dialog Form
- */
+  * Sign-Up Dialog Form
+  */
 trait SignUpForm extends js.Object {
   var name: js.UndefOr[String] = js.native
   var facebookID: js.UndefOr[String] = js.native
   var userName: js.UndefOr[String] = js.native
   var email: js.UndefOr[String] = js.native
-  var fbProfile: FacebookProfile = js.native
+  var fbProfile: FacebookProfileResponse = js.native
 }
 
 /**
- * Sign-Up Dialog Form Singleton
- */
+  * Sign-Up Dialog Form Singleton
+  */
 object SignUpForm {
 
   def apply() = makeNew[SignUpForm]

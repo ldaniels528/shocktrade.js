@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Controller, injected}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.BSONObjectID
 import org.scalajs.dom.console
 
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
   */
 class ExposureController($scope: js.Dynamic, $http: Http, $timeout: Timeout, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
-                         @injected("MySession") mySession: MySession)
+                         @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
   private var chartData = emptyArray[js.Dynamic]

@@ -3,7 +3,7 @@ package com.shocktrade.javascript.admin
 import com.github.ldaniels528.scalascript.core.Http
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Controller, injected, scoped}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
  */
 class InspectController($scope: InspectScope, $http: Http, $routeParams: InspectRouteParams, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
-                        @injected("MySession") mySession: MySession)
+                        @injected("MySessionService") mySession: MySessionService)
   extends Controller {
 
   /////////////////////////////////////////////////////////////////////

@@ -4,14 +4,14 @@ import com.github.ldaniels528.scalascript.core.Location
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.github.ldaniels528.scalascript.{Controller, Scope, scoped}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
 
 /**
   * Abstract Game Controller
   * @author lawrence.daniels@gmail.com
   */
-abstract class GameController($scope: Scope, $location: Location, toaster: Toaster, mySession: MySession)
+abstract class GameController($scope: Scope, $location: Location, toaster: Toaster, mySession: MySessionService)
   extends Controller {
 
   @scoped

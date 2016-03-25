@@ -4,9 +4,9 @@ import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.shocktrade.javascript.MySession
+import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.shocktrade.javascript.social.TaggableFriend
+import com.shocktrade.javascript.MySessionService
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -16,11 +16,11 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
 
 /**
- * Home Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Home Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
-                     @injected("MySession") mySession: MySession,
+                     @injected("MySessionService") mySession: MySessionService,
                      @injected("ProfileService") profileService: ProfileService)
   extends Controller {
 
@@ -71,8 +71,8 @@ class HomeController($scope: HomeScope, $timeout: Timeout, toaster: Toaster,
 }
 
 /**
- * Home Controller Scope
- */
+  * Home Controller Scope
+  */
 @js.native
 trait HomeScope extends Scope {
   var selectedFriend: TaggableFriend = js.native

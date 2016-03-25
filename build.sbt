@@ -28,10 +28,11 @@ lazy val appScalaJs = (project in file("app-js"))
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= Seq(
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
       "com.github.ldaniels528" %%% "scalascript" % "0.2.20",
+      "com.github.ldaniels528" %%% "scalascript-social" % "0.2.20",
       "com.vmunier" %% "play-scalajs-sourcemaps" % "0.1.0" exclude("com.typesafe.play", "play_2.11"),
-      "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-      "be.doeraene" %%% "scalajs-jquery" % "0.9.0"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.0"
     ))
   .enablePlugins(ScalaJSPlugin)
 

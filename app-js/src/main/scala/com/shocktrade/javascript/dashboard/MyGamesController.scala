@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.core.{Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
 import com.github.ldaniels528.scalascript.{Scope, injected, scoped}
 import com.shocktrade.javascript.AppEvents._
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialog
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, ParticipantRanking, UserProfile}
@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
  */
 class MyGamesController($scope: Scope, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
-                        @injected("MySession") mySession: MySession,
+                        @injected("MySessionService") mySession: MySessionService,
                         @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends GameController($scope, $location, toaster, mySession) {
 

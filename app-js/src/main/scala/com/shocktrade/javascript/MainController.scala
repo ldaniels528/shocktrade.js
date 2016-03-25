@@ -4,14 +4,14 @@ import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
 import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.scalascript.social.facebook.FacebookService
+import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.dialogs.SignUpDialog
 import com.shocktrade.javascript.models.{BSONObjectID, OnlinePlayerState, UserProfile}
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.social.Facebook
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -22,13 +22,13 @@ import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
 /**
- * Main Controller
- * @author lawrence.daniels@gmail.com
- */
+  * Main Controller
+  * @author lawrence.daniels@gmail.com
+  */
 class MainController($scope: MainScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                      @injected("ContestService") contestService: ContestService,
-                     @injected("Facebook") facebook: Facebook,
-                     @injected("MySession") mySession: MySession,
+                     @injected("Facebook") facebook: FacebookService,
+                     @injected("MySessionService") mySession: MySessionService,
                      @injected("ProfileService") profileService: ProfileService,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog)
   extends Controller with GlobalLoading {
@@ -87,7 +87,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
   @scoped def postLoginUpdates(facebookID: String, userInitiated: Boolean) = doPostLoginUpdates(facebookID, userInitiated)
 
   //////////////////////////////////////////////////////////////////////
-  //              MySession Functions
+  //              MySessionService Functions
   //////////////////////////////////////////////////////////////////////
 
   @scoped def contestIsEmpty = mySession.contest.isEmpty
@@ -161,7 +161,7 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
         nonMember = true
 
         // load the profile
-        doPostLoginUpdates(facebook.facebookID, userInitiated = true)
+        facebook.facebookID map (doPostLoginUpdates(_, userInitiated = true))
       case Failure(e) =>
         g.console.error(s"main:login error")
         e.printStackTrace()
@@ -274,9 +274,9 @@ class MainController($scope: MainScope, $http: Http, $location: Location, $timeo
 }
 
 /**
- * Main Scope
- * @author lawrence.daniels@gmail.com
- */
+  * Main Scope
+  * @author lawrence.daniels@gmail.com
+  */
 trait MainScope extends Scope {
   var appTabs: js.Array[MainTab] = js.native
   var levels: js.Array[GameLevel] = js.native
@@ -284,9 +284,9 @@ trait MainScope extends Scope {
 }
 
 /**
- * Main Controller Singleton
- * @author lawrence.daniels@gmail.com
- */
+  * Main Controller Singleton
+  * @author lawrence.daniels@gmail.com
+  */
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
 

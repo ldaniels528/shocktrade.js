@@ -4,7 +4,7 @@ import com.github.ldaniels528.scalascript.{Service, _}
 import com.github.ldaniels528.scalascript.core.{Http, Timeout}
 import com.github.ldaniels528.scalascript.core.TimerConversions._
 import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.shocktrade.javascript.MySession
+import com.shocktrade.javascript.MySessionService
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
@@ -50,7 +50,7 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
  */
 class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
                               $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout, toaster: Toaster,
-                              @injected("MySession") mySession: MySession,
+                              @injected("MySessionService") mySession: MySessionService,
                               @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends Controller {
 

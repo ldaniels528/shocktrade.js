@@ -9,7 +9,7 @@ import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialog
 import com.shocktrade.javascript.models.Contest.MaxPlayers
 import com.shocktrade.javascript.models._
-import com.shocktrade.javascript.{GlobalLoading, MySession}
+import com.shocktrade.javascript.{GlobalLoading, MySessionService}
 import org.scalajs.dom.console
 
 import scala.concurrent.duration._
@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
 class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
-                           @injected("MySession") mySession: MySession)
+                           @injected("MySessionService") mySession: MySessionService)
   extends GameController($scope, $location, toaster, mySession) with GlobalLoading {
 
   // public variables

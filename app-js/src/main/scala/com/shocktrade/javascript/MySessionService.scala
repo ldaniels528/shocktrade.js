@@ -3,33 +3,38 @@ package com.shocktrade.javascript
 import com.github.ldaniels528.scalascript._
 import com.github.ldaniels528.scalascript.core.Timeout
 import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.shocktrade.javascript.AppEvents._
+import com.github.ldaniels528.scalascript.social.facebook.{FacebookProfileResponse, FacebookService, TaggableFriend}
+import com.github.ldaniels528.scalascript.social.linkedin.LinkedIn
 import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.profile.ProfileService
-import com.shocktrade.javascript.social.{TaggableFriend, FacebookProfile}
 import org.scalajs.dom.console
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => JS}
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
- * My Session Facade
- * @author lawrence.daniels@gmail.com
- */
-class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
-                @injected("ContestService") contestService: ContestService,
-                @injected("ProfileService") profileService: ProfileService)
+  * My Session Service
+  * @author lawrence.daniels@gmail.com
+  */
+class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
+                       @injected("Facebook") facebook: FacebookService,
+                       @injected("ContestService") contestService: ContestService,
+                       @injected("ProfileService") profileService: ProfileService)
   extends Service {
 
   val notifications = emptyArray[String]
-  var facebookID: Option[String] = None
+  var facebookID: js.UndefOr[String] = js.undefined
+  var linkedInID: js.UndefOr[String] = js.undefined
   var fbFriends = emptyArray[TaggableFriend]
-  var fbProfile: Option[FacebookProfile] = None
+  var fbProfile: js.UndefOr[FacebookProfileResponse] = js.undefined
   var contest: Option[Contest] = None
   var userProfile: UserProfile = createSpectatorProfile()
 
@@ -37,10 +42,10 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def setUserProfile(profile: UserProfile, profileFB: FacebookProfile) {
+  def setUserProfile(profile: UserProfile, profileFB: FacebookProfileResponse) {
     console.log(s"facebookID = $facebookID, profileFB = ${angular.toJson(profileFB)}")
 
-    this.fbProfile = Option(profileFB)
+    this.fbProfile = profileFB
     this.facebookID = fbProfile.map(_.id)
 
     console.log(s"profile = ${angular.toJson(profile)}")
@@ -52,40 +57,40 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   /**
-   * Returns the user ID for the current user's name
-   * @return {*}
-   */
+    * Returns the user ID for the current user's name
+    * @return {*}
+    */
   def getUserName = userProfile.name
 
   /**
-   * Indicates whether the given user is an administrator
-   * @return {boolean}
-   */
+    * Indicates whether the given user is an administrator
+    * @return {boolean}
+    */
   def isAdmin = userProfile.admin.getOrElse(false)
 
   /**
-   * Indicates whether the user is logged in
-   * @return {boolean}
-   */
+    * Indicates whether the user is logged in
+    * @return {boolean}
+    */
   def isAuthenticated = userProfile._id.exists(_.$oid.nonEmpty)
 
   def getFacebookID = facebookID.orNull
 
-  def setFacebookID(fbId: String) = facebookID = Option(fbId)
+  def setFacebookID(fbId: String) = facebookID = fbId
 
   def getFacebookProfile = fbProfile
 
-  def setFacebookProfile(profile: FacebookProfile) = fbProfile = Option(profile)
+  def setFacebookProfile(profile: FacebookProfileResponse) = fbProfile = profile
 
   def isFbAuthenticated = fbProfile.isDefined
 
   /**
-   * Logout function
-   */
+    * Logout function
+    */
   def logout() = {
-    facebookID = None
+    facebookID = js.undefined
     fbFriends = js.Array[TaggableFriend]()
-    fbProfile = None
+    fbProfile = js.undefined
     userProfile = createSpectatorProfile()
     contest = None
   }
@@ -116,21 +121,21 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(symbol: String) = userProfile._id foreach(id => profileService.addFavoriteSymbol(id, symbol))
+  def addFavoriteSymbol(symbol: String) = userProfile._id foreach (id => profileService.addFavoriteSymbol(id, symbol))
 
   def getFavoriteSymbols = userProfile.favorites
 
   def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.contains(symbol)
 
-  def removeFavoriteSymbol(symbol: String) = userProfile._id foreach(id => profileService.removeFavoriteSymbol(id, symbol))
+  def removeFavoriteSymbol(symbol: String) = userProfile._id foreach (id => profileService.removeFavoriteSymbol(id, symbol))
 
-  def addRecentSymbol(symbol: String) = userProfile._id foreach(id => profileService.addRecentSymbol(id, symbol))
+  def addRecentSymbol(symbol: String) = userProfile._id foreach (id => profileService.addRecentSymbol(id, symbol))
 
   def getRecentSymbols = userProfile.recentSymbols
 
   def isRecentSymbol(symbol: String) = getRecentSymbols.contains(symbol)
 
-  def removeRecentSymbol(symbol: String) = userProfile._id foreach(id => profileService.removeRecentSymbol(id, symbol))
+  def removeRecentSymbol(symbol: String) = userProfile._id foreach (id => profileService.removeRecentSymbol(id, symbol))
 
   def getMostRecentSymbol = getRecentSymbols.lastOption getOrElse "AAPL"
 
@@ -163,8 +168,8 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   /**
-   * Returns the combined total funds for both the cash and margin accounts
-   */
+    * Returns the combined total funds for both the cash and margin accounts
+    */
   def getCompleteFundsAvailable = {
     (cashAccount_?.map(_.cashFunds) getOrElse 0.00d) + (marginAccount_?.map(_.cashFunds) getOrElse 0.00d)
   }
@@ -201,6 +206,78 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   def resetContest() = contest = None
 
   ////////////////////////////////////////////////////////////
+  //          Social Network Methods
+  ////////////////////////////////////////////////////////////
+
+  def doFacebookLogin() = {
+    // perform the login
+    facebook.getLoginStatus onComplete {
+      case Success(response) =>
+        console.log("Facebook login successful.")
+        initFacebook(facebookID = response.authResponse.userID, userInitiated = false)
+      case Failure(e) =>
+        console.error(s"Facebook: ${e.displayMessage}")
+    }
+  }
+
+  def initFacebook(facebookID: String, userInitiated: Boolean) = {
+    console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
+
+    // capture the Facebook user ID
+    this.facebookID = facebookID
+
+    val outcome = for {
+    // load the user"s Facebook profile
+      fbProfile <- {
+        console.log(s"Retrieving Facebook profile for FBID $facebookID...")
+        facebook.getUserProfile
+      }
+
+      friends <- {
+        console.log(s"Loading Facebook friends for FBID $facebookID...")
+        facebook.getTaggableFriends
+      }
+
+      fbCloseFriends <- {
+        console.log(s"Loading Facebook friends list for FBID $facebookID...")
+        facebook.getFriendList()
+      }
+
+      // load the user's ShockTrade profile
+      profile <- {
+        console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
+        //profileService.getProfileByFacebookID(facebookID)
+        Future.successful(userProfile)
+      }
+    } yield (fbProfile, friends, fbCloseFriends, profile)
+
+    outcome onComplete {
+      case Success((fbProfile, friends, fbCloseFriends, profile)) =>
+        console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
+        console.log(s"fbCloseFriends = ${angular.toJson(fbCloseFriends, pretty = true)}")
+        fbFriends = fbFriends
+      case Failure(e) =>
+        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
+    }
+    ()
+  }
+
+  def isFacebookConnected = facebookID.nonEmpty
+
+  def initLinkedIn(IN: LinkedIn) = {
+    // read the authenticated user's profile
+    IN.API.Profile(js.Array("me")) onComplete {
+      case Success(response) =>
+        linkedInID = response.values.headOption.flatMap(_.id.toOption).orUndefined
+        console.log(s"LinkedIn: memberID = $linkedInID")
+      case Failure(e) =>
+        console.error(s"LinkedIn-Profile: ${e.displayMessage}")
+    }
+  }
+
+  def isLinkedInConnected = linkedInID.nonEmpty
+
+  ////////////////////////////////////////////////////////////
   //          Notification Methods
   ////////////////////////////////////////////////////////////
 
@@ -235,14 +312,14 @@ class MySession($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a default 'Spectator' user profile
-   * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
-   */
+    * Creates a default 'Spectator' user profile
+    * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
+    */
   private def createSpectatorProfile() = {
     notifications.remove(0, notifications.length)
-    facebookID = None
+    facebookID = js.undefined
     fbFriends = emptyArray[TaggableFriend]
-    fbProfile = None
+    fbProfile = js.undefined
     contest = None
 
     UserProfile(

@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
  */
 class NavigationController($scope: Scope, $http: Http, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
-                           @injected("MySession") mySession: MySession,
+                           @injected("MySessionService") mySession: MySessionService,
                            @injected("WebSocketService") webSocket: WebSocketService)
   extends Controller {
 
