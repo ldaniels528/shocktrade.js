@@ -1,10 +1,11 @@
-package com.shocktrade.server.trading
+package com.shocktrade.processors
 
 import java.util.Date
 
 import akka.util.Timeout
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.ContestUpdated
+import com.shocktrade.dao.ContestDAO
 import com.shocktrade.models.contest.Contest
 import com.shocktrade.util.DateUtil._
 import org.joda.time.DateTime

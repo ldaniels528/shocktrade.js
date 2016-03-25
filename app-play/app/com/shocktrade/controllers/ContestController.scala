@@ -9,10 +9,10 @@ import com.github.ldaniels528.tabular.Tabular
 import com.shocktrade.actors.WebSockets
 import com.shocktrade.actors.WebSockets.UserProfileUpdated
 import com.shocktrade.controllers.ContestControllerForms._
-import com.shocktrade.dao.{SecuritiesDAO, UserProfileDAO}
+import com.shocktrade.dao.{ContestDAO, SecuritiesDAO, UserProfileDAO}
 import com.shocktrade.models.contest.{PlayerRef, _}
 import com.shocktrade.models.quote.{MarketQuote, QuoteSnapshot, SectorQuote}
-import com.shocktrade.server.trading.{ContestDAO, OrderProcessor}
+import com.shocktrade.processors.OrderProcessor
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.api._

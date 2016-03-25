@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.robots
+package com.shocktrade.processors.actors.robots
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicBoolean
@@ -8,13 +8,12 @@ import akka.util.Timeout
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.StringHelper._
 import com.github.ldaniels528.tabular.Tabular
-import com.shocktrade.dao.{SecuritiesDAO, UserProfileDAO}
+import com.shocktrade.dao.{ContestDAO, SecuritiesDAO, UserProfileDAO}
 import com.shocktrade.models.contest.PerkTypes.PerkType
 import com.shocktrade.models.contest._
 import com.shocktrade.models.profile.UserProfile
 import com.shocktrade.models.quote.{CompleteQuote, ResearchQuote}
-import com.shocktrade.server.trading.ContestDAO
-import com.shocktrade.server.trading.robots.TradingRobot._
+import com.shocktrade.processors.actors.robots.TradingRobot._
 import play.modules.reactivemongo.ReactiveMongoApi
 
 import scala.concurrent.Future

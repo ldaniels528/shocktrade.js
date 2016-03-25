@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading
+package com.shocktrade.dao
 
 import java.net.InetAddress
 import java.util.Date
@@ -7,7 +7,8 @@ import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.shocktrade.models.contest.AccountTypes.AccountType
 import com.shocktrade.models.contest.PerkTypes._
 import com.shocktrade.models.contest._
-import com.shocktrade.server.trading.Outcome.Failed
+import com.shocktrade.processors.models.Outcome.Failed
+import com.shocktrade.processors.models.{Claim, Outcome, WorkOrder}
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.DateUtil._
 import play.api.Logger
@@ -500,7 +501,7 @@ case class ContestDAO(reactiveMongoApi: ReactiveMongoApi) {
   /**
     * Increases a position by creating a new position
     * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
-    * @param claim    the given [[com.shocktrade.server.trading.Claim claim]]
+    * @param claim    the given [[Claim claim]]
     * @param asOfDate the given [[Date effective date]]
     * @param ec       the implicit [[ExecutionContext execution context]]
     * @return a promise of the number of positions updated
@@ -536,10 +537,10 @@ case class ContestDAO(reactiveMongoApi: ReactiveMongoApi) {
   /**
     * Increases a position by updating an existing position
     * @param c        the given [[com.shocktrade.models.contest.Contest contest]]
-    * @param claim    the given [[com.shocktrade.server.trading.Claim claim]]
+    * @param claim    the given [[Claim claim]]
     * @param asOfDate the given [[java.util.Date effective date]]
     * @param ec       the implicit [[ExecutionContext execution context]]
-    * @return a promise of the [[com.shocktrade.server.trading.Outcome outcome]]
+    * @return a promise of the [[Outcome outcome]]
     */
   private def updatePosition(c: Contest, claim: Claim, pos: Position, asOfDate: Date)(implicit ec: ExecutionContext) = {
     // create the increased position

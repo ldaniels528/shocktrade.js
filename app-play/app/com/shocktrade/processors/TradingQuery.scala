@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading
+package com.shocktrade.processors
 
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.WriteResult

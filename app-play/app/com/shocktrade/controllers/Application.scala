@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 import com.shocktrade.actors.WebSocketHandler
 import com.shocktrade.controllers.Application.initialized
-import com.shocktrade.server.trading.DataLoadingProcesses
+import com.shocktrade.processors.DataLoadingProcesses
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._

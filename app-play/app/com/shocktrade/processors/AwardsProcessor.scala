@@ -1,16 +1,15 @@
-package com.shocktrade.server.trading
+package com.shocktrade.processors
 
-import com.shocktrade.models.profile.AwardCodes
-import AwardCodes._
 import com.shocktrade.models.contest.{Contest, Participant, PerkTypes}
+import com.shocktrade.models.profile.AwardCodes._
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext
 
 /**
- * Awards Processor
- * @author lawrence.daniels@gmail.com
- */
+  * Awards Processor
+  * @author lawrence.daniels@gmail.com
+  */
 object AwardsProcessor {
   private val conditions = Seq(CheckeredFlag, CrystalBall, GoldTrophy, MadMoney, PayDirt, PerkSet)
   private val MinParticipation = 4

@@ -1,10 +1,10 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.server.trading.actors.NasdaqImportActor.{NasdaqImport, NasdaqQuote}
+import com.shocktrade.processors.actors.NasdaqImportActor.{NasdaqImport, NasdaqQuote}
 import com.shocktrade.util.BSONHelper._
 import play.api.Play.current
 import play.api.libs.ws.WS

@@ -1,6 +1,9 @@
 package com.shocktrade.dao
 
 import com.shocktrade.models.quote._
+import com.shocktrade.processors.actors.FinraRegShoUpdateActor.RegSHO
+import com.shocktrade.processors.actors.MissingCik
+import com.shocktrade.services.CikCompanySearchService.CikInfo
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -15,9 +18,11 @@ import scala.concurrent.{ExecutionContext, Future}
   * Securities DAO
   * @author lawrence.daniels@gmail.com
   */
-case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) extends Classifications {
+case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) {
   private val Stocks = "Stocks"
   private val db = reactiveMongoApi.db
+  private val mcN = db.collection[BSONCollection]("NAICS")
+  private val mcS = db.collection[BSONCollection]("SIC")
   private val mcQ = db.collection[BSONCollection](Stocks)
 
   val limitFields = BS(
@@ -128,10 +133,6 @@ case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) extends Classificat
     ))), BS("symbol" -> 1)).cursor[BS]()
   }
 
-  def updateQuote(symbol: String, doc: BS)(implicit ec: ExecutionContext) = {
-    mcQ.update(BS("symbol" -> symbol), BS("$set" -> doc))
-  }
-
   def exploreSectors(userID: String)(implicit ec: ExecutionContext) = {
     for {
       quotes <- db.command(Aggregate(Stocks, Seq(
@@ -166,7 +167,7 @@ case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) extends Classificat
 
   def exploreNAICSSectors(implicit ec: ExecutionContext) = {
     for {
-      codes <- naicsCodes
+      codes <- findNaicsCodes
       results <- db.command(Aggregate(Stocks, Seq(
         Match(BS("active" -> true, "naicsNumber" -> BS("$ne" -> BSONNull))),
         GroupField("naicsNumber")("total" -> SumValue(1))))) map (_ map { bs =>
@@ -178,7 +179,7 @@ case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) extends Classificat
 
   def exploreSICSectors(implicit ec: ExecutionContext) = {
     for {
-      codes <- sicCodes
+      codes <- findSicCodes
       results <- db.command(Aggregate(Stocks, Seq(
         Match(BS("active" -> true, "sicNumber" -> BS("$ne" -> BSONNull))),
         GroupField("sicNumber")("total" -> SumValue(1))))) map (_.toSeq map { bs =>
@@ -190,6 +191,64 @@ case class SecuritiesDAO(reactiveMongoApi: ReactiveMongoApi) extends Classificat
 
   def getSectorInfo(symbol: String)(implicit ec: ExecutionContext) = {
     findOne[SectorQuote](symbol)(SectorQuote.Fields: _*)
+  }
+
+  def findMissingCiks(implicit ec: ExecutionContext) = {
+    // query the missing symbols
+    // db.Stocks.count({"active":true, "assetType":"Common Stock", "name":{"$ne":null}, "cikNumber":{"$exists":false}});
+    // db.Stocks.find({"active":true, "assetType":"Common Stock", "name":{"$ne":null}, "cikNumber":{"$exists":false}});
+    mcQ.find(
+      BS("active" -> true, "assetType" -> "Common Stock", "name" -> BS("$ne" -> BSONNull), "cikNumber" -> BS("$exists" -> false)),
+      BS("symbol" -> 1, "name" -> 1))
+      .cursor[MissingCik]()
+      .collect[Seq]()
+  }
+
+  def updateCik(symbol: String, name: String, cik: CikInfo)(implicit ec: ExecutionContext) = {
+    import cik._
+
+    mcQ.update(
+      BS("symbol" -> symbol),
+      if (name.length < cikName.length)
+        BS("$set" -> BS("name" -> cikName, "cikNumber" -> cikNumber))
+      else
+        BS("$set" -> BS("cikNumber" -> cikNumber)),
+      upsert = false, multi = false)
+  }
+
+  def updateRegSHO(reg: RegSHO)(implicit ec: ExecutionContext) = {
+    mcQ.update(BS("symbol" -> reg.symbol),
+      BS(
+        "baseSymbol" -> reg.symbol.take(4),
+        "name" -> reg.securityName,
+        "exchange" -> "OTCBB",
+        "assetClass" -> "Equity",
+        "assetType" -> "Common Stock",
+        "active" -> true,
+        "yfDynLastUpdated" -> new DateTime().minusDays(1).toDate
+      ), upsert = true)
+  }
+
+  def updateQuote(symbol: String, doc: BS)(implicit ec: ExecutionContext) = {
+    mcQ.update(BS("symbol" -> symbol), BS("$set" -> doc))
+  }
+
+  /**
+    * Retrieves the NAICS code mappings
+    */
+  def findNaicsCodes(implicit ec: ExecutionContext): Future[Map[Int, String]] = {
+    mcN.find(BS()).cursor[NaicsCode]().collect[Seq]() map {
+      _ map { naicsCode => (naicsCode.naicsNumber, naicsCode.description) }
+    } map (f => Map(f: _*))
+  }
+
+  /**
+    * Retrieves the SIC code mappings
+    */
+  def findSicCodes(implicit ec: ExecutionContext): Future[Map[Int, String]] = {
+    mcS.find(BS()).cursor[SicCode]().collect[Seq]() map {
+      _ map { sicCode => (sicCode.sicNumber, sicCode.description) }
+    } map (f => Map(f: _*))
   }
 
 }

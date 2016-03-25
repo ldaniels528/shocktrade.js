@@ -95,8 +95,8 @@ class QuotesController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends
       quote_? <- securitiesDAO.findFullQuote(symbol)
       quoteBs = quote_?.getOrElse(BS())
       productsJs <- getEnrichedProducts(quoteBs)
-      naicsMap <- securitiesDAO.naicsCodes
-      sicMap <- securitiesDAO.sicCodes
+      naicsMap <- securitiesDAO.findNaicsCodes
+      sicMap <- securitiesDAO.findSicCodes
       enhanced = quote_? map { quote =>
         // start building the enriched JSON quote
         val quoteJs = Json.toJson(quote).asInstanceOf[JsObject]

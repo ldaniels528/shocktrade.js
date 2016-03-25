@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -7,12 +7,9 @@ import java.util.Date
 import akka.actor.{Actor, ActorLogging}
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.ResourceHelper._
-import com.shocktrade.server.trading.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSHO, _}
-import com.shocktrade.util.BSONHelper._
-import org.joda.time.DateTime
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.processors.actors.FinraRegShoUpdateActor.{ProcessRegSHO, RegSHO, _}
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.bson.{BSONDocument => BS}
 
 import scala.concurrent.Future
 import scala.io.Source
@@ -24,7 +21,7 @@ import scala.language.postfixOps
   */
 class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private lazy val mc = reactiveMongoApi.db.collection[BSONCollection]("Stocks")
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
 
   override def receive = {
     case ProcessRegSHO(processDate) =>
@@ -63,7 +60,7 @@ class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor w
         // schedule the data for processing
         val task = Future.sequence(dataSet map { data =>
           for {
-            result <- persistData(data)
+            result <- securitiesDAO.updateRegSHO(data)
           } yield (data, result)
         })
 
@@ -80,19 +77,6 @@ class FinraRegShoUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor w
         log.error(e, s"Error processing $url")
         -1
     }
-  }
-
-  private def persistData(reg: RegSHO) = {
-    mc.update(BS("symbol" -> reg.symbol),
-      BS(
-        "baseSymbol" -> reg.symbol.take(4),
-        "name" -> reg.securityName,
-        "exchange" -> "OTCBB",
-        "assetClass" -> "Equity",
-        "assetType" -> "Common Stock",
-        "active" -> true,
-        "yfDynLastUpdated" -> new DateTime().minusDays(1).toDate
-      ), upsert = true)
   }
 
   private def getDataURL(date: Date) = {

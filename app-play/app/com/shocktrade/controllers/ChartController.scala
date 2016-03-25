@@ -4,8 +4,7 @@ import javax.inject.Inject
 
 import akka.util.Timeout
 import com.github.ldaniels528.commons.helpers.OptionHelper._
-import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.server.trading.ContestDAO
+import com.shocktrade.dao.{ContestDAO, SecuritiesDAO}
 import com.shocktrade.util.BSONHelper._
 import com.shocktrade.util.ConcurrentCache
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

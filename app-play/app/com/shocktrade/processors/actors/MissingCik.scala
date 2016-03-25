@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader}
 

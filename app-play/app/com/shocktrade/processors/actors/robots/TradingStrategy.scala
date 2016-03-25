@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.robots
+package com.shocktrade.processors.actors.robots
 
 import com.shocktrade.models.quote.QuoteFilter
 

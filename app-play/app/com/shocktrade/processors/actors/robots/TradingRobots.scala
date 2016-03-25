@@ -1,7 +1,7 @@
-package com.shocktrade.server.trading.robots
+package com.shocktrade.processors.actors.robots
 
 import akka.actor.Props
-import com.shocktrade.server.trading.robots.TradingRobot.Invest
+import com.shocktrade.processors.actors.robots.TradingRobot.Invest
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka

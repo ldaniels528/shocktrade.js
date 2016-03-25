@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -9,7 +9,7 @@ import akka.actor.{Actor, ActorLogging}
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.commons.helpers.ResourceHelper._
 import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.server.trading.actors.EquityShortInterestUpdateActor.{EquityShortInterest, UpdateEquityShortInterest}
+import com.shocktrade.processors.actors.EquityShortInterestUpdateActor.{EquityShortInterest, UpdateEquityShortInterest}
 import com.shocktrade.util.BSONHelper._
 import org.joda.time.DateTime
 import play.modules.reactivemongo.ReactiveMongoApi

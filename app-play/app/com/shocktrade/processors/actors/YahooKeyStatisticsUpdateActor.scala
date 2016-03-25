@@ -1,13 +1,12 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.server.trading.actors.YahooKeyStatisticsUpdateActor._
+import com.shocktrade.processors.actors.YahooKeyStatisticsUpdateActor._
 import com.shocktrade.services.yahoofinance.YFKeyStatisticsService
-import com.shocktrade.util.BSONHelper._
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.bson.{BSONDocument => BS}
 
@@ -16,9 +15,9 @@ import reactivemongo.bson.{BSONDocument => BS}
   * @author lawrence.daniels@gmail.com
   */
 class YahooKeyStatisticsUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
-  implicit val ec = context.dispatcher
+  private implicit val ec = context.dispatcher
   private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
-  val counter = new AtomicInteger()
+  private val counter = new AtomicInteger()
 
   override def receive = {
     case RefreshAllKeyStatistics =>

@@ -1,14 +1,13 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
-import com.shocktrade.server.trading.actors.CikNumberUpdateActor._
+import com.shocktrade.dao.SecuritiesDAO
+import com.shocktrade.processors.actors.CikNumberUpdateActor._
 import com.shocktrade.services.CikCompanySearchService
 import com.shocktrade.services.CikCompanySearchService.CikInfo
 import play.modules.reactivemongo.ReactiveMongoApi
-import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.bson.{BSONNull, BSONDocument => BS}
 
 import scala.util.{Failure, Success, Try}
 
@@ -18,7 +17,7 @@ import scala.util.{Failure, Success, Try}
   */
 class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
   implicit val ec = context.dispatcher
-  private lazy val mc = reactiveMongoApi.db.collection[BSONCollection]("Stocks")
+  private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 
   override def receive = {
@@ -40,18 +39,9 @@ class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor wit
 
   private def findMissingCikSymbols() = {
     log.info(s"Searching for records missing CIK information...")
-
-    // query the missing symbols
-    // db.Stocks.count({"active":true, "assetType":"Common Stock", "name":{"$ne":null}, "cikNumber":{"$exists":false}});
-    // db.Stocks.find({"active":true, "assetType":"Common Stock", "name":{"$ne":null}, "cikNumber":{"$exists":false}});
-    val missingCiks = mc.find(
-      BS("active" -> true, "assetType" -> "Common Stock", "name" -> BS("$ne" -> BSONNull), "cikNumber" -> BS("$exists" -> false)),
-      BS("symbol" -> 1, "name" -> 1))
-      .cursor[MissingCik]()
-      .collect[Seq]()
-
-    missingCiks.map { records =>
-      log.info(s"Retrieving ${records.length} record(s)")
+    val missingCiks = securitiesDAO.findMissingCiks
+    missingCiks foreach { records =>
+      log.info(s"Retrieved ${records.length} securities with missing CIK information")
     }
     missingCiks
   }
@@ -77,19 +67,11 @@ class CikNumberUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor wit
     * Writes the updated CIK information to the data store
     */
   private def persistCik(symbol: String, name: String, cik: CikInfo) {
-    import cik._
-
-    mc.update(
-      BS("symbol" -> symbol),
-      if (name.length < cikName.length)
-        BS("$set" -> BS("name" -> cikName, "cikNumber" -> cikNumber))
-      else
-        BS("$set" -> BS("cikNumber" -> cikNumber)),
-      upsert = false, multi = false)
-
-    // log the statistics
-    if (counter.incrementAndGet() % 10 == 0) {
-      log.info(s"Processed ${counter.get} CIKs")
+    securitiesDAO.updateCik(symbol, name, cik) foreach { _ =>
+      // log the statistics
+      if (counter.incrementAndGet() % 20 == 0) {
+        log.info(s"Processed ${counter.get} CIKs")
+      }
     }
   }
 

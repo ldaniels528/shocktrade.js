@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading.robots
+package com.shocktrade.processors.actors.robots
 
 import com.github.ldaniels528.commons.helpers.OptionHelper.Risky._
 import com.shocktrade.models.quote.QuoteFilter

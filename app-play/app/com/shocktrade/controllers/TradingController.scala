@@ -2,7 +2,7 @@ package com.shocktrade.controllers
 
 import javax.inject.Inject
 
-import com.shocktrade.server.trading.TradingClock
+import com.shocktrade.processors.TradingClock
 import com.shocktrade.util.DateUtil
 import play.api.libs.json.Json.{obj => JS}
 import play.api.mvc._

@@ -1,12 +1,12 @@
-package com.shocktrade.server.trading.actors
+package com.shocktrade.processors.actors
 
 import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging}
 import com.shocktrade.dao.SecuritiesDAO
-import com.shocktrade.server.trading.actors.YahooCsvQuoteUpdateActor._
-import com.shocktrade.server.trading.TradingClock
+import com.shocktrade.processors.actors.YahooCsvQuoteUpdateActor._
+import com.shocktrade.processors.TradingClock
 import com.shocktrade.services.yahoofinance.YFStockQuoteService
 import com.shocktrade.util.BSONHelper._
 import play.modules.reactivemongo.ReactiveMongoApi
@@ -17,7 +17,7 @@ import reactivemongo.bson.{BSONDateTime, BSONDocument => BS}
   * @author lawrence.daniels@gmail.com
   */
 class YahooCsvQuoteUpdateActor(reactiveMongoApi: ReactiveMongoApi) extends Actor with ActorLogging {
-  implicit val ec = context.dispatcher
+  private implicit val ec = context.dispatcher
   private val securitiesDAO = SecuritiesDAO(reactiveMongoApi)
   private val counter = new AtomicInteger()
 

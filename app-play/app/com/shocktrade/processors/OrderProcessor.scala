@@ -1,16 +1,17 @@
-package com.shocktrade.server.trading
+package com.shocktrade.processors
 
 import java.util.Date
 
 import com.github.ldaniels528.commons.helpers.OptionHelper._
 import com.github.ldaniels528.tabular.Tabular
 import com.github.ldaniels528.tabular.formatters.FormatHandler
-import com.shocktrade.dao.UserProfileDAO
+import com.shocktrade.dao.{ContestDAO, UserProfileDAO}
 import com.shocktrade.models.contest.OrderTerms.OrderTerm
 import com.shocktrade.models.contest.PriceTypes.PriceType
 import com.shocktrade.models.contest._
-import com.shocktrade.server.trading.OrderProcessor.{BSONObjectIDHandler, _}
-import com.shocktrade.server.trading.Outcome.{Failed, Succeeded}
+import com.shocktrade.processors.models.Outcome.{Failed, Succeeded}
+import com.shocktrade.processors.models.{Claim, Outcome, WorkOrder}
+import com.shocktrade.processors.OrderProcessor._
 import com.shocktrade.services.util.DateUtil._
 import com.shocktrade.services.yahoofinance.YFIntraDayQuotesService.YFIntraDayQuote
 import com.shocktrade.services.yahoofinance.{YFIntraDayQuotesService, YFStockQuoteService}

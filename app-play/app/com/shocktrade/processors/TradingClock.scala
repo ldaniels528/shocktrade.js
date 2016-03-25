@@ -1,4 +1,4 @@
-package com.shocktrade.server.trading
+package com.shocktrade.processors
 
 import java.util.Date
 
