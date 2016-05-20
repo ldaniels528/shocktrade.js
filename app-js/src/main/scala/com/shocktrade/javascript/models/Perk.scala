@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -29,7 +29,7 @@ object Perk {
             cost: Double,
             owned: Boolean = false,
             selected: Boolean = false) = {
-    val perk = makeNew[Perk]
+    val perk = New[Perk]
     perk.name = name
     perk.code = code
     perk.description = description

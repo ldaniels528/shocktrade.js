@@ -1,11 +1,10 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Timeout
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import org.scalajs.dom.console
 
@@ -76,14 +75,14 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 @js.native
 trait HomeControllerScope extends Scope {
   // variables
-  var selectedFriend: TaggableFriend
+  var selectedFriend: TaggableFriend = js.native
 
   // functions
-  var initHome: js.Function0[Unit]
-  var getAwards: js.Function0[js.Array[String]]
-  var getFriends: js.Function0[js.Array[TaggableFriend]]
-  var getNextLevelXP: js.Function0[js.UndefOr[Int]]
-  var getStars: js.Function0[js.Array[Int]]
-  var getTotalXP: js.Function0[Int]
-  var selectFriend: js.Function1[UndefOr[TaggableFriend], Unit]
+  var initHome: js.Function0[Unit] = js.native
+  var getAwards: js.Function0[js.Array[String]] = js.native
+  var getFriends: js.Function0[js.Array[TaggableFriend]] = js.native
+  var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
+  var getStars: js.Function0[js.Array[Int]] = js.native
+  var getTotalXP: js.Function0[Int] = js.native
+  var selectFriend: js.Function1[UndefOr[TaggableFriend], Unit] = js.native
 }

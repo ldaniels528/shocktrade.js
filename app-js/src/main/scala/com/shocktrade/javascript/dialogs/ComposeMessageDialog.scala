@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Service, injected}
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogController.ComposeMessageResult
 
 import scala.concurrent.Future
@@ -78,6 +78,6 @@ trait ComposeMessageForm extends js.Object
   */
 object ComposeMessageForm {
 
-  def apply() = makeNew[ComposeMessageForm]
+  def apply() = New[ComposeMessageForm]
 
 }

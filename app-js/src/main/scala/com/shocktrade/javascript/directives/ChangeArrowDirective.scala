@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.directives
 
-import com.github.ldaniels528.scalascript.core.Attributes
-import com.github.ldaniels528.scalascript.{Directive, JQLite, Scope}
+import com.github.ldaniels528.meansjs.angularjs.Attributes
+import com.github.ldaniels528.meansjs.angularjs.{Directive, JQLite, Scope}
 
 import scala.language.postfixOps
 import scala.scalajs.js

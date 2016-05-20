@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, Service, injected}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Service, injected}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
@@ -184,7 +185,7 @@ object TransferFundsForm {
             amount: js.UndefOr[Double] = js.undefined,
             cashFunds: js.UndefOr[Double] = js.undefined,
             marginFunds: js.UndefOr[Double] = js.undefined) = {
-    val form = makeNew[TransferFundsForm]
+    val form = New[TransferFundsForm]
     form.action = action
     form.amount = amount
     form.cashFunds = cashFunds
@@ -210,7 +211,7 @@ trait TransferFundsAction extends js.Object {
 object TransferFundsAction {
 
   def apply(label: String, source: String) = {
-    val action = makeNew[TransferFundsAction]
+    val action = New[TransferFundsAction]
     action.label = label
     action.source = source
     action

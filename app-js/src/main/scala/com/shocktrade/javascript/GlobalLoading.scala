@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.Scope
-import com.github.ldaniels528.scalascript.core.Timeout
+import com.github.ldaniels528.meansjs.angularjs.Scope
+import com.github.ldaniels528.meansjs.angularjs.Timeout
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

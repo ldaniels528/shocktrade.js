@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -10,7 +10,7 @@ import scala.scalajs.js
   */
 @js.native
 trait OnlinePlayerState extends js.Object {
-  var connected: Boolean
+  var connected: Boolean = js.native
 
 }
 
@@ -20,7 +20,7 @@ trait OnlinePlayerState extends js.Object {
 object OnlinePlayerState {
 
   def apply(connected: Boolean = false) = {
-    val state = makeNew[OnlinePlayerState]
+    val state = New[OnlinePlayerState]
     state.connected = connected
     state
   }

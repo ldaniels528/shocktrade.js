@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -21,7 +21,7 @@ trait PlayerInfo extends js.Object {
 object PlayerInfo {
 
   def apply(id: BSONObjectID, facebookID: String, name: String) = {
-    val info = makeNew[PlayerInfo]
+    val info = New[PlayerInfo]
     info._id = id
     info.facebookID = facebookID
     info.name = name

@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.Timeout
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.javascript.models.{BSONObjectID, ParticipantRanking}
@@ -112,16 +112,16 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 @js.native
 trait DashboardScope extends Scope {
   // functions
-  var isCashAccount: js.Function0[Boolean]
-  var isMarginAccount: js.Function0[Boolean]
-  var toggleAccountMode: js.Function0[Unit]
-  var getAccountMode: js.Function0[Boolean]
-  var getAccountType: js.Function0[String]
-  var popupPerksDialog: js.Function0[Unit]
-  var popupTransferFundsDialog: js.Function0[Unit]
-  var isRankingsShown: js.Function0[Boolean]
-  var toggleRankingsShown: js.Function0[Unit]
-  var getRankings: js.Function0[js.Array[_ <: ParticipantRanking]]
+  var isCashAccount: js.Function0[Boolean] = js.native
+  var isMarginAccount: js.Function0[Boolean] = js.native
+  var toggleAccountMode: js.Function0[Unit] = js.native
+  var getAccountMode: js.Function0[Boolean] = js.native
+  var getAccountType: js.Function0[String] = js.native
+  var popupPerksDialog: js.Function0[Unit] = js.native
+  var popupTransferFundsDialog: js.Function0[Unit] = js.native
+  var isRankingsShown: js.Function0[Boolean] = js.native
+  var toggleRankingsShown: js.Function0[Unit] = js.native
+  var getRankings: js.Function0[js.Array[_ <: ParticipantRanking]] = js.native
 
 }
 
@@ -131,6 +131,6 @@ trait DashboardScope extends Scope {
   */
 @js.native
 trait DashboardRouteParams extends js.Object {
-  var contestId: js.UndefOr[BSONObjectID]
+  var contestId: js.UndefOr[BSONObjectID] = js.native
 
 }

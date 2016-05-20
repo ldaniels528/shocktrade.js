@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.social
 
-import com.github.ldaniels528.scalascript.Service
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
+import com.github.ldaniels528.meansjs.angularjs.Service
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
 import com.shocktrade.javascript.models.{BSONObjectID, MyUpdate, UserProfile}
 
 import scala.scalajs.js

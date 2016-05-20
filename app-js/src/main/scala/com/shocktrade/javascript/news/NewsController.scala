@@ -1,8 +1,10 @@
 package com.shocktrade.javascript.news
 
-import com.github.ldaniels528.scalascript.extensions.{Cookies, Sce, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
+import com.github.ldaniels528.meansjs.angularjs.sanitize.Sce
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.GlobalLoading
 import com.shocktrade.javascript.models.BSONObjectID
 import com.shocktrade.javascript.news.NewsController._
@@ -172,7 +174,7 @@ trait NewsFeedSelection extends js.Object {
 object NewsFeedSelection {
 
   def apply(feed: String) = {
-    val selection = makeNew[NewsFeedSelection]
+    val selection = New[NewsFeedSelection]
     selection.feed = feed
     selection
   }

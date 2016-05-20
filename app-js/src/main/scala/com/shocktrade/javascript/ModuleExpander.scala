@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -28,7 +28,7 @@ object ModuleExpander {
             icon: String,
             expanded: Boolean = false,
             visible: js.UndefOr[js.Function] = js.undefined) = {
-    val expander = makeNew[ModuleExpander]
+    val expander = New[ModuleExpander]
     expander.title = title
     expander.url = url
     expander.icon = icon

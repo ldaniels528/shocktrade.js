@@ -4,6 +4,8 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 
+val meanjsVersion = "0.1.10"
+
 val myScalaVersion = "2.11.8"
 val myAkkaVersion = "2.4.2"
 val myPlayVersion = "2.4.6"
@@ -27,9 +29,20 @@ lazy val appScalaJs = (project in file("app-js"))
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= Seq(
+      // MEANS.js
+      "com.github.ldaniels528" %%% "means-angularjs-core" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-animate" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-cookies" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-facebook" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-nervgh-fileupload" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-sanitize" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-toaster" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-ui-bootstrap" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-angularjs-ui-router" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-social-facebook" % meanjsVersion,
+      "com.github.ldaniels528" %%% "means-social-linkedin" % meanjsVersion,
+      // ScalaJS Libs
       "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
-      "com.github.ldaniels528" %%% "scalascript" % "0.2.20",
-      "com.github.ldaniels528" %%% "scalascript-social" % "0.2.20",
       "com.vmunier" %% "play-scalajs-sourcemaps" % "0.1.0" exclude("com.typesafe.play", "play_2.11"),
       "org.scala-js" %%% "scalajs-dom" % "0.9.0"
     ))

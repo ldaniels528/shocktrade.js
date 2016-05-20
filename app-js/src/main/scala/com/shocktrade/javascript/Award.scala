@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import com.shocktrade.core.AwardCodes._
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -27,7 +27,7 @@ object Award {
             code: String,
             icon: String,
             description: String) = {
-    val award = makeNew[Award]
+    val award = New[Award]
     award.name = name
     award.code = code
     award.icon = icon

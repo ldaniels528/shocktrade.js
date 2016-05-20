@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.Location
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, Scope}
+import com.github.ldaniels528.meansjs.angularjs.Location
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
 
@@ -40,6 +40,6 @@ abstract class GameController($scope: GameScope, $location: Location, toaster: T
 @js.native
 trait GameScope extends Scope {
   // functions
-  var enterGame: js.Function1[js.UndefOr[Contest], Unit]
-  var isParticipant: js.Function1[js.UndefOr[Contest], Boolean]
+  var enterGame: js.Function1[js.UndefOr[Contest], Unit] = js.native
+  var isParticipant: js.Function1[js.UndefOr[Contest], Boolean] = js.native
 }

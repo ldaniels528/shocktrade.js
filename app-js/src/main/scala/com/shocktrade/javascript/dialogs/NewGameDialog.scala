@@ -1,10 +1,12 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Http, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Service, _}
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.Modal
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Service, _}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
@@ -39,7 +41,6 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
     * @return the promise of the result of creating a new game
     */
   def createNewGame(form: NewGameForm): Future[Contest] = {
-    required("form", form)
     $http.put[Contest]("/api/contest", form)
   }
 }
@@ -186,7 +187,7 @@ trait GameDuration extends js.Object {
 object GameDuration {
 
   def apply(label: String, value: Int) = {
-    val duration = makeNew[GameDuration]
+    val duration = New[GameDuration]
     duration.label = label
     duration.value = value
     duration
@@ -220,7 +221,7 @@ object NewGameForm {
             robotsAllowed: js.UndefOr[Boolean] = js.undefined,
             startAutomatically: js.UndefOr[Boolean] = js.undefined,
             startingBalance: js.UndefOr[Int] = js.undefined) = {
-    val form = makeNew[NewGameForm]
+    val form = New[NewGameForm]
     form.duration = duration
     form.perksAllowed = perksAllowed
     form.robotsAllowed = robotsAllowed

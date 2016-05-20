@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Http
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.http.Http
 import com.shocktrade.javascript.profile.AwardsController._
 import com.shocktrade.javascript.{Award, MySessionService}
 
@@ -56,9 +56,9 @@ object AwardsController {
   */
 @js.native
 trait AwardsControllerScope extends Scope {
-  var getAwards: js.Function0[js.Array[MyAward]]
-  var getAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]]
-  var getMyAwards: js.Function0[js.Array[Award]]
+  var getAwards: js.Function0[js.Array[MyAward]] = js.native
+  var getAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+  var getMyAwards: js.Function0[js.Array[Award]] = js.native
 }
 
 /**
@@ -67,5 +67,5 @@ trait AwardsControllerScope extends Scope {
   */
 @js.native
 trait MyAward extends Award {
-  var owned: Boolean
+  var owned: Boolean = js.native
 }

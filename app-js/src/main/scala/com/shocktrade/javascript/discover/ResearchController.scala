@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.scalascript.core.Timeout
-import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, angular, injected}
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, angular, injected}
 import com.shocktrade.javascript.discover.ResearchController._
 import com.shocktrade.javascript.{GlobalLoading, MainController}
 import org.scalajs.dom.console
@@ -124,7 +125,7 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  private def exchangeSets = $scope.exchangeSets.as[js.Dictionary[Boolean]]
+  private def exchangeSets = $scope.exchangeSets
 
   private def getSearchResultClass(count: js.UndefOr[Int]) = {
     count.map {
@@ -173,24 +174,24 @@ object ResearchController {
 @js.native
 trait ResearchScope extends Scope {
   // variables
-  var exchangeSets: js.Dictionary[Boolean]
-  var maxResultsSet: js.Array[Int]
-  var priceRanges: js.Array[Int]
-  var volumeRanges: js.Array[Int]
-  var percentages: js.Array[Int]
-  var changePercentages: js.Array[Int]
-  var searchOptions: ResearchSearchOptions
+  var exchangeSets: js.Dictionary[Boolean] = js.native
+  var maxResultsSet: js.Array[Int] = js.native
+  var priceRanges: js.Array[Int] = js.native
+  var volumeRanges: js.Array[Int] = js.native
+  var percentages: js.Array[Int] = js.native
+  var changePercentages: js.Array[Int] = js.native
+  var searchOptions: ResearchSearchOptions = js.native
 
   // functions
-  var getFilteredResults: js.Function0[js.Array[ResearchQuote]]
-  var getSearchResults: js.Function0[js.Array[ResearchQuote]]
-  var getExchangeCount: js.Function1[js.UndefOr[String], Double]
-  var getExchangeSet: js.Function1[js.UndefOr[String], Boolean]
-  var filterExchanges: js.Function0[js.Array[ResearchQuote]]
-  var getSearchResultClass: js.Function1[js.UndefOr[Int], js.UndefOr[String]]
-  var getSearchResultsCount: js.Function0[Int]
-  var columnAlign: js.Function1[js.UndefOr[String], js.UndefOr[String]]
-  var rowClass: js.Function2[js.UndefOr[String], js.UndefOr[ResearchQuote], js.UndefOr[String]]
-  var quoteSearch: js.Function1[js.UndefOr[ResearchSearchOptions], Unit]
+  var getFilteredResults: js.Function0[js.Array[ResearchQuote]] = js.native
+  var getSearchResults: js.Function0[js.Array[ResearchQuote]] = js.native
+  var getExchangeCount: js.Function1[js.UndefOr[String], Double] = js.native
+  var getExchangeSet: js.Function1[js.UndefOr[String], Boolean] = js.native
+  var filterExchanges: js.Function0[js.Array[ResearchQuote]] = js.native
+  var getSearchResultClass: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
+  var getSearchResultsCount: js.Function0[Int] = js.native
+  var columnAlign: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+  var rowClass: js.Function2[js.UndefOr[String], js.UndefOr[ResearchQuote], js.UndefOr[String]] = js.native
+  var quoteSearch: js.Function1[js.UndefOr[ResearchSearchOptions], Unit] = js.native
 
 }

@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -24,7 +24,7 @@ trait ContestSearchOptions extends js.Object {
 object ContestSearchOptions {
 
   def apply() = {
-    val options = makeNew[ContestSearchOptions]
+    val options = New[ContestSearchOptions]
     options.activeOnly = false
     options.available = false
     options.friendsOnly = false

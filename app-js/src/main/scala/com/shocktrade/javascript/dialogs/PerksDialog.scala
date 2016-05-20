@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, Perk}
@@ -208,18 +209,18 @@ object PerksDialogController {
 @js.native
 trait PerksDialogScope extends Scope {
   // functions
-  var cancel: js.Function0[Unit]
-  var countOwnedPerks: js.Function0[Int]
-  var getFundsAvailable: js.Function0[js.UndefOr[Double]]
-  var getPerks: js.Function0[js.Array[Perk]]
-  var getTotalCost: js.Function0[Double]
-  var hasSufficientFunds: js.Function0[Boolean]
-  var perksSelected: js.Function0[Boolean]
-  var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]]
-  var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]]
-  var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]]
-  var loadPerks: js.Function0[Unit]
-  var purchasePerks: js.Function0[Unit]
+  var cancel: js.Function0[Unit] = js.native
+  var countOwnedPerks: js.Function0[Int] = js.native
+  var getFundsAvailable: js.Function0[js.UndefOr[Double]] = js.native
+  var getPerks: js.Function0[js.Array[Perk]] = js.native
+  var getTotalCost: js.Function0[Double] = js.native
+  var hasSufficientFunds: js.Function0[Boolean] = js.native
+  var perksSelected: js.Function0[Boolean] = js.native
+  var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+  var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+  var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+  var loadPerks: js.Function0[Unit] = js.native
+  var purchasePerks: js.Function0[Unit] = js.native
 
 }
 
@@ -229,6 +230,6 @@ trait PerksDialogScope extends Scope {
   */
 @js.native
 trait PerksResponse extends js.Object {
-  var perkCodes: js.Array[String]
-  var fundsAvailable: js.UndefOr[Double]
+  var perkCodes: js.Array[String] = js.native
+  var fundsAvailable: js.UndefOr[Double] = js.native
 }

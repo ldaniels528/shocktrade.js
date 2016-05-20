@@ -1,11 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Http, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.social.facebook.{FacebookProfileResponse, FacebookService}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.shocktrade.core.StringHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Timeout, _}
+import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.social.facebook.FacebookProfileResponse
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.javascript.models.UserProfile
 import org.scalajs.dom.console
@@ -65,7 +67,7 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
           stopLoading()
           if (!isDefined(profile.dynamic.error)) $modalInstance.close((profile, form.fbProfile))
           else {
-            messages.push(profile.dynamic.error.as[String])
+            profile.dynamic.error.asOpt[String] foreach(messages.push(_))
           }
 
         case Failure(e) =>
@@ -161,11 +163,11 @@ trait SignUpDialogScope extends js.Object {
   */
 @js.native
 trait SignUpForm extends js.Object {
-  var name: js.UndefOr[String]
-  var facebookID: js.UndefOr[String]
-  var userName: js.UndefOr[String]
-  var email: js.UndefOr[String]
-  var fbProfile: FacebookProfileResponse
+  var name: js.UndefOr[String] = js.native
+  var facebookID: js.UndefOr[String] = js.native
+  var userName: js.UndefOr[String] = js.native
+  var email: js.UndefOr[String] = js.native
+  var fbProfile: FacebookProfileResponse = js.native
 }
 
 /**
@@ -173,6 +175,6 @@ trait SignUpForm extends js.Object {
   */
 object SignUpForm {
 
-  def apply() = makeNew[SignUpForm]
+  def apply() = New[SignUpForm]
 }
 

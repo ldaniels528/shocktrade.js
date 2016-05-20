@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.javascript.models.OrderQuote
 import org.scalajs.dom.console
@@ -34,7 +35,6 @@ class NewsQuoteDialog($http: Http, $modal: Modal) extends Service {
   }
 
   def getQuote(symbol: String): Future[OrderQuote] = {
-    required("symbol", symbol)
     $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
   }
 }
@@ -48,7 +48,7 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
                                 @injected("symbol") symbol: String)
   extends Controller {
 
-  $scope.quote = makeNew[OrderQuote]
+  $scope.quote = New[OrderQuote]
   $scope.quote.foreach(_.symbol = symbol)
 
   $scope.init = (aSymbol: js.UndefOr[String]) => aSymbol foreach { symbol =>

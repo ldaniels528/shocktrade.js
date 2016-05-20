@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -37,7 +37,7 @@ object MainTab {
             url: String,
             contestRequired: Boolean = false,
             authenticationRequired: Boolean = false) = {
-    val tab = makeNew[MainTab]
+    val tab = New[MainTab]
     tab.name = name
     tab.icon_class = icon_class
     tab.tool_tip = tool_tip

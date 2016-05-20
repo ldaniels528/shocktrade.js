@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.admin
 
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
@@ -85,13 +85,13 @@ class InspectController($scope: InspectControllerScope, $http: Http, $routeParam
 @js.native
 trait InspectControllerScope extends Scope {
   // variables
-  var contest: js.UndefOr[Contest]
+  var contest: js.UndefOr[Contest] = js.native
 
   // functions
-  var expandItem: js.Function1[js.UndefOr[ExpandableItem], Unit]
-  var expandPlayer: js.Function1[js.UndefOr[ExpandablePlayer], Unit]
-  var getOpenOrders: js.Function1[js.UndefOr[Contest], js.UndefOr[js.Array[Order]]]
-  var updateContestHost: js.Function1[js.UndefOr[String], Unit]
+  var expandItem: js.Function1[js.UndefOr[ExpandableItem], Unit] = js.native
+  var expandPlayer: js.Function1[js.UndefOr[ExpandablePlayer], Unit] = js.native
+  var getOpenOrders: js.Function1[js.UndefOr[Contest], js.UndefOr[js.Array[Order]]] = js.native
+  var updateContestHost: js.Function1[js.UndefOr[String], Unit] = js.native
 
 }
 
@@ -101,7 +101,7 @@ trait InspectControllerScope extends Scope {
   */
 @js.native
 trait InspectRouteParams extends js.Object {
-  var contestId: js.UndefOr[String]
+  var contestId: js.UndefOr[String] = js.native
 
 }
 
@@ -111,7 +111,7 @@ trait InspectRouteParams extends js.Object {
   */
 @js.native
 trait ExpandableItem extends js.Object {
-  var expanded: js.UndefOr[Boolean]
+  var expanded: js.UndefOr[Boolean] = js.native
 
 }
 
@@ -121,9 +121,9 @@ trait ExpandableItem extends js.Object {
   */
 @js.native
 trait ExpandablePlayer extends js.Object {
-  var expanded: js.UndefOr[Boolean]
-  var myOpenOrders: js.UndefOr[js.Array[Order]]
-  var myClosedOrders: js.UndefOr[js.Array[ClosedOrder]]
-  var myPositions: js.UndefOr[js.Array[Position]]
-  var myPerformance: js.UndefOr[js.Array[Performance]]
+  var expanded: js.UndefOr[Boolean] = js.native
+  var myOpenOrders: js.UndefOr[js.Array[Order]] = js.native
+  var myClosedOrders: js.UndefOr[js.Array[ClosedOrder]] = js.native
+  var myPositions: js.UndefOr[js.Array[Position]] = js.native
+  var myPerformance: js.UndefOr[js.Array[Performance]] = js.native
 }

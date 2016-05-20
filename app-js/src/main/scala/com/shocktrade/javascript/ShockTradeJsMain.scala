@@ -1,11 +1,11 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.extensions.{RouteProvider, RouteTo}
-import com.github.ldaniels528.scalascript.social.facebook.Facebook._
-import com.github.ldaniels528.scalascript.social.facebook.{FacebookAppConfig, FacebookService}
-import com.github.ldaniels528.scalascript.social.linkedin.LinkedIn._
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Module, Scope, angular}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
+import com.github.ldaniels528.meansjs.angularjs.uirouter.{RouteProvider, RouteTo}
+import com.github.ldaniels528.meansjs.angularjs.{Module, Scope, angular}
+import com.github.ldaniels528.meansjs.social.facebook.{FB, FacebookAppConfig}
+import com.github.ldaniels528.meansjs.social.linkedin.IN
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
@@ -140,7 +140,7 @@ object ShockTradeJsMain extends js.JSApp {
     // setup the initialization callback for Facebook
     g.fbAsyncInit = () => {
       console.log("fbAsyncInit: Setting up Facebook integration...")
-      val config = FacebookAppConfig(appId = getFacebookAppID(g.location.hostname.as[String]), status = true, xfbml = true)
+      val config = FacebookAppConfig(appId = getFacebookAppID(g.location.hostname.asOpt[String].get), status = true, xfbml = true)
       FB.init(config)
       console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
 

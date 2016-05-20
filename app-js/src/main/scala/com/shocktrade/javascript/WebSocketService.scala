@@ -1,12 +1,15 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Service, injected}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.{Service, injected}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket, console}
 
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 import scala.scalajs.js.JSON
@@ -111,7 +114,7 @@ class WebSocketService($rootScope: js.Dynamic, $http: Http, $location: Location,
       connected = false
       sendState(connected)
       g.console.warn("Websocket connection lost")
-      $timeout(() => connect(), 15000)
+      $timeout(() => connect(), 15.seconds)
     }
 
     socket.onerror = (event: ErrorEvent) => ()

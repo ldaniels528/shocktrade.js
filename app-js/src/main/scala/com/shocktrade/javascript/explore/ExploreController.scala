@@ -1,9 +1,11 @@
 package com.shocktrade.javascript.explore
 
-import com.github.ldaniels528.scalascript.core.{Location, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{AnchorScroll, Cookies, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
+import com.github.ldaniels528.meansjs.angularjs.AnchorScroll
+import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import org.scalajs.dom.console
 
 import scala.concurrent.Future
@@ -234,7 +236,7 @@ trait Sector extends QuoteContainer {
   */
 object Sector {
   def apply(label: String, total: Int) = {
-    val sector = makeNew[Sector]
+    val sector = New[Sector]
     sector.label = label
     sector.total = total
     sector
@@ -254,7 +256,7 @@ trait Industry extends QuoteContainer {
   */
 object Industry {
   def apply(label: String, total: Int) = {
-    val industry = makeNew[Industry]
+    val industry = New[Industry]
     industry.label = label
     industry.total = total
     industry
@@ -274,7 +276,7 @@ trait SubIndustry extends QuoteContainer {
   */
 object SubIndustry {
   def apply(label: String, total: Int) = {
-    val subIndustry = makeNew[SubIndustry]
+    val subIndustry = New[SubIndustry]
     subIndustry.label = label
     subIndustry.total = total
     subIndustry

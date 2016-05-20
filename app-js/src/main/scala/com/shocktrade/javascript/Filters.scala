@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.angular
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.angular
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js

@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.{QPromise, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
@@ -247,46 +248,46 @@ class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: T
 @js.native
 trait PortfolioScope extends Scope {
   // variables
-  var portfolioTabs: js.Array[PortfolioTab]
-  var selectedClosedOrder: js.UndefOr[ClosedOrder]
-  var selectedOrder: js.UndefOr[Order]
-  var selectedPerformance: js.UndefOr[Performance]
-  var selectedPosition: js.UndefOr[Position]
+  var portfolioTabs: js.Array[PortfolioTab] = js.native
+  var selectedClosedOrder: js.UndefOr[ClosedOrder] = js.native
+  var selectedOrder: js.UndefOr[Order] = js.native
+  var selectedPerformance: js.UndefOr[Performance] = js.native
+  var selectedPosition: js.UndefOr[Position] = js.native
 
   // closed order functions
-  var getClosedOrders: js.Function0[js.Array[ClosedOrder]]
-  var isClosedOrderSelected: js.Function0[Boolean]
-  var selectClosedOrder: js.Function1[js.UndefOr[ClosedOrder], Unit]
-  var toggleSelectedClosedOrder: js.Function0[Unit]
+  var getClosedOrders: js.Function0[js.Array[ClosedOrder]] = js.native
+  var isClosedOrderSelected: js.Function0[Boolean] = js.native
+  var selectClosedOrder: js.Function1[js.UndefOr[ClosedOrder], Unit] = js.native
+  var toggleSelectedClosedOrder: js.Function0[Unit] = js.native
 
   // order functions
-  var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]]
-  var cancelOrder: js.Function3[js.UndefOr[BSONObjectID], js.UndefOr[BSONObjectID], js.UndefOr[BSONObjectID], Unit]
-  var getActiveOrders: js.Function0[js.Array[Order]]
-  var getAccountType: js.Function0[String]
-  var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean]
-  var isOrderSelected: js.Function0[Boolean]
-  var selectOrder: js.Function1[js.UndefOr[Order], Unit]
-  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[QPromise[NewOrderDialogResult]]]
-  var toggleSelectedOrder: js.Function0[Unit]
+  var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
+  var cancelOrder: js.Function3[js.UndefOr[BSONObjectID], js.UndefOr[BSONObjectID], js.UndefOr[BSONObjectID], Unit] = js.native
+  var getActiveOrders: js.Function0[js.Array[Order]] = js.native
+  var getAccountType: js.Function0[String] = js.native
+  var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
+  var isOrderSelected: js.Function0[Boolean] = js.native
+  var selectOrder: js.Function1[js.UndefOr[Order], Unit] = js.native
+  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
+  var toggleSelectedOrder: js.Function0[Unit] = js.native
 
   // performance functions
-  var cost: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]]
-  var gainLoss: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]]
-  var proceeds: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]]
-  var soldValue: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]]
-  var getPerformance: js.Function0[js.Array[Performance]]
-  var isPerformanceSelected: js.Function0[Boolean]
-  var selectPerformance: js.Function1[js.UndefOr[Performance], Unit]
-  var toggleSelectedPerformance: js.Function0[Unit]
+  var cost: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
+  var gainLoss: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
+  var proceeds: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
+  var soldValue: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
+  var getPerformance: js.Function0[js.Array[Performance]] = js.native
+  var isPerformanceSelected: js.Function0[Boolean] = js.native
+  var selectPerformance: js.Function1[js.UndefOr[Performance], Unit] = js.native
+  var toggleSelectedPerformance: js.Function0[Unit] = js.native
 
   // position functions
-  var getPositions: js.Function0[js.Array[Position]]
-  var isPositionSelected: js.Function0[Boolean]
-  var selectPosition: js.Function1[js.UndefOr[Position], Unit]
-  var sellPosition: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[QPromise[NewOrderDialogResult]]]
-  var toggleSelectedPosition: js.Function0[Unit]
-  var tradingStart: js.Function0[js.Date]
+  var getPositions: js.Function0[js.Array[Position]] = js.native
+  var isPositionSelected: js.Function0[Boolean] = js.native
+  var selectPosition: js.Function1[js.UndefOr[Position], Unit] = js.native
+  var sellPosition: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
+  var toggleSelectedPosition: js.Function0[Unit] = js.native
+  var tradingStart: js.Function0[js.Date] = js.native
 
 }
 
@@ -296,10 +297,10 @@ trait PortfolioScope extends Scope {
   */
 @js.native
 trait PortfolioTab extends js.Object {
-  var name: String
-  var icon: String
-  var path: String
-  var active: Boolean
+  var name: String = js.native
+  var icon: String = js.native
+  var path: String = js.native
+  var active: Boolean = js.native
 }
 
 /**
@@ -309,7 +310,7 @@ trait PortfolioTab extends js.Object {
 object PortfolioTab {
 
   def apply(name: String, icon: String, path: String, active: Boolean = false) = {
-    val tab = makeNew[PortfolioTab]
+    val tab = New[PortfolioTab]
     tab.name = name
     tab.icon = icon
     tab.path = path

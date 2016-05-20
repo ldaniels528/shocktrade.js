@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -80,7 +80,7 @@ object FullQuote {
 
   def apply(symbol: js.UndefOr[String] = js.undefined,
             active: Boolean = true) = {
-    val quote = makeNew[FullQuote]
+    val quote = New[FullQuote]
     quote.symbol = symbol
     quote.active = active
     quote

@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Service, angular}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Service, angular}
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 
@@ -128,7 +128,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
       contest.rankings
     }
 
-    else makeNew[Rankings]
+    else New[Rankings]
   }
 
   def getTotalInvestment(playerID: BSONObjectID) = {
@@ -179,7 +179,7 @@ class ContestService($http: Http, toaster: Toaster) extends Service {
   */
 @js.native
 trait MarginMarketValue extends js.Object {
-  var _id: js.UndefOr[BSONObjectID]
-  var name: String
-  var marginMarketValue: Double
+  var _id: js.UndefOr[BSONObjectID] = js.native
+  var name: String = js.native
+  var marginMarketValue: Double = js.native
 }

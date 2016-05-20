@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.directives
 
-import com.github.ldaniels528.scalascript.core.Attributes
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Directive, JQLite, Scope, angular}
+import com.github.ldaniels528.meansjs.angularjs.Attributes
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Directive, JQLite, Scope, angular}
 import com.shocktrade.javascript.directives.AvatarDirective.UNKNOWN_PERSON
 
 import scala.scalajs.js

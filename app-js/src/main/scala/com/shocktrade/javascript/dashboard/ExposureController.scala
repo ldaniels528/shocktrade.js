@@ -1,9 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.{Http, Timeout}
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.Timeout
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.BSONObjectID
 import org.scalajs.dom.console
@@ -105,8 +106,8 @@ trait ExposureScope extends Scope {
   */
 @js.native
 trait Exposure extends js.Object {
-  var label: String
-  var value: String
+  var label: String = js.native
+  var value: String = js.native
 }
 
 /**
@@ -116,7 +117,7 @@ trait Exposure extends js.Object {
 object Exposure {
 
   def apply(label: String, value: String) = {
-    val model = makeNew[Exposure]
+    val model = New[Exposure]
     model.label = label
     model.value = value
     model

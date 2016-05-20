@@ -1,8 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.scalascript.Service
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.Service
+import com.github.ldaniels528.meansjs.angularjs.http.{Http, HttpConfig}
 import com.shocktrade.javascript.models.{BSONObjectID, HistoricalQuote, OrderQuote}
 
 import scala.scalajs.js
@@ -14,14 +13,16 @@ import scala.scalajs.js
 class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int) = {
-    val queryString = params("searchTerm" -> searchTerm, "maxResults" -> maxResults)
-    $http.get[js.Array[AutoCompletedQuote]](s"/api/quotes/autoComplete$queryString")
+    $http[js.Array[AutoCompletedQuote]](HttpConfig(
+      method = "GET",
+      url = "/api/quotes/autoComplete",
+      params = js.Dictionary("searchTerm" -> searchTerm, "maxResults" -> maxResults)
+    ))
   }
 
   def getExchangeCounts = $http.get[js.Array[js.Dynamic]]("/api/exchanges")
 
-  def getFilterQuotes(filter: js.Dynamic) = {
-    required("filter", filter)
+  def getFilterQuotes(aFilter: js.UndefOr[js.Any]) = aFilter foreach { filter =>
     $http.post[js.Dynamic]("/api/quotes/filter/mini", filter)
   }
 
@@ -30,7 +31,7 @@ class QuoteService($http: Http) extends Service {
   }
 
   def getStockQuoteList(symbols: js.Array[String]) = {
-    $http.post[js.Array[js.Dynamic]]("/api/quotes/list", symbols)
+    $http.post[js.Array[BasicQuote]]("/api/quotes/list", symbols)
   }
 
   def getStockQuote(symbol: String) = {
@@ -49,11 +50,21 @@ class QuoteService($http: Http) extends Service {
   */
 @js.native
 trait AutoCompletedQuote extends js.Object {
-  var _id: js.UndefOr[BSONObjectID]
-  var symbol: js.UndefOr[String]
-  var name: js.UndefOr[String]
-  var exchange: js.UndefOr[String]
-  var assetType: js.UndefOr[String]
-  var icon: js.UndefOr[String]
+  var _id: js.UndefOr[BSONObjectID] = js.native
+  var symbol: js.UndefOr[String] = js.native
+  var name: js.UndefOr[String] = js.native
+  var exchange: js.UndefOr[String] = js.native
+  var assetType: js.UndefOr[String] = js.native
+  var icon: js.UndefOr[String] = js.native
 }
 
+/**
+  * Basic Quote
+  * @author lawrence.daniels@gmail.com
+  */
+@js.native
+trait BasicQuote extends js.Object {
+  var _id: js.UndefOr[BSONObjectID] = js.native
+  var symbol: js.UndefOr[String] = js.native
+  var exchange: js.UndefOr[String] = js.native
+}

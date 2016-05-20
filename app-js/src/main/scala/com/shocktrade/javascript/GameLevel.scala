@@ -1,6 +1,6 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -47,7 +47,7 @@ object GameLevel {
     GameLevel(number = 25, nextLevelXP = 524288000, description = "General"))
 
   def apply(number: Int, nextLevelXP: Int, description: String) = {
-    val level = makeNew[GameLevel]
+    val level = New[GameLevel]
     level.number = number
     level.nextLevelXP = nextLevelXP
     level.description = description

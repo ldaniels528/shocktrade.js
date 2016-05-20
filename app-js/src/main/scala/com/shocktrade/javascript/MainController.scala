@@ -1,11 +1,12 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Http, Location, Timeout}
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.social.facebook.{FacebookProfileResponse, FacebookService, TaggableFriend}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Location, Scope, Timeout, injected}
+import com.github.ldaniels528.meansjs.angularjs.toaster._
+import com.github.ldaniels528.meansjs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -56,7 +57,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }, _timeout)
   }
 
-  $scope.stopLoading = (promise: js.UndefOr[CancellablePromise]) => {
+  $scope.stopLoading = (promise: js.UndefOr[js.Promise[js.Any]]) => {
     $timeout.cancel(promise)
     $timeout(() => if (loadingIndex > 0) loadingIndex -= 1, 500.millis)
     ()
@@ -78,7 +79,9 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getTabIndex = () => determineTableIndex
 
-  $scope.isVisible = (tab: js.Dynamic) => (loadingIndex == 0) && ((!isTrue(tab.contestRequired) || mySession.contest.isDefined) && (!isTrue(tab.authenticationRequired) || mySession.isAuthenticated))
+  $scope.isVisible = (aTab: js.UndefOr[ContestTab]) => aTab.exists { tab =>
+    (loadingIndex == 0) && ((!tab.contestRequired || mySession.contest.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
+  }
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
@@ -142,7 +145,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
             console.error(s"Error retrieving online state for user $playerID")
         }
       }
-      onlinePlayers(playerID).toUndefOr[OnlinePlayerState].exists(_.connected)
+      onlinePlayers.get(playerID).exists(_.connected)
     }
   }
 
@@ -329,46 +332,52 @@ object MainController {
 @js.native
 trait MainControllerScope extends Scope {
   // variables
-  var appTabs: js.Array[MainTab]
-  var levels: js.Array[GameLevel]
+  var appTabs: js.Array[MainTab] = js.native
+  var levels: js.Array[GameLevel] = js.native
 
   // functions
   var isLoading: js.Function0[Boolean]
-  var startLoading: js.Function1[js.UndefOr[Int], CancellablePromise]
-  var stopLoading: js.Function1[js.UndefOr[CancellablePromise], Unit]
+  var startLoading: js.Function1[js.UndefOr[Int], js.Promise[js.Any]] = js.native
+  var stopLoading: js.Function1[js.UndefOr[js.Promise[js.Any]], Unit] = js.native
 
-  var mainInit: js.Function1[js.UndefOr[String], Unit]
-  var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String]
-  var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String]
-  var getDate: js.Function1[js.Dynamic, js.Dynamic]
-  var getExchangeClass: js.Function1[js.UndefOr[String], String]
-  var getTabIndex: js.Function0[Int]
-  var isVisible: js.Function1[js.Dynamic, Boolean]
-  var normalizeExchange: js.Function1[js.UndefOr[String], String]
-  var postLoginUpdates: js.Function2[js.UndefOr[String], js.UndefOr[Boolean], Unit]
+  var mainInit: js.Function1[js.UndefOr[String], Unit] = js.native
+  var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
+  var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
+  var getDate: js.Function1[js.Dynamic, js.Dynamic] = js.native
+  var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
+  var getTabIndex: js.Function0[Int] = js.native
+  var isVisible: js.Function1[js.UndefOr[ContestTab], Boolean] = js.native
+  var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
+  var postLoginUpdates: js.Function2[js.UndefOr[String], js.UndefOr[Boolean], Unit] = js.native
 
-  var contestIsEmpty: js.Function0[Boolean]
-  var getContestID: js.Function0[js.UndefOr[BSONObjectID]]
-  var getContestName: js.Function0[String]
-  var getContestStatus: js.Function0[String]
-  var getFacebookID: js.Function0[String]
-  var getFacebookProfile: js.Function0[js.UndefOr[FacebookProfileResponse]]
-  var getFacebookFriends: js.Function0[js.Array[TaggableFriend]]
-  var getFundsAvailable: js.Function0[Double]
-  var getNetWorth: js.Function0[Double]
-  var getUserID: js.Function0[BSONObjectID]
-  var getUserName: js.Function0[String]
-  var getUserProfile: js.Function0[UserProfile]
-  var hasNotifications: js.Function0[Boolean]
-  var hasPerk: js.Function1[js.UndefOr[String], Boolean]
-  var isAdmin: js.Function0[Boolean]
-  var isAuthenticated: js.Function0[Boolean]
+  var contestIsEmpty: js.Function0[Boolean] = js.native
+  var getContestID: js.Function0[js.UndefOr[BSONObjectID]] = js.native
+  var getContestName: js.Function0[String] = js.native
+  var getContestStatus: js.Function0[String] = js.native
+  var getFacebookID: js.Function0[String] = js.native
+  var getFacebookProfile: js.Function0[js.UndefOr[FacebookProfileResponse]] = js.native
+  var getFacebookFriends: js.Function0[js.Array[TaggableFriend]] = js.native
+  var getFundsAvailable: js.Function0[Double] = js.native
+  var getNetWorth: js.Function0[Double] = js.native
+  var getUserID: js.Function0[BSONObjectID] = js.native
+  var getUserName: js.Function0[String] = js.native
+  var getUserProfile: js.Function0[UserProfile] = js.native
+  var hasNotifications: js.Function0[Boolean] = js.native
+  var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
+  var isAdmin: js.Function0[Boolean] = js.native
+  var isAuthenticated: js.Function0[Boolean] = js.native
 
-  var changeAppTab: js.Function1[js.UndefOr[Int], Unit]
-  var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean]
-  var getPreferenceIcon: js.Function1[js.Dynamic, String]
-  var login: js.Function0[Unit]
-  var logout: js.Function0[Unit]
-  var signUp: js.Function0[Unit]
+  var changeAppTab: js.Function1[js.UndefOr[Int], Unit] = js.native
+  var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
+  var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
+  var login: js.Function0[Unit] = js.native
+  var logout: js.Function0[Unit] = js.native
+  var signUp: js.Function0[Unit] = js.native
 
+}
+
+@js.native
+trait ContestTab extends js.Object {
+  var contestRequired: Boolean = js.native
+  var authenticationRequired: Boolean = js.native
 }

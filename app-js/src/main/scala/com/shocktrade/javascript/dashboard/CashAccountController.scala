@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 
 import scala.language.postfixOps
@@ -55,13 +55,12 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
   */
 @js.native
 trait CashAccountScope extends Scope {
-  // functions
-  var asOfDate: js.Function0[js.Date]
-  var getTotalOrders: js.Function0[Double]
-  var getTotalEquity: js.Function0[Double]
-  var getTotalBuyOrders: js.Function0[Double]
-  var getTotalSellOrders: js.Function0[Double]
-  var getFundsAvailable: js.Function0[Double]
-  var getTotalInvestment: js.Function0[Double]
+  var asOfDate: js.Function0[js.Date] = js.native
+  var getTotalOrders: js.Function0[Double] = js.native
+  var getTotalEquity: js.Function0[Double] = js.native
+  var getTotalBuyOrders: js.Function0[Double] = js.native
+  var getTotalSellOrders: js.Function0[Double] = js.native
+  var getFundsAvailable: js.Function0[Double] = js.native
+  var getTotalInvestment: js.Function0[Double] = js.native
 
 }

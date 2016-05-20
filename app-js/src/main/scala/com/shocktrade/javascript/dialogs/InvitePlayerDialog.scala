@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.Modal
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.javascript.models.Participant
@@ -84,13 +85,13 @@ object InvitePlayerDialogController {
 @js.native
 trait InvitePlayerScope extends Scope {
   // variables
-  var invites: js.Array[TaggableFriend]
+  var invites: js.Array[TaggableFriend] = js.native
 
   // functions
-  var cancel: js.Function0[Unit]
-  var getFriends: js.Function0[js.Array[TaggableFriend]]
-  var getInvitedCount: js.Function0[Int]
-  var getInvites: js.Function0[js.Array[TaggableFriend]]
-  var ok: js.Function0[Unit]
+  var cancel: js.Function0[Unit] = js.native
+  var getFriends: js.Function0[js.Array[TaggableFriend]] = js.native
+  var getInvitedCount: js.Function0[Int] = js.native
+  var getInvites: js.Function0[js.Array[TaggableFriend]] = js.native
+  var ok: js.Function0[Unit] = js.native
 
 }

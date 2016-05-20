@@ -1,18 +1,18 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.scalascript.core.Location
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.{Controller, injected}
+import com.github.ldaniels528.meansjs.angularjs.Location
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.{Controller, injected}
 import com.shocktrade.javascript.Filters.toDuration
 import com.shocktrade.javascript.MySessionService
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.ChatController._
 import com.shocktrade.javascript.models.{Message, PlayerRef}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -62,7 +62,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
         // replace the symbols with icon images
         var text = msg.text
         Emoticons.foreach { emo =>
-          text = text.replaceAllLiterally(emo.symbol.as[String], s"""<img src="assets/images/smilies/${emo.uri.as[String]}">""")
+          text = text.replaceAllLiterally(emo.symbol, s"""<img src="assets/images/smilies/${emo.uri}">""")
         }
 
         html + s"""<img src="http://graph.facebook.com/${msg.sender.facebookID}/picture" class="chat_icon">
@@ -102,7 +102,7 @@ class ChatController($scope: js.Dynamic, $location: Location, toaster: Toaster,
       case Some((playerId, facebookID, contestId)) =>
         if (messageText.trim.nonEmpty) {
           // build the message blob
-          val message = makeNew[Message]
+          val message = New[Message]
           message.text = messageText
           //message.recipient = null
           message.sender = PlayerRef(userId = playerId, name = mySession.getUserName, facebookID = facebookID)
@@ -131,25 +131,28 @@ object ChatController {
 
   private val Colors = js.Array("#0088ff", "#ff00ff", "#008888", "#2200ff")
 
+  @ScalaJSDefined
+  class Emotion(val symbol: String, val uri: String, val tooltip: String) extends js.Object
+
   private val Emoticons = js.Array(
-    JS(symbol = ":-@", uri = "icon_mrgreen.gif", tooltip = "Big Grin"),
-    JS(symbol = ":-)", uri = "icon_smile.gif", tooltip = "Smile"),
-    JS(symbol = "-)", uri = "icon_wink.gif", tooltip = "Wink"),
-    JS(symbol = ":-D", uri = "icon_biggrin.gif", tooltip = "Big Smile"),
-    JS(symbol = ":->", uri = "icon_razz.gif", tooltip = "Razzed"),
-    JS(symbol = "B-)", uri = "icon_cool.gif", tooltip = "Cool"),
-    JS(symbol = "$-|", uri = "icon_rolleyes.gif", tooltip = "Roll Eyes"),
-    JS(symbol = "8-|", uri = "icon_eek.gif", tooltip = "Eek"),
-    JS(symbol = ":-/", uri = "icon_confused.gif", tooltip = "Confused"),
-    JS(symbol = "|-|", uri = "icon_redface.gif", tooltip = "Blush"),
-    JS(symbol = ":-(", uri = "icon_sad.gif", tooltip = "Sad"),
-    JS(symbol = ":'-(", uri = "icon_cry.gif", tooltip = "Cry"),
-    JS(symbol = ">:-(", uri = "icon_evil.gif", tooltip = "Enraged"),
-    JS(symbol = ":-|", uri = "icon_neutral.gif", tooltip = "Neutral"),
-    JS(symbol = ":-O", uri = "icon_surprised.gif", tooltip = "Surprised"),
-    JS(symbol = "(i)", uri = "icon_idea.gif", tooltip = "Idea"),
-    JS(symbol = "(!)", uri = "icon_exclaim.gif", tooltip = "Exclamation"),
-    JS(symbol = "(?)", uri = "icon_question.gif", tooltip = "Question"),
-    JS(symbol = "=>", uri = "icon_arrow.gif", tooltip = "Arrow"))
+    new Emotion(symbol = ":-@", uri = "icon_mrgreen.gif", tooltip = "Big Grin"),
+    new Emotion(symbol = ":-)", uri = "icon_smile.gif", tooltip = "Smile"),
+    new Emotion(symbol = "-)", uri = "icon_wink.gif", tooltip = "Wink"),
+    new Emotion(symbol = ":-D", uri = "icon_biggrin.gif", tooltip = "Big Smile"),
+    new Emotion(symbol = ":->", uri = "icon_razz.gif", tooltip = "Razzed"),
+    new Emotion(symbol = "B-)", uri = "icon_cool.gif", tooltip = "Cool"),
+    new Emotion(symbol = "$-|", uri = "icon_rolleyes.gif", tooltip = "Roll Eyes"),
+    new Emotion(symbol = "8-|", uri = "icon_eek.gif", tooltip = "Eek"),
+    new Emotion(symbol = ":-/", uri = "icon_confused.gif", tooltip = "Confused"),
+    new Emotion(symbol = "|-|", uri = "icon_redface.gif", tooltip = "Blush"),
+    new Emotion(symbol = ":-(", uri = "icon_sad.gif", tooltip = "Sad"),
+    new Emotion(symbol = ":'-(", uri = "icon_cry.gif", tooltip = "Cry"),
+    new Emotion(symbol = ">:-(", uri = "icon_evil.gif", tooltip = "Enraged"),
+    new Emotion(symbol = ":-|", uri = "icon_neutral.gif", tooltip = "Neutral"),
+    new Emotion(symbol = ":-O", uri = "icon_surprised.gif", tooltip = "Surprised"),
+    new Emotion(symbol = "(i)", uri = "icon_idea.gif", tooltip = "Idea"),
+    new Emotion(symbol = "(!)", uri = "icon_exclaim.gif", tooltip = "Exclamation"),
+    new Emotion(symbol = "(?)", uri = "icon_question.gif", tooltip = "Question"),
+    new Emotion(symbol = "=>", uri = "icon_arrow.gif", tooltip = "Arrow"))
 
 }

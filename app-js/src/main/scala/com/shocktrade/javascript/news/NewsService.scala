@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.news
 
-import com.github.ldaniels528.scalascript.Service
-import com.github.ldaniels528.scalascript.core.Http
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.Service
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.models.BSONObjectID
 
 import scala.scalajs.js
@@ -39,7 +39,7 @@ object NewsChannel {
   implicit class NewsChannelEnrichment(val channel: NewsChannel) extends AnyVal {
 
     def copy(items: js.UndefOr[js.Array[NewsItem]] = js.undefined) = {
-      val newChannel = makeNew[NewsChannel]
+      val newChannel = New[NewsChannel]
       newChannel.items = items getOrElse channel.items
       newChannel
     }
@@ -67,7 +67,7 @@ object NewsItem {
 
     def copy(description: js.UndefOr[String] = js.undefined,
              quotes: js.UndefOr[js.Array[NewsQuote]] = js.undefined) = {
-      val newItem = makeNew[NewsItem]
+      val newItem = New[NewsItem]
       newItem.description = description getOrElse item.description
       newItem.quotes = quotes getOrElse item.quotes
       newItem

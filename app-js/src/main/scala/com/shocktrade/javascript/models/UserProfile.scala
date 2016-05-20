@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -49,7 +49,7 @@ object UserProfile {
             lastSymbol: String = "AAPL",
             country: js.UndefOr[String] = js.undefined,
             lastLoginTime: js.UndefOr[js.Date] = js.undefined) = {
-    val profile = makeNew[UserProfile]
+    val profile = New[UserProfile]
     profile.name = name
     profile.facebookID = facebookID
     profile.email = email

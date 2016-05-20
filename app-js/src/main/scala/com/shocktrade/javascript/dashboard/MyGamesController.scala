@@ -1,8 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.{Location, Timeout}
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.injected
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.injected
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.NewGameDialog

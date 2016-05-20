@@ -1,10 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Http, Q, Timeout}
-import com.github.ldaniels528.scalascript.extensions.{Modal, ModalInstance, ModalOptions, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Service, angular, injected}
+import com.shocktrade.core.StringHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.{Q, Timeout}
+import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import com.github.ldaniels528.meansjs.angularjs.http.Http
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{Service, angular, injected}
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, OrderQuote}
@@ -37,14 +40,10 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
   }
 
   def createOrder(contestId: BSONObjectID, playerId: BSONObjectID, order: NewOrderForm): Future[Contest] = {
-    required("contestId", contestId)
-    required("playerId", playerId)
-    required("order", order)
     $http.put[Contest](s"/api/order/${contestId.$oid}/${playerId.$oid}", order)
   }
 
   def getQuote(symbol: String): Future[OrderQuote] = {
-    required("symbol", symbol)
     $http.get[OrderQuote](s"/api/quotes/order/symbol/$symbol")
   }
 }
@@ -66,7 +65,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   private var processing = false
 
   $scope.form = {
-    val form = makeNew[NewOrderForm]
+    val form = New[NewOrderForm]
     form.emailNotify = true
     form.accountType = params.accountType
     form.symbol = params.symbol
@@ -75,7 +74,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   }
 
   $scope.quote = {
-    val quote = makeNew[OrderQuote]
+    val quote = New[OrderQuote]
     quote.symbol = $scope.form.symbol
     quote
   }
@@ -130,9 +129,10 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
 
   private def lookupTickerQuote(ticker: js.Dynamic) = {
     console.log(s"ticker = ${angular.toJson(ticker)}")
-    val _ticker = if (isDefined(ticker.symbol)) ticker.symbol.as[String] else ticker.as[String]
-    if (_ticker.nonBlank) {
-      val symbol = (_ticker.indexOfOpt(" ") map (index => _ticker.substring(0, index - 1)) getOrElse _ticker).trim
+    for {
+      _ticker <- if (isDefined(ticker.symbol)) ticker.symbol.asOpt[String] else ticker.asOpt[String] map(_.trim)
+      symbol = (_ticker.indexOfOpt(" ") map (index => _ticker.substring(0, index - 1)) getOrElse _ticker).trim
+    } {
       lookupSymbolQuote(symbol)
     }
   }
@@ -250,7 +250,7 @@ object NewOrderParams {
   def apply(accountType: js.UndefOr[String] = js.undefined,
             symbol: js.UndefOr[String] = js.undefined,
             quantity: js.UndefOr[Double] = js.undefined) = {
-    val params = makeNew[NewOrderParams]
+    val params = New[NewOrderParams]
     params.accountType = accountType
     params.symbol = symbol
     params.quantity = quantity

@@ -1,11 +1,12 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Timeout
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.social.facebook.{FacebookProfileResponse, FacebookService, TaggableFriend}
-import com.github.ldaniels528.scalascript.social.linkedin.LinkedIn
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.AngularJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.{Timeout, _}
+import com.github.ldaniels528.meansjs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import com.github.ldaniels528.meansjs.social.linkedin.LinkedIn
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
@@ -161,7 +162,7 @@ class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
     else if (isDefined(aContest.dynamic.error)) toaster.error(aContest.dynamic.error)
 
     // is it a delta?
-    else if (aContest.dynamic.`type` === "delta") updateContestDelta(aContest)
+    else if (aContest.dynamic.`type`.asOpt[String] ?== "delta") updateContestDelta(aContest)
 
     // otherwise, digest the full contest
     else contest = Option(aContest)
@@ -302,9 +303,7 @@ class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
   }
 
   def findPlayerByName(contest: Contest, playerName: String) = {
-    required("contest", contest)
-    required("playerName", playerName)
-    contest.participants.find(_.name == playerName) getOrElse makeNew
+    contest.participants.find(_.name == playerName) getOrElse New
   }
 
   ////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core.{Location, Timeout}
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{angular, injected}
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{angular, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialog
 import com.shocktrade.javascript.models.Contest.MaxPlayers
@@ -341,34 +341,34 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 @js.native
 trait GameSearchScope extends GameScope {
   // variables
-  var contest: Contest
-  var searchTerm: String
-  var searchOptions: ContestSearchOptions
+  var contest: Contest = js.native
+  var searchTerm: String = js.native
+  var searchOptions: ContestSearchOptions = js.native
 
   // functions
-  var contestStatusClass: js.Function1[js.UndefOr[Contest], js.UndefOr[String]]
-  var getAvailableCount: js.Function0[Int]
-  var getAvailableSlots: js.Function2[js.UndefOr[Contest], js.UndefOr[Number], js.UndefOr[js.Array[Participant]]]
-  var getSelectionClass: js.Function1[js.UndefOr[Contest], js.UndefOr[String]]
-  var getStatusClass: js.Function1[js.UndefOr[Contest], String]
-  var isSplitScreen: js.Function0[Boolean]
-  var toggleSplitScreen: js.Function0[Unit]
-  var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]]
+  var contestStatusClass: js.Function1[js.UndefOr[Contest], js.UndefOr[String]] = js.native
+  var getAvailableCount: js.Function0[Int] = js.native
+  var getAvailableSlots: js.Function2[js.UndefOr[Contest], js.UndefOr[Number], js.UndefOr[js.Array[Participant]]] = js.native
+  var getSelectionClass: js.Function1[js.UndefOr[Contest], js.UndefOr[String]] = js.native
+  var getStatusClass: js.Function1[js.UndefOr[Contest], String] = js.native
+  var isSplitScreen: js.Function0[Boolean] = js.native
+  var toggleSplitScreen: js.Function0[Unit] = js.native
+  var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
 
   // contest functions
-  var containsPlayer: js.Function2[js.UndefOr[Contest], js.UndefOr[UserProfile], Boolean]
-  var contestSearch: js.Function1[js.UndefOr[ContestSearchOptions], Unit]
-  var deleteContest: js.Function1[js.UndefOr[Contest], Unit]
-  var getSearchResults: js.Function1[js.UndefOr[String], js.Array[Contest]]
-  var getSelectedContest: js.Function0[js.UndefOr[Contest]]
-  var invitePlayerPopup: js.Function2[js.UndefOr[Contest], js.UndefOr[BSONObjectID], Unit]
-  var isContestOwner: js.Function1[js.UndefOr[Contest], Boolean]
-  var isDeletable: js.Function1[js.UndefOr[Contest], Boolean]
-  var isJoinable: js.Function1[js.UndefOr[Contest], Boolean]
-  var joinContest: js.Function1[js.UndefOr[Contest], Unit]
-  var quitContest: js.Function1[js.UndefOr[Contest], Unit]
-  var selectContest: js.Function1[js.UndefOr[Contest], Unit]
-  var startContest: js.Function1[js.UndefOr[Contest], Unit]
+  var containsPlayer: js.Function2[js.UndefOr[Contest], js.UndefOr[UserProfile], Boolean] = js.native
+  var contestSearch: js.Function1[js.UndefOr[ContestSearchOptions], Unit] = js.native
+  var deleteContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
+  var getSearchResults: js.Function1[js.UndefOr[String], js.Array[Contest]] = js.native
+  var getSelectedContest: js.Function0[js.UndefOr[Contest]] = js.native
+  var invitePlayerPopup: js.Function2[js.UndefOr[Contest], js.UndefOr[BSONObjectID], Unit] = js.native
+  var isContestOwner: js.Function1[js.UndefOr[Contest], Boolean] = js.native
+  var isDeletable: js.Function1[js.UndefOr[Contest], Boolean] = js.native
+  var isJoinable: js.Function1[js.UndefOr[Contest], Boolean] = js.native
+  var joinContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
+  var quitContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
+  var selectContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
+  var startContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
 
 }
 

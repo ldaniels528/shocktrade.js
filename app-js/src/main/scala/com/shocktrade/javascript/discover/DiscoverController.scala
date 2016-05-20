@@ -1,10 +1,11 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.scalascript.core.TimerConversions._
-import com.github.ldaniels528.scalascript.core._
-import com.github.ldaniels528.scalascript.extensions.{Cookies, Toaster}
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{angular, injected}
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
+import com.github.ldaniels528.meansjs.angularjs.http.HttpPromise
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs.{angular, injected}
 import com.shocktrade.javascript._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
@@ -21,6 +22,7 @@ import scala.util.{Failure, Success}
 
 /**
   * Discover Controller
+  * @author lawrence.daniels@gmail.com
   */
 class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
                          $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
@@ -57,14 +59,15 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
     console.log(s"Loading symbol ${angular.toJson(ticker, pretty = false)}")
 
     // determine the symbol
-    val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.as[String].toUpperCase
+    val symbol = (if (isDefined(ticker.symbol)) ticker.symbol.asOpt[String]
     else {
-      val _ticker = ticker.as[String]
-      val index = _ticker.indexOf(" ")
-      if (index == -1) _ticker else _ticker.substring(0, index)
-    }).toUpperCase
+      ticker.asOpt[String] map { _ticker =>
+        val index = _ticker.indexOf(" ")
+        if (index == -1) _ticker else _ticker.substring(0, index)
+      }
+    }) map(_.toUpperCase)
 
-    updateQuote(symbol)
+    symbol foreach updateQuote
   }
 
   private def updateQuote(ticker: String) {
@@ -165,7 +168,7 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
   }
 
   $scope.getRiskClass = (riskLevel: js.UndefOr[String]) => riskLevel map {
-    case rs if isDefined(rs) && rs.nonBlank => s"risk_${rs.toLowerCase}"
+    case rs if isDefined(rs) && rs.nonEmpty => s"risk_${rs.toLowerCase}"
     case _ => js.undefined
   }
 
@@ -337,7 +340,7 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope {
   var hasHoldings: js.Function1[js.UndefOr[FullQuote], Boolean]
   var isUSMarketsOpen: js.Function0[js.UndefOr[Boolean]]
   var loadQuote: js.Function1[js.Dynamic, Unit]
-  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[QPromise[NewOrderDialogResult]]]
+  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]]
 
   // favorite quote functions
   var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpPromise[js.Dynamic]]]
@@ -370,7 +373,7 @@ trait DiscoverOptions extends js.Object {
 object DiscoverOptions {
 
   def apply(range: String) = {
-    val options = makeNew[DiscoverOptions]
+    val options = New[DiscoverOptions]
     options.range = range
     options
   }

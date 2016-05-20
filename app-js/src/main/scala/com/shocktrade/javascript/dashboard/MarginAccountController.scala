@@ -1,10 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.scalascript.core.HttpPromise._
-import com.github.ldaniels528.scalascript.core.Timeout
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
-import com.github.ldaniels528.scalascript.{Controller, Scope, injected}
+import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Timeout, injected}
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 
 import scala.language.postfixOps
@@ -89,8 +87,8 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 
   private def investmentCost = {
     var total = 0d
-    mySession.participant foreach (_.positions.asArray[js.Dynamic] filter (_.accountType === "MARGIN") foreach { pos =>
-      total += pos.pricePaid.as[Double] * pos.quantity.as[Double]
+    mySession.participant foreach (_.positions filter (_.accountType == "MARGIN") foreach { pos =>
+      total += pos.pricePaid.toDouble * pos.quantity.toDouble
     })
     total
   }

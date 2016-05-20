@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.social
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.extensions.Toaster
-import com.github.ldaniels528.scalascript.social.facebook.TaggableFriend
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialog
 import com.shocktrade.javascript.models.{MyUpdate, UserProfile}
@@ -113,7 +113,7 @@ class ConnectController($scope: ConnectScope, toaster: Toaster,
   }
 
   $scope.loadMyUpdates = (aUserName: js.UndefOr[String]) => aUserName foreach { userName =>
-    if (userName.nonBlank) {
+    if (userName.nonEmpty) {
       asyncLoading($scope)(connectService.getUserUpdates(userName, 50)) onComplete {
         case Success(data) =>
           myUpdates = data

@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.language.implicitConversions
 import scala.scalajs.js
@@ -26,7 +26,7 @@ object BSONObjectID {
     * @return a new BSON object ID instance
     */
   def apply(value: String) = {
-    val bsid = makeNew[BSONObjectID]
+    val bsid = New[BSONObjectID]
     bsid.$oid = value
     bsid
   }

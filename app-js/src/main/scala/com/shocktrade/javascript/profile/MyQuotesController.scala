@@ -1,20 +1,20 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.scalascript._
-import com.github.ldaniels528.scalascript.core.Location
-import com.github.ldaniels528.scalascript.extensions.Toaster
+import com.github.ldaniels528.meansjs.angularjs._
+import com.github.ldaniels528.meansjs.angularjs.Location
+import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySessionService
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
-import com.shocktrade.javascript.discover.QuoteService
+import com.shocktrade.javascript.discover.{BasicQuote, QuoteService}
 import com.shocktrade.javascript.models.UserProfile
 import com.shocktrade.javascript.profile.MyQuotesController._
 import org.scalajs.dom.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => JS}
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -28,8 +28,8 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
                          @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
-  private val quoteSets = js.Dictionary[js.Dynamic](QuoteLists map { case (name, icon) =>
-    name -> JS(
+  private val quoteSets = js.Dictionary(QuoteLists map { case (name, icon) =>
+    name -> new Expandable(
       icon = icon,
       quotes = null,
       expanded = false,
@@ -74,8 +74,8 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
   private def expandList(name: String) {
     quoteSets.get(name) foreach { obj =>
       obj.expanded = !obj.expanded
-      if (obj.expanded.isTrue && !isDefined(obj.quotes)) {
-        obj.quotes = emptyArray[js.Dynamic]
+      if (obj.expanded && !isDefined(obj.quotes)) {
+        obj.quotes = emptyArray[BasicQuote]
         name match {
           case Favorites => loadQuotes(name, mySession.getFavoriteSymbols, obj)
           case Held => loadHeldSecurities(obj)
@@ -87,7 +87,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
     }
   }
 
-  private def loadQuotes(name: String, symbols: js.Array[String], obj: js.Dynamic) {
+  private def loadQuotes(name: String, symbols: js.Array[String], obj: Expandable) {
     if (symbols.nonEmpty) {
       quoteService.getStockQuoteList(symbols) onComplete {
         case Success(updatedQuotes) => obj.quotes = updatedQuotes
@@ -98,7 +98,7 @@ class MyQuotesController($scope: js.Dynamic, $location: Location, toaster: Toast
     }
   }
 
-  private def loadHeldSecurities(obj: js.Dynamic): Unit = {
+  private def loadHeldSecurities(obj: Expandable): Unit = {
     mySession.userProfile._id foreach { playerId =>
       val outcome = for {
         symbols <- contestService.getHeldSecurities(playerId)
@@ -161,5 +161,11 @@ object MyQuotesController {
     Held -> "fa-star",
     Recents -> "fa-history"
   )
+
+  @ScalaJSDefined
+  class Expandable(var icon: String = null,
+                   var quotes: js.Array[BasicQuote] = null,
+                   var expanded: Boolean = false,
+                   var loading: Boolean = false) extends js.Object
 
 }

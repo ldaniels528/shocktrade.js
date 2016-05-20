@@ -1,6 +1,6 @@
 package com.shocktrade.javascript.models
 
-import com.github.ldaniels528.scalascript.util.ScalaJsHelper._
+import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
@@ -33,7 +33,7 @@ object OrderQuote {
 
   def apply(symbol: UndefOr[String] = js.undefined,
             active: Boolean = true) = {
-    val quote = makeNew[OrderQuote]
+    val quote = New[OrderQuote]
     quote.symbol = symbol
     quote.active = active
     quote
