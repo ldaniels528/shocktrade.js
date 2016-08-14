@@ -1,0 +1,79 @@
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_label">Revenue</span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.revenue == null" class="null">&#8212;</span>
+			<span ng-show="q.revenue != null"
+				ng-class="q.revenue < 0 ? 'negative' : ''">{{ q.revenue | bigNumber }}</span>
+		</span>
+	</div>	
+		
+	<div class="col-md-4">
+		<span class="qm_label">EBITDA</span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.EBITDA == null" class="null">&#8212;</span>
+			<span ng-show="q.EBITDA != null"
+				ng-class="q.EBITDA < 0 ? 'negative' : ''">{{ q.EBITDA | bigNumber }}</span>
+		</span>
+	</div>						
+	
+	<div class="col-md-4">
+		<span class="qm_label">Gross Profit</span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.grossProfit == null" class="null">&#8212;</span>
+			<span ng-show="q.grossProfit != null"
+				ng-class="q.grossProfit < 0 ? 'negative' : ''">{{ q.grossProfit | bigNumber }}</span>
+		</span>
+	</div>
+</div>
+
+<div class="row">	
+	<div class="col-md-4">
+		<span class="qm_label">Revenue/Share</span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.revenuePerShare == null" class="null">&#8212;</span>
+			<span ng-show="q.revenuePerShare != null"
+				ng-class="q.revenuePerShare < 0 ? 'negative' : ''">{{ q.revenuePerShare | quoteNumber }}</span>
+		</span>
+	</div>
+			
+	<div class="col-md-4">
+		<span class="qm_label">Earnings/Share <span class="small">(diluted)</span></span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.dilutedEPS == null" class="null">&#8212;</span>
+			<span ng-show="q.dilutedEPS != null"
+				ng-class="q.dilutedEPS < 0 ? 'negative' : ''">{{ q.dilutedEPS | quoteNumber }}</span>
+		</span>
+	</div>
+	
+	<div class="col-md-4">
+		<span class="qm_label">Net Income</span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.netIncomeAvailToCommon == null" class="null">&#8212;</span>
+			<span ng-show="q.netIncomeAvailToCommon != null"
+				ng-class="q.netIncomeAvailToCommon < 0 ? 'negative' : ''">{{ q.netIncomeAvailToCommon | bigNumber }}</span>
+		</span>
+	</div>										
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<span class="qm_label">Revenue Growth <span class="small">(qtr)</span></span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.revenueGrowthQuarterly == null" class="null">&#8212;</span>
+			<span ng-show="q.revenueGrowthQuarterly != null"
+				ng-class="q.revenueGrowthQuarterly < 0 ? 'negative' : ''">{{ q.revenueGrowthQuarterly | number:2 }}%</span>
+		</span>
+	</div>		
+	
+	<div class="col-md-4">
+		<span class="qm_label">Earnings Growth <span class="small">(qtr)</span></span>
+		<span class="qm_value pull-right">
+			<span ng-show="q.earningsGrowthQuarterly == null" class="null">&#8212;</span>
+			<span ng-show="q.earningsGrowthQuarterly != null"
+				ng-class="q.earningsGrowthQuarterly < 0 ? 'negative' : ''">{{ q.earningsGrowthQuarterly | number:2 }}%</span>
+		</span>
+	</div>	
+	
+	<div class="col-md-4">&nbsp;</div>				
+</div>

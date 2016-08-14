@@ -1,0 +1,172 @@
+<div ng-controller="StatisticsController">
+	<div class="row">
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-user"></i> Level and Rank</legend>
+				<table style="width: 100%">
+					<tr>
+						<th style="width: 50%">Experience-points (XP):</th>
+						<td style="width: 50%">{{ userProfile.totalXP || 0 | number }}</td>
+					</tr>	
+					<tr>
+						<th>Level:</th>
+						<td>{{ userProfile.level || 1 }} &#8212; {{ levels[ userProfile.level || 0 ].description }}</td>
+					</tr>	
+					<tr>
+						<th>Next Level:</th>
+						<td>{{ levels[ userProfile.level || 0 ].nextLevelXP }} XP</td>
+					</tr>			
+					<tr>
+						<th>Rank:</th>
+						<td>{{ userProfile.rank || 0 }}</td>
+					</tr>	
+				</table>
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-gamepad"></i> Games Statistics</legend>
+				<table style="width: 100%">
+					<tr>
+						<th style="width: 50%">Games created:</th>
+						<td style="width: 50%">{{ userProfile.gamesCreated || 0 | number }}</td>
+					</tr>
+					<tr>
+						<th>Games deleted:</th>
+						<td>{{ userProfile.gamesDeleted || 0 | number }}</td>
+					</tr>						
+					<tr>
+						<th>Games joined:</th>
+						<td>{{ userProfile.gamesJoined || 0 | number }}</td>
+					</tr>
+					<tr>
+						<th>Games in-progress:</th>
+						<td>{{ userProfile.gamesInProgress || 0 | number }}</td>
+					</tr>		
+					<tr>
+						<th>Games withdrawn:</th>
+						<td>{{ userProfile.gamesDropped || 0 | number }}</td>
+					</tr>
+					<tr>
+						<th>Games completed:</th>
+						<td>{{ userProfile.gamesCompleted || 0 | number }}</td>
+					</tr>	
+				</table>
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-money"></i> Portfolio Growth</legend>
+				<table style="width: 100%">
+					<tr>
+						<th style="width: 50%">Net Cash gains (losses):</th>
+						<td style="width: 50%">
+							$ {{ (userProfile.netCashEarned || 0) | number:2 }}
+							<i ng-show="getUserProfile().netCashEarned > 0" class="fa fa-arrow-up positive"></i>
+							<i ng-show="getUserProfile().netCashEarned < 0" class="fa fa-arrow-down negative"></i>
+						</td>
+					</tr>			
+					<tr>
+						<th>Max Portfolio growth:</th>
+						<td>{{ (userProfile.maxPctGrowth || 0) | number:1 }}%</td>
+					</tr>	
+					<tr>
+						<th>Max Portfolio loss:</th>
+						<td>{{ (userProfile.maxPctLoss || 0) | number:1 }}%</td>
+					</tr>	
+				</table>
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-gift"></i> Awards & Perks</legend>
+				<table style="width: 100%">		
+					<tr>
+						<th style="width: 50%">Awards earned:</th>
+						<td style="width: 50%">{{ userProfile.awards.length || 0 }}</td>
+					</tr>	
+					<tr>
+						<th>Perk-points earned:</th>
+						<td>{{ userProfile.perkPointsEarned || 0 }}</td>
+					</tr>	
+					<tr>
+						<th>Perk-points used:</th>
+						<td>{{ userProfile.perkPointsUsed || 0 }}</td>
+					</tr>		
+					<tr>
+						<th>Perk-points available:</th>
+						<td>{{ userProfile.perkPoints || 0 }}</td>
+					</tr>	
+				</table>
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-flag-checkered"></i> Competitive Statistics</legend>
+				<table style="width: 100%">
+					<tr>
+						<th style="width: 50%">Trophies earned:</th>
+						<td style="width: 50%">
+							{{ userProfile.trophiesGold + userProfile.trophiesSilver + userProfile.trophiesBronze || 0 }} &#8212; 
+							<img src="/images/contests/gold.png"> x {{ userProfile.trophiesGold || 0 }}&nbsp;
+							<img src="/images/contests/silver.png"> x {{ userProfile.trophiesSilver || 0 }}&nbsp;
+							<img src="/images/contests/bronze.png"> x {{ userProfile.trophiesBronze || 0 }}&nbsp;
+						</td>
+					</tr>	
+					<tr>
+						<th>Winning Streak:</th>
+						<td>{{ userProfile.winningStreak || 0 }} time(s)</td>
+					</tr>	
+					<tr>
+						<th>Losing Streak:</th>
+						<td>{{ userProfile.lossingStreak || 0 }} time(s)</td>
+					</tr>			
+					<tr>
+						<th>Last Place:</th>
+						<td>{{ userProfile.lastPlace || 0 }} time(s)</td>
+					</tr>		
+					<tr>
+						<th>Max players (single game):</th>
+						<td>{{ userProfile.maxPlayers || 0 }}</td>
+					</tr>	
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>				
+				</table>
+			</fieldset>
+		</div>
+
+		<div class="col-md-6">
+			<fieldset>
+				<legend><i class="fa fa-facebook-square"></i> Social</legend>
+				<table style="width: 100%">	
+					<tr>
+						<th style="width: 50%">Social Networks:</th>
+						<td style="width: 50%">{{ userProfile.socialNetworks || 0 }} / 6</td>
+					</tr>					
+					<tr>
+						<th>Friends:</th>
+						<td>{{ userProfile.friends.length || 0 }}</td>
+					</tr>	
+					<tr>
+						<th>Referrals:</th>
+						<td>{{ userProfile.referrals || 0 }}</td>
+					</tr>						
+					<tr>
+						<th>Likes:</th>
+						<td>{{ userProfile.thumbsUp || 0 }} <i class="fa fa-thumbs-o-up"></i></td>
+					</tr>	
+					<tr>
+						<th>Dislikes:</th>
+						<td>{{ userProfile.thumbsDown || 0 }} <i class="fa fa-thumbs-o-down"></i></td>
+					</tr>					
+				</table>
+			</fieldset>			
+		</div>
+	</div>
+</div>

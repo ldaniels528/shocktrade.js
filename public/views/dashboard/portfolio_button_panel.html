@@ -1,0 +1,26 @@
+<div class="row portfolio_button_panel">
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold"
+                ng-click="popupNewOrderDialog(getAccountType())"
+                ng-hide="getContestStatus() === 'CLOSED'"
+                title="Create a new order">
+            <i class="fa fa-cart-plus"></i> Order
+        </button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold pull-right"
+                ng-click="popupTransferFundsDialog()"
+                ng-hide="getContestStatus() === 'CLOSED' || !hasPerk('MARGIN')"
+                title="Use your margin account">
+            <i class="fa fa-sign-out"></i> Transfers
+        </button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-default sell_button bold pull-right"
+                ng-click="popupPerksDialog()"
+                ng-hide="getContestStatus() === 'CLOSED'"
+                title="Create a new order">
+            <i class="fa fa-gift"></i> Perks
+        </button>
+    </div>
+</div>

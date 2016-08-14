@@ -4,147 +4,142 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 
-val meanjsVersion = "0.2.2.2"
-
-val myAkkaVersion = "2.4.2"
-val myPlayVersion = "2.4.6"
-val myAppVersion = "0.8.1"
+val appVersion = "0.8.1"
 
 val _scalaVersion = "2.11.8"
 val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
+val scalaJsNodeVersion = "0.2.2.4"
+
+scalaJSUseRhino in Global := false
 
 scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars")
 
-val scalajsOutputDir = Def.settingKey[File]("Directory for Javascript files output by ScalaJS")
+lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directory")
+copyJS := {
+  val inDir = baseDirectory.value / "app-nodejs" / "target" / "scala-2.11"
+  val outDir = baseDirectory.value
+  val files = Seq("shocktrade-nodejs-fastopt.js", "shocktrade-nodejs-fastopt.js.map") map { p => (inDir / p, outDir / p) }
+  IO.copy(files, overwrite = true)
+}
 
-lazy val appScalaJs = (project in file("app-js"))
+lazy val jsCommonSettings = Seq(
+  scalacOptions ++= Seq("-feature", "-deprecation"),
+  scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
+  scalaVersion := _scalaVersion,
+  persistLauncher := true,
+  persistLauncher in Test := false,
+  relativeSourceMaps := true,
+  homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
+  addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
+  resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+  libraryDependencies ++= Seq(
+    "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
+    "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
+    "org.scala-lang" % "scala-reflect" % _scalaVersion
+  ))
+
+lazy val sharedjs = (project in file("./app-shared"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(jsCommonSettings: _*)
   .settings(
-    name := "shocktrade-scalajs",
+    name := "shocktrade-common",
     organization := "com.shocktrade",
-    version := myAppVersion,
-    scalaVersion := _scalaVersion,
-    relativeSourceMaps := true,
-    persistLauncher := true,
-    persistLauncher in Test := false,
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
+    version := appVersion,
+    libraryDependencies ++= Seq(
+      "com.github.ldaniels528" %%% "scalajs-common" % scalaJsNodeVersion
+    ))
+
+lazy val angularjs = (project in file("./app-angularjs"))
+  .aggregate(sharedjs)
+  .dependsOn(sharedjs)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(jsCommonSettings: _*)
+  .settings(
+    name := "shocktrade-angularjs",
+    organization := "com.shocktrade",
+    version := appVersion,
+    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
       // MEANS.js
-      "com.github.ldaniels528" %%% "scalajs-browser-core" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-core" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-anchor-scroll" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-animate" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-cookies" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-facebook" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-nervgh-fileupload" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-sanitize" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-toaster" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-bootstrap" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-router" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-social-facebook" % meanjsVersion,
-      "com.github.ldaniels528" %%% "scalajs-social-linkedin" % meanjsVersion,
-      // ScalaJS Libs
-      "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
-      "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
-      "org.scala-lang" % "scala-reflect" % _scalaVersion
+      "com.github.ldaniels528" %%% "scalajs-browser-core" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-core" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-anchor-scroll" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-animate" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-cookies" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-facebook" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-nervgh-fileupload" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-sanitize" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-toaster" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-bootstrap" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-router" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-social-facebook" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-social-linkedin" % scalaJsNodeVersion
     ))
+
+lazy val nodejs = (project in file("./app-nodejs"))
+  .aggregate(sharedjs)
+  .dependsOn(sharedjs)
   .enablePlugins(ScalaJSPlugin)
-
-lazy val appSvc = (project in file("app-svc"))
+  .settings(jsCommonSettings: _*)
   .settings(
-    name := "shocktrade-services",
+    name := "shocktrade-nodejs",
     organization := "com.shocktrade",
-    version := myAppVersion,
-    scalaVersion := _scalaVersion,
+    version := appVersion,
+    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      //
-      // Shocktrade/ldaniels528 dependencies
-      //
-      "com.github.ldaniels528" %% "tabular" % "0.1.3" exclude("org.slf4j", "slf4j-log4j12"),
-      //
-      // Third Party dependencies
-      //
-      "commons-beanutils" % "commons-beanutils" % "1.9.1",
-      "joda-time" % "joda-time" % "2.3",
-      "net.databinder.dispatch" %% "dispatch-core" % "0.11.0",
-      "net.databinder.dispatch" %% "dispatch-tagsoup" % "0.11.0",
-      "net.liftweb" %% "lift-json" % "3.0-M3",
-      "org.apache.commons" % "commons-io" % "1.3.2",
-      "org.joda" % "joda-convert" % "1.6",
-      "org.slf4j" % "slf4j-api" % "1.7.10",
-      //
-      // Testing Dependencies
-      //
-      "junit" % "junit" % "4.11" % "test"
-    )
-  )
+      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-elgs-splitargs" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-express-csv" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-feedparser-promised" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-pvorb-md5" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-xml2js" % scalaJsNodeVersion
+    ))
 
-lazy val appPlay = (project in file("app-play"))
+lazy val shocktradejs = (project in file("."))
+  .aggregate(angularjs, nodejs)
+  .dependsOn(angularjs, nodejs)
+  .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "shocktrade.js",
     organization := "com.shocktrade",
-    version := myAppVersion,
+    version := appVersion,
     scalaVersion := _scalaVersion,
     relativeSourceMaps := true,
-    scalajsOutputDir := (crossTarget in Compile).value / "classes" / "public" / "javascripts",
-    //scalaJSProjects := clients,
-    pipelineStages := Seq(/*scalaJSProd,*/ gzip),
-    // ask scalajs project to put its outputs in scalajsOutputDir
-    Seq(packageScalaJSLauncher, fastOptJS, fullOptJS) map { packageJSKey =>
-      crossTarget in(appScalaJs, Compile, packageJSKey) := scalajsOutputDir.value
-    },
     compile in Compile <<=
-      (compile in Compile) dependsOn (fastOptJS in(appScalaJs, Compile)),
+      (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),
     ivyScala := ivyScala.value map (_.copy(overrideScalaVersion = true)),
-    libraryDependencies ++= Seq(cache, filters, jdbc, json, ws,
-      //
-      // Shocktrade/ldaniels528 dependencies
-      //
-      "com.github.ldaniels528" %% "commons-helpers" % "0.1.2",
-      "com.github.ldaniels528" %% "tabular" % "0.1.3" exclude("org.slf4j", "slf4j-log4j12"),
-      //
-      // TypeSafe dependencies
-      //
-      "com.typesafe.akka" %% "akka-testkit" % myAkkaVersion % "test",
-      "com.typesafe.play" %% "play" % myPlayVersion,
-      "com.typesafe.play" %% "anorm" % "2.4.0",
-      //
-      // Third Party dependencies
-      //
-      "com.github.jsonld-java" % "jsonld-java" % "0.7.0",
-//      "com.microsoft.sqlserver" % "sqljdbc4" % "4.0",
-      "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1",
-      "org.imgscalr" % "imgscalr-lib" % "4.2",
-      "org.reactivemongo" %% "play2-reactivemongo" % "0.11.7.play24",
-      "org.mindrot" % "jbcrypt" % "0.3m",
-      "ch.qos.logback" % "logback-classic" % "1.1.3",
-      //
-      // Web Jar dependencies
-      //
-      "org.webjars" % "jquery" % "1.11.1",
-      "org.webjars" % "angularjs" % "1.5.2",
-      "org.webjars" % "angularjs-nvd3-directives" % "0.0.7-1",
-      "org.webjars" % "angularjs-toaster" % "0.4.8",
-      //	"org.webjars" % "angular-file-upload" % "1.6.12",
-      //	"org.webjars" % "angular-translate" % "2.3.0",
-      "org.webjars" % "angular-ui-bootstrap" % "0.12.1-1",
-      "org.webjars" % "angular-ui-router" % "0.2.13",
-      "org.webjars" % "bootstrap" % "3.3.6",
-      "org.webjars" % "d3js" % "3.5.3",
-      "org.webjars" % "font-awesome" % "4.5.0",
-      "org.webjars" % "jquery" % "2.1.3",
-      //	"org.webjars" % "less" % "2.5.0",
-      //  "org.webjars" % "textAngular" % "1.2.0",
-      "org.webjars" % "nvd3" % "1.8.1",
-      "org.webjars" %% "webjars-play" % "2.4.0-2"
+    Seq(packageScalaJSLauncher, fastOptJS, fullOptJS) map { packageJSKey =>
+      crossTarget in(angularjs, Compile, packageJSKey) := baseDirectory.value / "public" / "javascripts"
+    })
+
+lazy val tqm = (project in file("./app-tqm"))
+  .aggregate(sharedjs)
+  .dependsOn(sharedjs)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(jsCommonSettings: _*)
+  .settings(
+    name := "shocktrade-tqm",
+    organization := "com.shocktrade",
+    version := appVersion,
+    pipelineStages := Seq(gzip),
+    libraryDependencies ++= Seq(
+      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-elgs-splitargs" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-express-csv" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-feedparser-promised" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-pvorb-md5" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-xml2js" % scalaJsNodeVersion
     ))
-  .dependsOn(appSvc)
-  .enablePlugins(PlayScala, play.twirl.sbt.SbtTwirl, SbtWeb)
-  .aggregate(appScalaJs)
+
+// add the alias
+addCommandAlias("fastOptJSPlus", ";fastOptJS;copyJS")
 
 // loads the jvm project at sbt startup
-onLoad in Global := (Command.process("project appPlay", _: State)) compose (onLoad in Global).value
+onLoad in Global := (Command.process("project shocktradejs", _: State)) compose (onLoad in Global).value

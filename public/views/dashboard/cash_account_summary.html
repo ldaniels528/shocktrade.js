@@ -1,0 +1,50 @@
+<div class="row">
+	<div class="col-md-6">
+		<div class="col-md-12">
+			<span class="alabel">Cash Available:</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getFundsAvailable() | number:2 }}</span>
+			</span>
+			<span style="font-size: 9pt">
+				&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
+			</span>
+		</div>
+		<div class="col-md-12">
+			<span class="alabel">Investments:</span>
+			<span class="afunds pull-right">
+				<span class="totalInvestment">{{ getTotalInvestment() | number:2 }}</span>
+			</span>
+		</div>
+		<div class="col-md-12">
+			<span class="alabel">Total Equity:</span>
+			<span class="afunds pull-right">
+				<span class="fundsAvailable">{{ getTotalEquity() | number:2 }}</span>
+			</span>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="col-md-12">
+			<span class="alabel">Pending Orders:</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ getTotalOrders() | number:2 }}</span>
+            </span>
+		</div>
+		<div class="col-md-12">
+			<!-- Pending Orders (BUY) -->
+			<span class="alabel">&nbsp; BUY Orders:</span>
+			<span class="afunds pull-right">
+				<span ng-class="getTotalBuyOrders() > getFundsAvailable() ? 'profitable' : 'unprofitable'">
+					{{ getTotalBuyOrders() | number:2 }}
+				</span>
+			</span>
+		</div>
+		<div class="col-md-12">
+			<!-- Pending Orders (SELL) -->
+			<span class="alabel">&nbsp; SELL Orders:</span>
+			<span class="afunds pull-right">
+                <span class="fundsAvailable">{{ getTotalSellOrders() | number:2 }}</span>
+            </span>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,49 @@
+<div class="row">
+    <div ng-show="contestIsEmpty()" ng-include src="'/views/play/no_contest_selected.html'"></div>
+    <div ng-if="!contestIsEmpty()" class="play_container">
+        <div ng-show="isRankingsShown()" class="col-md-3">
+            <div class="rankings_container">
+                <div class="rank_cell" ng-repeat="p in getRankings() track by $index">
+                    <div class="pull-left" style="display: inline">
+                        <avatar id="{{ p.facebookID }}" class="avatar-45"></avatar>
+                    </div>
+                    <div class="pull-left" style="display: inline">
+                        <div>
+                            <img ng-src="/images/status/{{ isOnline(p) ? 'greenlight' : 'offlight' }}.png">
+                            <span ng-class="'rank_' + p.rank">{{ p.rank }}</span>
+                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '1st'" src="/images/contests/gold.png">
+                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '2nd'" src="/images/contests/silver.png">
+                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '3rd'" src="/images/contests/bronze.png">
+                            <span class="null">&#8212;</span>
+                            <span class="st_text_color" ng-click="showGamerCard(p.name)">{{ p.name }}</span>
+                        </div>
+                        <div>
+                            <span class="positive">$ {{ p.totalEquity | number:2 }}</span>
+                            <span ng-class="p.gainLoss >= 0 ? 'positive' : 'negative'">
+                                <changearrow value="{{ p.gainLoss }}"></changearrow> {{ p.gainLoss | abs | number:2 }}%
+                            </span>
+                        </div>
+                    </div>
+                    <br style="clear: both">
+                </div>
+            </div>
+        </div>
+
+        <div ng-controller="PortfolioController" ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
+            <div class="rankings_header">
+                <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
+                <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
+                <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
+                    {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
+                </span>
+
+                <span ng-show="hasPerk('MARGIN')" class="clickable pull-right" ng-click="toggleAccountMode()">
+                    <span class="st_blue bold" title="Switch account type">{{ isMarginAccount() ? 'Margin' : 'Cash' }} Account</span>
+                    <i ng-class="isMarginAccount() ? 'fa-toggle-on' : 'fa-toggle-off'" class="fa fa-lg st_blue"></i>
+                </span>
+            </div>
+            <div ng-show="isCashAccount()" ng-include src="'/views/dashboard/cash_account.html'"></div>
+            <div ng-if="isMarginAccount()" ng-include src="'/views/dashboard/margin_account.html'"></div>
+        </div>
+    </div>
+</div>

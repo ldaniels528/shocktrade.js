@@ -1,0 +1,41 @@
+<div ng-init="setupAwards()" style="width: 100%; height: 100%; border: 1px solid #888888; background-color: #ffffee; border-radius: 5px 5px 5px 5px">
+	<div style="width: 100%; background-color: #004080; color: #ffffee; text-align: center">{{ contact.name }} ({{ contact.profile.name }})</div>
+	<div style="display:block; width: 100%; background-color: #ccddff">
+		<country profile="{{ contact.profile }}"></country>
+		<span style="vertical-align: middle; font-weight: bold; color: #000088">Level {{ contact.profile.level }} - {{ levels[contact.profile.level || 0].description }}</span>
+	</div>
+	<div style="display: block; width: 100%">
+		<div style="display: inline; float: left; width: 75px">
+			<avatar id="{{ contact.facebookID }}" class="avatar-75"></avatar>
+		</div>
+		<div style="display:inline; float: right; width: 155px">
+			<table style="width: 100%">			
+				<tr>
+					<th class="small" colspan="2">
+					Rep &nbsp; <i ng-repeat="n in range(contact.profile.rep || 1)" class="fa fa-star st_orange"></i>
+					</th> 
+				</tr>				
+				<tr>
+					<th class="small">Experience</th> 
+					<td class="small">{{ (contact.profile.totalXP || 0) | number }}</td>
+				</tr>
+				<tr>
+					<th class="small">Next Level</th> 
+					<td class="small">{{ (contact.profile.nextLevelXP || 0) | number }}</td>
+				</tr>	
+				<tr>
+					<th class="small">Friends</th> 
+					<td class="small">{{ contact.profile.friends.length || 0 }}</td>
+				</tr>		
+				<tr>
+					<th class="small">Awards</th> 
+					<td class="small">{{ contact.profile.awards.length || 0 }}</td>
+				</tr>									
+			</table>
+		</div>
+		<br style="clear: both">
+		<div ng-show="contact.profile.awards.length > 0" style="display: block; background-color: #cccccc; border: 1px solid #888888; border-radius: 4px 4px 4px 4px; height: 33px; text-align: center">
+			<img ng-repeat="award in contact.profile.awards.slice(0,7)" style="vertical-align: middle; padding: 2px 2px 2px 2px" ng-src="{{ getAwardImage(award) }}">			
+		</div>
+	</div>
+</div>

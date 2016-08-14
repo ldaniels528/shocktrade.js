@@ -1,0 +1,21 @@
+<div class="pull-left st_nav_bar contest_colors">
+    <ul class="nav nav-tabs nav-stacked">
+        <li ng-hide="isLoading() || isBarVisible() || !isAuthenticated()"
+            class="st_nav_bar">
+            <i ng-click="toggleVisibility()"
+                class="fa fa-2x fa-chevron-circle-right st_control middle"
+                title="Show the information bar"
+                style="padding-top: 13px"></i>
+        </li>
+        <li class="st_nav_bar" ng-repeat="tab in appTabs">
+            <i ng-show="isVisible(tab)" ng-class="'fa ' + tab.icon_class + ' nav_icon clickable' + (tab.hover ? ' st_control' : (getTabIndex() === $index ? ' st_nav_selected' : ''))"
+               title="{{ tab.tool_tip }}"
+               ng-click="changeAppTab($index)"
+               ng-mouseenter="tab.hover = true"
+               ng-mouseleave="tab.hover = false"></i>
+
+            <i ng-hide="isVisible(tab)" ng-class="'fa ' + tab.icon_class + ' nav_icon null'"
+               title="{{ tab.tool_tip }}"></i>
+        </li>
+    </ul>
+</div>

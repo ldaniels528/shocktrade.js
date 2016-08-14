@@ -1,0 +1,28 @@
+<div class="row"
+    ng-controller="ExposureController">
+    <div class="col-md-12" style="padding-bottom: 4px">
+        <select class="form-control symbol_input_text_field"
+                ng-model="selectedExposure"
+                ng-options="e.label for e in getExposures()"
+                ng-change="exposurePieChart(selectedExposure.value, getContestID(), getUserID())">
+            <option value="">-- Select an Exposure --</option>
+        </select>
+    </div>
+
+    <div class="col-md-12">
+        <nvd3-pie-chart
+            data="getChartData()"
+            id="exposure"
+            width="800"
+            height="350"
+            x="xFunction()"
+            y="yFunction()"
+            donut="true"
+            donutRatio="0.25"
+            showLegend="true"
+            showLabels="false">
+            <svg height="325"></svg>
+        </nvd3-pie-chart>
+    </div>
+
+</div>

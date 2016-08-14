@@ -1,0 +1,34 @@
+<div style="font-size: 12pt; margin-bottom: 20px">
+    <i class="fa fa-warning restricted"></i> Oops! No Game is selected.
+    <ul>
+        <li>Click <a ng-click="changeAppTab(0)">here</a> to return to the
+            <span ng-click="changeAppTab(0)" class="st_text_color clickable">Search</span> view</li>
+        <li ng-show="getMyContests().length">Or, chose one of the games below:</li>
+    </ul>
+</div>
+
+<div class="col-md-6" class="myGamesContainer">
+    <div class="row" ng-show="getMyContests().length">
+        <div class="col-md-7 header left padding-left-16">Game Title</div>
+        <div class="col-md-2 header center">Players</div>
+        <div class="col-md-3 header right">Game Features</div>
+    </div>
+
+    <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
+        <div class="col-md-7">
+            <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20"></avatar>{{ c.name }}
+        </div>
+        <div class="col-md-2 center">
+            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>
+        </div>
+        <div class="col-md-3">
+            <span class="pull-right">
+                <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
+                <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
+                <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
+                <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
+                <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
+            </span>
+        </div>
+    </div>
+</div>

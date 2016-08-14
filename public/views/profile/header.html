@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="inline pull-left">
+            <avatar id="{{ getFacebookID() }}" class="avatar-75"></avatar>
+        </div>
+        <div class="col-md-5 inline pull-left">
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Level</span>
+                <span class="pull-right">{{ userProfile.level || 1 }} &#8212; {{ levels[ userProfile.level || 0 ].description }}</span>
+            </div>
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Experience</span>
+                <span class="pull-right">{{ getTotalXP() | number }} <span class="small">XP</span></span>
+            </div>
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Next Level</span>
+                <span class="pull-right">{{ levels[ userProfile.level || 0 ].nextLevelXP }} <span class="small">XP</span></span>
+            </div>
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Rep</span>
+                <span class="pull-right"><i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
+            </div>
+        </div>
+        <div class="col-md-5 inline pull-right">
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Cash</span>
+                <span class="pull-right st_green">{{ getNetWorth() | number:2 }}</span>
+            </div>
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Assets</span>
+                <span class="pull-right st_blue">{{ getTotalInvestment() | number:2 }}</span>
+            </div>
+            <div class="col-md-12 pull-left">
+                <span class="pull-left">Total</span>
+                <span class="pull-right st_orange">{{ getNetWorth() + getTotalInvestment() | number:2 }}</span>
+            </div>
+        </div>
+        <br style="clear: both">
+    </div>
+    <div class="col-md-4" ng-controller="AwardsController" ng-init="setupAwards()">
+        <fieldset>
+            <legend>Recent Awards ({{ getMyAwards().length }})</legend>
+        </fieldset>
+        <span ng-if="getMyAwards().length">
+            <img ng-repeat="award in getMyAwards()" ng-src="{{ award.icon }}" title="{{ award.name }}"
+            style="padding: 2px 2px 2px 2px">
+        </span>
+        <span ng-hide="getMyAwards().length" class="warning">
+            No awards granted.
+        </span>
+    </div>
+</div>

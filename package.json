@@ -1,0 +1,25 @@
+{
+  "name": "shocktrade",
+  "version": "0.8.1",
+  "private": true,
+  "engines": {
+    "node": "6.1.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "engine.io": "^1.6.8",
+    "express": "4.13.4",
+    "express-fileupload": "0.0.5",
+    "express-ws": "^2.0.0-beta",
+    "feedparser-promised": "^1.1.1",
+    "fs": "0.0.2",
+    "html": "0.0.10",
+    "http": "0.0.0",
+    "md5": "^2.1.0",
+    "moment": "^2.14.1",
+    "mongodb": "^2.1.18",
+    "request": "^2.72.0",
+    "splitargs": "0.0.7",
+    "xml2js": "^0.4.17"
+  }
+}

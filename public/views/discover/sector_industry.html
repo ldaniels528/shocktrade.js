@@ -1,0 +1,70 @@
+<div class="row sector_industry">
+	<div class="col-md-12">
+		<!-- Market Image -->
+		<i ng-show="q.active" ng-class="getAssetIcon(q)"></i>
+		<i ng-show="!q.active" class="fa fa-warning warning"
+			popover="Asset is inactive" 
+			popover-trigger="mouseenter"
+			popover-placement="right"></i>
+		
+		<!-- Sector -->
+		<span ng-show="q.sector && (q.sector !== 'N/A')">
+			<a class="sector_H" ng-href="#/explore">{{ q.sector }}</a>
+			<i ng-show="q.sector" class="fa fa-chevron-circle-right st_control"></i>
+		</span>
+		
+		<!-- Industry -->
+		<span ng-show="q.industry && (q.industry !== 'N/A')">
+			<a class="industry_H" ng-href="#/explore">{{ q.industry }}</a>
+			<i ng-show="q.industry" class="fa fa-chevron-circle-right st_control"></i>
+		</span>
+		
+		<!-- Sub-Industry -->
+		<span ng-show="q.subIndustry && (q.subIndustry !== 'N/A')">
+			<a class="sub_industry_H" ng-href="#/explore">{{ q.subIndustry }}</a>
+			<i ng-show="q.subIndustry" class="fa fa-chevron-circle-right st_control"></i>
+		</span>		
+		
+		<!-- Exchange -->
+		<a ng-class="getExchangeClass(q.exchange)" ng-href="#/explore">{{ normalizeExchange(q.exchange) }}</a>
+		
+		<!-- Company Name -->
+		<span ng-show="q.name">
+			<i ng-show="q.exchange" class="fa fa-chevron-circle-right st_control"></i>
+			<a class="company_H" ng-href="#/explore">{{ q.name }}</a>
+		</span>
+		
+		<!--  Symbol -->
+		<span ng-show="q.symbol">
+			(<a ng-class="q.exchange + ' bold'" ng-href="#/explore">{{ q.symbol }}</a>)
+		</span>
+		
+		<!-- Favorite -->
+        <i class="fa fa-heart-o clickable heart"
+            popover="Add to Favorites"
+            popover-trigger="mouseenter"
+            ng-show="q.active && !isFavorite(q.symbol)"
+            ng-click="addFavoriteSymbol(q.symbol)"></i>
+
+		<!-- Un-Favorite -->
+        <i class="fa fa-heart clickable heart"
+           popover="Remove from Favorites"
+           popover-trigger="mouseenter"
+           ng-show="q.active && isFavorite(q.symbol)"
+           ng-click="removeFavoriteSymbol(q.symbol)"></i>
+
+		<!-- Trade button -->
+		<i class="fa fa-cart-plus clickable sector_cart st_control"
+		   ng-show="!contestIsEmpty() && q.active"
+		   ng-click="popupNewOrderDialog(q.symbol)"
+		   popover="Buy or Sell this security"
+		   popover-trigger="mouseenter"></i>
+
+		<!-- US Markets Open/Closed -->
+        <span class="pull-right" ng-class="isUSMarketsOpen() === null ? 'mks_loading' : (isUSMarketsOpen() ? 'mks_open' : 'mks_closed')">
+            <img ng-show="isUSMarketsOpen() === null" src="/images/status/loading16.gif">
+            {{ isUSMarketsOpen() === null ? 'US Markets ....' : (isUSMarketsOpen() ? 'US Markets Open' : 'US Markets Closed') }}
+        </span>
+	</div>
+</div>
+	

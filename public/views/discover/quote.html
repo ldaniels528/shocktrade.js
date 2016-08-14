@@ -1,0 +1,47 @@
+<div class="row">
+    <span class="col-md-10">
+        <input class="col-md-10 form-control symbol_input_text_field"
+               id="stockTicker" type="text" ng-model="ticker"
+               placeholder="Enter Symbol or Company name"
+               typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue)"
+               typeahead-template-url="symbol_lookup_dialog.htm"
+               typeahead-loading="loading"
+               typeahead-on-select="loadQuote(ticker)"
+               popover="Enter a Symbol or Business here"
+               popover-trigger="focus">
+    </span>
+    <button class="btn btn-default st_button" ng-click="loadQuote(ticker)">
+		<img ng-show="isLoading()" src="/images/status/loading16.gif">
+        <i ng-hide="isLoading()" class="fa fa-search"></i> Search
+    </button>
+</div>
+
+<div class="advisory" ng-show="q.advisory">
+	<i ng-class="q.advisoryType === 'INFO' ? 'fa fa-info-circle st_blue' : 'fa fa-warning st_orange'"></i> {{ q.advisory }}
+</div>
+
+<div ng-include src="'/views/discover/stock_quote.html'"></div>
+
+<div ng-include src="'/views/discover/security_class.html'"></div>
+
+<div ng-include src="'/views/discover/fund_summary.html'"></div>
+
+<div ng-if="q.assetType === 'Common Stock'" style="margin-top: 5px">
+	<div ng-repeat="module in expanders">
+		<div class="quote_title contest_colors" ng-if="!module.visible || module.visible(q)">
+			<i class="fa clickable st_orange bold" ng-class="module.expanded ? 'fa-minus-square' : 'fa-plus-square'"
+			   ng-click="expandSection(module)"></i>
+			<i class="fa st_green bold" ng-class="module.icon"></i>
+			{{ module.title }}
+			<img ng-show="module.loading" src="/images/status/loading16.gif">
+		</div>
+		<div ng-if="module.expanded" ng-include="module.url"></div>
+		<div style="margin-bottom: 5px"></div>
+	</div>
+</div>
+
+<div ng-if="hasHoldings(q)">
+	<div class="quote_sub_title contest_colors holdings_detail">ETF Holdings Detail</div>
+	<div ng-include src="'/assets/views/discover/profile/holdings_detail.htm'"></div>
+	<hr>
+</div>
