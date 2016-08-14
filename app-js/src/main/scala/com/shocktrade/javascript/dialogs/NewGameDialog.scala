@@ -1,12 +1,12 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs.Timeout
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.Modal
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Service, _}
+import org.scalajs.angularjs.Timeout
+import org.scalajs.angularjs.uibootstrap.{ModalInstance, ModalOptions}
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.uibootstrap.Modal
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Service, _}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.NewGameDialogController.{NewGameDialogResult, _}
 import com.shocktrade.javascript.models.{Contest, PlayerInfo}
@@ -29,9 +29,9 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
     */
   def popup(): Future[NewGameDialogResult] = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[NewGameDialogResult](ModalOptions(
+    val $modalInstance = $modal.open[NewGameDialogResult](new ModalOptions(
       templateUrl = "new_game_dialog.htm",
-      controllerClass = classOf[NewGameDialogController]
+      controller = classOf[NewGameDialogController].getSimpleName
     ))
     $modalInstance.result
   }

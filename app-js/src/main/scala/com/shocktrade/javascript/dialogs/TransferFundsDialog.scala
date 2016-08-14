@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Service, injected}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.angularjs.{Controller, Scope, Service, injected}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
@@ -25,9 +25,9 @@ class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
     * Transfer Funds pop-up dialog
     */
   def popup(): Future[TransferFundsResult] = {
-    val modalInstance = $modal.open[TransferFundsResult](ModalOptions(
+    val modalInstance = $modal.open[TransferFundsResult](new ModalOptions(
       templateUrl = "transfer_funds_dialog.htm",
-      controllerClass = classOf[TransferFundsDialogController]
+      controller = classOf[TransferFundsDialogController].getSimpleName
     ))
     modalInstance.result
   }

@@ -1,12 +1,11 @@
 package com.shocktrade.javascript.explore
 
-import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
-import com.github.ldaniels528.meansjs.angularjs.AnchorScroll
-import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
+import org.scalajs.angularjs.anchorscroll.AnchorScroll
+import org.scalajs.angularjs.cookies.Cookies
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Controller, Location, Scope, Timeout, injected}
 import org.scalajs.dom.console
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

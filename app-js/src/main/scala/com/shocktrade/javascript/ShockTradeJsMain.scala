@@ -1,11 +1,5 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
-import com.github.ldaniels528.meansjs.angularjs.uirouter.{RouteProvider, RouteTo}
-import com.github.ldaniels528.meansjs.angularjs.{Module, Scope, angular}
-import com.github.ldaniels528.meansjs.social.facebook.{FB, FacebookAppConfig}
-import com.github.ldaniels528.meansjs.social.linkedin.IN
 import com.shocktrade.javascript.admin._
 import com.shocktrade.javascript.dashboard._
 import com.shocktrade.javascript.dialogs._
@@ -15,8 +9,14 @@ import com.shocktrade.javascript.explore.{ExploreController, ExploreService}
 import com.shocktrade.javascript.news._
 import com.shocktrade.javascript.profile._
 import com.shocktrade.javascript.social._
+import org.scalajs.angularjs.facebook.FacebookService
+import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
+import org.scalajs.angularjs.{Module, Scope, angular}
 import org.scalajs.dom._
 import org.scalajs.jquery._
+import org.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
+import org.scalajs.nodejs.social.linkedin.IN
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
@@ -169,7 +169,7 @@ object ShockTradeJsMain extends js.JSApp {
     }
   }
 
-  private def onload(success: js.Function1[MySessionService, Unit], failure: js.Function0[Unit]) = {
+  private def onload(success: js.Function1[MySessionService, Any], failure: js.Function0[Any]) = {
     val mainElem = angular.element(jQuery("#ShockTradeMain"))
     val $scope = mainElem.scope()
     val injector = mainElem.injector()

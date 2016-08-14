@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Q, Scope}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Q, Scope}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.discover.{AutoCompletedQuote, QuoteService}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -31,6 +31,6 @@ abstract class AutoCompletionController($scope: AutoCompletionControllerScope, $
   */
 @js.native
 trait AutoCompletionControllerScope extends Scope {
-  var autoCompleteSymbols: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[AutoCompletedQuote]]]]
+  var autoCompleteSymbols: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[AutoCompletedQuote]]]] = js.native
 
 }

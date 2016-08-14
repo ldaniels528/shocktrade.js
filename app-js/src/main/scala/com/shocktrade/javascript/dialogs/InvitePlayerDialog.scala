@@ -1,14 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.Modal
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.javascript.models.Participant
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.nodejs.social.facebook.TaggableFriend
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.js
@@ -23,9 +22,9 @@ class InvitePlayerDialog($http: Http, $modal: Modal) extends Service {
     * Invite a player via pop-up dialog
     */
   def popup(participant: Participant): Future[InvitePlayerDialogResult] = {
-    val modalInstance = $modal.open[InvitePlayerDialogResult](ModalOptions(
+    val modalInstance = $modal.open[InvitePlayerDialogResult](new ModalOptions(
       templateUrl = "invite_player_dialog.htm",
-      controllerClass = classOf[InvitePlayerDialogController]
+      controller = classOf[InvitePlayerDialogController].getSimpleName
     ))
     modalInstance.result
   }

@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.http.Http
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
 import com.shocktrade.javascript.profile.AwardsController._
 import com.shocktrade.javascript.{Award, MySessionService}
 

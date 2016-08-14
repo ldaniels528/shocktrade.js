@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Service, angular}
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Service, angular}
 import com.shocktrade.javascript.models._
 import org.scalajs.dom.console
 

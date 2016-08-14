@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Timeout, injected}
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 
 import scala.language.postfixOps

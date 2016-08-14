@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.meansjs.angularjs.Service
-import com.github.ldaniels528.meansjs.angularjs.http.Http
+import org.scalajs.angularjs.Service
+import org.scalajs.angularjs.http.Http
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

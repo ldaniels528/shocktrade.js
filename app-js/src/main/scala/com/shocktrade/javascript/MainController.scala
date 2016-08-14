@@ -1,12 +1,11 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Location, Scope, Timeout, injected}
-import com.github.ldaniels528.meansjs.angularjs.toaster._
-import com.github.ldaniels528.meansjs.social.facebook.{FacebookProfileResponse, TaggableFriend}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.facebook.FacebookService
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.{Controller, Location, Scope, Timeout, injected}
+import org.scalajs.angularjs.toaster._
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MainController._
 import com.shocktrade.javascript.dashboard.ContestService
@@ -14,6 +13,7 @@ import com.shocktrade.javascript.dialogs.SignUpDialog
 import com.shocktrade.javascript.models.{BSONObjectID, ClassifiedQuote, OnlinePlayerState, UserProfile}
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
+import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

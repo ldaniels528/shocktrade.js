@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{angular, injected}
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.{Location, Timeout}
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{angular, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.InvitePlayerDialog
 import com.shocktrade.javascript.models.Contest.MaxPlayers

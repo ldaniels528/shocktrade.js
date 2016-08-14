@@ -1,7 +1,7 @@
 package com.shocktrade.javascript
 
 import com.shocktrade.core.AwardCodes._
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 

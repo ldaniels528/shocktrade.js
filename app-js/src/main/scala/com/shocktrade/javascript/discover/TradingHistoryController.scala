@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.models.HistoricalQuote
 import org.scalajs.dom.console
 

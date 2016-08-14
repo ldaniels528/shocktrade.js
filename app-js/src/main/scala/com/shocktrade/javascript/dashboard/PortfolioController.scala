@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs.Timeout
-import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
+import org.scalajs.angularjs.Timeout
+import org.scalajs.angularjs.cookies.Cookies
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}

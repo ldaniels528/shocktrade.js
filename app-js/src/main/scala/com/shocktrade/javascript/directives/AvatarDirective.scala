@@ -1,23 +1,21 @@
 package com.shocktrade.javascript.directives
 
-import com.github.ldaniels528.meansjs.angularjs.Attributes
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Directive, JQLite, Scope, angular}
 import com.shocktrade.javascript.directives.AvatarDirective.UNKNOWN_PERSON
+import org.scalajs.angularjs.Directive._
+import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope, angular}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
+import scala.scalajs.js.JSConverters._
 
 /**
   * Avatar Directive
   * @author lawrence.daniels@gmail.com
   * @example <avatar id="{{ p.facebookID }}" class="avatar-24"></avatar>
   */
-class AvatarDirective extends Directive[AvatarDirectiveScope] {
-  override val restrict = "E"
-  override val scope = JS(id = "@id", link = "@link", `class` = "@class", style = "@style")
+class AvatarDirective extends Directive with ElementRestriction with LinkSupport[AvatarDirectiveScope] with TemplateSupport {
+  override val scope = AvatarDirectiveScope(id = "@id", link = "@link", `class` = "@class", style = "@style")
   override val transclude = true
-  override val replace = false
   override val template = """<img ng-src="{{ url }}" ng-class="myClass" class="{{ class }}" style="{{ style }}">"""
 
   override def link(scope: AvatarDirectiveScope, element: JQLite, attrs: Attributes) = {
@@ -27,12 +25,12 @@ class AvatarDirective extends Directive[AvatarDirectiveScope] {
 
   private def populateScope(scope: AvatarDirectiveScope, newValue: Any, oldValue: Any) {
     // determine the image URL
-    scope.url = scope.id.toOption map (id => s"http://graph.facebook.com/$id/picture") getOrElse {
-      scope.link.toOption map angular.fromJson flatMap (_.picture.data.url.asOpt[String]) getOrElse UNKNOWN_PERSON
-    }
+    scope.url = scope.id.map(id => s"http://graph.facebook.com/$id/picture") ??
+      (scope.link.toOption map angular.fromJson flatMap (_.picture.data.url.asOpt[String])).orUndefined ??
+      UNKNOWN_PERSON
 
-    // set the ng-class
-    scope.myClass = if (scope.url == UNKNOWN_PERSON) "spectatorAvatar" else "playerAvatar"
+    // set the class
+    scope.myClass = if (scope.url.contains(UNKNOWN_PERSON)) "spectatorAvatar" else "playerAvatar"
   }
 }
 
@@ -52,14 +50,14 @@ object AvatarDirective {
 @js.native
 trait AvatarDirectiveScope extends Scope {
   // input fields
-  var id: js.UndefOr[String]
-  var link: js.UndefOr[String]
-  var `class`: js.UndefOr[String]
-  var style: js.UndefOr[String]
+  var id: js.UndefOr[String] = js.native
+  var link: js.UndefOr[String] = js.native
+  var `class`: js.UndefOr[String] = js.native
+  var style: js.UndefOr[String] = js.native
 
   // output fields
-  var myClass: String
-  var url: String
+  var myClass: js.UndefOr[String] = js.native
+  var url: js.UndefOr[String] = js.native
 
 }
 
@@ -69,10 +67,12 @@ trait AvatarDirectiveScope extends Scope {
   */
 object AvatarDirectiveScope {
 
-  def apply(): AvatarDirectiveScope = {
+  def apply(id: String, link: String, `class`: String, style: String): AvatarDirectiveScope = {
     val scope = new js.Object().asInstanceOf[AvatarDirectiveScope]
-    scope.myClass = null
-    scope.url = null
+    scope.id = id
+    scope.link = link
+    scope.`class` = `class`
+    scope.style = style
     scope
   }
 

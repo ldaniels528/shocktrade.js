@@ -1,11 +1,12 @@
 package com.shocktrade.javascript.directives
 
-import com.github.ldaniels528.meansjs.angularjs.Attributes
-import com.github.ldaniels528.meansjs.angularjs.{Directive, JQLite, Scope}
+import org.scalajs.angularjs.Directive._
+import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
+import scala.scalajs.js.JSConverters._
 import scala.util.Try
 
 /**
@@ -13,11 +14,9 @@ import scala.util.Try
   * @author lawrence.daniels@gmail.com
   * @example <changearrow value="{{ q.change }}"></changearrow>
   */
-class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
-  override val restrict = "E"
-  override val scope = JS(value = "@value")
+class ChangeArrowDirective extends Directive with ElementRestriction with LinkSupport[ChangeArrowDirectiveScope] with TemplateSupport {
+  override val scope = ChangeArrowDirectiveScope(value = "@value")
   override val transclude = true
-  override val replace = false
   override val template = """<i ng-class="icon"></i>"""
 
   override def link(scope: ChangeArrowDirectiveScope, element: JQLite, attrs: Attributes) = {
@@ -26,7 +25,7 @@ class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
         case v if v > 0 => "fa fa-arrow-up positive"
         case v if v < 0 => "fa fa-arrow-down negative"
         case _ => "fa fa-minus null"
-      } orNull
+      } orUndefined
     })
   }
 
@@ -44,8 +43,11 @@ class ChangeArrowDirective extends Directive[ChangeArrowDirectiveScope] {
   */
 @js.native
 trait ChangeArrowDirectiveScope extends Scope {
-  var value: js.UndefOr[Any]
-  var icon: String
+  // input fields
+  var value: js.UndefOr[Any] = js.native
+
+  // output fields
+  var icon: js.UndefOr[String] = js.native
 
 }
 
@@ -55,9 +57,9 @@ trait ChangeArrowDirectiveScope extends Scope {
   */
 object ChangeArrowDirectiveScope {
 
-  def apply(): ChangeArrowDirectiveScope = {
-    val scope = new js.Object().asInstanceOf[ChangeArrowDirectiveScope]
-    scope.icon = null
+  def apply(value: String): ChangeArrowDirectiveScope = {
+    val scope = New[ChangeArrowDirectiveScope]
+    scope.value = value
     scope
   }
 

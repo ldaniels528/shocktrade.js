@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.explore
 
-import com.github.ldaniels528.meansjs.angularjs.Service
-import com.github.ldaniels528.meansjs.angularjs.http.{Http, HttpConfig}
+import org.scalajs.angularjs.Service
+import org.scalajs.angularjs.http.{Http, HttpConfig}
 
 import scala.scalajs.js
 

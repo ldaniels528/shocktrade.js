@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, injected}
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Controller, Scope, injected}
 import com.shocktrade.javascript.MySessionService
 
 import scala.language.postfixOps

@@ -1,12 +1,11 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.meansjs.angularjs.Timeout
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
+import org.scalajs.angularjs.{Timeout, _}
+import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.dom.console
+import org.scalajs.nodejs.social.facebook.TaggableFriend
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js

@@ -1,8 +1,8 @@
 package com.shocktrade.javascript.dashboard
 
-import com.github.ldaniels528.meansjs.angularjs.Location
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope}
+import org.scalajs.angularjs.Location
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Controller, Scope}
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest}
 

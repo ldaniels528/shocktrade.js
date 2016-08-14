@@ -1,13 +1,13 @@
 package com.shocktrade.javascript.dialogs
 
 import com.shocktrade.core.StringHelper._
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.{Q, Timeout}
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Service, angular, injected}
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.{Q, Timeout}
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Service, angular, injected}
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.discover.QuoteService
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, OrderQuote}
@@ -31,9 +31,9 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
     */
   def popup(params: NewOrderParams) = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[NewOrderDialogResult](ModalOptions(
+    val $modalInstance = $modal.open[NewOrderDialogResult](new ModalOptions(
       templateUrl = "new_order_dialog.htm",
-      controllerClass = classOf[NewOrderDialogController],
+      controller = classOf[NewOrderDialogController].getSimpleName,
       resolve = js.Dictionary("params" -> (() => params))
     ))
     $modalInstance.result

@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.javascript.models.OrderQuote
 import org.scalajs.dom.console
@@ -26,9 +26,9 @@ class NewsQuoteDialog($http: Http, $modal: Modal) extends Service {
     */
   def popup(symbol: String): Future[NewsQuoteDialogResult] = {
     // create an instance of the dialog
-    val $modalInstance = $modal.open[NewsQuoteDialogResult](ModalOptions(
+    val $modalInstance = $modal.open[NewsQuoteDialogResult](new ModalOptions(
       templateUrl = "news_quote_dialog.htm",
-      controllerClass = classOf[NewsQuoteDialogController],
+      controller = classOf[NewsQuoteDialogController].getSimpleName,
       resolve = js.Dictionary("symbol" -> (() => symbol))
     ))
     $modalInstance.result

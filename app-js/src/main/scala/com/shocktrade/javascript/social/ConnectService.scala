@@ -1,17 +1,17 @@
 package com.shocktrade.javascript.social
 
-import com.github.ldaniels528.meansjs.angularjs.Service
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
 import com.shocktrade.javascript.models.{BSONObjectID, MyUpdate, UserProfile}
+import org.scalajs.angularjs.Service
+import org.scalajs.angularjs.http.Http
+import org.scalajs.nodejs.social.facebook.TaggableFriend
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
- * Connect Service
- * @author lawrence.daniels@gmail.com
- */
+  * Connect Service
+  * @author lawrence.daniels@gmail.com
+  */
 @JSExportAll
 class ConnectService($http: Http) extends Service {
 

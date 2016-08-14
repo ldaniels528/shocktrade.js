@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.MySessionService
 import com.shocktrade.javascript.dialogs.PerksDialogController._
 import com.shocktrade.javascript.models.{BSONObjectID, Contest, Perk}
@@ -27,9 +27,9 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
     * Perks Modal Dialog
     */
   def popup(): Future[PerksDialogResult] = {
-    val $modalInstance = $modal.open[PerksDialogResult](ModalOptions(
+    val $modalInstance = $modal.open[PerksDialogResult](new ModalOptions(
       templateUrl = "perks_dialog.htm",
-      controllerClass = classOf[PerksDialogController]
+      controller = classOf[PerksDialogController].getSimpleName
     ))
     $modalInstance.result
   }

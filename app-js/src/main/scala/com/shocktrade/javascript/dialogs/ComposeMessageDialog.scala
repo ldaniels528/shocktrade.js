@@ -1,9 +1,9 @@
 package com.shocktrade.javascript.dialogs
 
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap._
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, Service, injected}
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.uibootstrap._
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Scope, Service, injected}
 import com.shocktrade.javascript.dialogs.ComposeMessageDialogController.ComposeMessageResult
 
 import scala.concurrent.Future
@@ -16,9 +16,9 @@ import scala.scalajs.js
 class ComposeMessageDialog($http: Http, $modal: Modal) extends Service {
 
   def popup(): Future[ComposeMessageResult] = {
-    val $modalInstance = $modal.open[ComposeMessageResult](ModalOptions(
+    val $modalInstance = $modal.open[ComposeMessageResult](new ModalOptions(
       templateUrl = "compose_message.htm",
-      controllerClass = classOf[ComposeMessageDialogController]
+      controller = classOf[ComposeMessageDialogController].getSimpleName
     ))
     $modalInstance.result
   }

@@ -1,17 +1,17 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.meansjs.angularjs.AngularJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.{Timeout, _}
-import com.github.ldaniels528.meansjs.social.facebook.{FacebookProfileResponse, TaggableFriend}
-import com.github.ldaniels528.meansjs.social.linkedin.LinkedIn
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs.AngularJsHelper._
+import org.scalajs.angularjs.facebook.FacebookService
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Timeout, _}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.models._
 import com.shocktrade.javascript.profile.ProfileService
 import org.scalajs.dom.console
+import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import org.scalajs.nodejs.social.linkedin.LinkedIn
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

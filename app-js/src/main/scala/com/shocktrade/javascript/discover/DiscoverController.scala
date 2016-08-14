@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
-import com.github.ldaniels528.meansjs.angularjs.http.HttpPromise
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{angular, injected}
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.cookies.Cookies
+import org.scalajs.angularjs.http.HttpResponse
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{angular, injected}
 import com.shocktrade.javascript._
 import com.shocktrade.javascript.dialogs.NewOrderDialogController.NewOrderDialogResult
 import com.shocktrade.javascript.dialogs.{NewOrderDialog, NewOrderParams}
@@ -343,14 +343,14 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope {
   var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]]
 
   // favorite quote functions
-  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpPromise[js.Dynamic]]]
+  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[js.Dynamic]]]
   var isFavorite: js.Function1[js.UndefOr[String], Boolean]
-  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpPromise[js.Dynamic]]]
+  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[js.Dynamic]]]
 
   // recently-viewed quote functions
-  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpPromise[js.Dynamic]]]
+  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[js.Dynamic]]]
   var isRecentSymbol: js.Function1[js.UndefOr[String], Boolean]
-  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpPromise[js.Dynamic]]]
+  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[js.Dynamic]]]
 
   // risk functions
   var getBetaClass: js.Function1[js.UndefOr[Double], js.UndefOr[Object]]

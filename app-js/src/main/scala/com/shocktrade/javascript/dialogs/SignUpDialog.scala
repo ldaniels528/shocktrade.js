@@ -1,16 +1,16 @@
 package com.shocktrade.javascript.dialogs
 
 import com.shocktrade.core.StringHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Timeout, _}
-import com.github.ldaniels528.meansjs.angularjs.facebook.FacebookService
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import com.github.ldaniels528.meansjs.social.facebook.FacebookProfileResponse
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Timeout, _}
+import org.scalajs.angularjs.facebook.FacebookService
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.javascript.models.UserProfile
 import org.scalajs.dom.console
+import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -25,9 +25,9 @@ import scala.util.{Failure, Success}
 class SignUpDialog($http: Http, $modal: Modal) extends Service {
 
   def popup()(implicit ec: ExecutionContext) = {
-    val modalInstance = $modal.open[SignUpDialogResult](ModalOptions(
+    val modalInstance = $modal.open[SignUpDialogResult](new ModalOptions(
       templateUrl = "sign_up_dialog.htm",
-      controllerClass = classOf[SignUpDialogController]
+      controller = classOf[SignUpDialogController].getSimpleName
     ))
     modalInstance.result
   }

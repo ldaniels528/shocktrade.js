@@ -1,11 +1,11 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.Location
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.Location
+import org.scalajs.angularjs.toaster.Toaster
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.MySessionService
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.javascript.dashboard.ContestService
 import com.shocktrade.javascript.discover.{BasicQuote, QuoteService}
 import com.shocktrade.javascript.models.UserProfile

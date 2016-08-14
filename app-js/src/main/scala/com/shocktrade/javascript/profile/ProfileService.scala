@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.profile
 
-import com.github.ldaniels528.meansjs.angularjs.Service
-import com.github.ldaniels528.meansjs.angularjs.http.Http
+import org.scalajs.angularjs.Service
+import org.scalajs.angularjs.http.Http
 import com.shocktrade.javascript.models.{BSONObjectID, OnlinePlayerState, UserProfile}
 
 import scala.scalajs.js

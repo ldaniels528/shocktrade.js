@@ -1,14 +1,14 @@
 package com.shocktrade.javascript.social
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.social.facebook.TaggableFriend
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
 import com.shocktrade.javascript.AppEvents._
 import com.shocktrade.javascript.dialogs.ComposeMessageDialog
 import com.shocktrade.javascript.models.{MyUpdate, UserProfile}
 import com.shocktrade.javascript.{GlobalLoading, MySessionService}
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.dom.console
+import org.scalajs.nodejs.social.facebook.TaggableFriend
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

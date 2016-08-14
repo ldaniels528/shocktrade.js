@@ -1,11 +1,11 @@
 package com.shocktrade.javascript
 
-import com.github.ldaniels528.meansjs.angularjs._
-import com.github.ldaniels528.meansjs.angularjs.http.Http
-import com.github.ldaniels528.meansjs.angularjs.{Location, Timeout}
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.angularjs.{Service, injected}
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
+import org.scalajs.angularjs.{Location, Timeout}
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Service, injected}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
 import org.scalajs.dom.{Event, WebSocket, console}
 

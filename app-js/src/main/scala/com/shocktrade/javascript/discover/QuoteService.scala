@@ -1,7 +1,7 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.meansjs.angularjs.Service
-import com.github.ldaniels528.meansjs.angularjs.http.{Http, HttpConfig}
+import org.scalajs.angularjs.Service
+import org.scalajs.angularjs.http.{Http, HttpConfig}
 import com.shocktrade.javascript.models.{BSONObjectID, HistoricalQuote, OrderQuote}
 
 import scala.scalajs.js

@@ -4,12 +4,16 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 
-val meanjsVersion = "0.1.10"
+val meanjsVersion = "0.2.2.2"
 
-val myScalaVersion = "2.11.8"
 val myAkkaVersion = "2.4.2"
 val myPlayVersion = "2.4.6"
 val myAppVersion = "0.8.1"
+
+val _scalaVersion = "2.11.8"
+val paradisePluginVersion = "3.0.0-M1"
+val scalaJsDomVersion = "0.9.0"
+val scalaJsJQueryVersion = "0.9.0"
 
 scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
 
@@ -22,29 +26,31 @@ lazy val appScalaJs = (project in file("app-js"))
     name := "shocktrade-scalajs",
     organization := "com.shocktrade",
     version := myAppVersion,
-    scalaVersion := myScalaVersion,
+    scalaVersion := _scalaVersion,
     relativeSourceMaps := true,
     persistLauncher := true,
     persistLauncher in Test := false,
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+    addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
     libraryDependencies ++= Seq(
       // MEANS.js
-      "com.github.ldaniels528" %%% "means-angularjs-core" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-animate" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-cookies" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-facebook" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-nervgh-fileupload" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-sanitize" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-toaster" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-ui-bootstrap" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-angularjs-ui-router" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-social-facebook" % meanjsVersion,
-      "com.github.ldaniels528" %%% "means-social-linkedin" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-browser-core" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-core" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-anchor-scroll" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-animate" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-cookies" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-facebook" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-nervgh-fileupload" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-sanitize" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-toaster" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-bootstrap" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-router" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-social-facebook" % meanjsVersion,
+      "com.github.ldaniels528" %%% "scalajs-social-linkedin" % meanjsVersion,
       // ScalaJS Libs
-      "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
-      "com.vmunier" %% "play-scalajs-sourcemaps" % "0.1.0" exclude("com.typesafe.play", "play_2.11"),
-      "org.scala-js" %%% "scalajs-dom" % "0.9.0"
+      "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
+      "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
+      "org.scala-lang" % "scala-reflect" % _scalaVersion
     ))
   .enablePlugins(ScalaJSPlugin)
 
@@ -53,7 +59,7 @@ lazy val appSvc = (project in file("app-svc"))
     name := "shocktrade-services",
     organization := "com.shocktrade",
     version := myAppVersion,
-    scalaVersion := myScalaVersion,
+    scalaVersion := _scalaVersion,
     libraryDependencies ++= Seq(
       //
       // Shocktrade/ldaniels528 dependencies
@@ -82,7 +88,7 @@ lazy val appPlay = (project in file("app-play"))
     name := "shocktrade.js",
     organization := "com.shocktrade",
     version := myAppVersion,
-    scalaVersion := myScalaVersion,
+    scalaVersion := _scalaVersion,
     relativeSourceMaps := true,
     scalajsOutputDir := (crossTarget in Compile).value / "classes" / "public" / "javascripts",
     //scalaJSProjects := clients,
@@ -110,7 +116,7 @@ lazy val appPlay = (project in file("app-play"))
       // Third Party dependencies
       //
       "com.github.jsonld-java" % "jsonld-java" % "0.7.0",
-      "com.microsoft.sqlserver" % "sqljdbc4" % "4.0",
+//      "com.microsoft.sqlserver" % "sqljdbc4" % "4.0",
       "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2.1",
       "org.imgscalr" % "imgscalr-lib" % "4.2",
       "org.reactivemongo" %% "play2-reactivemongo" % "0.11.7.play24",

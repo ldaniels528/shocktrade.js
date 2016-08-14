@@ -1,10 +1,10 @@
 package com.shocktrade.javascript.discover
 
-import com.github.ldaniels528.meansjs.angularjs.Timeout
-import com.github.ldaniels528.meansjs.angularjs.cookies.Cookies
-import com.github.ldaniels528.meansjs.angularjs.toaster.Toaster
-import com.github.ldaniels528.meansjs.util.ScalaJsHelper._
-import com.github.ldaniels528.meansjs.angularjs.{Controller, Scope, angular, injected}
+import org.scalajs.angularjs.Timeout
+import org.scalajs.angularjs.cookies.Cookies
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.angularjs.{Controller, Scope, angular, injected}
 import com.shocktrade.javascript.discover.ResearchController._
 import com.shocktrade.javascript.{GlobalLoading, MainController}
 import org.scalajs.dom.console
