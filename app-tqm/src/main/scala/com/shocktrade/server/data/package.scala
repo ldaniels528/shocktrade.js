@@ -1,4 +1,4 @@
-package com.shocktrade.server.tqm
+package com.shocktrade.server
 
 import scala.concurrent.{ExecutionContext, Future}
 

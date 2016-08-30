@@ -4,7 +4,7 @@
  */
 (function () {
     require("./app-tqm/target/scala-2.11/shocktrade-tqm-fastopt.js");
-    const facade = com.shocktrade.server.tqm.ShocktradeTQMJsApp();
+    const facade = com.shocktrade.server.ShocktradeServerJsApp();
     facade.startServer({
         "__dirname": __dirname,
         "__filename": __filename,

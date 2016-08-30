@@ -1,4 +1,4 @@
-package com.shocktrade.server.tqm.data
+package com.shocktrade.server.data
 
 import com.shocktrade.javascript.models.contest.{Order, Position}
 import org.scalajs.nodejs.mongodb.ObjectID
@@ -11,7 +11,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author lawrence.daniels@gmail.com
   */
 @ScalaJSDefined
-class WorkOrder(val contestID: ObjectID, val participantID: String, val order: Order, val claim: Claim) extends js.Object
+class WorkOrder(val portfolioID: ObjectID, val order: Order, val claim: Claim) extends js.Object
 
 /**
   * Work Order Companion

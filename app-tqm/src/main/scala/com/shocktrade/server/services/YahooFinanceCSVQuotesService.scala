@@ -1,7 +1,7 @@
-package com.shocktrade.server.tqm.services
+package com.shocktrade.server.services
 
 import com.shocktrade.javascript.util.StringHelper._
-import com.shocktrade.server.tqm.services.YahooFinanceCSVQuotesService._
+import YahooFinanceCSVQuotesService._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.request.Request
 import org.scalajs.nodejs.{NodeRequire, console}

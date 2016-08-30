@@ -20,7 +20,7 @@ import scala.scalajs.js.annotation.JSExportAll
   * @author lawrence.daniels@gmail.com
   */
 @JSExportAll
-object ShocktradeServerJsApp extends js.JSApp {
+object ShocktradeWebServerJsApp extends js.JSApp {
 
   override def main() {}
 

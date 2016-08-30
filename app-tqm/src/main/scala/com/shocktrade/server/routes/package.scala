@@ -1,4 +1,4 @@
-package com.shocktrade.server.tqm
+package com.shocktrade.server
 
 import org.scalajs.nodejs.mongodb.{Collection, MongoDB, _}
 

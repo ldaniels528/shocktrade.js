@@ -80,10 +80,10 @@ object Order {
     def isLimitOrder = order.priceType.contains("LIMIT")
 
     @inline
-    def isMarketOrder = order.accountType.contains("MARKET")
+    def isMarketOrder = order.priceType.contains("MARKET")
 
     @inline
-    def isMarketAtCloseOrder = order.accountType.contains("MARKET_AT_CLOSE")
+    def isMarketAtCloseOrder = order.priceType.contains("MARKET_AT_CLOSE")
 
     @inline
     def totalCost = for {

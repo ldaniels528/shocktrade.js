@@ -32,10 +32,27 @@ db.Portfolios.update({_id: ObjectId("57c270fd207bc10ca05102dd")}, {
             _id: ObjectId().valueOf(),
             symbol: "AMD",
             accountType: "CASH",
+            orderType: "BUY",
+            priceType: "MARKET",
+            quantity: 250,
+            commission: 9.99,
+            creationTime: 1472252400000
+        }, {
+            _id: ObjectId().valueOf(),
+            symbol: "AMD",
+            accountType: "CASH",
             orderType: "SELL",
-            priceType: "LIMIT",
-            price: 7.0,
+            priceType: "MARKET",
             quantity: 500,
+            commission: 9.99,
+            creationTime: 1472252400000
+        }, {
+            _id: ObjectId().valueOf(),
+            symbol: "AAPL",
+            accountType: "CASH",
+            orderType: "SELL",
+            priceType: "MARKET",
+            quantity: 10,
             commission: 9.99,
             creationTime: 1472252400000
         }]

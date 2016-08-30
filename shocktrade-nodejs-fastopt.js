@@ -4356,7 +4356,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
                 if ($is_s_Some(p10)) {
                   var x11 = $as_s_Some(p10);
                   var max$2 = $uD(x11.x$2);
-                  var kvps$4 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$2)]);
+                  var kvps$4 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2)]);
                   var y$3 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$4);
                   var jsx$4 = new $c_T2().init___O__O("changePct", y$3);
                   break matchEnd15
@@ -4390,7 +4390,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
           if ($is_s_Some(p10$1)) {
             var x11$1 = $as_s_Some(p10$1);
             var max$1 = $uD(x11$1.x$2);
-            var kvps$8 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$1)]);
+            var kvps$8 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$1)]);
             var y$5 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$8);
             var kvps$9 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("changePct", y$5)]);
             var this$107 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$9));
@@ -4516,7 +4516,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
                 if ($is_s_Some(p10$2)) {
                   var x11$2 = $as_s_Some(p10$2);
                   var max$2$1 = $uD(x11$2.x$2);
-                  var kvps$12 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$2$1)]);
+                  var kvps$12 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$1)]);
                   var y$8 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$12);
                   var jsx$7 = new $c_T2().init___O__O("lastTrade", y$8);
                   break matchEnd15$1
@@ -4550,7 +4550,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
           if ($is_s_Some(p10$3)) {
             var x11$3 = $as_s_Some(p10$3);
             var max$4 = $uD(x11$3.x$2);
-            var kvps$16 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$4)]);
+            var kvps$16 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$4)]);
             var y$10 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$16);
             var kvps$17 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("lastTrade", y$10)]);
             var this$201 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$17));
@@ -4676,7 +4676,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
                 if ($is_s_Some(p10$4)) {
                   var x11$4 = $as_s_Some(p10$4);
                   var max$2$2 = $uD(x11$4.x$2);
-                  var kvps$20 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$2$2)]);
+                  var kvps$20 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$2)]);
                   var y$13 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$20);
                   var jsx$10 = new $c_T2().init___O__O("spread", y$13);
                   break matchEnd15$2
@@ -4710,7 +4710,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
           if ($is_s_Some(p10$5)) {
             var x11$5 = $as_s_Some(p10$5);
             var max$6 = $uD(x11$5.x$2);
-            var kvps$24 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$6)]);
+            var kvps$24 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$6)]);
             var y$15 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$24);
             var kvps$25 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("spread", y$15)]);
             var this$295 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$25));
@@ -4836,7 +4836,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
                 if ($is_s_Some(p10$6)) {
                   var x11$6 = $as_s_Some(p10$6);
                   var max$2$3 = $uD(x11$6.x$2);
-                  var kvps$28 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$2$3)]);
+                  var kvps$28 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$3)]);
                   var y$18 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$28);
                   var jsx$13 = new $c_T2().init___O__O("volume", y$18);
                   break matchEnd15$3
@@ -4870,7 +4870,7 @@ $c_Lcom_shocktrade_javascript_routes_ResearchRoutes$.prototype.search__Lorg_scal
           if ($is_s_Some(p10$7)) {
             var x11$7 = $as_s_Some(p10$7);
             var max$8 = $uD(x11$7.x$2);
-            var kvps$32 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", max$8)]);
+            var kvps$32 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$8)]);
             var y$20 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$32);
             var kvps$33 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("volume", y$20)]);
             var this$389 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$33));
@@ -13438,7 +13438,7 @@ $c_Lcom_shocktrade_javascript_data_ContestDAO$ContestDAOExtensions$$anonfun$tota
     if ((value$1 === (void 0))) {
       var value$3 = (void 0)
     } else {
-      var quantity = $uI(value$1);
+      var quantity = $uD(value$1);
       var value$2 = (pricePaid * quantity);
       var value$3 = value$2
     }

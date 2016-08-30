@@ -1,4 +1,4 @@
-package com.shocktrade.server.tqm.data
+package com.shocktrade.server.data
 
 import com.shocktrade.javascript.models.contest._
 import org.scalajs.nodejs.mongodb.ObjectID
@@ -12,7 +12,7 @@ import scala.scalajs.js
 @js.native
 trait PortfolioData extends js.Object {
   var _id: js.UndefOr[ObjectID] = js.native
-  var contestID: js.UndefOr[String] = js.native
+  var contestID: js.UndefOr[ObjectID] = js.native
   var playerID: js.UndefOr[String] = js.native
 
   var status: js.UndefOr[String] = js.native
@@ -27,5 +27,28 @@ trait PortfolioData extends js.Object {
   // administrative fields
   var lastUpdate: js.UndefOr[Double] = js.native
   var nextUpdate: js.UndefOr[Double] = js.native
-  
+  var processingHost: js.UndefOr[String] = js.native
+
+}
+
+/**
+  * Portfolio Data Companion
+  * @author lawrence.daniels@gmail.com
+  */
+object PortfolioData {
+
+  /**
+    * Portfolio Enrichment
+    * @param portfolio the given [[PortfolioData portfolio]]
+    */
+  implicit class PortfolioEnrichment(val portfolio: PortfolioData) extends AnyVal {
+
+    @inline
+    def findEligibleOrders(asOfTime: Double = js.Date.now()) = for {
+      orders <- portfolio.orders.toOption.map(_.toSeq).toList
+      order <- orders.filter(!_.isExpired(asOfTime))
+    } yield order
+
+  }
+
 }

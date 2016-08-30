@@ -4,7 +4,7 @@
  */
 (function () {
     require("./shocktrade-nodejs-fastopt.js");
-    const facade = com.shocktrade.javascript.ShocktradeServerJsApp();
+    const facade = com.shocktrade.javascript.ShocktradeWebServerJsApp();
     facade.startServer({
         "__dirname": __dirname,
         "__filename": __filename,

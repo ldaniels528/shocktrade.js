@@ -1,4 +1,4 @@
-package com.shocktrade.server.tqm.data
+package com.shocktrade.server.data
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
