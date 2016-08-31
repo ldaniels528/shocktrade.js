@@ -5,12 +5,12 @@ import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
 
 import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
-  * Shocktrade Trading Qualification Module (TQM) JavaScript Application
+  * Shocktrade Server JavaScript Application
   * @author lawrence.daniels@gmail.com
   */
 @JSExportAll
@@ -37,12 +37,15 @@ object ShocktradeServerJsApp extends js.JSApp {
     console.log("Connecting to '%s'...", connectionString)
     val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // run the qualification engine every 30 seconds
+    // run the qualification engine once every 30 minutes
     val qm = new TradingQualificationEngine(dbFuture)
-    setInterval(() => qm.run(), 30.seconds)
-    qm.run() // TODO remove after testing
+    setInterval(() => qm.run(), 30.minutes)
+    //qm.run() // TODO for testing only
 
-
+    // run the stock refresh loader once every 30 minutes
+    val stockLoader = new StockRefreshLoader(dbFuture)
+    setInterval(() => stockLoader.run(), 4.hours)
+    stockLoader.run() // TODO for testing only
   }
 
 }
