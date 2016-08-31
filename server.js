@@ -1,5 +1,5 @@
 /**
- * ShockTrade ScalaJS Production Server Bootstrap
+ * ShockTrade Web App Server Bootstrap
  * @author: lawrence.daniels@gmail.com
  */
 (function () {

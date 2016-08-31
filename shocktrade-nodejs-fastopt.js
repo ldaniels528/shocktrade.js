@@ -8748,6 +8748,134 @@ $e.com.shocktrade = ($e.com.shocktrade || {});
 $e.com.shocktrade.javascript = ($e.com.shocktrade.javascript || {});
 $e.com.shocktrade.javascript.ShocktradeServerJsApp = $m_Lcom_shocktrade_javascript_ShocktradeServerJsApp$;
 /** @constructor */
+function $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype = new $h_O();
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.constructor = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$;
+/** @constructor */
+function $h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype;
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.$$js$exported$meth$startServer__Lorg_scalajs_nodejs_Bootstrap__O = (function(bootstrap) {
+  this.startServer__Lorg_scalajs_nodejs_Bootstrap__V(bootstrap)
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.$$js$exported$meth$main__O = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.startServer__Lorg_scalajs_nodejs_Bootstrap__V = (function(bootstrap) {
+  var require = bootstrap.require;
+  var t = $m_jl_System$().currentTimeMillis__J();
+  var lo = t.lo$2;
+  var hi = t.hi$2;
+  var dict = $g.process.env;
+  var valueA = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "port")) ? new $c_s_Some().init___O(dict.port) : $m_s_None$());
+  if (valueA.isDefined__Z()) {
+    var this$7 = valueA
+  } else {
+    var dict$1 = $g.process.env;
+    var this$7 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$1, "PORT")) ? new $c_s_Some().init___O(dict$1.PORT) : $m_s_None$())
+  };
+  var port = $as_T((this$7.isEmpty__Z() ? "1337" : this$7.get__O()));
+  var dict$2 = $g.process.env;
+  var this$10 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$2, "db_connection")) ? new $c_s_Some().init___O(dict$2.db_connection) : $m_s_None$());
+  var connectionString = $as_T((this$10.isEmpty__Z() ? "mongodb://localhost:27017/shocktrade" : this$10.get__O()));
+  var jsx$1 = $m_Lorg_scalajs_nodejs_globals_Process$ProcessExtensions$();
+  var process = $g.process;
+  jsx$1.onUncaughtException$extension__Lorg_scalajs_nodejs_globals_Process__F1__Lorg_scalajs_nodejs_globals_Process(process, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(err$2) {
+    $g.console.error("An uncaught exception was fired:");
+    $g.console.error(err$2.stack)
+  })));
+  $g.console.log("Loading Express modules...");
+  var express = $m_Lorg_scalajs_nodejs_express_Express$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_express_Express(require);
+  var router = express();
+  $m_Lorg_scalajs_nodejs_expressws_ExpressWS$().apply__Lorg_scalajs_nodejs_express_Application__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_expressws_WsInstance(router, require);
+  var fileUpload = $m_Lorg_scalajs_nodejs_express_fileupload_ExpressFileUpload$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_express_fileupload_ExpressFileUpload(require);
+  $g.console.log("Loading MongoDB module...");
+  var mongo = $m_Lorg_scalajs_nodejs_mongodb_MongoDB$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB(require);
+  $g.console.log("Setting up body parsers...");
+  var bodyParser = $m_Lorg_scalajs_nodejs_bodyparser_BodyParser$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_bodyparser_BodyParser(require);
+  router.use(bodyParser.json());
+  var a = new $c_Lorg_scalajs_nodejs_bodyparser_UrlEncodedBodyOptions(true);
+  var jsx$2 = bodyParser.urlencoded(a);
+  router.use(jsx$2);
+  $g.console.log("Setting up the routes for serving static files...");
+  router.use(fileUpload());
+  router.use(express["static"]("public"));
+  router.use("/assets", express["static"]("public"));
+  router.use("/bower_components", express["static"]("bower_components"));
+  router.disable("etag");
+  router.use((function(f) {
+    return (function(arg1, arg2, arg3) {
+      return f.apply__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_stream_Writable(arg1, arg2, arg3)
+    })
+  })(new $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3().init___()));
+  $g.console.log("Connecting to '%s'...", connectionString);
+  var $class = mongo.MongoClient;
+  var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+  var arg1$1 = (function(promise$1) {
+    return (function(err$2$1, result$2) {
+      if ((!((err$2$1 !== null) && (err$2$1 !== (void 0))))) {
+        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+      } else {
+        var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$1);
+        return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+      }
+    })
+  })(promise);
+  $class.connect(connectionString, arg1$1);
+  $m_Lcom_shocktrade_javascript_routes_ContestRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
+  $m_Lcom_shocktrade_javascript_routes_ExploreRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  $m_Lcom_shocktrade_javascript_routes_NewsRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
+  $m_Lcom_shocktrade_javascript_routes_OnlineStatusRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  $m_Lcom_shocktrade_javascript_routes_ProfileRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
+  $m_Lcom_shocktrade_javascript_routes_QuoteRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  $m_Lcom_shocktrade_javascript_routes_ResearchRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  $m_Lcom_shocktrade_javascript_routes_TradingClockRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  router.listen(port, (function(startTime$1, port$1) {
+    return (function() {
+      var jsx$3 = $g.console;
+      var t$1 = $m_jl_System$().currentTimeMillis__J();
+      var lo$1 = t$1.lo$2;
+      var hi$1 = t$1.hi$2;
+      var bhi = startTime$1.hi$2;
+      var lo$2 = ((lo$1 - startTime$1.lo$2) | 0);
+      var hi$2 = ((((-2147483648) ^ lo$2) > ((-2147483648) ^ lo$1)) ? (((-1) + ((hi$1 - bhi) | 0)) | 0) : ((hi$1 - bhi) | 0));
+      jsx$3.log("Server now listening on port %s [%d msec]", port$1, new $c_sjsr_RuntimeLong().init___I__I(lo$2, hi$2))
+    })
+  })(new $c_sjsr_RuntimeLong().init___I__I(lo, hi), port))
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.startServer = (function(arg$1) {
+  var prep0 = arg$1;
+  return this.$$js$exported$meth$startServer__Lorg_scalajs_nodejs_Bootstrap__O(prep0)
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.main = (function() {
+  return this.$$js$exported$meth$main__O()
+});
+var $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$ = new $TypeData().initClass({
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$: 0
+}, false, "com.shocktrade.javascript.ShocktradeWebServerJsApp$", {
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$: 1,
+  O: 1,
+  sjs_js_JSApp: 1
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$.prototype.$classData = $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$;
+var $n_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$ = (void 0);
+function $m_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$() {
+  if ((!$n_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$)) {
+    $n_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$ = new $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$().init___()
+  };
+  return $n_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$
+}
+$e.com = ($e.com || {});
+$e.com.shocktrade = ($e.com.shocktrade || {});
+$e.com.shocktrade.javascript = ($e.com.shocktrade.javascript || {});
+$e.com.shocktrade.javascript.ShocktradeWebServerJsApp = $m_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$;
+/** @constructor */
 function $c_jl_Number() {
   $c_O.call(this)
 }
@@ -13200,6 +13328,43 @@ var $d_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3 =
 });
 $c_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3.prototype.$classData = $d_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3;
 /** @constructor */
+function $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3() {
+  $c_sr_AbstractFunction3.call(this)
+}
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype = new $h_sr_AbstractFunction3();
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype.constructor = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3;
+/** @constructor */
+function $h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype;
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype.apply__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_stream_Writable = (function(request, response, next) {
+  var t = $m_jl_System$().currentTimeMillis__J();
+  var lo = t.lo$2;
+  var hi = t.hi$2;
+  next();
+  var listener = new $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1().init___Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3__J__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response(this, new $c_sjsr_RuntimeLong().init___I__I(lo, hi), request, response);
+  return response.on("finish", (function(f) {
+    return (function() {
+      return f.apply__O()
+    })
+  })(listener))
+});
+var $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3 = new $TypeData().initClass({
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3: 0
+}, false, "com.shocktrade.javascript.ShocktradeWebServerJsApp$$anonfun$startServer$3", {
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3: 1,
+  sr_AbstractFunction3: 1,
+  O: 1,
+  F3: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3.prototype.$classData = $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3;
+/** @constructor */
 function $c_Lcom_shocktrade_javascript_data_ContestDAO$ContestDAOExtensions$$anonfun$totalInvestment$2() {
   $c_sr_AbstractFunction1.call(this)
 }
@@ -16783,6 +16948,86 @@ var $d_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3$$
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_javascript_ShocktradeServerJsApp$$anonfun$startServer$3$$anonfun$apply$1;
+/** @constructor */
+function $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1() {
+  $c_sr_AbstractFunction0$mcV$sp.call(this);
+  this.startTime$2$3 = $m_sjsr_RuntimeLong$().Zero__sjsr_RuntimeLong();
+  this.request$1$3 = null;
+  this.response$1$3 = null
+}
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype = new $h_sr_AbstractFunction0$mcV$sp();
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1;
+/** @constructor */
+function $h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype;
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.init___Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3__J__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response = (function($$outer, startTime$2, request$1, response$1) {
+  this.startTime$2$3 = startTime$2;
+  this.request$1$3 = request$1;
+  this.response$1$3 = response$1;
+  return this
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.apply$mcV$sp__V = (function() {
+  var t = $m_jl_System$().currentTimeMillis__J();
+  var lo = t.lo$2;
+  var hi = t.hi$2;
+  var b = this.startTime$2$3;
+  var bhi = b.hi$2;
+  var lo$1 = ((lo - b.lo$2) | 0);
+  var hi$1 = ((((-2147483648) ^ lo$1) > ((-2147483648) ^ lo)) ? (((-1) + ((hi - bhi) | 0)) | 0) : ((hi - bhi) | 0));
+  var dict = this.request$1$3.query;
+  var elem$1 = 0;
+  elem$1 = 0;
+  var this$4 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(dict);
+  while (this$4.hasNext__Z()) {
+    this$4.next__T2();
+    elem$1 = ((1 + elem$1) | 0)
+  };
+  if ((elem$1 !== 0)) {
+    var dict$1 = this.request$1$3.query;
+    $m_scm_Iterable$();
+    $m_scm_Iterable$();
+    var b$1 = new $c_scm_ArrayBuffer().init___();
+    var this$8 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(dict$1);
+    while (this$8.hasNext__Z()) {
+      var arg1$1 = this$8.next__T2();
+      if ((arg1$1 === null)) {
+        throw new $c_s_MatchError().init___O(arg1$1)
+      };
+      var k = $as_T(arg1$1.$$und1$f);
+      var v = $as_T(arg1$1.$$und2$f);
+      var elem = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", "=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([k, v]));
+      b$1.$$plus$eq__O__scm_ArrayBuffer(elem)
+    };
+    var string = $s_sc_TraversableOnce$class__mkString__sc_TraversableOnce__T__T__T__T(b$1, "", ",", "");
+    if (($uI(string.length) > 120)) {
+      var this$13 = new $c_sci_StringOps().init___T(string);
+      var query = ($m_sci_StringOps$().slice$extension__T__I__I__T(this$13.repr$1, 0, 120) + "...")
+    } else {
+      var query = string
+    }
+  } else {
+    var query = "..."
+  };
+  $g.console.log("[node] application - %s %s (%s) ~> %d [%d ms]", $as_T(this.request$1$3.method), $as_T(this.request$1$3.path), query, $uI(this.response$1$3.statusCode), new $c_sjsr_RuntimeLong().init___I__I(lo$1, hi$1))
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.apply__O = (function() {
+  this.apply$mcV$sp__V()
+});
+var $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1 = new $TypeData().initClass({
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1: 0
+}, false, "com.shocktrade.javascript.ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1", {
+  Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1: 1,
+  sr_AbstractFunction0$mcV$sp: 1,
+  sr_AbstractFunction0: 1,
+  O: 1,
+  F0: 1,
+  s_Function0$mcV$sp: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_javascript_ShocktradeWebServerJsApp$$anonfun$startServer$3$$anonfun$apply$1;
 /** @constructor */
 function $c_jl_JSConsoleBasedPrintStream() {
   $c_Ljava_io_PrintStream.call(this);

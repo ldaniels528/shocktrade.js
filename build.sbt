@@ -20,7 +20,7 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8",
 
 lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directory")
 copyJS := {
-  val inDir = baseDirectory.value / "app-nodejs" / "target" / "scala-2.11"
+  val inDir = baseDirectory.value / "app-web-nodejs" / "target" / "scala-2.11"
   val outDir = baseDirectory.value
   val files = Seq("shocktrade-nodejs-fastopt.js", "shocktrade-nodejs-fastopt.js.map") map { p => (inDir / p, outDir / p) }
   IO.copy(files, overwrite = true)
@@ -53,7 +53,7 @@ lazy val sharedjs = (project in file("./app-shared"))
       "com.github.ldaniels528" %%% "scalajs-common" % scalaJsNodeVersion
     ))
 
-lazy val angularjs = (project in file("./app-angularjs"))
+lazy val angularjs = (project in file("./app-web-angularjs"))
   .aggregate(sharedjs)
   .dependsOn(sharedjs)
   .enablePlugins(ScalaJSPlugin)
@@ -80,7 +80,7 @@ lazy val angularjs = (project in file("./app-angularjs"))
       "com.github.ldaniels528" %%% "scalajs-social-linkedin" % scalaJsNodeVersion
     ))
 
-lazy val nodejs = (project in file("./app-nodejs"))
+lazy val nodejs = (project in file("./app-web-nodejs"))
   .aggregate(sharedjs)
   .dependsOn(sharedjs)
   .enablePlugins(ScalaJSPlugin)
@@ -117,13 +117,13 @@ lazy val shocktradejs = (project in file("."))
       crossTarget in(angularjs, Compile, packageJSKey) := baseDirectory.value / "public" / "javascripts"
     })
 
-lazy val tqm = (project in file("./app-tqm"))
+lazy val server = (project in file("./app-server"))
   .aggregate(sharedjs)
   .dependsOn(sharedjs)
   .enablePlugins(ScalaJSPlugin)
   .settings(jsCommonSettings: _*)
   .settings(
-    name := "shocktrade-tqm",
+    name := "shocktrade-server",
     organization := "com.shocktrade",
     version := appVersion,
     pipelineStages := Seq(gzip),

@@ -1,5 +1,6 @@
 package com.shocktrade.server
 
+import com.shocktrade.server.services.NASDAQIntraDayQuotesService
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -37,6 +38,11 @@ object ShocktradeServerJsApp extends js.JSApp {
     console.log("Connecting to '%s'...", connectionString)
     val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
+    val svc = new NASDAQIntraDayQuotesService()
+    svc.getQuotes("AAPL") foreach { quote =>
+      console.log("quote => %j", quote)
+    }
+
     // run the qualification engine once every 30 minutes
     val qm = new TradingQualificationEngine(dbFuture)
     setInterval(() => qm.run(), 30.minutes)
@@ -45,7 +51,7 @@ object ShocktradeServerJsApp extends js.JSApp {
     // run the stock refresh loader once every 30 minutes
     val stockLoader = new StockRefreshLoader(dbFuture)
     setInterval(() => stockLoader.run(), 4.hours)
-    stockLoader.run() // TODO for testing only
+    //stockLoader.run() // TODO for testing only
   }
 
 }

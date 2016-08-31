@@ -39,27 +39,28 @@ ShockTrade provides the capability of:
 <a name="build-requirements"></a>
 ### Build Requirements
 
-* [Java SDK 1.7] (http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
-* [Scala 2.11.6] (http://scala-lang.org/download/)
+* [Scala 2.11.8] (http://scala-lang.org/download/)
 * [SBT 0.13+] (http://www.scala-sbt.org/download.html)
 
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [Commons Helpers] (https://github.com/ldaniels528/commons-helpers)
-* [Play-JSON Compat] (https://github.com/ldaniels528/play-json-compat)
-* [ShockTrade Services] (https://github.com/ldaniels528/shocktrade-services)
+* [ScalaJs-NodeJs 2.2.x] (https://github.com/ldaniels528/scalajs-nodejs)
 
 <a name="building-the-code"></a>
 ### Building the web application
 
-    $ activator clean dist
+    $ sbt fastOptJSPlus
     
 <a name="testing-the-code"></a>    
 ### Running the application locally
 
-    $ activator run
-       
+#### To start the web server 
 
+    $ node ./server.js
+       
+#### To start the qualification engine
+
+    $ node ./engine.js
 
 
