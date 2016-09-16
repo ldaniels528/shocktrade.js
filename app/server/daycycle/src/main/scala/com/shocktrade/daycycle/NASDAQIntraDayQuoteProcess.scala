@@ -3,7 +3,7 @@ package com.shocktrade.daycycle
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.quotes.IntraDayQuoteData
 import com.shocktrade.common.dao.quotes.IntraDayQuotesDAO._
-import com.shocktrade.daycycle.IntraDayQuoteRefreshEngine._
+import com.shocktrade.daycycle.NASDAQIntraDayQuoteProcess._
 import com.shocktrade.services.NASDAQIntraDayQuotesService
 import com.shocktrade.services.NASDAQIntraDayQuotesService._
 import com.shocktrade.common.models.contest.OrderLike
@@ -19,10 +19,10 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Intra-Day Quote Refresh Engine
+  * Intra-Day Quote Process (NASDAQ Datafeed)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class IntraDayQuoteRefreshEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+class NASDAQIntraDayQuoteProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
@@ -101,7 +101,7 @@ class IntraDayQuoteRefreshEngine(dbFuture: Future[Db])(implicit ec: ExecutionCon
   * Intra-Day Quote Refresh Engine Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object IntraDayQuoteRefreshEngine {
+object NASDAQIntraDayQuoteProcess {
 
   /**
     * NASDAQ Intra-Day Response Extensions

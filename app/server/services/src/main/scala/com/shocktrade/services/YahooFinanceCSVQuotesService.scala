@@ -1,9 +1,10 @@
 package com.shocktrade.services
 
+import com.shocktrade.services.YahooFinanceCSVQuotesService._
 import com.shocktrade.util.ParsingHelper._
 import com.shocktrade.util.StringHelper._
-import com.shocktrade.services.YahooFinanceCSVQuotesService._
 import org.scalajs.nodejs.moment.Moment
+import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.request._
 import org.scalajs.nodejs.{NodeRequire, console}
 
@@ -21,6 +22,7 @@ import scala.util.{Failure, Success, Try}
 class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
   private val request = Request()
   private val moment = Moment()
+  MomentTimezone()
 
   /**
     * Returns all supported parameter codes
@@ -134,7 +136,7 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
       /* c6 */ m.uget("changeRealTime") flatMap decimalValue,
       /* c8 */ m.uget("changeAfterHours") flatMap decimalValue,
       /* d0 */ m.uget("divShare") flatMap decimalValue,
-      /* d1 */ m.uget("tradeDate") flatMap dateValue,
+      /* d1 */ m.uget("tradeDate"),
       /* ++ */ m.uget("tradeDateTime") map (s => new js.Date(s)),
       /* e0 */ m.uget("eps") flatMap decimalValue,
       /* e1 */ m.uget("errorMessage") flatMap stringValue,
@@ -377,15 +379,15 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
     (kvps.get("tradeDate"), kvps.get("tradeTime")) match {
       case (Some(tradeDate), Some(tradeTime)) =>
         Try {
+          // "9/01/2016 6:17a"
           val dateString = s"$tradeDate $tradeTime"
-          //console.log(s"tradeDate = '$tradeDate', tradeTime = '$tradeTime' => $dateString")
 
           // format as an ISO date string
-          moment(dateString, "M/DD/YYYY h:mma").toISOString()
+          moment(dateString, "M/DD/YYYY h:mma").tz("America/New_York").toISOString()
         } match {
           case Success(ts) => kvps + ("tradeDateTime" -> ts)
           case Failure(e) =>
-            console.error(s"Error parsing date/time string (date = '$tradeDate', time = '$tradeTime')")
+            console.error(s"Error parsing date/time string [M/DD/YYYY h:mma] (date = '$tradeDate', time = '$tradeTime')")
             kvps
         }
       case _ => kvps
@@ -434,21 +436,19 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
   private def decimalValue(encodedString: String): js.UndefOr[Double] = {
     val rawString = encodedString.replaceAll("[$]", "").replaceAll("[+]", "").replaceAll("[,]", "")
     try {
-      stringValue(rawString).toOption match {
-        case None => js.undefined
-
+      stringValue(rawString) flatMap {
         // is it blank?
-        case Some(s) if s.isBlank || NOT_APPLICABLE.contains(s) => js.undefined
+        case s if s.isBlank || NOT_APPLICABLE.contains(s) => js.undefined
 
         // *%, *K, *M, *B, *T
-        case Some(s) if s.endsWith("%") => s.dropRight(1).toDouble
-        case Some(s) if s.endsWith("K") => s.dropRight(1).toDouble * 1.0e3
-        case Some(s) if s.endsWith("M") => s.dropRight(1).toDouble * 1.0e6
-        case Some(s) if s.endsWith("B") => s.dropRight(1).toDouble * 1.0e9
-        case Some(s) if s.endsWith("T") => s.dropRight(1).toDouble * 1.0e12
+        case s if s.endsWith("%") => s.dropRight(1).toDouble
+        case s if s.endsWith("K") => s.dropRight(1).toDouble * 1.0e3
+        case s if s.endsWith("M") => s.dropRight(1).toDouble * 1.0e6
+        case s if s.endsWith("B") => s.dropRight(1).toDouble * 1.0e9
+        case s if s.endsWith("T") => s.dropRight(1).toDouble * 1.0e12
 
         // otherwise, just convert it
-        case Some(s) => s.toDouble
+        case s => s.toDouble
       }
     } catch {
       case e: Exception =>
@@ -537,7 +537,7 @@ object YahooFinanceCSVQuotesService {
                    val changeRealTime: js.UndefOr[Double], // c6 - Change (Real-time)
                    val changeAfterHours: js.UndefOr[Double], // c8 - After Hours Change (Real-time)
                    val divShare: js.UndefOr[Double], // d0 - Dividend/Share (Trailing Annual)
-                   val tradeDate: js.UndefOr[js.Date], // d1 - Last Trade Date
+                   val tradeDate: js.UndefOr[String], // d1 - Last Trade Date
                    val tradeDateTime: js.UndefOr[js.Date],
                    // d2 - Trade Date? (-)
                    // d3 - Last Trade Time? ("Feb  3", "10:56am")

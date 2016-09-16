@@ -2,9 +2,10 @@ package com.shocktrade.common.dao.contest
 
 import java.util.UUID
 
-import org.scalajs.nodejs.{console, _}
+import org.scalajs.nodejs.console
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.DateHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -36,11 +37,15 @@ object PortfolioUpdateDAO {
 
     @inline
     def findNext(processingHost: String, updateDelay: FiniteDuration)(implicit ec: ExecutionContext) = {
-      val thisUpdate = new js.Date()
-      val nextUpdate = new js.Date(thisUpdate.getTime() + updateDelay)
+      val lastUpdate = new js.Date()
+      val nextUpdate = lastUpdate + updateDelay
       portfolioDAO.findOneAndUpdate(
-        filter = doc("status" $eq "ACTIVE", $or("nextUpdate" $exists false, "nextUpdate" $lte thisUpdate)),
-        update = $set(doc("lastUpdate" -> thisUpdate, "nextUpdate" -> nextUpdate, "processedHost" -> processingHost)),
+        filter = doc("status" $eq "ACTIVE", $or("nextUpdate" $exists false, "nextUpdate" $lte lastUpdate)),
+        update = $set(doc(
+          "lastUpdate" -> lastUpdate,
+          "nextUpdate" -> nextUpdate,
+          "processedHost" -> processingHost
+        )),
         options = new FindAndUpdateOptions(upsert = false, returnOriginal = false)
       ) map {
         case result if result.isOk => result.valueAs[PortfolioData]

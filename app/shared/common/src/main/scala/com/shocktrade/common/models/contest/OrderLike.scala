@@ -2,6 +2,7 @@ package com.shocktrade.common.models.contest
 
 import com.shocktrade.Commissions
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.DateHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -61,7 +62,7 @@ object OrderLike {
   implicit class OrderLikeEnrichment(val order: OrderLike) extends AnyVal {
 
     @inline
-    def isExpired(asOfTime: js.Date) = order.expirationTime.exists(_.getTime() > asOfTime.getTime())
+    def isExpired(asOfTime: js.Date) = order.expirationTime.exists(_ < asOfTime)
 
     @inline
     def isCashAccount = order.accountType.contains(ACCOUNT_TYPE_CASH)

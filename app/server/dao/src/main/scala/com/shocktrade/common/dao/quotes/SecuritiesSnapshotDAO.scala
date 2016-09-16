@@ -1,5 +1,6 @@
 package com.shocktrade.common.dao.quotes
 
+import com.shocktrade.common.models.contest.OrderLike
 import org.scalajs.nodejs.mongodb._
 
 import scala.concurrent.ExecutionContext
@@ -23,6 +24,20 @@ object SecuritiesSnapshotDAO {
     * @param dao the given [[SecuritiesUpdateDAO Stock DAO]]
     */
   implicit class SecuritiesSnapshotDAOEnrichment(val dao: SecuritiesSnapshotDAO) extends AnyVal {
+
+    @inline
+    def findMatch(order: OrderLike)(implicit ec: ExecutionContext) = {
+      val query = doc(Seq(
+        Option("symbol" $eq order.symbol),
+        Option("tradeDateTime" between(order.creationTime, new js.Date())),
+        Option("volume" $gte order.quantity),
+        // pricing
+        if (order.isLimitOrder) Option(if (order.isBuyOrder) "lastTrade" $lte order.price else "lastTrade" $gte order.price)
+        else None
+      ).flatten: _*)
+
+      dao.findOneFuture[SnapshotQuote](query)
+    }
 
     @inline
     def getSnapshots(symbol: String, startTime: js.Date, endTime: js.Date) = {

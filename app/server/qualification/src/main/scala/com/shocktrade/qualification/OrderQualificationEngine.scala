@@ -3,16 +3,16 @@ package com.shocktrade.qualification
 import com.shocktrade.common.dao.Claim
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
-import com.shocktrade.common.dao.quotes.IntraDayQuotesDAO._
-import com.shocktrade.qualification.OrderQualificationEngine._
+import com.shocktrade.common.dao.quotes.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
+import com.shocktrade.qualification.OrderQualificationEngine._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, ObjectID}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{console, _}
+import org.scalajs.sjs.DateHelper._
 
-import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -29,27 +29,27 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private implicit val moment = Moment()
 
   // get DAO and service references
-  private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
+
+  private val separator = "=" * 80
 
   /**
     * Invokes the process
     */
   def run(): Unit = {
+    val startTime = System.currentTimeMillis()
     val outcome = for {
-      portfolioOpt <- portfolioDAO.flatMap(_.findNext(processingHost = os.hostname(), updateDelay = 5.seconds))
-      claims <- portfolioOpt match {
-        case Some(portfolio) => processOrders(portfolio)
-        case None =>
-          console.log("No eligible portfolio(s) found")
-          Future.successful(Nil)
-      }
+      portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
+      //portfolioOpt <- portfolioDAO.flatMap(_.findNext(processingHost = os.hostname(), updateDelay = 5.minutes))
+      claims <- Future.sequence(portfolios.toSeq map processOrders) map (_.flatten)
     } yield claims
 
     outcome onComplete {
       case Success(claims) =>
+        console.log(separator)
         console.log(s"${claims.size} claim(s) were created")
-        console.log("Process completed successfully")
+        console.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
       case Failure(e) =>
         console.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
@@ -57,6 +57,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def processOrders(portfolio: PortfolioData) = {
+    console.log(separator)
     console.log(s"Processing portfolio # ${portfolio._id}")
 
     // determine the as-of date
@@ -82,17 +83,17 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private def fulfillOrders(workOrders: Seq[WorkOrder]) = {
     console.log(s"Processing order fulfillment...")
     Future.sequence {
-      workOrders map { workOrder =>
-        val outcome = if (workOrder.order.isBuyOrder) {
-          console.log("Creating new position - %j", workOrder)
-          portfolioDAO.flatMap(_.insertPosition(workOrder))
+      workOrders map { wo =>
+        val outcome = if (wo.order.isBuyOrder) {
+          //console.log("Creating new position - %j", wo)
+          portfolioDAO.flatMap(_.insertPosition(wo))
         } else {
-          console.log("Reducing position - %j", workOrder)
-          portfolioDAO.flatMap(_.reducePosition(workOrder))
+          //console.log("Reducing position - %j", wo)
+          portfolioDAO.flatMap(_.reducePosition(wo))
         }
 
         outcome foreach { result =>
-          console.info(s"Order # ${workOrder.order._id} result => ", result.result)
+          console.info(s"Order # ${wo.order._id}: ${wo.order.symbol} x ${wo.order.quantity} - result => ", result.result)
         }
         outcome
       }
@@ -101,7 +102,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   private def lookupWorkQuotes(portfolio: PortfolioData, orders: Seq[OrderLike]) = {
     val eligibleQuotes = Future.sequence(orders.map { order =>
-      intraDayDAO.flatMap(_.findMatch(order) map {
+      snapshotDAO.flatMap(_.findMatch(order) map {
         case Some(quote) => Some(order -> quote)
         case None => None
       }).map(_.toSeq)
@@ -112,10 +113,10 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
         new WorkQuote(
           symbol = quote.symbol,
           exchange = order.exchange,
-          lastTrade = quote.price,
-          close = quote.price,
+          lastTrade = quote.lastTrade,
+          close = quote.lastTrade,
           tradeDateTime = quote.tradeDateTime.map(_.getTime()),
-          volume = quote.aggregateVolume
+          volume = quote.volume
         )
       }
     }
@@ -211,7 +212,7 @@ object OrderQualificationEngine {
       // If the volume is greater than the desired quantity
       // and the price is either Market or less than or equal to the limit price
       // and the transaction occurred AFTER the order was created
-      if (orderTime.getTime() > tradeTime.getTime()) reject(s"out of time bounds", required = tradeTime, actual = orderTime)
+      if (orderTime > tradeTime) reject(s"out of time bounds", required = tradeTime, actual = orderTime)
       else if (volume < quantity) reject(s"insufficient volume", required = quantity, actual = volume)
       else if (order.isLimitOrder) {
         val limitPrice = order.price orDie "Missing LIMIT price"

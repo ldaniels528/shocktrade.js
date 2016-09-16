@@ -13,7 +13,7 @@ import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Securities Refresh Process
@@ -48,7 +48,7 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
       outcome onComplete {
         case Success(quotesWithResults) =>
-          console.log(s"Process completed in ${js.Date.now() - startTime} msec(s)")
+          log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
         case Failure(e) =>
           console.error(s"Failed during processing: ${e.getMessage}")
           e.printStackTrace()
@@ -57,21 +57,42 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def processQuotes(quoteRefs: Seq[SecuritiesRef]) = {
-    console.log(s"Retrieved ${quoteRefs.size} symbols (${quoteRefs.size / batchSize} batches expected)")
+    log(s"Retrieved ${quoteRefs.size} symbols (${quoteRefs.size / batchSize} batches expected)")
     Future.sequence {
       var batchNo = 0
+      var symbolCount = 0
       quoteRefs.sliding(batchSize, batchSize).toSeq map { batch =>
         val symbols = batch.flatMap(_.symbol.toOption)
         batchNo += 1
-        console.log(s"[$batchNo] Querying ${symbols.size} symbols (from '${symbols.head}' to '${symbols.last}')")
+        symbolCount += symbols.size
+
+        // notify the operator at every 100 batches
+        if (batchNo % 100 == 0 || symbolCount == quoteRefs.size) {
+          val completion = (100 * (symbolCount.toDouble / quoteRefs.size)).toInt
+          log("Processed %d securities (%d%% complete - %d batches) so far...", symbolCount, completion, batchNo)
+        }
 
         for {
           quotes <- csvQuoteSvc.getQuotes(cvsQuoteParams, symbols)
-          snapshotResults <- createSnapshots(quotes)
-          securitiesResults <- updateQuotes(quotes)
+          snapshotResults = createSnapshots(quotes) onComplete errorHandler
+          securitiesResults = updateQuotes(quotes) onComplete errorHandler
         } yield securitiesResults
       }
     }
+  }
+
+  private def errorHandler[T](outcome: Try[T]) = {
+    outcome match {
+      case Success(result) => Some(result)
+      case Failure(e) =>
+        console.error(s"Persistence error: ${e.getMessage}")
+        None
+    }
+  }
+
+  @inline
+  private def log(message: String, args: js.Any*) = {
+    console.log(s"[${moment().format("MM/DD HH:mm:ss")}] " + message, args: _*)
   }
 
   @inline
@@ -120,6 +141,7 @@ object SecuritiesRefreshProcess {
       exchange = quote.exchange,
       lastTrade = quote.lastTrade,
       tradeDateTime = quote.tradeDateTime,
+      tradeDate = quote.tradeDate,
       tradeTime = quote.tradeTime,
       volume = quote.volume
     )

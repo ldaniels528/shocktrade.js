@@ -4,6 +4,7 @@ import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
@@ -38,9 +39,9 @@ object QualificationJsApp extends js.JSApp {
     console.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // run the order qualification engine once every 30 minutes
+    // run the order qualification engine once every 5 minutes
     val qualification = new OrderQualificationEngine(dbFuture)
-    //setInterval(() => qualification.run(), 30.minutes)
+    setInterval(() => qualification.run(), 1.minutes)
     qualification.run() // TODO for testing only
   }
 

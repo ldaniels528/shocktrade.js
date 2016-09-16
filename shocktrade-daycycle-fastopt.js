@@ -1144,6 +1144,25 @@ function $s_s_Product2$class__productElement__s_Product2__I__O($$this, n) {
     }
   }
 }
+function $s_s_Product3$class__productElement__s_Product3__I__O($$this, n) {
+  switch (n) {
+    case 0: {
+      return $$this.$$und1$1;
+      break
+    }
+    case 1: {
+      return $$this.$$und2$1;
+      break
+    }
+    case 2: {
+      return $$this.$$und3$1;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + n))
+    }
+  }
+}
 function $s_s_Proxy$class__toString__s_Proxy__T($$this) {
   return ("" + $$this.self$1)
 }
@@ -1389,9 +1408,6 @@ function $asArrayOf_sc_GenTraversableOnce(obj, depth) {
 }
 function $s_sc_IndexedSeqOptimized$class__lengthCompare__sc_IndexedSeqOptimized__I__I($$this, len) {
   return (($$this.length__I() - len) | 0)
-}
-function $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O($$this) {
-  return (($$this.length__I() > 0) ? $$this.apply__I__O((((-1) + $$this.length__I()) | 0)) : $s_sc_TraversableLike$class__last__sc_TraversableLike__O($$this))
 }
 function $s_sc_IndexedSeqOptimized$class__slice__sc_IndexedSeqOptimized__I__I__O($$this, from, until) {
   var lo = ((from > 0) ? from : 0);
@@ -1845,21 +1861,6 @@ function $s_sc_TraversableLike$class__stringPrefix__sc_TraversableLike__T($$this
   };
   return string
 }
-function $s_sc_TraversableLike$class__last__sc_TraversableLike__O($$this) {
-  var elem = $$this.head__O();
-  var lst = new $c_sr_ObjectRef().init___O(elem);
-  $$this.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, lst$1) {
-    return (function(x$2) {
-      lst$1.elem$1 = x$2
-    })
-  })($$this, lst)));
-  return lst.elem$1
-}
-function $s_sc_TraversableOnce$class__to__sc_TraversableOnce__scg_CanBuildFrom__O($$this, cbf) {
-  var b = cbf.apply__scm_Builder();
-  b.$$plus$plus$eq__sc_TraversableOnce__scg_Growable($$this.seq__sc_TraversableOnce());
-  return b.result__O()
-}
 function $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder($$this, b, start, sep, end) {
   var first = new $c_sr_BooleanRef().init___Z(true);
   b.append__T__scm_StringBuilder(start);
@@ -1877,6 +1878,11 @@ function $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringB
   })($$this, first, b, sep)));
   b.append__T__scm_StringBuilder(end);
   return b
+}
+function $s_sc_TraversableOnce$class__to__sc_TraversableOnce__scg_CanBuildFrom__O($$this, cbf) {
+  var b = cbf.apply__scm_Builder();
+  b.$$plus$plus$eq__sc_TraversableOnce__scg_Growable($$this.seq__sc_TraversableOnce());
+  return b.result__O()
 }
 function $s_sc_TraversableOnce$class__foldLeft__sc_TraversableOnce__O__F2__O($$this, z, op) {
   var result = new $c_sr_ObjectRef().init___O(z);
@@ -2788,42 +2794,68 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.run__V = (functio
     var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$4().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess(this);
     var executor$1 = this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
     var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$27, f$1, executor$1);
-    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(startTime$1) {
+    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, startTime$1) {
       return (function(x0$1$2) {
         var x0$1 = $as_s_util_Try(x0$1$2);
         if ($is_s_util_Success(x0$1)) {
+          var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in %d seconds"])).s__sc_Seq__T($m_sci_Nil$());
+          var value = (($uD($g.Date.now()) - startTime$1) / 1000);
+          var array = [value];
           var jsx$4 = $g.console;
-          var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in ", " msec(s)"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([($uD($g.Date.now()) - startTime$1)]));
-          jsx$4.log(s)
+          var jsx$6 = jsx$4.log;
+          var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, arg$outer.moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+          var jsx$5 = [s].concat(array);
+          jsx$6.apply(jsx$4, jsx$5)
         } else if ($is_s_util_Failure(x0$1)) {
           var x3 = $as_s_util_Failure(x0$1);
           var e = x3.exception$2;
-          var jsx$5 = $g.console;
+          var jsx$7 = $g.console;
           var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed during processing: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
-          jsx$5.error(s$1);
+          jsx$7.error(s$1);
           e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1)
         } else {
           throw new $c_s_MatchError().init___O(x0$1)
         }
       })
-    })(startTime)), this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
+    })(this, startTime)), this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
+  }
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.com$shocktrade$daycycle$SecuritiesRefreshProcess$$errorHandler__s_util_Try__s_Option = (function(outcome) {
+  if ($is_s_util_Success(outcome)) {
+    var x2 = $as_s_util_Success(outcome);
+    var result = x2.value$2;
+    return new $c_s_Some().init___O(result)
+  } else if ($is_s_util_Failure(outcome)) {
+    var x3 = $as_s_util_Failure(outcome);
+    var e = x3.exception$2;
+    var jsx$1 = $g.console;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Persistence error: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
+    jsx$1.error(s);
+    return $m_s_None$()
+  } else {
+    throw new $c_s_MatchError().init___O(outcome)
   }
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes__sc_Seq__s_concurrent_Future = (function(quoteRefs) {
+  var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Retrieved ", " symbols (", " batches expected)"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([quoteRefs.size__I(), ((quoteRefs.size__I() / this.batchSize$1) | 0)]));
+  var array = [];
   var jsx$1 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Retrieved ", " symbols (", " batches expected)"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([quoteRefs.size__I(), ((quoteRefs.size__I() / this.batchSize$1) | 0)]));
-  jsx$1.log(s);
-  var jsx$5 = $m_s_concurrent_Future$();
+  var jsx$3 = jsx$1.log;
+  var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this.moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+  var jsx$2 = [s].concat(array);
+  jsx$3.apply(jsx$1, jsx$2);
+  var jsx$7 = $m_s_concurrent_Future$();
   var batchNo = new $c_sr_IntRef().init___I(0);
+  var symbolCount = new $c_sr_IntRef().init___I(0);
   var size = this.batchSize$1;
   var step = this.batchSize$1;
-  var this$3 = $s_sc_IterableLike$class__sliding__sc_IterableLike__I__I__sc_Iterator(quoteRefs, size, step);
-  var jsx$4 = this$3.toStream__sci_Stream();
-  var jsx$3 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sr_IntRef(this, batchNo);
-  var this$4 = $m_sc_Seq$();
-  var jsx$2 = $as_sc_TraversableOnce(jsx$4.map__F1__scg_CanBuildFrom__O(jsx$3, this$4.ReusableCBFInstance$2));
-  var this$5 = $m_sc_Seq$();
-  return jsx$5.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$2, this$5.ReusableCBFInstance$2, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
+  var this$5 = $s_sc_IterableLike$class__sliding__sc_IterableLike__I__I__sc_Iterator(quoteRefs, size, step);
+  var jsx$6 = this$5.toStream__sci_Stream();
+  var jsx$5 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef(this, quoteRefs, batchNo, symbolCount);
+  var this$6 = $m_sc_Seq$();
+  var jsx$4 = $as_sc_TraversableOnce(jsx$6.map__F1__scg_CanBuildFrom__O(jsx$5, this$6.ReusableCBFInstance$2));
+  var this$7 = $m_sc_Seq$();
+  return jsx$7.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$4, this$7.ReusableCBFInstance$2, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire = (function(dbFuture, ec, require) {
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f = ec;
@@ -3376,773 +3408,767 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.toQuote__p1__
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$14 = m.get__O__s_Option("tradeDate");
   if (opt$14.isEmpty__Z()) {
-    var value$14 = (void 0)
-  } else {
-    var arg1$16 = opt$14.get__O();
-    var value$14 = arg1$16
-  };
-  if ((value$14 === (void 0))) {
     var jsx$70 = (void 0)
   } else {
-    var encodedString$14 = $as_T(value$14);
-    var jsx$70 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$dateValue__T__sjs_js_UndefOr(encodedString$14)
+    var arg1$16 = opt$14.get__O();
+    var jsx$70 = arg1$16
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$15 = m.get__O__s_Option("tradeDateTime");
   if (opt$15.isEmpty__Z()) {
-    var value$15 = (void 0)
+    var value$14 = (void 0)
   } else {
     var arg1$17 = opt$15.get__O();
-    var value$15 = arg1$17
+    var value$14 = arg1$17
   };
-  if ((value$15 === (void 0))) {
+  if ((value$14 === (void 0))) {
     var jsx$69 = (void 0)
   } else {
-    var s = $as_T(value$15);
-    var value$16 = new $g.Date(s);
-    var jsx$69 = value$16
+    var s = $as_T(value$14);
+    var value$15 = new $g.Date(s);
+    var jsx$69 = value$15
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$16 = m.get__O__s_Option("eps");
   if (opt$16.isEmpty__Z()) {
-    var value$17 = (void 0)
+    var value$16 = (void 0)
   } else {
     var arg1$18 = opt$16.get__O();
-    var value$17 = arg1$18
+    var value$16 = arg1$18
   };
-  if ((value$17 === (void 0))) {
+  if ((value$16 === (void 0))) {
     var jsx$68 = (void 0)
   } else {
-    var encodedString$15 = $as_T(value$17);
-    var jsx$68 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$15)
+    var encodedString$14 = $as_T(value$16);
+    var jsx$68 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$14)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$17 = m.get__O__s_Option("errorMessage");
   if (opt$17.isEmpty__Z()) {
-    var value$18 = (void 0)
+    var value$17 = (void 0)
   } else {
     var arg1$19 = opt$17.get__O();
-    var value$18 = arg1$19
+    var value$17 = arg1$19
   };
-  if ((value$18 === (void 0))) {
+  if ((value$17 === (void 0))) {
     var jsx$67 = (void 0)
   } else {
-    var encodedString$16 = $as_T(value$18);
-    var jsx$67 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$16)
+    var encodedString$15 = $as_T(value$17);
+    var jsx$67 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$15)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$18 = m.get__O__s_Option("epsEstCurrentYear");
   if (opt$18.isEmpty__Z()) {
-    var value$19 = (void 0)
+    var value$18 = (void 0)
   } else {
     var arg1$20 = opt$18.get__O();
-    var value$19 = arg1$20
+    var value$18 = arg1$20
   };
-  if ((value$19 === (void 0))) {
+  if ((value$18 === (void 0))) {
     var jsx$66 = (void 0)
   } else {
-    var encodedString$17 = $as_T(value$19);
-    var jsx$66 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$17)
+    var encodedString$16 = $as_T(value$18);
+    var jsx$66 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$16)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$19 = m.get__O__s_Option("epsEstNextYear");
   if (opt$19.isEmpty__Z()) {
-    var value$20 = (void 0)
+    var value$19 = (void 0)
   } else {
     var arg1$21 = opt$19.get__O();
-    var value$20 = arg1$21
+    var value$19 = arg1$21
   };
-  if ((value$20 === (void 0))) {
+  if ((value$19 === (void 0))) {
     var jsx$65 = (void 0)
   } else {
-    var encodedString$18 = $as_T(value$20);
-    var jsx$65 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$18)
+    var encodedString$17 = $as_T(value$19);
+    var jsx$65 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$17)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$20 = m.get__O__s_Option("epsEstNextQtr");
   if (opt$20.isEmpty__Z()) {
-    var value$21 = (void 0)
+    var value$20 = (void 0)
   } else {
     var arg1$22 = opt$20.get__O();
-    var value$21 = arg1$22
+    var value$20 = arg1$22
   };
-  if ((value$21 === (void 0))) {
+  if ((value$20 === (void 0))) {
     var jsx$64 = (void 0)
   } else {
-    var encodedString$19 = $as_T(value$21);
-    var jsx$64 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$19)
+    var encodedString$18 = $as_T(value$20);
+    var jsx$64 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$18)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$21 = m.get__O__s_Option("floatShares");
   if (opt$21.isEmpty__Z()) {
-    var value$22 = (void 0)
+    var value$21 = (void 0)
   } else {
     var arg1$23 = opt$21.get__O();
-    var value$22 = arg1$23
+    var value$21 = arg1$23
   };
-  if ((value$22 === (void 0))) {
+  if ((value$21 === (void 0))) {
     var jsx$63 = (void 0)
   } else {
-    var encodedString$20 = $as_T(value$22);
-    var jsx$63 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$20)
+    var encodedString$19 = $as_T(value$21);
+    var jsx$63 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$19)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$22 = m.get__O__s_Option("low");
   if (opt$22.isEmpty__Z()) {
-    var value$23 = (void 0)
+    var value$22 = (void 0)
   } else {
     var arg1$24 = opt$22.get__O();
-    var value$23 = arg1$24
+    var value$22 = arg1$24
   };
-  if ((value$23 === (void 0))) {
+  if ((value$22 === (void 0))) {
     var jsx$62 = (void 0)
   } else {
-    var encodedString$21 = $as_T(value$23);
-    var jsx$62 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$21)
+    var encodedString$20 = $as_T(value$22);
+    var jsx$62 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$20)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$23 = m.get__O__s_Option("holdingsGainPct");
   if (opt$23.isEmpty__Z()) {
-    var value$24 = (void 0)
+    var value$23 = (void 0)
   } else {
     var arg1$25 = opt$23.get__O();
-    var value$24 = arg1$25
+    var value$23 = arg1$25
   };
-  if ((value$24 === (void 0))) {
+  if ((value$23 === (void 0))) {
     var jsx$61 = (void 0)
   } else {
-    var encodedString$22 = $as_T(value$24);
-    var jsx$61 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$22)
+    var encodedString$21 = $as_T(value$23);
+    var jsx$61 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$21)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$24 = m.get__O__s_Option("annualizedGain");
   if (opt$24.isEmpty__Z()) {
-    var value$25 = (void 0)
+    var value$24 = (void 0)
   } else {
     var arg1$26 = opt$24.get__O();
-    var value$25 = arg1$26
+    var value$24 = arg1$26
   };
-  if ((value$25 === (void 0))) {
+  if ((value$24 === (void 0))) {
     var jsx$60 = (void 0)
   } else {
-    var encodedString$23 = $as_T(value$25);
-    var jsx$60 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$23)
+    var encodedString$22 = $as_T(value$24);
+    var jsx$60 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$22)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$25 = m.get__O__s_Option("holdingsGain");
   if (opt$25.isEmpty__Z()) {
-    var value$26 = (void 0)
+    var value$25 = (void 0)
   } else {
     var arg1$27 = opt$25.get__O();
-    var value$26 = arg1$27
+    var value$25 = arg1$27
   };
-  if ((value$26 === (void 0))) {
+  if ((value$25 === (void 0))) {
     var jsx$59 = (void 0)
   } else {
-    var encodedString$24 = $as_T(value$26);
-    var jsx$59 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$24)
+    var encodedString$23 = $as_T(value$25);
+    var jsx$59 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$23)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$26 = m.get__O__s_Option("holdingsGainPctRealTime");
   if (opt$26.isEmpty__Z()) {
-    var value$27 = (void 0)
+    var value$26 = (void 0)
   } else {
     var arg1$28 = opt$26.get__O();
-    var value$27 = arg1$28
+    var value$26 = arg1$28
   };
-  if ((value$27 === (void 0))) {
+  if ((value$26 === (void 0))) {
     var jsx$58 = (void 0)
   } else {
-    var encodedString$25 = $as_T(value$27);
-    var jsx$58 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$25)
+    var encodedString$24 = $as_T(value$26);
+    var jsx$58 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$24)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$27 = m.get__O__s_Option("holdingsGainRealTime");
   if (opt$27.isEmpty__Z()) {
-    var value$28 = (void 0)
+    var value$27 = (void 0)
   } else {
     var arg1$29 = opt$27.get__O();
-    var value$28 = arg1$29
+    var value$27 = arg1$29
   };
-  if ((value$28 === (void 0))) {
+  if ((value$27 === (void 0))) {
     var jsx$57 = (void 0)
   } else {
-    var encodedString$26 = $as_T(value$28);
-    var jsx$57 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$26)
+    var encodedString$25 = $as_T(value$27);
+    var jsx$57 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$25)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$28 = m.get__O__s_Option("high");
   if (opt$28.isEmpty__Z()) {
-    var value$29 = (void 0)
+    var value$28 = (void 0)
   } else {
     var arg1$30 = opt$28.get__O();
-    var value$29 = arg1$30
+    var value$28 = arg1$30
   };
-  if ((value$29 === (void 0))) {
+  if ((value$28 === (void 0))) {
     var jsx$56 = (void 0)
   } else {
-    var encodedString$27 = $as_T(value$29);
-    var jsx$56 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$27)
+    var encodedString$26 = $as_T(value$28);
+    var jsx$56 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$26)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$29 = m.get__O__s_Option("moreInfo");
   if (opt$29.isEmpty__Z()) {
-    var value$30 = (void 0)
+    var value$29 = (void 0)
   } else {
     var arg1$31 = opt$29.get__O();
-    var value$30 = arg1$31
+    var value$29 = arg1$31
   };
-  if ((value$30 === (void 0))) {
+  if ((value$29 === (void 0))) {
     var jsx$55 = (void 0)
   } else {
-    var encodedString$28 = $as_T(value$30);
-    var jsx$55 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$28)
+    var encodedString$27 = $as_T(value$29);
+    var jsx$55 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$27)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$30 = m.get__O__s_Option("orderBookRealTime");
   if (opt$30.isEmpty__Z()) {
-    var value$31 = (void 0)
+    var value$30 = (void 0)
   } else {
     var arg1$32 = opt$30.get__O();
-    var value$31 = arg1$32
+    var value$30 = arg1$32
   };
-  if ((value$31 === (void 0))) {
+  if ((value$30 === (void 0))) {
     var jsx$54 = (void 0)
   } else {
-    var encodedString$29 = $as_T(value$31);
-    var jsx$54 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$29)
+    var encodedString$28 = $as_T(value$30);
+    var jsx$54 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$28)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$31 = m.get__O__s_Option("low52Week");
   if (opt$31.isEmpty__Z()) {
-    var value$32 = (void 0)
+    var value$31 = (void 0)
   } else {
     var arg1$33 = opt$31.get__O();
-    var value$32 = arg1$33
+    var value$31 = arg1$33
   };
-  if ((value$32 === (void 0))) {
+  if ((value$31 === (void 0))) {
     var jsx$53 = (void 0)
   } else {
-    var encodedString$30 = $as_T(value$32);
-    var jsx$53 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$30)
+    var encodedString$29 = $as_T(value$31);
+    var jsx$53 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$29)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$32 = m.get__O__s_Option("marketCap");
   if (opt$32.isEmpty__Z()) {
-    var value$33 = (void 0)
+    var value$32 = (void 0)
   } else {
     var arg1$34 = opt$32.get__O();
-    var value$33 = arg1$34
+    var value$32 = arg1$34
   };
-  if ((value$33 === (void 0))) {
+  if ((value$32 === (void 0))) {
     var jsx$52 = (void 0)
   } else {
-    var encodedString$31 = $as_T(value$33);
-    var jsx$52 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$31)
+    var encodedString$30 = $as_T(value$32);
+    var jsx$52 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$30)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$33 = m.get__O__s_Option("sharesOutstanding");
   if (opt$33.isEmpty__Z()) {
-    var value$34 = (void 0)
+    var value$33 = (void 0)
   } else {
     var arg1$35 = opt$33.get__O();
-    var value$34 = arg1$35
+    var value$33 = arg1$35
   };
-  if ((value$34 === (void 0))) {
+  if ((value$33 === (void 0))) {
     var jsx$51 = (void 0)
   } else {
-    var encodedString$32 = $as_T(value$34);
-    var jsx$51 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$32)
+    var encodedString$31 = $as_T(value$33);
+    var jsx$51 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$31)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$34 = m.get__O__s_Option("marketCapRealTime");
   if (opt$34.isEmpty__Z()) {
-    var value$35 = (void 0)
+    var value$34 = (void 0)
   } else {
     var arg1$36 = opt$34.get__O();
-    var value$35 = arg1$36
+    var value$34 = arg1$36
   };
-  if ((value$35 === (void 0))) {
+  if ((value$34 === (void 0))) {
     var jsx$50 = (void 0)
   } else {
-    var encodedString$33 = $as_T(value$35);
-    var jsx$50 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$33)
+    var encodedString$32 = $as_T(value$34);
+    var jsx$50 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$32)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$35 = m.get__O__s_Option("EBITDA");
   if (opt$35.isEmpty__Z()) {
-    var value$36 = (void 0)
+    var value$35 = (void 0)
   } else {
     var arg1$37 = opt$35.get__O();
-    var value$36 = arg1$37
+    var value$35 = arg1$37
   };
-  if ((value$36 === (void 0))) {
+  if ((value$35 === (void 0))) {
     var jsx$49 = (void 0)
   } else {
-    var encodedString$34 = $as_T(value$36);
-    var jsx$49 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$34)
+    var encodedString$33 = $as_T(value$35);
+    var jsx$49 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$33)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$36 = m.get__O__s_Option("change52WeekLow");
   if (opt$36.isEmpty__Z()) {
-    var value$37 = (void 0)
+    var value$36 = (void 0)
   } else {
     var arg1$38 = opt$36.get__O();
-    var value$37 = arg1$38
+    var value$36 = arg1$38
   };
-  if ((value$37 === (void 0))) {
+  if ((value$36 === (void 0))) {
     var jsx$48 = (void 0)
   } else {
-    var encodedString$35 = $as_T(value$37);
-    var jsx$48 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$35)
+    var encodedString$34 = $as_T(value$36);
+    var jsx$48 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$34)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$37 = m.get__O__s_Option("changePct52WeekLow");
   if (opt$37.isEmpty__Z()) {
-    var value$38 = (void 0)
+    var value$37 = (void 0)
   } else {
     var arg1$39 = opt$37.get__O();
-    var value$38 = arg1$39
+    var value$37 = arg1$39
   };
-  if ((value$38 === (void 0))) {
+  if ((value$37 === (void 0))) {
     var jsx$47 = (void 0)
   } else {
-    var encodedString$36 = $as_T(value$38);
-    var jsx$47 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$36)
+    var encodedString$35 = $as_T(value$37);
+    var jsx$47 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$35)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$38 = m.get__O__s_Option("high52Week");
   if (opt$38.isEmpty__Z()) {
-    var value$39 = (void 0)
+    var value$38 = (void 0)
   } else {
     var arg1$40 = opt$38.get__O();
-    var value$39 = arg1$40
+    var value$38 = arg1$40
   };
-  if ((value$39 === (void 0))) {
+  if ((value$38 === (void 0))) {
     var jsx$46 = (void 0)
   } else {
-    var encodedString$37 = $as_T(value$39);
-    var jsx$46 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$37)
+    var encodedString$36 = $as_T(value$38);
+    var jsx$46 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$36)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$39 = m.get__O__s_Option("changePctRealTime");
   if (opt$39.isEmpty__Z()) {
-    var value$40 = (void 0)
+    var value$39 = (void 0)
   } else {
     var arg1$41 = opt$39.get__O();
-    var value$40 = arg1$41
+    var value$39 = arg1$41
   };
-  if ((value$40 === (void 0))) {
+  if ((value$39 === (void 0))) {
     var jsx$45 = (void 0)
   } else {
-    var encodedString$38 = $as_T(value$40);
-    var jsx$45 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$38)
+    var encodedString$37 = $as_T(value$39);
+    var jsx$45 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$37)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$40 = m.get__O__s_Option("lastTradeSize");
   if (opt$40.isEmpty__Z()) {
-    var value$41 = (void 0)
+    var value$40 = (void 0)
   } else {
     var arg1$42 = opt$40.get__O();
-    var value$41 = arg1$42
+    var value$40 = arg1$42
   };
-  if ((value$41 === (void 0))) {
+  if ((value$40 === (void 0))) {
     var jsx$44 = (void 0)
   } else {
-    var encodedString$39 = $as_T(value$41);
-    var jsx$44 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$intValue__T__sjs_js_UndefOr(encodedString$39)
+    var encodedString$38 = $as_T(value$40);
+    var jsx$44 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$intValue__T__sjs_js_UndefOr(encodedString$38)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$41 = m.get__O__s_Option("change52WeekHigh");
   if (opt$41.isEmpty__Z()) {
-    var value$42 = (void 0)
+    var value$41 = (void 0)
   } else {
     var arg1$43 = opt$41.get__O();
-    var value$42 = arg1$43
+    var value$41 = arg1$43
   };
-  if ((value$42 === (void 0))) {
+  if ((value$41 === (void 0))) {
     var jsx$43 = (void 0)
   } else {
-    var encodedString$40 = $as_T(value$42);
-    var jsx$43 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$40)
+    var encodedString$39 = $as_T(value$41);
+    var jsx$43 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$39)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$42 = m.get__O__s_Option("changePct52WeekHigh");
   if (opt$42.isEmpty__Z()) {
-    var value$43 = (void 0)
+    var value$42 = (void 0)
   } else {
     var arg1$44 = opt$42.get__O();
-    var value$43 = arg1$44
+    var value$42 = arg1$44
   };
-  if ((value$43 === (void 0))) {
+  if ((value$42 === (void 0))) {
     var jsx$42 = (void 0)
   } else {
-    var encodedString$41 = $as_T(value$43);
-    var jsx$42 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$41)
+    var encodedString$40 = $as_T(value$42);
+    var jsx$42 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$40)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$43 = m.get__O__s_Option("lastTrade");
   if (opt$43.isEmpty__Z()) {
-    var value$44 = (void 0)
+    var value$43 = (void 0)
   } else {
     var arg1$45 = opt$43.get__O();
-    var value$44 = arg1$45
+    var value$43 = arg1$45
   };
-  if ((value$44 === (void 0))) {
+  if ((value$43 === (void 0))) {
     var jsx$41 = (void 0)
   } else {
-    var encodedString$42 = $as_T(value$44);
-    var jsx$41 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$42)
+    var encodedString$41 = $as_T(value$43);
+    var jsx$41 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$41)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$44 = m.get__O__s_Option("highLimit");
   if (opt$44.isEmpty__Z()) {
-    var value$45 = (void 0)
+    var value$44 = (void 0)
   } else {
     var arg1$46 = opt$44.get__O();
-    var value$45 = arg1$46
+    var value$44 = arg1$46
   };
-  if ((value$45 === (void 0))) {
+  if ((value$44 === (void 0))) {
     var jsx$40 = (void 0)
   } else {
-    var encodedString$43 = $as_T(value$45);
-    var jsx$40 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$43)
+    var encodedString$42 = $as_T(value$44);
+    var jsx$40 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$42)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$45 = m.get__O__s_Option("lowLimit");
   if (opt$45.isEmpty__Z()) {
-    var value$46 = (void 0)
+    var value$45 = (void 0)
   } else {
     var arg1$47 = opt$45.get__O();
-    var value$46 = arg1$47
+    var value$45 = arg1$47
   };
-  if ((value$46 === (void 0))) {
+  if ((value$45 === (void 0))) {
     var jsx$39 = (void 0)
   } else {
-    var encodedString$44 = $as_T(value$46);
-    var jsx$39 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$44)
+    var encodedString$43 = $as_T(value$45);
+    var jsx$39 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$43)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$46 = m.get__O__s_Option("movingAverage50Day");
   if (opt$46.isEmpty__Z()) {
-    var value$47 = (void 0)
+    var value$46 = (void 0)
   } else {
     var arg1$48 = opt$46.get__O();
-    var value$47 = arg1$48
+    var value$46 = arg1$48
   };
-  if ((value$47 === (void 0))) {
+  if ((value$46 === (void 0))) {
     var jsx$38 = (void 0)
   } else {
-    var encodedString$45 = $as_T(value$47);
-    var jsx$38 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$45)
+    var encodedString$44 = $as_T(value$46);
+    var jsx$38 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$44)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$47 = m.get__O__s_Option("movingAverage200Day");
   if (opt$47.isEmpty__Z()) {
-    var value$48 = (void 0)
+    var value$47 = (void 0)
   } else {
     var arg1$49 = opt$47.get__O();
-    var value$48 = arg1$49
+    var value$47 = arg1$49
   };
-  if ((value$48 === (void 0))) {
+  if ((value$47 === (void 0))) {
     var jsx$37 = (void 0)
   } else {
-    var encodedString$46 = $as_T(value$48);
-    var jsx$37 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$46)
+    var encodedString$45 = $as_T(value$47);
+    var jsx$37 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$45)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$48 = m.get__O__s_Option("change200DayMovingAvg");
   if (opt$48.isEmpty__Z()) {
-    var value$49 = (void 0)
+    var value$48 = (void 0)
   } else {
     var arg1$50 = opt$48.get__O();
-    var value$49 = arg1$50
+    var value$48 = arg1$50
   };
-  if ((value$49 === (void 0))) {
+  if ((value$48 === (void 0))) {
     var jsx$36 = (void 0)
   } else {
-    var encodedString$47 = $as_T(value$49);
-    var jsx$36 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$47)
+    var encodedString$46 = $as_T(value$48);
+    var jsx$36 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$46)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$49 = m.get__O__s_Option("changePct200DayMovingAvg");
   if (opt$49.isEmpty__Z()) {
-    var value$50 = (void 0)
+    var value$49 = (void 0)
   } else {
     var arg1$51 = opt$49.get__O();
-    var value$50 = arg1$51
+    var value$49 = arg1$51
   };
-  if ((value$50 === (void 0))) {
+  if ((value$49 === (void 0))) {
     var jsx$35 = (void 0)
   } else {
-    var encodedString$48 = $as_T(value$50);
-    var jsx$35 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$48)
+    var encodedString$47 = $as_T(value$49);
+    var jsx$35 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$47)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$50 = m.get__O__s_Option("change50DayMovingAvg");
   if (opt$50.isEmpty__Z()) {
-    var value$51 = (void 0)
+    var value$50 = (void 0)
   } else {
     var arg1$52 = opt$50.get__O();
-    var value$51 = arg1$52
+    var value$50 = arg1$52
   };
-  if ((value$51 === (void 0))) {
+  if ((value$50 === (void 0))) {
     var jsx$34 = (void 0)
   } else {
-    var encodedString$49 = $as_T(value$51);
-    var jsx$34 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$49)
+    var encodedString$48 = $as_T(value$50);
+    var jsx$34 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$48)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$51 = m.get__O__s_Option("changePct50DayMovingAvg");
   if (opt$51.isEmpty__Z()) {
-    var value$52 = (void 0)
+    var value$51 = (void 0)
   } else {
     var arg1$53 = opt$51.get__O();
-    var value$52 = arg1$53
+    var value$51 = arg1$53
   };
-  if ((value$52 === (void 0))) {
+  if ((value$51 === (void 0))) {
     var jsx$33 = (void 0)
   } else {
-    var encodedString$50 = $as_T(value$52);
-    var jsx$33 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$50)
+    var encodedString$49 = $as_T(value$51);
+    var jsx$33 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$49)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$52 = m.get__O__s_Option("name");
   if (opt$52.isEmpty__Z()) {
-    var value$53 = (void 0)
+    var value$52 = (void 0)
   } else {
     var arg1$54 = opt$52.get__O();
-    var value$53 = arg1$54
+    var value$52 = arg1$54
   };
-  if ((value$53 === (void 0))) {
+  if ((value$52 === (void 0))) {
     var jsx$32 = (void 0)
   } else {
-    var encodedString$51 = $as_T(value$53);
-    var jsx$32 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$51)
+    var encodedString$50 = $as_T(value$52);
+    var jsx$32 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$50)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$53 = m.get__O__s_Option("notes");
   if (opt$53.isEmpty__Z()) {
-    var value$54 = (void 0)
+    var value$53 = (void 0)
   } else {
     var arg1$55 = opt$53.get__O();
-    var value$54 = arg1$55
+    var value$53 = arg1$55
   };
-  if ((value$54 === (void 0))) {
+  if ((value$53 === (void 0))) {
     var jsx$31 = (void 0)
   } else {
-    var encodedString$52 = $as_T(value$54);
-    var jsx$31 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$52)
+    var encodedString$51 = $as_T(value$53);
+    var jsx$31 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$51)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$54 = m.get__O__s_Option("open");
   if (opt$54.isEmpty__Z()) {
-    var value$55 = (void 0)
+    var value$54 = (void 0)
   } else {
     var arg1$56 = opt$54.get__O();
-    var value$55 = arg1$56
+    var value$54 = arg1$56
   };
-  if ((value$55 === (void 0))) {
+  if ((value$54 === (void 0))) {
     var jsx$30 = (void 0)
   } else {
-    var encodedString$53 = $as_T(value$55);
-    var jsx$30 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$53)
+    var encodedString$52 = $as_T(value$54);
+    var jsx$30 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$52)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$55 = m.get__O__s_Option("prevClose");
   if (opt$55.isEmpty__Z()) {
-    var value$56 = (void 0)
+    var value$55 = (void 0)
   } else {
     var arg1$57 = opt$55.get__O();
-    var value$56 = arg1$57
+    var value$55 = arg1$57
   };
-  if ((value$56 === (void 0))) {
+  if ((value$55 === (void 0))) {
     var jsx$29 = (void 0)
   } else {
-    var encodedString$54 = $as_T(value$56);
-    var jsx$29 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$54)
+    var encodedString$53 = $as_T(value$55);
+    var jsx$29 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$53)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$56 = m.get__O__s_Option("pricePaid");
   if (opt$56.isEmpty__Z()) {
-    var value$57 = (void 0)
+    var value$56 = (void 0)
   } else {
     var arg1$58 = opt$56.get__O();
-    var value$57 = arg1$58
+    var value$56 = arg1$58
   };
-  if ((value$57 === (void 0))) {
+  if ((value$56 === (void 0))) {
     var jsx$28 = (void 0)
   } else {
-    var encodedString$55 = $as_T(value$57);
-    var jsx$28 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$55)
+    var encodedString$54 = $as_T(value$56);
+    var jsx$28 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$54)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$57 = m.get__O__s_Option("changePct");
   if (opt$57.isEmpty__Z()) {
-    var value$58 = (void 0)
+    var value$57 = (void 0)
   } else {
     var arg1$59 = opt$57.get__O();
-    var value$58 = arg1$59
+    var value$57 = arg1$59
   };
-  if ((value$58 === (void 0))) {
+  if ((value$57 === (void 0))) {
     var jsx$27 = (void 0)
   } else {
-    var encodedString$56 = $as_T(value$58);
-    var jsx$27 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$56)
+    var encodedString$55 = $as_T(value$57);
+    var jsx$27 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$55)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$58 = m.get__O__s_Option("priceOverSales");
   if (opt$58.isEmpty__Z()) {
-    var value$59 = (void 0)
+    var value$58 = (void 0)
   } else {
     var arg1$60 = opt$58.get__O();
-    var value$59 = arg1$60
+    var value$58 = arg1$60
   };
-  if ((value$59 === (void 0))) {
+  if ((value$58 === (void 0))) {
     var jsx$26 = (void 0)
   } else {
-    var encodedString$57 = $as_T(value$59);
-    var jsx$26 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$57)
+    var encodedString$56 = $as_T(value$58);
+    var jsx$26 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$56)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$59 = m.get__O__s_Option("priceOverBook");
   if (opt$59.isEmpty__Z()) {
-    var value$60 = (void 0)
+    var value$59 = (void 0)
   } else {
     var arg1$61 = opt$59.get__O();
-    var value$60 = arg1$61
+    var value$59 = arg1$61
   };
-  if ((value$60 === (void 0))) {
+  if ((value$59 === (void 0))) {
     var jsx$25 = (void 0)
   } else {
-    var encodedString$58 = $as_T(value$60);
-    var jsx$25 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$58)
+    var encodedString$57 = $as_T(value$59);
+    var jsx$25 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$57)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$60 = m.get__O__s_Option("exDividendDate");
   if (opt$60.isEmpty__Z()) {
-    var value$61 = (void 0)
+    var value$60 = (void 0)
   } else {
     var arg1$62 = opt$60.get__O();
-    var value$61 = arg1$62
+    var value$60 = arg1$62
   };
-  if ((value$61 === (void 0))) {
+  if ((value$60 === (void 0))) {
     var jsx$24 = (void 0)
   } else {
-    var encodedString$59 = $as_T(value$61);
-    var jsx$24 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$dateValue__T__sjs_js_UndefOr(encodedString$59)
+    var encodedString$58 = $as_T(value$60);
+    var jsx$24 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$dateValue__T__sjs_js_UndefOr(encodedString$58)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$61 = m.get__O__s_Option("close");
   if (opt$61.isEmpty__Z()) {
-    var value$62 = (void 0)
+    var value$61 = (void 0)
   } else {
     var arg1$63 = opt$61.get__O();
-    var value$62 = arg1$63
+    var value$61 = arg1$63
   };
-  if ((value$62 === (void 0))) {
+  if ((value$61 === (void 0))) {
     var jsx$23 = (void 0)
   } else {
-    var encodedString$60 = $as_T(value$62);
-    var jsx$23 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$60)
+    var encodedString$59 = $as_T(value$61);
+    var jsx$23 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$59)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$62 = m.get__O__s_Option("peRatio");
   if (opt$62.isEmpty__Z()) {
-    var value$63 = (void 0)
+    var value$62 = (void 0)
   } else {
     var arg1$64 = opt$62.get__O();
-    var value$63 = arg1$64
+    var value$62 = arg1$64
   };
-  if ((value$63 === (void 0))) {
+  if ((value$62 === (void 0))) {
     var jsx$22 = (void 0)
   } else {
-    var encodedString$61 = $as_T(value$63);
-    var jsx$22 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$61)
+    var encodedString$60 = $as_T(value$62);
+    var jsx$22 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$60)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$63 = m.get__O__s_Option("dividendPayDate");
   if (opt$63.isEmpty__Z()) {
-    var value$64 = (void 0)
+    var value$63 = (void 0)
   } else {
     var arg1$65 = opt$63.get__O();
-    var value$64 = arg1$65
+    var value$63 = arg1$65
   };
-  if ((value$64 === (void 0))) {
+  if ((value$63 === (void 0))) {
     var jsx$21 = (void 0)
   } else {
-    var encodedString$62 = $as_T(value$64);
-    var jsx$21 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$dateValue__T__sjs_js_UndefOr(encodedString$62)
+    var encodedString$61 = $as_T(value$63);
+    var jsx$21 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$dateValue__T__sjs_js_UndefOr(encodedString$61)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$64 = m.get__O__s_Option("peRatioRealTime");
   if (opt$64.isEmpty__Z()) {
-    var value$65 = (void 0)
+    var value$64 = (void 0)
   } else {
     var arg1$66 = opt$64.get__O();
-    var value$65 = arg1$66
+    var value$64 = arg1$66
   };
-  if ((value$65 === (void 0))) {
+  if ((value$64 === (void 0))) {
     var jsx$20 = (void 0)
   } else {
-    var encodedString$63 = $as_T(value$65);
-    var jsx$20 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$63)
+    var encodedString$62 = $as_T(value$64);
+    var jsx$20 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$62)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$65 = m.get__O__s_Option("pegRatio");
   if (opt$65.isEmpty__Z()) {
-    var value$66 = (void 0)
+    var value$65 = (void 0)
   } else {
     var arg1$67 = opt$65.get__O();
-    var value$66 = arg1$67
+    var value$65 = arg1$67
   };
-  if ((value$66 === (void 0))) {
+  if ((value$65 === (void 0))) {
     var jsx$19 = (void 0)
   } else {
-    var encodedString$64 = $as_T(value$66);
-    var jsx$19 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$64)
+    var encodedString$63 = $as_T(value$65);
+    var jsx$19 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$63)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$66 = m.get__O__s_Option("priceOverEPSCurYr");
   if (opt$66.isEmpty__Z()) {
-    var value$67 = (void 0)
+    var value$66 = (void 0)
   } else {
     var arg1$68 = opt$66.get__O();
-    var value$67 = arg1$68
+    var value$66 = arg1$68
   };
-  if ((value$67 === (void 0))) {
+  if ((value$66 === (void 0))) {
     var jsx$18 = (void 0)
   } else {
-    var encodedString$65 = $as_T(value$67);
-    var jsx$18 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$65)
+    var encodedString$64 = $as_T(value$66);
+    var jsx$18 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$64)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$67 = m.get__O__s_Option("priceOverEPSNextYr");
   if (opt$67.isEmpty__Z()) {
-    var value$68 = (void 0)
+    var value$67 = (void 0)
   } else {
     var arg1$69 = opt$67.get__O();
-    var value$68 = arg1$69
+    var value$67 = arg1$69
   };
-  if ((value$68 === (void 0))) {
+  if ((value$67 === (void 0))) {
     var jsx$17 = (void 0)
   } else {
-    var encodedString$66 = $as_T(value$68);
-    var jsx$17 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$66)
+    var encodedString$65 = $as_T(value$67);
+    var jsx$17 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$65)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$68 = m.get__O__s_Option("symbol");
   if (opt$68.isEmpty__Z()) {
-    var value$69 = (void 0)
+    var value$68 = (void 0)
   } else {
     var arg1$70 = opt$68.get__O();
-    var value$69 = arg1$70
+    var value$68 = arg1$70
   };
-  if ((value$69 === (void 0))) {
+  if ((value$68 === (void 0))) {
     var jsx$16 = (void 0)
   } else {
-    var encodedString$67 = $as_T(value$69);
-    var jsx$16 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$67)
+    var encodedString$66 = $as_T(value$68);
+    var jsx$16 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$66)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$69 = m.get__O__s_Option("errorMessage");
@@ -4156,171 +4182,171 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.toQuote__p1__
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$70 = m.get__O__s_Option("sharesOwned");
   if (opt$70.isEmpty__Z()) {
-    var value$70 = (void 0)
+    var value$69 = (void 0)
   } else {
     var arg1$72 = opt$70.get__O();
-    var value$70 = arg1$72
+    var value$69 = arg1$72
   };
-  if ((value$70 === (void 0))) {
+  if ((value$69 === (void 0))) {
     var jsx$13 = (void 0)
   } else {
-    var encodedString$68 = $as_T(value$70);
-    var jsx$13 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$68)
+    var encodedString$67 = $as_T(value$69);
+    var jsx$13 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$67)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$71 = m.get__O__s_Option("revenue");
   if (opt$71.isEmpty__Z()) {
-    var value$71 = (void 0)
+    var value$70 = (void 0)
   } else {
     var arg1$73 = opt$71.get__O();
-    var value$71 = arg1$73
+    var value$70 = arg1$73
   };
-  if ((value$71 === (void 0))) {
+  if ((value$70 === (void 0))) {
     var jsx$12 = (void 0)
   } else {
-    var encodedString$69 = $as_T(value$71);
-    var jsx$12 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$69)
+    var encodedString$68 = $as_T(value$70);
+    var jsx$12 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$68)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$72 = m.get__O__s_Option("shortRatio");
   if (opt$72.isEmpty__Z()) {
-    var value$72 = (void 0)
+    var value$71 = (void 0)
   } else {
     var arg1$74 = opt$72.get__O();
-    var value$72 = arg1$74
+    var value$71 = arg1$74
   };
-  if ((value$72 === (void 0))) {
+  if ((value$71 === (void 0))) {
     var jsx$11 = (void 0)
   } else {
-    var encodedString$70 = $as_T(value$72);
-    var jsx$11 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$70)
+    var encodedString$69 = $as_T(value$71);
+    var jsx$11 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$69)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$73 = m.get__O__s_Option("tradeTime");
   if (opt$73.isEmpty__Z()) {
-    var value$73 = (void 0)
+    var value$72 = (void 0)
   } else {
     var arg1$75 = opt$73.get__O();
-    var value$73 = arg1$75
+    var value$72 = arg1$75
   };
-  if ((value$73 === (void 0))) {
+  if ((value$72 === (void 0))) {
     var jsx$10 = (void 0)
   } else {
-    var encodedString$71 = $as_T(value$73);
-    var jsx$10 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$71)
+    var encodedString$70 = $as_T(value$72);
+    var jsx$10 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(encodedString$70)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$74 = m.get__O__s_Option("target1Y");
   if (opt$74.isEmpty__Z()) {
-    var value$74 = (void 0)
+    var value$73 = (void 0)
   } else {
     var arg1$76 = opt$74.get__O();
-    var value$74 = arg1$76
+    var value$73 = arg1$76
   };
-  if ((value$74 === (void 0))) {
+  if ((value$73 === (void 0))) {
     var jsx$9 = (void 0)
   } else {
-    var encodedString$72 = $as_T(value$74);
-    var jsx$9 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$72)
+    var encodedString$71 = $as_T(value$73);
+    var jsx$9 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$71)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$75 = m.get__O__s_Option("volume");
   if (opt$75.isEmpty__Z()) {
-    var value$75 = (void 0)
+    var value$74 = (void 0)
   } else {
     var arg1$77 = opt$75.get__O();
-    var value$75 = arg1$77
+    var value$74 = arg1$77
   };
-  if ((value$75 === (void 0))) {
+  if ((value$74 === (void 0))) {
     var jsx$8 = (void 0)
   } else {
-    var encodedString$73 = $as_T(value$75);
-    var jsx$8 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$73)
+    var encodedString$72 = $as_T(value$74);
+    var jsx$8 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$72)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$76 = m.get__O__s_Option("holdingsValue");
   if (opt$76.isEmpty__Z()) {
-    var value$76 = (void 0)
+    var value$75 = (void 0)
   } else {
     var arg1$78 = opt$76.get__O();
-    var value$76 = arg1$78
+    var value$75 = arg1$78
   };
-  if ((value$76 === (void 0))) {
+  if ((value$75 === (void 0))) {
     var jsx$7 = (void 0)
   } else {
-    var encodedString$74 = $as_T(value$76);
-    var jsx$7 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$74)
+    var encodedString$73 = $as_T(value$75);
+    var jsx$7 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$73)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$77 = m.get__O__s_Option("holdingsValueRealTime");
   if (opt$77.isEmpty__Z()) {
-    var value$77 = (void 0)
+    var value$76 = (void 0)
   } else {
     var arg1$79 = opt$77.get__O();
-    var value$77 = arg1$79
+    var value$76 = arg1$79
   };
-  if ((value$77 === (void 0))) {
+  if ((value$76 === (void 0))) {
     var jsx$6 = (void 0)
   } else {
-    var encodedString$75 = $as_T(value$77);
-    var jsx$6 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$75)
+    var encodedString$74 = $as_T(value$76);
+    var jsx$6 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$74)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$78 = m.get__O__s_Option("daysChange");
   if (opt$78.isEmpty__Z()) {
-    var value$78 = (void 0)
+    var value$77 = (void 0)
   } else {
     var arg1$80 = opt$78.get__O();
-    var value$78 = arg1$80
+    var value$77 = arg1$80
   };
-  if ((value$78 === (void 0))) {
+  if ((value$77 === (void 0))) {
     var jsx$5 = (void 0)
   } else {
-    var encodedString$76 = $as_T(value$78);
-    var jsx$5 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$76)
+    var encodedString$75 = $as_T(value$77);
+    var jsx$5 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$75)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$79 = m.get__O__s_Option("daysChangeRealTime");
   if (opt$79.isEmpty__Z()) {
-    var value$79 = (void 0)
+    var value$78 = (void 0)
   } else {
     var arg1$81 = opt$79.get__O();
-    var value$79 = arg1$81
+    var value$78 = arg1$81
   };
-  if ((value$79 === (void 0))) {
+  if ((value$78 === (void 0))) {
     var jsx$4 = (void 0)
   } else {
-    var encodedString$77 = $as_T(value$79);
-    var jsx$4 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$77)
+    var encodedString$76 = $as_T(value$78);
+    var jsx$4 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$76)
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$80 = m.get__O__s_Option("exchange");
   if (opt$80.isEmpty__Z()) {
-    var value$80 = (void 0)
+    var value$79 = (void 0)
   } else {
     var arg1$82 = opt$80.get__O();
-    var value$80 = arg1$82
+    var value$79 = arg1$82
   };
-  if ((value$80 === (void 0))) {
+  if ((value$79 === (void 0))) {
     var jsx$3 = (void 0)
   } else {
-    var x$1 = $as_T(value$80);
-    var value$81 = $as_T(x$1.toUpperCase());
-    var jsx$3 = value$81
+    var x$1 = $as_T(value$79);
+    var value$80 = $as_T(x$1.toUpperCase());
+    var jsx$3 = value$80
   };
   $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$();
   var opt$81 = m.get__O__s_Option("divYield");
   if (opt$81.isEmpty__Z()) {
-    var value$82 = (void 0)
+    var value$81 = (void 0)
   } else {
     var arg1$83 = opt$81.get__O();
-    var value$82 = arg1$83
+    var value$81 = arg1$83
   };
-  if ((value$82 === (void 0))) {
+  if ((value$81 === (void 0))) {
     var jsx$2 = (void 0)
   } else {
-    var encodedString$78 = $as_T(value$82);
-    var jsx$2 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$78)
+    var encodedString$77 = $as_T(value$81);
+    var jsx$2 = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr(encodedString$77)
   };
   return new $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$YFCSVQuote(symbol, jsx$84, jsx$83, jsx$82, jsx$81, jsx$80, jsx$79, jsx$78, jsx$77, jsx$76, jsx$75, jsx$74, jsx$73, jsx$72, jsx$71, jsx$70, jsx$69, jsx$68, jsx$67, jsx$66, jsx$65, jsx$64, jsx$63, jsx$62, jsx$61, jsx$60, jsx$59, jsx$58, jsx$57, jsx$56, jsx$55, jsx$54, jsx$53, jsx$52, jsx$51, jsx$50, jsx$49, jsx$48, jsx$47, jsx$46, jsx$45, jsx$44, jsx$43, jsx$42, jsx$41, jsx$40, jsx$39, jsx$38, jsx$37, jsx$36, jsx$35, jsx$34, jsx$33, jsx$32, jsx$31, jsx$30, jsx$29, jsx$28, jsx$27, jsx$26, jsx$25, jsx$24, jsx$23, jsx$22, jsx$21, jsx$20, jsx$19, jsx$18, jsx$17, jsx$16, jsx$14, jsx$13, jsx$12, jsx$11, jsx$10, jsx$9, jsx$8, jsx$7, jsx$6, jsx$5, jsx$4, jsx$3, jsx$2, responseTimeMsec)
 });
@@ -4347,7 +4373,9 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.appendLastTra
       var tradeTime = $as_T(x5.x$2);
       try {
         var dateString = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([tradeDate, tradeTime]));
-        var x1$2 = new $c_s_util_Success().init___O($as_T((0, this.com$shocktrade$services$YahooFinanceCSVQuotesService$$moment$1)(dateString, "M/DD/YYYY h:mma").toISOString()))
+        var moment = (0, this.com$shocktrade$services$YahooFinanceCSVQuotesService$$moment$1)(dateString, "M/DD/YYYY h:mma");
+        var jsx$1 = moment.tz("America/New_York").toISOString();
+        var x1$2 = new $c_s_util_Success().init___O($as_T(jsx$1))
       } catch (e) {
         var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
         if ((e$2 !== null)) {
@@ -4371,9 +4399,9 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.appendLastTra
         var ts = $as_T(x2.value$2);
         return kvps.$$plus__T2__sci_Map(new $c_T2().init___O__O("tradeDateTime", ts))
       } else if ($is_s_util_Failure(x1$2)) {
-        var jsx$1 = $g.console;
-        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error parsing date/time string (date = '", "', time = '", "')"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([tradeDate, tradeTime]));
-        jsx$1.error(s);
+        var jsx$2 = $g.console;
+        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error parsing date/time string [M/DD/YYYY h:mma] (date = '", "', time = '", "')"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([tradeDate, tradeTime]));
+        jsx$2.error(s);
         return kvps
       } else {
         throw new $c_s_MatchError().init___O(x1$2)
@@ -4436,102 +4464,72 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.com$shocktrad
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.com$shocktrade$services$YahooFinanceCSVQuotesService$$decimalValue__T__sjs_js_UndefOr = (function(encodedString) {
   var rawString = $m_sjsr_RuntimeString$().replaceAll__T__T__T__T($m_sjsr_RuntimeString$().replaceAll__T__T__T__T($m_sjsr_RuntimeString$().replaceAll__T__T__T__T(encodedString, "[$]", ""), "[+]", ""), "[,]", "");
   try {
-    var rc11 = false;
-    var x2 = null;
     var value = this.com$shocktrade$services$YahooFinanceCSVQuotesService$$stringValue__T__sjs_js_UndefOr(rawString);
-    var x1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-    var x = $m_s_None$();
-    if ((x === x1)) {
+    if ((value === (void 0))) {
       return (void 0)
-    };
-    if ($is_s_Some(x1)) {
-      rc11 = true;
-      x2 = $as_s_Some(x1);
-      var s = $as_T(x2.x$2);
-      var thiz = $as_T(s.trim());
+    } else {
+      var x0$7 = $as_T(value);
+      var thiz = $as_T(x0$7.trim());
       if ((thiz === null)) {
         throw new $c_jl_NullPointerException().init___()
       };
-      if (((thiz === "") || $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$().NOT$undAPPLICABLE$1.contains__O__Z(s))) {
+      if (((thiz === "") || $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$().NOT$undAPPLICABLE$1.contains__O__Z(x0$7))) {
         return (void 0)
-      }
-    };
-    if (rc11) {
-      var s$2 = $as_T(x2.x$2);
-      if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(s$2, "%")) {
-        var this$9 = new $c_sci_StringOps().init___T(s$2);
-        var x$1 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$9, 1));
-        var this$11 = new $c_sci_StringOps().init___T(x$1);
+      } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(x0$7, "%")) {
+        var this$9 = new $c_sci_StringOps().init___T(x0$7);
+        var x = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$9, 1));
+        var this$11 = new $c_sci_StringOps().init___T(x);
         var jsx$1 = $m_jl_Double$();
         var $$this = this$11.repr$1;
         var value$1 = jsx$1.parseDouble__T__D($$this);
         return value$1
-      }
-    };
-    if (rc11) {
-      var s$3 = $as_T(x2.x$2);
-      if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(s$3, "K")) {
-        var this$15 = new $c_sci_StringOps().init___T(s$3);
-        var x$2 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$15, 1));
-        var this$17 = new $c_sci_StringOps().init___T(x$2);
+      } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(x0$7, "K")) {
+        var this$15 = new $c_sci_StringOps().init___T(x0$7);
+        var x$1 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$15, 1));
+        var this$17 = new $c_sci_StringOps().init___T(x$1);
         var jsx$2 = $m_jl_Double$();
         var $$this$1 = this$17.repr$1;
         var value$2 = (1000.0 * jsx$2.parseDouble__T__D($$this$1));
         return value$2
-      }
-    };
-    if (rc11) {
-      var s$4 = $as_T(x2.x$2);
-      if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(s$4, "M")) {
-        var this$21 = new $c_sci_StringOps().init___T(s$4);
-        var x$3 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$21, 1));
-        var this$23 = new $c_sci_StringOps().init___T(x$3);
+      } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(x0$7, "M")) {
+        var this$21 = new $c_sci_StringOps().init___T(x0$7);
+        var x$2 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$21, 1));
+        var this$23 = new $c_sci_StringOps().init___T(x$2);
         var jsx$3 = $m_jl_Double$();
         var $$this$2 = this$23.repr$1;
         var value$3 = (1000000.0 * jsx$3.parseDouble__T__D($$this$2));
         return value$3
-      }
-    };
-    if (rc11) {
-      var s$5 = $as_T(x2.x$2);
-      if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(s$5, "B")) {
-        var this$27 = new $c_sci_StringOps().init___T(s$5);
-        var x$4 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$27, 1));
-        var this$29 = new $c_sci_StringOps().init___T(x$4);
+      } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(x0$7, "B")) {
+        var this$27 = new $c_sci_StringOps().init___T(x0$7);
+        var x$3 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$27, 1));
+        var this$29 = new $c_sci_StringOps().init___T(x$3);
         var jsx$4 = $m_jl_Double$();
         var $$this$3 = this$29.repr$1;
         var value$4 = (1.0E9 * jsx$4.parseDouble__T__D($$this$3));
         return value$4
-      }
-    };
-    if (rc11) {
-      var s$6 = $as_T(x2.x$2);
-      if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(s$6, "T")) {
-        var this$33 = new $c_sci_StringOps().init___T(s$6);
-        var x$5 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$33, 1));
-        var this$35 = new $c_sci_StringOps().init___T(x$5);
+      } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(x0$7, "T")) {
+        var this$33 = new $c_sci_StringOps().init___T(x0$7);
+        var x$4 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$33, 1));
+        var this$35 = new $c_sci_StringOps().init___T(x$4);
         var jsx$5 = $m_jl_Double$();
         var $$this$4 = this$35.repr$1;
         var value$5 = (1.0E12 * jsx$5.parseDouble__T__D($$this$4));
         return value$5
+      } else {
+        var this$39 = new $c_sci_StringOps().init___T(x0$7);
+        var jsx$6 = $m_jl_Double$();
+        var $$this$5 = this$39.repr$1;
+        var value$6 = jsx$6.parseDouble__T__D($$this$5);
+        return value$6
       }
-    };
-    if (rc11) {
-      var s$7 = $as_T(x2.x$2);
-      var this$39 = new $c_sci_StringOps().init___T(s$7);
-      var jsx$6 = $m_jl_Double$();
-      var $$this$5 = this$39.repr$1;
-      var value$6 = jsx$6.parseDouble__T__D($$this$5);
-      return value$6
-    };
-    throw new $c_s_MatchError().init___O(x1)
+    }
   } catch (e) {
     var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
     if ($is_jl_Exception(e$2)) {
       var e$3 = $as_jl_Exception(e$2);
       var jsx$7 = $g.console;
-      var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error parsing decimal value '", "' (", ")"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([rawString, encodedString]));
-      jsx$7.error(s$1, e$3);
+      var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error parsing decimal value '", "' (", ")"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([rawString, encodedString]));
+      jsx$7.error(s, e$3);
       return (void 0)
     } else {
       throw e
@@ -4665,6 +4663,7 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.extract52Week
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.init___Lorg_scalajs_nodejs_NodeRequire = (function(require) {
   this.request$1 = $m_Lorg_scalajs_nodejs_request_Request$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_request_Request(require);
   this.com$shocktrade$services$YahooFinanceCSVQuotesService$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
   return this
 });
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.com$shocktrade$services$YahooFinanceCSVQuotesService$$mapCodeToNamedValues__T__T__s_Option = (function(code, data) {
@@ -9445,6 +9444,9 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.init___ = (function() {
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.$$js$exported$meth$startServer__Lorg_scalajs_nodejs_Bootstrap__O = (function(bootstrap) {
   this.startServer__Lorg_scalajs_nodejs_Bootstrap__V(bootstrap)
 });
+$c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.$$js$exported$meth$main__O = (function() {
+  return (void 0)
+});
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer__Lorg_scalajs_nodejs_Bootstrap__V = (function(bootstrap) {
   var require = bootstrap.require;
   $g.console.log("Starting the Shocktrade Day-Cycle Server...");
@@ -9484,9 +9486,6 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer__Lorg_scalajs_n
     })
   })(csvQuoteRefresh), jsx$2.duration2Int__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$16.scala$concurrent$duration$DurationInt$$n$1, unit)));
   csvQuoteRefresh.run__V()
-});
-$c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.$$js$exported$meth$main__O = (function() {
-  return (void 0)
 });
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer = (function(arg$1) {
   var prep0 = arg$1;
@@ -10697,13 +10696,14 @@ $h_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote.prototype = $g.Object.p
 $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote.prototype = new $h_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote();
 $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote.prototype.constructor = $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(arg$1, arg$2, arg$3, arg$4, arg$5, arg$6) {
+function $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(arg$1, arg$2, arg$3, arg$4, arg$5, arg$6, arg$7) {
   var symbol = arg$1;
   var exchange = arg$2;
   var lastTrade = arg$3;
   var tradeDateTime = arg$4;
-  var tradeTime = arg$5;
-  var volume = arg$6;
+  var tradeDate = arg$5;
+  var tradeTime = arg$6;
+  var volume = arg$7;
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
     "symbol": {
@@ -10738,6 +10738,14 @@ function $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(arg$1, arg$2, arg$3,
     }
   });
   $g.Object.defineProperties(this, {
+    "tradeDate": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
     "tradeTime": {
       "configurable": true,
       "enumerable": true,
@@ -10757,6 +10765,7 @@ function $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(arg$1, arg$2, arg$3,
   this.exchange = exchange;
   this.lastTrade = lastTrade;
   this.tradeDateTime = tradeDateTime;
+  this.tradeDate = tradeDate;
   this.tradeTime = tradeTime;
   this.volume = volume
 }
@@ -11740,11 +11749,11 @@ $h_jl_Character$.prototype = $c_jl_Character$.prototype;
 $c_jl_Character$.prototype.init___ = (function() {
   return this
 });
-$c_jl_Character$.prototype.getType__I__I = (function(codePoint) {
-  return ((codePoint < 0) ? 0 : ((codePoint < 256) ? this.java$lang$Character$$charTypesFirst256__AB().u[codePoint] : this.getTypeGE256__p1__I__B(codePoint)))
-});
 $c_jl_Character$.prototype.charTypeIndices__p1__AI = (function() {
   return (((2 & this.bitmap$0$1) === 0) ? this.charTypeIndices$lzycompute__p1__AI() : this.charTypeIndices$1)
+});
+$c_jl_Character$.prototype.getType__I__I = (function(codePoint) {
+  return ((codePoint < 0) ? 0 : ((codePoint < 256) ? this.java$lang$Character$$charTypesFirst256__AB().u[codePoint] : this.getTypeGE256__p1__I__B(codePoint)))
 });
 $c_jl_Character$.prototype.charTypeIndices$lzycompute__p1__AI = (function() {
   if (((2 & this.bitmap$0$1) === 0)) {
@@ -16345,14 +16354,19 @@ $c_Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO$SecuritiesUpdateDAOExte
   };
   var jsx$8 = new $c_T2().init___O__O("close", y$4);
   var value$8 = quote.tradeDate;
-  var y$5 = ((value$8 === (void 0)) ? (void 0) : value$8);
+  if ((value$8 === (void 0))) {
+    var y$5 = (void 0)
+  } else {
+    var s$2 = $as_T(value$8);
+    var y$5 = s$2
+  };
   var jsx$7 = new $c_T2().init___O__O("tradeDate", y$5);
   var value$9 = quote.tradeTime;
   if ((value$9 === (void 0))) {
     var y$6 = (void 0)
   } else {
-    var s$2 = $as_T(value$9);
-    var y$6 = s$2
+    var s$3 = $as_T(value$9);
+    var y$6 = s$3
   };
   var jsx$6 = new $c_T2().init___O__O("tradeTime", y$6);
   var value$10 = quote.tradeDateTime;
@@ -16370,8 +16384,8 @@ $c_Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO$SecuritiesUpdateDAOExte
   if ((value$13 === (void 0))) {
     var y$9 = (void 0)
   } else {
-    var s$3 = $as_T(value$13);
-    var y$9 = s$3
+    var s$4 = $as_T(value$13);
+    var y$9 = s$4
   };
   var jsx$3 = new $c_T2().init___O__O("errorMessage", y$9);
   var value$14 = quote.yfCsvResponseTime;
@@ -16461,12 +16475,12 @@ $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future = (function(x$5) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future = (function(x$6) {
   var jsx$4 = $m_sjs_js_Thenable$ThenableOps$();
   var jsx$2 = this.quotes$1$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$6$2) {
-    var value = $as_T(x$6$2.symbol);
-    return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$6$2.exchange, x$6$2.lastTrade, x$6$2.tradeDateTime, x$6$2.tradeTime, x$6$2.volume)
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$7$2) {
+    var value = $as_T(x$7$2.symbol);
+    return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$7$2.exchange, x$7$2.lastTrade, x$7$2.tradeDateTime, x$7$2.tradeDate, x$7$2.tradeTime, x$7$2.volume)
   }));
   var this$5 = $m_sc_Seq$();
   var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2));
@@ -16486,7 +16500,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
     })(this$7, result)));
     var jsx$3 = result
   };
-  var p = x$5.insertMany(jsx$3);
+  var p = x$6.insertMany(jsx$3);
   return jsx$4.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$1) {
@@ -16508,7 +16522,9 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.batchNo$1$2 = null
+  this.quoteRefs$1$2 = null;
+  this.batchNo$1$2 = null;
+  this.symbolCount$1$2 = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1;
@@ -16517,15 +16533,6 @@ function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shock
   /*<skip>*/
 }
 $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sr_IntRef = (function($$outer, batchNo$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.batchNo$1$2 = batchNo$1;
-  return this
-});
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.apply__O__O = (function(v1) {
   return this.apply__sc_Seq__s_concurrent_Future($as_sc_Seq(v1))
 });
@@ -16538,13 +16545,44 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   var this$5 = $m_sc_Seq$();
   var symbols = $as_sc_Seq(batch.flatMap__F1__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2));
   this.batchNo$1$2.elem$1 = ((1 + this.batchNo$1$2.elem$1) | 0);
-  var jsx$2 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] Querying ", " symbols (from '", "' to '", "')"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.batchNo$1$2.elem$1, symbols.size__I(), symbols.head__O(), symbols.last__O()]));
-  jsx$2.log(s);
-  var this$7 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1, symbols, this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
+  this.symbolCount$1$2.elem$1 = ((this.symbolCount$1$2.elem$1 + symbols.size__I()) | 0);
+  if (((((this.batchNo$1$2.elem$1 % 100) | 0) === 0) || (this.symbolCount$1$2.elem$1 === this.quoteRefs$1$2.size__I()))) {
+    var completion = $doubleToInt((100 * (this.symbolCount$1$2.elem$1 / this.quoteRefs$1$2.size__I())));
+    var this$9 = this.$$outer$2;
+    var value$1 = this.symbolCount$1$2.elem$1;
+    var value$2 = this.batchNo$1$2.elem$1;
+    var array = [value$1, completion, value$2];
+    var jsx$2 = $g.console;
+    var jsx$4 = jsx$2.log;
+    var s = (new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$9.moment$1)().format("MM/DD HH:mm:ss"))])) + "Processed %d securities (%d%% complete - %d batches) so far...");
+    var jsx$3 = [s].concat(array);
+    jsx$4.apply(jsx$2, jsx$3)
+  };
+  var this$12 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1, symbols, this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
   var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1(this);
   var executor = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$7, f, executor)
+  var this$13 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$12, f, executor);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$5$2) {
+    var x$5 = $as_T3(x$5$2);
+    if ((x$5 !== null)) {
+      $asUnit(x$5.$$und3$1)
+    } else {
+      throw new $c_s_MatchError().init___O(x$5)
+    }
+  }));
+  var executor$1 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$13, f$1, executor$1)
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef = (function($$outer, quoteRefs$1, batchNo$1, symbolCount$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.quoteRefs$1$2 = quoteRefs$1;
+  this.batchNo$1$2 = batchNo$1;
+  this.symbolCount$1$2 = symbolCount$1;
+  return this
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1: 0
@@ -16570,7 +16608,7 @@ function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shock
 }
 $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype;
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype.apply__O__O = (function(v1) {
-  return this.apply__sc_Seq__s_concurrent_Future($as_sc_Seq(v1))
+  return this.apply__sc_Seq__T3($as_sc_Seq(v1))
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1 = (function($$outer) {
   if (($$outer === null)) {
@@ -16580,15 +16618,30 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   };
   return this
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype.apply__sc_Seq__s_concurrent_Future = (function(quotes) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype.apply__sc_Seq__T3 = (function(quotes) {
   var this$1 = this.$$outer$2.$$outer$2;
   var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1;
   var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
   var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-  var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2__sc_Seq(this, quotes);
-  var executor$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f$1, executor$1)
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(outcome$2) {
+      var outcome = $as_s_util_Try(outcome$2);
+      return arg$outer.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$errorHandler__s_util_Try__s_Option(outcome)
+    })
+  })(this)), this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
+  var snapshotResults = (void 0);
+  var this$3 = this.$$outer$2.$$outer$2;
+  var this$4 = this$3.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
+  var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$3, quotes);
+  var executor$1 = this$3.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f$1, executor$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer$1) {
+    return (function(outcome$2$1) {
+      var outcome$1 = $as_s_util_Try(outcome$2$1);
+      return arg$outer$1.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$errorHandler__s_util_Try__s_Option(outcome$1)
+    })
+  })(this)), this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
+  var securitiesResults = (void 0);
+  return new $c_T3().init___O__O__O(quotes, snapshotResults, securitiesResults)
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2: 0
@@ -16601,55 +16654,6 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2;
-/** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.quotes$3$2 = null
-}
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3;
-/** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lorg_scalajs_nodejs_mongodb_InsertWriteOpResult__s_concurrent_Future(v1)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype.apply__Lorg_scalajs_nodejs_mongodb_InsertWriteOpResult__s_concurrent_Future = (function(snapshotResults) {
-  var this$1 = this.$$outer$2.$$outer$2.$$outer$2;
-  var quotes = this.quotes$3$2;
-  var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
-  var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
-  var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(securitiesResults$2) {
-    return securitiesResults$2
-  }));
-  var executor$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f$1, executor$1)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2__sc_Seq = (function($$outer, quotes$3) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.quotes$3$2 = quotes$3;
-  return this
-});
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$2$$anonfun$apply$3;
 /** @constructor */
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -16665,23 +16669,23 @@ $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future = (function(x$7) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future = (function(x$8) {
   var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
   var jsx$2 = this.quotes$2$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$8$2) {
-    var value = $as_T(x$8$2.symbol);
-    var x$10 = x$8$2.exchange;
-    var x$11 = x$8$2.lastTrade;
-    var x$12 = x$8$2.open;
-    var x$13 = x$8$2.close;
-    var x$14 = x$8$2.tradeDate;
-    var x$15 = x$8$2.tradeTime;
-    var x$16 = x$8$2.tradeDateTime;
-    var x$17 = x$8$2.volume;
-    var x$18 = x$8$2.errorMessage;
-    var value$1 = $uD(x$8$2.responseTimeMsec);
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$9$2) {
+    var value = $as_T(x$9$2.symbol);
+    var x$11 = x$9$2.exchange;
+    var x$12 = x$9$2.lastTrade;
+    var x$13 = x$9$2.open;
+    var x$14 = x$9$2.close;
+    var x$15 = x$9$2.tradeDate;
+    var x$16 = x$9$2.tradeTime;
+    var x$17 = x$9$2.tradeDateTime;
+    var x$18 = x$9$2.volume;
+    var x$19 = x$9$2.errorMessage;
+    var value$1 = $uD(x$9$2.responseTimeMsec);
     var value$2 = new $g.Date();
-    return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, x$10, x$11, x$12, x$13, x$16, x$14, x$15, x$17, x$18, value$1, value$2)
+    return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, x$11, x$12, x$13, x$14, x$17, x$15, x$16, x$18, x$19, value$1, value$2)
   }));
   var this$7 = $m_sc_Seq$();
   var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$7.ReusableCBFInstance$2));
@@ -16704,7 +16708,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
     })(this$10, result)));
     var jsx$3 = result
   };
-  var p = x$7.bulkWrite(jsx$3);
+  var p = x$8.bulkWrite(jsx$3);
   return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$2) {
@@ -19360,6 +19364,79 @@ var $d_T2 = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_T2.prototype.$classData = $d_T2;
+/** @constructor */
+function $c_T3() {
+  $c_O.call(this);
+  this.$$und1$1 = null;
+  this.$$und2$1 = null;
+  this.$$und3$1 = null
+}
+$c_T3.prototype = new $h_O();
+$c_T3.prototype.constructor = $c_T3;
+/** @constructor */
+function $h_T3() {
+  /*<skip>*/
+}
+$h_T3.prototype = $c_T3.prototype;
+$c_T3.prototype.productPrefix__T = (function() {
+  return "Tuple3"
+});
+$c_T3.prototype.productArity__I = (function() {
+  return 3
+});
+$c_T3.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_T3(x$1)) {
+    var Tuple3$1 = $as_T3(x$1);
+    return (($m_sr_BoxesRunTime$().equals__O__O__Z(this.$$und1$1, Tuple3$1.$$und1$1) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$und2$1, Tuple3$1.$$und2$1)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$und3$1, Tuple3$1.$$und3$1))
+  } else {
+    return false
+  }
+});
+$c_T3.prototype.productElement__I__O = (function(n) {
+  return $s_s_Product3$class__productElement__s_Product3__I__O(this, n)
+});
+$c_T3.prototype.toString__T = (function() {
+  return (((((("(" + this.$$und1$1) + ",") + this.$$und2$1) + ",") + this.$$und3$1) + ")")
+});
+$c_T3.prototype.init___O__O__O = (function(_1, _2, _3) {
+  this.$$und1$1 = _1;
+  this.$$und2$1 = _2;
+  this.$$und3$1 = _3;
+  return this
+});
+$c_T3.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_T3.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_T3(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.T3)))
+}
+function $as_T3(obj) {
+  return (($is_T3(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.Tuple3"))
+}
+function $isArrayOf_T3(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.T3)))
+}
+function $asArrayOf_T3(obj, depth) {
+  return (($isArrayOf_T3(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.Tuple3;", depth))
+}
+var $d_T3 = new $TypeData().initClass({
+  T3: 0
+}, false, "scala.Tuple3", {
+  T3: 1,
+  O: 1,
+  s_Product3: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_T3.prototype.$classData = $d_T3;
 /** @constructor */
 function $c_jl_NumberFormatException() {
   $c_jl_IllegalArgumentException.call(this)
@@ -23758,9 +23835,6 @@ $c_sci_StringOps.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_sci_WrappedString().init___T($$this)
 });
-$c_sci_StringOps.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_sci_StringOps.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   var c = (65535 & $uI($$this.charCodeAt(idx)));
@@ -23947,9 +24021,6 @@ $c_scm_ArrayOps$ofBoolean.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofBoolean().init___AZ($$this)
 });
-$c_scm_ArrayOps$ofBoolean.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_ArrayOps$ofBoolean.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24125,9 +24196,6 @@ $h_scm_ArrayOps$ofByte.prototype = $c_scm_ArrayOps$ofByte.prototype;
 $c_scm_ArrayOps$ofByte.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofByte().init___AB($$this)
-});
-$c_scm_ArrayOps$ofByte.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayOps$ofByte.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
@@ -24305,9 +24373,6 @@ $c_scm_ArrayOps$ofChar.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofChar().init___AC($$this)
 });
-$c_scm_ArrayOps$ofChar.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_ArrayOps$ofChar.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   var c = $$this.u[idx];
@@ -24482,9 +24547,6 @@ $h_scm_ArrayOps$ofDouble.prototype = $c_scm_ArrayOps$ofDouble.prototype;
 $c_scm_ArrayOps$ofDouble.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofDouble().init___AD($$this)
-});
-$c_scm_ArrayOps$ofDouble.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayOps$ofDouble.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
@@ -24662,9 +24724,6 @@ $c_scm_ArrayOps$ofFloat.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofFloat().init___AF($$this)
 });
-$c_scm_ArrayOps$ofFloat.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_ArrayOps$ofFloat.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24841,9 +24900,6 @@ $c_scm_ArrayOps$ofInt.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofInt().init___AI($$this)
 });
-$c_scm_ArrayOps$ofInt.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_ArrayOps$ofInt.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -25019,9 +25075,6 @@ $h_scm_ArrayOps$ofLong.prototype = $c_scm_ArrayOps$ofLong.prototype;
 $c_scm_ArrayOps$ofLong.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofLong().init___AJ($$this)
-});
-$c_scm_ArrayOps$ofLong.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayOps$ofLong.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
@@ -25200,9 +25253,6 @@ $h_scm_ArrayOps$ofRef.prototype = $c_scm_ArrayOps$ofRef.prototype;
 $c_scm_ArrayOps$ofRef.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofRef().init___AO($$this)
-});
-$c_scm_ArrayOps$ofRef.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayOps$ofRef.prototype.apply__I__O = (function(index) {
   var $$this = this.repr$1;
@@ -25383,9 +25433,6 @@ $c_scm_ArrayOps$ofShort.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofShort().init___AS($$this)
 });
-$c_scm_ArrayOps$ofShort.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_ArrayOps$ofShort.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -25561,9 +25608,6 @@ $h_scm_ArrayOps$ofUnit.prototype = $c_scm_ArrayOps$ofUnit.prototype;
 $c_scm_ArrayOps$ofUnit.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofUnit().init___Asr_BoxedUnit($$this)
-});
-$c_scm_ArrayOps$ofUnit.prototype.head__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayOps$ofUnit.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1
@@ -28257,9 +28301,6 @@ $c_sci_List.prototype.toStream__sci_Stream = (function() {
 $c_sci_List.prototype.drop__I__O = (function(n) {
   return this.drop__I__sci_List(n)
 });
-$c_sci_List.prototype.last__O = (function() {
-  return $s_sc_LinearSeqOptimized$class__last__sc_LinearSeqOptimized__O(this)
-});
 $c_sci_List.prototype.thisCollection__sc_Seq = (function() {
   return this
 });
@@ -28700,9 +28741,6 @@ $c_sci_Stream.prototype.take__I__O = (function(n) {
 });
 $c_sci_Stream.prototype.toStream__sci_Stream = (function() {
   return this
-});
-$c_sci_Stream.prototype.last__O = (function() {
-  return $s_sc_LinearSeqOptimized$class__last__sc_LinearSeqOptimized__O(this)
 });
 $c_sci_Stream.prototype.drop__I__O = (function(n) {
   return this.drop__I__sci_Stream(n)
@@ -29845,12 +29883,6 @@ $c_sci_Vector.prototype.gotoFreshPosWritable__p4__I__I__I__V = (function(oldInde
 $c_sci_Vector.prototype.display1__AO = (function() {
   return this.display1$4
 });
-$c_sci_Vector.prototype.last__O = (function() {
-  if ($s_sc_SeqLike$class__isEmpty__sc_SeqLike__Z(this)) {
-    throw new $c_jl_UnsupportedOperationException().init___T("empty.last")
-  };
-  return this.apply__I__O((((-1) + this.length__I()) | 0))
-});
 $c_sci_Vector.prototype.drop__I__O = (function(n) {
   return this.drop__I__sci_Vector(n)
 });
@@ -30143,9 +30175,6 @@ $c_sci_WrappedString.prototype.seq__sc_Seq = (function() {
 $c_sci_WrappedString.prototype.length__I = (function() {
   var thiz = this.self$4;
   return $uI(thiz.length)
-});
-$c_sci_WrappedString.prototype.last__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this)
 });
 $c_sci_WrappedString.prototype.drop__I__O = (function(n) {
   var thiz = this.self$4;
@@ -30573,9 +30602,6 @@ $c_scm_WrappedArray.prototype.iterator__sc_Iterator = (function() {
 });
 $c_scm_WrappedArray.prototype.seq__sc_Seq = (function() {
   return this
-});
-$c_scm_WrappedArray.prototype.last__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_WrappedArray.prototype.drop__I__O = (function(n) {
   var until = this.length__I();
@@ -31928,10 +31954,6 @@ $c_scm_ListBuffer.prototype.seq__sc_Seq = (function() {
 $c_scm_ListBuffer.prototype.toStream__sci_Stream = (function() {
   return this.scala$collection$mutable$ListBuffer$$start$6.toStream__sci_Stream()
 });
-$c_scm_ListBuffer.prototype.last__O = (function() {
-  var this$1 = this.scala$collection$mutable$ListBuffer$$start$6;
-  return $s_sc_LinearSeqOptimized$class__last__sc_LinearSeqOptimized__O(this$1)
-});
 $c_scm_ListBuffer.prototype.prependToList__sci_List__sci_List = (function(xs) {
   if (this.scala$collection$mutable$ListBuffer$$start$6.isEmpty__Z()) {
     return xs
@@ -32191,9 +32213,6 @@ $c_scm_StringBuilder.prototype.length__I = (function() {
 $c_scm_StringBuilder.prototype.seq__sc_Seq = (function() {
   return this
 });
-$c_scm_StringBuilder.prototype.last__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this)
-});
 $c_scm_StringBuilder.prototype.drop__I__O = (function(n) {
   var this$1 = this.underlying$5;
   var thiz = this$1.content$1;
@@ -32398,9 +32417,6 @@ $c_sjs_js_WrappedArray.prototype.length__I = (function() {
 });
 $c_sjs_js_WrappedArray.prototype.seq__sc_Seq = (function() {
   return this
-});
-$c_sjs_js_WrappedArray.prototype.last__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this)
 });
 $c_sjs_js_WrappedArray.prototype.drop__I__O = (function(n) {
   var until = $uI(this.array$6.length);
@@ -32615,9 +32631,6 @@ $c_scm_ArrayBuffer.prototype.length__I = (function() {
 });
 $c_scm_ArrayBuffer.prototype.seq__sc_Seq = (function() {
   return this
-});
-$c_scm_ArrayBuffer.prototype.last__O = (function() {
-  return $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this)
 });
 $c_scm_ArrayBuffer.prototype.drop__I__O = (function(n) {
   var until = this.size0$6;

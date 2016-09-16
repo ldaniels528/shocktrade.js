@@ -3,7 +3,7 @@
  * @author: lawrence.daniels@gmail.com
  */
 (function () {
-    require("./app/server/qualification/target/scala-2.11/shocktrade-qualification-fastopt.js");
+    require("./shocktrade-qualification-fastopt.js");
     const facade = com.shocktrade.qualification.QualificationJsApp();
     facade.startServer({
         "__dirname": __dirname,

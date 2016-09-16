@@ -12,7 +12,8 @@ import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, FindAndModifyWriteOpResult, MongoDB}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, console, _}
+import org.scalajs.nodejs.{NodeRequire, console}
+import org.scalajs.sjs.DateHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -216,6 +217,7 @@ object AutonomousTradingEngine {
                 priceType: String,
                 price: Double,
                 quantity: Double) = {
+      val now = new js.Date()
       new OrderData(
         symbol = quote.symbol,
         exchange = quote.exchange,
@@ -224,8 +226,8 @@ object AutonomousTradingEngine {
         priceType = priceType,
         price = price,
         quantity = quantity,
-        creationTime = new js.Date(),
-        expirationTime = new js.Date(js.Date.now() + 3.days)
+        creationTime = now - 6.hours, // TODO remove the 6-hour delta after testing
+        expirationTime = now + 3.days
       )
     }
 
