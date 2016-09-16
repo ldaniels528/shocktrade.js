@@ -6,7 +6,7 @@
     "Lawrence Daniels <lawrence.daniels@gmail.com>"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/ldaniels528/socialized",
+  "homepage": "https://github.com/ldaniels528/shocktrade`",
   "private": true,
   "ignore": [
     "**/.*",
@@ -22,7 +22,6 @@
     "AngularJS-Toaster": "toaster#^1.2.0",
     "angular-cookies": "^1.5.3",
     "angular-file-upload": "^2.2.0",
-    "angular-highlightjs": "^0.6.1",
     "angular-route": "^1.5.3",
     "angular-sanitize": "^1.5.3",
     "font-awesome": "^4.5.0",
@@ -31,6 +30,6 @@
     "angular-md5": "^0.1.10",
     "d3": "^4.2.1",
     "nvd3": "^1.8.4",
-    "angularjs-nvd3-directives": "^0.0.7"
+    "angular-nvd3": "^1.0.9"
   }
 }

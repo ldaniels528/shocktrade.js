@@ -39,28 +39,31 @@ ShockTrade provides the capability of:
 <a name="build-requirements"></a>
 ### Build Requirements
 
-* [Scala 2.11.8] (http://scala-lang.org/download/)
 * [SBT 0.13+] (http://www.scala-sbt.org/download.html)
 
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [ScalaJs-NodeJs 2.2.x] (https://github.com/ldaniels528/scalajs-nodejs)
+* [ScalaJs-NodeJs 0.2.2.7] (https://github.com/ldaniels528/scalajs-nodejs)
 
 <a name="building-the-code"></a>
-### Building the web application
+### Building the application
 
-    $ sbt fastOptJSPlus
+    $ sbt fastOptJSCopy
     
 <a name="testing-the-code"></a>    
 ### Running the application locally
 
-#### To start the web server 
+#### To start the web application server 
 
     $ node ./server.js
        
 #### To start the qualification engine
 
-    $ node ./engine.js
+    $ node ./qualification.js
+
+#### To start the day-cycle process
+
+    $ node ./daycycle.js
 
 

@@ -159,7 +159,7 @@ li.st_nav_bar {
 }
 
 body {
-	/* background-image: url('/assets/images/backgrounds/matrix1.jpg'); */
+	/* background-image: url('/images/backgrounds/matrix1.jpg'); */
 	background: #f0f0f0;
 	min-width: 1024px;
 	margin-left: 10px;
@@ -291,7 +291,7 @@ span.error {
 }
 
 ul.error {
-	list-style-image: url("/assets/images/status/redlight.png");
+	list-style-image: url("/images/status/redlight.png");
 }
 
 .error_bar {	

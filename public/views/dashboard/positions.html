@@ -37,7 +37,6 @@
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">
                 $ {{ p.pricePaid | quoteNumber }}
-            </span>
             </div>
             <div class="col-md-3 right" ng-hide="isPositionSelected()">
                 <span ng-show="p.lastTrade" class="right">$ {{ p.lastTrade | quoteNumber }}</span>
@@ -97,7 +96,7 @@
             <div class="col-md-7">
                 $ {{ selectedPosition.netValue | number:2 }}
                 <span ng-if="selectedPosition.gainLossPct != null">
-                    <changearrow value="{{ selectedPosition.gainLossPct }}"/>
+                    <changearrow value="{{ selectedPosition.gainLossPct }}"></changearrow>
                     <span ng-class="selectedPosition.gainLossPct < 0 ? 'negative' : 'positive'">
                         {{ selectedPosition.gainLossPct | number:2 }}%
                     </span>

@@ -1,0 +1,72 @@
+<div class="row" ng-hide="getMyContests().length">
+    <span class="warning col-md-12">
+        <i class="fa fa-exclamation-triangle"></i> No games found
+    </span>
+</div>
+
+<div class="row" ng-show="getMyContests().length">
+    <div ng-show="includeExpiry">
+        <div class="col-md-4 header left padding-left-16">Game Title</div>
+        <div class="col-md-2 header center">Leader</div>
+        <div class="col-md-2 header center">Expires</div>
+        <div class="col-md-2 header center">My Ranking</div>
+        <div class="col-md-2 header right">Game Features</div>
+    </div>
+    <div ng-hide="includeExpiry">
+        <div class="col-md-6 header left padding-left-16">Game Title</div>
+        <div class="col-md-3 header center">My Ranking</div>
+        <div class="col-md-3 header right">Game Features</div>
+    </div>
+</div>
+
+<div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
+    <div ng-class="includeExpiry ? 'col-md-4' : 'col-md-6'">
+        <img ng-show="c.loading" src="/images/status/loading16.gif">
+        <avatar ng-hide="c.loading" id="{{ c.rankings.leader.facebookID || c.participants[0].facebookID }}" class="avatar-20"></avatar> {{ c.name }}
+    </div>
+
+    <div ng-show="includeExpiry">
+        <div ng-show="includeExpiry" class="col-md-2 center">
+            <span ng-if="c.rankings.leader">
+                <avatar id="{{ c.rankings.leader.facebookID }}" class="avatar-20" title="{{ c.rankings.leader.name }}"></avatar>
+                <span ng-class="c.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+                    <changearrow value="{{ c.rankings.leader.gainLoss }}"></changearrow>
+                    {{ c.rankings.leader.gainLoss | abs | number:2 }}%
+                </span>
+            </span>
+        </div>
+        <div class="col-md-2 center">
+            <span ng-show="c.status === 'ACTIVE'">
+                <span ng-show="c.expirationTime">{{ c.expirationTime | duration }}</span>
+                <span ng-hide="c.expirationTime">&#8212;</span>
+            </span>
+            <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
+        </div>
+    </div>
+
+    <div class="center" ng-class="includeExpiry ? 'col-md-2' : 'col-md-3'">
+        <span ng-if="getMyRankings(c)">
+            <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
+            <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
+                <changearrow value="{{ getMyRankings(c).gainLoss }}"></changearrow>
+                {{ getMyRankings(c).gainLoss | abs | number:2 }}%
+            </span>
+        </span>
+        <span ng-hide="getMyRankings(c)" class="null">
+            <img src="/images/status/loading16.gif"> Loading...
+        </span>
+    </div>
+    <div class="right" ng-class="includeExpiry ? 'col-md-2' : 'col-md-3'">
+        <span class="pull-right">
+            <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
+            <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
+            <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
+            <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
+            <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
+        </span>
+    </div>
+</div>
+
+
+
+

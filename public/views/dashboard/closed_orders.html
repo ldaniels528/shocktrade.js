@@ -37,7 +37,10 @@
                 </span>
 			</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 left">{{ o.orderType }}</div>
-			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">$ {{ o.price | quoteNumber }}</div>
+			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">
+				<span ng-show="o.price">$ {{ o.price | quoteNumber }}</span>
+				<span ng-hide="o.price" class="positive">MARKET</span>
+			</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-3 left">{{ o.processedTime | duration }}</div>
 			<div ng-hide="isClosedOrderSelected()" class="col-md-2 right">{{ o.quantity | number }}</div>
 		</div>

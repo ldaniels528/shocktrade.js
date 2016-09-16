@@ -31,6 +31,13 @@ db.Stocks.find({}, {symbol:1, exchange:1});
 
 db.Stocks.update({exchange:"OTC BB"}, {$set:{exchange : "OTCBB"}}, {multi:true});
 
+db.Stocks.update({symbol: "DLCR"}, {
+	$set: {
+		sector: "Consumer Discretionary",
+		industry: "Apparel & Textile Products",
+		subIndustry: "Apparel, Footwear, Acc Desgn"
+	}
+});
 
 db.zipcodes.aggregate({
 	$group : {
@@ -45,7 +52,7 @@ db.zipcodes.aggregate({
 			$gte : 10 * 1000 * 1000
 		}
 	}
-})
+});
 
 
-cfg.members = [{"_id" : 0, "host"  : "192.168.1.5"}]
+cfg.members = [{"_id" : 0, "host"  : "192.168.1.5"}];

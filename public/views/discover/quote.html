@@ -1,12 +1,11 @@
 <div class="row">
     <span class="col-md-10">
-        <input class="col-md-10 form-control symbol_input_text_field"
-               id="stockTicker" type="text" ng-model="ticker"
+        <input class="col-md-10 form-control symbol_input_text_field" type="text" ng-model="ticker"
                placeholder="Enter Symbol or Company name"
-               typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue)"
-               typeahead-template-url="symbol_lookup_dialog.htm"
+			   typeahead="item as formatSearchResult(item) for item in autoCompleteSymbols($viewValue)"
+			   typeahead-template-url="symbol_lookup.html"
                typeahead-loading="loading"
-               typeahead-on-select="loadQuote(ticker)"
+			   typeahead-on-select="onSelectedItem($item, $model, $label)"
                popover="Enter a Symbol or Business here"
                popover-trigger="focus">
     </span>
@@ -42,6 +41,6 @@
 
 <div ng-if="hasHoldings(q)">
 	<div class="quote_sub_title contest_colors holdings_detail">ETF Holdings Detail</div>
-	<div ng-include src="'/assets/views/discover/profile/holdings_detail.htm'"></div>
+	<div ng-include src="'/views/discover/profile/holdings_detail.html'"></div>
 	<hr>
 </div>

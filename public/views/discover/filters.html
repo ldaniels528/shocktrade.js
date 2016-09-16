@@ -1,15 +1,15 @@
 <accordion>
 	<accordion-group is-open="true">
 		<accordion-heading><img src="/images/objects/clock16.png"> Recently Viewed</accordion-heading>
-		<div ng-include src="'/assets/views/discover/recently_viewed.htm'"></div>
+		<div ng-include src="'/views/discover/recently_viewed.html'"></div>
 	</accordion-group>
 	<accordion-group>
 		<accordion-heading><img src="/images/objects/favorite.png"> Favorites</accordion-heading>
-		<div ng-include src="'/assets/views/discover/favorites.htm'"></div>
+		<div ng-include src="'/views/discover/favorites.html'"></div>
 	</accordion-group>		
 	<accordion-group ng-if="HeldSecurities.symbols.length > 0">
 		<accordion-heading><img src="/images/objects/star16.gif"> Held Securities</accordion-heading>
-		<div ng-include src="'/assets/views/discover/held_securities.htm'"></div>
+		<div ng-include src="'/views/discover/held_securities.html'"></div>
 	</accordion-group>	
 	<accordion-group ng-repeat="filter in filterQuotes">
 		<accordion-heading>

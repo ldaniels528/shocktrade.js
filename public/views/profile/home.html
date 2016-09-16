@@ -1,41 +1,31 @@
-<div>
-    <div class="row col-md-12">
+<div ng-controller="MyGamesController" ng-init="initMyGames()">
+    <div ng-controller="MyQuotesController" class="row col-md-12">
         <div ng-include src="'/views/profile/header.html'"></div>
 
         <tabset>
             <tab ng-if="isAdmin()">
                 <tab-heading><i class="fa fa-inbox"></i> Inbox</tab-heading>
-                <div class="row home_tab home_tab_container" ng-include src="'/views/connect/connect.html'"></div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/social/connect.html'"></div>
             </tab>
-            <tab ng-controller="MyGamesController" ng-init="initMyGames()">
+            <tab ng-if="getMyContests().length">
                 <tab-heading><i class="fa fa-gamepad"></i> My Games ({{ getMyContests().length || 0 }})</tab-heading>
-                <div class="row home_tab home_tab_container">
-                    @assets.views.html.search.MyContests(includeExpiry = true)
-                </div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/contest/my_contests.html'"></div>
             </tab>
-            <tab ng-controller="MyQuotesController">
+            <tab>
                 <tab-heading><i class="fa fa-heart"></i> My Quotes</tab-heading>
-                <div class="row home_tab home_tab_container">
-                    @assets.views.html.profile.MyQuotes()
-                </div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/profile/my_quotes.html'"></div>
             </tab>
             <tab>
                 <tab-heading><i class="fa fa-user"></i> My Friends ({{ getFriends().length | number }})</tab-heading>
-                <div class="row home_tab home_tab_container">
-                    @assets.views.html.profile.MyFriends()
-                </div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/profile/my_friends.html'"></div>
             </tab>
             <tab>
                 <tab-heading><i class="fa fa-trophy"></i> My Awards</tab-heading>
-                <div class="row home_tab home_tab_container">
-                @assets.views.html.profile.MyAwards()
-                </div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/profile/my_awards.html'"></div>
             </tab>
             <tab>
                 <tab-heading><i class="fa fa-bar-chart"></i> My Statistics</tab-heading>
-                <div class="row home_tab home_tab_container">
-                    @assets.views.html.profile.MyStatistics()
-                </div>
+                <div class="row home_tab home_tab_container" ng-include src="'/views/profile/my_statistics.html'"></div>
             </tab>
         </tabset>
     </div>

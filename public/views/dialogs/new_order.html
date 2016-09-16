@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="new_order_dialog.htm">
+<script type="text/ng-template" id="new_order_dialog.html">
     <div class="modal-header st_modal_header">
         <h4>Create New Order</h4>
     </div>
@@ -35,13 +35,14 @@
         </div>
         <div>
             <span class="header">Symbol</span>
-            <input class="form-control symbol_input_text_field"
-                   type="text" ng-model="form.symbol"
+            <input class="form-control symbol_input_text_field" type="text" ng-model="ticker"
                    placeholder="Enter Symbol or Company name"
-                   typeahead="quote as quote.symbol + (quote.name ? ' - ' + quote.name : '') for quote in autoCompleteSymbols($viewValue)"
-                   typeahead-template-url="symbol_lookup_dialog.htm"
+                   typeahead="item as formatSearchResult(item) for item in autoCompleteSymbols($viewValue)"
+                   typeahead-template-url="symbol_lookup.html"
                    typeahead-loading="loading"
-                   typeahead-on-select="orderQuote(form.symbol)">
+                   typeahead-on-select="onSelectedItem($item, $model, $label)"
+                   popover="Enter a Symbol or Business here"
+                   popover-trigger="focus">
         </div>
         <div class="row">
             <div class="col-md-4 header">Account</div>
@@ -74,7 +75,7 @@
                 <changearrow ng-show="quote.changePct" value="{{ quote.changePct }}" style="vertical-align: bottom" />
 
 
-                <button class="btn st_button pull-right" ng-click="orderQuote(form.symbol)">
+                <button class="btn st_button pull-right" ng-click="orderQuote(ticker)">
                     <img src="/images/status/loading16.gif" ng-show="loading">
                     <i class="fa fa-search clickable"  ng-hide="loading"></i> Quote
                 </button>

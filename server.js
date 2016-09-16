@@ -1,10 +1,10 @@
 /**
- * ShockTrade Web App Server Bootstrap
+ * ShockTrade Web Application Server Bootstrap
  * @author: lawrence.daniels@gmail.com
  */
 (function () {
-    require("./shocktrade-nodejs-fastopt.js");
-    const facade = com.shocktrade.javascript.ShocktradeWebServerJsApp();
+    require("./shocktrade-webapp-fastopt.js");
+    const facade = com.shocktrade.webapp.WebServerJsApp();
     facade.startServer({
         "__dirname": __dirname,
         "__filename": __filename,

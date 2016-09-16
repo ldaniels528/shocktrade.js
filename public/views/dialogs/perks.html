@@ -1,14 +1,18 @@
-<script type="text/ng-template" id="perks_dialog.htm">
+<script type="text/ng-template" id="perks_dialog.html">
     <div class="modal-header st_modal_header">
         <h4 style="color: #345688">Perks</h4>
     </div>
     <div class="modal-body">
+        <div ng-if="errors.length" ng-repeat="error in errors" style="margin-bottom: 15px">
+            <span class="error">{{ error }}</span>
+        </div>
+
         <div ng-init="loadPerks()">
             <div>
                 <span class="st_sub_heading bold st_bkg_color">Total Purchase Cost:
                     <span ng-class="hasSufficientFunds() ? 'positive' : 'negative'">
                         $ {{ getTotalCost() | number:2 }}
-                    </span> / {{ getFundsAvailable() | number:2 }}
+                    </span> / {{ fundsAvailable | number:2 }}
                 </span>
                 <span ng-hide="hasSufficientFunds()">
                     &#8212;
@@ -17,11 +21,11 @@
                 </span>
             </div>
             <div class="perks_container">
-                <span ng-hide="getPerks().length">
+                <span ng-hide="availablePerks.length">
                     <img src="/images/status/loading16.gif"> Loading Perks ...
                 </span>
-                <div class="perk_padding" ng-repeat="perk in getPerks() track by $index">
-                    <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && getFundsAvailable() < perk.cost)">
+                <div class="perk_padding" ng-repeat="perk in availablePerks track by $index">
+                    <input type="checkbox" ng-model="perk.selected" ng-disabled="perk.owned || (!perk.selected && fundsAvailable < perk.cost)">
                     <img ng-src="/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
                     <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
                     <span ng-hide="perk.owned">(<span ng-class="getPerkCostClass(perk)">${{ perk.cost | number }}</span>):</span>
@@ -32,7 +36,7 @@
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12" style="margin-top: 10px">
-            <button class="btn btn-primary pull-left" ng-click="purchasePerks()" ng-disabled="!perksSelected()">Purchase</button>
+            <button class="btn btn-primary pull-left" ng-click="purchasePerks()" ng-disabled="!isPerksSelected()">Purchase</button>
             <button class="btn btn-warning pull-right" ng-click="cancel()">Cancel</button>
         </div>
     </div>
