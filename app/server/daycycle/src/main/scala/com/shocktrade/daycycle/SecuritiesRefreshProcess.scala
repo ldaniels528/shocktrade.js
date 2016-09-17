@@ -8,12 +8,13 @@ import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{TradingClock, YahooFinanceCSVQuotesService}
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.moment.timezone.MomentTimezone
-import org.scalajs.nodejs.mongodb.Db
+import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
   * Securities Refresh Process
@@ -22,11 +23,13 @@ import scala.util.{Failure, Success, Try}
 class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
   private val batchSize = 40
 
-  // get DAO and service references
+  // get service references
   private val csvQuoteSvc = new YahooFinanceCSVQuotesService()
   private val cvsQuoteParams = csvQuoteSvc.getParams(
     "symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume", "errorMessage"
   )
+
+  // get DAO references
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
@@ -43,11 +46,14 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
       val startTime = js.Date.now()
       val outcome = for {
         quoteRefs <- securitiesDAO.flatMap(_.findSymbolsForUpdate())
-        quotesWithResults <- processQuotes(quoteRefs)
-      } yield quotesWithResults
+        results <- processQuotes(quoteRefs)
+      } yield results
 
       outcome onComplete {
-        case Success(quotesWithResults) =>
+        case Success(results) =>
+          val snapshotResults = results.map(_._1)
+          val securitiesResults = results.map(_._2)
+          log("", results.map(_._1))
           log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
         case Failure(e) =>
           console.error(s"Failed during processing: ${e.getMessage}")
@@ -74,19 +80,16 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
         for {
           quotes <- csvQuoteSvc.getQuotes(cvsQuoteParams, symbols)
-          snapshotResults = createSnapshots(quotes) onComplete errorHandler
-          securitiesResults = updateQuotes(quotes) onComplete errorHandler
-        } yield securitiesResults
+          snapshotResults <- createSnapshots(quotes) recover { case e =>
+            console.error("Snapshot write error: %s", e.getMessage)
+            New[BulkWriteOpResultObject]
+          }
+          securitiesResults <- updateSecurities(quotes) recover { case e =>
+            console.error("Securities update error: %s", e.getMessage)
+            New[BulkWriteOpResultObject]
+          }
+        } yield snapshotResults -> securitiesResults
       }
-    }
-  }
-
-  private def errorHandler[T](outcome: Try[T]) = {
-    outcome match {
-      case Success(result) => Some(result)
-      case Failure(e) =>
-        console.error(s"Persistence error: ${e.getMessage}")
-        None
     }
   }
 
@@ -101,7 +104,7 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   @inline
-  private def updateQuotes(quotes: Seq[YFCSVQuote]) = {
+  private def updateSecurities(quotes: Seq[YFCSVQuote]) = {
     securitiesDAO.flatMap(_.updateQuotes(quotes.map(_.toUpdateQuote)).toFuture)
   }
 

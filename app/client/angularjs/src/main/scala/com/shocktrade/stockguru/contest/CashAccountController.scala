@@ -3,7 +3,7 @@ package com.shocktrade.stockguru.contest
 import com.shocktrade.stockguru.MySessionService
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, injected}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js

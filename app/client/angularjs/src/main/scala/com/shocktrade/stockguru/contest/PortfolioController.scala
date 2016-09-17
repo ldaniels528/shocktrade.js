@@ -11,7 +11,7 @@ import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
 import org.scalajs.dom.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

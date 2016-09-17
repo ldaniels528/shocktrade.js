@@ -14,6 +14,7 @@ import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.DateHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -88,7 +89,7 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
   private def playWith(robot: RobotData, portfolio: PortfolioData) = {
     // lookup the trading strategy
     val tradingStrategy = getTradingStrategy(robot)
-    robot.info(s"Playing with portfolio #${portfolio._id.orNull} using ${tradingStrategy.name getOrElse "Untitled"} strategy")
+    robot.info(s"Playing with portfolio #${portfolio._id.orNull} using the '${tradingStrategy.name getOrElse "Untitled"}' strategy")
 
     // get the positions and active orders
     val positions = portfolio.positions.toList.flatMap(_.toList)

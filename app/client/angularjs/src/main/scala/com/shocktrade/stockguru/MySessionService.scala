@@ -1,9 +1,9 @@
 package com.shocktrade.stockguru
 
-import com.shocktrade.stockguru.ScopeEvents._
-import com.shocktrade.stockguru.contest.{ChatService, ContestRankingCapability, ContestService, PortfolioService}
 import com.shocktrade.common.models._
 import com.shocktrade.common.models.contest.{ChatMessage, Contest, Participant, Portfolio}
+import com.shocktrade.stockguru.ScopeEvents._
+import com.shocktrade.stockguru.contest.{ChatService, ContestRankingCapability, ContestService, PortfolioService}
 import com.shocktrade.stockguru.profile.ProfileService
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs._
@@ -12,6 +12,7 @@ import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.dom.console
 import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}

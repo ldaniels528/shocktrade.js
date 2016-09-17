@@ -1,15 +1,15 @@
 package com.shocktrade.webapp
 
-import com.shocktrade.webapp.routes.{WebSocketHandler, _}
 import com.shocktrade.util.StringHelper._
+import com.shocktrade.webapp.routes._
 import org.scalajs.nodejs.bodyparser._
 import org.scalajs.nodejs.express.fileupload.ExpressFileUpload
 import org.scalajs.nodejs.express.{Express, Request, Response}
 import org.scalajs.nodejs.expressws.{ExpressWS, WebSocket, WsRouterExtensions}
 import org.scalajs.nodejs.globals._
 import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{console, _}
+import org.scalajs.sjs.OptionHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

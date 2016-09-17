@@ -46,7 +46,7 @@ object SecuritiesSnapshotDAO {
 
     @inline
     def updateSnapshots(quotes: Seq[SnapshotQuote]) = {
-      dao.insertMany(docs = js.Array(quotes: _*))
+      dao.bulkWrite(js.Array(quotes map insertOne: _*))
     }
 
   }

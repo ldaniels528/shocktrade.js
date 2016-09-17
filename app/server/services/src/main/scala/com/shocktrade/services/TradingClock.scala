@@ -1,5 +1,7 @@
 package com.shocktrade.services
 
+import org.scalajs.sjs.DateHelper._
+import com.shocktrade.services.TradingClock._
 import org.scalajs.nodejs.moment._
 import org.scalajs.nodejs.moment.timezone._
 
@@ -15,7 +17,7 @@ class TradingClock() {
     * The time in milliseconds until the next trading day
     */
   def getDelayUntilTradingStartInMillis(implicit moment: Moment, momentTz: MomentTimezone): Double = {
-    getNextTradeStartTime.getTime - js.Date.now()
+    getNextTradeStartTime - new js.Date()
   }
 
   /**
@@ -23,9 +25,9 @@ class TradingClock() {
     * @return the stock market opening [[js.Date time]]
     */
   def getNextTradeStartTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
-    val theMoment = moment().tz("America/New_York")
+    val theMoment = moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
-      case SUNDAY | MONDAY | TUESDAY | WEDNESDAY | THURSDAY => 1
+      case day if day >= SUNDAY && day <= THURSDAY => 1
       case FRIDAY => 3
       case SATURDAY => 2
       case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
@@ -43,9 +45,9 @@ class TradingClock() {
     * @return the stock market opening [[js.Date time]]
     */
   def getTradeStartTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
-    val theMoment = moment().tz("America/New_York")
+    val theMoment = moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
-      case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
+      case day if day >= MONDAY && day <= FRIDAY => 0
       case SATURDAY => 2
       case SUNDAY => 1
       case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
@@ -69,10 +71,19 @@ class TradingClock() {
   }
 
   def isTradingActive(date: js.Date)(implicit moment: Moment, momentTz: MomentTimezone): Boolean = {
-    val theMoment = moment(date).tz("America/New_York")
+    val theMoment = moment(date).tz(NEW_YORK_TZ)
     val time = theMoment.format("HHmm").toInt
     val dayOfWeek = theMoment.day()
     dayOfWeek >= MONDAY && dayOfWeek <= FRIDAY && time >= 930 && time <= 1601
   }
+
+}
+
+/**
+  * Trading Clock Companion
+  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  */
+object TradingClock {
+  private val NEW_YORK_TZ = "America/New_York"
 
 }

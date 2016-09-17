@@ -2862,7 +2862,10 @@ function $s_scm_ResizableArray$class__$$init$__scm_ResizableArray__V($$this) {
 }
 /** @constructor */
 function $c_Lcom_shocktrade_Commissions$() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.LIMIT$undCOST$1 = 0.0;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
+  this.MARKET$undCOST$1 = 0.0
 }
 $c_Lcom_shocktrade_Commissions$.prototype = new $h_O();
 $c_Lcom_shocktrade_Commissions$.prototype.constructor = $c_Lcom_shocktrade_Commissions$;
@@ -2872,31 +2875,34 @@ function $h_Lcom_shocktrade_Commissions$() {
 }
 $h_Lcom_shocktrade_Commissions$.prototype = $c_Lcom_shocktrade_Commissions$.prototype;
 $c_Lcom_shocktrade_Commissions$.prototype.init___ = (function() {
+  this.LIMIT$undCOST$1 = 14.99;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
+  this.MARKET$undCOST$1 = 7.99;
   return this
 });
 $c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_forms_NewOrderForm__D = (function(form) {
   var valueA = form.priceType;
   if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return 14.99
+    return this.LIMIT$undCOST$1
   } else {
     var valueA$1 = form.priceType;
     if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return 9.99
+      return this.MARKET$undAT$undCLOSE$undCOST$1
     } else {
-      return 7.99
+      return this.MARKET$undCOST$1
     }
   }
 });
 $c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
   var valueA = order.priceType;
   if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return 14.99
+    return this.LIMIT$undCOST$1
   } else {
     var valueA$1 = order.priceType;
     if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return 9.99
+      return this.MARKET$undAT$undCLOSE$undCOST$1
     } else {
-      return 7.99
+      return this.MARKET$undCOST$1
     }
   }
 });

@@ -2567,7 +2567,10 @@ function $s_scm_ResizableArray$class__$$init$__scm_ResizableArray__V($$this) {
 }
 /** @constructor */
 function $c_Lcom_shocktrade_Commissions$() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.LIMIT$undCOST$1 = 0.0;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
+  this.MARKET$undCOST$1 = 0.0
 }
 $c_Lcom_shocktrade_Commissions$.prototype = new $h_O();
 $c_Lcom_shocktrade_Commissions$.prototype.constructor = $c_Lcom_shocktrade_Commissions$;
@@ -2577,18 +2580,21 @@ function $h_Lcom_shocktrade_Commissions$() {
 }
 $h_Lcom_shocktrade_Commissions$.prototype = $c_Lcom_shocktrade_Commissions$.prototype;
 $c_Lcom_shocktrade_Commissions$.prototype.init___ = (function() {
+  this.LIMIT$undCOST$1 = 14.99;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
+  this.MARKET$undCOST$1 = 7.99;
   return this
 });
 $c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
   var valueA = order.priceType;
   if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return 14.99
+    return this.LIMIT$undCOST$1
   } else {
     var valueA$1 = order.priceType;
     if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return 9.99
+      return this.MARKET$undAT$undCLOSE$undCOST$1
     } else {
-      return 7.99
+      return this.MARKET$undCOST$1
     }
   }
 });
@@ -13217,7 +13223,7 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
         if ($is_s_util_Success(x1$2)) {
           var x2 = $as_s_util_Success(x1$2);
           var claim = x2.value$2;
-          var this$217 = $m_s_Option$().apply__O__s_Option(claim)
+          var this$208 = $m_s_Option$().apply__O__s_Option(claim)
         } else {
           if ((!$is_s_util_Failure(x1$2))) {
             throw new $c_s_MatchError().init___O(x1$2)
@@ -13227,12 +13233,12 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
           var jsx$4 = $g.console;
           var s = e$1.getMessage__T();
           jsx$4.warn(s);
-          var this$217 = $m_s_None$()
+          var this$208 = $m_s_None$()
         };
-        if (this$217.isEmpty__Z()) {
+        if (this$208.isEmpty__Z()) {
           var xo = $m_s_None$()
         } else {
-          var arg1$1 = this$217.get__O();
+          var arg1$1 = this$208.get__O();
           var xo = new $c_s_Some().init___O(new $c_Lcom_shocktrade_common_dao_contest_WorkOrder(v1, orderWithPrice$1, arg1$1))
         }
       }
@@ -18806,6 +18812,10 @@ $c_sci_StringOps.prototype.hashCode__I = (function() {
 $c_sci_StringOps.prototype.copyToArray__O__I__I__V = (function(xs, start, len) {
   $s_sc_IndexedSeqOptimized$class__copyToArray__sc_IndexedSeqOptimized__O__I__I__V(this, xs, start, len)
 });
+$c_sci_StringOps.prototype.init___T = (function(repr) {
+  this.repr$1 = repr;
+  return this
+});
 $c_sci_StringOps.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (function(ev) {
   var b = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
   var i = 0;
@@ -18817,10 +18827,6 @@ $c_sci_StringOps.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (function
     i = ((1 + i) | 0)
   };
   return $as_sci_Map(b.elems$1)
-});
-$c_sci_StringOps.prototype.init___T = (function(repr) {
-  this.repr$1 = repr;
-  return this
 });
 $c_sci_StringOps.prototype.map__F1__scg_CanBuildFrom__O = (function(f, bf) {
   return $s_sc_TraversableLike$class__map__sc_TraversableLike__F1__scg_CanBuildFrom__O(this, f, bf)

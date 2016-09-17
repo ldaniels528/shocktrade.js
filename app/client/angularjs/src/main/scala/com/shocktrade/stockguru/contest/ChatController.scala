@@ -1,17 +1,17 @@
 package com.shocktrade.stockguru.contest
 
+import com.shocktrade.common.models.PlayerRef
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.stockguru.Filters.toDuration
 import com.shocktrade.stockguru.MySessionService
 import com.shocktrade.stockguru.ScopeEvents._
 import com.shocktrade.stockguru.contest.ChatController._
-import com.shocktrade.common.models.PlayerRef
-import com.shocktrade.common.models.contest.ChatMessage
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.anchorscroll.AnchorScroll
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Location, Scope, injected}
 import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

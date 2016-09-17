@@ -1,6 +1,7 @@
 package com.shocktrade.common.forms
 
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

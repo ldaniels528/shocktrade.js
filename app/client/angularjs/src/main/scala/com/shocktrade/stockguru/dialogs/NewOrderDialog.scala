@@ -215,7 +215,7 @@ trait NewOrderScope extends AutoCompletionControllerScope {
   // variables
   var form: NewOrderForm = js.native
   var quote: ResearchQuote = js.native
-  var ticker: js.Any
+  var ticker: js.Any = js.native
 
   // functions
   var init: js.Function0[Unit] = js.native

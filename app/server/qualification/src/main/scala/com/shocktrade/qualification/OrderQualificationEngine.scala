@@ -12,6 +12,7 @@ import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.DateHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps

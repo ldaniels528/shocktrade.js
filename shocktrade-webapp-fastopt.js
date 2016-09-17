@@ -3637,7 +3637,7 @@ $c_Lcom_shocktrade_common_models_quote_Advisory$.prototype.apply__T__sjs_js_Unde
           break
         }
         case 66: {
-          var description = "Class BS asset";
+          var description = "Class B asset";
           break
         }
         case 67: {
@@ -4004,7 +4004,8 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.init___ = (function() {
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z = (function(date, moment, momentTz) {
   var moment$1 = moment(date);
-  var theMoment = moment$1.tz("America/New_York");
+  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
+  var theMoment = moment$1.tz(timeZone);
   var x = $as_T(theMoment.format("HHmm"));
   var this$10 = new $c_sci_StringOps().init___T(x);
   var this$12 = $m_jl_Integer$();
@@ -4015,9 +4016,10 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date_
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.getNextTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date = (function(moment, momentTz) {
   var moment$1 = moment();
-  var theMoment = moment$1.tz("America/New_York");
+  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
+  var theMoment = moment$1.tz(timeZone);
   var x1 = $uI(theMoment.day());
-  if ((($m_Lorg_scalajs_nodejs_moment_package$().SUNDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().TUESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().WEDNESDAY$1 === x1) || ($m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1 === x1)))))) {
+  if (((x1 >= $m_Lorg_scalajs_nodejs_moment_package$().SUNDAY$1) && (x1 <= $m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1))) {
     var delta = 1
   } else if (($m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1 === x1)) {
     var delta = 3
@@ -4031,9 +4033,10 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.getNextTradeStartTime__Lorg_s
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.getTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date = (function(moment, momentTz) {
   var moment$1 = moment();
-  var theMoment = moment$1.tz("America/New_York");
+  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
+  var theMoment = moment$1.tz(timeZone);
   var x1 = $uI(theMoment.day());
-  if ((($m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().TUESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().WEDNESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1 === x1) || ($m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1 === x1)))))) {
+  if (((x1 >= $m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1) && (x1 <= $m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1))) {
     var delta = 0
   } else if (($m_Lorg_scalajs_nodejs_moment_package$().SATURDAY$1 === x1)) {
     var delta = 2
@@ -4046,7 +4049,9 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.getTradeStartTime__Lorg_scala
   return theMoment.add(delta, "day").hour(9).minute(30).toDate()
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.getDelayUntilTradingStartInMillis__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__D = (function(moment, momentTz) {
-  return ($uD(this.getNextTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date(moment, momentTz).getTime()) - $uD($g.Date.now()))
+  var date0 = this.getNextTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date(moment, momentTz);
+  var date1 = new $g.Date();
+  return ($uD(date0.getTime()) - $uD(date1.getTime()))
 });
 var $d_Lcom_shocktrade_services_TradingClock = new $TypeData().initClass({
   Lcom_shocktrade_services_TradingClock: 0
@@ -4055,6 +4060,36 @@ var $d_Lcom_shocktrade_services_TradingClock = new $TypeData().initClass({
   O: 1
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.$classData = $d_Lcom_shocktrade_services_TradingClock;
+/** @constructor */
+function $c_Lcom_shocktrade_services_TradingClock$() {
+  $c_O.call(this);
+  this.com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1 = null
+}
+$c_Lcom_shocktrade_services_TradingClock$.prototype = new $h_O();
+$c_Lcom_shocktrade_services_TradingClock$.prototype.constructor = $c_Lcom_shocktrade_services_TradingClock$;
+/** @constructor */
+function $h_Lcom_shocktrade_services_TradingClock$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_services_TradingClock$.prototype = $c_Lcom_shocktrade_services_TradingClock$.prototype;
+$c_Lcom_shocktrade_services_TradingClock$.prototype.init___ = (function() {
+  this.com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1 = "America/New_York";
+  return this
+});
+var $d_Lcom_shocktrade_services_TradingClock$ = new $TypeData().initClass({
+  Lcom_shocktrade_services_TradingClock$: 0
+}, false, "com.shocktrade.services.TradingClock$", {
+  Lcom_shocktrade_services_TradingClock$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_services_TradingClock$.prototype.$classData = $d_Lcom_shocktrade_services_TradingClock$;
+var $n_Lcom_shocktrade_services_TradingClock$ = (void 0);
+function $m_Lcom_shocktrade_services_TradingClock$() {
+  if ((!$n_Lcom_shocktrade_services_TradingClock$)) {
+    $n_Lcom_shocktrade_services_TradingClock$ = new $c_Lcom_shocktrade_services_TradingClock$().init___()
+  };
+  return $n_Lcom_shocktrade_services_TradingClock$
+}
 /** @constructor */
 function $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService() {
   $c_O.call(this);
@@ -6612,7 +6647,7 @@ $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.getExposureByXXX$1__p1__
       return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$1$1)
     })
   })(ec$1, contestId, playerId));
-  var this$23 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(portfolioDAO$1, f$1, ec$1);
+  var this$22 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(portfolioDAO$1, f$1, ec$1);
   var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$9$2) {
     var x$9 = $as_s_Option(x$9$2);
     if (x$9.isEmpty__Z()) {
@@ -6621,11 +6656,11 @@ $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.getExposureByXXX$1__p1__
       return x$9.get__O()
     }
   }));
-  var this$24 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f$2, ec$1);
+  var this$23 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$22, f$2, ec$1);
   var f$3 = new $c_Lcom_shocktrade_webapp_routes_ChartRoutes$$anonfun$getExposureByXXX$1$3().init___();
-  var this$25 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$24, f$3, ec$1);
+  var this$24 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f$3, ec$1);
   var f$4 = new $c_Lcom_shocktrade_webapp_routes_ChartRoutes$$anonfun$getExposureByXXX$1$4().init___s_concurrent_ExecutionContext__s_concurrent_Future__F1(ec$1, securitiesDAO$1, fx);
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$25, f$4, ec$1)
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$24, f$4, ec$1)
 });
 $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.com$shocktrade$webapp$routes$ChartRoutes$$exposureBySecurities$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, ec$1, portfolioDAO$1, securitiesDAO$1) {
   var dict = request.params;

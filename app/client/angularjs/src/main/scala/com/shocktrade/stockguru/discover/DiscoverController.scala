@@ -14,6 +14,7 @@ import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{angular, injected, _}
 import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

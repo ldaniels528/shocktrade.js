@@ -2648,7 +2648,10 @@ var $d_sjs_js_Any = new $TypeData().initClass({
 }, true, (void 0), $noIsInstance);
 /** @constructor */
 function $c_Lcom_shocktrade_Commissions$() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.LIMIT$undCOST$1 = 0.0;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
+  this.MARKET$undCOST$1 = 0.0
 }
 $c_Lcom_shocktrade_Commissions$.prototype = new $h_O();
 $c_Lcom_shocktrade_Commissions$.prototype.constructor = $c_Lcom_shocktrade_Commissions$;
@@ -2658,18 +2661,21 @@ function $h_Lcom_shocktrade_Commissions$() {
 }
 $h_Lcom_shocktrade_Commissions$.prototype = $c_Lcom_shocktrade_Commissions$.prototype;
 $c_Lcom_shocktrade_Commissions$.prototype.init___ = (function() {
+  this.LIMIT$undCOST$1 = 14.99;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
+  this.MARKET$undCOST$1 = 7.99;
   return this
 });
 $c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
   var valueA = order.priceType;
   if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return 14.99
+    return this.LIMIT$undCOST$1
   } else {
     var valueA$1 = order.priceType;
     if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return 9.99
+      return this.MARKET$undAT$undCLOSE$undCOST$1
     } else {
-      return 7.99
+      return this.MARKET$undCOST$1
     }
   }
 });
@@ -2952,7 +2958,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.showOrders__p1__
 });
 $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$autonomous$AutonomousTradingEngine$$playWith__Lcom_shocktrade_autonomous_dao_RobotData__Lcom_shocktrade_common_dao_contest_PortfolioData__s_concurrent_Future = (function(robot, portfolio) {
   var tradingStrategy = this.getTradingStrategy__p1__Lcom_shocktrade_autonomous_dao_RobotData__Lcom_shocktrade_autonomous_dao_TradingStrategy(robot);
-  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Playing with portfolio #", " using ", " strategy"]));
+  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Playing with portfolio #", " using the '", "' strategy"]));
   var this$3 = $m_sjs_js_UndefOrOps$();
   var value = portfolio._id;
   var $$this = value;
@@ -3087,9 +3093,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var selector = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1);
         var minValue = options$1.betaMin;
         var maxValue = options$1.betaMax;
-        var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2) {
+        var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2) {
           var this$71 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt = $m_s_Option$().apply__O__s_Option(x$3$2);
+          var opt = $m_s_Option$().apply__O__s_Option(x$2$2);
           var $$this$10 = opt;
           var ifEmpty = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$3) {
             return (function() {
@@ -3106,9 +3112,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$13 = ((minValue === (void 0)) ? (void 0) : f$4.apply__O__O(minValue));
         var $$this$11 = value$13;
         var jsx$19 = (($$this$11 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$11));
-        var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$1) {
+        var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$1) {
           var this$82 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$1 = $m_s_Option$().apply__O__s_Option(x$3$2$1);
+          var opt$1 = $m_s_Option$().apply__O__s_Option(x$2$2$1);
           var $$this$12 = opt$1;
           var ifEmpty$1 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$4) {
             return (function() {
@@ -3138,9 +3144,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue, maxValue));
               var minValue$2 = $as_T2(values.apply__O()).$$und1__O();
               var maxValue$2 = $as_T2(values.apply__O()).$$und2__O();
-              var f$8 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$2) {
+              var f$8 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$2) {
                 var this$97 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$2 = $m_s_Option$().apply__O__s_Option(x$3$2$2);
+                var opt$2 = $m_s_Option$().apply__O__s_Option(x$2$2$2);
                 var $$this$14 = opt$2;
                 var ifEmpty$2 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$5) {
                   return (function() {
@@ -3157,9 +3163,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$15 = ((minValue$2 === (void 0)) ? (void 0) : f$8.apply__O__O(minValue$2));
               var $$this$15 = value$15;
               var jsx$20 = (($$this$15 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$15));
-              var f$10 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$3) {
+              var f$10 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$3) {
                 var this$108 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$3 = $m_s_Option$().apply__O__s_Option(x$3$2$3);
+                var opt$3 = $m_s_Option$().apply__O__s_Option(x$2$2$3);
                 var $$this$16 = opt$3;
                 var ifEmpty$3 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$6) {
                   return (function() {
@@ -3301,9 +3307,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var minValue$3 = options$1.changeMin;
         var maxValue$3 = options$1.changeMax;
-        var f$13 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$4) {
+        var f$13 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$4) {
           var this$161 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$4 = $m_s_Option$().apply__O__s_Option(x$3$2$4);
+          var opt$4 = $m_s_Option$().apply__O__s_Option(x$2$2$4);
           var $$this$18 = opt$4;
           var ifEmpty$4 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$7) {
             return (function() {
@@ -3320,9 +3326,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$21 = ((minValue$3 === (void 0)) ? (void 0) : f$13.apply__O__O(minValue$3));
         var $$this$19 = value$21;
         var jsx$22 = (($$this$19 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$19));
-        var f$15 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$5) {
+        var f$15 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$5) {
           var this$172 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$5 = $m_s_Option$().apply__O__s_Option(x$3$2$5);
+          var opt$5 = $m_s_Option$().apply__O__s_Option(x$2$2$5);
           var $$this$20 = opt$5;
           var ifEmpty$5 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$8) {
             return (function() {
@@ -3352,9 +3358,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue$3, maxValue$3));
               var minValue$4 = $as_T2(values$1.apply__O()).$$und1__O();
               var maxValue$4 = $as_T2(values$1.apply__O()).$$und2__O();
-              var f$17 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$6) {
+              var f$17 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$6) {
                 var this$187 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$6 = $m_s_Option$().apply__O__s_Option(x$3$2$6);
+                var opt$6 = $m_s_Option$().apply__O__s_Option(x$2$2$6);
                 var $$this$22 = opt$6;
                 var ifEmpty$6 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$9) {
                   return (function() {
@@ -3371,9 +3377,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$23 = ((minValue$4 === (void 0)) ? (void 0) : f$17.apply__O__O(minValue$4));
               var $$this$23 = value$23;
               var jsx$23 = (($$this$23 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$23));
-              var f$19 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$7) {
+              var f$19 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$7) {
                 var this$198 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$7 = $m_s_Option$().apply__O__s_Option(x$3$2$7);
+                var opt$7 = $m_s_Option$().apply__O__s_Option(x$2$2$7);
                 var $$this$24 = opt$7;
                 var ifEmpty$7 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$10) {
                   return (function() {
@@ -3427,8 +3433,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
                 };
                 var p9$2 = $as_s_Option(x1$4.$$und1$f);
                 var p10$2 = $as_s_Option(x1$4.$$und2$f);
-                var x$3$3 = $m_s_None$();
-                if ((x$3$3 === p9$2)) {
+                var x$3$2 = $m_s_None$();
+                if ((x$3$2 === p9$2)) {
                   if ($is_s_Some(p10$2)) {
                     var x11$2 = $as_s_Some(p10$2);
                     var max$2$1 = x11$2.x$2;
@@ -3473,8 +3479,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           };
           var p9$3 = $as_s_Option(x1$3.$$und1$f);
           var p10$3 = $as_s_Option(x1$3.$$und2$f);
-          var x$3$4 = $m_s_None$();
-          if ((x$3$4 === p9$3)) {
+          var x$3$3 = $m_s_None$();
+          if ((x$3$3 === p9$3)) {
             if ($is_s_Some(p10$3)) {
               var x11$3 = $as_s_Some(p10$3);
               var max$5 = $uD(x11$3.x$2);
@@ -3504,9 +3510,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           throw new $c_s_MatchError().init___O(x1$3)
         };
         var f$20 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(selector$1$1) {
-          return (function(x$2$2) {
+          return (function(x$2$2$8) {
             var this$245 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(selector$1$1);
-            var xs$1 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(x$2$2);
+            var xs$1 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(x$2$2$8);
             return $as_sjs_js_WrappedDictionary($s_scg_Growable$class__$$plus$plus$eq__scg_Growable__sc_TraversableOnce__scg_Growable(this$245, xs$1))
           })
         })(selector));
@@ -3515,9 +3521,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var minValue$5 = options$1.priceMin;
         var maxValue$5 = options$1.priceMax;
-        var f$22 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$8) {
+        var f$22 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$9) {
           var this$251 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$8 = $m_s_Option$().apply__O__s_Option(x$3$2$8);
+          var opt$8 = $m_s_Option$().apply__O__s_Option(x$2$2$9);
           var $$this$26 = opt$8;
           var ifEmpty$8 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$11) {
             return (function() {
@@ -3534,9 +3540,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$29 = ((minValue$5 === (void 0)) ? (void 0) : f$22.apply__O__O(minValue$5));
         var $$this$27 = value$29;
         var jsx$25 = (($$this$27 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$27));
-        var f$24 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$9) {
+        var f$24 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$10) {
           var this$262 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$9 = $m_s_Option$().apply__O__s_Option(x$3$2$9);
+          var opt$9 = $m_s_Option$().apply__O__s_Option(x$2$2$10);
           var $$this$28 = opt$9;
           var ifEmpty$9 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$12) {
             return (function() {
@@ -3566,9 +3572,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue$5, maxValue$5));
               var minValue$6 = $as_T2(values$2.apply__O()).$$und1__O();
               var maxValue$6 = $as_T2(values$2.apply__O()).$$und2__O();
-              var f$26 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$10) {
+              var f$26 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$11) {
                 var this$277 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$10 = $m_s_Option$().apply__O__s_Option(x$3$2$10);
+                var opt$10 = $m_s_Option$().apply__O__s_Option(x$2$2$11);
                 var $$this$30 = opt$10;
                 var ifEmpty$10 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$13) {
                   return (function() {
@@ -3585,9 +3591,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$31 = ((minValue$6 === (void 0)) ? (void 0) : f$26.apply__O__O(minValue$6));
               var $$this$31 = value$31;
               var jsx$26 = (($$this$31 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$31));
-              var f$28 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$11) {
+              var f$28 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$12) {
                 var this$288 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$11 = $m_s_Option$().apply__O__s_Option(x$3$2$11);
+                var opt$11 = $m_s_Option$().apply__O__s_Option(x$2$2$12);
                 var $$this$32 = opt$11;
                 var ifEmpty$11 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$14) {
                   return (function() {
@@ -3641,8 +3647,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
                 };
                 var p9$4 = $as_s_Option(x1$6.$$und1$f);
                 var p10$4 = $as_s_Option(x1$6.$$und2$f);
-                var x$3$5 = $m_s_None$();
-                if ((x$3$5 === p9$4)) {
+                var x$3$4 = $m_s_None$();
+                if ((x$3$4 === p9$4)) {
                   if ($is_s_Some(p10$4)) {
                     var x11$4 = $as_s_Some(p10$4);
                     var max$2$2 = x11$4.x$2;
@@ -3687,8 +3693,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           };
           var p9$5 = $as_s_Option(x1$5.$$und1$f);
           var p10$5 = $as_s_Option(x1$5.$$und2$f);
-          var x$3$6 = $m_s_None$();
-          if ((x$3$6 === p9$5)) {
+          var x$3$5 = $m_s_None$();
+          if ((x$3$5 === p9$5)) {
             if ($is_s_Some(p10$5)) {
               var x11$5 = $as_s_Some(p10$5);
               var max$7 = $uD(x11$5.x$2);
@@ -3718,9 +3724,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           throw new $c_s_MatchError().init___O(x1$5)
         };
         var f$29 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(selector$1$2) {
-          return (function(x$3$2$12) {
+          return (function(x$3$2$1) {
             var this$335 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(selector$1$2);
-            var xs$2 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(x$3$2$12);
+            var xs$2 = new $c_sjs_js_WrappedDictionary().init___sjs_js_Dictionary(x$3$2$1);
             return $as_sjs_js_WrappedDictionary($s_scg_Growable$class__$$plus$plus$eq__scg_Growable__sc_TraversableOnce__scg_Growable(this$335, xs$2))
           })
         })(selector));
@@ -3729,9 +3735,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var minValue$7 = options$1.spreadMin;
         var maxValue$7 = options$1.spreadMax;
-        var f$31 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$13) {
+        var f$31 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$13) {
           var this$341 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$12 = $m_s_Option$().apply__O__s_Option(x$3$2$13);
+          var opt$12 = $m_s_Option$().apply__O__s_Option(x$2$2$13);
           var $$this$34 = opt$12;
           var ifEmpty$12 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$15) {
             return (function() {
@@ -3748,9 +3754,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$37 = ((minValue$7 === (void 0)) ? (void 0) : f$31.apply__O__O(minValue$7));
         var $$this$35 = value$37;
         var jsx$28 = (($$this$35 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$35));
-        var f$33 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$14) {
+        var f$33 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$14) {
           var this$352 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$13 = $m_s_Option$().apply__O__s_Option(x$3$2$14);
+          var opt$13 = $m_s_Option$().apply__O__s_Option(x$2$2$14);
           var $$this$36 = opt$13;
           var ifEmpty$13 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$16) {
             return (function() {
@@ -3780,9 +3786,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue$7, maxValue$7));
               var minValue$8 = $as_T2(values$3.apply__O()).$$und1__O();
               var maxValue$8 = $as_T2(values$3.apply__O()).$$und2__O();
-              var f$35 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$15) {
+              var f$35 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$15) {
                 var this$367 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$14 = $m_s_Option$().apply__O__s_Option(x$3$2$15);
+                var opt$14 = $m_s_Option$().apply__O__s_Option(x$2$2$15);
                 var $$this$38 = opt$14;
                 var ifEmpty$14 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$17) {
                   return (function() {
@@ -3799,9 +3805,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$39 = ((minValue$8 === (void 0)) ? (void 0) : f$35.apply__O__O(minValue$8));
               var $$this$39 = value$39;
               var jsx$29 = (($$this$39 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$39));
-              var f$37 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$16) {
+              var f$37 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$16) {
                 var this$378 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$15 = $m_s_Option$().apply__O__s_Option(x$3$2$16);
+                var opt$15 = $m_s_Option$().apply__O__s_Option(x$2$2$16);
                 var $$this$40 = opt$15;
                 var ifEmpty$15 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$18) {
                   return (function() {
@@ -3855,8 +3861,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
                 };
                 var p9$6 = $as_s_Option(x1$8.$$und1$f);
                 var p10$6 = $as_s_Option(x1$8.$$und2$f);
-                var x$3$7 = $m_s_None$();
-                if ((x$3$7 === p9$6)) {
+                var x$3$6 = $m_s_None$();
+                if ((x$3$6 === p9$6)) {
                   if ($is_s_Some(p10$6)) {
                     var x11$6 = $as_s_Some(p10$6);
                     var max$2$3 = x11$6.x$2;
@@ -3901,8 +3907,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           };
           var p9$7 = $as_s_Option(x1$7.$$und1$f);
           var p10$7 = $as_s_Option(x1$7.$$und2$f);
-          var x$3$8 = $m_s_None$();
-          if ((x$3$8 === p9$7)) {
+          var x$3$7 = $m_s_None$();
+          if ((x$3$7 === p9$7)) {
             if ($is_s_Some(p10$7)) {
               var x11$7 = $as_s_Some(p10$7);
               var max$9 = $uD(x11$7.x$2);
@@ -3943,9 +3949,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var minValue$9 = options$1.volumeMin;
         var maxValue$9 = options$1.volumeMax;
-        var f$40 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$17) {
+        var f$40 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$17) {
           var this$431 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$16 = $m_s_Option$().apply__O__s_Option(x$3$2$17);
+          var opt$16 = $m_s_Option$().apply__O__s_Option(x$2$2$17);
           var $$this$42 = opt$16;
           var ifEmpty$16 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$19) {
             return (function() {
@@ -3962,9 +3968,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$45 = ((minValue$9 === (void 0)) ? (void 0) : f$40.apply__O__O(minValue$9));
         var $$this$43 = value$45;
         var jsx$31 = (($$this$43 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$43));
-        var f$42 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$18) {
+        var f$42 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$18) {
           var this$442 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$17 = $m_s_Option$().apply__O__s_Option(x$3$2$18);
+          var opt$17 = $m_s_Option$().apply__O__s_Option(x$2$2$18);
           var $$this$44 = opt$17;
           var ifEmpty$17 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$20) {
             return (function() {
@@ -3994,9 +4000,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue$9, maxValue$9));
               var minValue$10 = $as_T2(values$4.apply__O()).$$und1__O();
               var maxValue$10 = $as_T2(values$4.apply__O()).$$und2__O();
-              var f$44 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$19) {
+              var f$44 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$19) {
                 var this$457 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$18 = $m_s_Option$().apply__O__s_Option(x$3$2$19);
+                var opt$18 = $m_s_Option$().apply__O__s_Option(x$2$2$19);
                 var $$this$46 = opt$18;
                 var ifEmpty$18 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$21) {
                   return (function() {
@@ -4013,9 +4019,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$47 = ((minValue$10 === (void 0)) ? (void 0) : f$44.apply__O__O(minValue$10));
               var $$this$47 = value$47;
               var jsx$32 = (($$this$47 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$47));
-              var f$46 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$20) {
+              var f$46 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$20) {
                 var this$468 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$19 = $m_s_Option$().apply__O__s_Option(x$3$2$20);
+                var opt$19 = $m_s_Option$().apply__O__s_Option(x$2$2$20);
                 var $$this$48 = opt$19;
                 var ifEmpty$19 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$22) {
                   return (function() {
@@ -4069,8 +4075,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
                 };
                 var p9$8 = $as_s_Option(x1$10.$$und1$f);
                 var p10$8 = $as_s_Option(x1$10.$$und2$f);
-                var x$3$9 = $m_s_None$();
-                if ((x$3$9 === p9$8)) {
+                var x$3$8 = $m_s_None$();
+                if ((x$3$8 === p9$8)) {
                   if ($is_s_Some(p10$8)) {
                     var x11$8 = $as_s_Some(p10$8);
                     var max$2$4 = x11$8.x$2;
@@ -4115,8 +4121,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           };
           var p9$9 = $as_s_Option(x1$9.$$und1$f);
           var p10$9 = $as_s_Option(x1$9.$$und2$f);
-          var x$3$10 = $m_s_None$();
-          if ((x$3$10 === p9$9)) {
+          var x$3$9 = $m_s_None$();
+          if ((x$3$9 === p9$9)) {
             if ($is_s_Some(p10$9)) {
               var x11$9 = $as_s_Some(p10$9);
               var max$11 = $uD(x11$9.x$2);
@@ -4157,9 +4163,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var minValue$11 = options$1.avgVolumeMin;
         var maxValue$11 = options$1.avgVolumeMax;
-        var f$49 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$21) {
+        var f$49 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$21) {
           var this$521 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$20 = $m_s_Option$().apply__O__s_Option(x$3$2$21);
+          var opt$20 = $m_s_Option$().apply__O__s_Option(x$2$2$21);
           var $$this$50 = opt$20;
           var ifEmpty$20 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$23) {
             return (function() {
@@ -4176,9 +4182,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var value$53 = ((minValue$11 === (void 0)) ? (void 0) : f$49.apply__O__O(minValue$11));
         var $$this$51 = value$53;
         var jsx$34 = (($$this$51 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$51));
-        var f$51 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$22) {
+        var f$51 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$22) {
           var this$532 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$21 = $m_s_Option$().apply__O__s_Option(x$3$2$22);
+          var opt$21 = $m_s_Option$().apply__O__s_Option(x$2$2$22);
           var $$this$52 = opt$21;
           var ifEmpty$21 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$24) {
             return (function() {
@@ -4208,9 +4214,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               })(minValue$11, maxValue$11));
               var minValue$12 = $as_T2(values$5.apply__O()).$$und1__O();
               var maxValue$12 = $as_T2(values$5.apply__O()).$$und2__O();
-              var f$53 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$23) {
+              var f$53 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$23) {
                 var this$547 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$22 = $m_s_Option$().apply__O__s_Option(x$3$2$23);
+                var opt$22 = $m_s_Option$().apply__O__s_Option(x$2$2$23);
                 var $$this$54 = opt$22;
                 var ifEmpty$22 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$25) {
                   return (function() {
@@ -4227,9 +4233,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
               var value$55 = ((minValue$12 === (void 0)) ? (void 0) : f$53.apply__O__O(minValue$12));
               var $$this$55 = value$55;
               var jsx$35 = (($$this$55 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O($$this$55));
-              var f$55 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$24) {
+              var f$55 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$24) {
                 var this$558 = $m_sjs_js_JSConverters$JSRichOption$();
-                var opt$23 = $m_s_Option$().apply__O__s_Option(x$3$2$24);
+                var opt$23 = $m_s_Option$().apply__O__s_Option(x$2$2$24);
                 var $$this$56 = opt$23;
                 var ifEmpty$23 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$26) {
                   return (function() {
@@ -4283,8 +4289,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
                 };
                 var p9$10 = $as_s_Option(x1$12.$$und1$f);
                 var p10$10 = $as_s_Option(x1$12.$$und2$f);
-                var x$3$11 = $m_s_None$();
-                if ((x$3$11 === p9$10)) {
+                var x$3$10 = $m_s_None$();
+                if ((x$3$10 === p9$10)) {
                   if ($is_s_Some(p10$10)) {
                     var x11$10 = $as_s_Some(p10$10);
                     var max$2$5 = x11$10.x$2;
@@ -4329,8 +4335,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
           };
           var p9$11 = $as_s_Option(x1$11.$$und1$f);
           var p10$11 = $as_s_Option(x1$11.$$und2$f);
-          var x$3$12 = $m_s_None$();
-          if ((x$3$12 === p9$11)) {
+          var x$3$11 = $m_s_None$();
+          if ((x$3$11 === p9$11)) {
             if ($is_s_Some(p10$11)) {
               var x11$11 = $as_s_Some(p10$11);
               var max$13 = $uD(x11$11.x$2);
@@ -4371,9 +4377,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         };
         var valueA = options$1.maxResults;
         var $$this$58 = valueA;
-        var f$58 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$25) {
+        var f$58 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$25) {
           var this$611 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$24 = $m_s_Option$().apply__O__s_Option(x$3$2$25);
+          var opt$24 = $m_s_Option$().apply__O__s_Option(x$2$2$25);
           var $$this$59 = opt$24;
           var ifEmpty$24 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$27) {
             return (function() {
@@ -4395,9 +4401,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var maxResults = $uI((($$this$60 === (void 0)) ? $default$3.apply__O() : $$this$60));
         var valueA$1 = options$1.sortBy;
         var $$this$61 = valueA$1;
-        var f$60 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$26) {
+        var f$60 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$26) {
           var this$622 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$25 = $m_s_Option$().apply__O__s_Option(x$3$2$26);
+          var opt$25 = $m_s_Option$().apply__O__s_Option(x$2$2$26);
           var $$this$62 = opt$25;
           var ifEmpty$25 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$28) {
             return (function() {
@@ -4419,9 +4425,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var sortField = $as_T((($$this$63 === (void 0)) ? $default$4.apply__O() : $$this$63));
         var value$63 = options$1.reverse;
         var $$this$64 = value$63;
-        var f$62 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2$27) {
+        var f$62 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2$27) {
           var this$635 = $m_sjs_js_JSConverters$JSRichOption$();
-          var opt$26 = $m_s_Option$().apply__O__s_Option(x$3$2$27);
+          var opt$26 = $m_s_Option$().apply__O__s_Option(x$2$2$27);
           var $$this$65 = opt$26;
           var ifEmpty$26 = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$29) {
             return (function() {
@@ -4438,8 +4444,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.com$shocktrade$a
         var valueA$2 = (($$this$64 === (void 0)) ? (void 0) : f$62.apply__O__O($$this$64));
         var $$this$66 = valueA$2;
         var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(value$1$1) {
-          return (function(x$2$2$1) {
-            return $m_sr_BoxesRunTime$().equals__O__O__Z(x$2$2$1, value$1$1)
+          return (function(x$1$2$1) {
+            return $m_sr_BoxesRunTime$().equals__O__O__Z(x$1$2$1, value$1$1)
           })
         })(true));
         if (((!($$this$66 === (void 0))) && $uZ(p.apply__O__O($$this$66)))) {
@@ -5011,7 +5017,7 @@ $c_Lcom_shocktrade_common_models_quote_Advisory$.prototype.apply__T__sjs_js_Unde
           break
         }
         case 66: {
-          var description = "Class BS asset";
+          var description = "Class B asset";
           break
         }
         case 67: {

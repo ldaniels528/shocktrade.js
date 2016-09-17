@@ -6,7 +6,7 @@ import com.shocktrade.stockguru.contest.PortfolioService.MarginMarketValue
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.{Service, angular}
 import org.scalajs.dom._
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

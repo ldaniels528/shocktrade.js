@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.quote
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -35,7 +35,7 @@ object Advisory {
       // get the advisory description
       val description = lastChar flatMap {
         case 'A' => "Class A asset"
-        case 'B' => "Class BS asset"
+        case 'B' => "Class B asset"
         case 'C' if exchange.contains("NASDAQ") => "Exception"
         case 'C' => "Continuance"
         case 'D' => "New issue or reverse split"

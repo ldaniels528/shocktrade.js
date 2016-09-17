@@ -1,14 +1,15 @@
 package com.shocktrade.stockguru.social
 
+import com.shocktrade.common.models.{MyUpdate, Profile}
 import com.shocktrade.stockguru.ScopeEvents._
 import com.shocktrade.stockguru.dialogs.ComposeMessageDialog
-import com.shocktrade.common.models.{MyUpdate, Profile}
 import com.shocktrade.stockguru.{GlobalLoading, MySessionService}
 import org.scalajs.angularjs._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.dom.console
 import org.scalajs.nodejs.social.facebook.TaggableFriend
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

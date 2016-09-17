@@ -7,7 +7,7 @@ import com.shocktrade.common.models.quote.ExposureQuote
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps

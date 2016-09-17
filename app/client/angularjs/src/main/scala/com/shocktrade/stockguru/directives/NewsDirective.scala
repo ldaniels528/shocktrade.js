@@ -4,7 +4,7 @@ import org.scalajs.angularjs.Directive.{ElementRestriction, LinkSupport, Templat
 import org.scalajs.angularjs.sanitize.Sce
 import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope}
 import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

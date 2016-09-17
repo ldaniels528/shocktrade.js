@@ -1,14 +1,14 @@
 package com.shocktrade.stockguru.contest
 
-import com.shocktrade.stockguru.ScopeEvents._
-import com.shocktrade.stockguru.MySessionService
-import com.shocktrade.stockguru.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.common.models.contest.{ContestRankings, PortfolioRanking}
+import com.shocktrade.stockguru.MySessionService
+import com.shocktrade.stockguru.ScopeEvents._
+import com.shocktrade.stockguru.dialogs.{PerksDialog, TransferFundsDialog}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
 import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

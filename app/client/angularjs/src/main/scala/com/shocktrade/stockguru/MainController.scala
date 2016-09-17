@@ -1,6 +1,6 @@
 package com.shocktrade.stockguru
 
-import com.shocktrade.common.models.quote.{AutoCompleteQuote, ClassifiedQuote}
+import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.{OnlineStatus, Profile}
 import com.shocktrade.stockguru.MainController._
 import com.shocktrade.stockguru.ScopeEvents._
@@ -14,6 +14,7 @@ import org.scalajs.angularjs.{Controller, Location, Scope, Timeout, injected, _}
 import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

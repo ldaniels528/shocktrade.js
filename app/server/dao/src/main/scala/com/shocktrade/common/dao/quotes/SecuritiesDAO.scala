@@ -4,7 +4,7 @@ package quotes
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
 import org.scalajs.nodejs.mongodb._
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

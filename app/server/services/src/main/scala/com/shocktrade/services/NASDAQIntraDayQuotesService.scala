@@ -7,6 +7,7 @@ import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.request.Request
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console, errors}
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps

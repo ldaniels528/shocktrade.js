@@ -1,11 +1,11 @@
 package com.shocktrade.stockguru.contest
 
-import com.shocktrade.stockguru.QuoteCache
 import com.shocktrade.common.models.contest._
+import com.shocktrade.stockguru.QuoteCache
 import com.shocktrade.util.StringHelper._
 import org.scalajs.angularjs.angular
 import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps

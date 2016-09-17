@@ -18,7 +18,7 @@ object SellingFlow {
 
   /**
     * Selling Flow Enrichment
-    * @param flow the given [[SellingFlow flow]]
+    * @param flow the given [[SellingFlow selling flow]]
     */
   implicit class SellingFlowEnrichment(val flow: SellingFlow) extends AnyVal {
 

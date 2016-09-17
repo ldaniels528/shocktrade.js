@@ -1,13 +1,13 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.dao.quotes.NAICSDAO._
-import com.shocktrade.common.dao.quotes.SecuritiesDAO._
 import com.shocktrade.common.dao.quotes.SICDAO._
+import com.shocktrade.common.dao.quotes.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, ResearchQuote}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb._
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

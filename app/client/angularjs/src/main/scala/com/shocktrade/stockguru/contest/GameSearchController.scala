@@ -1,15 +1,16 @@
 package com.shocktrade.stockguru.contest
 
-import com.shocktrade.stockguru.ScopeEvents._
-import com.shocktrade.stockguru.dialogs.InvitePlayerDialog
 import com.shocktrade.common.forms.PlayerInfoForm
 import com.shocktrade.common.models._
 import com.shocktrade.common.models.contest.{Contest, ContestSearchOptions, Participant}
+import com.shocktrade.stockguru.ScopeEvents._
+import com.shocktrade.stockguru.dialogs.InvitePlayerDialog
 import com.shocktrade.stockguru.{GlobalLoading, MySessionService}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, angular, injected, _}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

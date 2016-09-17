@@ -8,6 +8,7 @@ import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Location, Scope, Timeout, angular, injected}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

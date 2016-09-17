@@ -1,14 +1,15 @@
 package com.shocktrade.stockguru.discover
 
-import com.shocktrade.stockguru.discover.ResearchController._
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
+import com.shocktrade.stockguru.discover.ResearchController._
 import com.shocktrade.stockguru.{GlobalLoading, MainController}
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, Timeout, angular, injected}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

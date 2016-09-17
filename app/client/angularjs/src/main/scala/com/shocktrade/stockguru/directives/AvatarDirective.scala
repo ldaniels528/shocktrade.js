@@ -3,6 +3,7 @@ package com.shocktrade.stockguru.directives
 import org.scalajs.angularjs.Directive._
 import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope, angular}
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
