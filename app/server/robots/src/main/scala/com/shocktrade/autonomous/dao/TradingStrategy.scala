@@ -1,7 +1,5 @@
 package com.shocktrade.autonomous.dao
 
-import com.shocktrade.common.forms.ResearchOptions
-
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
 
@@ -19,29 +17,6 @@ class TradingStrategy(val name: js.UndefOr[String],
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object TradingStrategy {
-
-  /**
-    * Returns a default trading strategy
-    * @return a [[TradingStrategy trading strategy]]
-    */
-  def default() = {
-    new TradingStrategy(
-      name = "Day-Trading",
-      buyingFlow = new BuyingFlow(
-        preferredSpendPerSecurity = 1000.0,
-        searchOptions = new ResearchOptions(
-          changeMin = -0.10,
-          spreadMin = 25.0,
-          priceMin =  0.0001,
-          priceMax = 2.0,
-          avgVolumeMin = 1e+6,
-          sortBy = "spread",
-          reverse = true,
-          maxResults = 250
-        )),
-      sellingFlow = new SellingFlow()
-    )
-  }
 
   /**
     * Trading Strategy Enrichment

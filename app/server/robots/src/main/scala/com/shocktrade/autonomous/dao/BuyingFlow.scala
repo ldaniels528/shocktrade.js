@@ -1,19 +1,19 @@
 package com.shocktrade.autonomous.dao
 
-import com.shocktrade.autonomous.dao.BuyingFlow.Rule
+import com.shocktrade.autonomous.dao.BuyingFlow.RuleSet
 import com.shocktrade.common.forms.ResearchOptions
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
-  * Represents a Trading Strategy's Buying Flow
+  * Represents a Trading Strategy Security Buying Flow
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
 class BuyingFlow(val searchOptions: js.UndefOr[ResearchOptions],
                  val preferredSpendPerSecurity: js.UndefOr[Double] = js.undefined,
-                 val rules: js.UndefOr[Rule]) extends js.Object
+                 val rules: js.UndefOr[js.Array[RuleSet]] = js.undefined) extends js.Object
 
 /**
   * Buying Flow Companion
@@ -22,9 +22,8 @@ class BuyingFlow(val searchOptions: js.UndefOr[ResearchOptions],
 object BuyingFlow {
 
   @ScalaJSDefined
-  class Rule(val name: js.UndefOr[String],
-             val exclude: js.UndefOr[js.Dictionary[js.Any]],
-             val sortBy: js.UndefOr[js.Dictionary[String]]) extends js.Object
+  class RuleSet(val name: js.UndefOr[String],
+                val exclude: js.UndefOr[js.Array[js.Dictionary[js.Any]]]) extends js.Object
 
   /**
     * Buying Flow Enrichment

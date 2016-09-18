@@ -3096,6 +3096,9 @@ $h_Lcom_shocktrade_common_forms_ResearchOptions$.prototype = $c_Lcom_shocktrade_
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
   return (void 0)
 });
+$c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
+  return 25
+});
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.init___ = (function() {
   return this
 });
@@ -3127,7 +3130,7 @@ $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$de
   return (void 0)
 });
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
-  return 25
+  return (void 0)
 });
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
   return (void 0)
@@ -14351,30 +14354,23 @@ function $c_Lcom_shocktrade_common_forms_ResearchOptions() {
     arg$rest.push(arguments[jsx$2]);
     jsx$2 = ((jsx$2 + 1) | 0)
   };
-  var sortBy = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var betaMax = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var betaMin = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var changeMax = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var changeMin = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var priceMax = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var priceMin = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var spreadMax = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var spreadMin = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var volumeMax = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var volumeMin = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var avgVolumeMax = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var avgVolumeMin = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var reverse = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var maxResults = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
+  var betaMax = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var betaMin = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var changeMax = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var changeMin = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  var priceMax = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
+  var priceMin = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
+  var spreadMax = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
+  var spreadMin = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
+  var volumeMax = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
+  var volumeMin = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
+  var avgVolumeMax = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
+  var avgVolumeMin = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+  var sortFields = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+  var sortBy = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
+  var reverse = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
+  var maxResults = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ResearchOptions$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
   $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "sortBy": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
   $g.Object.defineProperties(this, {
     "betaMax": {
       "configurable": true,
@@ -14472,6 +14468,22 @@ function $c_Lcom_shocktrade_common_forms_ResearchOptions() {
     }
   });
   $g.Object.defineProperties(this, {
+    "sortFields": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "sortBy": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
     "reverse": {
       "configurable": true,
       "enumerable": true,
@@ -14487,7 +14499,6 @@ function $c_Lcom_shocktrade_common_forms_ResearchOptions() {
       "value": null
     }
   });
-  this.sortBy = sortBy;
   this.betaMax = betaMax;
   this.betaMin = betaMin;
   this.changeMax = changeMax;
@@ -14500,6 +14511,8 @@ function $c_Lcom_shocktrade_common_forms_ResearchOptions() {
   this.volumeMin = volumeMin;
   this.avgVolumeMax = avgVolumeMax;
   this.avgVolumeMin = avgVolumeMin;
+  this.sortFields = sortFields;
+  this.sortBy = sortBy;
   this.reverse = reverse;
   this.maxResults = maxResults
 }
@@ -16637,7 +16650,7 @@ $c_Lcom_shocktrade_stockguru_discover_ResearchController.prototype.init___Lcom_s
   $$scope.percentages = $m_Lcom_shocktrade_stockguru_discover_ResearchController$().Percentages$1;
   $$scope.changePercentages = $m_Lcom_shocktrade_stockguru_discover_ResearchController$().ChangePercentages$1;
   var value = $m_Lcom_shocktrade_stockguru_discover_ResearchController$().MaxResultsSet$1[1];
-  $$scope.searchOptions = new $c_Lcom_shocktrade_common_forms_ResearchOptions((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), value);
+  $$scope.searchOptions = new $c_Lcom_shocktrade_common_forms_ResearchOptions((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), value);
   $$scope.getFilteredResults = (function(arg$outer) {
     return (function() {
       return arg$outer.com$shocktrade$stockguru$discover$ResearchController$$filteredResults$1
@@ -16688,7 +16701,7 @@ $c_Lcom_shocktrade_stockguru_discover_ResearchController.prototype.init___Lcom_s
       return f$5.apply__O__O__O(arg1$4, arg2)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_ResearchController$$anonfun$10().init___Lcom_shocktrade_stockguru_discover_ResearchController(this));
-  $$scope.quoteSearch = (function(f$6) {
+  $$scope.research = (function(f$6) {
     return (function(arg1$5) {
       return f$6.apply__O__O(arg1$5)
     })

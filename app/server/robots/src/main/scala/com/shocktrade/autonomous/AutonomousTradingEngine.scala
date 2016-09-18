@@ -2,16 +2,19 @@ package com.shocktrade.autonomous
 
 import com.shocktrade.autonomous.AutonomousTradingEngine._
 import com.shocktrade.autonomous.dao.RobotDAO._
-import com.shocktrade.autonomous.dao.{RobotData, TradingStrategy}
-import com.shocktrade.common.dao.contest.PortfolioDAO._
-import com.shocktrade.common.dao.contest.{OrderData, PortfolioData}
+import com.shocktrade.autonomous.dao.{BuyingFlow, RobotData, SellingFlow}
+import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
+import com.shocktrade.common.dao.contest._
+import com.shocktrade.common.dao.quotes.SecuritiesDAO
 import com.shocktrade.common.dao.quotes.SecuritiesDAO._
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.quote.ResearchQuote
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, FindAndModifyWriteOpResult, MongoDB}
+import org.scalajs.nodejs.npm.numeral.Numeral
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.nodejs.util.Util
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
@@ -28,13 +31,19 @@ import scala.util.{Failure, Success}
   */
 class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) {
   // load modules
-  private implicit val os = OS()
   private implicit val moment = Moment()
+  private implicit val numeral = Numeral()
+  private implicit val util = Util()
+  private implicit val os = OS()
 
   // get DAO instances
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
-  private val robotDAO = dbFuture.flatMap(_.getRobotDAO)
+  private implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+  private implicit val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private implicit val robotDAO = dbFuture.flatMap(_.getRobotDAO)
+
+  // create the rule compiler and processor
+  private implicit val processor = new RuleProcessor()
+  private implicit val compiler = new RuleCompiler()
 
   /**
     * Invokes the process
@@ -59,7 +68,7 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
 
   /**
     * Processes the portfolios for the given robot
-    * @param robot the given robot
+    * @param robot the given [[RobotData robot]]
     * @return a promise of the outcomes
     */
   def operate(robot: RobotData) = {
@@ -68,16 +77,7 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
         robot.info("Retrieving portfolios...")
         for {
           portfolios <- portfolioDAO.flatMap(_.findByPlayer(playerID))
-          results <- Future.sequence(portfolios map { portfolio =>
-            for {
-              orders <- playWith(robot, portfolio)
-              result <- portfolio._id.toOption match {
-                case Some(id) => portfolioDAO.flatMap(_.createOrders(id.toHexString(), orders).toFuture)
-                case None => Future.successful(New[FindAndModifyWriteOpResult])
-              }
-            } yield result
-          } toSeq)
-        //
+          results <- processOrders(robot, portfolios)
         } yield results
 
       case None =>
@@ -86,59 +86,56 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
     }
   }
 
-  private def playWith(robot: RobotData, portfolio: PortfolioData) = {
-    // lookup the trading strategy
-    val tradingStrategy = getTradingStrategy(robot)
-    robot.info(s"Playing with portfolio #${portfolio._id.orNull} using the '${tradingStrategy.name getOrElse "Untitled"}' strategy")
+  @inline
+  private def processOrders(robot: RobotData, portfolios: Seq[PortfolioData]) = {
+    Future.sequence {
+      for {
+        tradingStrategy <- robot.tradingStrategy.toList
+        buyingFlow <- tradingStrategy.buyingFlow.toList
+        sellingFlow <- tradingStrategy.sellingFlow.toList
+        name <- tradingStrategy.name.toList
+        portfolio <- portfolios
+        portfolioId <- portfolio._id.map(_.toHexString()).toList
+      } yield {
+        robot.info(s"Playing with portfolio #$portfolioId using the '$name' strategy")
 
-    // get the positions and active orders
-    val positions = portfolio.positions.toList.flatMap(_.toList)
-    val orders = portfolio.orders.toList.flatMap(_.toList)
+        // create the robot environment
+        implicit val env = RobotEnvironment(portfolio)
 
-    // compute the outstanding orders cost
-    val outstandingOrdersCost = orders.flatMap(_.totalCost.toOption).sum
+        for {
+        // process the BUY flow
+          securities <- buyingFlow.execute()
+          buyOrders = if (securities.isEmpty) Nil else createBuyOrders(robot, buyingFlow, securities)
 
-    // create a collection of symbols we already have orders for / positions in
-    val exclusionSymbols = (positions.flatMap(_.symbol.toOption) ::: orders.flatMap(_.symbol.toOption)).toSet
+          // process the SELL flow
+          positions <- sellingFlow.execute()
+          sellOrders = createSellOrders(robot, sellingFlow, positions)
 
-    for {
-    // get the collection of eligible quotes
-      securities <- tradingStrategy.buyingFlow.flatMap(_.searchOptions).toOption match {
-        case Some(options) => securitiesDAO.flatMap(_.research(options)) map (_.toSeq)
-        case None => Future.successful(Nil)
+          // combine the buy and sell orders into a single collection
+          orders = {
+            val combinedOrders = buyOrders ++ sellOrders
+            showOrders(robot, combinedOrders)
+            combinedOrders
+          }
+
+          // persist the orders
+          result <- portfolio._id.toOption match {
+            case Some(id) if orders.nonEmpty => portfolioDAO.flatMap(_.createOrders(id.toHexString(), orders).toFuture)
+            case _ => Future.successful(New[FindAndModifyWriteOpResult])
+          }
+        } yield result
       }
-
-      _ = robot.log("Identified %d eligible securities", securities.size)
-
-      // filter out those we already have orders for / positions in
-      unownedSecurities = securities.filterNot(_.symbol.exists(exclusionSymbols.contains))
-
-      _ = robot.log("%d unowned securities", unownedSecurities.size)
-
-      // filter out securities with negative ratings
-      preferredSecurities = unownedSecurities.filterNot(_.getAdvisory.exists(_.isWarning))
-
-      _ = robot.log("%d preferred securities", preferredSecurities.size)
-
-      // sort the securities - largest spread on top
-      sortedSecurities = preferredSecurities.sortBy(q => (-(q.avgVolume10Day getOrElse 0.0), -(q.spread getOrElse 0.0), q.low getOrElse 0.0))
-
-    // determine how much of each security to purchase
-    } yield if (sortedSecurities.nonEmpty) createBuyOrders(robot, portfolio, tradingStrategy, sortedSecurities, outstandingOrdersCost) else Nil
+    }
   }
 
-  private def createBuyOrders(robot: RobotData,
-                              portfolio: PortfolioData,
-                              tradingStrategy: TradingStrategy,
-                              securities: Seq[ResearchQuote],
-                              outstandingOrdersCost: Double) = {
+  @inline
+  private def createBuyOrders(robot: RobotData, buyingFlow: BuyingFlow, securities: Seq[ResearchQuote])(implicit env: RobotEnvironment) = {
     // display the quotes
     showQuotes(robot, securities)
 
-    val orders = (for {
-      buyingFlow <- tradingStrategy.buyingFlow
-      cashFunds <- portfolio.cashAccount.flatMap(_.cashFunds)
-      availableCash = cashFunds - outstandingOrdersCost
+    (for {
+      cashFunds <- env.portfolio.cashAccount.flatMap(_.cashFunds)
+      availableCash = cashFunds - env.outstandingOrdersCost
       preferredSpend <- buyingFlow.preferredSpendPerSecurity
       numOfSecuritiesToBuy = (cashFunds / preferredSpend).toInt
       securitiesToBuy = securities.take(numOfSecuritiesToBuy)
@@ -164,27 +161,20 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
         Nil
       }
     } yield buyOrders).toOption.toSeq.flatten
-
-    showOrders(robot, orders)
-
-    orders
   }
 
-  private def getTradingStrategy(robot: RobotData) = {
-    robot.tradingStrategy.toOption match {
-      case Some(strategy) => strategy
-      case None =>
-        val defaultStrategy = TradingStrategy.default()
-        robot.warn(s"The trading strategy is either not defined or invalid. Defaulting to '${defaultStrategy.name}'")
-        defaultStrategy
-    }
+  @inline
+  private def createSellOrders(robot: RobotData, flow: SellingFlow, positions: Seq[PositionData]) = {
+    Seq.empty[OrderData]
   }
 
   private def showQuotes(robot: RobotData, quotes: Seq[ResearchQuote]) = {
     robot.log(s"${quotes.size} securities identified:")
     quotes foreach { q =>
-      robot.log("security: %s/%s, price %d, low %d, high %d, volume %d, avgVol %d, spread %d",
-        q.symbol, q.exchange, q.lastTrade ?? 0.0, q.low ?? 0.0, q.high ?? 0.0, q.volume ?? 0.0, q.avgVolume10Day ?? 0.0, q.spread ?? 0.0)
+      robot.log("| %s/%s | price: %d | low: %d | high: %d | volume: %s | avgVol: %s | spread: %d%% |",
+        q.symbol, q.exchange, q.lastTrade.orZero, q.low.orZero, q.high.orZero,
+        numeral(q.volume.orZero).format("0,0"), numeral(q.avgVolume10Day.orZero).format("0,0"),
+        (q.spread.orZero * 10).toInt / 10.0)
     }
   }
 
@@ -203,8 +193,6 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object AutonomousTradingEngine {
-
-  type Quantity = Double
 
   /**
     * Research Quote Extensions
@@ -263,6 +251,41 @@ object AutonomousTradingEngine {
     @inline
     private def now(implicit moment: Moment) = s"${moment().format("MM/DD HH:mm:ss")}"
 
+  }
+
+  /**
+    * Buying Flow Extensions
+    * @param flow the given [[BuyingFlow buying flow]]
+    */
+  implicit class BuyingFlowExtensions(val flow: BuyingFlow) extends AnyVal {
+
+    @inline
+    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, securitiesDAO: Future[SecuritiesDAO]) = {
+      for {
+      // get the collection of eligible quotes
+        securities <- flow.searchOptions.toOption match {
+          case Some(options) => securitiesDAO.flatMap(_.research(options)) map (_.toSeq)
+          case None => Future.successful(Nil)
+        }
+
+        // compile the flow
+        opCodes = compiler(flow)
+
+      // use the rules to filter out ineligible securities
+      } yield processor(opCodes, securities)
+    }
+  }
+
+  /**
+    * Selling Flow Extensions
+    * @param flow the given [[BuyingFlow buying flow]]
+    */
+  implicit class SellingFlowExtensions(val flow: SellingFlow) extends AnyVal {
+
+    @inline
+    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, portfolioDAO: Future[PortfolioUpdateDAO]) = {
+      Future.successful(Seq.empty[PositionData])
+    }
   }
 
 }

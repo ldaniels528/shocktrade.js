@@ -3,6 +3,7 @@ package quotes
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
+import org.scalajs.nodejs.console
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -90,15 +91,24 @@ object SecuritiesDAO {
       toRange("volume", options.volumeMin, options.volumeMax) foreach (selector ++= _)
       toRange("avgVolume10Day", options.avgVolumeMin, options.avgVolumeMax) foreach (selector ++= _)
 
-      // determine the maximum number of results, the sort field and sort direction
+      // is there an array of sort fields?
+      val sortFields: js.Array[js.Any] = options.sortFields map (_ flatMap { sf =>
+        js.Array(sf.field, sf.direction).asInstanceOf[js.Array[js.Any]]
+      }) getOrElse {
+        val sortField = options.sortBy.flat.getOrElse("symbol")
+        val sortDirection = if (options.reverse.isTrue) -1 else 1
+        js.Array(sortField, sortDirection)
+      }
+
+      console.log("sortFields = %j", sortFields)
+
+      // determine the maximum number of results
       val maxResults = options.maxResults.flat.getOrElse(25)
-      val sortField = options.sortBy.flat.getOrElse("symbol")
-      val sortDirection = if (options.reverse.isTrue) -1 else 1
 
       // perform the query
       dao.find(selector, projection = ResearchQuote.Fields.toProjection)
         .limit(maxResults)
-        .sort(js.Array(sortField, sortDirection))
+        .sort(sortFields)
         .toArrayFuture[ResearchQuote]
     }
 

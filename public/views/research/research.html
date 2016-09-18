@@ -1,4 +1,4 @@
-<div ng-init="quoteSearch(searchOptions)">
+<div ng-init="research(searchOptions)">
     <!-- Filtering Options -->
     <div class="col-md-12">
         <fieldset>
@@ -86,7 +86,7 @@
                         </select>
                    </div>
                     <div class="col-md-4">
-                        <button class="btn st_button" ng-click="quoteSearch(searchOptions)">
+                        <button class="btn st_button" ng-click="research(searchOptions)">
                             <i ng-hide="isLoading()" class="fa fa-search"></i>
                             <img ng-show="isLoading()" ng-disabled="loading" src="/images/status/loading16.gif">
                             Search

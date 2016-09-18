@@ -1,15 +1,16 @@
 package com.shocktrade.common.forms
 
+import com.shocktrade.common.forms.ResearchOptions.SortField
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
-  * Research Securities Options
+  * Securities Research Options
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class ResearchOptions(var sortBy: js.UndefOr[String] = js.undefined,
-                      var betaMax: js.UndefOr[Double] = js.undefined,
+class ResearchOptions(var betaMax: js.UndefOr[Double] = js.undefined,
                       var betaMin: js.UndefOr[Double] = js.undefined,
                       var changeMax: js.UndefOr[Double] = js.undefined,
                       var changeMin: js.UndefOr[Double] = js.undefined,
@@ -21,5 +22,18 @@ class ResearchOptions(var sortBy: js.UndefOr[String] = js.undefined,
                       var volumeMin: js.UndefOr[Double] = js.undefined,
                       var avgVolumeMax: js.UndefOr[Double] = js.undefined,
                       var avgVolumeMin: js.UndefOr[Double] = js.undefined,
+                      var sortFields: js.UndefOr[js.Array[SortField]] = js.undefined,
+                      var sortBy: js.UndefOr[String] = js.undefined,
                       var reverse: js.UndefOr[Boolean] = js.undefined,
                       var maxResults: js.UndefOr[Int] = 25) extends js.Object
+
+/**
+  * Research Options Companion
+  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  */
+object ResearchOptions {
+
+  @ScalaJSDefined
+  class SortField(val field: String, val direction: Int) extends js.Object
+
+}

@@ -86,7 +86,7 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
     if (column.contains("symbol")) row.flatMap(_.exchange) else column
   }
 
-  $scope.quoteSearch = (aSearchOptions: js.UndefOr[ResearchOptions]) => aSearchOptions foreach { searchOptions =>
+  $scope.research = (aSearchOptions: js.UndefOr[ResearchOptions]) => aSearchOptions foreach { searchOptions =>
     filteredResults = emptyArray
     searchResults = emptyArray
 
@@ -198,6 +198,6 @@ trait ResearchScope extends Scope {
   var getSearchResultsCount: js.Function0[Int] = js.native
   var columnAlign: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
   var rowClass: js.Function2[js.UndefOr[String], js.UndefOr[ResearchQuote], js.UndefOr[String]] = js.native
-  var quoteSearch: js.Function1[js.UndefOr[ResearchOptions], Unit] = js.native
+  var research: js.Function1[js.UndefOr[ResearchOptions], Unit] = js.native
 
 }

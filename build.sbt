@@ -171,6 +171,7 @@ lazy val robots = (project in file("./app/server/robots"))
       "com.github.ldaniels528" %%% "scalajs-nodejs-htmlparser2" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-numeral" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion
     ))
 

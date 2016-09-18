@@ -10208,8 +10208,8 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
         var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
         var fields = $m_Lcom_shocktrade_common_models_quote_AutoCompleteQuote$().Fields$1;
         var qual$3 = x$15$2.find(jsx$5, jsx$1.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
-        var x$11 = ["name", 1];
-        var qual$4 = qual$3.sort(x$11);
+        var x$12 = ["name", 1];
+        var qual$4 = qual$3.sort(x$12);
         var cursor = qual$4.limit(maxResults$1);
         var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
         var arg1$1 = (function(promise$1) {
@@ -11566,57 +11566,85 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           selector[$as_T(arg1$35.$$und1__O())] = arg1$35.$$und2__O()
         }
       };
-      var valueA = options$1.maxResults;
-      if ((valueA === (void 0))) {
-        var value$24 = (void 0)
-      } else {
-        var opt$24 = $m_s_Option$().apply__O__s_Option(valueA);
-        if (opt$24.isEmpty__Z()) {
-          var value$24 = (void 0)
-        } else {
-          var arg1$36 = opt$24.get__O();
-          var value$24 = arg1$36
-        }
-      };
-      var maxResults = $uI(((value$24 === (void 0)) ? 25 : value$24));
-      var valueA$1 = options$1.sortBy;
-      if ((valueA$1 === (void 0))) {
+      var value$24 = options$1.sortFields;
+      if ((value$24 === (void 0))) {
         var value$25 = (void 0)
       } else {
-        var opt$25 = $m_s_Option$().apply__O__s_Option(valueA$1);
-        if (opt$25.isEmpty__Z()) {
-          var value$25 = (void 0)
-        } else {
-          var arg1$37 = opt$25.get__O();
-          var value$25 = arg1$37
-        }
+        var array = [];
+        var i = 0;
+        var len = $uI(value$24.length);
+        while ((i < len)) {
+          var index = i;
+          var arg1$36 = value$24[index];
+          var array$1 = [$as_T(arg1$36.field), $uI(arg1$36.direction)];
+          var i$1 = 0;
+          var len$1 = $uI(array$1.length);
+          while ((i$1 < len$1)) {
+            var index$1 = i$1;
+            var arg1$37 = array$1[index$1];
+            array.push(arg1$37);
+            i$1 = ((1 + i$1) | 0)
+          };
+          i = ((1 + i) | 0)
+        };
+        var value$25 = array
       };
-      var sortField = $as_T(((value$25 === (void 0)) ? "symbol" : value$25));
-      var value$26 = options$1.reverse;
-      if ((value$26 === (void 0))) {
-        var valueA$2 = (void 0)
+      if ((value$25 === (void 0))) {
+        var valueA = options$1.sortBy;
+        if ((valueA === (void 0))) {
+          var value$26 = (void 0)
+        } else {
+          var opt$24 = $m_s_Option$().apply__O__s_Option(valueA);
+          if (opt$24.isEmpty__Z()) {
+            var value$26 = (void 0)
+          } else {
+            var arg1$38 = opt$24.get__O();
+            var value$26 = arg1$38
+          }
+        };
+        var sortField = $as_T(((value$26 === (void 0)) ? "symbol" : value$26));
+        var value$27 = options$1.reverse;
+        if ((value$27 === (void 0))) {
+          var valueA$1 = (void 0)
+        } else {
+          var opt$25 = $m_s_Option$().apply__O__s_Option(value$27);
+          if (opt$25.isEmpty__Z()) {
+            var valueA$1 = (void 0)
+          } else {
+            var arg1$39 = opt$25.get__O();
+            var valueA$1 = arg1$39
+          }
+        };
+        if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, true))) {
+          var sortDirection = (-1)
+        } else {
+          var sortDirection = 1
+        };
+        var sortFields = [sortField, sortDirection]
       } else {
-        var opt$26 = $m_s_Option$().apply__O__s_Option(value$26);
+        var sortFields = value$25
+      };
+      $g.console.log("sortFields = %j", sortFields);
+      var valueA$2 = options$1.maxResults;
+      if ((valueA$2 === (void 0))) {
+        var value$28 = (void 0)
+      } else {
+        var opt$26 = $m_s_Option$().apply__O__s_Option(valueA$2);
         if (opt$26.isEmpty__Z()) {
-          var valueA$2 = (void 0)
+          var value$28 = (void 0)
         } else {
-          var arg1$38 = opt$26.get__O();
-          var valueA$2 = arg1$38
+          var arg1$40 = opt$26.get__O();
+          var value$28 = arg1$40
         }
       };
-      if (((valueA$2 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$2, true))) {
-        var sortDirection = (-1)
-      } else {
-        var sortDirection = 1
-      };
+      var maxResults = $uI(((value$28 === (void 0)) ? 25 : value$28));
       var jsx$20 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
       var fields = $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().Fields$1;
       var qual$1 = x$2$2.find(selector, jsx$20.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
       var qual$2 = qual$1.limit(maxResults);
-      var x$9$1 = [sortField, sortDirection];
-      var cursor = qual$2.sort(x$9$1);
+      var cursor = qual$2.sort(sortFields);
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-      var arg1$39 = (function(promise$1) {
+      var arg1$41 = (function(promise$1) {
         return (function(err$2, result$2) {
           if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
             return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
@@ -11626,7 +11654,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           }
         })
       })(promise);
-      cursor.toArray(arg1$39);
+      cursor.toArray(arg1$41);
       return promise
     })
   })(options));
