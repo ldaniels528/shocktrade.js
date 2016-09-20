@@ -10,7 +10,7 @@ val _scalaVersion = "2.11.8"
 val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
-val scalaJsNodeVersion = "0.2.2.7"
+val scalaJsNodeVersion = "0.2.3.0"
 
 scalaJSUseRhino in Global := false
 
@@ -112,12 +112,12 @@ lazy val webapp = (project in file("./app/server/webapp"))
     version := appVersion,
     pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-elgs-splitargs" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-express-csv" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-feedparser-promised" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-pvorb-md5" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-express-csv" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-feedparser-promised" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-md5" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-splitargs" % scalaJsNodeVersion
     ))
 
 lazy val daycycle = (project in file("./app/server/daycycle"))
@@ -131,11 +131,11 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     version := appVersion,
     pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-htmlparser2" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
@@ -149,11 +149,11 @@ lazy val qualification = (project in file("./app/server/qualification"))
     version := appVersion,
     pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-htmlparser2" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion
     ))
 
 lazy val robots = (project in file("./app/server/robots"))
@@ -167,12 +167,12 @@ lazy val robots = (project in file("./app/server/robots"))
     version := appVersion,
     pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-htmlparser2" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-numeral" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-numeral" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion
     ))
 
 lazy val dao = (project in file("./app/server/dao"))
@@ -185,9 +185,9 @@ lazy val dao = (project in file("./app/server/dao"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion
     ))
 
 lazy val services = (project in file("./app/server/services"))
@@ -200,12 +200,12 @@ lazy val services = (project in file("./app/server/services"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-mean-bundle-minimal" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-htmlparser2" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-moment-timezone" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-request" % scalaJsNodeVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-xml2js" % scalaJsNodeVersion
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-xml2js" % scalaJsNodeVersion
     ))
 
 lazy val shocktradejs = (project in file("."))

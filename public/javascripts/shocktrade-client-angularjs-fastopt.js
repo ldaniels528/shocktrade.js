@@ -3096,11 +3096,11 @@ $h_Lcom_shocktrade_common_forms_ResearchOptions$.prototype = $c_Lcom_shocktrade_
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
-  return 25
-});
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.init___ = (function() {
   return this
+});
+$c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
+  return 25
 });
 $c_Lcom_shocktrade_common_forms_ResearchOptions$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
   return (void 0)
