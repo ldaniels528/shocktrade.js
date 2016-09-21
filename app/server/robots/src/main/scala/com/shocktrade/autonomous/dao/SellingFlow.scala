@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class SellingFlow extends js.Object
+class SellingFlow(val profitTarget: js.UndefOr[Double]) extends js.Object
 
 /**
   * Selling Flow Companion
@@ -23,7 +23,7 @@ object SellingFlow {
   implicit class SellingFlowEnrichment(val flow: SellingFlow) extends AnyVal {
 
     @inline
-    def isValid = true
+    def isValid = flow.profitTarget.nonEmpty
 
   }
 

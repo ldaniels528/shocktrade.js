@@ -10231,22 +10231,31 @@ $c_Lcom_shocktrade_stockguru_contest_ExposureController.prototype.init___Lcom_sh
   this.com$shocktrade$stockguru$contest$ExposureController$$toaster$f = toaster;
   this.com$shocktrade$stockguru$contest$ExposureController$$portfolioService$f = portfolioService;
   $$scope.data = null;
-  $$scope.selectedExposure = (void 0);
   $$scope.exposures = [new $c_Lcom_shocktrade_stockguru_contest_ExposureController$ExposureSelection("Sector Exposure", "sector"), new $c_Lcom_shocktrade_stockguru_contest_ExposureController$ExposureSelection("Industry Exposure", "industry"), new $c_Lcom_shocktrade_stockguru_contest_ExposureController$ExposureSelection("Exchange Exposure", "exchange"), new $c_Lcom_shocktrade_stockguru_contest_ExposureController$ExposureSelection("Exchange Sub-Market Exposure", "market"), new $c_Lcom_shocktrade_stockguru_contest_ExposureController$ExposureSelection("Securities Exposure", "securities")];
+  var array = $$scope.exposures;
+  var this$2 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
+  var opt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$2);
+  if (opt.isEmpty__Z()) {
+    var jsx$1 = (void 0)
+  } else {
+    var arg1 = opt.get__O();
+    var jsx$1 = arg1
+  };
+  $$scope.selectedExposure = jsx$1;
   var x$15 = (function(d$2) {
     return $as_T(d$2.key)
   });
   var x$16 = (function(d$2$1) {
     return $uD(d$2$1.value)
   });
-  var jsx$1 = new $c_Lorg_scalajs_angularjs_nvd3_ChartOptions(new $c_Lorg_scalajs_angularjs_nvd3_chart_PieChart((void 0), 800, 400, 0.25, true, x$15, x$16, (void 0), 0.01, (void 0), true, false));
-  $$scope.options = jsx$1;
-  var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+  var jsx$2 = new $c_Lorg_scalajs_angularjs_nvd3_ChartOptions(new $c_Lorg_scalajs_angularjs_nvd3_chart_PieChart((void 0), 800, 400, 0.25, true, x$15, x$16, (void 0), 0.01, (void 0), true, false));
+  $$scope.options = jsx$2;
+  var jsx$3 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["options = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson($$scope.options, true))]));
-  jsx$2.log(s);
+  jsx$3.log(s);
   $$scope.exposureChart = (function(f) {
-    return (function(arg1, arg2, arg3) {
-      return f.apply__O__O__O__O(arg1, arg2, arg3)
+    return (function(arg1$1, arg2, arg3) {
+      return f.apply__O__O__O__O(arg1$1, arg2, arg3)
     })
   })(new $c_Lcom_shocktrade_stockguru_contest_ExposureController$$anonfun$3().init___Lcom_shocktrade_stockguru_contest_ExposureController(this));
   return this

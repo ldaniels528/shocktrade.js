@@ -8,6 +8,7 @@ import com.shocktrade.common.dao.contest._
 import com.shocktrade.common.dao.quotes.SecuritiesDAO
 import com.shocktrade.common.dao.quotes.SecuritiesDAO._
 import com.shocktrade.common.models.contest.OrderLike._
+import com.shocktrade.common.models.contest.PositionLike
 import com.shocktrade.common.models.quote.ResearchQuote
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, FindAndModifyWriteOpResult, MongoDB}
@@ -23,6 +24,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -30,11 +32,11 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) {
-  // load modules
+  // load the required modules
   private implicit val moment = Moment()
   private implicit val numeral = Numeral()
-  private implicit val util = Util()
   private implicit val os = OS()
+  private implicit val util = Util()
 
   // get DAO instances
   private implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
@@ -58,7 +60,6 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
 
     outcome onComplete {
       case Success(results) =>
-        console.log(s"${results.size} orders(s) were created")
         console.log(s"Process completed in ${System.currentTimeMillis() - startTime} msec")
       case Failure(e) =>
         console.error(s"Failed to process robot: ${e.getMessage}")
@@ -100,16 +101,16 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
         robot.info(s"Playing with portfolio #$portfolioId using the '$name' strategy")
 
         // create the robot environment
-        implicit val env = RobotEnvironment(portfolio)
+        implicit val env = RobotEnvironment(name, portfolio)
 
         for {
-        // process the BUY flow
+        // execute the buying flow
           securities <- buyingFlow.execute()
-          buyOrders = if (securities.isEmpty) Nil else createBuyOrders(robot, buyingFlow, securities)
+          buyOrders = createBuyOrders(robot, buyingFlow, securities)
 
-          // process the SELL flow
+          // execute the selling flow
           positions <- sellingFlow.execute()
-          sellOrders = createSellOrders(robot, sellingFlow, positions)
+          sellOrders <- createSellOrders(robot, sellingFlow, positions)
 
           // combine the buy and sell orders into a single collection
           orders = {
@@ -120,8 +121,13 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
 
           // persist the orders
           result <- portfolio._id.toOption match {
-            case Some(id) if orders.nonEmpty => portfolioDAO.flatMap(_.createOrders(id.toHexString(), orders).toFuture)
-            case _ => Future.successful(New[FindAndModifyWriteOpResult])
+            case Some(id) if orders.nonEmpty =>
+              portfolioDAO.flatMap(_.createOrders(id.toHexString(), orders).toFuture) map { result =>
+                robot.log(s"${orders.size} order(s) were created")
+                new UpdateResult(success = result.isOk, updates = orders.size)
+              }
+            case _ =>
+              Future.successful(new UpdateResult())
           }
         } yield result
       }
@@ -130,42 +136,76 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
 
   @inline
   private def createBuyOrders(robot: RobotData, buyingFlow: BuyingFlow, securities: Seq[ResearchQuote])(implicit env: RobotEnvironment) = {
-    // display the quotes
-    showQuotes(robot, securities)
+    if (securities.isEmpty) Nil
+    else {
+      // display the securities
+      showQuotes(robot, securities)
 
-    (for {
-      cashFunds <- env.portfolio.cashAccount.flatMap(_.cashFunds)
-      availableCash = cashFunds - env.outstandingOrdersCost
-      preferredSpend <- buyingFlow.preferredSpendPerSecurity
-      numOfSecuritiesToBuy = (cashFunds / preferredSpend).toInt
-      securitiesToBuy = securities.take(numOfSecuritiesToBuy)
-      buyOrders = if (availableCash > preferredSpend) {
-        robot.log("$ %d cash available. Submitting %d BUY orders...", availableCash, numOfSecuritiesToBuy)
-        securitiesToBuy flatMap { security =>
-          for {
-            low <- security.low.toOption
-            computedQuantity = (preferredSpend / low).toLong
-            volume = security.avgVolume10Day.map(vol => (vol * 0.25).toLong) getOrElse computedQuantity
-            quantity = if (computedQuantity > volume) volume else computedQuantity
-          } yield {
-            security.toOrder(
-              accountType = ACCOUNT_TYPE_CASH,
-              orderType = ORDER_TYPE_BUY,
-              priceType = PRICE_TYPE_LIMIT,
-              price = low,
-              quantity = quantity)
+      robot.log("Processing BUY orders...")
+
+      (for {
+        cashFunds <- env.portfolio.cashAccount.flatMap(_.cashFunds)
+        availableCash = cashFunds - env.outstandingOrdersCost
+        preferredSpend <- buyingFlow.preferredSpendPerSecurity
+        numOfSecuritiesToBuy = (cashFunds / preferredSpend).toInt
+        securitiesToBuy = securities.take(numOfSecuritiesToBuy)
+        buyOrders = if (availableCash > preferredSpend) {
+          robot.log("Cash available: $%d (%d max orders)", availableCash, numOfSecuritiesToBuy)
+          securitiesToBuy flatMap { security =>
+            for {
+              low <- security.low.toOption
+              computedQuantity = (preferredSpend / low).toLong
+              volume = security.avgVolume10Day.map(vol => (vol * 0.25).toLong) getOrElse computedQuantity
+              quantity = if (computedQuantity > volume) volume else computedQuantity
+            } yield {
+              security.toOrder(
+                accountType = ACCOUNT_TYPE_CASH,
+                orderType = ORDER_TYPE_BUY,
+                priceType = PRICE_TYPE_LIMIT,
+                price = low,
+                quantity = quantity)
+            }
           }
+        } else {
+          robot.log("No cash available for purchases (%d)", availableCash)
+          Nil
         }
-      } else {
-        robot.log("No cash available for purchases (%d)", availableCash)
-        Nil
-      }
-    } yield buyOrders).toOption.toSeq.flatten
+      } yield buyOrders).toOption.toSeq.flatten
+    }
   }
 
   @inline
   private def createSellOrders(robot: RobotData, flow: SellingFlow, positions: Seq[PositionData]) = {
-    Seq.empty[OrderData]
+    if (positions.isEmpty) Future.successful(Seq.empty[OrderData])
+    else {
+      // display the current positions
+      showPositions(robot, positions)
+
+      robot.log("Processing SELL orders...")
+
+      for {
+        positionsEtc <- Future.sequence(positions.map(p => p.computePercentGain.map(p -> _)))
+        orders = positionsEtc flatMap {
+          case (position, Some((lastTrade, pctGain))) if pctGain >= 25 =>
+            robot.info("%s @ %d x %s (last: %d, gain/loss: %s%%) <%s>",
+              position.symbol.orNull, position.pricePaid.orZero, numeral(position.quantity.orZero).format("0,0"),
+              lastTrade, numeral(pctGain).format("0.0"), position._id.orNull)
+            Option(new OrderData(
+              symbol = position.symbol,
+              exchange = position.exchange,
+              accountType = position.accountType,
+              orderType = ORDER_TYPE_SELL,
+              priceType = PRICE_TYPE_LIMIT,
+              price = lastTrade,
+              quantity = position.quantity,
+              creationTime = new js.Date(),
+              expirationTime = new js.Date() + 7.days
+            ))
+          case (position, Some((lastTrade, pctGain))) => None
+          case _ => None
+        }
+      } yield orders
+    }
   }
 
   private def showQuotes(robot: RobotData, quotes: Seq[ResearchQuote]) = {
@@ -181,9 +221,15 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
   private def showOrders(robot: RobotData, orders: Seq[OrderData]) = {
     robot.log(s"${orders.size} eligible order(s):")
     orders.zipWithIndex foreach { case (o, n) =>
-      console.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
+      robot.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
     }
-    console.log("")
+  }
+
+  private def showPositions(robot: RobotData, positions: Seq[PositionData]) = {
+    robot.log(s"${positions.size} eligible position(s):")
+    positions.zipWithIndex foreach { case (p, n) =>
+      robot.log(s"[${n + 1}] ${p.symbol} @ ${p.pricePaid} x ${p.quantity} <${p._id}>")
+    }
   }
 
 }
@@ -215,7 +261,7 @@ object AutonomousTradingEngine {
         priceType = priceType,
         price = price,
         quantity = quantity,
-        creationTime = now - 6.hours, // TODO remove the 6-hour delta after testing
+        creationTime = now - 48.hours, // TODO remove the 6-hour delta after testing
         expirationTime = now + 3.days
       )
     }
@@ -229,22 +275,22 @@ object AutonomousTradingEngine {
   implicit class RobotsExtensions(val robot: RobotData) extends AnyVal {
 
     @inline
-    def log(format: String, args: js.Any*)(implicit moment: Moment) = {
+    def log(format: String, args: Any*)(implicit moment: Moment) = {
       console.log(s"$now [${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def info(format: String, args: js.Any*)(implicit moment: Moment) = {
+    def info(format: String, args: Any*)(implicit moment: Moment) = {
       console.info(s"$now [${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def error(format: String, args: js.Any*)(implicit moment: Moment) = {
+    def error(format: String, args: Any*)(implicit moment: Moment) = {
       console.error(s"$now [${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def warn(format: String, args: js.Any*)(implicit moment: Moment) = {
+    def warn(format: String, args: Any*)(implicit moment: Moment) = {
       console.warn(s"$now [${robot.name.orNull}] " + format, args: _*)
     }
 
@@ -278,14 +324,61 @@ object AutonomousTradingEngine {
 
   /**
     * Selling Flow Extensions
-    * @param flow the given [[BuyingFlow buying flow]]
+    * @param flow the given [[SellingFlow selling flow]]
     */
   implicit class SellingFlowExtensions(val flow: SellingFlow) extends AnyVal {
 
     @inline
     def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, portfolioDAO: Future[PortfolioUpdateDAO]) = {
-      Future.successful(Seq.empty[PositionData])
+      // remove any positions there are already orders for
+      val sellOrderSymbols = env.orders.filter(_.isSellOrder).flatMap(_.symbol.toOption).toSet
+      val eligiblePositions = env.positions.filterNot(_.symbol.exists(sellOrderSymbols.contains))
+      Future.successful(eligiblePositions)
     }
+  }
+
+  /**
+    * Position Extensions
+    * @param position the given [[PositionLike position]]
+    */
+  implicit class PositionExtensions(val position: PositionLike) extends AnyVal {
+
+    @inline
+    def computePercentGain(implicit ec: ExecutionContext, securitiesDAO: Future[SecuritiesDAO]) = {
+      val params = for {
+        symbol <- position.symbol
+        cost <- position.totalCost
+        quantity <- position.quantity
+      } yield (symbol, cost, quantity)
+
+      params.toOption match {
+        case Some((symbol, cost, quantity)) =>
+          securitiesDAO.flatMap(_.findQuote[PricingQuote](symbol, fields = PricingQuote.Fields)) map {
+            case Some(quote) => quote.lastTrade.map(price => price -> 100 * (price * quantity - cost) / cost).toOption
+            case None => None
+          }
+        case None => Future.successful(None)
+      }
+    }
+  }
+
+  @ScalaJSDefined
+  class UpdateResult(val success: Boolean = false, val updates: Int = 0) extends js.Object
+
+  /**
+    * Represents a pricing quote
+    * @param symbol    the given symbol (e.g. "AAPL")
+    * @param lastTrade the given last trade
+    */
+  @ScalaJSDefined
+  class PricingQuote(val symbol: String, val lastTrade: js.UndefOr[Double]) extends js.Object
+
+  /**
+    * Price Quote Companion
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  object PricingQuote {
+    val Fields = Seq("symbol", "lastTrade")
   }
 
 }

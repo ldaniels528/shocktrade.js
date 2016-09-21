@@ -1,16 +1,17 @@
 package com.shocktrade.autonomous
 
-import com.shocktrade.common.models.contest.{OrderLike, PortfolioLike, PositionLike}
+import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, PositionData}
 
 /**
   * Represents a robot's operating environment
-  * @param portfolio the given [[PortfolioLike portfolio]]
-  * @param positions the given array of [[PositionLike positions]]
-  * @param orders    the given array of [[OrderLike orders]]
+  * @param portfolio the given [[PortfolioData portfolio]]
+  * @param positions the given array of [[PositionData positions]]
+  * @param orders    the given array of [[OrderData orders]]
   */
-class RobotEnvironment(val portfolio: PortfolioLike,
-                       val positions: Seq[_ <: PositionLike],
-                       val orders: Seq[_ <: OrderLike]) {
+class RobotEnvironment(val name: String,
+                       val portfolio: PortfolioData,
+                       val positions: Seq[PositionData],
+                       val orders: Seq[OrderData]) {
 
   /**
     * Computes the outstanding orders cost
@@ -26,10 +27,13 @@ class RobotEnvironment(val portfolio: PortfolioLike,
   */
 object RobotEnvironment {
 
-  def apply(portfolio: PortfolioLike) = new RobotEnvironment(
-    portfolio = portfolio,
-    positions = portfolio.positions.toList.flatMap(_.toList),
-    orders = portfolio.orders.toList.flatMap(_.toList)
-  )
+  def apply(name: String, portfolio: PortfolioData) = {
+    new RobotEnvironment(
+      name = name,
+      portfolio = portfolio,
+      positions = portfolio.positions.toList.flatMap(_.toList),
+      orders = portfolio.orders.toList.flatMap(_.toList)
+    )
+  }
 
 }

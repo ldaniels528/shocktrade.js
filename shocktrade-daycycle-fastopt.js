@@ -1029,18 +1029,6 @@ function $isArrayOf_F0(obj, depth) {
 function $asArrayOf_F0(obj, depth) {
   return (($isArrayOf_F0(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.Function0;", depth))
 }
-function $is_F1(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.F1)))
-}
-function $as_F1(obj) {
-  return (($is_F1(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.Function1"))
-}
-function $isArrayOf_F1(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.F1)))
-}
-function $asArrayOf_F1(obj, depth) {
-  return (($isArrayOf_F1(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.Function1;", depth))
-}
 function $is_Ljava_io_Closeable(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Ljava_io_Closeable)))
 }
@@ -2754,10 +2742,9 @@ function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess() {
   this.batchSize$1 = 0;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1 = null;
+  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1 = null;
-  this.moment$1 = null;
-  this.momentTz$1 = null;
   this.tradingClock$1 = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype = new $h_O();
@@ -2769,9 +2756,7 @@ function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess() {
 $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype;
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.run__V = (function() {
   var this$1 = this.tradingClock$1;
-  var moment = this.moment$1;
-  var momentTz = this.momentTz$1;
-  if (this$1.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z(new $g.Date(), moment, momentTz)) {
+  if (this$1.isTradingActive__sjs_js_Date__Z(new $g.Date())) {
     var startTime = $uD($g.Date.now());
     var this$26 = this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2) {
@@ -2804,7 +2789,30 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.run__V = (functio
     var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$4().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess(this);
     var executor$1 = this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
     var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$27, f$1, executor$1);
-    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__D(this, startTime), this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
+    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, startTime$1) {
+      return (function(x0$1$2) {
+        var x0$1 = $as_s_util_Try(x0$1$2);
+        if ($is_s_util_Success(x0$1)) {
+          var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in %d seconds"])).s__sc_Seq__T($m_sci_Nil$());
+          var value = (($uD($g.Date.now()) - startTime$1) / 1000);
+          var array = [value];
+          var jsx$4 = $g.console;
+          var jsx$6 = jsx$4.log;
+          var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, arg$outer.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+          var jsx$5 = [s].concat(array);
+          jsx$6.apply(jsx$4, jsx$5)
+        } else if ($is_s_util_Failure(x0$1)) {
+          var x3 = $as_s_util_Failure(x0$1);
+          var e = x3.exception$2;
+          var jsx$7 = $g.console;
+          var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed during processing: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
+          jsx$7.error(s$1);
+          e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1)
+        } else {
+          throw new $c_s_MatchError().init___O(x0$1)
+        }
+      })
+    })(this, startTime)), this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
   }
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes__sc_Seq__s_concurrent_Future = (function(quoteRefs) {
@@ -2812,7 +2820,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.com$shocktrade$da
   var array = [];
   var jsx$1 = $g.console;
   var jsx$3 = jsx$1.log;
-  var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this.moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+  var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
   var jsx$2 = [s].concat(array);
   jsx$3.apply(jsx$1, jsx$2);
   var jsx$7 = $m_s_concurrent_Future$();
@@ -2906,6 +2914,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
   b.append__T__scm_StringBuilder("");
   var this$12 = b.underlying$5;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1 = this$12.content$1;
+  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x$1$2) {
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
@@ -2964,9 +2973,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
     })
   })(this));
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$3, ec);
-  this.moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
-  this.momentTz$1 = $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
-  this.tradingClock$1 = new $c_Lcom_shocktrade_services_TradingClock().init___();
+  this.tradingClock$1 = new $c_Lcom_shocktrade_services_TradingClock().init___Lorg_scalajs_nodejs_NodeRequire(require);
   return this
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess = new $TypeData().initClass({
@@ -2978,7 +2985,8 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess = new $TypeData().initC
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess;
 /** @constructor */
 function $c_Lcom_shocktrade_services_TradingClock() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.com$shocktrade$services$TradingClock$$moment$1 = null
 }
 $c_Lcom_shocktrade_services_TradingClock.prototype = new $h_O();
 $c_Lcom_shocktrade_services_TradingClock.prototype.constructor = $c_Lcom_shocktrade_services_TradingClock;
@@ -2987,13 +2995,10 @@ function $h_Lcom_shocktrade_services_TradingClock() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_services_TradingClock.prototype = $c_Lcom_shocktrade_services_TradingClock.prototype;
-$c_Lcom_shocktrade_services_TradingClock.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z = (function(date, moment, momentTz) {
-  var moment$1 = moment(date);
+$c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date__Z = (function(date) {
+  var moment = (0, this.com$shocktrade$services$TradingClock$$moment$1)(date);
   var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
-  var theMoment = moment$1.tz(timeZone);
+  var theMoment = moment.tz(timeZone);
   var x = $as_T(theMoment.format("HHmm"));
   var this$10 = new $c_sci_StringOps().init___T(x);
   var this$12 = $m_jl_Integer$();
@@ -3001,6 +3006,11 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date_
   var time = this$12.parseInt__T__I__I($$this, 10);
   var dayOfWeek = $uI(theMoment.day());
   return ((((dayOfWeek >= $m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1) && (dayOfWeek <= $m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1)) && (time >= 930)) && (time <= 1601))
+});
+$c_Lcom_shocktrade_services_TradingClock.prototype.init___Lorg_scalajs_nodejs_NodeRequire = (function(require) {
+  this.com$shocktrade$services$TradingClock$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
+  return this
 });
 var $d_Lcom_shocktrade_services_TradingClock = new $TypeData().initClass({
   Lcom_shocktrade_services_TradingClock: 0
@@ -16574,12 +16584,12 @@ $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future = (function(x$8) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future = (function(x$5) {
   var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
   var jsx$2 = this.quotes$1$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$9$2) {
-    var value = $as_T(x$9$2.symbol);
-    return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$9$2.exchange, x$9$2.lastTrade, x$9$2.tradeDateTime, x$9$2.tradeDate, x$9$2.tradeTime, x$9$2.volume)
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$6$2) {
+    var value = $as_T(x$6$2.symbol);
+    return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$6$2.exchange, x$6$2.lastTrade, x$6$2.tradeDateTime, x$6$2.tradeDate, x$6$2.tradeTime, x$6$2.volume)
   }));
   var this$5 = $m_sc_Seq$();
   var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2));
@@ -16605,7 +16615,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
     })(this$11, result)));
     var jsx$3 = result
   };
-  var p = x$8.bulkWrite(jsx$3);
+  var p = x$5.bulkWrite(jsx$3);
   return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$1) {
@@ -16642,8 +16652,8 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   return this.apply__sc_Seq__s_concurrent_Future($as_sc_Seq(v1))
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.apply__sc_Seq__s_concurrent_Future = (function(batch) {
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$7$2) {
-    var value = x$7$2.symbol;
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
+    var value = x$4$2.symbol;
     var xo = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
     return xo.toList__sci_List()
   }));
@@ -16659,12 +16669,12 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
     var array = [value$1, completion, value$2];
     var jsx$2 = $g.console;
     var jsx$4 = jsx$2.log;
-    var s = (new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$9.moment$1)().format("MM/DD HH:mm:ss"))])) + "Processed %d securities (%d%% complete - %d batches) so far...");
+    var s = (new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$9.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))])) + "Processed %d securities (%d%% complete - %d batches) so far...");
     var jsx$3 = [s].concat(array);
     jsx$4.apply(jsx$2, jsx$3)
   };
   var this$12 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1, symbols, this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
-  var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1(this);
+  var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1(this);
   var executor = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$12, f, executor)
 });
@@ -16691,21 +16701,21 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1;
 /** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5() {
+function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4;
 /** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5() {
+function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.apply__O__O = (function(v1) {
   return this.apply__sc_Seq__s_concurrent_Future($as_sc_Seq(v1))
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1 = (function($$outer) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -16713,47 +16723,47 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   };
   return this
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype.apply__sc_Seq__s_concurrent_Future = (function(quotes) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.apply__sc_Seq__s_concurrent_Future = (function(quotes) {
   var this$1 = this.$$outer$2.$$outer$2;
   var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1;
   var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
   var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-  var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5(this);
+  var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4(this);
   var executor$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   var this$4 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, pf, executor$1);
-  var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5__sc_Seq(this, quotes);
+  var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4__sc_Seq(this, quotes);
   var executor$2 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f$1, executor$2)
 });
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5: 1,
+var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4 = new $TypeData().initClass({
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4: 0
+}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4", {
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4;
 /** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6() {
+function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.quotes$3$2 = null
 }
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5;
 /** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6() {
+function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
   return this.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5__sc_Seq = (function($$outer, quotes$3) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4__sc_Seq = (function($$outer, quotes$3) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -16762,14 +16772,14 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   this.quotes$3$2 = quotes$3;
   return this
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future = (function(snapshotResults) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future = (function(snapshotResults) {
   var this$1 = this.$$outer$2.$$outer$2.$$outer$2;
   var quotes = this.quotes$3$2;
   var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
   var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
   var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-  var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6(this);
+  var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5(this);
   var executor$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   var this$6 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, pf, executor$1);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(snapshotResults$1) {
@@ -16780,17 +16790,17 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   var executor$2 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
   return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$6, f$1, executor$2)
 });
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6: 1,
+var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5 = new $TypeData().initClass({
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5: 0
+}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5", {
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5;
 /** @constructor */
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -16806,23 +16816,23 @@ $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future = (function(x$10) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future = (function(x$7) {
   var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
   var jsx$2 = this.quotes$2$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$11$2) {
-    var value = $as_T(x$11$2.symbol);
-    var x$13 = x$11$2.exchange;
-    var x$14 = x$11$2.lastTrade;
-    var x$15 = x$11$2.open;
-    var x$16 = x$11$2.close;
-    var x$17 = x$11$2.tradeDate;
-    var x$18 = x$11$2.tradeTime;
-    var x$19 = x$11$2.tradeDateTime;
-    var x$20 = x$11$2.volume;
-    var x$21 = x$11$2.errorMessage;
-    var value$1 = $uD(x$11$2.responseTimeMsec);
+  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$8$2) {
+    var value = $as_T(x$8$2.symbol);
+    var x$10 = x$8$2.exchange;
+    var x$11 = x$8$2.lastTrade;
+    var x$12 = x$8$2.open;
+    var x$13 = x$8$2.close;
+    var x$14 = x$8$2.tradeDate;
+    var x$15 = x$8$2.tradeTime;
+    var x$16 = x$8$2.tradeDateTime;
+    var x$17 = x$8$2.volume;
+    var x$18 = x$8$2.errorMessage;
+    var value$1 = $uD(x$8$2.responseTimeMsec);
     var value$2 = new $g.Date();
-    return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, x$13, x$14, x$15, x$16, x$19, x$17, x$18, x$20, x$21, value$1, value$2)
+    return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, x$10, x$11, x$12, x$13, x$16, x$14, x$15, x$17, x$18, value$1, value$2)
   }));
   var this$7 = $m_sc_Seq$();
   var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$7.ReusableCBFInstance$2));
@@ -16845,7 +16855,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
     })(this$10, result)));
     var jsx$3 = result
   };
-  var p = x$10.bulkWrite(jsx$3);
+  var p = x$7.bulkWrite(jsx$3);
   return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$2) {
@@ -16863,94 +16873,6 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1;
-/** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.startTime$1$2 = 0.0
-}
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1;
-/** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype.apply__O__O = (function(v1) {
-  this.apply__s_util_Try__V($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype.apply__s_util_Try__V = (function(x0$1) {
-  if ($is_s_util_Success(x0$1)) {
-    var x2 = $as_s_util_Success(x0$1);
-    var results = $as_sc_Seq(x2.value$2);
-    var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
-      var x$4 = $as_T2(x$4$2);
-      return x$4.$$und1__O()
-    }));
-    var this$1 = $m_sc_Seq$();
-    $as_sc_Seq(results.map__F1__scg_CanBuildFrom__O(jsx$1, this$1.ReusableCBFInstance$2));
-    var jsx$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$5$2) {
-      var x$5 = $as_T2(x$5$2);
-      return x$5.$$und2__O()
-    }));
-    var this$2 = $m_sc_Seq$();
-    $as_sc_Seq(results.map__F1__scg_CanBuildFrom__O(jsx$2, this$2.ReusableCBFInstance$2));
-    var this$4 = this.$$outer$2;
-    var jsx$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$6$2) {
-      var x$6 = $as_T2(x$6$2);
-      return x$6.$$und1__O()
-    }));
-    var this$3 = $m_sc_Seq$();
-    var array = [(function(f) {
-      return (function(arg1) {
-        return f.apply__O__O(arg1)
-      })
-    })($as_F1(results.map__F1__scg_CanBuildFrom__O(jsx$3, this$3.ReusableCBFInstance$2)))];
-    var jsx$4 = $g.console;
-    var jsx$6 = jsx$4.log;
-    var s = ("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$4.moment$1)().format("MM/DD HH:mm:ss"))])));
-    var jsx$5 = [s].concat(array);
-    jsx$6.apply(jsx$4, jsx$5);
-    var this$8 = this.$$outer$2;
-    var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in %d seconds"])).s__sc_Seq__T($m_sci_Nil$());
-    var value = (($uD($g.Date.now()) - this.startTime$1$2) / 1000);
-    var array$1 = [value];
-    var jsx$7 = $g.console;
-    var jsx$9 = jsx$7.log;
-    var s$1 = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$8.moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
-    var jsx$8 = [s$1].concat(array$1);
-    jsx$9.apply(jsx$7, jsx$8)
-  } else if ($is_s_util_Failure(x0$1)) {
-    var x3 = $as_s_util_Failure(x0$1);
-    var e = x3.exception$2;
-    var jsx$10 = $g.console;
-    var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed during processing: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
-    jsx$10.error(s$2);
-    e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1)
-  } else {
-    throw new $c_s_MatchError().init___O(x0$1)
-  }
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__D = (function($$outer, startTime$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.startTime$1$2 = startTime$1;
-  return this
-});
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$run$1", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$run$1;
 /** @constructor */
 function $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -19462,36 +19384,36 @@ var $d_sr_ScalaRunTime$$anon$1 = new $TypeData().initClass({
 });
 $c_sr_ScalaRunTime$$anon$1.prototype.$classData = $d_sr_ScalaRunTime$$anon$1;
 /** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1() {
+function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1() {
   $c_sr_AbstractPartialFunction.call(this)
 }
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype = new $h_sr_AbstractPartialFunction();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype = new $h_sr_AbstractPartialFunction();
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1;
 /** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1() {
+function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.isDefinedAt__jl_Throwable__Z = (function(x1) {
+$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.isDefinedAt__jl_Throwable__Z = (function(x1) {
   return true
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.applyOrElse__jl_Throwable__F1__O = (function(x1, $default) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.applyOrElse__jl_Throwable__F1__O = (function(x1, $default) {
   $g.console.error("Snapshot write error: %s", x1.getMessage__T());
   return {}
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.isDefinedAt__O__Z = (function(x) {
-  return this.isDefinedAt__jl_Throwable__Z($as_jl_Throwable(x))
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.applyOrElse__O__F1__O = (function(x, $default) {
-  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), $default)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5 = (function($$outer) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4 = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1: 1,
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.isDefinedAt__O__Z = (function(x) {
+  return this.isDefinedAt__jl_Throwable__Z($as_jl_Throwable(x))
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.applyOrElse__O__F1__O = (function(x, $default) {
+  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), $default)
+});
+var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1 = new $TypeData().initClass({
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1: 0
+}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1", {
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1: 1,
   sr_AbstractPartialFunction: 1,
   O: 1,
   F1: 1,
@@ -19499,38 +19421,38 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$1;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1;
 /** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2() {
+function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2() {
   $c_sr_AbstractPartialFunction.call(this)
 }
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype = new $h_sr_AbstractPartialFunction();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype = new $h_sr_AbstractPartialFunction();
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2;
 /** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2() {
+function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.isDefinedAt__jl_Throwable__Z = (function(x2) {
+$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.isDefinedAt__jl_Throwable__Z = (function(x2) {
   return true
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.applyOrElse__jl_Throwable__F1__O = (function(x2, $default) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.applyOrElse__jl_Throwable__F1__O = (function(x2, $default) {
   $g.console.error("Securities update error: %s", x2.getMessage__T());
   return {}
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.isDefinedAt__O__Z = (function(x) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.isDefinedAt__O__Z = (function(x) {
   return this.isDefinedAt__jl_Throwable__Z($as_jl_Throwable(x))
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.applyOrElse__O__F1__O = (function(x, $default) {
-  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), $default)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6 = (function($$outer) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5 = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2: 1,
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.applyOrElse__O__F1__O = (function(x, $default) {
+  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), $default)
+});
+var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2 = new $TypeData().initClass({
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2: 0
+}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2", {
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2: 1,
   sr_AbstractPartialFunction: 1,
   O: 1,
   F1: 1,
@@ -19538,7 +19460,7 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$2;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2;
 /** @constructor */
 function $c_Ljava_io_PrintStream() {
   $c_Ljava_io_FilterOutputStream.call(this);

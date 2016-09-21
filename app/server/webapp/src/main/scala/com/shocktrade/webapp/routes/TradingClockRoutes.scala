@@ -1,10 +1,10 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.services.TradingClock
-import org.scalajs.nodejs.NodeRequire
+import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.moment.timezone.MomentTimezone
+import org.scalajs.nodejs.moment._
+import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,27 +38,31 @@ object TradingClockRoutes {
       */
     def status(request: Request, response: Response, next: NextFunction) {
       val lastUpdateTimeMillis = request.params("lastUpdate").toDouble
-      val active = tradingClock.isTradingActive(System.currentTimeMillis())
+      val active = tradingClock.isTradingActive(js.Date.now())
       val delay = tradingClock.getDelayUntilTradingStartInMillis
       val start = tradingClock.getTradeStartTime
       val end = tradingClock.getTradeStopTime
-      var stateChanged = false
 
       // if the last update time was specified, add the state change indicator
-      if (lastUpdateTimeMillis > 0) {
-        stateChanged = active != tradingClock.isTradingActive(lastUpdateTimeMillis)
-      }
+      val stateChanged = (lastUpdateTimeMillis > 0) && (active != tradingClock.isTradingActive(lastUpdateTimeMillis))
 
       // send the trading status
-      response.send(new TradingStatus(
-        stateChanged = stateChanged,
-        active = active,
-        sysTime = System.currentTimeMillis(),
-        delay = delay,
-        start = start.getTime(),
-        end = end.getTime()
-      ))
-      next()
+      try {
+        response.send(new TradingStatus(
+          stateChanged = stateChanged,
+          active = active,
+          sysTime = System.currentTimeMillis(),
+          delay = delay,
+          start = start.getTime(),
+          end = end.getTime()
+        ))
+      } catch {
+        case e: Throwable =>
+          e.printStackTrace()
+          response.internalServerError(e)
+      } finally {
+        next()
+      }
     }
 
     /**

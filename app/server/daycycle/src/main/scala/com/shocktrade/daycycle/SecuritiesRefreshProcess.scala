@@ -7,7 +7,6 @@ import com.shocktrade.daycycle.SecuritiesRefreshProcess._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{TradingClock, YahooFinanceCSVQuotesService}
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.moment.timezone.MomentTimezone
 import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console}
@@ -29,13 +28,12 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
     "symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume", "errorMessage"
   )
 
+  // load the modules
+  private val moment = Moment()
+
   // get DAO references
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
-
-  // load the modules
-  implicit val moment = Moment()
-  implicit val momentTz = MomentTimezone()
 
   // create a trading clock
   private val tradingClock = new TradingClock()
@@ -51,9 +49,6 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
       outcome onComplete {
         case Success(results) =>
-          val snapshotResults = results.map(_._1)
-          val securitiesResults = results.map(_._2)
-          log("", results.map(_._1))
           log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
         case Failure(e) =>
           console.error(s"Failed during processing: ${e.getMessage}")

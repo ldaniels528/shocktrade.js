@@ -3990,7 +3990,8 @@ var $d_Lcom_shocktrade_services_RSSFeedParser = new $TypeData().initClass({
 $c_Lcom_shocktrade_services_RSSFeedParser.prototype.$classData = $d_Lcom_shocktrade_services_RSSFeedParser;
 /** @constructor */
 function $c_Lcom_shocktrade_services_TradingClock() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.com$shocktrade$services$TradingClock$$moment$1 = null
 }
 $c_Lcom_shocktrade_services_TradingClock.prototype = new $h_O();
 $c_Lcom_shocktrade_services_TradingClock.prototype.constructor = $c_Lcom_shocktrade_services_TradingClock;
@@ -3999,44 +4000,17 @@ function $h_Lcom_shocktrade_services_TradingClock() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_services_TradingClock.prototype = $c_Lcom_shocktrade_services_TradingClock.prototype;
-$c_Lcom_shocktrade_services_TradingClock.prototype.init___ = (function() {
-  return this
+$c_Lcom_shocktrade_services_TradingClock.prototype.getDelayUntilTradingStartInMillis__D = (function() {
+  var date0 = this.getNextTradeStartTime__sjs_js_Date();
+  var date1 = new $g.Date();
+  return ($uD(date0.getTime()) - $uD(date1.getTime()))
 });
-$c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z = (function(date, moment, momentTz) {
-  var moment$1 = moment(date);
+$c_Lcom_shocktrade_services_TradingClock.prototype.getTradeStartTime__sjs_js_Date = (function() {
+  var moment = (0, this.com$shocktrade$services$TradingClock$$moment$1)();
   var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
-  var theMoment = moment$1.tz(timeZone);
-  var x = $as_T(theMoment.format("HHmm"));
-  var this$10 = new $c_sci_StringOps().init___T(x);
-  var this$12 = $m_jl_Integer$();
-  var $$this = this$10.repr$1;
-  var time = this$12.parseInt__T__I__I($$this, 10);
-  var dayOfWeek = $uI(theMoment.day());
-  return ((((dayOfWeek >= $m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1) && (dayOfWeek <= $m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1)) && (time >= 930)) && (time <= 1601))
-});
-$c_Lcom_shocktrade_services_TradingClock.prototype.getNextTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date = (function(moment, momentTz) {
-  var moment$1 = moment();
-  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
-  var theMoment = moment$1.tz(timeZone);
+  var theMoment = moment.tz(timeZone);
   var x1 = $uI(theMoment.day());
-  if (((x1 >= $m_Lorg_scalajs_nodejs_moment_package$().SUNDAY$1) && (x1 <= $m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1))) {
-    var delta = 1
-  } else if (($m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1 === x1)) {
-    var delta = 3
-  } else {
-    if (($m_Lorg_scalajs_nodejs_moment_package$().SATURDAY$1 !== x1)) {
-      throw new $c_jl_IllegalArgumentException().init___T(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Illegal day of week value (", ")"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([x1])))
-    };
-    var delta = 2
-  };
-  return theMoment.add(delta, "day").hour(9).minute(30).toDate()
-});
-$c_Lcom_shocktrade_services_TradingClock.prototype.getTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date = (function(moment, momentTz) {
-  var moment$1 = moment();
-  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
-  var theMoment = moment$1.tz(timeZone);
-  var x1 = $uI(theMoment.day());
-  if (((x1 >= $m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1) && (x1 <= $m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1))) {
+  if ((($m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().TUESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().WEDNESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1 === x1) || ($m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1 === x1)))))) {
     var delta = 0
   } else if (($m_Lorg_scalajs_nodejs_moment_package$().SATURDAY$1 === x1)) {
     var delta = 2
@@ -4048,10 +4022,39 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.getTradeStartTime__Lorg_scala
   };
   return theMoment.add(delta, "day").hour(9).minute(30).toDate()
 });
-$c_Lcom_shocktrade_services_TradingClock.prototype.getDelayUntilTradingStartInMillis__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__D = (function(moment, momentTz) {
-  var date0 = this.getNextTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date(moment, momentTz);
-  var date1 = new $g.Date();
-  return ($uD(date0.getTime()) - $uD(date1.getTime()))
+$c_Lcom_shocktrade_services_TradingClock.prototype.isTradingActive__sjs_js_Date__Z = (function(date) {
+  var moment = (0, this.com$shocktrade$services$TradingClock$$moment$1)(date);
+  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
+  var theMoment = moment.tz(timeZone);
+  var x = $as_T(theMoment.format("HHmm"));
+  var this$10 = new $c_sci_StringOps().init___T(x);
+  var this$12 = $m_jl_Integer$();
+  var $$this = this$10.repr$1;
+  var time = this$12.parseInt__T__I__I($$this, 10);
+  var dayOfWeek = $uI(theMoment.day());
+  return ((((dayOfWeek >= $m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1) && (dayOfWeek <= $m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1)) && (time >= 930)) && (time <= 1601))
+});
+$c_Lcom_shocktrade_services_TradingClock.prototype.init___Lorg_scalajs_nodejs_NodeRequire = (function(require) {
+  this.com$shocktrade$services$TradingClock$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
+  return this
+});
+$c_Lcom_shocktrade_services_TradingClock.prototype.getNextTradeStartTime__sjs_js_Date = (function() {
+  var moment = (0, this.com$shocktrade$services$TradingClock$$moment$1)();
+  var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
+  var theMoment = moment.tz(timeZone);
+  var x1 = $uI(theMoment.day());
+  if ((($m_Lorg_scalajs_nodejs_moment_package$().SUNDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().MONDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().TUESDAY$1 === x1) || (($m_Lorg_scalajs_nodejs_moment_package$().WEDNESDAY$1 === x1) || ($m_Lorg_scalajs_nodejs_moment_package$().THURSDAY$1 === x1)))))) {
+    var delta = 1
+  } else if (($m_Lorg_scalajs_nodejs_moment_package$().FRIDAY$1 === x1)) {
+    var delta = 3
+  } else {
+    if (($m_Lorg_scalajs_nodejs_moment_package$().SATURDAY$1 !== x1)) {
+      throw new $c_jl_IllegalArgumentException().init___T(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Illegal day of week value (", ")"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([x1])))
+    };
+    var delta = 2
+  };
+  return theMoment.add(delta, "day").hour(9).minute(30).toDate()
 });
 var $d_Lcom_shocktrade_services_TradingClock = new $TypeData().initClass({
   Lcom_shocktrade_services_TradingClock: 0
@@ -11624,7 +11627,6 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
       } else {
         var sortFields = value$25
       };
-      $g.console.log("sortFields = %j", sortFields);
       var valueA$2 = options$1.maxResults;
       if ((valueA$2 === (void 0))) {
         var value$28 = (void 0)
@@ -11745,22 +11747,7 @@ $h_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype = $c_Lcom_shocktr
 $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V = (function(app, dbFuture, ec, require, mongo) {
-  var moment = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
-  var momentTz = $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
-  var tradingClock = new $c_Lcom_shocktrade_services_TradingClock().init___();
-  app.get("/api/tradingClock/status/:lastUpdate", (function(moment$1, momentTz$1, tradingClock$1) {
-    return (function(request$2, response$2, next$2) {
-      $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().com$shocktrade$webapp$routes$TradingClockRoutes$$status$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Lcom_shocktrade_services_TradingClock__V(request$2, response$2, next$2, moment$1, momentTz$1, tradingClock$1)
-    })
-  })(moment, momentTz, tradingClock));
-  app.get("/api/tradingClock/delayUntilStart", (function(moment$1$1, momentTz$1$1, tradingClock$1$1) {
-    return (function(request$2$1, response$2$1, next$2$1) {
-      $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().com$shocktrade$webapp$routes$TradingClockRoutes$$delayUntilTradingStart$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Lcom_shocktrade_services_TradingClock__V(request$2$1, response$2$1, next$2$1, moment$1$1, momentTz$1$1, tradingClock$1$1)
-    })
-  })(moment, momentTz, tradingClock))
-});
-$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.com$shocktrade$webapp$routes$TradingClockRoutes$$status$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Lcom_shocktrade_services_TradingClock__V = (function(request, response, next, moment$1, momentTz$1, tradingClock$1) {
+$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.com$shocktrade$webapp$routes$TradingClockRoutes$$status$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_TradingClock__V = (function(request, response, next, tradingClock$1) {
   var dict = request.params;
   if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "lastUpdate")))) {
     throw new $c_ju_NoSuchElementException().init___T("key not found: lastUpdate")
@@ -11770,35 +11757,59 @@ $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.com$shocktrade$we
   var jsx$1 = $m_jl_Double$();
   var $$this = this$4.repr$1;
   var lastUpdateTimeMillis = jsx$1.parseDouble__T__D($$this);
-  var t = $m_jl_System$().currentTimeMillis__J();
-  var lo = t.lo$2;
-  var hi = t.hi$2;
-  var timeInMillis = $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi);
-  var active = tradingClock$1.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z(new $g.Date(timeInMillis), moment$1, momentTz$1);
-  var delay = tradingClock$1.getDelayUntilTradingStartInMillis__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__D(moment$1, momentTz$1);
-  var start = tradingClock$1.getTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date(moment$1, momentTz$1);
-  var a = tradingClock$1.getTradeStartTime__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__sjs_js_Date(moment$1, momentTz$1);
-  var jsx$4 = moment$1(a);
+  var timeInMillis = $uD($g.Date.now());
+  var active = tradingClock$1.isTradingActive__sjs_js_Date__Z(new $g.Date(timeInMillis));
+  var delay = tradingClock$1.getDelayUntilTradingStartInMillis__D();
+  var start = tradingClock$1.getTradeStartTime__sjs_js_Date();
+  var jsx$5 = tradingClock$1.com$shocktrade$services$TradingClock$$moment$1;
+  var a = tradingClock$1.getTradeStartTime__sjs_js_Date();
+  var jsx$4 = jsx$5(a);
   var jsx$3 = jsx$4.hour(16);
   var jsx$2 = jsx$3.minute(0);
   var end = jsx$2.toDate();
-  var stateChanged = false;
-  if ((lastUpdateTimeMillis > 0)) {
-    stateChanged = (active !== tradingClock$1.isTradingActive__sjs_js_Date__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Z(new $g.Date(lastUpdateTimeMillis), moment$1, momentTz$1))
-  };
-  var x$1 = stateChanged;
-  var t$1 = $m_jl_System$().currentTimeMillis__J();
-  var lo$1 = t$1.lo$2;
-  var hi$1 = t$1.hi$2;
-  var x$3 = $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo$1, hi$1);
-  var x$5 = $uD(start.getTime());
-  var x$6 = $uD(end.getTime());
-  response.send(new $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$TradingStatus(active, x$3, delay, x$5, x$6, x$1));
+  var stateChanged = ((lastUpdateTimeMillis > 0) && (active !== tradingClock$1.isTradingActive__sjs_js_Date__Z(new $g.Date(lastUpdateTimeMillis))));
+  try {
+    try {
+      var t = $m_jl_System$().currentTimeMillis__J();
+      var lo = t.lo$2;
+      var hi = t.hi$2;
+      var x$3 = $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi);
+      var x$5 = $uD(start.getTime());
+      var x$6 = $uD(end.getTime());
+      response.send(new $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$TradingStatus(active, x$3, delay, x$5, x$6, stateChanged))
+    } catch (e) {
+      var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+      if ((e$2 !== null)) {
+        e$2.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1);
+        var jsx$6 = response.status(500);
+        var s = e$2.getMessage__T();
+        jsx$6.send(s)
+      } else {
+        throw e
+      }
+    }
+  } finally {
+    next()
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.com$shocktrade$webapp$routes$TradingClockRoutes$$delayUntilTradingStart$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_TradingClock__V = (function(request, response, next, tradingClock$1) {
+  response.send(new $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$TradingStart(tradingClock$1.getDelayUntilTradingStartInMillis__D()));
   next()
 });
-$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.com$shocktrade$webapp$routes$TradingClockRoutes$$delayUntilTradingStart$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__Lcom_shocktrade_services_TradingClock__V = (function(request, response, next, moment$1, momentTz$1, tradingClock$1) {
-  response.send(new $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$TradingStart(tradingClock$1.getDelayUntilTradingStartInMillis__Lorg_scalajs_nodejs_moment_Moment__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone__D(moment$1, momentTz$1)));
-  next()
+$c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V = (function(app, dbFuture, ec, require, mongo) {
+  $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
+  var tradingClock = new $c_Lcom_shocktrade_services_TradingClock().init___Lorg_scalajs_nodejs_NodeRequire(require);
+  app.get("/api/tradingClock/status/:lastUpdate", (function(tradingClock$1) {
+    return (function(request$2, response$2, next$2) {
+      $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().com$shocktrade$webapp$routes$TradingClockRoutes$$status$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_TradingClock__V(request$2, response$2, next$2, tradingClock$1)
+    })
+  })(tradingClock));
+  app.get("/api/tradingClock/delayUntilStart", (function(tradingClock$1$1) {
+    return (function(request$2$1, response$2$1, next$2$1) {
+      $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().com$shocktrade$webapp$routes$TradingClockRoutes$$delayUntilTradingStart$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_TradingClock__V(request$2$1, response$2$1, next$2$1, tradingClock$1$1)
+    })
+  })(tradingClock))
 });
 var $d_Lcom_shocktrade_webapp_routes_TradingClockRoutes$ = new $TypeData().initClass({
   Lcom_shocktrade_webapp_routes_TradingClockRoutes$: 0

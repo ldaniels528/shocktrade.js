@@ -1,5 +1,6 @@
 package com.shocktrade.stockguru.contest
 
+import scala.scalajs.js.JSConverters._
 import com.shocktrade.stockguru.contest.ExposureController.ExposureSelection
 import com.shocktrade.common.models.ExposureData
 import org.scalajs.angularjs.AngularJsHelper._
@@ -27,14 +28,14 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
 
   $scope.data = null
 
-  $scope.selectedExposure = js.undefined
-
   $scope.exposures = js.Array(
     new ExposureSelection(value = "sector", label = "Sector Exposure"),
     new ExposureSelection(value = "industry", label = "Industry Exposure"),
     new ExposureSelection(value = "exchange", label = "Exchange Exposure"),
     new ExposureSelection(value = "market", label = "Exchange Sub-Market Exposure"),
     new ExposureSelection(value = "securities", label = "Securities Exposure"))
+
+  $scope.selectedExposure = $scope.exposures.headOption.orUndefined
 
   $scope.options = new ChartOptions(
     new PieChart(
@@ -97,7 +98,7 @@ trait ExposureControllerScope extends Scope {
   var data: js.Array[_ <: js.Any] = js.native
   var exposures: js.Array[ExposureSelection] = js.native
   var options: ChartOptions = js.native
-  var selectedExposure: js.UndefOr[String] = js.native
+  var selectedExposure: js.UndefOr[ExposureSelection] = js.native
 
   // functions
   var exposureChart: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[ExposureSelection], Unit] = js.native

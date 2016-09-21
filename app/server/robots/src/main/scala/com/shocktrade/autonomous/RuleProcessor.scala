@@ -25,7 +25,7 @@ class RuleProcessor()(implicit require: NodeRequire) {
   def apply(opCodes: Seq[OpCode], securities: Seq[ResearchQuote])(implicit env: RobotEnvironment) = {
     opCodes.foldLeft(securities) { (inputSet, condition) =>
       val outputSet = inputSet.filterNot(condition.filter)
-      condition.log(s"${getClass.getSimpleName}: in: ${inputSet.size} => out: ${outputSet.size}")
+      condition.log(s"(in: ${inputSet.size} => out: ${outputSet.size})")
       outputSet
     }
   }
@@ -53,8 +53,8 @@ object RuleProcessor {
   implicit class OpCodeExtensions(val opCode: OpCode) extends AnyVal {
 
     @inline
-    def log(format: String, args: js.Any*)(implicit moment: Moment) = {
-      console.log(s"${moment().format("MM/DD HH:mm:ss")} [Rule] ${opCode.name} $format", args: _*)
+    def log(format: String, args: Any*)(implicit env: RobotEnvironment, moment: Moment) = {
+      console.log(s"${moment().format("MM/DD HH:mm:ss")} [${env.name}] ${opCode.name} $format", args: _*)
     }
   }
 

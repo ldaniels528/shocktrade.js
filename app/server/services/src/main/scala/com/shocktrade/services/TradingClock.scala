@@ -2,6 +2,7 @@ package com.shocktrade.services
 
 import org.scalajs.sjs.DateHelper._
 import com.shocktrade.services.TradingClock._
+import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.nodejs.moment._
 import org.scalajs.nodejs.moment.timezone._
 
@@ -11,12 +12,15 @@ import scala.scalajs.js
   * Trading Clock
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class TradingClock() {
+class TradingClock()(implicit require: NodeRequire) {
+  // load modules
+  private val moment = Moment()
+  MomentTimezone()
 
   /**
     * The time in milliseconds until the next trading day
     */
-  def getDelayUntilTradingStartInMillis(implicit moment: Moment, momentTz: MomentTimezone): Double = {
+  def getDelayUntilTradingStartInMillis: Double = {
     getNextTradeStartTime - new js.Date()
   }
 
@@ -24,10 +28,10 @@ class TradingClock() {
     * The U.S. Stock Markets open at 9:30am Eastern Time
     * @return the stock market opening [[js.Date time]]
     */
-  def getNextTradeStartTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
+  def getNextTradeStartTime: js.Date = {
     val theMoment = moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
-      case day if day >= SUNDAY && day <= THURSDAY => 1
+      case SUNDAY | MONDAY | TUESDAY | WEDNESDAY | THURSDAY => 1
       case FRIDAY => 3
       case SATURDAY => 2
       case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
@@ -36,7 +40,7 @@ class TradingClock() {
   }
 
   @inline
-  def getNextTradeStopTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
+  def getNextTradeStopTime: js.Date = {
     moment(getNextTradeStartTime).hour(16).minute(0).toDate()
   }
 
@@ -44,10 +48,10 @@ class TradingClock() {
     * The U.S. Stock Markets open at 9:30am Eastern Time
     * @return the stock market opening [[js.Date time]]
     */
-  def getTradeStartTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
+  def getTradeStartTime: js.Date = {
     val theMoment = moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
-      case day if day >= MONDAY && day <= FRIDAY => 0
+      case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
       case SATURDAY => 2
       case SUNDAY => 1
       case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
@@ -56,21 +60,21 @@ class TradingClock() {
   }
 
   @inline
-  def getTradeStopTime(implicit moment: Moment, momentTz: MomentTimezone): js.Date = {
+  def getTradeStopTime: js.Date = {
     moment(getTradeStartTime).hour(16).minute(0).toDate()
   }
 
   @inline
-  def isTradingActive(implicit moment: Moment, momentTz: MomentTimezone): Boolean = {
+  def isTradingActive: Boolean = {
     isTradingActive(new js.Date())
   }
 
   @inline
-  def isTradingActive(timeInMillis: Double)(implicit moment: Moment, momentTz: MomentTimezone): Boolean = {
+  def isTradingActive(timeInMillis: Double): Boolean = {
     isTradingActive(new js.Date(timeInMillis))
   }
 
-  def isTradingActive(date: js.Date)(implicit moment: Moment, momentTz: MomentTimezone): Boolean = {
+  def isTradingActive(date: js.Date): Boolean = {
     val theMoment = moment(date).tz(NEW_YORK_TZ)
     val time = theMoment.format("HHmm").toInt
     val dayOfWeek = theMoment.day()

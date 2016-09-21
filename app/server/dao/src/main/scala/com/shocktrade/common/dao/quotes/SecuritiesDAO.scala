@@ -100,8 +100,6 @@ object SecuritiesDAO {
         js.Array(sortField, sortDirection)
       }
 
-      console.log("sortFields = %j", sortFields)
-
       // determine the maximum number of results
       val maxResults = options.maxResults.flat.getOrElse(25)
 
