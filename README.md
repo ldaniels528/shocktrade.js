@@ -44,7 +44,7 @@ ShockTrade provides the capability of:
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [ScalaJs-NodeJs 0.2.2.7] (https://github.com/ldaniels528/scalajs-nodejs)
+* [ScalaJs-NodeJs 0.2.3.0] (https://github.com/ldaniels528/scalajs-nodejs)
 
 <a name="building-the-code"></a>
 ### Building the application
@@ -65,5 +65,9 @@ ShockTrade provides the capability of:
 #### To start the day-cycle process
 
     $ node ./daycycle.js
+    
+#### To start the trading robots server
+
+    $ node ./robots.js
 
 
