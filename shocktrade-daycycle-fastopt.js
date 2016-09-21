@@ -3186,11 +3186,18 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.getChangedSym
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future = (function(params, symbols, ec) {
   var startTime = $uD($g.Date.now());
   var symbolList = symbols.mkString__T__T("+");
-  var jsx$1 = $m_Lorg_scalajs_nodejs_request_Request$RequestExtensions$();
-  var request = this.request$1;
-  var this$2 = jsx$1.getFuture$extension__Lorg_scalajs_nodejs_request_Request__T__s_concurrent_Future(request, new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["http://finance.yahoo.com/d/quotes.csv?s=", "&f=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbolList, params])));
+  var client = this.request$1;
+  var url = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["http://finance.yahoo.com/d/quotes.csv?s=", "&f=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbolList, params]));
+  var task = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+  var arg1 = (function(task$3) {
+    return (function(a$2, b$2) {
+      var value = new $c_T2().init___O__O(a$2, b$2);
+      return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(task$3, value)
+    })
+  })(task);
+  client.get(url, arg1);
   var f = new $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1().init___Lcom_shocktrade_services_YahooFinanceCSVQuotesService__T__sc_Seq__D(this, params, symbols, startTime);
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, ec)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, ec)
 });
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.toQuote__p1__T__sjs_js_Dictionary__D__Lcom_shocktrade_services_YahooFinanceCSVQuotesService$YFCSVQuote = (function(symbol, kvps, responseTimeMsec) {
   var jsx$1 = $m_s_Predef$().Map$2;
@@ -5459,14 +5466,14 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$.prototype.init___ = (f
   };
   this.CODE$undTO$undFIELD$undMAPPING$1 = $as_sci_Map(this$163.elems$1);
   var this$165 = this.CODE$undTO$undFIELD$undMAPPING$1;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x0$1$2) {
-    var x0$1 = $as_T2(x0$1$2);
-    if ((x0$1 !== null)) {
-      var k = $as_T(x0$1.$$und1__O());
-      var v = $as_T(x0$1.$$und2__O());
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x0$4$2) {
+    var x0$4 = $as_T2(x0$4$2);
+    if ((x0$4 !== null)) {
+      var k = $as_T(x0$4.$$und1__O());
+      var v = $as_T(x0$4.$$und2__O());
       return new $c_T2().init___O__O(v, k)
     } else {
-      throw new $c_s_MatchError().init___O(x0$1)
+      throw new $c_s_MatchError().init___O(x0$4)
     }
   }));
   var this$164 = $m_sci_Map$();
@@ -5866,50 +5873,6 @@ function $m_Lorg_scalajs_nodejs_request_Request$() {
     $n_Lorg_scalajs_nodejs_request_Request$ = new $c_Lorg_scalajs_nodejs_request_Request$().init___()
   };
   return $n_Lorg_scalajs_nodejs_request_Request$
-}
-/** @constructor */
-function $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  $c_O.call(this)
-}
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype = new $h_O();
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.constructor = $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$;
-/** @constructor */
-function $h_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  /*<skip>*/
-}
-$h_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype = $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype;
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.init___ = (function() {
-  return this
-});
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.getFuture$extension__Lorg_scalajs_nodejs_request_Request__T__s_concurrent_Future = (function($$this, url) {
-  var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-  $$this.get(url, (function(promise$1) {
-    return (function(error$2, response$2, body$2) {
-      var body = $as_T(body$2);
-      if ((!((error$2 !== null) && (error$2 !== (void 0))))) {
-        var value = new $c_T2().init___O__O(response$2, body);
-        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, value)
-      } else {
-        var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(error$2);
-        return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-      }
-    })
-  })(promise));
-  return promise
-});
-var $d_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = new $TypeData().initClass({
-  Lorg_scalajs_nodejs_request_Request$RequestExtensions$: 0
-}, false, "org.scalajs.nodejs.request.Request$RequestExtensions$", {
-  Lorg_scalajs_nodejs_request_Request$RequestExtensions$: 1,
-  O: 1
-});
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.$classData = $d_Lorg_scalajs_nodejs_request_Request$RequestExtensions$;
-var $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = (void 0);
-function $m_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  if ((!$n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$)) {
-    $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = new $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$().init___()
-  };
-  return $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$
 }
 /** @constructor */
 function $c_jl_Class() {
@@ -16891,30 +16854,30 @@ $h_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.pr
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__O__O = (function(v1) {
   return this.apply__T2__sc_Seq($as_T2(v1))
 });
-$c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__T2__sc_Seq = (function(x0$3) {
-  if ((x0$3 !== null)) {
-    var data = $as_T(x0$3.$$und2__O());
+$c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__T2__sc_Seq = (function(x0$2) {
+  if ((x0$2 !== null)) {
+    var data = $as_T(x0$2.$$und2__O());
     var lines = $m_sjsr_RuntimeString$().split__T__T__I__AT(data, "[\n]", 0);
     var jsx$4 = this.symbols$1$2;
     var jsx$3 = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray(lines);
     var this$2 = $m_sc_Seq$();
     var jsx$2 = $as_sc_TraversableLike(jsx$4.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$3, this$2.ReusableCBFInstance$2));
     var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-      return (function(x0$4$2) {
-        var x0$4 = $as_T2(x0$4$2);
-        if ((x0$4 !== null)) {
-          var symbol = $as_T(x0$4.$$und1__O());
-          var line = $as_T(x0$4.$$und2__O());
+      return (function(x0$3$2) {
+        var x0$3 = $as_T2(x0$3$2);
+        if ((x0$3 !== null)) {
+          var symbol = $as_T(x0$3.$$und1__O());
+          var line = $as_T(x0$3.$$und2__O());
           return arg$outer.$$outer$2.parseQuote__T__T__T__D__Lcom_shocktrade_services_YahooFinanceCSVQuotesService$YFCSVQuote(symbol, arg$outer.params$2$f, line, arg$outer.startTime$2$f)
         } else {
-          throw new $c_s_MatchError().init___O(x0$4)
+          throw new $c_s_MatchError().init___O(x0$3)
         }
       })
     })(this));
     var this$3 = $m_sc_Seq$();
     return $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$3.ReusableCBFInstance$2))
   } else {
-    throw new $c_s_MatchError().init___O(x0$3)
+    throw new $c_s_MatchError().init___O(x0$2)
   }
 });
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.init___Lcom_shocktrade_services_YahooFinanceCSVQuotesService__T__sc_Seq__D = (function($$outer, params$2, symbols$1, startTime$2) {

@@ -6,6 +6,7 @@ import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.request._
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.concurrent.ExecutionContext
@@ -23,20 +24,6 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
   private val request = Request()
   private val moment = Moment()
   MomentTimezone()
-
-  /**
-    * Returns all supported parameter codes
-    * @return all supported parameter codes
-    */
-  def getAllParams: String = FIELD_CODE_TO_MAPPING.keys.mkString
-
-  /**
-    * Returns the parameter codes required to retrieve values for the given fields
-    * @return the parameter codes required to retrieve values for the given fields
-    */
-  def getParams(fields: String*): String = {
-    (fields flatMap FIELD_CODE_TO_MAPPING.get).map(c => if (c.endsWith("0")) c.dropRight(1) else c).mkString
-  }
 
   /**
     * Performs the service call and returns a single object read from the service.
@@ -64,6 +51,20 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
       val lines = data.split("[\n]")
       (symbols zip lines) map { case (symbol, line) => parseQuote(symbol, params, line, startTime) }
     }
+  }
+
+  /**
+    * Returns all supported parameter codes
+    * @return all supported parameter codes
+    */
+  def getAllParams: String = FIELD_CODE_TO_MAPPING.keys.mkString
+
+  /**
+    * Returns the parameter codes required to retrieve values for the given fields
+    * @return the parameter codes required to retrieve values for the given fields
+    */
+  def getParams(fields: String*): String = {
+    (fields flatMap FIELD_CODE_TO_MAPPING.get).map(c => if (c.endsWith("0")) c.dropRight(1) else c).mkString
   }
 
   /**

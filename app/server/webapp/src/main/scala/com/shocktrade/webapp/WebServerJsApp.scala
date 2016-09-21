@@ -31,7 +31,11 @@ object WebServerJsApp extends js.JSApp {
 
     // determine the port to listen on
     val startTime = System.currentTimeMillis()
+
+    // get the web application port
     val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
+
+    // determine the database connection URL
     val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
 
     // handle any uncaught exceptions
@@ -93,6 +97,7 @@ object WebServerJsApp extends js.JSApp {
     OnlineStatusRoutes.init(app, dbFuture)
     PortfolioRoutes.init(app, dbFuture)
     ProfileRoutes.init(app, dbFuture)
+    RemoteEventRoutes.init(app, dbFuture)
     QuoteRoutes.init(app, dbFuture)
     ResearchRoutes.init(app, dbFuture)
     TradingClockRoutes.init(app, dbFuture)

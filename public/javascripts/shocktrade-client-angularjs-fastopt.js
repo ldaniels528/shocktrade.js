@@ -2921,7 +2921,7 @@ function $m_Lcom_shocktrade_Commissions$() {
   return $n_Lcom_shocktrade_Commissions$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_common_WebAppEvents$() {
+function $c_Lcom_shocktrade_common_events_RemoteEvent$() {
   $c_O.call(this);
   this.ContestCreated$1 = null;
   this.ContestDeleted$1 = null;
@@ -2936,14 +2936,14 @@ function $c_Lcom_shocktrade_common_WebAppEvents$() {
   this.UserProfileUpdated$1 = null;
   this.UserStatusChanged$1 = null
 }
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.constructor = $c_Lcom_shocktrade_common_WebAppEvents$;
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.constructor = $c_Lcom_shocktrade_common_events_RemoteEvent$;
 /** @constructor */
-function $h_Lcom_shocktrade_common_WebAppEvents$() {
+function $h_Lcom_shocktrade_common_events_RemoteEvent$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_WebAppEvents$.prototype = $c_Lcom_shocktrade_common_WebAppEvents$.prototype;
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.init___ = (function() {
+$h_Lcom_shocktrade_common_events_RemoteEvent$.prototype = $c_Lcom_shocktrade_common_events_RemoteEvent$.prototype;
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.init___ = (function() {
   this.ContestCreated$1 = "contest_created";
   this.ContestDeleted$1 = "contest_deleted";
   this.ContestSelected$1 = "contest_selected";
@@ -2958,19 +2958,19 @@ $c_Lcom_shocktrade_common_WebAppEvents$.prototype.init___ = (function() {
   this.UserStatusChanged$1 = "user_status_changed";
   return this
 });
-var $d_Lcom_shocktrade_common_WebAppEvents$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_WebAppEvents$: 0
-}, false, "com.shocktrade.common.WebAppEvents$", {
-  Lcom_shocktrade_common_WebAppEvents$: 1,
+var $d_Lcom_shocktrade_common_events_RemoteEvent$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_events_RemoteEvent$: 0
+}, false, "com.shocktrade.common.events.RemoteEvent$", {
+  Lcom_shocktrade_common_events_RemoteEvent$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.$classData = $d_Lcom_shocktrade_common_WebAppEvents$;
-var $n_Lcom_shocktrade_common_WebAppEvents$ = (void 0);
-function $m_Lcom_shocktrade_common_WebAppEvents$() {
-  if ((!$n_Lcom_shocktrade_common_WebAppEvents$)) {
-    $n_Lcom_shocktrade_common_WebAppEvents$ = new $c_Lcom_shocktrade_common_WebAppEvents$().init___()
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.$classData = $d_Lcom_shocktrade_common_events_RemoteEvent$;
+var $n_Lcom_shocktrade_common_events_RemoteEvent$ = (void 0);
+function $m_Lcom_shocktrade_common_events_RemoteEvent$() {
+  if ((!$n_Lcom_shocktrade_common_events_RemoteEvent$)) {
+    $n_Lcom_shocktrade_common_events_RemoteEvent$ = new $c_Lcom_shocktrade_common_events_RemoteEvent$().init___()
   };
-  return $n_Lcom_shocktrade_common_WebAppEvents$
+  return $n_Lcom_shocktrade_common_events_RemoteEvent$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_NewGameForm$() {
@@ -9022,7 +9022,7 @@ $c_Lcom_shocktrade_stockguru_NavigationController.prototype.init___Lcom_shocktra
       arg$outer$7.com$shocktrade$stockguru$NavigationController$$retrieveTotalInvestment__V()
     })
   })(this));
-  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1, (function(f$3) {
+  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$3) {
     return (function(arg1, arg2) {
       return f$3.apply__O__O__O(arg1, arg2)
     })
@@ -9638,7 +9638,7 @@ $c_Lcom_shocktrade_stockguru_WebSocketService.prototype.com$shocktrade$stockguru
             var jsx$2 = $g.console;
             var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting action '", "' => ", "..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action$1, $as_T($g.angular.toJson(data$1))]));
             jsx$2.log(s$1);
-            if (($m_Lcom_shocktrade_common_WebAppEvents$().ChatMessagesUpdated$1 === action$1)) {
+            if (($m_Lcom_shocktrade_common_events_RemoteEvent$().ChatMessagesUpdated$1 === action$1)) {
               $$scope.$emit(action$1, data$1);
               $$scope.$broadcast(action$1, data$1)
             } else {
@@ -9891,7 +9891,7 @@ $c_Lcom_shocktrade_stockguru_contest_ChatController.prototype.init___Lcom_shockt
   })(new $c_Lcom_shocktrade_stockguru_contest_ChatController$$anonfun$7().init___Lcom_shocktrade_stockguru_contest_ChatController(this));
   var this$2 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback = new $c_Lcom_shocktrade_stockguru_contest_ChatController$$anonfun$9().init___Lcom_shocktrade_stockguru_contest_ChatController(this);
-  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ChatMessagesUpdated$1, (function(f$3) {
+  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ChatMessagesUpdated$1, (function(f$3) {
     return (function(arg1$2, arg2) {
       return f$3.apply__O__O__O(arg1$2, arg2)
     })
@@ -10197,7 +10197,7 @@ $c_Lcom_shocktrade_stockguru_contest_DashboardController.prototype.init___Lcom_s
   };
   var this$5 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback = new $c_Lcom_shocktrade_stockguru_contest_DashboardController$$anonfun$12().init___Lcom_shocktrade_stockguru_contest_DashboardController(this);
-  this$5.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1, (function(f$5) {
+  this$5.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$5) {
     return (function(arg1, arg2) {
       return f$5.apply__O__O__O(arg1, arg2)
     })
@@ -12624,7 +12624,7 @@ $c_Lcom_shocktrade_stockguru_profile_MyQuotesController.prototype.init___Lcom_sh
       arg$outer$2.com$shocktrade$stockguru$profile$MyQuotesController$$reloadQuotes__V()
     })
   })(this));
-  this$7.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1, (function(f$5) {
+  this$7.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$5) {
     return (function(arg1$6, arg2) {
       return f$5.apply__O__O__O(arg1$6, arg2)
     })
@@ -15401,7 +15401,7 @@ $c_Lcom_shocktrade_stockguru_MainController.prototype.init___Lcom_shocktrade_sto
     var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["user_status_changed: newState = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.JSON.stringify(newState))]));
     jsx$2.log(s$1)
   }));
-  this$13.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserStatusChanged$1, (function(f$12) {
+  this$13.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserStatusChanged$1, (function(f$12) {
     return (function(arg1$8, arg2$1) {
       return f$12.apply__O__O__O(arg1$8, arg2$1)
     })
@@ -15636,7 +15636,7 @@ $c_Lcom_shocktrade_stockguru_contest_MyGamesController.prototype.init___Lcom_sho
       arg$outer$2.com$shocktrade$stockguru$contest$MyGamesController$$reload__V()
     })
   })(this));
-  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestCreated$1, (function(f$2) {
+  this$2.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, (function(f$2) {
     return (function(arg1$1, arg2) {
       return f$2.apply__O__O__O(arg1$1, arg2)
     })
@@ -15647,7 +15647,7 @@ $c_Lcom_shocktrade_stockguru_contest_MyGamesController.prototype.init___Lcom_sho
       arg$outer$3.com$shocktrade$stockguru$contest$MyGamesController$$reload__V()
     })
   })(this));
-  this$4.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestDeleted$1, (function(f$3) {
+  this$4.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestDeleted$1, (function(f$3) {
     return (function(arg1$2, arg2$1) {
       return f$3.apply__O__O__O(arg1$2, arg2$1)
     })
@@ -15658,7 +15658,7 @@ $c_Lcom_shocktrade_stockguru_contest_MyGamesController.prototype.init___Lcom_sho
       arg$outer$4.com$shocktrade$stockguru$contest$MyGamesController$$reload__V()
     })
   })(this));
-  this$6.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1, (function(f$4) {
+  this$6.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$4) {
     return (function(arg1$3, arg2$2) {
       return f$4.apply__O__O__O(arg1$3, arg2$2)
     })
@@ -15898,7 +15898,7 @@ $c_Lcom_shocktrade_stockguru_contest_PortfolioController.prototype.init___Lcom_s
       arg$outer$13.com$shocktrade$stockguru$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$19.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestSelected$1, (function(f$12) {
+  this$19.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestSelected$1, (function(f$12) {
     return (function(arg1$9, arg2$2) {
       return f$12.apply__O__O__O(arg1$9, arg2$2)
     })
@@ -15913,37 +15913,36 @@ $c_Lcom_shocktrade_stockguru_contest_PortfolioController.prototype.init___Lcom_s
       arg$outer$14.com$shocktrade$stockguru$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$22.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestUpdated$1, (function(f$13) {
+  this$22.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestUpdated$1, (function(f$13) {
     return (function(arg1$10, arg2$3) {
       return f$13.apply__O__O__O(arg1$10, arg2$3)
     })
   })(callback$1));
-  var this$28 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
+  var this$25 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback$2 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$15) {
-    return (function(x$11$2, portfolio$2) {
-      var jsx$4 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-      var jsx$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Orders for Portfolio '", "' updated"]));
-      var value$4 = portfolio$2._id;
-      var s$2 = jsx$3.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value$4 === (void 0)) ? null : value$4)]));
-      jsx$4.log(s$2);
+    return (function(x$11$2, portfolioId$2) {
+      var portfolioId = $as_T(portfolioId$2);
+      var jsx$3 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+      var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Orders for Portfolio '", "' updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId]));
+      jsx$3.log(s$2);
       arg$outer$15.com$shocktrade$stockguru$contest$PortfolioController$$resetOrders__V()
     })
   })(this));
-  this$28.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().OrderUpdated$1, (function(f$14) {
+  this$25.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().OrderUpdated$1, (function(f$14) {
     return (function(arg1$11, arg2$4) {
       return f$14.apply__O__O__O(arg1$11, arg2$4)
     })
   })(callback$2));
-  var this$31 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
+  var this$28 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback$3 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$16) {
     return (function(x$12$2, participant$2) {
-      var jsx$5 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+      var jsx$4 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
       var s$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Player '", "' updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([participant$2.name]));
-      jsx$5.log(s$3);
+      jsx$4.log(s$3);
       arg$outer$16.com$shocktrade$stockguru$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$31.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ParticipantUpdated$1, (function(f$15) {
+  this$28.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ParticipantUpdated$1, (function(f$15) {
     return (function(arg1$12, arg2$5) {
       return f$15.apply__O__O__O(arg1$12, arg2$5)
     })
@@ -17251,7 +17250,7 @@ $c_Lcom_shocktrade_stockguru_social_ConnectController.prototype.init___Lcom_shoc
       (0, arg$outer$7.com$shocktrade$stockguru$social$ConnectController$$$scope$f.loadMyUpdates)(arg$outer$7.com$shocktrade$stockguru$social$ConnectController$$mySession$f.getUserName__sjs_js_UndefOr())
     })
   })(this));
-  this$8.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1, (function(f$7) {
+  this$8.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$7) {
     return (function(arg1$7, arg2) {
       return f$7.apply__O__O__O(arg1$7, arg2)
     })
@@ -17262,7 +17261,7 @@ $c_Lcom_shocktrade_stockguru_social_ConnectController.prototype.init___Lcom_shoc
       (0, arg$outer$8.com$shocktrade$stockguru$social$ConnectController$$$scope$f.loadMyUpdates)(arg$outer$8.com$shocktrade$stockguru$social$ConnectController$$mySession$f.getUserName__sjs_js_UndefOr())
     })
   })(this));
-  this$10.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileUpdated$1, (function(f$8) {
+  this$10.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileUpdated$1, (function(f$8) {
     return (function(arg1$8, arg2$1) {
       return f$8.apply__O__O__O(arg1$8, arg2$1)
     })
@@ -21535,21 +21534,21 @@ $c_Lcom_shocktrade_stockguru_contest_GameSearchController.prototype.init___Lcom_
       return $uI(arg$outer$3.searchResults$2.push(contest$2))
     })
   })(this));
-  this$6.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestCreated$1, (function(f$18) {
+  this$6.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, (function(f$18) {
     return (function(arg1$17, arg2$3) {
       return f$18.apply__O__O__O(arg1$17, arg2$3)
     })
   })(callback));
   var this$8 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback$1 = new $c_Lcom_shocktrade_stockguru_contest_GameSearchController$$anonfun$27().init___Lcom_shocktrade_stockguru_contest_GameSearchController(this);
-  this$8.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestDeleted$1, (function(f$19) {
+  this$8.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestDeleted$1, (function(f$19) {
     return (function(arg1$18, arg2$4) {
       return f$19.apply__O__O__O(arg1$18, arg2$4)
     })
   })(callback$1));
   var this$10 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback$2 = new $c_Lcom_shocktrade_stockguru_contest_GameSearchController$$anonfun$28().init___Lcom_shocktrade_stockguru_contest_GameSearchController(this);
-  this$10.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_WebAppEvents$().ContestUpdated$1, (function(f$20) {
+  this$10.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestUpdated$1, (function(f$20) {
     return (function(arg1$19, arg2$5) {
       return f$20.apply__O__O__O(arg1$19, arg2$5)
     })
@@ -25601,11 +25600,11 @@ $c_Lcom_shocktrade_stockguru_MySessionService$$anonfun$loadContestByID$1$$anonfu
         arg$outer.$$outer$2.$$outer$2.participant$und$qmark$1 = participantOpt;
         arg$outer.$$outer$2.$$outer$2.portfolio$und$qmark$1 = $m_s_Option$().apply__O__s_Option(portfolio);
         var $$scope = arg$outer.$$outer$2.$$outer$2.$$rootScope$1;
-        var action = $m_Lcom_shocktrade_common_WebAppEvents$().ContestSelected$1;
+        var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestSelected$1;
         var jsx$1 = $g.console;
         var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(contest$2))]));
         jsx$1.info(s);
-        $$scope.$broadcast($m_Lcom_shocktrade_common_WebAppEvents$().ContestCreated$1, contest$2);
+        $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, contest$2);
         return new $c_T4().init___O__O__O__O(contest$2, portfolio, arg$outer.playerId$2$f, participantOpt)
       } else {
         throw new $c_s_MatchError().init___O(x$11)
@@ -43518,11 +43517,11 @@ $c_Lcom_shocktrade_stockguru_MySessionService.prototype.setUserProfile__Lcom_sho
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["profile = ", ", facebookID = ", ", profileFB = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(profile)), this.facebookID$1, $as_T($g.angular.toJson(profileFB))]));
   jsx$2.info(s);
   var $$scope = this.$$rootScope$1;
-  var action = $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileChanged$1;
+  var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
   var jsx$3 = $g.console;
   var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
   jsx$3.info(s$1);
-  $$scope.$broadcast($m_Lcom_shocktrade_common_WebAppEvents$().ContestCreated$1, profile)
+  $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
 });
 $c_Lcom_shocktrade_stockguru_MySessionService.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
@@ -43680,7 +43679,7 @@ $c_Lcom_shocktrade_stockguru_MySessionService.prototype.init___Lorg_scalajs_angu
   this.userProfile$1 = this.createSpectatorProfile__p1__Lcom_shocktrade_common_models_Profile();
   var this$4 = $m_Lcom_shocktrade_stockguru_ScopeEvents$ScopeEnrichment$();
   var callback = new $c_Lcom_shocktrade_stockguru_MySessionService$$anonfun$5().init___Lcom_shocktrade_stockguru_MySessionService(this);
-  this$4.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$rootScope, $m_Lcom_shocktrade_common_WebAppEvents$().UserProfileUpdated$1, (function(f) {
+  this$4.com$shocktrade$stockguru$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$rootScope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileUpdated$1, (function(f) {
     return (function(arg1, arg2) {
       return f.apply__O__O__O(arg1, arg2)
     })

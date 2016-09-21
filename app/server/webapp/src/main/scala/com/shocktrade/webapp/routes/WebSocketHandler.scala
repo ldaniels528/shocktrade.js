@@ -2,7 +2,7 @@ package com.shocktrade.webapp.routes
 
 import java.util.UUID
 
-import com.shocktrade.common.WsResponse
+import com.shocktrade.common.events.RemoteEvent
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.Request
 import org.scalajs.nodejs.expressws.WebSocket
@@ -56,7 +56,7 @@ object WebSocketHandler {
 
     def send(action: String, data: String) = ws.send(encode(action, data))
 
-    private def encode(action: String, data: String) = JSON.stringify(new WsResponse(action, data))
+    private def encode(action: String, data: String) = JSON.stringify(new RemoteEvent(action, data))
 
   }
 

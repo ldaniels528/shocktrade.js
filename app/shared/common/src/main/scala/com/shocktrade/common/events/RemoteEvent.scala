@@ -1,10 +1,20 @@
-package com.shocktrade.common
+package com.shocktrade.common.events
+
+import scala.scalajs.js
+import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
-  * Shocktrade Application Events
+  * Represents a Remote Event
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object WebAppEvents {
+@ScalaJSDefined
+class RemoteEvent(val action: js.UndefOr[String], val data: js.UndefOr[String]) extends js.Object
+
+/**
+  * Remote Event Companion
+  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  */
+object RemoteEvent {
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Events

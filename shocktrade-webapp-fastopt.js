@@ -3015,58 +3015,6 @@ var $d_sjs_js_Any = new $TypeData().initClass({
 }, false, "scala.scalajs.js.Any", {
   sjs_js_Any: 1
 }, true, (void 0), $noIsInstance);
-/** @constructor */
-function $c_Lcom_shocktrade_common_WebAppEvents$() {
-  $c_O.call(this);
-  this.ContestCreated$1 = null;
-  this.ContestDeleted$1 = null;
-  this.ContestSelected$1 = null;
-  this.ContestUpdated$1 = null;
-  this.ChatMessagesUpdated$1 = null;
-  this.OrderUpdated$1 = null;
-  this.ParticipantUpdated$1 = null;
-  this.PerksUpdated$1 = null;
-  this.AwardsUpdated$1 = null;
-  this.UserProfileChanged$1 = null;
-  this.UserProfileUpdated$1 = null;
-  this.UserStatusChanged$1 = null
-}
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.constructor = $c_Lcom_shocktrade_common_WebAppEvents$;
-/** @constructor */
-function $h_Lcom_shocktrade_common_WebAppEvents$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_WebAppEvents$.prototype = $c_Lcom_shocktrade_common_WebAppEvents$.prototype;
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.init___ = (function() {
-  this.ContestCreated$1 = "contest_created";
-  this.ContestDeleted$1 = "contest_deleted";
-  this.ContestSelected$1 = "contest_selected";
-  this.ContestUpdated$1 = "contest_updated";
-  this.ChatMessagesUpdated$1 = "chat_messages_updated";
-  this.OrderUpdated$1 = "orders_updated";
-  this.ParticipantUpdated$1 = "participant_updated";
-  this.PerksUpdated$1 = "perks_updated";
-  this.AwardsUpdated$1 = "awards_updated";
-  this.UserProfileChanged$1 = "user_profile_changed";
-  this.UserProfileUpdated$1 = "profile_updated";
-  this.UserStatusChanged$1 = "user_status_changed";
-  return this
-});
-var $d_Lcom_shocktrade_common_WebAppEvents$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_WebAppEvents$: 0
-}, false, "com.shocktrade.common.WebAppEvents$", {
-  Lcom_shocktrade_common_WebAppEvents$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_common_WebAppEvents$.prototype.$classData = $d_Lcom_shocktrade_common_WebAppEvents$;
-var $n_Lcom_shocktrade_common_WebAppEvents$ = (void 0);
-function $m_Lcom_shocktrade_common_WebAppEvents$() {
-  if ((!$n_Lcom_shocktrade_common_WebAppEvents$)) {
-    $n_Lcom_shocktrade_common_WebAppEvents$ = new $c_Lcom_shocktrade_common_WebAppEvents$().init___()
-  };
-  return $n_Lcom_shocktrade_common_WebAppEvents$
-}
 var $d_Lcom_shocktrade_common_dao_NewsDAO = new $TypeData().initClass({
   Lcom_shocktrade_common_dao_NewsDAO: 0
 }, false, "com.shocktrade.common.dao.NewsDAO", {
@@ -3391,6 +3339,58 @@ function $m_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$() {
     $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$ = new $c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$().init___()
   };
   return $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_common_events_RemoteEvent$() {
+  $c_O.call(this);
+  this.ContestCreated$1 = null;
+  this.ContestDeleted$1 = null;
+  this.ContestSelected$1 = null;
+  this.ContestUpdated$1 = null;
+  this.ChatMessagesUpdated$1 = null;
+  this.OrderUpdated$1 = null;
+  this.ParticipantUpdated$1 = null;
+  this.PerksUpdated$1 = null;
+  this.AwardsUpdated$1 = null;
+  this.UserProfileChanged$1 = null;
+  this.UserProfileUpdated$1 = null;
+  this.UserStatusChanged$1 = null
+}
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.constructor = $c_Lcom_shocktrade_common_events_RemoteEvent$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_events_RemoteEvent$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_events_RemoteEvent$.prototype = $c_Lcom_shocktrade_common_events_RemoteEvent$.prototype;
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.init___ = (function() {
+  this.ContestCreated$1 = "contest_created";
+  this.ContestDeleted$1 = "contest_deleted";
+  this.ContestSelected$1 = "contest_selected";
+  this.ContestUpdated$1 = "contest_updated";
+  this.ChatMessagesUpdated$1 = "chat_messages_updated";
+  this.OrderUpdated$1 = "orders_updated";
+  this.ParticipantUpdated$1 = "participant_updated";
+  this.PerksUpdated$1 = "perks_updated";
+  this.AwardsUpdated$1 = "awards_updated";
+  this.UserProfileChanged$1 = "user_profile_changed";
+  this.UserProfileUpdated$1 = "profile_updated";
+  this.UserStatusChanged$1 = "user_status_changed";
+  return this
+});
+var $d_Lcom_shocktrade_common_events_RemoteEvent$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_events_RemoteEvent$: 0
+}, false, "com.shocktrade.common.events.RemoteEvent$", {
+  Lcom_shocktrade_common_events_RemoteEvent$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_events_RemoteEvent$.prototype.$classData = $d_Lcom_shocktrade_common_events_RemoteEvent$;
+var $n_Lcom_shocktrade_common_events_RemoteEvent$ = (void 0);
+function $m_Lcom_shocktrade_common_events_RemoteEvent$() {
+  if ((!$n_Lcom_shocktrade_common_events_RemoteEvent$)) {
+    $n_Lcom_shocktrade_common_events_RemoteEvent$ = new $c_Lcom_shocktrade_common_events_RemoteEvent$().init___()
+  };
+  return $n_Lcom_shocktrade_common_events_RemoteEvent$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_ContestSearchForm$ContestSearchValidations$() {
@@ -3955,14 +3955,20 @@ $c_Lcom_shocktrade_services_RSSFeedParser.prototype.init___Lorg_scalajs_nodejs_N
   return this
 });
 $c_Lcom_shocktrade_services_RSSFeedParser.prototype.parse__T__s_concurrent_ExecutionContext__s_concurrent_Future = (function(url, ec) {
-  var jsx$1 = $m_Lorg_scalajs_nodejs_request_Request$RequestExtensions$();
-  var request = this.request$1;
-  var this$2 = jsx$1.getFuture$extension__Lorg_scalajs_nodejs_request_Request__T__s_concurrent_Future(request, url);
+  var client = this.request$1;
+  var task = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+  var arg1 = (function(task$3) {
+    return (function(a$2, b$2) {
+      var value = new $c_T2().init___O__O(a$2, b$2);
+      return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(task$3, value)
+    })
+  })(task);
+  client.get(url, arg1);
   var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(check$ifrefutable$1$2) {
     var check$ifrefutable$1 = $as_T2(check$ifrefutable$1$2);
     return (check$ifrefutable$1 !== null)
   }));
-  var this$4 = $s_s_concurrent_Future$class__filter__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, p, ec);
+  var this$7 = $s_s_concurrent_Future$class__filter__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, p, ec);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2) {
     var x$3 = $as_T2(x$3$2);
     if ((x$3 !== null)) {
@@ -3977,9 +3983,9 @@ $c_Lcom_shocktrade_services_RSSFeedParser.prototype.parse__T__s_concurrent_Execu
       throw new $c_s_MatchError().init___O(x$3)
     }
   }));
-  var this$5 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f, ec);
+  var this$8 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$7, f, ec);
   var f$1 = new $c_Lcom_shocktrade_services_RSSFeedParser$$anonfun$parse$3().init___Lcom_shocktrade_services_RSSFeedParser__s_concurrent_ExecutionContext(this, ec);
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f$1, ec)
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$8, f$1, ec)
 });
 var $d_Lcom_shocktrade_services_RSSFeedParser = new $TypeData().initClass({
   Lcom_shocktrade_services_RSSFeedParser: 0
@@ -4230,11 +4236,18 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.getChangedSym
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future = (function(params, symbols, ec) {
   var startTime = $uD($g.Date.now());
   var symbolList = symbols.mkString__T__T("+");
-  var jsx$1 = $m_Lorg_scalajs_nodejs_request_Request$RequestExtensions$();
-  var request = this.request$1;
-  var this$2 = jsx$1.getFuture$extension__Lorg_scalajs_nodejs_request_Request__T__s_concurrent_Future(request, new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["http://finance.yahoo.com/d/quotes.csv?s=", "&f=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbolList, params])));
+  var client = this.request$1;
+  var url = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["http://finance.yahoo.com/d/quotes.csv?s=", "&f=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbolList, params]));
+  var task = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+  var arg1 = (function(task$3) {
+    return (function(a$2, b$2) {
+      var value = new $c_T2().init___O__O(a$2, b$2);
+      return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(task$3, value)
+    })
+  })(task);
+  client.get(url, arg1);
   var f = new $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1().init___Lcom_shocktrade_services_YahooFinanceCSVQuotesService__T__sc_Seq__D(this, params, symbols, startTime);
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, ec)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, ec)
 });
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.toQuote__p1__T__sjs_js_Dictionary__D__Lcom_shocktrade_services_YahooFinanceCSVQuotesService$YFCSVQuote = (function(symbol, kvps, responseTimeMsec) {
   var jsx$1 = $m_s_Predef$().Map$2;
@@ -6503,14 +6516,14 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$.prototype.init___ = (f
   };
   this.CODE$undTO$undFIELD$undMAPPING$1 = $as_sci_Map(this$163.elems$1);
   var this$165 = this.CODE$undTO$undFIELD$undMAPPING$1;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x0$1$2) {
-    var x0$1 = $as_T2(x0$1$2);
-    if ((x0$1 !== null)) {
-      var k = $as_T(x0$1.$$und1__O());
-      var v = $as_T(x0$1.$$und2__O());
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x0$4$2) {
+    var x0$4 = $as_T2(x0$4$2);
+    if ((x0$4 !== null)) {
+      var k = $as_T(x0$4.$$und1__O());
+      var v = $as_T(x0$4.$$und2__O());
       return new $c_T2().init___O__O(v, k)
     } else {
-      throw new $c_s_MatchError().init___O(x0$1)
+      throw new $c_s_MatchError().init___O(x0$4)
     }
   }));
   var this$164 = $m_sci_Map$();
@@ -7021,7 +7034,7 @@ $c_Lcom_shocktrade_webapp_routes_ChatRoutes$.prototype.com$shocktrade$webapp$rou
             var value$2 = contest.messages;
             response$2.send(((value$2 === (void 0)) ? (void 0) : value$2));
             next$2();
-            return $m_Lcom_shocktrade_webapp_routes_WebSocketHandler$().emit__T__T__Lorg_scalajs_nodejs_timer_Timeout($m_Lcom_shocktrade_common_WebAppEvents$().ChatMessagesUpdated$1, contestID$2$1)
+            return $m_Lcom_shocktrade_webapp_routes_WebSocketHandler$().emit__T__T__Lorg_scalajs_nodejs_timer_Timeout($m_Lcom_shocktrade_common_events_RemoteEvent$().ChatMessagesUpdated$1, contestID$2$1)
           } else {
             var x = $m_s_None$();
             if ((x === x1$2)) {
@@ -10585,6 +10598,79 @@ function $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$() {
   return $n_Lcom_shocktrade_webapp_routes_QuoteRoutes$
 }
 /** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype = $c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype;
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype.com$shocktrade$webapp$routes$RemoteEventRoutes$$relayEvent$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__V = (function(request, response, next) {
+  var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
+  var value = form.action;
+  if ((value === (void 0))) {
+    var result = (void 0)
+  } else {
+    var action = $as_T(value);
+    var value$1 = form.data;
+    if ((value$1 === (void 0))) {
+      var result = (void 0)
+    } else {
+      var data = $as_T(value$1);
+      var value$2 = new $c_T2().init___O__O(action, data);
+      var result = value$2
+    }
+  };
+  var x1 = ((result === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(result));
+  matchEnd6: {
+    if ($is_s_Some(x1)) {
+      var x2 = $as_s_Some(x1);
+      var p3 = $as_T2(x2.x$2);
+      if ((p3 !== null)) {
+        var action$1 = $as_T(p3.$$und1__O());
+        var data$1 = $as_T(p3.$$und2__O());
+        $m_Lcom_shocktrade_webapp_routes_WebSocketHandler$().emit__T__T__Lorg_scalajs_nodejs_timer_Timeout(action$1, data$1);
+        response.send("Ok");
+        $asUnit(next());
+        break matchEnd6
+      }
+    };
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      $g.console.error("invalid event => %j", form);
+      response.status(400).json(form);
+      $asUnit(next());
+      break matchEnd6
+    };
+    throw new $c_s_MatchError().init___O(x1)
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__V = (function(app, dbFuture, ec, require) {
+  app.post("/api/events/relay", (function(request$2, response$2, next$2) {
+    $m_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$().com$shocktrade$webapp$routes$RemoteEventRoutes$$relayEvent$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__V(request$2, response$2, next$2)
+  }))
+});
+var $d_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_RemoteEventRoutes$: 0
+}, false, "com.shocktrade.webapp.routes.RemoteEventRoutes$", {
+  Lcom_shocktrade_webapp_routes_RemoteEventRoutes$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$;
+var $n_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$)) {
+    $n_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$ = new $c_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$() {
   $c_O.call(this)
 }
@@ -12481,50 +12567,6 @@ function $m_Lorg_scalajs_nodejs_request_Request$() {
     $n_Lorg_scalajs_nodejs_request_Request$ = new $c_Lorg_scalajs_nodejs_request_Request$().init___()
   };
   return $n_Lorg_scalajs_nodejs_request_Request$
-}
-/** @constructor */
-function $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  $c_O.call(this)
-}
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype = new $h_O();
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.constructor = $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$;
-/** @constructor */
-function $h_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  /*<skip>*/
-}
-$h_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype = $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype;
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.init___ = (function() {
-  return this
-});
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.getFuture$extension__Lorg_scalajs_nodejs_request_Request__T__s_concurrent_Future = (function($$this, url) {
-  var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-  $$this.get(url, (function(promise$1) {
-    return (function(error$2, response$2, body$2) {
-      var body = $as_T(body$2);
-      if ((!((error$2 !== null) && (error$2 !== (void 0))))) {
-        var value = new $c_T2().init___O__O(response$2, body);
-        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, value)
-      } else {
-        var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(error$2);
-        return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-      }
-    })
-  })(promise));
-  return promise
-});
-var $d_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = new $TypeData().initClass({
-  Lorg_scalajs_nodejs_request_Request$RequestExtensions$: 0
-}, false, "org.scalajs.nodejs.request.Request$RequestExtensions$", {
-  Lorg_scalajs_nodejs_request_Request$RequestExtensions$: 1,
-  O: 1
-});
-$c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$.prototype.$classData = $d_Lorg_scalajs_nodejs_request_Request$RequestExtensions$;
-var $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = (void 0);
-function $m_Lorg_scalajs_nodejs_request_Request$RequestExtensions$() {
-  if ((!$n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$)) {
-    $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$ = new $c_Lorg_scalajs_nodejs_request_Request$RequestExtensions$().init___()
-  };
-  return $n_Lorg_scalajs_nodejs_request_Request$RequestExtensions$
 }
 /** @constructor */
 function $c_Lorg_scalajs_nodejs_util_ScalaJsHelper$() {
@@ -16336,6 +16378,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   $m_Lcom_shocktrade_webapp_routes_OnlineStatusRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_PortfolioRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, mongo);
   $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
+  $m_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_ResearchRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, mongo);
@@ -17496,7 +17539,7 @@ var $d_sr_ObjectRef = new $TypeData().initClass({
 });
 $c_sr_ObjectRef.prototype.$classData = $d_sr_ObjectRef;
 /** @constructor */
-function $c_Lcom_shocktrade_common_WsResponse(arg$1, arg$2) {
+function $c_Lcom_shocktrade_common_events_RemoteEvent(arg$1, arg$2) {
   var action = arg$1;
   var data = arg$2;
   $g.Object.call(this);
@@ -17520,12 +17563,12 @@ function $c_Lcom_shocktrade_common_WsResponse(arg$1, arg$2) {
   this.data = data
 }
 /** @constructor */
-function $h_Lcom_shocktrade_common_WsResponse() {
+function $h_Lcom_shocktrade_common_events_RemoteEvent() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_WsResponse.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_WsResponse.prototype = new $h_Lcom_shocktrade_common_WsResponse();
-$c_Lcom_shocktrade_common_WsResponse.prototype.constructor = $c_Lcom_shocktrade_common_WsResponse;
+$h_Lcom_shocktrade_common_events_RemoteEvent.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_events_RemoteEvent.prototype = new $h_Lcom_shocktrade_common_events_RemoteEvent();
+$c_Lcom_shocktrade_common_events_RemoteEvent.prototype.constructor = $c_Lcom_shocktrade_common_events_RemoteEvent;
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_PerksResponse(arg$1, arg$2) {
   var fundsAvailable = arg$1;
@@ -25320,30 +25363,30 @@ $h_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.pr
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__O__O = (function(v1) {
   return this.apply__T2__sc_Seq($as_T2(v1))
 });
-$c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__T2__sc_Seq = (function(x0$3) {
-  if ((x0$3 !== null)) {
-    var data = $as_T(x0$3.$$und2__O());
+$c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.apply__T2__sc_Seq = (function(x0$2) {
+  if ((x0$2 !== null)) {
+    var data = $as_T(x0$2.$$und2__O());
     var lines = $m_sjsr_RuntimeString$().split__T__T__I__AT(data, "[\n]", 0);
     var jsx$4 = this.symbols$1$2;
     var jsx$3 = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray(lines);
     var this$2 = $m_sc_Seq$();
     var jsx$2 = $as_sc_TraversableLike(jsx$4.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$3, this$2.ReusableCBFInstance$2));
     var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-      return (function(x0$4$2) {
-        var x0$4 = $as_T2(x0$4$2);
-        if ((x0$4 !== null)) {
-          var symbol = $as_T(x0$4.$$und1__O());
-          var line = $as_T(x0$4.$$und2__O());
+      return (function(x0$3$2) {
+        var x0$3 = $as_T2(x0$3$2);
+        if ((x0$3 !== null)) {
+          var symbol = $as_T(x0$3.$$und1__O());
+          var line = $as_T(x0$3.$$und2__O());
           return arg$outer.$$outer$2.parseQuote__T__T__T__D__Lcom_shocktrade_services_YahooFinanceCSVQuotesService$YFCSVQuote(symbol, arg$outer.params$2$f, line, arg$outer.startTime$2$f)
         } else {
-          throw new $c_s_MatchError().init___O(x0$4)
+          throw new $c_s_MatchError().init___O(x0$3)
         }
       })
     })(this));
     var this$3 = $m_sc_Seq$();
     return $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$3.ReusableCBFInstance$2))
   } else {
-    throw new $c_s_MatchError().init___O(x0$3)
+    throw new $c_s_MatchError().init___O(x0$2)
   }
 });
 $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1.prototype.init___Lcom_shocktrade_services_YahooFinanceCSVQuotesService__T__sc_Seq__D = (function($$outer, params$2, symbols$1, startTime$2) {
@@ -27868,7 +27911,7 @@ $c_Lcom_shocktrade_webapp_routes_WebSocketHandler$WsClient.prototype.toString__T
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
 $c_Lcom_shocktrade_webapp_routes_WebSocketHandler$WsClient.prototype.encode__p1__T__T__T = (function(action, data) {
-  return $as_T($g.JSON.stringify(new $c_Lcom_shocktrade_common_WsResponse(action, data)))
+  return $as_T($g.JSON.stringify(new $c_Lcom_shocktrade_common_events_RemoteEvent(action, data)))
 });
 $c_Lcom_shocktrade_webapp_routes_WebSocketHandler$WsClient.prototype.send__T__T__sjs_js_Any = (function(action, data) {
   var jsx$1 = this.ws$1;

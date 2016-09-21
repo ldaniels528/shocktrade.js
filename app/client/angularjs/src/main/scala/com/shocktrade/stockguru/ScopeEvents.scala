@@ -1,6 +1,6 @@
 package com.shocktrade.stockguru
 
-import com.shocktrade.common.WebAppEvents._
+import com.shocktrade.common.events.RemoteEvent._
 import com.shocktrade.common.models.Profile
 import com.shocktrade.common.models.contest.{ChatMessage, Contest, Participant, Portfolio}
 import org.scalajs.angularjs.{Scope, angular}
@@ -79,7 +79,7 @@ object ScopeEvents {
     def onMessagesUpdated(callback: (dom.Event, String) => Any) = reactTo(ChatMessagesUpdated, callback)
 
     @inline
-    def onOrderUpdated(callback: (dom.Event, Portfolio) => Any) = reactTo(OrderUpdated, callback)
+    def onOrderUpdated(callback: (dom.Event, String) => Any) = reactTo(OrderUpdated, callback)
 
     @inline
     def onParticipantUpdated(callback: (dom.Event, Participant) => Any) = reactTo(ParticipantUpdated, callback)

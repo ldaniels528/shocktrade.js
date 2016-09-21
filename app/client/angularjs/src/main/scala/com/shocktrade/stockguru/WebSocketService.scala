@@ -1,6 +1,6 @@
 package com.shocktrade.stockguru
 
-import com.shocktrade.common.WsResponse
+import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.stockguru.ScopeEvents._
 import com.shocktrade.stockguru.WebSocketService.window
 import org.scalajs.angularjs.http.Http
@@ -104,7 +104,7 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
     Option(event.data) match {
       case Some(rawMessage: String) =>
         console.log(s"rawMessage = '$rawMessage'")
-        val message = JSON.parse(rawMessage).asInstanceOf[WsResponse]
+        val message = JSON.parse(rawMessage).asInstanceOf[RemoteEvent]
         val result = for {
           action <- message.action.toOption
           data <- message.data.toOption

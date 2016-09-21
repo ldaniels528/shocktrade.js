@@ -2,9 +2,9 @@ package com.shocktrade.webapp.routes
 
 import java.util.UUID
 
-import com.shocktrade.common.WebAppEvents
 import com.shocktrade.common.dao.contest.ContestDAO._
 import com.shocktrade.common.dao.contest.ContestData
+import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.models.contest.ChatMessage
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
@@ -40,7 +40,7 @@ object ChatRoutes {
             case Some(contest) =>
               response.send(contest.messages)
               next()
-              WebSocketHandler.emit(WebAppEvents.ChatMessagesUpdated, contestID)
+              WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
             case None => response.notFound("Unexpected error"); next()
           }
         case Success(result) =>

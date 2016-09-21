@@ -207,8 +207,8 @@ class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: T
     resetPositions()
   }
 
-  $scope.onOrderUpdated { (_, portfolio) =>
-    console.log(s"[Portfolio] Orders for Portfolio '${portfolio._id.orNull}' updated")
+  $scope.onOrderUpdated { (_, portfolioId) =>
+    console.log(s"[Portfolio] Orders for Portfolio '$portfolioId' updated")
     resetOrders()
   }
 

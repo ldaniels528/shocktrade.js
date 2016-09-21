@@ -7,13 +7,17 @@ import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest._
 import com.shocktrade.common.dao.quotes.SecuritiesDAO
 import com.shocktrade.common.dao.quotes.SecuritiesDAO._
+import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.PositionLike
 import com.shocktrade.common.models.quote.ResearchQuote
+import com.shocktrade.services.RemoteEventService
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.npm.numeral.Numeral
+import org.scalajs.nodejs.npm.numeral.Numeral.Implicits._
 import org.scalajs.nodejs.os.OS
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.util.Util
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.DateHelper._
@@ -30,17 +34,20 @@ import scala.util.{Failure, Success}
   * Autonomous Trading Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) {
+class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) {
   // load the required modules
   private implicit val moment = Moment()
   private implicit val numeral = Numeral()
   private implicit val os = OS()
   private implicit val util = Util()
 
-  // get DAO instances
+  // create DAO instances
   private implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
   private implicit val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private implicit val robotDAO = dbFuture.flatMap(_.getRobotDAO)
+
+  // create the service instances
+  private val removeEventService = new RemoteEventService(webAppEndPoint)
 
   // create the rule compiler and processor
   private implicit val processor = new RuleProcessor()
@@ -121,8 +128,10 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
           // persist the orders
           result <- portfolio._id.toOption match {
             case Some(id) if orders.nonEmpty =>
-              portfolioDAO.flatMap(_.createOrders(id.toHexString(), orders).toFuture) map { result =>
+              val portfolioId = id.toHexString()
+              portfolioDAO.flatMap(_.createOrders(portfolioId, orders).toFuture) map { result =>
                 robot.log(s"${orders.size} order(s) were created")
+                sendEvent(robot, OrderEvents.updated(portfolioId))
                 new UpdateResult(success = result.isOk, updates = orders.size)
               }
             case _ =>
@@ -187,8 +196,8 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
         orders = positionsEtc flatMap {
           case (position, Some((lastTrade, pctGain))) if pctGain >= 25 =>
             robot.info("%s @ %d x %s (last: %d, gain/loss: %s%%) <%s>",
-              position.symbol.orNull, position.pricePaid.orZero, numeral(position.quantity.orZero).format("0,0"),
-              lastTrade, numeral(pctGain).format("0.0"), position._id.orNull)
+              position.symbol.orNull, position.pricePaid.orZero, position.quantity.orZero.format("0,0"),
+              lastTrade, pctGain.format("0.0"), position._id.orNull)
             Option(new OrderData(
               symbol = position.symbol,
               exchange = position.exchange,
@@ -207,12 +216,19 @@ class AutonomousTradingEngine(dbFuture: Future[Db])(implicit ec: ExecutionContex
     }
   }
 
+  private def sendEvent(robot: RobotData, event: RemoteEvent) = {
+    removeEventService.send(event) onComplete {
+      case Success(_) => robot.log("Event transmitted")
+      case Failure(e) => robot.error(s"Failed during transmission: ${e.getMessage}")
+    }
+  }
+
   private def showQuotes(robot: RobotData, quotes: Seq[ResearchQuote]) = {
     robot.log(s"${quotes.size} securities identified:")
     quotes foreach { q =>
       robot.log("| %s/%s | price: %d | low: %d | high: %d | volume: %s | avgVol: %s | spread: %d%% |",
         q.symbol, q.exchange, q.lastTrade.orZero, q.low.orZero, q.high.orZero,
-        numeral(q.volume.orZero).format("0,0"), numeral(q.avgVolume10Day.orZero).format("0,0"),
+        q.volume.orZero.format("0,0"), q.avgVolume10Day.orZero.format("0,0"),
         (q.spread.orZero * 10).toInt / 10.0)
     }
   }
