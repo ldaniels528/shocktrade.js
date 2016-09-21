@@ -1,4 +1,3 @@
-
 db.Contests.update({name: "The World is Mine too"}, {
         name: "The World is Mine too",
         status: "ACTIVE",
@@ -20,6 +19,11 @@ db.Contests.update({name: "The World is Mine too"}, {
             _id: "554d8d313400002b00ff4ed5",
             name: "Gadget",
             facebookID: "613646325380649",
+            joinedTime: new ISODate()
+        }, {
+            _id: "51a308ac50c70a97d375a6b5",
+            name: "Daisy",
+            facebookID: "100001992439064",
             joinedTime: new ISODate()
         }]
     },

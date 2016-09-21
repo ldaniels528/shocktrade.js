@@ -11,10 +11,9 @@ import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.PositionLike
 import com.shocktrade.common.models.quote.ResearchQuote
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, FindAndModifyWriteOpResult, MongoDB}
+import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.npm.numeral.Numeral
 import org.scalajs.nodejs.os.OS
-import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.util.Util
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.DateHelper._
@@ -261,7 +260,7 @@ object AutonomousTradingEngine {
         priceType = priceType,
         price = price,
         quantity = quantity,
-        creationTime = now - 48.hours, // TODO remove the 6-hour delta after testing
+        creationTime = now - 8.hours, // TODO remove the 6-hour delta after testing
         expirationTime = now + 3.days
       )
     }
@@ -354,12 +353,18 @@ object AutonomousTradingEngine {
       params.toOption match {
         case Some((symbol, cost, quantity)) =>
           securitiesDAO.flatMap(_.findQuote[PricingQuote](symbol, fields = PricingQuote.Fields)) map {
-            case Some(quote) => quote.lastTrade.map(price => price -> 100 * (price * quantity - cost) / cost).toOption
+            case Some(quote) => quote.lastTrade.map(price => price -> gainLoss(price, quantity, cost)).toOption
             case None => None
           }
         case None => Future.successful(None)
       }
     }
+
+    @inline
+    def gainLoss(price: Double, quantity: Double, cost: Double) = {
+      if (cost > 0) 100 * (price * quantity - cost) / cost else 0.0
+    }
+
   }
 
   @ScalaJSDefined

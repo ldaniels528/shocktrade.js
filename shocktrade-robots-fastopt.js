@@ -3443,6 +3443,9 @@ function $h_Lcom_shocktrade_autonomous_RobotEnvironment$() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype = $c_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype;
+$c_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype.init___ = (function() {
+  return this
+});
 $c_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype.apply__T__Lcom_shocktrade_common_dao_contest_PortfolioData__Lcom_shocktrade_autonomous_RobotEnvironment = (function(name, portfolio) {
   var jsx$4 = $m_sjs_js_UndefOrOps$();
   var value = portfolio.positions;
@@ -3550,9 +3553,6 @@ $c_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype.apply__T__Lcom_shocktr
     var jsx$2 = b$4.toList__sci_List()
   };
   return new $c_Lcom_shocktrade_autonomous_RobotEnvironment().init___T__Lcom_shocktrade_common_dao_contest_PortfolioData__sc_Seq__sc_Seq(name, portfolio, jsx$3, $as_sc_Seq(jsx$2))
-});
-$c_Lcom_shocktrade_autonomous_RobotEnvironment$.prototype.init___ = (function() {
-  return this
 });
 var $d_Lcom_shocktrade_autonomous_RobotEnvironment$ = new $TypeData().initClass({
   Lcom_shocktrade_autonomous_RobotEnvironment$: 0
@@ -13301,7 +13301,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
     var now = new $g.Date();
     var x$24 = security.symbol;
     var x$25 = security.exchange;
-    var this$24 = new $c_s_concurrent_duration_package$DurationInt().init___I(48);
+    var this$24 = new $c_s_concurrent_duration_package$DurationInt().init___I(8);
     var unit = $m_ju_concurrent_TimeUnit$().HOURS$1;
     var duration = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$24.scala$concurrent$duration$DurationInt$$n$1, unit);
     var jsx$2 = $g.Date;
@@ -13451,7 +13451,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
           })
         })(symbol$1, ec));
         var this$44 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO, f$1, ec);
-        var f$2 = new $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2().init___D__D(cost$1, quantity$2);
+        var f$2 = new $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2().init___D__D__Lcom_shocktrade_common_models_contest_PositionLike(cost$1, quantity$2, p);
         var this$47 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$44, f$2, ec);
         break matchEnd6
       }
@@ -15623,7 +15623,8 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$operate$2.prototy
 function $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2() {
   $c_sr_AbstractFunction1.call(this);
   this.cost$1$f = 0.0;
-  this.quantity$1$f = 0.0
+  this.quantity$1$f = 0.0;
+  this.$$this$2$f = null
 }
 $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype.constructor = $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2;
@@ -15635,9 +15636,10 @@ $h_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfu
 $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype.apply__O__O = (function(v1) {
   return this.apply__s_Option__s_Option($as_s_Option(v1))
 });
-$c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype.init___D__D = (function(cost$1, quantity$1) {
+$c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype.init___D__D__Lcom_shocktrade_common_models_contest_PositionLike = (function(cost$1, quantity$1, $$this$2) {
   this.cost$1$f = cost$1;
   this.quantity$1$f = quantity$1;
+  this.$$this$2$f = $$this$2;
   return this
 });
 $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfun$computePercentGain$extension$2.prototype.apply__s_Option__s_Option = (function(x0$2) {
@@ -15649,7 +15651,9 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PositionExtensions$$anonfu
       var value$2 = (void 0)
     } else {
       var price = $uD(value);
-      var y = ((100 * ((price * this.quantity$1$f) - this.cost$1$f)) / this.cost$1$f);
+      var quantity = this.quantity$1$f;
+      var cost = this.cost$1$f;
+      var y = ((cost > 0) ? ((100 * ((price * quantity) - cost)) / cost) : 0.0);
       var value$1 = new $c_T2().init___O__O(price, y);
       var value$2 = value$1
     };
@@ -21452,13 +21456,13 @@ $c_sc_AbstractTraversable.prototype.tail__O = (function() {
 $c_sc_AbstractTraversable.prototype.addString__scm_StringBuilder__T__T__T__scm_StringBuilder = (function(b, start, sep, end) {
   return $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder(this, b, start, sep, end)
 });
+$c_sc_AbstractTraversable.prototype.repr__O = (function() {
+  return this
+});
 $c_sc_AbstractTraversable.prototype.toSet__sci_Set = (function() {
   var this$1 = $m_sci_Set$();
   var cbf = new $c_scg_GenSetFactory$$anon$1().init___scg_GenSetFactory(this$1);
   return $as_sci_Set($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
-});
-$c_sc_AbstractTraversable.prototype.repr__O = (function() {
-  return this
 });
 $c_sc_AbstractTraversable.prototype.isTraversableAgain__Z = (function() {
   return true
@@ -21714,11 +21718,11 @@ $c_sci_StringOps.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
   return new $c_sci_WrappedString().init___T($$this)
 });
-$c_sci_StringOps.prototype.equals__O__Z = (function(x$1) {
-  return $m_sci_StringOps$().equals$extension__T__O__Z(this.repr$1, x$1)
-});
 $c_sci_StringOps.prototype.flatMap__F1__scg_CanBuildFrom__O = (function(f, bf) {
   return $s_sc_TraversableLike$class__flatMap__sc_TraversableLike__F1__scg_CanBuildFrom__O(this, f, bf)
+});
+$c_sci_StringOps.prototype.equals__O__Z = (function(x$1) {
+  return $m_sci_StringOps$().equals$extension__T__O__Z(this.repr$1, x$1)
 });
 $c_sci_StringOps.prototype.mkString__T__T__T__T = (function(start, sep, end) {
   return $s_sc_TraversableOnce$class__mkString__sc_TraversableOnce__T__T__T__T(this, start, sep, end)
@@ -22009,13 +22013,13 @@ $c_sjs_js_ArrayOps.prototype.thisCollection__sc_Seq = (function() {
 $c_sjs_js_ArrayOps.prototype.addString__scm_StringBuilder__T__T__T__scm_StringBuilder = (function(b, start, sep, end) {
   return $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder(this, b, start, sep, end)
 });
+$c_sjs_js_ArrayOps.prototype.repr__O = (function() {
+  return this.scala$scalajs$js$ArrayOps$$array$f
+});
 $c_sjs_js_ArrayOps.prototype.toSet__sci_Set = (function() {
   var this$1 = $m_sci_Set$();
   var cbf = new $c_scg_GenSetFactory$$anon$1().init___scg_GenSetFactory(this$1);
   return $as_sci_Set($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
-});
-$c_sjs_js_ArrayOps.prototype.repr__O = (function() {
-  return this.scala$scalajs$js$ArrayOps$$array$f
 });
 $c_sjs_js_ArrayOps.prototype.$$plus$eq__O__scm_Builder = (function(elem) {
   this.scala$scalajs$js$ArrayOps$$array$f.push(elem);
@@ -22382,11 +22386,11 @@ $c_sci_ListSet.prototype.head__O = (function() {
 $c_sci_ListSet.prototype.apply__O__O = (function(v1) {
   return this.contains__O__Z(v1)
 });
-$c_sci_ListSet.prototype.isEmpty__Z = (function() {
-  return true
-});
 $c_sci_ListSet.prototype.thisCollection__sc_Traversable = (function() {
   return this
+});
+$c_sci_ListSet.prototype.isEmpty__Z = (function() {
+  return true
 });
 $c_sci_ListSet.prototype.scala$collection$immutable$ListSet$$unchecked$undouter__sci_ListSet = (function() {
   throw new $c_ju_NoSuchElementException().init___T("Empty ListSet has no outer pointer")
