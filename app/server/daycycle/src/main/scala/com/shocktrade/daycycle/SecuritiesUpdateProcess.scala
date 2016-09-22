@@ -1,9 +1,9 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.common.dao.quotes.SecuritiesSnapshotDAO._
-import com.shocktrade.common.dao.quotes.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.quotes.{SecurityUpdateQuote, SnapshotQuote}
-import com.shocktrade.daycycle.SecuritiesRefreshProcess._
+import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
+import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.common.dao.securities.{SecuritiesRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.daycycle.SecuritiesUpdateProcess._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
 import org.scalajs.nodejs.NodeRequire
@@ -15,10 +15,10 @@ import scala.scalajs.js
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Securities Refresh Process
+  * Securities Update Process
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+class SecuritiesUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
   private val logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
@@ -34,18 +34,23 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   // create a trading clock
   private val tradingClock = new TradingClock()
+  private var lastRun: js.Date = new js.Date()
 
+  /**
+    * Executes the process
+    */
   def run(): Unit = {
     // if trading is active, run the process ...
-    if (tradingClock.isTradingActive) {
+    if (tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)) {
       val startTime = js.Date.now()
       val outcome = for {
-        quoteRefs <- securitiesDAO.flatMap(_.findSymbolsForUpdate())
+        quoteRefs <- securitiesDAO.flatMap(_.findSymbolsForUpdate(tradingClock.getTradeStopTime))
         results <- processQuotes(quoteRefs)
       } yield results
 
       outcome onComplete {
         case Success(results) =>
+          lastRun = new js.Date(startTime)
           logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
         case Failure(e) =>
           logger.error(s"Failed during processing: ${e.getMessage}")
@@ -63,7 +68,7 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
       var processedBatchNo = 0
 
       quoteRefs.sliding(batchSize, batchSize).toSeq map { batch =>
-        val symbols = batch.flatMap(_.symbol.toOption)
+        val symbols = batch.map(_.symbol)
         scheduledBatchNo += 1
         scheduled += symbols.size
 
@@ -132,7 +137,8 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
   * Securities Refresh Process Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object SecuritiesRefreshProcess {
+object SecuritiesUpdateProcess {
+  val ProcessName = "SecuritiesRefresh"
 
   /**
     * Yahoo! Finance CSV Quote Extensions

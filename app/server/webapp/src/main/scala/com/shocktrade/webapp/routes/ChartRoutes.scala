@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.dao.contest.PortfolioDAO._
-import com.shocktrade.common.dao.quotes.SecuritiesDAO._
+import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.ExposureData
 import com.shocktrade.common.models.quote.ExposureQuote
 import org.scalajs.nodejs.NodeRequire

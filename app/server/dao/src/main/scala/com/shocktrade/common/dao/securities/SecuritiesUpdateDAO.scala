@@ -1,11 +1,10 @@
 package com.shocktrade.common.dao
-package quotes
+package securities
 
 import org.scalajs.nodejs.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Securities Update DAO
@@ -21,23 +20,25 @@ trait SecuritiesUpdateDAO extends SecuritiesDAO
 object SecuritiesUpdateDAO {
 
   /**
-    * Represents a stock quote reference
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  @ScalaJSDefined
-  class SecuritiesRef(val _id: js.UndefOr[ObjectID], val symbol: js.UndefOr[String]) extends js.Object
-
-  /**
     * Stock Update DAO Extensions
     * @param dao the given [[SecuritiesUpdateDAO Stock DAO]]
     */
   implicit class SecuritiesUpdateDAOExtensions(val dao: SecuritiesUpdateDAO) extends AnyVal {
 
     @inline
-    def findSymbolsForUpdate() = {
+    def findSymbolsForUpdate(cutOffTime: js.Date) = {
       dao.find(
-        selector = doc("active" $eq true, "symbol" $ne null /*, "exchange" $ne null*/),
-        projection = Seq("symbol", "exchange").toProjection)
+        selector = doc("active" $eq true, "symbol" $ne null /*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
+        projection = SecuritiesRef.Fields.toProjection)
+        .sort(js.Array("symbol", 1))
+        .toArrayFuture[SecuritiesRef]
+    }
+
+    @inline
+    def findSymbolsForKeyStatisticsUpdate(cutOffTime: js.Date) = {
+      dao.find(
+        selector = doc("active" $eq true, "symbol" $ne null/*, "exchange" $in (js.Array("NASDAQ", "NYQ", "NYSE"))*//*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
+        projection = SecuritiesRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
         .toArrayFuture[SecuritiesRef]
     }

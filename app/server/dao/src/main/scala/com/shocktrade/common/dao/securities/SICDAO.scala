@@ -1,4 +1,4 @@
-package com.shocktrade.common.dao.quotes
+package com.shocktrade.common.dao.securities
 
 import org.scalajs.nodejs.mongodb._
 

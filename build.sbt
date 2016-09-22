@@ -6,7 +6,7 @@ import sbt._
 
 val appVersion = "0.1.0"
 
-val _scalaVersion = "2.11.8"
+val appScalaVersion = "2.11.8"
 val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
@@ -20,23 +20,23 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8",
 
 lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directory")
 copyJS := {
-  val outDir = baseDirectory.value
-  val dayDir = outDir / "app" / "server" / "daycycle" / "target" / "scala-2.11"
-  val qualifDir = outDir / "app" / "server" / "qualification" / "target" / "scala-2.11"
-  val robotDir = outDir / "app" / "server" / "robots" / "target" / "scala-2.11"
-  val webDir = outDir / "app" / "server" / "webapp" / "target" / "scala-2.11"
+  val out_dir = baseDirectory.value
+  val day_dir = out_dir / "app" / "server" / "daycycle" / "target" / "scala-2.11"
+  val qual_dir = out_dir / "app" / "server" / "qualification" / "target" / "scala-2.11"
+  val robot_dir = out_dir / "app" / "server" / "robots" / "target" / "scala-2.11"
+  val web_dir = out_dir / "app" / "server" / "webapp" / "target" / "scala-2.11"
 
-  val files1 = Seq("shocktrade-daycycle-fastopt.js", "shocktrade-daycycle-fastopt.js.map") map(s => (dayDir / s, outDir / s))
-  val files2 = Seq("shocktrade-qualification-fastopt.js", "shocktrade-qualification-fastopt.js.map") map(s => (qualifDir / s, outDir / s))
-  val files3 = Seq("shocktrade-robots-fastopt.js", "shocktrade-robots-fastopt.js.map") map(s => (robotDir / s, outDir / s))
-  val files4 = Seq("shocktrade-webapp-fastopt.js", "shocktrade-webapp-fastopt.js.map") map(s => (webDir / s, outDir / s))
+  val files1 = Seq("", ".map") map ("shocktrade-daycycle-fastopt.js" + _) map (s => (day_dir / s, out_dir / s))
+  val files2 = Seq("", ".map") map ("shocktrade-qualification-fastopt.js" + _) map (s => (qual_dir / s, out_dir / s))
+  val files3 = Seq("", ".map") map ("shocktrade-robots-fastopt.js" + _) map (s => (robot_dir / s, out_dir / s))
+  val files4 = Seq("", ".map") map ("shocktrade-webapp-fastopt.js" + _) map (s => (web_dir / s, out_dir / s))
   IO.copy(files1 ++ files2 ++ files3 ++ files4, overwrite = true)
 }
 
 lazy val appSettings = Seq(
   scalacOptions ++= Seq("-feature", "-deprecation"),
   scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
-  scalaVersion := _scalaVersion,
+  scalaVersion := appScalaVersion,
   persistLauncher := true,
   persistLauncher in Test := false,
   relativeSourceMaps := true,
@@ -44,15 +44,21 @@ lazy val appSettings = Seq(
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
   resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
   libraryDependencies ++= Seq(
-//  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
+    //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
-    "org.scala-lang" % "scala-reflect" % _scalaVersion
+    "org.scala-lang" % "scala-reflect" % appScalaVersion,
+    //
+    // Testing dependencies
+    //
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
+    "org.mockito" % "mockito-all" % "1.9.5" % "test",
+    "org.scalatest" %% "scalatest" % "2.2.2" % "test"
   ))
 
 lazy val moduleSettings = Seq(
   scalacOptions ++= Seq("-feature", "-deprecation"),
   scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
-  scalaVersion := _scalaVersion,
+  scalaVersion := appScalaVersion,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
@@ -60,7 +66,13 @@ lazy val moduleSettings = Seq(
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
-    "org.scala-lang" % "scala-reflect" % _scalaVersion
+    "org.scala-lang" % "scala-reflect" % appScalaVersion,
+    //
+    // Testing dependencies
+    //
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
+    "org.mockito" % "mockito-all" % "1.9.5" % "test",
+    "org.scalatest" %% "scalatest" % "2.2.2" % "test"
   ))
 
 lazy val common = (project in file("./app/shared/common"))
@@ -216,7 +228,7 @@ lazy val shocktradejs = (project in file("."))
     name := "shocktrade.js",
     organization := "com.shocktrade",
     version := appVersion,
-    scalaVersion := _scalaVersion,
+    scalaVersion := appScalaVersion,
     relativeSourceMaps := true,
     compile in Compile <<=
       (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),

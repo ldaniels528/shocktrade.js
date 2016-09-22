@@ -3,10 +3,10 @@ package com.shocktrade.qualification
 import com.shocktrade.common.dao.Claim
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
-import com.shocktrade.common.dao.quotes.SecuritiesSnapshotDAO._
+import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
 import com.shocktrade.qualification.OrderQualificationEngine._
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, ObjectID}
@@ -31,35 +31,43 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private implicit val moment = Moment()
 
   // get DAO and service references
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val logger = LoggerFactory.getLogger(getClass)
+  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
+  // create a trading clock
+  private val tradingClock = new TradingClock()
+  private var lastRun: js.Date = new js.Date()
+
+  // internal fields
   private val separator = "=" * 80
 
   /**
     * Invokes the process
     */
   def run(): Unit = {
+    val isMarketCloseEvent = !tradingClock.isTradingActive && tradingClock.isTradingActive(lastRun)
     val startTime = System.currentTimeMillis()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
       //portfolioOpt <- portfolioDAO.flatMap(_.findNext(processingHost = os.hostname(), updateDelay = 5.minutes))
-      claims <- Future.sequence(portfolios.toSeq map processOrders) map (_.flatten)
+      claims <- Future.sequence(portfolios.toSeq map(processOrders(_, isMarketCloseEvent))) map (_.flatten)
     } yield claims
 
     outcome onComplete {
       case Success(claims) =>
+        lastRun = new js.Date(startTime)
         logger.log(separator)
         logger.log(s"${claims.size} claim(s) were created")
         logger.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
       case Failure(e) =>
+        lastRun = new js.Date(startTime)
         logger.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
     }
   }
 
-  private def processOrders(portfolio: PortfolioData) = {
+  private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
     logger.log(separator)
     logger.log(s"Processing portfolio # ${portfolio._id}")
 

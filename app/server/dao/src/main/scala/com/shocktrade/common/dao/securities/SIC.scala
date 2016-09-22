@@ -1,4 +1,4 @@
-package com.shocktrade.common.dao.quotes
+package com.shocktrade.common.dao.securities
 
 import scala.scalajs.js
 

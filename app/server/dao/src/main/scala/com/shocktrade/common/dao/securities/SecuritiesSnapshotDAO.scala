@@ -1,4 +1,4 @@
-package com.shocktrade.common.dao.quotes
+package com.shocktrade.common.dao.securities
 
 import com.shocktrade.common.models.contest.OrderLike
 import org.scalajs.nodejs.mongodb._

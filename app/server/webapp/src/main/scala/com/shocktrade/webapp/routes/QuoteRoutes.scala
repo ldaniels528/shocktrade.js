@@ -1,8 +1,8 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.dao.quotes.NAICSDAO._
-import com.shocktrade.common.dao.quotes.SICDAO._
-import com.shocktrade.common.dao.quotes.SecuritiesDAO._
+import com.shocktrade.common.dao.securities.NAICSDAO._
+import com.shocktrade.common.dao.securities.SICDAO._
+import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, ResearchQuote}
 import org.scalajs.nodejs.express.{Application, Request, Response}

@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.dao.quotes.SecuritiesDAO._
+import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.forms.ResearchOptions
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb._

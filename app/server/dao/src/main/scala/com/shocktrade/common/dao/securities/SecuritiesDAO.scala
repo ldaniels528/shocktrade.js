@@ -1,9 +1,8 @@
 package com.shocktrade.common.dao
-package quotes
+package securities
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
-import org.scalajs.nodejs.console
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.sjs.JsUnderOrHelper._
 

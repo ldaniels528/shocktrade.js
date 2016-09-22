@@ -1,8 +1,8 @@
 package com.shocktrade.daycycle
 
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.common.dao.quotes.IntraDayQuoteData
-import com.shocktrade.common.dao.quotes.IntraDayQuotesDAO._
+import com.shocktrade.common.dao.securities.IntraDayQuoteData
+import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.daycycle.NASDAQIntraDayQuoteProcess._
 import com.shocktrade.services.NASDAQIntraDayQuotesService
 import com.shocktrade.services.NASDAQIntraDayQuotesService._

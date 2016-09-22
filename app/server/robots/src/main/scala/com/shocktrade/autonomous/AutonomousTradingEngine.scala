@@ -5,8 +5,8 @@ import com.shocktrade.autonomous.dao.RobotDAO._
 import com.shocktrade.autonomous.dao.{BuyingFlow, RobotData, SellingFlow}
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest._
-import com.shocktrade.common.dao.quotes.SecuritiesDAO
-import com.shocktrade.common.dao.quotes.SecuritiesDAO._
+import com.shocktrade.common.dao.securities.SecuritiesDAO
+import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.PositionLike

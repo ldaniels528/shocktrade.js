@@ -1,5 +1,5 @@
 package com.shocktrade.common.dao
-package quotes
+package securities
 
 import org.scalajs.nodejs.mongodb.ObjectID
 

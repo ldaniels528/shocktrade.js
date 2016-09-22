@@ -3282,7 +3282,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.init___T__s_conc
   this.util$1 = $m_Lorg_scalajs_nodejs_util_Util$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_util_Util(require);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x$1$2) {
-      $m_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$();
+      $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
         return (function(err$2, result$2) {
@@ -3296,7 +3296,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.init___T__s_conc
       })(promise);
       x$1$2.collection("Stocks", null, arg1);
       var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-      var boxedClass = ($d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO.getClassOf());
+      var boxedClass = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
       $m_s_Predef$().require__Z__V((boxedClass !== null));
       var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this, boxedClass$1) {
         return (function(s$2) {
@@ -4505,42 +4505,42 @@ var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions = 
   O: 1
 });
 $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions;
-var $d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_quotes_SecuritiesDAO: 0
-}, false, "com.shocktrade.common.dao.quotes.SecuritiesDAO", {
-  Lcom_shocktrade_common_dao_quotes_SecuritiesDAO: 1,
+var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO: 0
+}, false, "com.shocktrade.common.dao.securities.SecuritiesDAO", {
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO: 1,
   Lorg_scalajs_nodejs_mongodb_Collection: 1
 }, true, (void 0), $noIsInstance);
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$() {
+function $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
   $c_O.call(this);
-  this.com$shocktrade$common$dao$quotes$SecuritiesDAO$$assetTypes$1 = null
+  this.com$shocktrade$common$dao$securities$SecuritiesDAO$$assetTypes$1 = null
 }
-$c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype.constructor = $c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$;
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.constructor = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$() {
+function $h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype = $c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype;
-$c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype.init___ = (function() {
-  $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$ = this;
-  this.com$shocktrade$common$dao$quotes$SecuritiesDAO$$assetTypes$1 = ["Common Stock", "ETF"];
+$h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype;
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.init___ = (function() {
+  $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = this;
+  this.com$shocktrade$common$dao$securities$SecuritiesDAO$$assetTypes$1 = ["Common Stock", "ETF"];
   return this
 });
-var $d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$: 0
-}, false, "com.shocktrade.common.dao.quotes.SecuritiesDAO$", {
-  Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$: 1,
+var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$: 0
+}, false, "com.shocktrade.common.dao.securities.SecuritiesDAO$", {
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$.prototype.$classData = $d_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$;
-var $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$ = (void 0);
-function $m_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$() {
-  if ((!$n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$)) {
-    $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$ = new $c_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$().init___()
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.$classData = $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$;
+var $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = (void 0);
+function $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
+  if ((!$n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$)) {
+    $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = new $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$().init___()
   };
-  return $n_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$
+  return $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_events_OrderEvents$() {
@@ -5088,7 +5088,7 @@ $c_Lcom_shocktrade_services_RemoteEventService.prototype.$classData = $d_Lcom_sh
 /** @constructor */
 function $c_Lcom_shocktrade_services_TradingClock() {
   $c_O.call(this);
-  this.com$shocktrade$services$TradingClock$$moment$1 = null
+  this.moment$1 = null
 }
 $c_Lcom_shocktrade_services_TradingClock.prototype = new $h_O();
 $c_Lcom_shocktrade_services_TradingClock.prototype.constructor = $c_Lcom_shocktrade_services_TradingClock;
@@ -5097,8 +5097,8 @@ function $h_Lcom_shocktrade_services_TradingClock() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_services_TradingClock.prototype = $c_Lcom_shocktrade_services_TradingClock.prototype;
-$c_Lcom_shocktrade_services_TradingClock.prototype.getLastTradeStartTime__sjs_js_Date = (function() {
-  var moment = (0, this.com$shocktrade$services$TradingClock$$moment$1)();
+$c_Lcom_shocktrade_services_TradingClock.prototype.com$shocktrade$services$TradingClock$$getLastTradeDay__Lorg_scalajs_nodejs_moment_Moment = (function() {
+  var moment = (0, this.moment$1)();
   var timeZone = $m_Lcom_shocktrade_services_TradingClock$().com$shocktrade$services$TradingClock$$NEW$undYORK$undTZ$1;
   var theMoment = moment.tz(timeZone);
   var x1 = $uI(theMoment.day());
@@ -5112,10 +5112,10 @@ $c_Lcom_shocktrade_services_TradingClock.prototype.getLastTradeStartTime__sjs_js
     };
     var delta = 2
   };
-  return theMoment.subtract(delta, "day").hour(9).minute(30).toDate()
+  return theMoment.subtract(delta, "day")
 });
 $c_Lcom_shocktrade_services_TradingClock.prototype.init___Lorg_scalajs_nodejs_NodeRequire = (function(require) {
-  this.com$shocktrade$services$TradingClock$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  this.moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
   $m_Lorg_scalajs_nodejs_moment_timezone_MomentTimezone$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_timezone_MomentTimezone(require);
   return this
 });
@@ -5600,6 +5600,9 @@ $c_jl_Class.prototype.isInterface__Z = (function() {
 $c_jl_Class.prototype.java$lang$Class$$isRawJSType__Z = (function() {
   return $uZ(this.data$1.isRawJSType)
 });
+$c_jl_Class.prototype.isArray__Z = (function() {
+  return $uZ(this.data$1.isArrayClass)
+});
 $c_jl_Class.prototype.getSimpleName__T = (function() {
   var x = $as_T(this.data$1.name);
   var this$2 = new $c_sci_StringOps().init___T(x);
@@ -5610,9 +5613,6 @@ $c_jl_Class.prototype.getSimpleName__T = (function() {
   var xs$1 = $s_sci_StringLike$class__split__sci_StringLike__C__AT(this$6, 36);
   var this$8 = new $c_scm_ArrayOps$ofRef().init___AO(xs$1);
   return $as_T($s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this$8))
-});
-$c_jl_Class.prototype.isArray__Z = (function() {
-  return $uZ(this.data$1.isArrayClass)
 });
 $c_jl_Class.prototype.newArrayOfThisClass__sjs_js_Array__O = (function(dimensions) {
   return this.data$1.newArrayOfThisClass(dimensions)
@@ -7738,19 +7738,6 @@ $c_sjsr_RuntimeString$.prototype.indexOf__T__I__I = (function(thiz, ch) {
   var str = this.fromCodePoint__p1__I__T(ch);
   return $uI(thiz.indexOf(str))
 });
-$c_sjsr_RuntimeString$.prototype.hashCode__T__I = (function(thiz) {
-  var res = 0;
-  var mul = 1;
-  var i = (((-1) + $uI(thiz.length)) | 0);
-  while ((i >= 0)) {
-    var jsx$1 = res;
-    var index = i;
-    res = ((jsx$1 + $imul((65535 & $uI(thiz.charCodeAt(index))), mul)) | 0);
-    mul = $imul(31, mul);
-    i = (((-1) + i) | 0)
-  };
-  return res
-});
 $c_sjsr_RuntimeString$.prototype.fromCodePoint__p1__I__T = (function(codePoint) {
   if ((((-65536) & codePoint) === 0)) {
     var array = [codePoint];
@@ -7766,6 +7753,19 @@ $c_sjsr_RuntimeString$.prototype.fromCodePoint__p1__I__T = (function(codePoint) 
     var jsx$3 = jsx$4.fromCharCode.apply(jsx$4, array$1);
     return $as_T(jsx$3)
   }
+});
+$c_sjsr_RuntimeString$.prototype.hashCode__T__I = (function(thiz) {
+  var res = 0;
+  var mul = 1;
+  var i = (((-1) + $uI(thiz.length)) | 0);
+  while ((i >= 0)) {
+    var jsx$1 = res;
+    var index = i;
+    res = ((jsx$1 + $imul((65535 & $uI(thiz.charCodeAt(index))), mul)) | 0);
+    mul = $imul(31, mul);
+    i = (((-1) + i) | 0)
+  };
+  return res
 });
 $c_sjsr_RuntimeString$.prototype.format__T__AO__T = (function(format, args) {
   var frm = new $c_ju_Formatter().init___();
@@ -13782,12 +13782,12 @@ $c_jl_StringBuilder.prototype.append__jl_CharSequence__I__I__jl_StringBuilder = 
 $c_jl_StringBuilder.prototype.append__C__jl_StringBuilder = (function(c) {
   return this.append__T__jl_StringBuilder($as_T($g.String.fromCharCode(c)))
 });
-$c_jl_StringBuilder.prototype.append__C__jl_Appendable = (function(c) {
-  return this.append__C__jl_StringBuilder(c)
-});
 $c_jl_StringBuilder.prototype.init___T = (function(content) {
   this.content$1 = content;
   return this
+});
+$c_jl_StringBuilder.prototype.append__C__jl_Appendable = (function(c) {
+  return this.append__C__jl_StringBuilder(c)
 });
 $c_jl_StringBuilder.prototype.reverse__jl_StringBuilder = (function() {
   var original = this.content$1;
@@ -15437,7 +15437,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
     var now = new $g.Date();
     var x$24 = security.symbol;
     var x$25 = security.exchange;
-    var value$5 = tradingClock.getLastTradeStartTime__sjs_js_Date();
+    var value$5 = tradingClock.com$shocktrade$services$TradingClock$$getLastTradeDay__Lorg_scalajs_nodejs_moment_Moment().hour(9).minute(30).toDate();
     var this$25 = new $c_s_concurrent_duration_package$DurationInt().init___I(3);
     var unit = $m_ju_concurrent_TimeUnit$().DAYS$1;
     var duration = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$25.scala$concurrent$duration$DurationInt$$n$1, unit);
@@ -15532,7 +15532,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
         var quantity$2 = $uD(p3.$$und3$1);
         var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbol$1$1, ec$2) {
           return (function(x$23$2) {
-            $m_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$();
+            $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
             var fields = $m_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PricingQuote$().Fields$1;
             var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", symbol$1$1));
             var this$33 = $m_sjsr_package$();
@@ -16153,7 +16153,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
     var options = x2$1.x$2;
     var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(options$1, ec$1) {
       return (function(x$17$2) {
-        $m_Lcom_shocktrade_common_dao_quotes_SecuritiesDAO$();
+        $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
         var jsx$9 = new $c_T2().init___O__O("active", true);
         var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$ne", null)]);
         var y = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
@@ -24206,13 +24206,13 @@ $c_sc_AbstractTraversable.prototype.tail__O = (function() {
 $c_sc_AbstractTraversable.prototype.addString__scm_StringBuilder__T__T__T__scm_StringBuilder = (function(b, start, sep, end) {
   return $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder(this, b, start, sep, end)
 });
-$c_sc_AbstractTraversable.prototype.repr__O = (function() {
-  return this
-});
 $c_sc_AbstractTraversable.prototype.toSet__sci_Set = (function() {
   var this$1 = $m_sci_Set$();
   var cbf = new $c_scg_GenSetFactory$$anon$1().init___scg_GenSetFactory(this$1);
   return $as_sci_Set($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_sc_AbstractTraversable.prototype.repr__O = (function() {
+  return this
 });
 $c_sc_AbstractTraversable.prototype.isTraversableAgain__Z = (function() {
   return true
@@ -24531,13 +24531,13 @@ $c_sci_StringOps.prototype.thisCollection__sc_Seq = (function() {
 $c_sci_StringOps.prototype.addString__scm_StringBuilder__T__T__T__scm_StringBuilder = (function(b, start, sep, end) {
   return $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder(this, b, start, sep, end)
 });
+$c_sci_StringOps.prototype.repr__O = (function() {
+  return this.repr$1
+});
 $c_sci_StringOps.prototype.toSet__sci_Set = (function() {
   var this$1 = $m_sci_Set$();
   var cbf = new $c_scg_GenSetFactory$$anon$1().init___scg_GenSetFactory(this$1);
   return $as_sci_Set($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
-});
-$c_sci_StringOps.prototype.repr__O = (function() {
-  return this.repr$1
 });
 $c_sci_StringOps.prototype.copyToArray__O__I__I__V = (function(xs, start, len) {
   $s_sc_IndexedSeqOptimized$class__copyToArray__sc_IndexedSeqOptimized__O__I__I__V(this, xs, start, len)
@@ -24733,13 +24733,13 @@ $c_scm_ArrayOps$ofRef.prototype.thisCollection__sc_Seq = (function() {
 $c_scm_ArrayOps$ofRef.prototype.addString__scm_StringBuilder__T__T__T__scm_StringBuilder = (function(b, start, sep, end) {
   return $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder(this, b, start, sep, end)
 });
+$c_scm_ArrayOps$ofRef.prototype.repr__O = (function() {
+  return this.repr$1
+});
 $c_scm_ArrayOps$ofRef.prototype.toSet__sci_Set = (function() {
   var this$1 = $m_sci_Set$();
   var cbf = new $c_scg_GenSetFactory$$anon$1().init___scg_GenSetFactory(this$1);
   return $as_sci_Set($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
-});
-$c_scm_ArrayOps$ofRef.prototype.repr__O = (function() {
-  return this.repr$1
 });
 $c_scm_ArrayOps$ofRef.prototype.copyToArray__O__I__I__V = (function(xs, start, len) {
   $s_scm_ArrayOps$class__copyToArray__scm_ArrayOps__O__I__I__V(this, xs, start, len)
@@ -31947,12 +31947,12 @@ $c_scm_ArrayBuffer.prototype.apply__I__O = (function(idx) {
 $c_scm_ArrayBuffer.prototype.lengthCompare__I__I = (function(len) {
   return $s_sc_IndexedSeqOptimized$class__lengthCompare__sc_IndexedSeqOptimized__I__I(this, len)
 });
-$c_scm_ArrayBuffer.prototype.sameElements__sc_GenIterable__Z = (function(that) {
-  return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
-});
 $c_scm_ArrayBuffer.prototype.apply__O__O = (function(v1) {
   var idx = $uI(v1);
   return $s_scm_ResizableArray$class__apply__scm_ResizableArray__I__O(this, idx)
+});
+$c_scm_ArrayBuffer.prototype.sameElements__sc_GenIterable__Z = (function(that) {
+  return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
 $c_scm_ArrayBuffer.prototype.exists__F1__Z = (function(p) {
   return $s_sc_IndexedSeqOptimized$class__exists__sc_IndexedSeqOptimized__F1__Z(this, p)
