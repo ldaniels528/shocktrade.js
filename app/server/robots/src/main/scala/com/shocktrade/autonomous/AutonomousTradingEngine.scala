@@ -11,7 +11,8 @@ import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.PositionLike
 import com.shocktrade.common.models.quote.ResearchQuote
-import com.shocktrade.services.RemoteEventService
+import com.shocktrade.services.{LoggerFactory, RemoteEventService, TradingClock}
+import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.npm.numeral.Numeral
@@ -19,7 +20,6 @@ import org.scalajs.nodejs.npm.numeral.Numeral.Implicits._
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.util.Util
-import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -47,6 +47,8 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   private implicit val robotDAO = dbFuture.flatMap(_.getRobotDAO)
 
   // create the service instances
+  private implicit val tradingClock = new TradingClock()
+  private val logger = LoggerFactory.getLogger(getClass)
   private val removeEventService = new RemoteEventService(webAppEndPoint)
 
   // create the rule compiler and processor
@@ -57,7 +59,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     * Invokes the process
     */
   def run(): Unit = {
-    console.info(s"${moment().format("MM/DD HH:mm:ss")} Looking for robots....")
+    logger.info("Looking for robots....")
     val startTime = System.currentTimeMillis()
     val outcome = for {
       robots <- robotDAO.flatMap(_.findRobots())
@@ -66,9 +68,9 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
 
     outcome onComplete {
       case Success(results) =>
-        console.log(s"Process completed in ${System.currentTimeMillis() - startTime} msec")
+        logger.log(s"Process completed in ${System.currentTimeMillis() - startTime} msec")
       case Failure(e) =>
-        console.error(s"Failed to process robot: ${e.getMessage}")
+        logger.error(s"Failed to process robot: ${e.getMessage}")
         e.printStackTrace()
     }
   }
@@ -254,6 +256,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object AutonomousTradingEngine {
+  private[this] val logger = LoggerFactory.getLogger(getClass)
 
   /**
     * Research Quote Extensions
@@ -266,7 +269,7 @@ object AutonomousTradingEngine {
                 orderType: String,
                 priceType: String,
                 price: Double,
-                quantity: Double) = {
+                quantity: Double)(implicit tradingClock: TradingClock) = {
       val now = new js.Date()
       new OrderData(
         symbol = quote.symbol,
@@ -276,11 +279,10 @@ object AutonomousTradingEngine {
         priceType = priceType,
         price = price,
         quantity = quantity,
-        creationTime = now - 8.hours, // TODO remove the 6-hour delta after testing
+        creationTime = tradingClock.getLastTradeStartTime, // TODO replace with "now" after testing
         expirationTime = now + 3.days
       )
     }
-
   }
 
   /**
@@ -290,27 +292,24 @@ object AutonomousTradingEngine {
   implicit class RobotsExtensions(val robot: RobotData) extends AnyVal {
 
     @inline
-    def log(format: String, args: Any*)(implicit moment: Moment) = {
-      console.log(s"$now [${robot.name.orNull}] " + format, args: _*)
+    def log(format: String, args: Any*) = {
+      logger.log(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def info(format: String, args: Any*)(implicit moment: Moment) = {
-      console.info(s"$now [${robot.name.orNull}] " + format, args: _*)
+    def info(format: String, args: Any*) = {
+      logger.info(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def error(format: String, args: Any*)(implicit moment: Moment) = {
-      console.error(s"$now [${robot.name.orNull}] " + format, args: _*)
+    def error(format: String, args: Any*) = {
+      logger.error(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def warn(format: String, args: Any*)(implicit moment: Moment) = {
-      console.warn(s"$now [${robot.name.orNull}] " + format, args: _*)
+    def warn(format: String, args: Any*) = {
+      logger.warn(s"[${robot.name.orNull}] " + format, args: _*)
     }
-
-    @inline
-    private def now(implicit moment: Moment) = s"${moment().format("MM/DD HH:mm:ss")}"
 
   }
 

@@ -1,14 +1,15 @@
 package com.shocktrade.webapp
 
+import com.shocktrade.services.LoggerFactory
 import com.shocktrade.util.StringHelper._
 import com.shocktrade.webapp.routes._
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.bodyparser._
 import org.scalajs.nodejs.express.fileupload.ExpressFileUpload
 import org.scalajs.nodejs.express.{Express, Request, Response}
 import org.scalajs.nodejs.expressws.{ExpressWS, WebSocket, WsRouterExtensions}
 import org.scalajs.nodejs.globals._
 import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.OptionHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -27,7 +28,9 @@ object WebServerJsApp extends js.JSApp {
   def startServer(implicit bootstrap: Bootstrap) {
     implicit val require = bootstrap.require
 
-    console.log("Starting the Shocktrade Web Server...")
+    val logger = LoggerFactory.getLogger(getClass)
+
+    logger.log("Starting the Shocktrade Web Server...")
 
     // determine the port to listen on
     val startTime = System.currentTimeMillis()
@@ -40,27 +43,27 @@ object WebServerJsApp extends js.JSApp {
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>
-      console.error("An uncaught exception was fired:")
-      console.error(err.stack)
+      logger.error("An uncaught exception was fired:")
+      logger.error(err.stack)
     }
 
-    console.log("Loading Express modules...")
+    logger.log("Loading Express modules...")
     implicit val express = Express()
     implicit val app = express().withWsRouting
     implicit val wss = ExpressWS(app)
     implicit val fileUpload = ExpressFileUpload()
 
-    console.log("Loading MongoDB module...")
+    logger.log("Loading MongoDB module...")
     implicit val mongo = MongoDB()
 
     // setup the body parsers
-    console.log("Setting up body parsers...")
+    logger.log("Setting up body parsers...")
     val bodyParser = BodyParser()
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
     // setup the routes for serving static files
-    console.log("Setting up the routes for serving static files...")
+    logger.log("Setting up the routes for serving static files...")
     app.use(fileUpload())
     app.use(express.static("public"))
     app.use("/bower_components", express.static("bower_components"))
@@ -75,12 +78,12 @@ object WebServerJsApp extends js.JSApp {
       response.onFinish(() => {
         val elapsedTime = System.currentTimeMillis() - startTime
         val query = if (request.query.nonEmpty) (request.query map { case (k, v) => s"$k=$v" } mkString ",").limitTo(120) else "..."
-        console.log("[node] application - %s %s (%s) ~> %d [%d ms]", request.method, request.path, query, response.statusCode, elapsedTime)
+        logger.log("[node] application - %s %s (%s) ~> %d [%d ms]", request.method, request.path, query, response.statusCode, elapsedTime)
       })
     })
 
     // setup mongodb connection
-    console.log("Connecting to database '%s'...", connectionString)
+    logger.log("Connecting to database '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
     // setup web socket routes
@@ -103,7 +106,7 @@ object WebServerJsApp extends js.JSApp {
     TradingClockRoutes.init(app, dbFuture)
 
     // start the listener
-    app.listen(port, () => console.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
+    app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
     ()
   }
 

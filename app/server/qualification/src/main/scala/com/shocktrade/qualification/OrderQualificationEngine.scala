@@ -6,11 +6,12 @@ import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
 import com.shocktrade.common.dao.quotes.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
 import com.shocktrade.qualification.OrderQualificationEngine._
+import com.shocktrade.services.LoggerFactory
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, ObjectID}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -31,6 +32,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   // get DAO and service references
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private val logger = LoggerFactory.getLogger(getClass)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
   private val separator = "=" * 80
@@ -48,22 +50,22 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
     outcome onComplete {
       case Success(claims) =>
-        console.log(separator)
-        console.log(s"${claims.size} claim(s) were created")
-        console.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
+        logger.log(separator)
+        logger.log(s"${claims.size} claim(s) were created")
+        logger.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
       case Failure(e) =>
-        console.error(s"Failed to process portfolio: ${e.getMessage}")
+        logger.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
     }
   }
 
   private def processOrders(portfolio: PortfolioData) = {
-    console.log(separator)
-    console.log(s"Processing portfolio # ${portfolio._id}")
+    logger.log(separator)
+    logger.log(s"Processing portfolio # ${portfolio._id}")
 
     // determine the as-of date
     val asOfTime = portfolio.lastUpdate.getOrElse(new js.Date())
-    console.log(s"as-of date: $asOfTime\n")
+    logger.log(s"as-of date: $asOfTime\n")
 
     // attempt to find eligible orders
     val orders = portfolio.findEligibleOrders(asOfTime)
@@ -82,19 +84,19 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def fulfillOrders(workOrders: Seq[WorkOrder]) = {
-    console.log(s"Processing order fulfillment...")
+    logger.log(s"Processing order fulfillment...")
     Future.sequence {
       workOrders map { wo =>
         val outcome = if (wo.order.isBuyOrder) {
-          //console.log("Creating new position - %j", wo)
+          //logger.log("Creating new position - %j", wo)
           portfolioDAO.flatMap(_.insertPosition(wo))
         } else {
-          //console.log("Reducing position - %j", wo)
+          //logger.log("Reducing position - %j", wo)
           portfolioDAO.flatMap(_.reducePosition(wo))
         }
 
         outcome foreach { result =>
-          console.info(s"Order # ${wo.order._id}: ${wo.order.symbol} x ${wo.order.quantity} - result => ", result.result)
+          logger.info(s"Order # ${wo.order._id}: ${wo.order.symbol} x ${wo.order.quantity} - result => ", result.result)
         }
         outcome
       }
@@ -127,7 +129,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def performQualification(portfolio: PortfolioData, orders: Seq[OrderData], quotes: Seq[WorkQuote]) = {
-    console.log(s"Performing qualification <portfolio ${portfolio._id.orNull}>")
+    logger.log(s"Performing qualification <portfolio ${portfolio._id.orNull}>")
     val quoteMapping = js.Dictionary(quotes flatMap (q => q.symbol.map(_ -> q).toOption): _*)
     orders flatMap { order =>
       for {
@@ -137,38 +139,38 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
         orderWithPrice = if (order.isLimitOrder && order.price.nonEmpty) order else order.copy(price = quote.lastTrade)
         claim <- order.qualify(quote) match {
           case Success(claim) => Option(claim)
-          case Failure(e) => console.warn(e.getMessage); None
+          case Failure(e) => logger.warn(e.getMessage); None
         }
       } yield new WorkOrder(portfolioID, orderWithPrice, claim)
     }
   }
 
   private def removeEmptyPositions(portfolioID: ObjectID) = {
-    console.log("removing zero-quantity positions...")
+    logger.log("removing zero-quantity positions...")
     portfolioDAO.flatMap(_.removeEmptyPositions(portfolioID)) map {
       case outcome if outcome.result.isOk =>
-        console.log("Zero-quantity positions: %d", outcome.result.nModified)
+        logger.log("Zero-quantity positions: %d", outcome.result.nModified)
         outcome
       case outcome if outcome.result.isOk =>
-        console.log("outcome => ", outcome)
+        logger.log("outcome => ", outcome)
         outcome
     }
   }
 
   private def showOrders(portfolio: PortfolioData, orders: Seq[OrderData]) = {
-    console.log(s"Portfolio '${portfolio._id}' - ${orders.size} eligible order(s):")
+    logger.log(s"Portfolio '${portfolio._id}' - ${orders.size} eligible order(s):")
     orders.zipWithIndex foreach { case (o, n) =>
-      console.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
+      logger.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
     }
-    console.log("")
+    logger.log("")
   }
 
   private def showQuotes(portfolio: PortfolioData, quotes: Seq[WorkQuote]) = {
-    console.log(s"Portfolio '${portfolio._id}' - ${quotes.size} quote(s):")
+    logger.log(s"Portfolio '${portfolio._id}' - ${quotes.size} quote(s):")
     quotes.zipWithIndex foreach { case (q, n) =>
-      console.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
+      logger.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
     }
-    console.log("")
+    logger.log("")
   }
 
 }

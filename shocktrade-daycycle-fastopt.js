@@ -1404,6 +1404,12 @@ function $asArrayOf_sc_GenTraversableOnce(obj, depth) {
 function $s_sc_IndexedSeqOptimized$class__lengthCompare__sc_IndexedSeqOptimized__I__I($$this, len) {
   return (($$this.length__I() - len) | 0)
 }
+function $s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O($$this) {
+  return (($$this.length__I() > 0) ? $$this.apply__I__O((((-1) + $$this.length__I()) | 0)) : $s_sc_TraversableLike$class__last__sc_TraversableLike__O($$this))
+}
+function $s_sc_IndexedSeqOptimized$class__takeRight__sc_IndexedSeqOptimized__I__O($$this, n) {
+  return $$this.slice__I__I__O((($$this.length__I() - ((n > 0) ? n : 0)) | 0), $$this.length__I())
+}
 function $s_sc_IndexedSeqOptimized$class__slice__sc_IndexedSeqOptimized__I__I__O($$this, from, until) {
   var lo = ((from > 0) ? from : 0);
   var x = ((until > 0) ? until : 0);
@@ -1419,9 +1425,6 @@ function $s_sc_IndexedSeqOptimized$class__slice__sc_IndexedSeqOptimized__I__I__O
     i = ((1 + i) | 0)
   };
   return b.result__O()
-}
-function $s_sc_IndexedSeqOptimized$class__takeRight__sc_IndexedSeqOptimized__I__O($$this, n) {
-  return $$this.slice__I__I__O((($$this.length__I() - ((n > 0) ? n : 0)) | 0), $$this.length__I())
 }
 function $s_sc_IndexedSeqOptimized$class__foldl__p0__sc_IndexedSeqOptimized__I__I__O__F2__O($$this, start, end, z, op) {
   _foldl: while (true) {
@@ -1859,6 +1862,16 @@ function $s_sc_TraversableLike$class__stringPrefix__sc_TraversableLike__T($$this
   };
   return string
 }
+function $s_sc_TraversableLike$class__last__sc_TraversableLike__O($$this) {
+  var elem = $$this.head__O();
+  var lst = new $c_sr_ObjectRef().init___O(elem);
+  $$this.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, lst$1) {
+    return (function(x$2) {
+      lst$1.elem$1 = x$2
+    })
+  })($$this, lst)));
+  return lst.elem$1
+}
 function $s_sc_TraversableOnce$class__addString__sc_TraversableOnce__scm_StringBuilder__T__T__T__scm_StringBuilder($$this, b, start, sep, end) {
   var first = new $c_sr_BooleanRef().init___Z(true);
   b.append__T__scm_StringBuilder(start);
@@ -1938,6 +1951,64 @@ function $s_sci_DefaultMap$class__$$plus__sci_DefaultMap__T2__sci_Map($$this, kv
   var elem = new $c_T2().init___O__O(kv.$$und1__O(), kv.$$und2__O());
   b.$$plus$eq__T2__scm_MapBuilder(elem);
   return $as_sci_Map(b.elems$1)
+}
+function $s_sci_StringLike$class__split__sci_StringLike__C__AT($$this, separator) {
+  var thisString = $$this.toString__T();
+  var pos = $m_sjsr_RuntimeString$().indexOf__T__I__I(thisString, separator);
+  if ((pos !== (-1))) {
+    var res = new $c_scm_ArrayBuilder$ofRef().init___s_reflect_ClassTag(new $c_s_reflect_ClassTag$ClassClassTag().init___jl_Class($d_T.getClassOf()));
+    var prev = 0;
+    do {
+      var beginIndex = prev;
+      var endIndex = pos;
+      res.$$plus$eq__O__scm_ArrayBuilder$ofRef($as_T(thisString.substring(beginIndex, endIndex)));
+      prev = ((1 + pos) | 0);
+      pos = $m_sjsr_RuntimeString$().indexOf__T__I__I__I(thisString, separator, prev)
+    } while ((pos !== (-1)));
+    if ((prev !== $uI(thisString.length))) {
+      var beginIndex$1 = prev;
+      var endIndex$1 = $uI(thisString.length);
+      res.$$plus$eq__O__scm_ArrayBuilder$ofRef($as_T(thisString.substring(beginIndex$1, endIndex$1)))
+    };
+    var initialResult = $asArrayOf_T(res.result__AO(), 1);
+    pos = initialResult.u.length;
+    while (true) {
+      if ((pos > 0)) {
+        var thiz = initialResult.u[(((-1) + pos) | 0)];
+        if ((thiz === null)) {
+          throw new $c_jl_NullPointerException().init___()
+        };
+        var jsx$1 = (thiz === "")
+      } else {
+        var jsx$1 = false
+      };
+      if (jsx$1) {
+        pos = (((-1) + pos) | 0)
+      } else {
+        break
+      }
+    };
+    if ((pos !== initialResult.u.length)) {
+      var trimmed = $newArrayObject($d_T.getArrayOf(), [pos]);
+      $m_s_Array$().copy__O__I__O__I__I__V(initialResult, 0, trimmed, 0, pos);
+      return trimmed
+    } else {
+      return initialResult
+    }
+  } else {
+    var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array([thisString]);
+    var len = $uI(xs.array$6.length);
+    var array = $newArrayObject($d_T.getArrayOf(), [len]);
+    var elem$1 = 0;
+    elem$1 = 0;
+    var this$12 = new $c_sc_IndexedSeqLike$Elements().init___sc_IndexedSeqLike__I__I(xs, 0, $uI(xs.array$6.length));
+    while (this$12.hasNext__Z()) {
+      var arg1 = this$12.next__O();
+      array.u[elem$1] = arg1;
+      elem$1 = ((1 + elem$1) | 0)
+    };
+    return array
+  }
 }
 function $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O($$this, arg) {
   if ($is_s_math_ScalaNumber(arg)) {
@@ -2739,10 +2810,10 @@ var $d_Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO = new $TypeData()
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess() {
   $c_O.call(this);
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f = null;
+  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1 = null;
   this.batchSize$1 = 0;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1 = null;
-  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1 = null;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1 = null;
   this.tradingClock$1 = null
@@ -2793,20 +2864,99 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.run__V = (functio
       return (function(x0$1$2) {
         var x0$1 = $as_s_util_Try(x0$1$2);
         if ($is_s_util_Success(x0$1)) {
-          var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in %d seconds"])).s__sc_Seq__T($m_sci_Nil$());
-          var value = (($uD($g.Date.now()) - startTime$1) / 1000);
-          var array = [value];
+          var this$28 = arg$outer.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+          var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Process completed in %d seconds"])).s__sc_Seq__T($m_sci_Nil$());
+          var array = [(($uD($g.Date.now()) - startTime$1) / 1000)];
           var jsx$4 = $g.console;
-          var jsx$6 = jsx$4.log;
-          var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, arg$outer.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+          var jsx$9 = jsx$4.log;
+          var jsx$8 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+          var date = new $g.Date();
+          var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+          var this$30 = new $c_sci_StringOps().init___T(x);
+          var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+          var jsx$7 = $m_sjsr_RuntimeString$();
+          var $$this = this$30.repr$1;
+          $m_sc_Seq$();
+          $m_sjs_js_WrappedArray$();
+          var array$2 = [];
+          $uI(array$1.length);
+          var i = 0;
+          var len = $uI(array$1.length);
+          while ((i < len)) {
+            var index = i;
+            var arg1$1 = array$1[index];
+            var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$30, arg1$1);
+            array$2.push(elem);
+            i = ((1 + i) | 0)
+          };
+          $m_s_reflect_ManifestFactory$ObjectManifest$();
+          var len$1 = $uI(array$2.length);
+          var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+          var len$2 = result.u.length;
+          var i$1 = 0;
+          var j = 0;
+          var x$2 = $uI(array$2.length);
+          var x$3 = ((x$2 < len$2) ? x$2 : len$2);
+          var that = result.u.length;
+          var end = ((x$3 < that) ? x$3 : that);
+          while ((i$1 < end)) {
+            var jsx$6 = j;
+            var index$1 = i$1;
+            result.u[jsx$6] = array$2[index$1];
+            i$1 = ((1 + i$1) | 0);
+            j = ((1 + j) | 0)
+          };
+          var s = jsx$8.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$7.format__T__AO__T($$this, result), this$28.com$shocktrade$services$LoggerFactory$Logger$$className$f, format]));
           var jsx$5 = [s].concat(array);
-          jsx$6.apply(jsx$4, jsx$5)
+          jsx$9.apply(jsx$4, jsx$5)
         } else if ($is_s_util_Failure(x0$1)) {
           var x3 = $as_s_util_Failure(x0$1);
           var e = x3.exception$2;
-          var jsx$7 = $g.console;
-          var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed during processing: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
-          jsx$7.error(s$1);
+          var this$46 = arg$outer.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+          var format$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed during processing: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
+          var array$3 = [];
+          var jsx$10 = $g.console;
+          var jsx$15 = jsx$10.error;
+          var jsx$14 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+          var date$1 = new $g.Date();
+          var x$4 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+          var this$48 = new $c_sci_StringOps().init___T(x$4);
+          var array$4 = [((1 + $uI(date$1.getMonth())) | 0), $uI(date$1.getDate()), $uI(date$1.getHours()), $uI(date$1.getMinutes()), $uI(date$1.getSeconds())];
+          var jsx$13 = $m_sjsr_RuntimeString$();
+          var $$this$1 = this$48.repr$1;
+          $m_sc_Seq$();
+          $m_sjs_js_WrappedArray$();
+          var array$5 = [];
+          $uI(array$4.length);
+          var i$2 = 0;
+          var len$3 = $uI(array$4.length);
+          while ((i$2 < len$3)) {
+            var index$2 = i$2;
+            var arg1$2 = array$4[index$2];
+            var elem$1 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$48, arg1$2);
+            array$5.push(elem$1);
+            i$2 = ((1 + i$2) | 0)
+          };
+          $m_s_reflect_ManifestFactory$ObjectManifest$();
+          var len$4 = $uI(array$5.length);
+          var result$1 = $newArrayObject($d_O.getArrayOf(), [len$4]);
+          var len$5 = result$1.u.length;
+          var i$3 = 0;
+          var j$1 = 0;
+          var x$5 = $uI(array$5.length);
+          var x$6 = ((x$5 < len$5) ? x$5 : len$5);
+          var that$1 = result$1.u.length;
+          var end$1 = ((x$6 < that$1) ? x$6 : that$1);
+          while ((i$3 < end$1)) {
+            var jsx$12 = j$1;
+            var index$3 = i$3;
+            result$1.u[jsx$12] = array$5[index$3];
+            i$3 = ((1 + i$3) | 0);
+            j$1 = ((1 + j$1) | 0)
+          };
+          var s$1 = jsx$14.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$13.format__T__AO__T($$this$1, result$1), this$46.com$shocktrade$services$LoggerFactory$Logger$$className$f, format$1]));
+          var jsx$11 = [s$1].concat(array$3);
+          jsx$15.apply(jsx$10, jsx$11);
           e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1)
         } else {
           throw new $c_s_MatchError().init___O(x0$1)
@@ -2816,28 +2966,71 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.run__V = (functio
   }
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes__sc_Seq__s_concurrent_Future = (function(quoteRefs) {
-  var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Retrieved ", " symbols (", " batches expected)"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([quoteRefs.size__I(), ((quoteRefs.size__I() / this.batchSize$1) | 0)]));
+  var this$1 = this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+  var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Retrieved ", " symbols (", " batches expected)"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([quoteRefs.size__I(), ((quoteRefs.size__I() / this.batchSize$1) | 0)]));
   var array = [];
   var jsx$1 = $g.console;
-  var jsx$3 = jsx$1.log;
-  var s = (("" + new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))]))) + message);
+  var jsx$6 = jsx$1.log;
+  var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+  var date = new $g.Date();
+  var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$3 = new $c_sci_StringOps().init___T(x);
+  var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+  var jsx$4 = $m_sjsr_RuntimeString$();
+  var $$this = this$3.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$2 = [];
+  $uI(array$1.length);
+  var i = 0;
+  var len = $uI(array$1.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = array$1[index];
+    var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$3, arg1);
+    array$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$1 = $uI(array$2.length);
+  var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+  var len$2 = result.u.length;
+  var i$1 = 0;
+  var j = 0;
+  var x$1 = $uI(array$2.length);
+  var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+  var that = result.u.length;
+  var end = ((x$2 < that) ? x$2 : that);
+  while ((i$1 < end)) {
+    var jsx$3 = j;
+    var index$1 = i$1;
+    result.u[jsx$3] = array$2[index$1];
+    i$1 = ((1 + i$1) | 0);
+    j = ((1 + j) | 0)
+  };
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), this$1.com$shocktrade$services$LoggerFactory$Logger$$className$f, format]));
   var jsx$2 = [s].concat(array);
-  jsx$3.apply(jsx$1, jsx$2);
-  var jsx$7 = $m_s_concurrent_Future$();
-  var batchNo = new $c_sr_IntRef().init___I(0);
-  var symbolCount = new $c_sr_IntRef().init___I(0);
-  var size = this.batchSize$1;
+  jsx$6.apply(jsx$1, jsx$2);
+  var jsx$10 = $m_s_concurrent_Future$();
+  var scheduled = new $c_sr_IntRef().init___I(0);
+  var scheduledBatchNo = new $c_sr_IntRef().init___I(0);
+  var processed = new $c_sr_IntRef().init___I(0);
+  var processedBatchNo = new $c_sr_IntRef().init___I(0);
+  var size$1 = this.batchSize$1;
   var step = this.batchSize$1;
-  var this$5 = $s_sc_IterableLike$class__sliding__sc_IterableLike__I__I__sc_Iterator(quoteRefs, size, step);
-  var jsx$6 = this$5.toStream__sci_Stream();
-  var jsx$5 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef(this, quoteRefs, batchNo, symbolCount);
-  var this$6 = $m_sc_Seq$();
-  var jsx$4 = $as_sc_TraversableOnce(jsx$6.map__F1__scg_CanBuildFrom__O(jsx$5, this$6.ReusableCBFInstance$2));
-  var this$7 = $m_sc_Seq$();
-  return jsx$7.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$4, this$7.ReusableCBFInstance$2, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
+  var this$23 = $s_sc_IterableLike$class__sliding__sc_IterableLike__I__I__sc_Iterator(quoteRefs, size$1, step);
+  var jsx$9 = this$23.toStream__sci_Stream();
+  var jsx$8 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef__sr_IntRef__sr_IntRef(this, quoteRefs, scheduled, scheduledBatchNo, processed, processedBatchNo);
+  var this$24 = $m_sc_Seq$();
+  var jsx$7 = $as_sc_TraversableOnce(jsx$9.map__F1__scg_CanBuildFrom__O(jsx$8, this$24.ReusableCBFInstance$2));
+  var this$25 = $m_sc_Seq$();
+  return jsx$10.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$7, this$25.ReusableCBFInstance$2, this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f)
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire = (function(dbFuture, ec, require) {
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f = ec;
+  var this$1 = $m_Lcom_shocktrade_services_LoggerFactory$();
+  var $class = $objectGetClass(this);
+  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1 = this$1.getLogger__T__Lcom_shocktrade_services_LoggerFactory$Logger($class.getSimpleName__T());
   this.batchSize$1 = 40;
   this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1 = new $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService().init___Lorg_scalajs_nodejs_NodeRequire(require);
   var array = ["symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume", "errorMessage"];
@@ -2851,12 +3044,12 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
     var arg1 = array[index];
     var key = $as_T(arg1);
     var xo = $m_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$().FIELD$undCODE$undTO$undMAPPING$1.get__O__s_Option(key);
-    var this$5 = xo.toList__sci_List();
-    if ((this$5 !== null)) {
-      var xs = this$5;
+    var this$6 = xo.toList__sci_List();
+    if ((this$6 !== null)) {
+      var xs = this$6;
       _loop: while (true) {
-        var this$6 = xs;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$6)) {
+        var this$7 = xs;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$7)) {
           var elem = xs.head__O();
           array$1.push(elem);
           xs = $as_sc_LinearSeq(xs.tail__O());
@@ -2865,7 +3058,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
         break
       }
     } else {
-      var these = this$5;
+      var these = this$6;
       while ((!these.isEmpty__Z())) {
         var arg1$1 = these.head__O();
         array$1.push(arg1$1);
@@ -2885,8 +3078,8 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
     var arg1$2 = array$1[index$1];
     var c = $as_T(arg1$2);
     if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(c, "0")) {
-      var this$10 = new $c_sci_StringOps().init___T(c);
-      var elem$1 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$10, 1))
+      var this$11 = new $c_sci_StringOps().init___T(c);
+      var elem$1 = $as_T($s_sc_IndexedSeqOptimized$class__dropRight__sc_IndexedSeqOptimized__I__O(this$11, 1))
     } else {
       var elem$1 = c
     };
@@ -2912,9 +3105,8 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.init___s_concurre
     i$2 = ((1 + i$2) | 0)
   };
   b.append__T__scm_StringBuilder("");
-  var this$12 = b.underlying$5;
-  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1 = this$12.content$1;
-  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1 = $m_Lorg_scalajs_nodejs_moment_Moment$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_moment_Moment(require);
+  var this$13 = b.underlying$5;
+  this.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1 = this$13.content$1;
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x$1$2) {
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
@@ -2983,6 +3175,90 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess = new $TypeData().initC
   O: 1
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess;
+/** @constructor */
+function $c_Lcom_shocktrade_services_LoggerFactory$() {
+  $c_O.call(this);
+  this.loggers$1 = null
+}
+$c_Lcom_shocktrade_services_LoggerFactory$.prototype = new $h_O();
+$c_Lcom_shocktrade_services_LoggerFactory$.prototype.constructor = $c_Lcom_shocktrade_services_LoggerFactory$;
+/** @constructor */
+function $h_Lcom_shocktrade_services_LoggerFactory$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_services_LoggerFactory$.prototype = $c_Lcom_shocktrade_services_LoggerFactory$.prototype;
+$c_Lcom_shocktrade_services_LoggerFactory$.prototype.init___ = (function() {
+  $n_Lcom_shocktrade_services_LoggerFactory$ = this;
+  this.loggers$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary($m_sci_Nil$());
+  return this
+});
+$c_Lcom_shocktrade_services_LoggerFactory$.prototype.getLogger__T__Lcom_shocktrade_services_LoggerFactory$Logger = (function(className) {
+  var dict = this.loggers$1;
+  var x1 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, className)) ? new $c_s_Some().init___O(dict[className]) : $m_s_None$());
+  if ($is_s_Some(x1)) {
+    var x2 = $as_s_Some(x1);
+    var v = x2.x$2;
+    var jsx$1 = v
+  } else {
+    var x = $m_s_None$();
+    if ((!(x === x1))) {
+      throw new $c_s_MatchError().init___O(x1)
+    };
+    var d = new $c_Lcom_shocktrade_services_LoggerFactory$Logger().init___T(className);
+    dict[className] = d;
+    var jsx$1 = d
+  };
+  return $as_Lcom_shocktrade_services_LoggerFactory$Logger(jsx$1)
+});
+var $d_Lcom_shocktrade_services_LoggerFactory$ = new $TypeData().initClass({
+  Lcom_shocktrade_services_LoggerFactory$: 0
+}, false, "com.shocktrade.services.LoggerFactory$", {
+  Lcom_shocktrade_services_LoggerFactory$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_services_LoggerFactory$.prototype.$classData = $d_Lcom_shocktrade_services_LoggerFactory$;
+var $n_Lcom_shocktrade_services_LoggerFactory$ = (void 0);
+function $m_Lcom_shocktrade_services_LoggerFactory$() {
+  if ((!$n_Lcom_shocktrade_services_LoggerFactory$)) {
+    $n_Lcom_shocktrade_services_LoggerFactory$ = new $c_Lcom_shocktrade_services_LoggerFactory$().init___()
+  };
+  return $n_Lcom_shocktrade_services_LoggerFactory$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_services_LoggerFactory$Logger() {
+  $c_O.call(this);
+  this.com$shocktrade$services$LoggerFactory$Logger$$className$f = null
+}
+$c_Lcom_shocktrade_services_LoggerFactory$Logger.prototype = new $h_O();
+$c_Lcom_shocktrade_services_LoggerFactory$Logger.prototype.constructor = $c_Lcom_shocktrade_services_LoggerFactory$Logger;
+/** @constructor */
+function $h_Lcom_shocktrade_services_LoggerFactory$Logger() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_services_LoggerFactory$Logger.prototype = $c_Lcom_shocktrade_services_LoggerFactory$Logger.prototype;
+$c_Lcom_shocktrade_services_LoggerFactory$Logger.prototype.init___T = (function(className) {
+  this.com$shocktrade$services$LoggerFactory$Logger$$className$f = className;
+  return this
+});
+function $is_Lcom_shocktrade_services_LoggerFactory$Logger(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_services_LoggerFactory$Logger)))
+}
+function $as_Lcom_shocktrade_services_LoggerFactory$Logger(obj) {
+  return (($is_Lcom_shocktrade_services_LoggerFactory$Logger(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.services.LoggerFactory$Logger"))
+}
+function $isArrayOf_Lcom_shocktrade_services_LoggerFactory$Logger(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_services_LoggerFactory$Logger)))
+}
+function $asArrayOf_Lcom_shocktrade_services_LoggerFactory$Logger(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_services_LoggerFactory$Logger(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.services.LoggerFactory$Logger;", depth))
+}
+var $d_Lcom_shocktrade_services_LoggerFactory$Logger = new $TypeData().initClass({
+  Lcom_shocktrade_services_LoggerFactory$Logger: 0
+}, false, "com.shocktrade.services.LoggerFactory$Logger", {
+  Lcom_shocktrade_services_LoggerFactory$Logger: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_services_LoggerFactory$Logger.prototype.$classData = $d_Lcom_shocktrade_services_LoggerFactory$Logger;
 /** @constructor */
 function $c_Lcom_shocktrade_services_TradingClock() {
   $c_O.call(this);
@@ -3189,10 +3465,15 @@ $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService.prototype.getQuotes__T_
   var client = this.request$1;
   var url = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["http://finance.yahoo.com/d/quotes.csv?s=", "&f=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbolList, params]));
   var task = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-  var arg1 = (function(task$3) {
-    return (function(a$2, b$2) {
-      var value = new $c_T2().init___O__O(a$2, b$2);
-      return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(task$3, value)
+  var arg1 = (function(task$8) {
+    return (function(err$2, a$2, b$2) {
+      if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+        var value = new $c_T2().init___O__O(a$2, b$2);
+        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(task$8, value)
+      } else {
+        var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+        return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(task$8, cause)
+      }
     })
   })(task);
   client.get(url, arg1);
@@ -5916,6 +6197,17 @@ $c_jl_Class.prototype.isInterface__Z = (function() {
 });
 $c_jl_Class.prototype.java$lang$Class$$isRawJSType__Z = (function() {
   return $uZ(this.data$1.isRawJSType)
+});
+$c_jl_Class.prototype.getSimpleName__T = (function() {
+  var x = $as_T(this.data$1.name);
+  var this$2 = new $c_sci_StringOps().init___T(x);
+  var xs = $s_sci_StringLike$class__split__sci_StringLike__C__AT(this$2, 46);
+  var this$4 = new $c_scm_ArrayOps$ofRef().init___AO(xs);
+  var x$1 = $as_T($s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this$4));
+  var this$6 = new $c_sci_StringOps().init___T(x$1);
+  var xs$1 = $s_sci_StringLike$class__split__sci_StringLike__C__AT(this$6, 36);
+  var this$8 = new $c_scm_ArrayOps$ofRef().init___AO(xs$1);
+  return $as_T($s_sc_IndexedSeqOptimized$class__last__sc_IndexedSeqOptimized__O(this$8))
 });
 $c_jl_Class.prototype.isArray__Z = (function() {
   return $uZ(this.data$1.isArrayClass)
@@ -9463,42 +9755,216 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.$$js$exported$meth$main__O 
 });
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer__Lorg_scalajs_nodejs_Bootstrap__V = (function(bootstrap) {
   var require = bootstrap.require;
-  $g.console.log("Starting the Shocktrade Day-Cycle Server...");
+  var this$1 = $m_Lcom_shocktrade_services_LoggerFactory$();
+  var $class = $objectGetClass(this);
+  var logger = this$1.getLogger__T__Lcom_shocktrade_services_LoggerFactory$Logger($class.getSimpleName__T());
+  var array = [];
+  var jsx$1 = $g.console;
+  var jsx$6 = jsx$1.log;
+  var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+  var date = new $g.Date();
+  var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$3 = new $c_sci_StringOps().init___T(x);
+  var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+  var jsx$4 = $m_sjsr_RuntimeString$();
+  var $$this = this$3.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$2 = [];
+  $uI(array$1.length);
+  var i = 0;
+  var len = $uI(array$1.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = array$1[index];
+    var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$3, arg1);
+    array$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$1 = $uI(array$2.length);
+  var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+  var len$2 = result.u.length;
+  var i$1 = 0;
+  var j = 0;
+  var x$1 = $uI(array$2.length);
+  var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+  var that = result.u.length;
+  var end = ((x$2 < that) ? x$2 : that);
+  while ((i$1 < end)) {
+    var jsx$3 = j;
+    var index$1 = i$1;
+    result.u[jsx$3] = array$2[index$1];
+    i$1 = ((1 + i$1) | 0);
+    j = ((1 + j) | 0)
+  };
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), logger.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Starting the Shocktrade Day-Cycle Server..."]));
+  var jsx$2 = [s].concat(array);
+  jsx$6.apply(jsx$1, jsx$2);
   var dict = $g.process.env;
-  var this$4 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "db_connection")) ? new $c_s_Some().init___O(dict.db_connection) : $m_s_None$());
-  var connectionString = $as_T((this$4.isEmpty__Z() ? "mongodb://localhost:27017/shocktrade" : this$4.get__O()));
-  var jsx$1 = $m_Lorg_scalajs_nodejs_globals_Process$ProcessExtensions$();
+  var this$21 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "db_connection")) ? new $c_s_Some().init___O(dict.db_connection) : $m_s_None$());
+  var connectionString = $as_T((this$21.isEmpty__Z() ? "mongodb://localhost:27017/shocktrade" : this$21.get__O()));
+  var jsx$7 = $m_Lorg_scalajs_nodejs_globals_Process$ProcessExtensions$();
   var process = $g.process;
-  jsx$1.onUncaughtException$extension__Lorg_scalajs_nodejs_globals_Process__F1__Lorg_scalajs_nodejs_globals_Process(process, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(err$2) {
-    $g.console.error("An uncaught exception was fired:");
-    $g.console.error(err$2.stack)
-  })));
-  $g.console.log("Loading MongoDB module...");
+  jsx$7.onUncaughtException$extension__Lorg_scalajs_nodejs_globals_Process__F1__Lorg_scalajs_nodejs_globals_Process(process, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(logger$1) {
+    return (function(err$2) {
+      var array$3 = [];
+      var jsx$8 = $g.console;
+      var jsx$13 = jsx$8.error;
+      var jsx$12 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+      var date$1 = new $g.Date();
+      var x$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+      var this$24 = new $c_sci_StringOps().init___T(x$3);
+      var array$4 = [((1 + $uI(date$1.getMonth())) | 0), $uI(date$1.getDate()), $uI(date$1.getHours()), $uI(date$1.getMinutes()), $uI(date$1.getSeconds())];
+      var jsx$11 = $m_sjsr_RuntimeString$();
+      var $$this$1 = this$24.repr$1;
+      $m_sc_Seq$();
+      $m_sjs_js_WrappedArray$();
+      var array$5 = [];
+      $uI(array$4.length);
+      var i$2 = 0;
+      var len$3 = $uI(array$4.length);
+      while ((i$2 < len$3)) {
+        var index$2 = i$2;
+        var arg1$1 = array$4[index$2];
+        var elem$1 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$24, arg1$1);
+        array$5.push(elem$1);
+        i$2 = ((1 + i$2) | 0)
+      };
+      $m_s_reflect_ManifestFactory$ObjectManifest$();
+      var len$4 = $uI(array$5.length);
+      var result$1 = $newArrayObject($d_O.getArrayOf(), [len$4]);
+      var len$5 = result$1.u.length;
+      var i$3 = 0;
+      var j$1 = 0;
+      var x$4 = $uI(array$5.length);
+      var x$5 = ((x$4 < len$5) ? x$4 : len$5);
+      var that$1 = result$1.u.length;
+      var end$1 = ((x$5 < that$1) ? x$5 : that$1);
+      while ((i$3 < end$1)) {
+        var jsx$10 = j$1;
+        var index$3 = i$3;
+        result$1.u[jsx$10] = array$5[index$3];
+        i$3 = ((1 + i$3) | 0);
+        j$1 = ((1 + j$1) | 0)
+      };
+      var s$1 = jsx$12.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$11.format__T__AO__T($$this$1, result$1), logger$1.com$shocktrade$services$LoggerFactory$Logger$$className$f, "An uncaught exception was fired:"]));
+      var jsx$9 = [s$1].concat(array$3);
+      jsx$13.apply(jsx$8, jsx$9);
+      var format = err$2.stack;
+      $g.console.error(format)
+    })
+  })(logger)));
+  var array$6 = [];
+  var jsx$14 = $g.console;
+  var jsx$19 = jsx$14.log;
+  var jsx$18 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+  var date$2 = new $g.Date();
+  var x$6 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$41 = new $c_sci_StringOps().init___T(x$6);
+  var array$7 = [((1 + $uI(date$2.getMonth())) | 0), $uI(date$2.getDate()), $uI(date$2.getHours()), $uI(date$2.getMinutes()), $uI(date$2.getSeconds())];
+  var jsx$17 = $m_sjsr_RuntimeString$();
+  var $$this$2 = this$41.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$8 = [];
+  $uI(array$7.length);
+  var i$4 = 0;
+  var len$6 = $uI(array$7.length);
+  while ((i$4 < len$6)) {
+    var index$4 = i$4;
+    var arg1$2 = array$7[index$4];
+    var elem$2 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$41, arg1$2);
+    array$8.push(elem$2);
+    i$4 = ((1 + i$4) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$7 = $uI(array$8.length);
+  var result$2 = $newArrayObject($d_O.getArrayOf(), [len$7]);
+  var len$8 = result$2.u.length;
+  var i$5 = 0;
+  var j$2 = 0;
+  var x$7 = $uI(array$8.length);
+  var x$8 = ((x$7 < len$8) ? x$7 : len$8);
+  var that$2 = result$2.u.length;
+  var end$2 = ((x$8 < that$2) ? x$8 : that$2);
+  while ((i$5 < end$2)) {
+    var jsx$16 = j$2;
+    var index$5 = i$5;
+    result$2.u[jsx$16] = array$8[index$5];
+    i$5 = ((1 + i$5) | 0);
+    j$2 = ((1 + j$2) | 0)
+  };
+  var s$2 = jsx$18.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$17.format__T__AO__T($$this$2, result$2), logger.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Loading MongoDB module..."]));
+  var jsx$15 = [s$2].concat(array$6);
+  jsx$19.apply(jsx$14, jsx$15);
   var mongo = $m_Lorg_scalajs_nodejs_mongodb_MongoDB$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB(require);
-  $g.console.log("Connecting to '%s'...", connectionString);
-  var $class = mongo.MongoClient;
+  var array$9 = [connectionString];
+  var jsx$20 = $g.console;
+  var jsx$25 = jsx$20.log;
+  var jsx$24 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+  var date$3 = new $g.Date();
+  var x$9 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$58 = new $c_sci_StringOps().init___T(x$9);
+  var array$10 = [((1 + $uI(date$3.getMonth())) | 0), $uI(date$3.getDate()), $uI(date$3.getHours()), $uI(date$3.getMinutes()), $uI(date$3.getSeconds())];
+  var jsx$23 = $m_sjsr_RuntimeString$();
+  var $$this$3 = this$58.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$11 = [];
+  $uI(array$10.length);
+  var i$6 = 0;
+  var len$9 = $uI(array$10.length);
+  while ((i$6 < len$9)) {
+    var index$6 = i$6;
+    var arg1$3 = array$10[index$6];
+    var elem$3 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$58, arg1$3);
+    array$11.push(elem$3);
+    i$6 = ((1 + i$6) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$10 = $uI(array$11.length);
+  var result$3 = $newArrayObject($d_O.getArrayOf(), [len$10]);
+  var len$11 = result$3.u.length;
+  var i$7 = 0;
+  var j$3 = 0;
+  var x$10 = $uI(array$11.length);
+  var x$11 = ((x$10 < len$11) ? x$10 : len$11);
+  var that$3 = result$3.u.length;
+  var end$3 = ((x$11 < that$3) ? x$11 : that$3);
+  while ((i$7 < end$3)) {
+    var jsx$22 = j$3;
+    var index$7 = i$7;
+    result$3.u[jsx$22] = array$11[index$7];
+    i$7 = ((1 + i$7) | 0);
+    j$3 = ((1 + j$3) | 0)
+  };
+  var s$3 = jsx$24.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$23.format__T__AO__T($$this$3, result$3), logger.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Connecting to '%s'..."]));
+  var jsx$21 = [s$3].concat(array$9);
+  jsx$25.apply(jsx$20, jsx$21);
+  var $class$1 = mongo.MongoClient;
   var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-  var arg1 = (function(promise$1) {
-    return (function(err$2$1, result$2) {
+  var arg1$4 = (function(promise$1) {
+    return (function(err$2$1, result$2$1) {
       if ((!((err$2$1 !== null) && (err$2$1 !== (void 0))))) {
-        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2$1)
       } else {
         var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$1);
         return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
       }
     })
   })(promise);
-  $class.connect(connectionString, arg1);
+  $class$1.connect(connectionString, arg1$4);
   var csvQuoteRefresh = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
-  var jsx$3 = $g.setInterval;
-  var jsx$2 = $m_Lorg_scalajs_nodejs_package$();
-  var this$16 = new $c_s_concurrent_duration_package$DurationInt().init___I(5);
+  var jsx$27 = $g.setInterval;
+  var jsx$26 = $m_Lorg_scalajs_nodejs_package$();
+  var this$81 = new $c_s_concurrent_duration_package$DurationInt().init___I(5);
   var unit = $m_ju_concurrent_TimeUnit$().MINUTES$1;
-  jsx$3((function(csvQuoteRefresh$1) {
+  jsx$27((function(csvQuoteRefresh$1) {
     return (function() {
       csvQuoteRefresh$1.run__V()
     })
-  })(csvQuoteRefresh), jsx$2.duration2Int__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$16.scala$concurrent$duration$DurationInt$$n$1, unit)));
+  })(csvQuoteRefresh), jsx$26.duration2Int__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$81.scala$concurrent$duration$DurationInt$$n$1, unit)));
   csvQuoteRefresh.run__V()
 });
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer = (function(arg$1) {
@@ -15043,12 +15509,12 @@ $c_jl_StringBuffer.prototype.append__T__jl_StringBuffer = (function(s) {
   this.content$1 = (("" + this.content$1) + ((s === null) ? "null" : s));
   return this
 });
+$c_jl_StringBuffer.prototype.append__C__jl_Appendable = (function(c) {
+  return this.append__C__jl_StringBuffer(c)
+});
 $c_jl_StringBuffer.prototype.init___T = (function(content) {
   this.content$1 = content;
   return this
-});
-$c_jl_StringBuffer.prototype.append__C__jl_Appendable = (function(c) {
-  return this.append__C__jl_StringBuffer(c)
 });
 $c_jl_StringBuffer.prototype.append__C__jl_StringBuffer = (function(c) {
   return this.append__T__jl_StringBuffer($as_T($g.String.fromCharCode(c)))
@@ -15137,12 +15603,12 @@ $c_jl_StringBuilder.prototype.length__I = (function() {
 $c_jl_StringBuilder.prototype.append__C__jl_StringBuilder = (function(c) {
   return this.append__T__jl_StringBuilder($as_T($g.String.fromCharCode(c)))
 });
+$c_jl_StringBuilder.prototype.append__C__jl_Appendable = (function(c) {
+  return this.append__C__jl_StringBuilder(c)
+});
 $c_jl_StringBuilder.prototype.init___T = (function(content) {
   this.content$1 = content;
   return this
-});
-$c_jl_StringBuilder.prototype.append__C__jl_Appendable = (function(c) {
-  return this.append__C__jl_StringBuilder(c)
 });
 $c_jl_StringBuilder.prototype.reverse__jl_StringBuilder = (function() {
   var original = this.content$1;
@@ -15543,9 +16009,6 @@ $c_sc_AbstractIterator.prototype.addString__scm_StringBuilder__T__T__T__scm_Stri
 $c_sc_AbstractIterator.prototype.isTraversableAgain__Z = (function() {
   return false
 });
-$c_sc_AbstractIterator.prototype.drop__I__sc_Iterator = (function(n) {
-  return $s_sc_Iterator$class__drop__sc_Iterator__I__sc_Iterator(this, n)
-});
 $c_sc_AbstractIterator.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (function(ev) {
   var b = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
   while (this.hasNext__Z()) {
@@ -15553,6 +16016,9 @@ $c_sc_AbstractIterator.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (fu
     b.$$plus$eq__T2__scm_MapBuilder($as_T2(arg1))
   };
   return $as_sci_Map(b.elems$1)
+});
+$c_sc_AbstractIterator.prototype.drop__I__sc_Iterator = (function(n) {
+  return $s_sc_Iterator$class__drop__sc_Iterator__I__sc_Iterator(this, n)
 });
 /** @constructor */
 function $c_scg_SetFactory() {
@@ -16115,13 +16581,13 @@ $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.next__O = (function() {
 $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.seq__sc_TraversableOnce = (function() {
   return this
 });
-$c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.isEmpty__Z = (function() {
-  return $s_sc_Iterator$class__isEmpty__sc_Iterator__Z(this)
-});
 $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableOnce$class__to__sc_TraversableOnce__scg_CanBuildFrom__O(this, cbf))
+});
+$c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.isEmpty__Z = (function() {
+  return $s_sc_Iterator$class__isEmpty__sc_Iterator__Z(this)
 });
 $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.init___sjs_js_Dictionary = (function(dict) {
   this.dict$1 = dict;
@@ -16170,9 +16636,6 @@ $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.addString__scm_StringBu
 $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.isTraversableAgain__Z = (function() {
   return false
 });
-$c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.drop__I__sc_Iterator = (function(n) {
-  return $s_sc_Iterator$class__drop__sc_Iterator__I__sc_Iterator(this, n)
-});
 $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (function(ev) {
   var b = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
   while (this.hasNext__Z()) {
@@ -16180,6 +16643,9 @@ $c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.toMap__s_Predef$$less$c
     b.$$plus$eq__T2__scm_MapBuilder(arg1)
   };
   return $as_sci_Map(b.elems$1)
+});
+$c_sjs_js_WrappedDictionary$DictionaryIterator.prototype.drop__I__sc_Iterator = (function(n) {
+  return $s_sc_Iterator$class__drop__sc_Iterator__I__sc_Iterator(this, n)
 });
 var $d_sjs_js_WrappedDictionary$DictionaryIterator = new $TypeData().initClass({
   sjs_js_WrappedDictionary$DictionaryIterator: 0
@@ -16533,76 +16999,14 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$4 = new $TypeD
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$4.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$4;
 /** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1() {
-  $c_sr_AbstractFunction1.call(this);
-  this.quotes$1$2 = null
-}
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1;
-/** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future(v1)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesSnapshotDAO__s_concurrent_Future = (function(x$5) {
-  var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
-  var jsx$2 = this.quotes$1$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$6$2) {
-    var value = $as_T(x$6$2.symbol);
-    return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$6$2.exchange, x$6$2.lastTrade, x$6$2.tradeDateTime, x$6$2.tradeDate, x$6$2.tradeTime, x$6$2.volume)
-  }));
-  var this$5 = $m_sc_Seq$();
-  var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2));
-  var this$11 = $m_sjsr_package$();
-  var jsx$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(document$2) {
-    var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("insertOne", document$2)]);
-    return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps)
-  }));
-  var this$10 = $m_sc_Seq$();
-  var col = $as_sc_Seq(quotes.map__F1__scg_CanBuildFrom__O(jsx$4, this$10.ReusableCBFInstance$2));
-  if ($is_sjs_js_ArrayOps(col)) {
-    var x2 = $as_sjs_js_ArrayOps(col);
-    var jsx$3 = x2.scala$scalajs$js$ArrayOps$$array$f
-  } else if ($is_sjs_js_WrappedArray(col)) {
-    var x3 = $as_sjs_js_WrappedArray(col);
-    var jsx$3 = x3.array$6
-  } else {
-    var result = [];
-    col.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
-      return (function(x$2) {
-        return $uI(result$1.push(x$2))
-      })
-    })(this$11, result)));
-    var jsx$3 = result
-  };
-  var p = x$5.bulkWrite(jsx$3);
-  return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$1) {
-  this.quotes$1$2 = quotes$1;
-  return this
-});
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1;
-/** @constructor */
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.quoteRefs$1$2 = null;
-  this.batchNo$1$2 = null;
-  this.symbolCount$1$2 = null
+  this.quoteRefs$1$f = null;
+  this.scheduled$1$2 = null;
+  this.scheduledBatchNo$1$2 = null;
+  this.processed$1$f = null;
+  this.processedBatchNo$1$f = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1;
@@ -16614,6 +17018,19 @@ $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.apply__O__O = (function(v1) {
   return this.apply__sc_Seq__s_concurrent_Future($as_sc_Seq(v1))
 });
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef__sr_IntRef__sr_IntRef = (function($$outer, quoteRefs$1, scheduled$1, scheduledBatchNo$1, processed$1, processedBatchNo$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.quoteRefs$1$f = quoteRefs$1;
+  this.scheduled$1$2 = scheduled$1;
+  this.scheduledBatchNo$1$2 = scheduledBatchNo$1;
+  this.processed$1$f = processed$1;
+  this.processedBatchNo$1$f = processedBatchNo$1;
+  return this
+});
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.apply__sc_Seq__s_concurrent_Future = (function(batch) {
   var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
     var value = x$4$2.symbol;
@@ -16622,35 +17039,63 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   }));
   var this$5 = $m_sc_Seq$();
   var symbols = $as_sc_Seq(batch.flatMap__F1__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2));
-  this.batchNo$1$2.elem$1 = ((1 + this.batchNo$1$2.elem$1) | 0);
-  this.symbolCount$1$2.elem$1 = ((this.symbolCount$1$2.elem$1 + symbols.size__I()) | 0);
-  if (((((this.batchNo$1$2.elem$1 % 100) | 0) === 0) || (this.symbolCount$1$2.elem$1 === this.quoteRefs$1$2.size__I()))) {
-    var completion = $doubleToInt((100 * (this.symbolCount$1$2.elem$1 / this.quoteRefs$1$2.size__I())));
-    var this$9 = this.$$outer$2;
-    var value$1 = this.symbolCount$1$2.elem$1;
-    var value$2 = this.batchNo$1$2.elem$1;
-    var array = [value$1, completion, value$2];
+  this.scheduledBatchNo$1$2.elem$1 = ((1 + this.scheduledBatchNo$1$2.elem$1) | 0);
+  this.scheduled$1$2.elem$1 = ((this.scheduled$1$2.elem$1 + symbols.size__I()) | 0);
+  if (((((this.scheduledBatchNo$1$2.elem$1 % 100) | 0) === 0) || (this.scheduled$1$2.elem$1 === this.quoteRefs$1$f.size__I()))) {
+    var completion = $doubleToInt((100 * (this.scheduled$1$2.elem$1 / this.quoteRefs$1$f.size__I())));
+    var this$6 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+    var array = [this.scheduled$1$2.elem$1, completion, this.scheduledBatchNo$1$2.elem$1];
     var jsx$2 = $g.console;
-    var jsx$4 = jsx$2.log;
-    var s = (new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[", "] "])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, this$9.com$shocktrade$daycycle$SecuritiesRefreshProcess$$moment$1)().format("MM/DD HH:mm:ss"))])) + "Processed %d securities (%d%% complete - %d batches) so far...");
+    var jsx$7 = jsx$2.log;
+    var jsx$6 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+    var date = new $g.Date();
+    var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+    var this$8 = new $c_sci_StringOps().init___T(x);
+    var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+    var jsx$5 = $m_sjsr_RuntimeString$();
+    var $$this = this$8.repr$1;
+    $m_sc_Seq$();
+    $m_sjs_js_WrappedArray$();
+    var array$2 = [];
+    $uI(array$1.length);
+    var i = 0;
+    var len = $uI(array$1.length);
+    while ((i < len)) {
+      var index = i;
+      var arg1 = array$1[index];
+      var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$8, arg1);
+      array$2.push(elem);
+      i = ((1 + i) | 0)
+    };
+    $m_s_reflect_ManifestFactory$ObjectManifest$();
+    var len$1 = $uI(array$2.length);
+    var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+    var len$2 = result.u.length;
+    var i$1 = 0;
+    var j = 0;
+    var x$1 = $uI(array$2.length);
+    var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+    var that = result.u.length;
+    var end = ((x$2 < that) ? x$2 : that);
+    while ((i$1 < end)) {
+      var jsx$4 = j;
+      var index$1 = i$1;
+      result.u[jsx$4] = array$2[index$1];
+      i$1 = ((1 + i$1) | 0);
+      j = ((1 + j) | 0)
+    };
+    var s = jsx$6.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$5.format__T__AO__T($$this, result), this$6.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Scheduled %d securities (%d%% completed - %d batches) so far..."]));
     var jsx$3 = [s].concat(array);
-    jsx$4.apply(jsx$2, jsx$3)
+    jsx$7.apply(jsx$2, jsx$3)
   };
-  var this$12 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1, symbols, this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
+  var this$24 = this.$$outer$2;
+  var this$25 = this$24.com$shocktrade$daycycle$SecuritiesRefreshProcess$$csvQuoteSvc$1.getQuotes__T__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this$24.com$shocktrade$daycycle$SecuritiesRefreshProcess$$cvsQuoteParams$1, symbols, this$24.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f);
+  var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$24, symbols);
+  var executor = this$24.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+  var this$26 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$25, pf, executor);
   var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1(this);
-  var executor = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$12, f, executor)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq__sr_IntRef__sr_IntRef = (function($$outer, quoteRefs$1, batchNo$1, symbolCount$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.quoteRefs$1$2 = quoteRefs$1;
-  this.batchNo$1$2 = batchNo$1;
-  this.symbolCount$1$2 = symbolCount$1;
-  return this
+  var executor$1 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$26, f, executor$1)
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1: 0
@@ -16688,16 +17133,125 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4.prototype.apply__sc_Seq__s_concurrent_Future = (function(quotes) {
   var this$1 = this.$$outer$2.$$outer$2;
-  var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1;
-  var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$createSnapshots$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
-  var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
+  try {
+    var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$5$2) {
+      var value = $as_T(x$5$2.symbol);
+      return new $c_Lcom_shocktrade_common_dao_quotes_SnapshotQuote(value, x$5$2.exchange, x$5$2.lastTrade, x$5$2.tradeDateTime, x$5$2.tradeDate, x$5$2.tradeTime, x$5$2.volume)
+    }));
+    var this$6 = $m_sc_Seq$();
+    var x1 = new $c_s_util_Success().init___O($as_sc_Seq(quotes.map__F1__scg_CanBuildFrom__O(jsx$1, this$6.ReusableCBFInstance$2)))
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      matchEnd8: {
+        var x1;
+        var o11 = $m_s_util_control_NonFatal$().unapply__jl_Throwable__s_Option(e$2);
+        if ((!o11.isEmpty__Z())) {
+          var e$3 = $as_jl_Throwable(o11.get__O());
+          var x1 = new $c_s_util_Failure().init___jl_Throwable(e$3);
+          break matchEnd8
+        };
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      var x1;
+      throw e
+    }
+  };
+  if ($is_s_util_Success(x1)) {
+    var x2 = $as_s_util_Success(x1);
+    var snapshots = $as_sc_Seq(x2.value$2);
+    var this$15 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$snapshotDAO$1;
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(snapshots$1) {
+      return (function(x$6$2) {
+        var jsx$4 = $m_sjs_js_Thenable$ThenableOps$();
+        var this$13 = $m_sjsr_package$();
+        var jsx$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(document$2) {
+          var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("insertOne", document$2)]);
+          return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps)
+        }));
+        var this$12 = $m_sc_Seq$();
+        var col = $as_sc_Seq(snapshots$1.map__F1__scg_CanBuildFrom__O(jsx$3, this$12.ReusableCBFInstance$2));
+        if ($is_sjs_js_ArrayOps(col)) {
+          var x2$1 = $as_sjs_js_ArrayOps(col);
+          var jsx$2 = x2$1.scala$scalajs$js$ArrayOps$$array$f
+        } else if ($is_sjs_js_WrappedArray(col)) {
+          var x3 = $as_sjs_js_WrappedArray(col);
+          var jsx$2 = x3.array$6
+        } else {
+          var result = [];
+          col.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
+            return (function(x$2) {
+              return $uI(result$1.push(x$2))
+            })
+          })(this$13, result)));
+          var jsx$2 = result
+        };
+        var p = x$6$2.bulkWrite(jsx$2);
+        return jsx$4.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+      })
+    })(snapshots));
+    var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+    var this$35 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$15, f, executor)
+  } else {
+    if ((!$is_s_util_Failure(x1))) {
+      throw new $c_s_MatchError().init___O(x1)
+    };
+    var x3$1 = $as_s_util_Failure(x1);
+    var e$1 = x3$1.exception$2;
+    var this$16 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+    var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to convert at least one object to a snapshot: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e$1.getMessage__T()]));
+    var array = [];
+    var jsx$5 = $g.console;
+    var jsx$10 = jsx$5.error;
+    var jsx$9 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+    var date = new $g.Date();
+    var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+    var this$18 = new $c_sci_StringOps().init___T(x);
+    var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+    var jsx$8 = $m_sjsr_RuntimeString$();
+    var $$this = this$18.repr$1;
+    $m_sc_Seq$();
+    $m_sjs_js_WrappedArray$();
+    var array$2 = [];
+    $uI(array$1.length);
+    var i = 0;
+    var len = $uI(array$1.length);
+    while ((i < len)) {
+      var index = i;
+      var arg1 = array$1[index];
+      var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$18, arg1);
+      array$2.push(elem);
+      i = ((1 + i) | 0)
+    };
+    $m_s_reflect_ManifestFactory$ObjectManifest$();
+    var len$1 = $uI(array$2.length);
+    var result$2 = $newArrayObject($d_O.getArrayOf(), [len$1]);
+    var len$2 = result$2.u.length;
+    var i$1 = 0;
+    var j = 0;
+    var x$1 = $uI(array$2.length);
+    var x$3 = ((x$1 < len$2) ? x$1 : len$2);
+    var that = result$2.u.length;
+    var end = ((x$3 < that) ? x$3 : that);
+    while ((i$1 < end)) {
+      var jsx$7 = j;
+      var index$1 = i$1;
+      result$2.u[jsx$7] = array$2[index$1];
+      i$1 = ((1 + i$1) | 0);
+      j = ((1 + j) | 0)
+    };
+    var s = jsx$9.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$8.format__T__AO__T($$this, result$2), this$16.com$shocktrade$services$LoggerFactory$Logger$$className$f, format]));
+    var jsx$6 = [s].concat(array);
+    jsx$10.apply(jsx$5, jsx$6);
+    var this$35 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future({})
+  };
   var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4(this);
   var executor$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$4 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, pf, executor$1);
+  var this$36 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$35, pf, executor$1);
   var f$1 = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4__sc_Seq(this, quotes);
   var executor$2 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f$1, executor$2)
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$36, f$1, executor$2)
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4: 0
@@ -16714,7 +17268,7 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.quotes$3$2 = null
+  this.quotes$3$f = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5;
@@ -16732,26 +17286,192 @@ $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$day
   } else {
     this.$$outer$2 = $$outer
   };
-  this.quotes$3$2 = quotes$3;
+  this.quotes$3$f = quotes$3;
   return this
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future = (function(snapshotResults) {
   var this$1 = this.$$outer$2.$$outer$2.$$outer$2;
-  var quotes = this.quotes$3$2;
-  var this$2 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
-  var f = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq(this$1, quotes);
-  var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$3 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
+  var quotes = this.quotes$3$f;
+  try {
+    var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$7$2) {
+      var value = $as_T(x$7$2.symbol);
+      var jsx$10 = x$7$2.exchange;
+      var jsx$9 = x$7$2.lastTrade;
+      var jsx$8 = x$7$2.open;
+      var jsx$7 = x$7$2.close;
+      var jsx$6 = x$7$2.tradeDateTime;
+      var jsx$5 = x$7$2.tradeDate;
+      var jsx$4 = x$7$2.tradeTime;
+      var jsx$3 = x$7$2.volume;
+      var jsx$2 = x$7$2.errorMessage;
+      var value$1 = $uD(x$7$2.responseTimeMsec);
+      var value$2 = new $g.Date();
+      return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, jsx$10, jsx$9, jsx$8, jsx$7, jsx$6, jsx$5, jsx$4, jsx$3, jsx$2, value$1, value$2)
+    }));
+    var this$8 = $m_sc_Seq$();
+    var x1 = new $c_s_util_Success().init___O($as_sc_Seq(quotes.map__F1__scg_CanBuildFrom__O(jsx$1, this$8.ReusableCBFInstance$2)))
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      matchEnd8: {
+        var x1;
+        var o11 = $m_s_util_control_NonFatal$().unapply__jl_Throwable__s_Option(e$2);
+        if ((!o11.isEmpty__Z())) {
+          var e$3 = $as_jl_Throwable(o11.get__O());
+          var x1 = new $c_s_util_Failure().init___jl_Throwable(e$3);
+          break matchEnd8
+        };
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      var x1;
+      throw e
+    }
+  };
+  if ($is_s_util_Success(x1)) {
+    var x2 = $as_s_util_Success(x1);
+    var securities = $as_sc_Seq(x2.value$2);
+    var this$14 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$securitiesDAO$1;
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(securities$1) {
+      return (function(x$8$2) {
+        var jsx$13 = $m_sjs_js_Thenable$ThenableOps$();
+        var this$12 = $m_sjsr_package$();
+        var jsx$12 = new $c_Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO$SecuritiesUpdateDAOExtensions$$anonfun$updateQuotes$extension$1().init___();
+        var this$11 = $m_sc_Seq$();
+        var col = $as_sc_Seq(securities$1.map__F1__scg_CanBuildFrom__O(jsx$12, this$11.ReusableCBFInstance$2));
+        if ($is_sjs_js_ArrayOps(col)) {
+          var x2$1 = $as_sjs_js_ArrayOps(col);
+          var jsx$11 = x2$1.scala$scalajs$js$ArrayOps$$array$f
+        } else if ($is_sjs_js_WrappedArray(col)) {
+          var x3 = $as_sjs_js_WrappedArray(col);
+          var jsx$11 = x3.array$6
+        } else {
+          var result = [];
+          col.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
+            return (function(x$2) {
+              return $uI(result$1.push(x$2))
+            })
+          })(this$12, result)));
+          var jsx$11 = result
+        };
+        var p = x$8$2.bulkWrite(jsx$11);
+        return jsx$13.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+      })
+    })(securities));
+    var executor = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
+    var this$34 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$14, f, executor)
+  } else {
+    if ((!$is_s_util_Failure(x1))) {
+      throw new $c_s_MatchError().init___O(x1)
+    };
+    var x3$1 = $as_s_util_Failure(x1);
+    var e$1 = x3$1.exception$2;
+    var this$15 = this$1.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+    var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to convert at least one object to a security: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e$1.getMessage__T()]));
+    var array = [];
+    var jsx$14 = $g.console;
+    var jsx$19 = jsx$14.error;
+    var jsx$18 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+    var date = new $g.Date();
+    var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+    var this$17 = new $c_sci_StringOps().init___T(x);
+    var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+    var jsx$17 = $m_sjsr_RuntimeString$();
+    var $$this = this$17.repr$1;
+    $m_sc_Seq$();
+    $m_sjs_js_WrappedArray$();
+    var array$2 = [];
+    $uI(array$1.length);
+    var i = 0;
+    var len = $uI(array$1.length);
+    while ((i < len)) {
+      var index = i;
+      var arg1 = array$1[index];
+      var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$17, arg1);
+      array$2.push(elem);
+      i = ((1 + i) | 0)
+    };
+    $m_s_reflect_ManifestFactory$ObjectManifest$();
+    var len$1 = $uI(array$2.length);
+    var result$2 = $newArrayObject($d_O.getArrayOf(), [len$1]);
+    var len$2 = result$2.u.length;
+    var i$1 = 0;
+    var j = 0;
+    var x$1 = $uI(array$2.length);
+    var x$3 = ((x$1 < len$2) ? x$1 : len$2);
+    var that = result$2.u.length;
+    var end = ((x$3 < that) ? x$3 : that);
+    while ((i$1 < end)) {
+      var jsx$16 = j;
+      var index$1 = i$1;
+      result$2.u[jsx$16] = array$2[index$1];
+      i$1 = ((1 + i$1) | 0);
+      j = ((1 + j) | 0)
+    };
+    var s = jsx$18.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$17.format__T__AO__T($$this, result$2), this$15.com$shocktrade$services$LoggerFactory$Logger$$className$f, format]));
+    var jsx$15 = [s].concat(array);
+    jsx$19.apply(jsx$14, jsx$15);
+    var this$34 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future({})
+  };
   var pf = new $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2().init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5(this);
   var executor$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  var this$6 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, pf, executor$1);
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(snapshotResults$1) {
+  var this$55 = $s_s_concurrent_Future$class__recover__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__s_concurrent_Future(this$34, pf, executor$1);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, snapshotResults$1) {
     return (function(securitiesResults$2) {
+      arg$outer.$$outer$2.$$outer$2.processed$1$f.elem$1 = ((arg$outer.$$outer$2.$$outer$2.processed$1$f.elem$1 + arg$outer.quotes$3$f.length__I()) | 0);
+      arg$outer.$$outer$2.$$outer$2.processedBatchNo$1$f.elem$1 = ((1 + arg$outer.$$outer$2.$$outer$2.processedBatchNo$1$f.elem$1) | 0);
+      if (((((arg$outer.$$outer$2.$$outer$2.processedBatchNo$1$f.elem$1 % 100) | 0) === 0) || (arg$outer.$$outer$2.$$outer$2.processed$1$f.elem$1 === arg$outer.$$outer$2.$$outer$2.quoteRefs$1$f.size__I()))) {
+        var completion = $doubleToInt((100 * (arg$outer.$$outer$2.$$outer$2.processed$1$f.elem$1 / arg$outer.$$outer$2.$$outer$2.quoteRefs$1$f.size__I())));
+        var this$35 = arg$outer.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+        var array$3 = [arg$outer.$$outer$2.$$outer$2.processed$1$f.elem$1, completion, arg$outer.$$outer$2.$$outer$2.processedBatchNo$1$f.elem$1];
+        var jsx$20 = $g.console;
+        var jsx$25 = jsx$20.log;
+        var jsx$24 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
+        var date$1 = new $g.Date();
+        var x$4 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+        var this$37 = new $c_sci_StringOps().init___T(x$4);
+        var array$4 = [((1 + $uI(date$1.getMonth())) | 0), $uI(date$1.getDate()), $uI(date$1.getHours()), $uI(date$1.getMinutes()), $uI(date$1.getSeconds())];
+        var jsx$23 = $m_sjsr_RuntimeString$();
+        var $$this$1 = this$37.repr$1;
+        $m_sc_Seq$();
+        $m_sjs_js_WrappedArray$();
+        var array$5 = [];
+        $uI(array$4.length);
+        var i$2 = 0;
+        var len$3 = $uI(array$4.length);
+        while ((i$2 < len$3)) {
+          var index$2 = i$2;
+          var arg1$1 = array$4[index$2];
+          var elem$1 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$37, arg1$1);
+          array$5.push(elem$1);
+          i$2 = ((1 + i$2) | 0)
+        };
+        $m_s_reflect_ManifestFactory$ObjectManifest$();
+        var len$4 = $uI(array$5.length);
+        var result$3 = $newArrayObject($d_O.getArrayOf(), [len$4]);
+        var len$5 = result$3.u.length;
+        var i$3 = 0;
+        var j$1 = 0;
+        var x$5 = $uI(array$5.length);
+        var x$6 = ((x$5 < len$5) ? x$5 : len$5);
+        var that$1 = result$3.u.length;
+        var end$1 = ((x$6 < that$1) ? x$6 : that$1);
+        while ((i$3 < end$1)) {
+          var jsx$22 = j$1;
+          var index$3 = i$3;
+          result$3.u[jsx$22] = array$5[index$3];
+          i$3 = ((1 + i$3) | 0);
+          j$1 = ((1 + j$1) | 0)
+        };
+        var s$1 = jsx$24.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$23.format__T__AO__T($$this$1, result$3), this$35.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Persisted %d securities (%d%% completed - %d batches) so far..."]));
+        var jsx$21 = [s$1].concat(array$3);
+        jsx$25.apply(jsx$20, jsx$21)
+      };
       return new $c_T2().init___O__O(snapshotResults$1, securitiesResults$2)
     })
-  })(snapshotResults));
+  })(this, snapshotResults));
   var executor$2 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$6, f$1, executor$2)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$55, f$1, executor$2)
 });
 var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5: 0
@@ -16764,78 +17484,6 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5;
-/** @constructor */
-function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1() {
-  $c_sr_AbstractFunction1.call(this);
-  this.quotes$2$2 = null
-}
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1;
-/** @constructor */
-function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future(v1)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.apply__Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO__s_concurrent_Future = (function(x$7) {
-  var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
-  var jsx$2 = this.quotes$2$2;
-  var jsx$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$8$2) {
-    var value = $as_T(x$8$2.symbol);
-    var x$10 = x$8$2.exchange;
-    var x$11 = x$8$2.lastTrade;
-    var x$12 = x$8$2.open;
-    var x$13 = x$8$2.close;
-    var x$14 = x$8$2.tradeDate;
-    var x$15 = x$8$2.tradeTime;
-    var x$16 = x$8$2.tradeDateTime;
-    var x$17 = x$8$2.volume;
-    var x$18 = x$8$2.errorMessage;
-    var value$1 = $uD(x$8$2.responseTimeMsec);
-    var value$2 = new $g.Date();
-    return new $c_Lcom_shocktrade_common_dao_quotes_SecurityUpdateQuote(value, x$10, x$11, x$12, x$13, x$16, x$14, x$15, x$17, x$18, value$1, value$2)
-  }));
-  var this$7 = $m_sc_Seq$();
-  var quotes = $as_sc_Seq(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$7.ReusableCBFInstance$2));
-  var this$10 = $m_sjsr_package$();
-  var jsx$4 = new $c_Lcom_shocktrade_common_dao_quotes_SecuritiesUpdateDAO$SecuritiesUpdateDAOExtensions$$anonfun$updateQuotes$extension$1().init___();
-  var this$9 = $m_sc_Seq$();
-  var col = $as_sc_Seq(quotes.map__F1__scg_CanBuildFrom__O(jsx$4, this$9.ReusableCBFInstance$2));
-  if ($is_sjs_js_ArrayOps(col)) {
-    var x2 = $as_sjs_js_ArrayOps(col);
-    var jsx$3 = x2.scala$scalajs$js$ArrayOps$$array$f
-  } else if ($is_sjs_js_WrappedArray(col)) {
-    var x3 = $as_sjs_js_WrappedArray(col);
-    var jsx$3 = x3.array$6
-  } else {
-    var result = [];
-    col.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
-      return (function(x$2) {
-        return $uI(result$1.push(x$2))
-      })
-    })(this$10, result)));
-    var jsx$3 = result
-  };
-  var p = x$7.bulkWrite(jsx$3);
-  return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, quotes$2) {
-  this.quotes$2$2 = quotes$2;
-  return this
-});
-var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1 = new $TypeData().initClass({
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1: 0
-}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1", {
-  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$updateSecurities$1;
 /** @constructor */
 function $c_Lcom_shocktrade_services_YahooFinanceCSVQuotesService$$anonfun$getQuotes$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -19347,8 +19995,103 @@ var $d_sr_ScalaRunTime$$anon$1 = new $TypeData().initClass({
 });
 $c_sr_ScalaRunTime$$anon$1.prototype.$classData = $d_sr_ScalaRunTime$$anon$1;
 /** @constructor */
+function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1() {
+  $c_sr_AbstractPartialFunction.call(this);
+  this.$$outer$2 = null;
+  this.symbols$1$2 = null
+}
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype = new $h_sr_AbstractPartialFunction();
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1;
+/** @constructor */
+function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype;
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.isDefinedAt__jl_Throwable__Z = (function(x1) {
+  return true
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.applyOrElse__jl_Throwable__F1__O = (function(x1, $default) {
+  var this$1 = this.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+  var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Service call failure [", "] for symbols: %s"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([x1.getMessage__T()]));
+  var array = [this.symbols$1$2.mkString__T__T("+")];
+  var jsx$1 = $g.console;
+  var jsx$6 = jsx$1.error;
+  var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+  var date = new $g.Date();
+  var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$3 = new $c_sci_StringOps().init___T(x);
+  var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+  var jsx$4 = $m_sjsr_RuntimeString$();
+  var $$this = this$3.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$2 = [];
+  $uI(array$1.length);
+  var i = 0;
+  var len = $uI(array$1.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = array$1[index];
+    var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$3, arg1);
+    array$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$1 = $uI(array$2.length);
+  var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+  var len$2 = result.u.length;
+  var i$1 = 0;
+  var j = 0;
+  var x$1 = $uI(array$2.length);
+  var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+  var that = result.u.length;
+  var end = ((x$2 < that) ? x$2 : that);
+  while ((i$1 < end)) {
+    var jsx$3 = j;
+    var index$1 = i$1;
+    result.u[jsx$3] = array$2[index$1];
+    i$1 = ((1 + i$1) | 0);
+    j = ((1 + j) | 0)
+  };
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), this$1.com$shocktrade$services$LoggerFactory$Logger$$className$f, format]));
+  var jsx$2 = [s].concat(array);
+  jsx$6.apply(jsx$1, jsx$2);
+  $m_sc_Seq$();
+  $m_sci_Seq$();
+  var this$21 = new $c_scm_ListBuffer().init___();
+  return this$21.toList__sci_List()
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess__sc_Seq = (function($$outer, symbols$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.symbols$1$2 = symbols$1;
+  return this
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.isDefinedAt__O__Z = (function(x) {
+  return this.isDefinedAt__jl_Throwable__Z($as_jl_Throwable(x))
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.applyOrElse__O__F1__O = (function(x, $default) {
+  return this.applyOrElse__jl_Throwable__F1__O($as_jl_Throwable(x), $default)
+});
+var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1 = new $TypeData().initClass({
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1: 0
+}, false, "com.shocktrade.daycycle.SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1", {
+  Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1: 1,
+  sr_AbstractPartialFunction: 1,
+  O: 1,
+  F1: 1,
+  s_PartialFunction: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$getQuotes$1;
+/** @constructor */
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1() {
-  $c_sr_AbstractPartialFunction.call(this)
+  $c_sr_AbstractPartialFunction.call(this);
+  this.$$outer$2 = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype = new $h_sr_AbstractPartialFunction();
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1;
@@ -19357,14 +20100,62 @@ function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shock
   /*<skip>*/
 }
 $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.isDefinedAt__jl_Throwable__Z = (function(x1) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.isDefinedAt__jl_Throwable__Z = (function(x2) {
   return true
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.applyOrElse__jl_Throwable__F1__O = (function(x1, $default) {
-  $g.console.error("Snapshot write error: %s", x1.getMessage__T());
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.applyOrElse__jl_Throwable__F1__O = (function(x2, $default) {
+  var this$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+  var array = [x2.getMessage__T()];
+  var jsx$1 = $g.console;
+  var jsx$6 = jsx$1.error;
+  var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+  var date = new $g.Date();
+  var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$3 = new $c_sci_StringOps().init___T(x);
+  var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+  var jsx$4 = $m_sjsr_RuntimeString$();
+  var $$this = this$3.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$2 = [];
+  $uI(array$1.length);
+  var i = 0;
+  var len = $uI(array$1.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = array$1[index];
+    var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$3, arg1);
+    array$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$1 = $uI(array$2.length);
+  var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+  var len$2 = result.u.length;
+  var i$1 = 0;
+  var j = 0;
+  var x$1 = $uI(array$2.length);
+  var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+  var that = result.u.length;
+  var end = ((x$2 < that) ? x$2 : that);
+  while ((i$1 < end)) {
+    var jsx$3 = j;
+    var index$1 = i$1;
+    result.u[jsx$3] = array$2[index$1];
+    i$1 = ((1 + i$1) | 0);
+    j = ((1 + j) | 0)
+  };
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), this$1.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Snapshot write error: %s"]));
+  var jsx$2 = [s].concat(array);
+  jsx$6.apply(jsx$1, jsx$2);
   return {}
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
   return this
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.isDefinedAt__O__Z = (function(x) {
@@ -19387,7 +20178,8 @@ var $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$1;
 /** @constructor */
 function $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2() {
-  $c_sr_AbstractPartialFunction.call(this)
+  $c_sr_AbstractPartialFunction.call(this);
+  this.$$outer$2 = null
 }
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype = new $h_sr_AbstractPartialFunction();
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2;
@@ -19396,17 +20188,65 @@ function $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shock
   /*<skip>*/
 }
 $h_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype;
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.isDefinedAt__jl_Throwable__Z = (function(x2) {
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.isDefinedAt__jl_Throwable__Z = (function(x3) {
   return true
 });
-$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.applyOrElse__jl_Throwable__F1__O = (function(x2, $default) {
-  $g.console.error("Securities update error: %s", x2.getMessage__T());
+$c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.applyOrElse__jl_Throwable__F1__O = (function(x3, $default) {
+  var this$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$SecuritiesRefreshProcess$$logger$1;
+  var array = [x3.getMessage__T()];
+  var jsx$1 = $g.console;
+  var jsx$6 = jsx$1.error;
+  var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
+  var date = new $g.Date();
+  var x = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+  var this$3 = new $c_sci_StringOps().init___T(x);
+  var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+  var jsx$4 = $m_sjsr_RuntimeString$();
+  var $$this = this$3.repr$1;
+  $m_sc_Seq$();
+  $m_sjs_js_WrappedArray$();
+  var array$2 = [];
+  $uI(array$1.length);
+  var i = 0;
+  var len = $uI(array$1.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = array$1[index];
+    var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$3, arg1);
+    array$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  $m_s_reflect_ManifestFactory$ObjectManifest$();
+  var len$1 = $uI(array$2.length);
+  var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+  var len$2 = result.u.length;
+  var i$1 = 0;
+  var j = 0;
+  var x$1 = $uI(array$2.length);
+  var x$2 = ((x$1 < len$2) ? x$1 : len$2);
+  var that = result.u.length;
+  var end = ((x$2 < that) ? x$2 : that);
+  while ((i$1 < end)) {
+    var jsx$3 = j;
+    var index$1 = i$1;
+    result.u[jsx$3] = array$2[index$1];
+    i$1 = ((1 + i$1) | 0);
+    j = ((1 + j) | 0)
+  };
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), this$1.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Securities update error: %s"]));
+  var jsx$2 = [s].concat(array);
+  jsx$6.apply(jsx$1, jsx$2);
   return {}
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.isDefinedAt__O__Z = (function(x) {
   return this.isDefinedAt__jl_Throwable__Z($as_jl_Throwable(x))
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.init___Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
   return this
 });
 $c_Lcom_shocktrade_daycycle_SecuritiesRefreshProcess$$anonfun$com$shocktrade$daycycle$SecuritiesRefreshProcess$$processQuotes$1$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$2.prototype.applyOrElse__O__F1__O = (function(x, $default) {
@@ -24020,6 +24860,9 @@ $c_sci_StringOps.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_sci_WrappedString().init___T($$this)
 });
+$c_sci_StringOps.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_sci_StringOps.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   var c = (65535 & $uI($$this.charCodeAt(idx)));
@@ -24031,13 +24874,13 @@ $c_sci_StringOps.prototype.lengthCompare__I__I = (function(len) {
 $c_sci_StringOps.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_sci_StringOps.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_sci_StringOps.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_sci_StringOps.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_sci_StringOps.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -24206,6 +25049,9 @@ $c_scm_ArrayOps$ofBoolean.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofBoolean().init___AZ($$this)
 });
+$c_scm_ArrayOps$ofBoolean.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofBoolean.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24216,13 +25062,13 @@ $c_scm_ArrayOps$ofBoolean.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofBoolean.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofBoolean.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofBoolean.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofBoolean.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofBoolean.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -24382,6 +25228,9 @@ $c_scm_ArrayOps$ofByte.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofByte().init___AB($$this)
 });
+$c_scm_ArrayOps$ofByte.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofByte.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24392,13 +25241,13 @@ $c_scm_ArrayOps$ofByte.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofByte.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofByte.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofByte.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofByte.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofByte.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -24473,10 +25322,6 @@ $c_scm_ArrayOps$ofByte.prototype.hashCode__I = (function() {
   var $$this = this.repr$1;
   return $$this.hashCode__I()
 });
-$c_scm_ArrayOps$ofByte.prototype.init___AB = (function(repr) {
-  this.repr$1 = repr;
-  return this
-});
 $c_scm_ArrayOps$ofByte.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (function(ev) {
   var b = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
   var i = 0;
@@ -24490,6 +25335,10 @@ $c_scm_ArrayOps$ofByte.prototype.toMap__s_Predef$$less$colon$less__sci_Map = (fu
     i = ((1 + i) | 0)
   };
   return $as_sci_Map(b.elems$1)
+});
+$c_scm_ArrayOps$ofByte.prototype.init___AB = (function(repr) {
+  this.repr$1 = repr;
+  return this
 });
 $c_scm_ArrayOps$ofByte.prototype.map__F1__scg_CanBuildFrom__O = (function(f, bf) {
   return $s_sc_TraversableLike$class__map__sc_TraversableLike__F1__scg_CanBuildFrom__O(this, f, bf)
@@ -24558,6 +25407,9 @@ $c_scm_ArrayOps$ofChar.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofChar().init___AC($$this)
 });
+$c_scm_ArrayOps$ofChar.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofChar.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   var c = $$this.u[idx];
@@ -24569,13 +25421,13 @@ $c_scm_ArrayOps$ofChar.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofChar.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofChar.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofChar.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofChar.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofChar.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -24733,6 +25585,9 @@ $c_scm_ArrayOps$ofDouble.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofDouble().init___AD($$this)
 });
+$c_scm_ArrayOps$ofDouble.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofDouble.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24743,13 +25598,13 @@ $c_scm_ArrayOps$ofDouble.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofDouble.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofDouble.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofDouble.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofDouble.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofDouble.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -24909,6 +25764,9 @@ $c_scm_ArrayOps$ofFloat.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofFloat().init___AF($$this)
 });
+$c_scm_ArrayOps$ofFloat.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofFloat.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -24919,13 +25777,13 @@ $c_scm_ArrayOps$ofFloat.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofFloat.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofFloat.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofFloat.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofFloat.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofFloat.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -25085,6 +25943,9 @@ $c_scm_ArrayOps$ofInt.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofInt().init___AI($$this)
 });
+$c_scm_ArrayOps$ofInt.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofInt.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -25095,13 +25956,13 @@ $c_scm_ArrayOps$ofInt.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofInt.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofInt.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofInt.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofInt.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofInt.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -25261,6 +26122,9 @@ $c_scm_ArrayOps$ofLong.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofLong().init___AJ($$this)
 });
+$c_scm_ArrayOps$ofLong.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofLong.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -25271,13 +26135,13 @@ $c_scm_ArrayOps$ofLong.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofLong.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofLong.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofLong.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofLong.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofLong.prototype.init___AJ = (function(repr) {
   this.repr$1 = repr;
@@ -25439,6 +26303,9 @@ $c_scm_ArrayOps$ofRef.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofRef().init___AO($$this)
 });
+$c_scm_ArrayOps$ofRef.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofRef.prototype.apply__I__O = (function(index) {
   var $$this = this.repr$1;
   return $$this.u[index]
@@ -25449,13 +26316,13 @@ $c_scm_ArrayOps$ofRef.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofRef.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofRef.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofRef.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofRef.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofRef.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -25618,6 +26485,9 @@ $c_scm_ArrayOps$ofShort.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofShort().init___AS($$this)
 });
+$c_scm_ArrayOps$ofShort.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofShort.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1;
   return $$this.u[idx]
@@ -25628,13 +26498,13 @@ $c_scm_ArrayOps$ofShort.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofShort.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofShort.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofShort.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofShort.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofShort.prototype.init___AS = (function(repr) {
   this.repr$1 = repr;
@@ -25794,6 +26664,9 @@ $c_scm_ArrayOps$ofUnit.prototype.seq__sc_TraversableOnce = (function() {
   var $$this = this.repr$1;
   return new $c_scm_WrappedArray$ofUnit().init___Asr_BoxedUnit($$this)
 });
+$c_scm_ArrayOps$ofUnit.prototype.head__O = (function() {
+  return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
+});
 $c_scm_ArrayOps$ofUnit.prototype.apply__I__O = (function(idx) {
   var $$this = this.repr$1
 });
@@ -25803,13 +26676,13 @@ $c_scm_ArrayOps$ofUnit.prototype.lengthCompare__I__I = (function(len) {
 $c_scm_ArrayOps$ofUnit.prototype.sameElements__sc_GenIterable__Z = (function(that) {
   return $s_sc_IndexedSeqOptimized$class__sameElements__sc_IndexedSeqOptimized__sc_GenIterable__Z(this, that)
 });
-$c_scm_ArrayOps$ofUnit.prototype.isEmpty__Z = (function() {
-  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
-});
 $c_scm_ArrayOps$ofUnit.prototype.toList__sci_List = (function() {
   var this$1 = $m_sci_List$();
   var cbf = this$1.ReusableCBFInstance$2;
   return $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(this, cbf))
+});
+$c_scm_ArrayOps$ofUnit.prototype.isEmpty__Z = (function() {
+  return $s_sc_IndexedSeqOptimized$class__isEmpty__sc_IndexedSeqOptimized__Z(this)
 });
 $c_scm_ArrayOps$ofUnit.prototype.thisCollection__sc_Traversable = (function() {
   var $$this = this.repr$1;
@@ -28473,14 +29346,14 @@ $c_sci_List.prototype.drop__I__sci_List = (function(n) {
   };
   return these
 });
+$c_sci_List.prototype.$$plus$plus__sc_GenTraversableOnce__scg_CanBuildFrom__O = (function(that, bf) {
+  return ((bf === $m_sci_List$().ReusableCBFInstance$2) ? that.seq__sc_TraversableOnce().toList__sci_List().$$colon$colon$colon__sci_List__sci_List(this) : $s_sc_TraversableLike$class__$$plus$plus__sc_TraversableLike__sc_GenTraversableOnce__scg_CanBuildFrom__O(this, that, bf))
+});
 $c_sci_List.prototype.seq__sc_Seq = (function() {
   return this
 });
 $c_sci_List.prototype.length__I = (function() {
   return $s_sc_LinearSeqOptimized$class__length__sc_LinearSeqOptimized__I(this)
-});
-$c_sci_List.prototype.$$plus$plus__sc_GenTraversableOnce__scg_CanBuildFrom__O = (function(that, bf) {
-  return ((bf === $m_sci_List$().ReusableCBFInstance$2) ? that.seq__sc_TraversableOnce().toList__sci_List().$$colon$colon$colon__sci_List__sci_List(this) : $s_sc_TraversableLike$class__$$plus$plus__sc_TraversableLike__sc_GenTraversableOnce__scg_CanBuildFrom__O(this, that, bf))
 });
 $c_sci_List.prototype.take__I__O = (function(n) {
   return this.take__I__sci_List(n)
@@ -30407,6 +31280,9 @@ $c_sci_WrappedString.prototype.init___T = (function(self) {
   this.self$4 = self;
   return this
 });
+$c_sci_WrappedString.prototype.takeRight__I__O = (function(n) {
+  return $s_sc_IndexedSeqOptimized$class__takeRight__sc_IndexedSeqOptimized__I__O(this, n)
+});
 $c_sci_WrappedString.prototype.slice__I__I__sci_WrappedString = (function(from, until) {
   var start = ((from < 0) ? 0 : from);
   if ((until <= start)) {
@@ -30427,9 +31303,6 @@ $c_sci_WrappedString.prototype.slice__I__I__sci_WrappedString = (function(from, 
   };
   var thiz$3 = $m_s_Predef$().unwrapString__sci_WrappedString__T(this);
   return new $c_sci_WrappedString().init___T($as_T(thiz$3.substring(start, end)))
-});
-$c_sci_WrappedString.prototype.takeRight__I__O = (function(n) {
-  return $s_sc_IndexedSeqOptimized$class__takeRight__sc_IndexedSeqOptimized__I__O(this, n)
 });
 $c_sci_WrappedString.prototype.toCollection__O__sc_Seq = (function(repr) {
   var repr$1 = $as_sci_WrappedString(repr);
@@ -32783,9 +33656,6 @@ $c_scm_ArrayBuffer.prototype.init___ = (function() {
 $c_scm_ArrayBuffer.prototype.head__O = (function() {
   return $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this)
 });
-$c_scm_ArrayBuffer.prototype.apply__I__O = (function(idx) {
-  return $s_scm_ResizableArray$class__apply__scm_ResizableArray__I__O(this, idx)
-});
 $c_scm_ArrayBuffer.prototype.remove__I__I__V = (function(n, count) {
   var requirement = (count >= 0);
   if ((!requirement)) {
@@ -32801,6 +33671,9 @@ $c_scm_ArrayBuffer.prototype.remove__I__I__V = (function(n, count) {
   $systemArraycopy(src, m, dest, n, len);
   var sz = ((this.size0$6 - count) | 0);
   $s_scm_ResizableArray$class__reduceToSize__scm_ResizableArray__I__V(this, sz)
+});
+$c_scm_ArrayBuffer.prototype.apply__I__O = (function(idx) {
+  return $s_scm_ResizableArray$class__apply__scm_ResizableArray__I__O(this, idx)
 });
 $c_scm_ArrayBuffer.prototype.lengthCompare__I__I = (function(len) {
   return $s_sc_IndexedSeqOptimized$class__lengthCompare__sc_IndexedSeqOptimized__I__I(this, len)

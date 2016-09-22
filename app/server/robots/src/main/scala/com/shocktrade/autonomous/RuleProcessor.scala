@@ -2,8 +2,9 @@ package com.shocktrade.autonomous
 
 import com.shocktrade.autonomous.RuleProcessor._
 import com.shocktrade.common.models.quote.ResearchQuote
+import com.shocktrade.services.LoggerFactory
+import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -23,9 +24,9 @@ class RuleProcessor()(implicit require: NodeRequire) {
     * @return the filtered set of securities
     */
   def apply(opCodes: Seq[OpCode], securities: Seq[ResearchQuote])(implicit env: RobotEnvironment) = {
-    opCodes.foldLeft(securities) { (inputSet, condition) =>
-      val outputSet = inputSet.filterNot(condition.filter)
-      condition.log(s"(in: ${inputSet.size} => out: ${outputSet.size})")
+    opCodes.foldLeft(securities) { (inputSet, opCode) =>
+      val outputSet = inputSet.filterNot(opCode.filter)
+      opCode.log(s"(in: ${inputSet.size} => out: ${outputSet.size})")
       outputSet
     }
   }
@@ -37,6 +38,7 @@ class RuleProcessor()(implicit require: NodeRequire) {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object RuleProcessor {
+  private[this] val logger = LoggerFactory.getLogger(getClass)
 
   /**
     * IN [ ... ] op-code
@@ -53,8 +55,8 @@ object RuleProcessor {
   implicit class OpCodeExtensions(val opCode: OpCode) extends AnyVal {
 
     @inline
-    def log(format: String, args: Any*)(implicit env: RobotEnvironment, moment: Moment) = {
-      console.log(s"${moment().format("MM/DD HH:mm:ss")} [${env.name}] ${opCode.name} $format", args: _*)
+    def log(format: String, args: Any*)(implicit env: RobotEnvironment) = {
+      logger.log(s"[${env.name}] ${opCode.name} $format", args: _*)
     }
   }
 

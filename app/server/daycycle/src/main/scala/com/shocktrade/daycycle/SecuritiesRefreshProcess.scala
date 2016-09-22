@@ -5,21 +5,21 @@ import com.shocktrade.common.dao.quotes.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.quotes.{SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.daycycle.SecuritiesRefreshProcess._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.services.{TradingClock, YahooFinanceCSVQuotesService}
-import org.scalajs.nodejs.moment.Moment
+import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
+import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Securities Refresh Process
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+  private val logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
   // get service references
@@ -27,9 +27,6 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private val cvsQuoteParams = csvQuoteSvc.getParams(
     "symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume", "errorMessage"
   )
-
-  // load the modules
-  private val moment = Moment()
 
   // get DAO references
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
@@ -49,58 +46,84 @@ class SecuritiesRefreshProcess(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
       outcome onComplete {
         case Success(results) =>
-          log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
+          logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
         case Failure(e) =>
-          console.error(s"Failed during processing: ${e.getMessage}")
+          logger.error(s"Failed during processing: ${e.getMessage}")
           e.printStackTrace()
       }
     }
   }
 
   private def processQuotes(quoteRefs: Seq[SecuritiesRef]) = {
-    log(s"Retrieved ${quoteRefs.size} symbols (${quoteRefs.size / batchSize} batches expected)")
+    logger.log(s"Retrieved ${quoteRefs.size} symbols (${quoteRefs.size / batchSize} batches expected)")
     Future.sequence {
-      var batchNo = 0
-      var symbolCount = 0
+      var scheduled = 0
+      var scheduledBatchNo = 0
+      var processed = 0
+      var processedBatchNo = 0
+
       quoteRefs.sliding(batchSize, batchSize).toSeq map { batch =>
         val symbols = batch.flatMap(_.symbol.toOption)
-        batchNo += 1
-        symbolCount += symbols.size
+        scheduledBatchNo += 1
+        scheduled += symbols.size
 
         // notify the operator at every 100 batches
-        if (batchNo % 100 == 0 || symbolCount == quoteRefs.size) {
-          val completion = (100 * (symbolCount.toDouble / quoteRefs.size)).toInt
-          log("Processed %d securities (%d%% complete - %d batches) so far...", symbolCount, completion, batchNo)
+        if (scheduledBatchNo % 100 == 0 || scheduled == quoteRefs.size) {
+          val completion = (100 * (scheduled.toDouble / quoteRefs.size)).toInt
+          logger.log("Scheduled %d securities (%d%% completed - %d batches) so far...", scheduled, completion, scheduledBatchNo)
         }
 
         for {
-          quotes <- csvQuoteSvc.getQuotes(cvsQuoteParams, symbols)
+          quotes <- getQuotes(symbols)
           snapshotResults <- createSnapshots(quotes) recover { case e =>
-            console.error("Snapshot write error: %s", e.getMessage)
+            logger.error("Snapshot write error: %s", e.getMessage)
             New[BulkWriteOpResultObject]
           }
           securitiesResults <- updateSecurities(quotes) recover { case e =>
-            console.error("Securities update error: %s", e.getMessage)
+            logger.error("Securities update error: %s", e.getMessage)
             New[BulkWriteOpResultObject]
           }
-        } yield snapshotResults -> securitiesResults
+        } yield {
+          // report the progress
+          processed += quotes.length
+          processedBatchNo += 1
+          if (processedBatchNo % 100 == 0 || processed == quoteRefs.size) {
+            val completion = (100 * (processed.toDouble / quoteRefs.size)).toInt
+            logger.log("Persisted %d securities (%d%% completed - %d batches) so far...", processed, completion, processedBatchNo)
+          }
+
+          snapshotResults -> securitiesResults
+        }
       }
     }
   }
 
   @inline
-  private def log(message: String, args: js.Any*) = {
-    console.log(s"[${moment().format("MM/DD HH:mm:ss")}] " + message, args: _*)
+  private def getQuotes(symbols: Seq[String], attemptsLeft: Int = 2) = {
+    csvQuoteSvc.getQuotes(cvsQuoteParams, symbols) recover { case e =>
+      logger.error(s"Service call failure [${e.getMessage}] for symbols: %s", symbols.mkString("+"))
+      Seq.empty
+    }
   }
 
   @inline
   private def createSnapshots(quotes: Seq[YFCSVQuote]) = {
-    snapshotDAO.flatMap(_.updateSnapshots(quotes.map(_.toSnapshot)).toFuture)
+    Try(quotes.map(_.toSnapshot)) match {
+      case Success(snapshots) => snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture)
+      case Failure(e) =>
+        logger.error(s"Failed to convert at least one object to a snapshot: ${e.getMessage}")
+        Future.successful(New[BulkWriteOpResultObject])
+    }
   }
 
   @inline
   private def updateSecurities(quotes: Seq[YFCSVQuote]) = {
-    securitiesDAO.flatMap(_.updateQuotes(quotes.map(_.toUpdateQuote)).toFuture)
+    Try(quotes.map(_.toUpdateQuote)) match {
+      case Success(securities) => securitiesDAO.flatMap(_.updateQuotes(securities).toFuture)
+      case Failure(e) =>
+        logger.error(s"Failed to convert at least one object to a security: ${e.getMessage}")
+        Future.successful(New[BulkWriteOpResultObject])
+    }
   }
 
 }
@@ -124,9 +147,9 @@ object SecuritiesRefreshProcess {
       lastTrade = quote.lastTrade,
       open = quote.open,
       close = quote.close,
+      tradeDateTime = quote.tradeDateTime,
       tradeDate = quote.tradeDate,
       tradeTime = quote.tradeTime,
-      tradeDateTime = quote.tradeDateTime,
       volume = quote.volume,
       errorMessage = quote.errorMessage,
       yfCsvResponseTime = quote.responseTimeMsec,

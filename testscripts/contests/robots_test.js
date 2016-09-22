@@ -58,7 +58,7 @@ db.Robots.update(
                 preferredSpendPerSecurity: 1000.00,
                 searchOptions: {
                     changeMin: -0.10,
-                    spreadMin: 25.0,
+                    spreadMin: 30.0,
                     priceMin: 0.0001,
                     priceMax: 2.00,
                     volumeMin: 1e+5,
@@ -87,7 +87,7 @@ db.Robots.update(
                 }]
             },
             sellingFlow: {
-                profitTarget: 25.0
+                profitTarget: 20.0
             }
         }
     }, {upsert: true});

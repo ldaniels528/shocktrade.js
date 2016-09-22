@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.events.RemoteEvent
+import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.Db
@@ -12,6 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object RemoteEventRoutes {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) = {
 
@@ -35,7 +37,7 @@ object RemoteEventRoutes {
           response.send("Ok")
           next()
         case None =>
-          console.error("invalid event => %j", form)
+          logger.error("BadRequest: invalid event => %j", form)
           response.badRequest(form)
           next()
       }

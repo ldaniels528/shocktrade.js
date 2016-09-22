@@ -1,10 +1,10 @@
 package com.shocktrade.services
 
-import org.scalajs.sjs.DateHelper._
 import com.shocktrade.services.TradingClock._
-import org.scalajs.nodejs.{NodeRequire, console}
+import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment._
 import org.scalajs.nodejs.moment.timezone._
+import org.scalajs.sjs.DateHelper._
 
 import scala.scalajs.js
 
@@ -22,6 +22,22 @@ class TradingClock()(implicit require: NodeRequire) {
     */
   def getDelayUntilTradingStartInMillis: Double = {
     getNextTradeStartTime - new js.Date()
+  }
+
+  /**
+    * Returns the last trading start time. If Monday through Friday, it will return the current date at 9:30am ET;
+    * however, if the current day of week is Saturday or Sunday, it will return the previous Friday at 9:30am ET.
+    * @return the stock market opening [[js.Date time]]
+    */
+  def getLastTradeStartTime: js.Date = {
+    val theMoment = moment().tz(NEW_YORK_TZ)
+    val delta = theMoment.day() match {
+      case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
+      case SATURDAY => 1
+      case SUNDAY => 2
+      case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
+    }
+    theMoment.subtract(delta, "day").hour(9).minute(30).toDate()
   }
 
   /**

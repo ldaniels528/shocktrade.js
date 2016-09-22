@@ -3,6 +3,7 @@ package com.shocktrade.webapp.routes
 import java.util.UUID
 
 import com.shocktrade.common.events.RemoteEvent
+import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.Request
 import org.scalajs.nodejs.expressws.WebSocket
@@ -17,6 +18,7 @@ import scala.util.{Failure, Success, Try}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object WebSocketHandler {
+  private val logger = LoggerFactory.getLogger(getClass)
   private val clients = js.Array[WsClient]()
 
   def messageHandler(ws: WebSocket, request: Request, message: String) = {
@@ -25,22 +27,22 @@ object WebSocketHandler {
       case "Hello" =>
         // have we received a message from this client before?
         val client = WsClient(ip = request.ip, ws = ws)
-        console.log(s"Client ${client.uid} (${client.ip}) connected")
+        logger.log(s"Client ${client.uid} (${client.ip}) connected")
         clients.push(client)
       case unknown =>
-        console.warn(s"Unhandled message '$message'...")
+        logger.warn(s"Unhandled message '$message'...")
     }
   }
 
   def emit(action: String, data: String) = {
     setTimeout(() => {
-      console.log(s"Broadcasting action '$action' with data '$data'...")
+      logger.log(s"Broadcasting action '$action' with data '$data'...")
       clients.foreach(client => Try(client.send(action, data)) match {
         case Success(_) =>
         case Failure(e) =>
-          console.warn(s"Client connection ${client.uid} (${client.ip}) failed")
+          logger.warn(s"Client connection ${client.uid} (${client.ip}) failed")
           clients.indexWhere(_.uid == client.uid) match {
-            case -1 => console.error(s"Client ${client.uid} was not removed")
+            case -1 => logger.error(s"Client ${client.uid} was not removed")
             case index => clients.remove(index)
           }
       })

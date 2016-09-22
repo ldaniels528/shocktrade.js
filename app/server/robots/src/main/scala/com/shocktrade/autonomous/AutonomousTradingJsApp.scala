@@ -1,5 +1,6 @@
 package com.shocktrade.autonomous
 
+import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -21,8 +22,9 @@ object AutonomousTradingJsApp extends js.JSApp {
 
   def startServer(implicit bootstrap: Bootstrap) = {
     implicit val require = bootstrap.require
+    val logger = LoggerFactory.getLogger(getClass)
 
-    console.log("Starting the Shocktrade Autonomous Trading Engine...")
+    logger.log("Starting the Shocktrade Autonomous Trading Engine...")
 
     // get the web application port
     val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
@@ -32,15 +34,15 @@ object AutonomousTradingJsApp extends js.JSApp {
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>
-      console.error("An uncaught exception was fired:")
-      console.error(err.stack)
+      logger.error("An uncaught exception was fired:")
+      logger.error(err.stack)
     }
 
-    console.log("Loading MongoDB module...")
+    logger.log("Loading MongoDB module...")
     implicit val mongo = MongoDB()
 
     // setup mongodb connection
-    console.log("Connecting to '%s'...", connectionString)
+    logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
     // run the autonomous trading engine once every 5 minutes
