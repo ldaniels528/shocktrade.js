@@ -1,6 +1,6 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.services.{CikLookupService, LoggerFactory}
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
 import org.scalajs.nodejs.{Bootstrap, _}
@@ -41,6 +41,12 @@ object DayCycleJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
+    val svc = new CikLookupService()
+    svc("AMD") foreach { response =>
+      console.log("response = %j", response.orNull)
+    }
+
+    /*
     // run the stock refresh process once every 30 minutes
     val csvQuoteRefresh = new SecuritiesUpdateProcess(dbFuture)
     setInterval(() => csvQuoteRefresh.run(), 5.minutes)
@@ -49,7 +55,7 @@ object DayCycleJsApp extends js.JSApp {
     // run the key statistics update process once every 24 hours
     val keyStatisticsUpdateProcess = new KeyStatisticsUpdateProcess(dbFuture)
     setInterval(() => keyStatisticsUpdateProcess.run(), 24.hours)
-    keyStatisticsUpdateProcess.run()
+    keyStatisticsUpdateProcess.run()*/
   }
 
 }

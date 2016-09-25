@@ -29,18 +29,18 @@ object SecuritiesUpdateDAO {
     def findSymbolsForUpdate(cutOffTime: js.Date) = {
       dao.find(
         selector = doc("active" $eq true, "symbol" $ne null /*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
-        projection = SecuritiesRef.Fields.toProjection)
+        projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
-        .toArrayFuture[SecuritiesRef]
+        .toArrayFuture[SecurityRef]
     }
 
     @inline
     def findSymbolsForKeyStatisticsUpdate(cutOffTime: js.Date) = {
       dao.find(
         selector = doc("active" $eq true, "symbol" $ne null/*, "exchange" $in (js.Array("NASDAQ", "NYQ", "NYSE"))*//*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
-        projection = SecuritiesRef.Fields.toProjection)
+        projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
-        .toArrayFuture[SecuritiesRef]
+        .toArrayFuture[SecurityRef]
     }
 
     @inline

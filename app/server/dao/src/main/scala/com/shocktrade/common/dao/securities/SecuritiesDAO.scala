@@ -141,8 +141,14 @@ object SecuritiesDAO {
     */
   implicit class SecuritiesDAOConstructors(val db: Db) extends AnyVal {
 
+    /**
+      * Retrieves the Securities DAO instance
+      * @return the [[SecuritiesDAO Securities DAO]] instance
+      */
     @inline
-    def getSecuritiesDAO(implicit ec: ExecutionContext) = db.collectionFuture("Stocks").mapTo[SecuritiesDAO]
+    def getSecuritiesDAO(implicit ec: ExecutionContext) = {
+      db.collectionFuture("Stocks").mapTo[SecuritiesDAO]
+    }
 
   }
 

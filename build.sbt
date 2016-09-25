@@ -144,6 +144,7 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
       "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-async" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,

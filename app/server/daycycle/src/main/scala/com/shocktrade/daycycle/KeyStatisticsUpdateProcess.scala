@@ -2,10 +2,11 @@ package com.shocktrade.daycycle
 
 import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecuritiesRef}
+import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
 import com.shocktrade.daycycle.KeyStatisticsUpdateProcess._
-import com.shocktrade.services.YahooFinanceStatisticsService.{YFKeyStatistics, YFQuantityType}
-import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceStatisticsService}
+import com.shocktrade.services.ConcurrentProcessor.{ConcurrentContext, TaskHandler}
+import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
+import com.shocktrade.services._
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.{Db, UpdateWriteOpResultObject}
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -25,9 +26,10 @@ class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
   // create the DAO and services instances
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
   private val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
-  private val yfKeyStatsSvc = new YahooFinanceStatisticsService()
+  private val yfKeyStatsSvc = new YahooFinanceKeyStatisticsService()
 
   // internal variables
+  private val processor = new ConcurrentProcessor()
   private val tradingClock = new TradingClock()
 
   /**
@@ -37,47 +39,46 @@ class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(tradingClock.getTradeStopTime))
-      results <- processStatistics(securities)
-    } yield results
+      outcome <- processor.start(securities, new TaskHandler[SecurityRef, UpdateWriteOpResultObject, Outcome] {
+        val requested = securities.size
+        var successes = 0
+        var failures = 0
+
+        logger.info(s"Scheduling $requested securities for processing...")
+
+        @inline def processed = successes + failures
+
+        override def onNext(ctx: ConcurrentContext[SecurityRef], security: SecurityRef) = updateSecurity(security)
+
+        override def onSuccess(ctx: ConcurrentContext[SecurityRef], result: UpdateWriteOpResultObject) = {
+          successes += 1
+          val count = processed
+          if (count % 500 == 0 || count == requested) {
+            logger.info(s"Processed $count securities (successes: $successes, failures: $failures) so far...")
+          }
+        }
+
+        override def onFailure(ctx: ConcurrentContext[SecurityRef], cause: Throwable) = failures += 1
+
+        override def onComplete(ctx: ConcurrentContext[SecurityRef]) = Outcome(processed, successes, failures)
+      }, concurrency = 15)
+    } yield outcome
 
     outcome onComplete {
-      case Success(results) =>
-        logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
+      case Success(Outcome(total, successes, failures)) =>
+        logger.info(s"Processed $total securities (successes: $successes, failures: $failures) in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
   }
 
-  def processStatistics(securities: Seq[SecuritiesRef]) = {
-    Future.sequence {
-      var successes = 0
-      var failures = 0
-      logger.info(s"Scheduling ${securities.size} for processing...")
-
-      for {
-        security <- securities
-      } yield {
-        val task = processSecurity(security) recover { case e: Throwable =>
-          failures += 1
-          //logger.error(s"Failed to process symbol ${security.symbol}: ${e.getMessage}")
-          New[UpdateWriteOpResultObject]
-        }
-
-        task onSuccess { case result =>
-          successes += 1
-          val count = successes + failures
-          if (count % 100 == 0 || count == securities.size) {
-            logger.info(s"Processed ${successes + failures} securities (success: $successes, failed: $failures) so far...")
-          }
-        }
-
-        task
-      }
-    }
-  }
-
-  def processSecurity(security: SecuritiesRef) = {
+  /**
+    * Persists the security to disk
+    * @param security the given [[SecurityRef security]]
+    * @return the outcome of the persistence
+    */
+  private def updateSecurity(security: SecurityRef) = {
     for {
       stats_? <- yfKeyStatsSvc(security.symbol)
       result <- stats_? match {
@@ -105,13 +106,18 @@ object KeyStatisticsUpdateProcess {
   implicit def quantityToDouble(quantity: js.UndefOr[YFQuantityType]): js.UndefOr[Double] = quantity.flatMap(_.raw)
 
   /**
+    * Processing outcome
+    */
+  case class Outcome(processed: Int, successes: Int, failures: Int)
+
+  /**
     * Yahoo! Finance: Key Statistics Extensions
     * @param stats the given [[YFKeyStatistics statistics]]
     */
   implicit class YFKeyStatisticsExtensions(val stats: YFKeyStatistics) extends AnyVal {
 
     @inline
-    def toData(security: SecuritiesRef) = {
+    def toData(security: SecurityRef) = {
       new KeyStatisticsData(
         _id = security._id,
         symbol = security.symbol,
@@ -161,7 +167,8 @@ object KeyStatisticsUpdateProcess {
         twoHundredDayAverage = stats.summaryDetail.flatMap(_.twoHundredDayAverage),
         volume = stats.summaryDetail.flatMap(_.volume),
         `yield` = stats.summaryDetail.flatMap(_.`yield`),
-        ytdReturn = stats.summaryDetail.flatMap(_.ytdReturn)
+        ytdReturn = stats.summaryDetail.flatMap(_.ytdReturn),
+        lastUpdated = new js.Date()
       )
     }
 

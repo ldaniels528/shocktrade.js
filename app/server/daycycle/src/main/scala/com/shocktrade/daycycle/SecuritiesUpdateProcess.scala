@@ -2,7 +2,7 @@ package com.shocktrade.daycycle
 
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{SecuritiesRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.daycycle.SecuritiesUpdateProcess._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
@@ -59,7 +59,7 @@ class SecuritiesUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionContex
     }
   }
 
-  private def processQuotes(quoteRefs: Seq[SecuritiesRef]) = {
+  private def processQuotes(quoteRefs: Seq[SecurityRef]) = {
     logger.log(s"Retrieved ${quoteRefs.size} symbols (${quoteRefs.size / batchSize} batches expected)")
     Future.sequence {
       var scheduled = 0

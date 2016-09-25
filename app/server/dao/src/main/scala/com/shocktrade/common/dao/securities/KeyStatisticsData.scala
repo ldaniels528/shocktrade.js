@@ -58,4 +58,5 @@ class KeyStatisticsData(var _id: js.UndefOr[ObjectID],
                         var twoHundredDayAverage: js.UndefOr[Double],
                         var volume: js.UndefOr[Double],
                         var `yield`: js.UndefOr[Double],
-                        var ytdReturn: js.UndefOr[Double]) extends js.Object
+                        var ytdReturn: js.UndefOr[Double],
+                        var lastUpdated: js.UndefOr[js.Date]) extends js.Object

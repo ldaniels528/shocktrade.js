@@ -1,6 +1,6 @@
 package com.shocktrade.services
 
-import com.shocktrade.services.YahooFinanceStatisticsService._
+import com.shocktrade.services.YahooFinanceKeyStatisticsService._
 import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
 import org.scalajs.nodejs.request.Request
@@ -14,10 +14,10 @@ import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Yahoo Finance! Statistics Service
+  * Yahoo Finance! Key Statistics Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceStatisticsService()(implicit require: NodeRequire) {
+class YahooFinanceKeyStatisticsService()(implicit require: NodeRequire) {
   private val htmlParser = HtmlParser2()
   private val request = Request()
 
@@ -51,7 +51,7 @@ class YahooFinanceStatisticsService()(implicit require: NodeRequire) {
         parser.end()
       case Failure(e) => promise.failure(e)
     }
-    promise
+    promise.future
   }
 
   @inline
@@ -94,7 +94,7 @@ class YahooFinanceStatisticsService()(implicit require: NodeRequire) {
   * Yahoo Finance! Statistics Service Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object YahooFinanceStatisticsService {
+object YahooFinanceKeyStatisticsService {
 
   /**
     * Represents the Yahoo! Finance Quote Summary Store object

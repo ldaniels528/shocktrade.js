@@ -1,10 +1,12 @@
 package com.shocktrade.webapp.routes
 
+import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
+import com.shocktrade.common.dao.securities.KeyStatisticsData
 import com.shocktrade.common.dao.securities.NAICSDAO._
 import com.shocktrade.common.dao.securities.SICDAO._
 import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
-import com.shocktrade.common.models.quote.{AutoCompleteQuote, ResearchQuote}
+import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, ResearchQuote}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.sjs.JsUnderOrHelper._
@@ -23,6 +25,7 @@ object QuoteRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB) = {
     implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+    implicit val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
     implicit val naicsDAO = dbFuture.flatMap(_.getNAICSDAO)
     implicit val sicDAO = dbFuture.flatMap(_.getSICDAO)
 
@@ -43,9 +46,11 @@ object QuoteRoutes {
       val symbol = request.getSymbol
       val outcome = for {
         quote <- securitiesDAO.flatMap(_.findCompleteQuote(symbol))
+        stats <- keyStatisticsDAO.flatMap(_.findBySymbol(symbol))
         naics <- quote.flatMap(_.naicsNumber.toOption map (code => naicsDAO.flatMap(_.findByCode(code)))) getOrElse Future.successful(None)
         sic <- quote.flatMap(_.sicNumber.toOption map (code => sicDAO.flatMap(_.findByCode(code)))) getOrElse Future.successful(None)
         discoverQuote = quote.map(_.toDiscover).map { q =>
+          stats foreach (ks => copyValues(q, ks))
           q.getAdvisory foreach { advisory =>
             q.advisory = advisory.description
             q.advisoryType = advisory.`type`
@@ -104,13 +109,23 @@ object QuoteRoutes {
       }
     }
 
-    def enrichSearchResults(results: js.Array[AutoCompleteQuote]) = {
-      results foreach { result =>
-        result.icon = result.getIcon
-      }
-      results
-    }
+  }
 
+  private def copyValues(q: DiscoverQuote, ks: KeyStatisticsData): Unit = {
+    q.avgVolume10Day = ks.averageVolume10days
+    q.beta = ks.beta
+    q.movingAverage200Day = ks.twoHundredDayAverage
+    q.movingAverage50Day = ks.fiftyDayAverage
+    q.forwardPE = ks.forwardPE
+
+    // TODO add the other fields
+  }
+
+  private def enrichSearchResults(results: js.Array[AutoCompleteQuote]) = {
+    results foreach { result =>
+      result.icon = result.getIcon
+    }
+    results
   }
 
   /**

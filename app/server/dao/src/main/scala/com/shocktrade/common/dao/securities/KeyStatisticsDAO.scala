@@ -24,6 +24,21 @@ object KeyStatisticsDAO {
     */
   implicit class KeyStatisticsDAOEnrichment(val dao: KeyStatisticsDAO) extends AnyVal {
 
+    /**
+      * Retrieves the key statistics for the given symbol
+      * @param symbol the given symbol (e.g. "AAPL")
+      * @return the promise of an option of [[KeyStatisticsData key statistics]] data object
+      */
+    @inline
+    def findBySymbol(symbol: String)(implicit ec: ExecutionContext) = {
+      dao.findOneFuture[KeyStatisticsData]("symbol" $eq symbol)
+    }
+
+    /**
+      * Upserts the given key statistics data object
+      * @param ks the given [[KeyStatisticsData key statistics]] data object
+      * @return the promise of an [[UpdateWriteOpResultObject update result]]
+      */
     @inline
     def saveKeyStatistics(ks: KeyStatisticsData)(implicit ec: ExecutionContext) = {
       dao.updateOne(
@@ -41,8 +56,14 @@ object KeyStatisticsDAO {
     */
   implicit class KeyStatisticsDAOConstructors(val db: Db) extends AnyVal {
 
+    /**
+      * Retrieves the Key Statistics DAO instance
+      * @return the [[KeyStatisticsDAO Key Statistics DAO]] instance
+      */
     @inline
-    def getKeyStatisticsDAO(implicit ec: ExecutionContext) = db.collectionFuture("KeyStatistics").mapTo[KeyStatisticsDAO]
+    def getKeyStatisticsDAO(implicit ec: ExecutionContext) = {
+      db.collectionFuture("KeyStatistics").mapTo[KeyStatisticsDAO]
+    }
 
   }
   

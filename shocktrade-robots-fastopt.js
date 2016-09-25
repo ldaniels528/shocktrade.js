@@ -5247,7 +5247,7 @@ $c_Lorg_scalajs_nodejs_moment_package$.prototype.init___ = (function() {
   this.THURSDAY$1 = 4;
   this.FRIDAY$1 = 5;
   this.SATURDAY$1 = 6;
-  this.SUNDAY$1 = 7;
+  this.SUNDAY$1 = 0;
   return this
 });
 var $d_Lorg_scalajs_nodejs_moment_package$ = new $TypeData().initClass({

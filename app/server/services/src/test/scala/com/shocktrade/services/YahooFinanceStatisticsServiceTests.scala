@@ -4,12 +4,14 @@ import org.scalajs.nodejs.NodeRequire._
 import org.scalajs.nodejs.console
 import utest._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+
 /**
   * Yahoo Finance! Statistics Service Test
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceStatisticsServiceTest extends TestSuite {
-  private val service = new YahooFinanceStatisticsService()(require)
+class YahooFinanceStatisticsServiceTests extends TestSuite {
+  private val service = new YahooFinanceKeyStatisticsService()(require)
 
   override val tests = this {
     "Yahoo! Finance Statistics Service should return stock quotes" - {
@@ -18,6 +20,11 @@ class YahooFinanceStatisticsServiceTest extends TestSuite {
         console.log("quote: %j", quote)
       }
     }
+  }
+
+  tests.runAsync() map { results =>
+    console.log(s"results: $results")
+    results
   }
 
 }
