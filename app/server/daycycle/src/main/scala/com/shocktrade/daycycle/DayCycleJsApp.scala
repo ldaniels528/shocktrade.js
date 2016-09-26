@@ -1,6 +1,6 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.services.{CikLookupService, LoggerFactory}
+import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
 import org.scalajs.nodejs.{Bootstrap, _}
@@ -41,10 +41,10 @@ object DayCycleJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    val svc = new CikLookupService()
-    svc("AMD") foreach { response =>
-      console.log("response = %j", response.orNull)
-    }
+    // run the cik update process once every 24 hours
+    val cikUpdateProcess = new CikUpdateProcess(dbFuture)
+    setInterval(() => cikUpdateProcess.run(), 24.hours)
+    cikUpdateProcess.run()
 
     /*
     // run the stock refresh process once every 30 minutes

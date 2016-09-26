@@ -26,6 +26,15 @@ object SecuritiesUpdateDAO {
   implicit class SecuritiesUpdateDAOExtensions(val dao: SecuritiesUpdateDAO) extends AnyVal {
 
     @inline
+    def findSymbolsForCikUpdate() = {
+      dao.find(
+        selector = doc("active" $eq true, "symbol" $ne null, $or("cikNumber" $exists false, "cikNumber" $eq null)),
+        projection = SecurityRef.Fields.toProjection)
+        .sort(js.Array("symbol", 1))
+        .toArrayFuture[SecurityRef]
+    }
+
+    @inline
     def findSymbolsForUpdate(cutOffTime: js.Date) = {
       dao.find(
         selector = doc("active" $eq true, "symbol" $ne null /*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
@@ -37,10 +46,18 @@ object SecuritiesUpdateDAO {
     @inline
     def findSymbolsForKeyStatisticsUpdate(cutOffTime: js.Date) = {
       dao.find(
-        selector = doc("active" $eq true, "symbol" $ne null/*, "exchange" $in (js.Array("NASDAQ", "NYQ", "NYSE"))*//*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
+        selector = doc("active" $eq true, "symbol" $ne null /*, "exchange" $in (js.Array("NASDAQ", "NYQ", "NYSE"))*//*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
         projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
         .toArrayFuture[SecurityRef]
+    }
+
+    @inline
+    def updateCik(symbol: String, cik: String) = {
+      dao.updateOne(
+        filter = "symbol" $eq symbol,
+        update = $set("cikNumber" -> cik)
+      )
     }
 
     @inline

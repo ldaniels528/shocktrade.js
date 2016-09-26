@@ -53,7 +53,7 @@ class CikLookupService()(implicit require: NodeRequire) {
                   }): _*)
                   cikNumber <- mapping.get("CIK")
                 } {
-                  values("cikNumber") = js.Array(cikNumber)
+                  values("CIK") = js.Array(cikNumber)
                 }
               case "span" =>
                 attributes.get("class").foreach { key =>
@@ -68,12 +68,13 @@ class CikLookupService()(implicit require: NodeRequire) {
           }
 
           override def onend = () => {
-            promise.success(values.get("cikNumber") map { cikNumber =>
+            promise.success(values.get("CIK") map { cikNumber =>
               new CikLookupResponse(
                 symbol = symbol,
                 CIK = cikNumber.mkString("\n"),
                 companyName = values.get("companyName").map(_.mkString("\n")).orUndefined,
-                mailerAddress = values.get("mailerAddress").orUndefined
+                mailerAddress = values.get("mailerAddress").orUndefined,
+                responseTime = js.Date.now() - startTime
               )
             })
           }
@@ -99,8 +100,9 @@ object CikLookupService {
 
   @ScalaJSDefined
   class CikLookupResponse(val symbol: String,
-                          val CIK: js.UndefOr[String],
+                          val CIK: String,
                           val companyName: js.UndefOr[String],
-                          val mailerAddress: js.UndefOr[js.Array[String]]) extends js.Object
+                          val mailerAddress: js.UndefOr[js.Array[String]],
+                          val responseTime: js.UndefOr[Double]) extends js.Object
 
 }
