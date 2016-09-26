@@ -3294,7 +3294,7 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.init___T__s_conc
           }
         })
       })(promise);
-      x$1$2.collection("Stocks", null, arg1);
+      x$1$2.collection("Securities", null, arg1);
       var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
       var boxedClass = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
       $m_s_Predef$().require__Z__V((boxedClass !== null));
@@ -5225,13 +5225,13 @@ function $m_Lorg_scalajs_nodejs_moment_Moment$() {
 /** @constructor */
 function $c_Lorg_scalajs_nodejs_moment_package$() {
   $c_O.call(this);
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 0;
   this.TUESDAY$1 = 0;
   this.WEDNESDAY$1 = 0;
   this.THURSDAY$1 = 0;
   this.FRIDAY$1 = 0;
-  this.SATURDAY$1 = 0;
-  this.SUNDAY$1 = 0
+  this.SATURDAY$1 = 0
 }
 $c_Lorg_scalajs_nodejs_moment_package$.prototype = new $h_O();
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.constructor = $c_Lorg_scalajs_nodejs_moment_package$;
@@ -5241,13 +5241,13 @@ function $h_Lorg_scalajs_nodejs_moment_package$() {
 }
 $h_Lorg_scalajs_nodejs_moment_package$.prototype = $c_Lorg_scalajs_nodejs_moment_package$.prototype;
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.init___ = (function() {
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 1;
   this.TUESDAY$1 = 2;
   this.WEDNESDAY$1 = 3;
   this.THURSDAY$1 = 4;
   this.FRIDAY$1 = 5;
   this.SATURDAY$1 = 6;
-  this.SUNDAY$1 = 0;
   return this
 });
 var $d_Lorg_scalajs_nodejs_moment_package$ = new $TypeData().initClass({

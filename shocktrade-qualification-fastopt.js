@@ -4044,13 +4044,13 @@ function $m_Lorg_scalajs_nodejs_moment_Moment$() {
 /** @constructor */
 function $c_Lorg_scalajs_nodejs_moment_package$() {
   $c_O.call(this);
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 0;
   this.TUESDAY$1 = 0;
   this.WEDNESDAY$1 = 0;
   this.THURSDAY$1 = 0;
   this.FRIDAY$1 = 0;
-  this.SATURDAY$1 = 0;
-  this.SUNDAY$1 = 0
+  this.SATURDAY$1 = 0
 }
 $c_Lorg_scalajs_nodejs_moment_package$.prototype = new $h_O();
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.constructor = $c_Lorg_scalajs_nodejs_moment_package$;
@@ -4060,13 +4060,13 @@ function $h_Lorg_scalajs_nodejs_moment_package$() {
 }
 $h_Lorg_scalajs_nodejs_moment_package$.prototype = $c_Lorg_scalajs_nodejs_moment_package$.prototype;
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.init___ = (function() {
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 1;
   this.TUESDAY$1 = 2;
   this.WEDNESDAY$1 = 3;
   this.THURSDAY$1 = 4;
   this.FRIDAY$1 = 5;
   this.SATURDAY$1 = 6;
-  this.SUNDAY$1 = 0;
   return this
 });
 var $d_Lorg_scalajs_nodejs_moment_package$ = new $TypeData().initClass({
@@ -7455,7 +7455,7 @@ $c_Lcom_shocktrade_qualification_QualificationJsApp$.prototype.startServer__Lorg
     i$1 = ((1 + i$1) | 0);
     j = ((1 + j) | 0)
   };
-  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), logger.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Starting the Shocktrade Qualification Server..."]));
+  var s = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4.format__T__AO__T($$this, result), logger.com$shocktrade$services$LoggerFactory$Logger$$className$f, "Starting the Qualification Server..."]));
   var jsx$2 = [s].concat(array);
   jsx$6.apply(jsx$1, jsx$2);
   var dict = $g.process.env;

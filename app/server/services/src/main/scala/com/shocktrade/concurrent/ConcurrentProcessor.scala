@@ -1,6 +1,6 @@
-package com.shocktrade.services
+package com.shocktrade.concurrent
 
-import com.shocktrade.services.ConcurrentProcessor.{ConcurrentContext, TaskHandler}
+import com.shocktrade.concurrent.ConcurrentProcessor._
 import org.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
 
 import scala.concurrent.duration._
@@ -28,11 +28,11 @@ class ConcurrentProcessor() {
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event
     val proxy = new TaskHandler[IN, OUT, RESULT] {
-      override def onNext(ctx: ConcurrentContext[IN],item: IN) = handler.onNext(ctx, item)
+      override def onNext(ctx: ConcurrentContext[IN], item: IN) = handler.onNext(ctx, item)
 
-      override def onSuccess(ctx: ConcurrentContext[IN],result: OUT) = handler.onSuccess(ctx, result)
+      override def onSuccess(ctx: ConcurrentContext[IN], result: OUT) = handler.onSuccess(ctx, result)
 
-      override def onFailure(ctx: ConcurrentContext[IN],cause: Throwable) = handler.onFailure(ctx, cause)
+      override def onFailure(ctx: ConcurrentContext[IN], cause: Throwable) = handler.onFailure(ctx, cause)
 
       override def onComplete(ctx: ConcurrentContext[IN]) = {
         ctx.completed = true
@@ -66,12 +66,12 @@ class ConcurrentProcessor() {
               scheduleNext(ctx, handler)
           }
         case None =>
-          if (!ctx.completed && ctx.active == 0) handler.onComplete(ctx)
+          if (!ctx.completed && ctx.active == 1) handler.onComplete(ctx)
       }
     }
   }
 
-  private def track[IN, RESULT, T](ctx: ConcurrentContext[IN])(block: => T): T = {
+  protected def track[IN, RESULT, T](ctx: ConcurrentContext[IN])(block: => T): T = {
     ctx.active += 1
     val result = block
     ctx.active -= 1
@@ -83,7 +83,7 @@ class ConcurrentProcessor() {
     * @param ctx     the given [[ConcurrentContext processing context]]
     * @param handler the given [[TaskHandler task handler]]
     */
-  private def scheduleNext[IN, OUT, RESULT](ctx: ConcurrentContext[IN], handler: TaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
+  protected def scheduleNext[IN, OUT, RESULT](ctx: ConcurrentContext[IN], handler: TaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
     if (ctx.paused)
       setTimeout(() => scheduleNext(ctx, handler), 1.seconds)
     else
@@ -102,9 +102,9 @@ object ConcurrentProcessor {
     * Concurrent Context - maintains the state for the queue
     */
   class ConcurrentContext[IN](val queue: js.Array[IN]) {
-    private[services] var active: Int = 0
-    private[services] var completed: Boolean = false
-    private[services] var paused: Boolean = false
+    private[concurrent] var active: Int = 0
+    private[concurrent] var completed: Boolean = false
+    private[concurrent] var paused: Boolean = false
 
     /**
       * @return true, if processing is currently paused

@@ -6947,7 +6947,7 @@ $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.init__Lorg_scalajs_nodej
           }
         })
       })(promise$2);
-      x$2$2.collection("Stocks", null, arg1$1);
+      x$2$2.collection("Securities", null, arg1$1);
       var ec$3 = $m_s_concurrent_Future$InternalCallbackExecutor$();
       var boxedClass$2 = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
       $m_s_Predef$().require__Z__V((boxedClass$2 !== null));
@@ -8300,7 +8300,7 @@ $c_Lcom_shocktrade_webapp_routes_ExploreRoutes$.prototype.init__Lorg_scalajs_nod
         }
       })
     })(promise);
-    x$1$2.collection("Stocks", null, arg1);
+    x$1$2.collection("Securities", null, arg1);
     var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
     var boxedClass = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
     $m_s_Predef$().require__Z__V((boxedClass !== null));
@@ -10266,25 +10266,6 @@ $h_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype = $c_Lcom_shocktrade_web
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$enrichSearchResults__sjs_js_Array__sjs_js_Array = (function(results) {
-  var i = 0;
-  var len = $uI(results.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = results[index];
-    var value = arg1.assetType;
-    if ((value === (void 0))) {
-      var valueA = (void 0)
-    } else {
-      var x0$5 = $as_T(value);
-      var value$1 = ((x0$5 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$5 === "Currency") ? "fa fa-dollar st_blue" : ((x0$5 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
-      var valueA = value$1
-    };
-    arg1.icon = ((valueA !== (void 0)) ? valueA : "fa fa-globe st_blue");
-    i = ((1 + i) | 0)
-  };
-  return results
-});
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$fullQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, securitiesDAO$1) {
   var symbol = $m_Lcom_shocktrade_webapp_routes_package$RequestExtensions$().getSymbol$extension__Lorg_scalajs_nodejs_express_Request__T(request);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbol$3) {
@@ -10353,6 +10334,25 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+});
+$c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$enrichSearchResults__sjs_js_Array__sjs_js_Array = (function(results) {
+  var i = 0;
+  var len = $uI(results.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = results[index];
+    var value = arg1.assetType;
+    if ((value === (void 0))) {
+      var valueA = (void 0)
+    } else {
+      var x0$5 = $as_T(value);
+      var value$1 = ((x0$5 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$5 === "Currency") ? "fa fa-dollar st_blue" : ((x0$5 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
+      var valueA = value$1
+    };
+    arg1.icon = ((valueA !== (void 0)) ? valueA : "fa fa-globe st_blue");
+    i = ((1 + i) | 0)
+  };
+  return results
 });
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, securitiesDAO$1) {
   var dict = request.query;
@@ -10469,7 +10469,7 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.init__Lorg_scalajs_nodej
         }
       })
     })(promise);
-    x$1$2.collection("Stocks", null, arg1);
+    x$1$2.collection("Securities", null, arg1);
     var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
     var boxedClass = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
     $m_s_Predef$().require__Z__V((boxedClass !== null));
@@ -12022,7 +12022,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.init__Lorg_scalajs_no
         }
       })
     })(promise);
-    x$1$2.collection("Stocks", null, arg1);
+    x$1$2.collection("Securities", null, arg1);
     var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
     var boxedClass = ($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO.getClassOf());
     $m_s_Predef$().require__Z__V((boxedClass !== null));
@@ -12619,13 +12619,13 @@ function $m_Lorg_scalajs_nodejs_moment_Moment$() {
 /** @constructor */
 function $c_Lorg_scalajs_nodejs_moment_package$() {
   $c_O.call(this);
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 0;
   this.TUESDAY$1 = 0;
   this.WEDNESDAY$1 = 0;
   this.THURSDAY$1 = 0;
   this.FRIDAY$1 = 0;
-  this.SATURDAY$1 = 0;
-  this.SUNDAY$1 = 0
+  this.SATURDAY$1 = 0
 }
 $c_Lorg_scalajs_nodejs_moment_package$.prototype = new $h_O();
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.constructor = $c_Lorg_scalajs_nodejs_moment_package$;
@@ -12635,13 +12635,13 @@ function $h_Lorg_scalajs_nodejs_moment_package$() {
 }
 $h_Lorg_scalajs_nodejs_moment_package$.prototype = $c_Lorg_scalajs_nodejs_moment_package$.prototype;
 $c_Lorg_scalajs_nodejs_moment_package$.prototype.init___ = (function() {
+  this.SUNDAY$1 = 0;
   this.MONDAY$1 = 1;
   this.TUESDAY$1 = 2;
   this.WEDNESDAY$1 = 3;
   this.THURSDAY$1 = 4;
   this.FRIDAY$1 = 5;
   this.SATURDAY$1 = 6;
-  this.SUNDAY$1 = 0;
   return this
 });
 var $d_Lorg_scalajs_nodejs_moment_package$ = new $TypeData().initClass({

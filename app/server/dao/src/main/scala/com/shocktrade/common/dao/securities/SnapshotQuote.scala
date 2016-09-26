@@ -10,6 +10,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 @ScalaJSDefined
 class SnapshotQuote(val symbol: js.UndefOr[String],
                     val exchange: js.UndefOr[String],
+                    val subExchange: js.UndefOr[String],
                     val lastTrade: js.UndefOr[Double],
                     val tradeDateTime: js.UndefOr[js.Date],
                     val tradeDate: js.UndefOr[String],

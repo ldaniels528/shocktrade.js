@@ -2,7 +2,8 @@ package com.shocktrade.services
 
 import java.util.UUID
 
-import com.shocktrade.services.ConcurrentProcessor.TaskHandler
+import com.shocktrade.concurrent.ConcurrentProcessor
+import com.shocktrade.concurrent.ConcurrentProcessor.TaskHandler
 import org.scalajs.nodejs.console
 import utest._
 

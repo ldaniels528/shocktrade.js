@@ -11,7 +11,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
-  * Shocktrade Qualification Server Application
+  * Qualification Server Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @JSExportAll
@@ -23,7 +23,7 @@ object QualificationJsApp extends js.JSApp {
     implicit val require = bootstrap.require
 
     val logger = LoggerFactory.getLogger(getClass)
-    logger.log("Starting the Shocktrade Qualification Server...")
+    logger.log("Starting the Qualification Server...")
 
     // determine the database connection URL
     val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"

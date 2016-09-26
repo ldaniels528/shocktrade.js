@@ -1,14 +1,16 @@
-package com.shocktrade.daycycle
+package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
-import com.shocktrade.daycycle.KeyStatisticsUpdateProcess._
-import com.shocktrade.services.ConcurrentProcessor.{ConcurrentContext, TaskHandler}
+import com.shocktrade.concurrent.ConcurrentProcessor
+import com.shocktrade.daycycle.SecuritiesUpdateHandler.Outcome
+import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
+import com.shocktrade.daycycle.{Daemon, SecuritiesUpdateHandler}
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import com.shocktrade.services._
 import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.{Db, UpdateWriteOpResultObject}
+import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -17,10 +19,10 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Key Statistics Update Process
+  * Key Statistics Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   private val logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
@@ -38,29 +40,23 @@ class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
   def run(): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
-      securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(tradingClock.getTradeStopTime))
-      outcome <- processor.start(securities, new TaskHandler[SecurityRef, UpdateWriteOpResultObject, Outcome] {
-        val requested = securities.size
-        var successes = 0
-        var failures = 0
+      securities <- lookupSecurities(tradingClock.getTradeStopTime)
+      outcome <- processor.start(securities, handler = new SecuritiesUpdateHandler {
 
-        logger.info(s"Scheduling $requested securities for processing...")
+        override val requested = securities.size
 
-        @inline def processed = successes + failures
+        override val logger = LoggerFactory.getLogger(getClass)
 
-        override def onNext(ctx: ConcurrentContext[SecurityRef], security: SecurityRef) = updateSecurity(security)
-
-        override def onSuccess(ctx: ConcurrentContext[SecurityRef], result: UpdateWriteOpResultObject) = {
-          successes += 1
-          val count = processed
-          if (count % 500 == 0 || count == requested) {
-            logger.info(s"Processed $count securities (successes: $successes, failures: $failures) so far...")
-          }
+        override def updateSecurity(security: SecurityRef) = {
+          for {
+            stats_? <- yfKeyStatsSvc(security.symbol)
+            result <- stats_? match {
+              case Some(stats) => keyStatisticsDAO.flatMap(_.saveKeyStatistics(stats.toData(security)))
+              case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
+            }
+          } yield result
         }
 
-        override def onFailure(ctx: ConcurrentContext[SecurityRef], cause: Throwable) = failures += 1
-
-        override def onComplete(ctx: ConcurrentContext[SecurityRef]) = Outcome(processed, successes, failures)
       }, concurrency = 15)
     } yield outcome
 
@@ -73,21 +69,9 @@ class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
     }
   }
 
-  /**
-    * Persists the security to disk
-    * @param security the given [[SecurityRef security]]
-    * @return the outcome of the persistence
-    */
-  private def updateSecurity(security: SecurityRef) = {
-    for {
-      stats_? <- yfKeyStatsSvc(security.symbol)
-      result <- stats_? match {
-        case Some(stats) => keyStatisticsDAO.flatMap(_.saveKeyStatistics(stats.toData(security)))
-        case None =>
-          logger.warn(s"No key statistics returned for symbol ${security.symbol}")
-          Future.successful(New[UpdateWriteOpResultObject])
-      }
-    } yield result
+  @inline
+  def lookupSecurities(cutOffTime: js.Date) = {
+    securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(cutOffTime))
   }
 
 }
@@ -96,7 +80,7 @@ class KeyStatisticsUpdateProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
   * Key Statistics Update Process Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object KeyStatisticsUpdateProcess {
+object KeyStatisticsUpdateDaemon {
 
   /**
     * Implicitly converts a quantity into a double value
@@ -104,11 +88,6 @@ object KeyStatisticsUpdateProcess {
     * @return the double value
     */
   implicit def quantityToDouble(quantity: js.UndefOr[YFQuantityType]): js.UndefOr[Double] = quantity.flatMap(_.raw)
-
-  /**
-    * Processing outcome
-    */
-  case class Outcome(processed: Int, successes: Int, failures: Int)
 
   /**
     * Yahoo! Finance: Key Statistics Extensions

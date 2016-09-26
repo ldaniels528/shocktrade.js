@@ -147,7 +147,7 @@ object SecuritiesDAO {
       */
     @inline
     def getSecuritiesDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Stocks").mapTo[SecuritiesDAO]
+      db.collectionFuture("Securities").mapTo[SecuritiesDAO]
     }
 
   }

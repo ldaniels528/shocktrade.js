@@ -1,12 +1,13 @@
-package com.shocktrade.daycycle
+package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.securities.IntraDayQuoteData
 import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
-import com.shocktrade.daycycle.NASDAQIntraDayQuoteProcess._
+import com.shocktrade.common.models.contest.OrderLike
+import com.shocktrade.daycycle.Daemon
+import com.shocktrade.daycycle.daemons.IntraDayQuoteDaemon._
 import com.shocktrade.services.NASDAQIntraDayQuotesService
 import com.shocktrade.services.NASDAQIntraDayQuotesService._
-import com.shocktrade.common.models.contest.OrderLike
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.os.OS
@@ -19,10 +20,11 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Intra-Day Quote Process (NASDAQ Datafeed)
+  * Intra-Day Quote Daemon (NASDAQ Datafeed)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NASDAQIntraDayQuoteProcess(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+@deprecated("Use SecuritiesUpdateDaemon instead", since = "0.20")
+class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
@@ -101,7 +103,7 @@ class NASDAQIntraDayQuoteProcess(dbFuture: Future[Db])(implicit ec: ExecutionCon
   * Intra-Day Quote Refresh Engine Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object NASDAQIntraDayQuoteProcess {
+object IntraDayQuoteDaemon {
 
   /**
     * NASDAQ Intra-Day Response Extensions

@@ -50,7 +50,6 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     val startTime = System.currentTimeMillis()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
-      //portfolioOpt <- portfolioDAO.flatMap(_.findNext(processingHost = os.hostname(), updateDelay = 5.minutes))
       claims <- Future.sequence(portfolios.toSeq map(processOrders(_, isMarketCloseEvent))) map (_.flatten)
     } yield claims
 

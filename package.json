@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.0",
+    "csv-parse": "^1.1.7",
     "engine.io": "^1.6.8",
     "express": "4.13.4",
     "express-fileupload": "0.0.5",

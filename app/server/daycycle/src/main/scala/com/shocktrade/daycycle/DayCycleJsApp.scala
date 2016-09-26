@@ -1,9 +1,10 @@
 package com.shocktrade.daycycle
 
+import com.shocktrade.daycycle.daemons._
 import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.nodejs.{Bootstrap, _}
+import org.scalajs.nodejs.{Bootstrap, duration2Int, _}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
@@ -11,7 +12,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
-  * Shocktrade Day-Cycle Server Application
+  * Day-Cycle Server Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @JSExportAll
@@ -23,7 +24,7 @@ object DayCycleJsApp extends js.JSApp {
     implicit val require = bootstrap.require
 
     val logger = LoggerFactory.getLogger(getClass)
-    logger.log("Starting the Day-Cycle Server...")
+    logger.info("Starting the Day-Cycle Server...")
 
     // determine the database connection URL
     val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
@@ -41,21 +42,28 @@ object DayCycleJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // run the cik update process once every 24 hours
-    val cikUpdateProcess = new CikUpdateProcess(dbFuture)
-    setInterval(() => cikUpdateProcess.run(), 24.hours)
-    cikUpdateProcess.run()
+    // define the daemons
+    val daemons = js.Array(
+      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 1.hour, frequency = 24.hours),
+      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 15.seconds, frequency = 5.minutes),
+      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 24.hours)
+    )
 
-    /*
-    // run the stock refresh process once every 30 minutes
-    val csvQuoteRefresh = new SecuritiesUpdateProcess(dbFuture)
-    setInterval(() => csvQuoteRefresh.run(), 5.minutes)
-    csvQuoteRefresh.run()
-
-    // run the key statistics update process once every 24 hours
-    val keyStatisticsUpdateProcess = new KeyStatisticsUpdateProcess(dbFuture)
-    setInterval(() => keyStatisticsUpdateProcess.run(), 24.hours)
-    keyStatisticsUpdateProcess.run()*/
+    // schedule the daemons to run
+    daemons foreach { ref =>
+      logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
+      setInterval(() => setTimeout(() => ref.daemon.run(), ref.delay), ref.frequency)
+    }
   }
+
+  /**
+    * Represents a reference to a daemon
+    * @param name the name of the daemon
+    * @param daemon the daemon instance
+    * @param delay the initial delay before the daemon runs on it's regular interval
+    * @param frequency the interval with which the daemon shall run
+    */
+  case class DaemonRef(name: String, daemon: Daemon, delay: FiniteDuration, frequency: FiniteDuration)
 
 }

@@ -9,6 +9,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 @ScalaJSDefined
 class SecurityUpdateQuote(val symbol: js.UndefOr[String],
                           val exchange: js.UndefOr[String],
+                          val subExchange: js.UndefOr[String],
                           val lastTrade: js.UndefOr[Double],
                           val open: js.UndefOr[Double],
                           val close: js.UndefOr[Double],

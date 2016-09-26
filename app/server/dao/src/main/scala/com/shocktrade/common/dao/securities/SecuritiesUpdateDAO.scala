@@ -1,6 +1,7 @@
 package com.shocktrade.common.dao
 package securities
 
+import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
 
 import scala.concurrent.ExecutionContext
@@ -20,10 +21,10 @@ trait SecuritiesUpdateDAO extends SecuritiesDAO
 object SecuritiesUpdateDAO {
 
   /**
-    * Stock Update DAO Extensions
+    * Stock Update DAO Enrichment
     * @param dao the given [[SecuritiesUpdateDAO Stock DAO]]
     */
-  implicit class SecuritiesUpdateDAOExtensions(val dao: SecuritiesUpdateDAO) extends AnyVal {
+  implicit class SecuritiesUpdateDAOEnrichment(val dao: SecuritiesUpdateDAO) extends AnyVal {
 
     @inline
     def findSymbolsForCikUpdate() = {
@@ -57,6 +58,24 @@ object SecuritiesUpdateDAO {
       dao.updateOne(
         filter = "symbol" $eq symbol,
         update = $set("cikNumber" -> cik)
+      )
+    }
+
+    @inline
+    def updateCompanyInfo(companies: Seq[NASDAQCompanyInfo]) = {
+      dao.bulkWrite(
+        js.Array(companies map { company =>
+          updateOne(filter = "symbol" $eq company.symbol, update = $set(
+            "symbol" -> company.symbol,
+            "exchange" -> company.exchange,
+            "name" -> company.name,
+            "sector" -> company.sector,
+            "industry" -> company.industry,
+            "marketCap" -> company.marketCap,
+            "IPOyear" -> company.IPOyear,
+            "active" -> true
+          ), upsert = true)
+        }: _*)
       )
     }
 
@@ -112,7 +131,9 @@ object SecuritiesUpdateDAO {
   implicit class SecuritiesUpdateDAOConstructor(val db: Db) extends AnyVal {
 
     @inline
-    def getSecuritiesUpdateDAO(implicit ec: ExecutionContext) = db.collectionFuture("Stocks").mapTo[SecuritiesUpdateDAO]
+    def getSecuritiesUpdateDAO(implicit ec: ExecutionContext) = {
+      db.collectionFuture("Securities").mapTo[SecuritiesUpdateDAO]
+    }
 
   }
 
