@@ -1,5 +1,6 @@
 package com.shocktrade.qualification
 
+import com.shocktrade.concurrent.daemon.Daemon._
 import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
@@ -41,10 +42,14 @@ object QualificationJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // run the order qualification engine once every 5 minutes
-    val qualification = new OrderQualificationEngine(dbFuture)
-    setInterval(() => qualification.run(), 1.minutes)
-    qualification.run() // TODO for testing only
+    // define the daemons
+    val daemons = Seq(
+      //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), delay = 0.seconds, frequency = 30.minutes),
+      DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), delay = 0.seconds, frequency = 1.minutes)
+    )
+
+    // schedule the daemons to run
+    schedule(daemons)
   }
 
 }

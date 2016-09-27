@@ -5,6 +5,7 @@ import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
+import com.shocktrade.concurrent.daemon.Daemon
 import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
@@ -25,7 +26,7 @@ import scala.util.{Failure, Success, Try}
   * Order Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
+class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
@@ -45,12 +46,12 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   /**
     * Invokes the process
     */
-  def run(): Unit = {
+  override def run(): Unit = {
     val isMarketCloseEvent = !tradingClock.isTradingActive && tradingClock.isTradingActive(lastRun)
     val startTime = System.currentTimeMillis()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
-      claims <- Future.sequence(portfolios.toSeq map(processOrders(_, isMarketCloseEvent))) map (_.flatten)
+      claims <- Future.sequence(portfolios.toSeq map (processOrders(_, isMarketCloseEvent))) map (_.flatten)
     } yield claims
 
     outcome onComplete {

@@ -1,7 +1,7 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.daycycle.Daemon
+import com.shocktrade.concurrent.daemon.Daemon
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import com.shocktrade.services.{LoggerFactory, NASDAQCompanyListService}
 import org.scalajs.nodejs.NodeRequire

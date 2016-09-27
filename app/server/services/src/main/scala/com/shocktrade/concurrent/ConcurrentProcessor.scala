@@ -35,7 +35,6 @@ class ConcurrentProcessor() {
       override def onFailure(ctx: ConcurrentContext[IN], cause: Throwable) = handler.onFailure(ctx, cause)
 
       override def onComplete(ctx: ConcurrentContext[IN]) = {
-        ctx.completed = true
         val result = handler.onComplete(ctx)
         promise.success(result)
         result
@@ -53,29 +52,26 @@ class ConcurrentProcessor() {
     * @param handler the given [[TaskHandler task handler]]
     */
   private def handleTask[IN, OUT, RESULT](ctx: ConcurrentContext[IN], handler: TaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
-    track(ctx) {
-      val anItem = if (ctx.queue.nonEmpty) Option(ctx.queue.pop()) else None
-      anItem match {
-        case Some(item) =>
-          handler.onNext(ctx, item) onComplete {
-            case Success(result) =>
-              handler.onSuccess(ctx, result)
-              scheduleNext(ctx, handler)
-            case Failure(e) =>
-              handler.onFailure(ctx, e)
-              scheduleNext(ctx, handler)
-          }
-        case None =>
-          if (!ctx.completed && ctx.active == 1) handler.onComplete(ctx)
-      }
+    val anItem = if (ctx.queue.nonEmpty) Option(ctx.queue.pop()) else None
+    anItem match {
+      case Some(item) =>
+        ctx.active += 1
+        handler.onNext(ctx, item) onComplete {
+          case Success(result) =>
+            handler.onSuccess(ctx, result)
+            ctx.active -= 1
+            scheduleNext(ctx, handler)
+          case Failure(e) =>
+            handler.onFailure(ctx, e)
+            ctx.active -= 1
+            scheduleNext(ctx, handler)
+        }
+      case None =>
+        if (!ctx.completed && ctx.active == 0) {
+          ctx.completed = true
+          handler.onComplete(ctx)
+        }
     }
-  }
-
-  protected def track[IN, RESULT, T](ctx: ConcurrentContext[IN])(block: => T): T = {
-    ctx.active += 1
-    val result = block
-    ctx.active -= 1
-    result
   }
 
   /**

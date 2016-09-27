@@ -1,6 +1,7 @@
 package com.shocktrade.common.dao
 package securities
 
+import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
 
@@ -55,10 +56,12 @@ object SecuritiesUpdateDAO {
 
     @inline
     def updateCik(symbol: String, cik: String) = {
-      dao.updateOne(
-        filter = "symbol" $eq symbol,
-        update = $set("cikNumber" -> cik)
-      )
+      dao.bulkWrite(js.Array(
+        updateOne(
+          filter = "symbol" $eq symbol,
+          update = $set("cikNumber" -> cik),
+          upsert = false
+        )))
     }
 
     @inline
@@ -75,6 +78,28 @@ object SecuritiesUpdateDAO {
             "IPOyear" -> company.IPOyear,
             "active" -> true
           ), upsert = true)
+        }: _*)
+      )
+    }
+
+    @inline
+    def updateEodQuotes(quotes: Seq[EodDataSecurity]) = {
+      dao.bulkWrite(js.Array(
+        quotes map { quote =>
+          updateOne(
+            filter = "symbol" $eq quote.symbol,
+            update = $set(
+              "symbol" -> quote.symbol,
+              "exchange" -> quote.exchange,
+              "name" -> quote.name,
+              "high" -> quote.high,
+              "low" -> quote.low,
+              "close" -> quote.close,
+              "volume" -> quote.volume,
+              "change" -> quote.change,
+              "changePct" -> quote.changePct,
+              "active" -> true
+            ), upsert = true)
         }: _*)
       )
     }

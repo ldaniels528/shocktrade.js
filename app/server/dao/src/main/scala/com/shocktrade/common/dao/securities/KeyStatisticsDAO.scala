@@ -36,16 +36,17 @@ object KeyStatisticsDAO {
 
     /**
       * Upserts the given key statistics data object
-      * @param ks the given [[KeyStatisticsData key statistics]] data object
-      * @return the promise of an [[UpdateWriteOpResultObject update result]]
+      * @param keyStats the given collection of [[KeyStatisticsData key statistics]] data objects
+      * @return the promise of an [[BulkWriteOpResultObject bulk update result]]
       */
     @inline
-    def saveKeyStatistics(ks: KeyStatisticsData)(implicit ec: ExecutionContext) = {
-      dao.updateOne(
-        filter = "symbol" $eq ks.symbol,
-        update = ks,
-        options = new UpdateOptions(upsert = true)
-      ).toFuture
+    def saveKeyStatistics(keyStats: KeyStatisticsData*)(implicit ec: ExecutionContext) = {
+      dao.bulkWrite(
+        js.Array(keyStats map (ks => updateOne(
+          filter = "symbol" $eq ks.symbol,
+          update = ks,
+          upsert = true
+        )): _*))
     }
 
   }
@@ -66,5 +67,5 @@ object KeyStatisticsDAO {
     }
 
   }
-  
+
 }

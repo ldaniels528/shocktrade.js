@@ -4,9 +4,8 @@ import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.daycycle.SecuritiesUpdateHandler.Outcome
+import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
-import com.shocktrade.daycycle.{Daemon, SecuritiesUpdateHandler}
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import com.shocktrade.services._
 import org.scalajs.nodejs.NodeRequire
@@ -41,28 +40,24 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     val startTime = js.Date.now()
     val outcome = for {
       securities <- lookupSecurities(tradingClock.getTradeStopTime)
-      outcome <- processor.start(securities, handler = new SecuritiesUpdateHandler {
+      stats <- processor.start(securities, concurrency = 15, handler = new BulkTaskUpdateHandler[SecurityRef](securities.size) {
+        logger.info(s"Scheduling ${securities.size} securities for Key Statistics processing...")
 
-        override val requested = securities.size
-
-        override val logger = LoggerFactory.getLogger(getClass)
-
-        override def updateSecurity(security: SecurityRef) = {
+        override def processBatch(security: SecurityRef) = {
           for {
             stats_? <- yfKeyStatsSvc(security.symbol)
             result <- stats_? match {
               case Some(stats) => keyStatisticsDAO.flatMap(_.saveKeyStatistics(stats.toData(security)))
               case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
             }
-          } yield result
+          } yield (1, result)
         }
-
-      }, concurrency = 15)
-    } yield outcome
+      })
+    } yield stats
 
     outcome onComplete {
-      case Success(Outcome(total, successes, failures)) =>
-        logger.info(s"Processed $total securities (successes: $successes, failures: $failures) in %d seconds", (js.Date.now() - startTime) / 1000)
+      case Success(stats) =>
+        logger.info(s"$stats in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()

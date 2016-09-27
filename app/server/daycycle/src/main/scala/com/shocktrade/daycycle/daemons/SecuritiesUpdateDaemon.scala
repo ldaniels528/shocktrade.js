@@ -4,19 +4,16 @@ import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.ConcurrentProcessor.{ConcurrentContext, TaskHandler}
-import com.shocktrade.daycycle.SecuritiesUpdateHandler.Outcome
+import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
-import com.shocktrade.daycycle.{BatchResult, Daemon}
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
 import com.shocktrade.util.ExchangeHelper
-import org.scalajs.nodejs.mongodb.Db
+import org.scalajs.nodejs.NodeRequire
+import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, duration2Int}
 import org.scalajs.sjs.JsUnderOrHelper._
 
-import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.util.{Failure, Success, Try}
@@ -66,41 +63,26 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   def execute(startTime: Double) = {
     val outcome = for {
       securities <- getSecurities(tradingClock.getTradeStopTime)
-      results <- processor.start(securities, handler = new TaskHandler[Seq[SecurityRef], BatchResult, Outcome] {
-        val expected = securities.size
-        var successes = 0
-        var failures = 0
-        var lastUpdated = js.Date.now()
+      results <- processor.start(securities, concurrency = 20, handler = new BulkTaskUpdateHandler[InputBatch](securities.size) {
         logger.info(s"Scheduling ${securities.size} batches of securities for updates and snapshots...")
 
-        @inline def processed = successes + failures
-
-        override def onNext(ctx: ConcurrentContext[Seq[SecurityRef]], securities: Seq[SecurityRef]) = {
-          processSecurities(securities)
+        override def processBatch(securities: InputBatch) = {
+          val symbols = securities.map(_.symbol)
+          for {
+            quotes <- getYahooCSVQuotes(symbols)
+            snapshotResults <- createSnapshots(quotes) recover { case e =>
+              logger.error("Snapshot write error: %s", e.getMessage)
+              New[BulkWriteOpResultObject]
+            }
+            securitiesResults <- updateSecurities(quotes)
+          } yield (quotes.length, securitiesResults)
         }
-
-        override def onSuccess(ctx: ConcurrentContext[Seq[SecurityRef]], result: BatchResult) = {
-          successes += (if (result.written > 0) 1 else 0)
-          failures += (if (result.written > 0) 0 else 1)
-
-          if (js.Date.now() - lastUpdated >= 5.seconds) {
-            lastUpdated = js.Date.now()
-            val count = processed
-            val completion = (100.0 * count / expected).toInt
-            logger.info(s"Processed $count batches (completion: $completion%, successes: $successes, failures: $failures, updates: ${result.written})")
-          }
-        }
-
-        override def onFailure(ctx: ConcurrentContext[Seq[SecurityRef]], cause: Throwable) = failures += 1
-
-        override def onComplete(ctx: ConcurrentContext[Seq[SecurityRef]]) = Outcome(processed, successes, failures)
-
-      }, concurrency = 20)
+      })
     } yield results
 
     outcome onComplete {
-      case Success(results) =>
-        logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
+      case Success(status) =>
+        logger.info(s"$status in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
@@ -113,21 +95,6 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
       securities <- securitiesDAO.flatMap(_.findSymbolsForUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches
-  }
-
-  private def processSecurities(securities: Seq[SecurityRef]) = {
-    val symbols = securities.map(_.symbol)
-    for {
-      quotes <- getYahooCSVQuotes(symbols)
-      snapshotResults <- createSnapshots(quotes) map (BatchResult(_)) recover { case e =>
-        logger.error("Snapshot write error: %s", e.getMessage)
-        new BatchResult(written = 0, errors = js.Array(e.getMessage))
-      }
-      securitiesResults <- updateSecurities(quotes) map (BatchResult(_)) recover { case e =>
-        logger.error("Securities update error: %s", e.getMessage)
-        new BatchResult(written = 0, errors = js.Array(e.getMessage))
-      }
-    } yield snapshotResults + securitiesResults
   }
 
   private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2) = {
@@ -160,6 +127,8 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object SecuritiesUpdateDaemon {
+
+  type InputBatch = Seq[SecurityRef]
 
   /**
     * Yahoo! Finance CSV Quote Extensions

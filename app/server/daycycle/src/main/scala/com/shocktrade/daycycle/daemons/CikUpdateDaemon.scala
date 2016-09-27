@@ -3,7 +3,7 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.daycycle.{Daemon, SecuritiesUpdateHandler}
+import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
 import com.shocktrade.services.{CikLookupService, LoggerFactory}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
@@ -34,28 +34,24 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, requi
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForCikUpdate())
-      outcome <- processor.start(securities, handler = new SecuritiesUpdateHandler {
+      status <- processor.start(securities, concurrency = 15, handler = new BulkTaskUpdateHandler[SecurityRef](securities.size) {
+        logger.info(s"Scheduling ${securities.size} securities for CIK processing...")
 
-        override val requested = securities.size
-
-        override val logger = LoggerFactory.getLogger(getClass)
-
-        override def updateSecurity(security: SecurityRef) = {
+        override def processBatch(security: SecurityRef) = {
           for {
             response_? <- cikLookupService(security.symbol)
             result <- response_? match {
               case Some(response) => securitiesDAO.flatMap(_.updateCik(security.symbol, response.CIK))
               case None => Future.failed(die(s"No CIK response for symbol ${security.symbol}"))
             }
-          } yield result
+          } yield (1, result)
         }
-
-      }, concurrency = 15)
-    } yield outcome
+      })
+    } yield status
 
     outcome onComplete {
-      case Success(results) =>
-        logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
+      case Success(status) =>
+        logger.info(s"$status in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()

@@ -1,11 +1,11 @@
-package com.shocktrade.daycycle.daemons
+package com.shocktrade.qualification
 
 import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.securities.IntraDayQuoteData
 import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.common.models.contest.OrderLike
-import com.shocktrade.daycycle.Daemon
-import com.shocktrade.daycycle.daemons.IntraDayQuoteDaemon._
+import com.shocktrade.concurrent.daemon.Daemon
+import com.shocktrade.qualification.IntraDayQuoteDaemon._
 import com.shocktrade.services.NASDAQIntraDayQuotesService
 import com.shocktrade.services.NASDAQIntraDayQuotesService._
 import org.scalajs.nodejs.moment.Moment
@@ -23,7 +23,6 @@ import scala.util.{Failure, Success}
   * Intra-Day Quote Daemon (NASDAQ Datafeed)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@deprecated("Use SecuritiesUpdateDaemon instead", since = "0.20")
 class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
@@ -37,7 +36,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, r
   /**
     * Persists intra-day quotes for all active orders to disk
     */
-  def run(): Unit = {
+  override def run(): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.findActiveOrders())

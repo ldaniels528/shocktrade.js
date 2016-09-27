@@ -1,10 +1,11 @@
 package com.shocktrade.daycycle
 
+import com.shocktrade.concurrent.daemon.Daemon._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.services.LoggerFactory
+import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.nodejs.{Bootstrap, duration2Int, _}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
@@ -43,27 +44,16 @@ object DayCycleJsApp extends js.JSApp {
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
     // define the daemons
-    val daemons = js.Array(
-      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 1.hour, frequency = 24.hours),
+    val daemons = Seq(
       DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 15.seconds, frequency = 5.minutes),
-      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 24.hours)
+      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
+      DaemonRef("FullMarketUpdate", new FullMarketUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
+      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 24.hours),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 5.minutes)
     )
 
     // schedule the daemons to run
-    daemons foreach { ref =>
-      logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
-      setInterval(() => setTimeout(() => ref.daemon.run(), ref.delay), ref.frequency)
-    }
+    schedule(daemons)
   }
-
-  /**
-    * Represents a reference to a daemon
-    * @param name the name of the daemon
-    * @param daemon the daemon instance
-    * @param delay the initial delay before the daemon runs on it's regular interval
-    * @param frequency the interval with which the daemon shall run
-    */
-  case class DaemonRef(name: String, daemon: Daemon, delay: FiniteDuration, frequency: FiniteDuration)
 
 }
