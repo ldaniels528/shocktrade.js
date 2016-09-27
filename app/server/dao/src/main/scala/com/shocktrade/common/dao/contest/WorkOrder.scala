@@ -48,6 +48,16 @@ object WorkOrder {
     )
 
     @inline
+    def toPerformance(positionSold: PositionData) = new PerformanceData(
+      _id = UUID.randomUUID().toString,
+      symbol = wo.order.symbol,
+      pricePaid = positionSold.pricePaid,
+      priceSold = wo.claim.price,
+      quantity = wo.claim.quantity,
+      commissions = positionSold.commission.map(_ + Commissions(wo.order))
+    )
+
+    @inline
     def totalCost = wo.order.totalCost getOrElse 0d
 
   }

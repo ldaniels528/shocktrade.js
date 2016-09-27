@@ -20659,16 +20659,16 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.productElement__I_
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
+$c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.init___T__Lcom_shocktrade_daycycle_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration = (function(name, daemon, delay, frequency) {
   this.name$1 = name;
   this.daemon$1 = daemon;
   this.delay$1 = delay;
   this.frequency$1 = frequency;
   return this
-});
-$c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__I(this, (-889275714))
 });
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$DaemonRef.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)

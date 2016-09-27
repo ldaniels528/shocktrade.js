@@ -27,20 +27,20 @@ object PortfolioUpdateDAO {
 
   /**
     * Portfolio Update DAO Extensions
-    * @param portfolioDAO the given [[PortfolioUpdateDAO Portfolio DAO]]
+    * @param dao the given [[PortfolioUpdateDAO Portfolio DAO]]
     */
-  implicit class PortfolioDAOExtensions(val portfolioDAO: PortfolioUpdateDAO) {
+  implicit class PortfolioDAOExtensions(val dao: PortfolioUpdateDAO) {
 
     @inline
     def findActiveOrders()(implicit ec: ExecutionContext) = {
-      portfolioDAO.find(selector = "status" $eq "ACTIVE", projection = Seq("orders").toProjection).toArrayFuture[PortfolioData]
+      dao.find(selector = "status" $eq "ACTIVE", projection = Seq("orders").toProjection).toArrayFuture[PortfolioData]
     }
 
     @inline
     def findNext(processingHost: String, updateDelay: FiniteDuration)(implicit ec: ExecutionContext) = {
       val lastUpdate = new js.Date()
       val nextUpdate = lastUpdate + updateDelay
-      portfolioDAO.findOneAndUpdate(
+      dao.findOneAndUpdate(
         filter = doc("status" $eq "ACTIVE", $or("nextUpdate" $exists false, "nextUpdate" $lte lastUpdate)),
         update = $set(doc(
           "lastUpdate" -> lastUpdate,
@@ -58,7 +58,7 @@ object PortfolioUpdateDAO {
 
     @inline
     def insertPosition(wo: WorkOrder)(implicit ec: ExecutionContext) = {
-      portfolioDAO.updateOne(
+      dao.updateOne(
         filter = doc(
           "_id" $eq wo.portfolioID,
           "cashAccount.cashFunds" $gte wo.totalCost),
@@ -76,7 +76,7 @@ object PortfolioUpdateDAO {
     @inline
     def mergePositions(portfolioID: ObjectID, positionIDs: Seq[String])(implicit ec: ExecutionContext) = {
       for {
-        portfolioOpt <- portfolioDAO.findOneFuture[PortfolioData]("_id" $eq portfolioID, fields = js.Array("positions"))
+        portfolioOpt <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID, fields = js.Array("positions"))
         results = for {
           portfolio <- portfolioOpt
           positions <- portfolio.positions.toOption.map(_.filter(_._id.exists(positionIDs.contains)))
@@ -103,7 +103,7 @@ object PortfolioUpdateDAO {
             if (!positions.forall(_.symbol.contains(symbol))) die("All positions must have the same symbol")
 
             // perform the update
-            portfolioDAO.findOneAndUpdate(
+            dao.findOneAndUpdate(
               filter = doc("_id" $eq portfolioID),
               update = doc(
                 "positions" $addToSet newPosition,
@@ -125,25 +125,40 @@ object PortfolioUpdateDAO {
 
     @inline
     def reducePosition(wo: WorkOrder)(implicit ec: ExecutionContext) = {
-      portfolioDAO.updateOne(
-        filter = doc(
-          "_id" $eq wo.portfolioID,
-          "positions" $elemMatch("symbol" $eq wo.claim.symbol, "quantity" $gte wo.claim.quantity)),
-        update = doc(
-          $inc(
-            "cashAccount.cashFunds" -> +wo.totalCost,
-            "positions.$.quantity" -> -wo.claim.quantity,
-            "positions.$.netValue" -> -wo.claim.quantity * wo.claim.price
-          ),
-          "cashAccount.asOfDate" $set wo.claim.asOfTime,
-          "orders" $pull doc("_id" -> wo.order._id),
-          "closedOrders" $addToSet wo.toClosedOrder("Processed")
-        ))
+      for {
+        portfolio_? <- dao.findOneFuture[PortfolioData]("_id" $eq wo.portfolioID, fields = js.Array("positions"))
+        positions = portfolio_?.flatMap(_.positions.toOption).getOrElse(emptyArray)
+        positionToSell_? = positions.find(p => p.symbol.contains(wo.claim.symbol) && p.quantity.exists(_ >= wo.claim.quantity))
+
+        result <- positionToSell_? match {
+          case Some(positionToSell) =>
+            dao.updateOne(
+              filter = doc(
+                "_id" $eq wo.portfolioID,
+                "positions" $elemMatch("symbol" $eq wo.claim.symbol, "quantity" $gte wo.claim.quantity)),
+              update = doc(
+                $inc(
+                  "cashAccount.cashFunds" -> +wo.totalCost,
+                  "positions.$.quantity" -> -wo.claim.quantity,
+                  "positions.$.netValue" -> -wo.claim.quantity * wo.claim.price
+                ),
+                $addToSet(
+                  "closedOrders" -> wo.toClosedOrder("Processed"),
+                  "performance" -> wo.toPerformance(positionToSell)
+                ),
+                "cashAccount.asOfDate" $set wo.claim.asOfTime,
+                "orders" $pull doc("_id" -> wo.order._id)
+              ))
+          case None =>
+            die(s"No suitable position found (symbol ${wo.claim.symbol}, qty: ${wo.claim.quantity})")
+        }
+
+      } yield result
     }
 
     @inline
     def removeEmptyPositions(portfolioID: ObjectID)(implicit ec: ExecutionContext) = {
-      portfolioDAO.updateMany(filter = doc("_id" $eq portfolioID), update = doc("positions" $pull ("quantity" $eq 0d)))
+      dao.updateMany(filter = doc("_id" $eq portfolioID), update = doc("positions" $pull ("quantity" $eq 0d)))
     }
 
   }
