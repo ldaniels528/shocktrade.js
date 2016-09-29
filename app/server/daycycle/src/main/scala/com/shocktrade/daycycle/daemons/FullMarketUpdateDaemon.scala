@@ -2,7 +2,8 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
+import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
+import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.FullMarketUpdateDaemon._
 import com.shocktrade.services.{EodDataSecuritiesService, LoggerFactory}
 import org.scalajs.nodejs.NodeRequire
@@ -34,10 +35,10 @@ class FullMarketUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   def run(): Unit = {
     val startTime = js.Date.now()
     val inputs = getInputPages
-    val outcome = processor.start(inputs, concurrency = 20, handler = new BulkTaskUpdateHandler[InputPages](inputs.size) {
+    val outcome = processor.start(inputs, concurrency = 20, handler = new BulkConcurrentTaskUpdateHandler[InputPages](inputs.size) {
       logger.info(s"Scheduling ${inputs.size} pages of securities for processing...")
 
-      override def processBatch(inputData: InputPages) = {
+      override def onNext(ctx: ConcurrentContext, inputData: InputPages) = {
         for {
           quotes <- eodDataService(inputData.exchange, inputData.letterCode)
           results <- securitiesDAO.flatMap(_.updateEodQuotes(quotes))

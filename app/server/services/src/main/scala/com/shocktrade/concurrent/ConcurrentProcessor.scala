@@ -17,24 +17,24 @@ class ConcurrentProcessor() {
   /**
     * Starts the concurrent processor. 
     * <b>NOTE</b>: For performance reasons the input items are used directly for processing.
-    * @param items       the given input [[js.Array items]]
-    * @param handler     the given [[TaskHandler task handler]]
+    * @param queue       the given input [[js.Array queue]]
+    * @param handler     the given [[ConcurrentTaskHandler task handler]]
     * @param concurrency the number of concurrent processes to use
     * @return the promise of a result
     */
-  def start[IN, OUT, RESULT](items: js.Array[IN], handler: TaskHandler[IN, OUT, RESULT], concurrency: Int = 1)(implicit ec: ExecutionContext) = {
-    val promise = Promise[RESULT]()
-    val ctx = new ConcurrentContext(items)
+  def start[IN, OUT, SUMMARY](queue: js.Array[IN], handler: ConcurrentTaskHandler[IN, OUT, SUMMARY], concurrency: Int = 1)(implicit ec: ExecutionContext) = {
+    val promise = Promise[SUMMARY]()
+    val ctx = new ConcurrentContext()
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event
-    val proxy = new TaskHandler[IN, OUT, RESULT] {
-      override def onNext(ctx: ConcurrentContext[IN], item: IN) = handler.onNext(ctx, item)
+    val proxy = new ConcurrentTaskHandler[IN, OUT, SUMMARY] {
+      override def onNext(ctx: ConcurrentContext, item: IN) = handler.onNext(ctx, item)
 
-      override def onSuccess(ctx: ConcurrentContext[IN], result: OUT) = handler.onSuccess(ctx, result)
+      override def onSuccess(ctx: ConcurrentContext, result: OUT) = handler.onSuccess(ctx, result)
 
-      override def onFailure(ctx: ConcurrentContext[IN], cause: Throwable) = handler.onFailure(ctx, cause)
+      override def onFailure(ctx: ConcurrentContext, cause: Throwable) = handler.onFailure(ctx, cause)
 
-      override def onComplete(ctx: ConcurrentContext[IN]) = {
+      override def onComplete(ctx: ConcurrentContext) = {
         val result = handler.onComplete(ctx)
         promise.success(result)
         result
@@ -42,17 +42,17 @@ class ConcurrentProcessor() {
     }
 
     // schedule the handlers
-    (0 to concurrency) foreach (_ => scheduleNext(ctx, proxy))
+    (0 to concurrency) foreach (_ => scheduleNext(queue, ctx, proxy))
     promise.future
   }
 
   /**
     * Manages the asynchronous processing all of items in the queue
     * @param ctx     the given [[ConcurrentContext processing context]]
-    * @param handler the given [[TaskHandler task handler]]
+    * @param handler the given [[ConcurrentTaskHandler task handler]]
     */
-  private def handleTask[IN, OUT, RESULT](ctx: ConcurrentContext[IN], handler: TaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
-    val anItem = if (ctx.queue.nonEmpty) Option(ctx.queue.pop()) else None
+  private def handleTask[IN, OUT, RESULT](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
+    val anItem = if (queue.nonEmpty) Option(queue.pop()) else None
     anItem match {
       case Some(item) =>
         ctx.active += 1
@@ -60,11 +60,11 @@ class ConcurrentProcessor() {
           case Success(result) =>
             handler.onSuccess(ctx, result)
             ctx.active -= 1
-            scheduleNext(ctx, handler)
+            scheduleNext(queue, ctx, handler)
           case Failure(e) =>
             handler.onFailure(ctx, e)
             ctx.active -= 1
-            scheduleNext(ctx, handler)
+            scheduleNext(queue, ctx, handler)
         }
       case None =>
         if (!ctx.completed && ctx.active == 0) {
@@ -77,13 +77,13 @@ class ConcurrentProcessor() {
   /**
     * Schedules the next item in the queue for processing
     * @param ctx     the given [[ConcurrentContext processing context]]
-    * @param handler the given [[TaskHandler task handler]]
+    * @param handler the given [[ConcurrentTaskHandler task handler]]
     */
-  protected def scheduleNext[IN, OUT, RESULT](ctx: ConcurrentContext[IN], handler: TaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
+  private def scheduleNext[IN, OUT, SUMMARY](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext): Unit = {
     if (ctx.paused)
-      setTimeout(() => scheduleNext(ctx, handler), 1.seconds)
+      setTimeout(() => scheduleNext(queue, ctx, handler), 1.seconds)
     else
-      setImmediate(() => handleTask(ctx, handler))
+      setImmediate(() => handleTask(queue, ctx, handler))
   }
 
 }
@@ -97,7 +97,7 @@ object ConcurrentProcessor {
   /**
     * Concurrent Context - maintains the state for the queue
     */
-  class ConcurrentContext[IN](val queue: js.Array[IN]) {
+  class ConcurrentContext() {
     private[concurrent] var active: Int = 0
     private[concurrent] var completed: Boolean = false
     private[concurrent] var paused: Boolean = false
@@ -120,17 +120,18 @@ object ConcurrentProcessor {
   }
 
   /**
-    * Represents a task handler
+    * Represents a concurrent task handler
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  trait TaskHandler[IN, OUT, RESULT] {
+  trait ConcurrentTaskHandler[IN, OUT, SUMMARY] {
 
-    def onNext(ctx: ConcurrentContext[IN], item: IN): Future[OUT]
+    def onNext(ctx: ConcurrentContext, item: IN): Future[OUT]
 
-    def onSuccess(ctx: ConcurrentContext[IN], result: OUT): Any
+    def onSuccess(ctx: ConcurrentContext, outcome: OUT): Any
 
-    def onFailure(ctx: ConcurrentContext[IN], cause: Throwable): Any
+    def onFailure(ctx: ConcurrentContext, cause: Throwable): Any
 
-    def onComplete(ctx: ConcurrentContext[IN]): RESULT
+    def onComplete(ctx: ConcurrentContext): SUMMARY
 
   }
 

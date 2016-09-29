@@ -4,7 +4,8 @@ import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
+import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
+import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
@@ -63,10 +64,10 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   def execute(startTime: Double) = {
     val outcome = for {
       securities <- getSecurities(tradingClock.getTradeStopTime)
-      results <- processor.start(securities, concurrency = 20, handler = new BulkTaskUpdateHandler[InputBatch](securities.size) {
+      results <- processor.start(securities, concurrency = 20, handler = new BulkConcurrentTaskUpdateHandler[InputBatch](securities.size) {
         logger.info(s"Scheduling ${securities.size} batches of securities for updates and snapshots...")
 
-        override def processBatch(securities: InputBatch) = {
+        override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
           val symbols = securities.map(_.symbol)
           for {
             quotes <- getYahooCSVQuotes(symbols)

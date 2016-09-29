@@ -4,7 +4,8 @@ import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.daemon.{BulkTaskUpdateHandler, Daemon}
+import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
+import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import com.shocktrade.services._
@@ -40,10 +41,10 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     val startTime = js.Date.now()
     val outcome = for {
       securities <- lookupSecurities(tradingClock.getTradeStopTime)
-      stats <- processor.start(securities, concurrency = 15, handler = new BulkTaskUpdateHandler[SecurityRef](securities.size) {
+      stats <- processor.start(securities, concurrency = 15, handler = new BulkConcurrentTaskUpdateHandler[SecurityRef](securities.size) {
         logger.info(s"Scheduling ${securities.size} securities for Key Statistics processing...")
 
-        override def processBatch(security: SecurityRef) = {
+        override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
           for {
             stats_? <- yfKeyStatsSvc(security.symbol)
             result <- stats_? match {
