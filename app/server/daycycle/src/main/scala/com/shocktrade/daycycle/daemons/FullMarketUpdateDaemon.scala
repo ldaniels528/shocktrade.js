@@ -42,7 +42,7 @@ class FullMarketUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
         for {
           quotes <- eodDataService(inputData.exchange, inputData.letterCode)
           results <- securitiesDAO.flatMap(_.updateEodQuotes(quotes))
-        } yield (quotes.size, results)
+        } yield (quotes.size, results.toBulkWrite)
       }
     })
 

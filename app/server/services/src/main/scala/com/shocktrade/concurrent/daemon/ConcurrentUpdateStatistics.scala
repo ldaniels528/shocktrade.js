@@ -1,18 +1,17 @@
 package com.shocktrade.concurrent.daemon
 
-import com.shocktrade.concurrent.daemon.DaemonUpdateStats._
+import com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics._
 import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.duration2Int
-import org.scalajs.nodejs.mongodb.BulkWriteOpResultObject
 
 import scala.concurrent.duration._
 import scala.scalajs.js
 
 /**
-  * Represents the current processing statistics
+  * Represents the concurrent processing statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class DaemonUpdateStats(val expectedBatches: Int) {
+class ConcurrentUpdateStatistics(val expectedBatches: Int) {
   private val logger = LoggerFactory.getLogger(getClass)
   private var nBatches = 0
   private var successes = 0
@@ -70,8 +69,10 @@ class DaemonUpdateStats(val expectedBatches: Int) {
   * Daemon Update Statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object DaemonUpdateStats {
+object ConcurrentUpdateStatistics {
 
-  type DaemonUpdateOutcome = (Int, BulkWriteOpResultObject)
+  case class BulkUpdateOutcome(nInserted: Int = 0, nMatched: Int = 0, nModified: Int = 0, nUpserted: Int = 0)
+
+  type DaemonUpdateOutcome = (Int, BulkUpdateOutcome)
 
 }

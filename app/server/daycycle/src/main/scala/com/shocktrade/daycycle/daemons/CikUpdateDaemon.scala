@@ -44,7 +44,7 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, requi
               case Some(response) => securitiesDAO.flatMap(_.updateCik(security.symbol, response.CIK))
               case None => Future.failed(die(s"No CIK response for symbol ${security.symbol}"))
             }
-          } yield (1, result)
+          } yield (1, result.toBulkWrite)
         }
       })
     } yield status

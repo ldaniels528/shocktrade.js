@@ -75,7 +75,7 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
               New[BulkWriteOpResultObject]
             }
             securitiesResults <- updateSecurities(quotes)
-          } yield (quotes.length, securitiesResults)
+          } yield (quotes.length, securitiesResults.toBulkWrite)
         }
       })
     } yield results

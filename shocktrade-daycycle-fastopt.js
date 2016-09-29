@@ -3121,8 +3121,8 @@ $c_Lcom_shocktrade_concurrent_ConcurrentProcessor.prototype.com$shocktrade$concu
         var x0$1 = $as_s_util_Try(x0$1$2);
         if ($is_s_util_Success(x0$1)) {
           var x2$1 = $as_s_util_Success(x0$1);
-          var result = x2$1.value$2;
-          handler$3.onSuccess__Lcom_shocktrade_concurrent_ConcurrentContext__O__V(ctx$3, result);
+          var outcome = x2$1.value$2;
+          handler$3.onSuccess__Lcom_shocktrade_concurrent_ConcurrentContext__O__V(ctx$3, outcome);
           ctx$3.active$1 = (((-1) + ctx$3.active$1) | 0);
           arg$outer.com$shocktrade$concurrent$ConcurrentProcessor$$scheduleNext__sjs_js_Array__Lcom_shocktrade_concurrent_ConcurrentContext__Lcom_shocktrade_concurrent_ConcurrentTaskHandler__s_concurrent_ExecutionContext__V(queue$3, ctx$3, handler$3, ec$3)
         } else if ($is_s_util_Failure(x0$1)) {
@@ -3156,40 +3156,7 @@ var $d_Lcom_shocktrade_concurrent_ConcurrentProcessor = new $TypeData().initClas
 });
 $c_Lcom_shocktrade_concurrent_ConcurrentProcessor.prototype.$classData = $d_Lcom_shocktrade_concurrent_ConcurrentProcessor;
 /** @constructor */
-function $c_Lcom_shocktrade_concurrent_daemon_Daemon$() {
-  $c_O.call(this);
-  this.com$shocktrade$concurrent$daemon$Daemon$$logger$f = null
-}
-$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype = new $h_O();
-$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.constructor = $c_Lcom_shocktrade_concurrent_daemon_Daemon$;
-/** @constructor */
-function $h_Lcom_shocktrade_concurrent_daemon_Daemon$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype = $c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype;
-$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.init___ = (function() {
-  $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = this;
-  var this$1 = $m_Lcom_shocktrade_services_LoggerFactory$();
-  var $class = $objectGetClass(this);
-  this.com$shocktrade$concurrent$daemon$Daemon$$logger$f = this$1.getLogger__T__Lcom_shocktrade_services_LoggerFactory$Logger($class.getSimpleName__T());
-  return this
-});
-var $d_Lcom_shocktrade_concurrent_daemon_Daemon$ = new $TypeData().initClass({
-  Lcom_shocktrade_concurrent_daemon_Daemon$: 0
-}, false, "com.shocktrade.concurrent.daemon.Daemon$", {
-  Lcom_shocktrade_concurrent_daemon_Daemon$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.$classData = $d_Lcom_shocktrade_concurrent_daemon_Daemon$;
-var $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = (void 0);
-function $m_Lcom_shocktrade_concurrent_daemon_Daemon$() {
-  if ((!$n_Lcom_shocktrade_concurrent_daemon_Daemon$)) {
-    $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = new $c_Lcom_shocktrade_concurrent_daemon_Daemon$().init___()
-  };
-  return $n_Lcom_shocktrade_concurrent_daemon_Daemon$
-}
-/** @constructor */
-function $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats() {
+function $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics() {
   $c_O.call(this);
   this.expectedBatches$1 = 0;
   this.logger$1 = null;
@@ -3202,17 +3169,17 @@ function $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats() {
   this.nModified$1 = 0;
   this.nUpserted$1 = 0
 }
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype = new $h_O();
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.constructor = $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats;
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype = new $h_O();
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.constructor = $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics;
 /** @constructor */
-function $h_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats() {
+function $h_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype = $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype;
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.failed__jl_Throwable__V = (function(cause) {
+$h_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype = $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype;
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.failed__jl_Throwable__V = (function(cause) {
   this.failures$1 = ((1 + this.failures$1) | 0)
 });
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.toString__T = (function() {
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.toString__T = (function() {
   var this$2 = new $c_sci_StringOps().init___T("Processed %d pages (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d]");
   var array = [this.nBatches$1, this.completion__D(), this.successes$1, this.failures$1, this.nInserted$1, this.nMatched$1, this.nModified$1, this.nUpserted$1];
   var jsx$2 = $m_sjsr_RuntimeString$();
@@ -3249,7 +3216,7 @@ $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.toString__T = (
   };
   return jsx$2.format__T__AO__T($$this, result)
 });
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.init___I = (function(expectedBatches) {
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.init___I = (function(expectedBatches) {
   this.expectedBatches$1 = expectedBatches;
   var this$1 = $m_Lcom_shocktrade_services_LoggerFactory$();
   var $class = $objectGetClass(this);
@@ -3264,20 +3231,20 @@ $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.init___I = (fun
   this.nUpserted$1 = 0;
   return this
 });
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.update__T2__V = (function(outcome) {
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.update__T2__V = (function(outcome) {
   if ((outcome === null)) {
     throw new $c_s_MatchError().init___O(outcome)
   };
   var requested = outcome.$$und1$mcI$sp__I();
-  var result = outcome.$$und2__O();
-  var nWritten = (((($uI(result.nInserted) + $uI(result.nUpserted)) | 0) + $uI(result.nModified)) | 0);
-  this.nInserted$1 = ((this.nInserted$1 + $uI(result.nInserted)) | 0);
-  this.nMatched$1 = ((this.nMatched$1 + $uI(result.nMatched)) | 0);
-  this.nModified$1 = ((this.nModified$1 + $uI(result.nModified)) | 0);
-  this.nUpserted$1 = ((this.nUpserted$1 + $uI(result.nUpserted)) | 0);
+  var result = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(outcome.$$und2__O());
+  var nWritten = ((((result.nInserted$1 + result.nUpserted$1) | 0) + result.nModified$1) | 0);
+  this.nInserted$1 = ((this.nInserted$1 + result.nInserted$1) | 0);
+  this.nMatched$1 = ((this.nMatched$1 + result.nMatched$1) | 0);
+  this.nModified$1 = ((this.nModified$1 + result.nModified$1) | 0);
+  this.nUpserted$1 = ((this.nUpserted$1 + result.nUpserted$1) | 0);
   this.nBatches$1 = ((1 + this.nBatches$1) | 0);
   this.successes$1 = ((this.successes$1 + nWritten) | 0);
-  this.failures$1 = ((this.failures$1 + ((requested - (((($uI(result.nInserted) + $uI(result.nUpserted)) | 0) + $uI(result.nMatched)) | 0)) | 0)) | 0);
+  this.failures$1 = ((this.failures$1 + ((requested - ((((result.nInserted$1 + result.nUpserted$1) | 0) + result.nMatched$1) | 0)) | 0)) | 0);
   var jsx$3 = $uD($g.Date.now());
   var jsx$2 = this.lastUpdated$1;
   var jsx$1 = $m_Lorg_scalajs_nodejs_package$();
@@ -3336,28 +3303,61 @@ $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.update__T2__V =
     this.nUpserted$1 = 0
   }
 });
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.completion__D = (function() {
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.completion__D = (function() {
   return ((100.0 * this.nBatches$1) / this.expectedBatches$1)
 });
-function $is_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats)))
+function $is_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics)))
 }
-function $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj) {
-  return (($is_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.concurrent.daemon.DaemonUpdateStats"))
+function $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj) {
+  return (($is_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics"))
 }
-function $isArrayOf_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats)))
+function $isArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics)))
 }
-function $asArrayOf_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj, depth) {
-  return (($isArrayOf_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.concurrent.daemon.DaemonUpdateStats;", depth))
+function $asArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics;", depth))
 }
-var $d_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats = new $TypeData().initClass({
-  Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats: 0
-}, false, "com.shocktrade.concurrent.daemon.DaemonUpdateStats", {
-  Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats: 1,
+var $d_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics = new $TypeData().initClass({
+  Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics: 0
+}, false, "com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics", {
+  Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics: 1,
   O: 1
 });
-$c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats.prototype.$classData = $d_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats;
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics.prototype.$classData = $d_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics;
+/** @constructor */
+function $c_Lcom_shocktrade_concurrent_daemon_Daemon$() {
+  $c_O.call(this);
+  this.com$shocktrade$concurrent$daemon$Daemon$$logger$f = null
+}
+$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype = new $h_O();
+$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.constructor = $c_Lcom_shocktrade_concurrent_daemon_Daemon$;
+/** @constructor */
+function $h_Lcom_shocktrade_concurrent_daemon_Daemon$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype = $c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype;
+$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.init___ = (function() {
+  $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = this;
+  var this$1 = $m_Lcom_shocktrade_services_LoggerFactory$();
+  var $class = $objectGetClass(this);
+  this.com$shocktrade$concurrent$daemon$Daemon$$logger$f = this$1.getLogger__T__Lcom_shocktrade_services_LoggerFactory$Logger($class.getSimpleName__T());
+  return this
+});
+var $d_Lcom_shocktrade_concurrent_daemon_Daemon$ = new $TypeData().initClass({
+  Lcom_shocktrade_concurrent_daemon_Daemon$: 0
+}, false, "com.shocktrade.concurrent.daemon.Daemon$", {
+  Lcom_shocktrade_concurrent_daemon_Daemon$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_concurrent_daemon_Daemon$.prototype.$classData = $d_Lcom_shocktrade_concurrent_daemon_Daemon$;
+var $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = (void 0);
+function $m_Lcom_shocktrade_concurrent_daemon_Daemon$() {
+  if ((!$n_Lcom_shocktrade_concurrent_daemon_Daemon$)) {
+    $n_Lcom_shocktrade_concurrent_daemon_Daemon$ = new $c_Lcom_shocktrade_concurrent_daemon_Daemon$().init___()
+  };
+  return $n_Lcom_shocktrade_concurrent_daemon_Daemon$
+}
 /** @constructor */
 function $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$() {
   $c_O.call(this)
@@ -11613,7 +11613,7 @@ $c_Lcom_shocktrade_concurrent_daemon_BulkConcurrentTaskUpdateHandler.prototype.o
   this.status$1.failed__jl_Throwable__V(cause)
 });
 $c_Lcom_shocktrade_concurrent_daemon_BulkConcurrentTaskUpdateHandler.prototype.init___I = (function(expectedBatches) {
-  this.status$1 = new $c_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats().init___I(expectedBatches);
+  this.status$1 = new $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics().init___I(expectedBatches);
   return this
 });
 $c_Lcom_shocktrade_concurrent_daemon_BulkConcurrentTaskUpdateHandler.prototype.onSuccess__Lcom_shocktrade_concurrent_ConcurrentContext__O__V = (function(ctx, outcome) {
@@ -11984,7 +11984,7 @@ $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon.prototype.run__V = (function
       var x0$1 = $as_s_util_Try(x0$1$2);
       if ($is_s_util_Success(x0$1)) {
         var x2 = $as_s_util_Success(x0$1);
-        var status = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(x2.value$2);
+        var status = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(x2.value$2);
         var this$46 = arg$outer.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$logger$1;
         var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " in %d seconds"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([status]));
         var array$2 = [(($uD($g.Date.now()) - startTime$1) / 1000)];
@@ -12566,7 +12566,7 @@ $c_Lcom_shocktrade_daycycle_daemons_FullMarketUpdateDaemon.prototype.run__V = (f
       var x0$1 = $as_s_util_Try(x0$1$2);
       if ($is_s_util_Success(x0$1)) {
         var x2 = $as_s_util_Success(x0$1);
-        var stats = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(x2.value$2);
+        var stats = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(x2.value$2);
         var this$1 = arg$outer.com$shocktrade$daycycle$daemons$FullMarketUpdateDaemon$$logger$1;
         var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " in %d seconds"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([stats]));
         var array = [(($uD($g.Date.now()) - startTime$1) / 1000)];
@@ -12773,7 +12773,7 @@ $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon.prototype.run__V =
       var x0$1 = $as_s_util_Try(x0$1$2);
       if ($is_s_util_Success(x0$1)) {
         var x2 = $as_s_util_Success(x0$1);
-        var stats = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(x2.value$2);
+        var stats = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(x2.value$2);
         var this$28 = arg$outer.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$logger$1;
         var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " in %d seconds"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([stats]));
         var array = [(($uD($g.Date.now()) - startTime$1) / 1000)];
@@ -13107,7 +13107,7 @@ $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon.prototype.execute__D_
       var x0$1 = $as_s_util_Try(x0$1$2);
       if ($is_s_util_Success(x0$1)) {
         var x2 = $as_s_util_Success(x0$1);
-        var status = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(x2.value$2);
+        var status = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(x2.value$2);
         var this$3 = arg$outer.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$logger$1;
         var format = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " in %d seconds"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([status]));
         var array = [(($uD($g.Date.now()) - startTime$2) / 1000)];
@@ -15360,12 +15360,6 @@ $h_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype
 $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype.onNext__Lcom_shocktrade_concurrent_ConcurrentContext__O__s_concurrent_Future = (function(ctx, item) {
   return this.onNext__Lcom_shocktrade_concurrent_ConcurrentContext__Lcom_shocktrade_common_dao_securities_SecurityRef__s_concurrent_Future(ctx, item)
 });
-$c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype.onNext__Lcom_shocktrade_concurrent_ConcurrentContext__Lcom_shocktrade_common_dao_securities_SecurityRef__s_concurrent_Future = (function(ctx, security) {
-  var this$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$cikLookupService$1.apply__T__s_concurrent_ExecutionContext__s_concurrent_Future($as_T(security.symbol), this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f);
-  var f = new $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1().init___Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1__Lcom_shocktrade_common_dao_securities_SecurityRef(this, security);
-  var executor = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
-});
 $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype.init___Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3__sjs_js_Array = (function($$outer, securities$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
@@ -15419,6 +15413,12 @@ $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype
   var jsx$2 = [s].concat(array);
   jsx$6.apply(jsx$1, jsx$2);
   return this
+});
+$c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1.prototype.onNext__Lcom_shocktrade_concurrent_ConcurrentContext__Lcom_shocktrade_common_dao_securities_SecurityRef__s_concurrent_Future = (function(ctx, security) {
+  var this$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$cikLookupService$1.apply__T__s_concurrent_ExecutionContext__s_concurrent_Future($as_T(security.symbol), this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f);
+  var f = new $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1().init___Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1__Lcom_shocktrade_common_dao_securities_SecurityRef(this, security);
+  var executor = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f;
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
 });
 var $d_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1: 0
@@ -22339,6 +22339,104 @@ var $d_Lcom_shocktrade_common_dao_securities_SecuritiesUpdateDAO$SecuritiesUpdat
 });
 $c_Lcom_shocktrade_common_dao_securities_SecuritiesUpdateDAO$SecuritiesUpdateDAOEnrichment$$anonfun$updateQuotes$extension$1.prototype.$classData = $d_Lcom_shocktrade_common_dao_securities_SecuritiesUpdateDAO$SecuritiesUpdateDAOEnrichment$$anonfun$updateQuotes$extension$1;
 /** @constructor */
+function $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome() {
+  $c_O.call(this);
+  this.nInserted$1 = 0;
+  this.nMatched$1 = 0;
+  this.nModified$1 = 0;
+  this.nUpserted$1 = 0
+}
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype = new $h_O();
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.constructor = $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome;
+/** @constructor */
+function $h_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype = $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype;
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.productPrefix__T = (function() {
+  return "BulkUpdateOutcome"
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.productArity__I = (function() {
+  return 4
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(x$1)) {
+    var BulkUpdateOutcome$1 = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(x$1);
+    return ((((this.nInserted$1 === BulkUpdateOutcome$1.nInserted$1) && (this.nMatched$1 === BulkUpdateOutcome$1.nMatched$1)) && (this.nModified$1 === BulkUpdateOutcome$1.nModified$1)) && (this.nUpserted$1 === BulkUpdateOutcome$1.nUpserted$1))
+  } else {
+    return false
+  }
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.nInserted$1;
+      break
+    }
+    case 1: {
+      return this.nMatched$1;
+      break
+    }
+    case 2: {
+      return this.nModified$1;
+      break
+    }
+    case 3: {
+      return this.nUpserted$1;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.init___I__I__I__I = (function(nInserted, nMatched, nModified, nUpserted) {
+  this.nInserted$1 = nInserted;
+  this.nMatched$1 = nMatched;
+  this.nModified$1 = nModified;
+  this.nUpserted$1 = nUpserted;
+  return this
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.hashCode__I = (function() {
+  var acc = (-889275714);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, this.nInserted$1);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, this.nMatched$1);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, this.nModified$1);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, this.nUpserted$1);
+  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 4)
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome)))
+}
+function $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj) {
+  return (($is_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics$BulkUpdateOutcome"))
+}
+function $isArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome)))
+}
+function $asArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics$BulkUpdateOutcome;", depth))
+}
+var $d_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome = new $TypeData().initClass({
+  Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome: 0
+}, false, "com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics$BulkUpdateOutcome", {
+  Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome.prototype.$classData = $d_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome;
+/** @constructor */
 function $c_Lcom_shocktrade_concurrent_daemon_Daemon$$anonfun$schedule$1() {
   $c_sr_AbstractFunction1.call(this)
 }
@@ -22634,7 +22732,7 @@ $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3.prototype.apply__
   var x$6 = new $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1().init___Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3__sjs_js_Array(this, securities);
   var this$1 = this.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$processor$1.start__sjs_js_Array__Lcom_shocktrade_concurrent_ConcurrentTaskHandler__I__s_concurrent_ExecutionContext__s_concurrent_Future(securities, x$6, 15, this.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(status$2) {
-    var status = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(status$2);
+    var status = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(status$2);
     return status
   }));
   var executor = this.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f;
@@ -22706,7 +22804,7 @@ $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$
       })
     })(this, response));
     var executor = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f;
-    var this$25 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f, executor)
+    var this$27 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f, executor)
   } else {
     var x = $m_s_None$();
     if ((!(x === response_$qmark))) {
@@ -22716,13 +22814,13 @@ $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$
     var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["No CIK response for symbol ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(this.security$1$f.symbol)]));
     var jsx$4;
     throw new $c_jl_IllegalStateException().init___T(message);
-    var this$25 = jsx$5.failed__jl_Throwable__s_concurrent_Future(jsx$4)
+    var this$27 = jsx$5.failed__jl_Throwable__s_concurrent_Future(jsx$4)
   };
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(result$2) {
-    return new $c_T2().init___O__O(1, result$2)
+    return new $c_T2().init___O__O(1, new $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome().init___I__I__I__I($uI(result$2.nInserted), $uI(result$2.nMatched), $uI(result$2.nModified), $uI(result$2.nUpserted)))
   }));
   var executor$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$CikUpdateDaemon$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$25, f$1, executor$1)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$27, f$1, executor$1)
 });
 var $d_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1: 0
@@ -22911,14 +23009,14 @@ $c_Lcom_shocktrade_daycycle_daemons_FullMarketUpdateDaemon$$anon$1$$anonfun$onNe
     })
   })(quotes));
   var executor = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$FullMarketUpdateDaemon$$ec$f;
-  var this$6 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f, executor);
+  var this$8 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f, executor);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(quotes$1$1) {
     return (function(results$2) {
-      return new $c_T2().init___O__O(quotes$1$1.size__I(), results$2)
+      return new $c_T2().init___O__O(quotes$1$1.size__I(), new $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome().init___I__I__I__I($uI(results$2.nInserted), $uI(results$2.nMatched), $uI(results$2.nModified), $uI(results$2.nUpserted)))
     })
   })(quotes));
   var executor$1 = this.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$FullMarketUpdateDaemon$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$6, f$1, executor$1)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$8, f$1, executor$1)
 });
 $c_Lcom_shocktrade_daycycle_daemons_FullMarketUpdateDaemon$$anon$1$$anonfun$onNext$1.prototype.init___Lcom_shocktrade_daycycle_daemons_FullMarketUpdateDaemon$$anon$1 = (function($$outer) {
   if (($$outer === null)) {
@@ -23051,7 +23149,7 @@ $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3.prototy
   var x$55 = new $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3$$anon$1().init___Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3__sjs_js_Array(this, securities);
   var this$1 = this.$$outer$2.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$processor$1.start__sjs_js_Array__Lcom_shocktrade_concurrent_ConcurrentTaskHandler__I__s_concurrent_ExecutionContext__s_concurrent_Future(securities, x$55, 15, this.$$outer$2.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$ec$f);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(stats$2) {
-    var stats = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(stats$2);
+    var stats = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(stats$2);
     return stats
   }));
   var executor = this.$$outer$2.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$ec$f;
@@ -23237,7 +23335,7 @@ $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3$$anon$1
       })
     })(this, stats));
     var executor = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$ec$f;
-    var this$171 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$169, f, executor)
+    var this$173 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$169, f, executor)
   } else {
     var x = $m_s_None$();
     if ((!(x === stats_$qmark))) {
@@ -23247,13 +23345,13 @@ $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3$$anon$1
     var message = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["No key statistics response for symbol ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(this.security$1$f.symbol)]));
     var jsx$55;
     throw new $c_jl_IllegalStateException().init___T(message);
-    var this$171 = jsx$56.failed__jl_Throwable__s_concurrent_Future(jsx$55)
+    var this$173 = jsx$56.failed__jl_Throwable__s_concurrent_Future(jsx$55)
   };
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(result$2) {
-    return new $c_T2().init___O__O(1, result$2)
+    return new $c_T2().init___O__O(1, new $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome().init___I__I__I__I($uI(result$2.nInserted), $uI(result$2.nMatched), $uI(result$2.nModified), $uI(result$2.nUpserted)))
   }));
   var executor$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$KeyStatisticsUpdateDaemon$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$171, f$1, executor$1)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$173, f$1, executor$1)
 });
 $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1.prototype.init___Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon$$anonfun$3$$anon$1__Lcom_shocktrade_common_dao_securities_SecurityRef = (function($$outer, security$1) {
   if (($$outer === null)) {
@@ -23294,7 +23392,7 @@ $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3.prototype.
   var x$13 = new $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3$$anon$1().init___Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3__sjs_js_Array(this, securities);
   var this$1 = this.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$processor$1.start__sjs_js_Array__Lcom_shocktrade_concurrent_ConcurrentTaskHandler__I__s_concurrent_ExecutionContext__s_concurrent_Future(securities, x$13, 20, this.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$ec$f);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(results$2) {
-    var results = $as_Lcom_shocktrade_concurrent_daemon_DaemonUpdateStats(results$2);
+    var results = $as_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics(results$2);
     return results
   }));
   var executor = this.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$ec$f;
@@ -23388,14 +23486,14 @@ $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3$$anon$1$$a
   return this.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future(v1)
 });
 $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1$$anonfun$apply$2.prototype.apply__Lorg_scalajs_nodejs_mongodb_BulkWriteOpResultObject__s_concurrent_Future = (function(snapshotResults) {
-  var this$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$updateSecurities__sc_Seq__s_concurrent_Future(this.quotes$3$f);
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$updateSecurities__sc_Seq__s_concurrent_Future(this.quotes$3$f);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(securitiesResults$2) {
-      return new $c_T2().init___O__O(arg$outer.quotes$3$f.length__I(), securitiesResults$2)
+      return new $c_T2().init___O__O(arg$outer.quotes$3$f.length__I(), new $c_Lcom_shocktrade_concurrent_daemon_ConcurrentUpdateStatistics$BulkUpdateOutcome().init___I__I__I__I($uI(securitiesResults$2.nInserted), $uI(securitiesResults$2.nMatched), $uI(securitiesResults$2.nModified), $uI(securitiesResults$2.nUpserted)))
     })
   })(this));
   var executor = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$daycycle$daemons$SecuritiesUpdateDaemon$$ec$f;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f, executor)
 });
 var $d_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1$$anonfun$apply$2 = new $TypeData().initClass({
   Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon$$anonfun$3$$anon$1$$anonfun$onNext$1$$anonfun$apply$2: 0

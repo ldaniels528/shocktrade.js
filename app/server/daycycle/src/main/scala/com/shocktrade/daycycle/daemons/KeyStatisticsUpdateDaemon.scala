@@ -51,7 +51,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
               case Some(stats) => keyStatisticsDAO.flatMap(_.saveKeyStatistics(stats.toData(security)))
               case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
             }
-          } yield (1, result)
+          } yield (1, result.toBulkWrite)
         }
       })
     } yield stats

@@ -1,14 +1,16 @@
 package com.shocktrade.concurrent.daemon
 
-import com.shocktrade.concurrent.daemon.DaemonUpdateStats.DaemonUpdateOutcome
+import com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics.DaemonUpdateOutcome
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentTaskHandler}
 
+import scala.language.implicitConversions
+
 /**
-  * Bulk Task Update Handler
+  * Bulk Concurrent Task Update Handler
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-abstract class BulkConcurrentTaskUpdateHandler[IN](expectedBatches: Int) extends ConcurrentTaskHandler[IN, DaemonUpdateOutcome, DaemonUpdateStats] {
-  private val status = new DaemonUpdateStats(expectedBatches)
+abstract class BulkConcurrentTaskUpdateHandler[IN](expectedBatches: Int) extends ConcurrentTaskHandler[IN, DaemonUpdateOutcome, ConcurrentUpdateStatistics] {
+  private val status = new ConcurrentUpdateStatistics(expectedBatches)
 
   override def onSuccess(ctx: ConcurrentContext, outcome: DaemonUpdateOutcome) = status.update(outcome)
 

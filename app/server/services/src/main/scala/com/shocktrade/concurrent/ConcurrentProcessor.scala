@@ -56,8 +56,8 @@ class ConcurrentProcessor() {
       case Some(item) =>
         ctx.active += 1
         handler.onNext(ctx, item) onComplete {
-          case Success(result) =>
-            handler.onSuccess(ctx, result)
+          case Success(outcome) =>
+            handler.onSuccess(ctx, outcome)
             ctx.active -= 1
             scheduleNext(queue, ctx, handler)
           case Failure(e) =>
