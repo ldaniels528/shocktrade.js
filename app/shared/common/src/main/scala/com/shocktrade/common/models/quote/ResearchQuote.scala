@@ -18,6 +18,7 @@ class ResearchQuote(var symbol: js.UndefOr[String] = js.undefined,
                     var prevClose: js.UndefOr[Double] = js.undefined,
                     var high: js.UndefOr[Double] = js.undefined,
                     var low: js.UndefOr[Double] = js.undefined,
+                    var change: js.UndefOr[Double] = js.undefined,
                     var changePct: js.UndefOr[Double] = js.undefined,
                     var spread: js.UndefOr[Double] = js.undefined,
                     var volume: js.UndefOr[Double] = js.undefined,
@@ -33,7 +34,7 @@ object ResearchQuote {
 
   val Fields = List(
     "symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low",
-    "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"
+    "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"
   )
 
   /**

@@ -2,7 +2,7 @@ package com.shocktrade.daycycle
 
 import com.shocktrade.concurrent.daemon.Daemon._
 import com.shocktrade.daycycle.daemons._
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -43,17 +43,21 @@ object DayCycleJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // define the daemons
-    val daemons = Seq(
-      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
-      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
-      DaemonRef("FullMarketUpdate", new FullMarketUpdateDaemon(dbFuture), delay = 4.hours, frequency = 24.hours),
-      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 24.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 5.minutes)
-    )
+    // create the trading clock instance
+    val tradingClock = new TradingClock()
+
+    //new KeyStatisticsUpdateDaemon(dbFuture).run()
+    //new SecuritiesUpdateDaemon(dbFuture).execute(js.Date.now())
 
     // schedule the daemons to run
-    schedule(daemons)
+    schedule(
+      tradingClock,
+      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 12.hours),
+      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
+      DaemonRef("FullMarketUpdate", new FullMarketUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
+      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 5.minutes)
+    )
   }
 
 }

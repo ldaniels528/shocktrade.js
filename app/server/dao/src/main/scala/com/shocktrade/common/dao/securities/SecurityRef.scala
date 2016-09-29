@@ -10,12 +10,14 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class SecurityRef(val _id: js.UndefOr[ObjectID], val symbol: String) extends js.Object
+class SecurityRef(val _id: js.UndefOr[ObjectID],
+                  val symbol: String,
+                  val exchange: js.UndefOr[String]) extends js.Object
 
 /**
   * Securities Reference Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object SecurityRef {
-  val Fields = Seq("symbol")
+  val Fields = Seq("symbol", "exchange")
 }

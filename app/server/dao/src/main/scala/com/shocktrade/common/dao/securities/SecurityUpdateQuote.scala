@@ -17,6 +17,7 @@ class SecurityUpdateQuote(val symbol: js.UndefOr[String],
                           val tradeDate: js.UndefOr[String],
                           val tradeTime: js.UndefOr[String],
                           val volume: js.UndefOr[Double],
+                          val active: js.UndefOr[Boolean],
                           val errorMessage: js.UndefOr[String],
                           val yfCsvResponseTime: js.UndefOr[Double],
                           val yfCsvLastUpdated: js.UndefOr[js.Date]) extends js.Object

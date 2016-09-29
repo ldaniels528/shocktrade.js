@@ -3,7 +3,7 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.concurrent.daemon.Daemon
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
-import com.shocktrade.services.{LoggerFactory, NASDAQCompanyListService}
+import com.shocktrade.services.{LoggerFactory, NASDAQCompanyListService, TradingClock}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -24,9 +24,17 @@ class CompanyListUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContex
   private val companyListService = new NASDAQCompanyListService()
 
   /**
-    * Executes the process
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
     */
-  def run(): Unit = {
+  override def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+
+  /**
+    * Executes the process
+    * @param tradingClock the given [[TradingClock trading clock]]
+    */
+  override def run(tradingClock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       amex <- getCompanyList("AMEX")

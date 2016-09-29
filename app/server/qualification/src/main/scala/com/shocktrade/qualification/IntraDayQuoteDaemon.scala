@@ -6,7 +6,7 @@ import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.common.models.contest.OrderLike
 import com.shocktrade.concurrent.daemon.Daemon
 import com.shocktrade.qualification.IntraDayQuoteDaemon._
-import com.shocktrade.services.NASDAQIntraDayQuotesService
+import com.shocktrade.services.{NASDAQIntraDayQuotesService, TradingClock}
 import com.shocktrade.services.NASDAQIntraDayQuotesService._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.Db
@@ -24,19 +24,31 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
-  private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
-  private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
-  private val loaded = js.Dictionary[(TimeSlot, TimeSlot)]()
-
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
 
+  // get DAO and service references
+  private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
+  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
+
+  // internal fields
+  private val loaded = js.Dictionary[(TimeSlot, TimeSlot)]()
+  private var lastRun: js.Date = new js.Date()
+
+  /**
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
+    */
+  override def isReady(tradingClock: TradingClock) = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
+
   /**
     * Persists intra-day quotes for all active orders to disk
+    * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(): Unit = {
+  override def run(tradingClock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.findActiveOrders())
@@ -47,6 +59,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, r
     // lookup the active orders
     outcome onComplete {
       case Success(results) =>
+        lastRun = new js.Date(startTime)
         val runTime = (js.Date.now() - startTime) / 1000
         console.log(s"Process completed in $runTime sec")
       case Failure(e) =>

@@ -3,8 +3,8 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
-import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
@@ -12,7 +12,7 @@ import com.shocktrade.util.ExchangeHelper
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -36,45 +36,38 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
-  // create a trading clock
-  private val tradingClock = new TradingClock()
-  private var lastRun: js.Date = new js.Date()
-
   // internal variables
   private val processor = new ConcurrentProcessor()
+  private var lastRun: js.Date = new js.Date()
 
   /**
-    * Executes the process if trading is active
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
     */
-  def run(): Unit = {
-    // if trading is active, run the process ...
-    if (tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)) {
-      val startTime = js.Date.now()
-      execute(startTime) onComplete {
-        case Success(_) => lastRun = new js.Date(startTime)
-        case Failure(e) => lastRun = new js.Date(startTime)
-      }
-    }
-  }
+  override def isReady(tradingClock: TradingClock) = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
 
   /**
     * Executes the process
+    * @param tradingClock the given [[TradingClock trading clock]]
     */
-  def execute(startTime: Double) = {
+  override def run(tradingClock: TradingClock): Unit = {
+    val startTime = js.Date.now()
     val outcome = for {
       securities <- getSecurities(tradingClock.getTradeStopTime)
-      results <- processor.start(securities, concurrency = 20, handler = new BulkConcurrentTaskUpdateHandler[InputBatch](securities.size) {
+      results <- processor.start(securities, concurrency = 20, handler = new BulkUpdateHandler[InputBatch](securities.size) {
         logger.info(s"Scheduling ${securities.size} batches of securities for updates and snapshots...")
 
         override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
           val symbols = securities.map(_.symbol)
+          val mapping = js.Dictionary(securities.map(s => s.symbol -> s): _*)
           for {
             quotes <- getYahooCSVQuotes(symbols)
-            snapshotResults <- createSnapshots(quotes) recover { case e =>
+            snapshotResults <- createSnapshots(quotes, mapping) recover { case e =>
               logger.error("Snapshot write error: %s", e.getMessage)
               New[BulkWriteOpResultObject]
             }
-            securitiesResults <- updateSecurities(quotes)
+            securitiesResults <- updateSecurities(quotes, mapping)
           } yield (quotes.length, securitiesResults.toBulkWrite)
         }
       })
@@ -82,12 +75,12 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
     outcome onComplete {
       case Success(status) =>
+        lastRun = new js.Date(startTime)
         logger.info(s"$status in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
   }
 
   private def getSecurities(cutOffTime: js.Date) = {
@@ -104,16 +97,16 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
     }
   }
 
-  private def createSnapshots(quotes: Seq[YFCSVQuote]) = {
-    Try(quotes.map(_.toSnapshot)) match {
+  private def createSnapshots(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
+    Try(quotes.map(_.toSnapshot(mapping))) match {
       case Success(snapshots) => snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture)
       case Failure(e) =>
         Future.failed(die(s"Failed to convert at least one object to a snapshot: ${e.getMessage}"))
     }
   }
 
-  private def updateSecurities(quotes: Seq[YFCSVQuote]) = {
-    Try(quotes.map(_.toUpdateQuote)) match {
+  private def updateSecurities(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
+    Try(quotes.map(_.toUpdateQuote(mapping))) match {
       case Success(securities) => securitiesDAO.flatMap(_.updateQuotes(securities).toFuture)
       case Failure(e) =>
         Future.failed(die(s"Failed to convert at least one object to a security: ${e.getMessage}"))
@@ -137,9 +130,9 @@ object SecuritiesUpdateDaemon {
   implicit class YFCSVQuoteExtensions(val quote: YFCSVQuote) extends AnyVal {
 
     @inline
-    def toUpdateQuote = new SecurityUpdateQuote(
+    def toUpdateQuote(mapping: js.Dictionary[SecurityRef]) = new SecurityUpdateQuote(
       symbol = quote.symbol,
-      exchange = quote.normalizeExchange,
+      exchange = quote.normalizedExchange(mapping),
       subExchange = quote.exchange,
       lastTrade = quote.lastTrade,
       open = quote.open,
@@ -148,15 +141,16 @@ object SecuritiesUpdateDaemon {
       tradeDate = quote.tradeDate,
       tradeTime = quote.tradeTime,
       volume = quote.volume,
+      active = true,
       errorMessage = quote.errorMessage,
       yfCsvResponseTime = quote.responseTimeMsec,
       yfCsvLastUpdated = new js.Date()
     )
 
     @inline
-    def toSnapshot = new SnapshotQuote(
+    def toSnapshot(mapping: js.Dictionary[SecurityRef]) = new SnapshotQuote(
       symbol = quote.symbol,
-      exchange = quote.normalizeExchange,
+      exchange = quote.normalizedExchange(mapping),
       subExchange = quote.exchange,
       lastTrade = quote.lastTrade,
       tradeDateTime = quote.tradeDateTime,
@@ -166,11 +160,13 @@ object SecuritiesUpdateDaemon {
     )
 
     @inline
-    def normalizeExchange = {
-      (for {
-        subExchange <- quote.exchange.flat.toOption
-        exchange <- ExchangeHelper.lookupExchange(subExchange)
-      } yield exchange) getOrElse "UNKNOWN"
+    def normalizedExchange(mapping: js.Dictionary[SecurityRef]) = {
+      val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
+      originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
+        case Some(exchange) => exchange
+        case None if quote.symbol.endsWith(".OB") => "OTCBB"
+        case None => originalExchange_? getOrElse "UNKNOWN"
+      }
     }
 
   }

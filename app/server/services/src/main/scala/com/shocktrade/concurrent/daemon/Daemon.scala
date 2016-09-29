@@ -1,6 +1,6 @@
 package com.shocktrade.concurrent.daemon
 
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 
 import scala.concurrent.duration.FiniteDuration
@@ -11,7 +11,17 @@ import scala.concurrent.duration.FiniteDuration
   */
 trait Daemon {
 
-  def run(): Unit
+  /**
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
+    */
+  def isReady(tradingClock: TradingClock): Boolean
+
+  /**
+    * Executes the process
+    */
+  def run(tradingClock: TradingClock): Unit
 
 }
 
@@ -26,14 +36,23 @@ object Daemon {
     * Schedules the collection of daemons for execution
     * @param daemons the given collection of [[DaemonRef daemon references]]
     */
-  def schedule(daemons: Seq[DaemonRef]) = {
+  def schedule(tradingClock: TradingClock, daemons: DaemonRef*) = {
     daemons foreach { ref =>
       logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
       setTimeout(() => {
-        logger.info(s"Starting daemon '${ref.name}'...")
-        ref.daemon.run()
-        setInterval(() => ref.daemon.run(), ref.frequency)
+        // attempt to run the daemon
+        if (ref.daemon.isReady(tradingClock)) run(tradingClock, ref)
+
+        // set the regular interval runs
+        setInterval(() => if (ref.daemon.isReady(tradingClock)) run(tradingClock, ref), ref.frequency)
       }, ref.delay)
+    }
+  }
+
+  private def run(tradingClock: TradingClock, ref: DaemonRef) = {
+    if (ref.daemon.isReady(tradingClock)) {
+      logger.info(s"Starting daemon '${ref.name}'...")
+      ref.daemon.run(tradingClock)
     }
   }
 

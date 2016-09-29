@@ -3949,7 +3949,7 @@ $h_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype = $c_Lcom_shockt
 $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_ResearchQuote$ = this;
   $m_sci_List$();
-  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"]);
+  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"]);
   var this$2 = $m_sci_List$();
   var cbf = this$2.ReusableCBFInstance$2;
   this.Fields$1 = $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(xs, cbf));
@@ -10961,7 +10961,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
       };
       var x1 = new $c_T2().init___O__O(jsx$2, ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1)));
       matchEnd19: {
-        var this$103;
+        var this$104;
         var p2 = $as_s_Option(x1.$$und1$f);
         var p3 = $as_s_Option(x1.$$und2$f);
         if ($is_s_Some(p2)) {
@@ -10997,7 +10997,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$1 = new $c_T2().init___O__O(jsx$3, ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3)));
-            matchEnd15: {
+            matchEnd19$1: {
               var jsx$4;
               var p2$1 = $as_s_Option(x1$1.$$und1$f);
               var p3$1 = $as_s_Option(x1$1.$$und2$f);
@@ -11010,7 +11010,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min), new $c_T2().init___O__O("$lte", max)]);
                   var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$2);
                   var jsx$4 = new $c_T2().init___O__O("beta", y$1);
-                  break matchEnd15
+                  break matchEnd19$1
                 }
               };
               var p6 = $as_s_Option(x1$1.$$und1$f);
@@ -11023,7 +11023,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$3 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2)]);
                   var y$2 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$3);
                   var jsx$4 = new $c_T2().init___O__O("beta", y$2);
-                  break matchEnd15
+                  break matchEnd19$1
                 }
               };
               var p9 = $as_s_Option(x1$1.$$und1$f);
@@ -11036,13 +11036,22 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$4 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2)]);
                   var y$3 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$4);
                   var jsx$4 = new $c_T2().init___O__O("beta", y$3);
-                  break matchEnd15
+                  break matchEnd19$1
+                }
+              };
+              var p12 = $as_s_Option(x1$1.$$und1$f);
+              var p13 = $as_s_Option(x1$1.$$und2$f);
+              var x$5 = $m_s_None$();
+              if ((x$5 === p12)) {
+                var x$7 = $m_s_None$();
+                if ((x$7 === p13)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$1)
             };
             var kvps$5 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4]);
-            var this$103 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$5));
+            var this$104 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$5));
             break matchEnd19
           }
         };
@@ -11056,7 +11065,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$6 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$1)]);
             var y$4 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$6);
             var kvps$7 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("beta", y$4)]);
-            var this$103 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$7));
+            var this$104 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$7));
             break matchEnd19
           }
         };
@@ -11070,27 +11079,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$8 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$1)]);
             var y$5 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$8);
             var kvps$9 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("beta", y$5)]);
-            var this$103 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$9));
+            var this$104 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$9));
             break matchEnd19
           }
         };
-        var p12 = $as_s_Option(x1.$$und1$f);
-        var p13 = $as_s_Option(x1.$$und2$f);
-        var x$5 = $m_s_None$();
-        if ((x$5 === p12)) {
-          var x$7 = $m_s_None$();
-          if ((x$7 === p13)) {
-            var this$103 = $m_s_None$();
+        var p12$1 = $as_s_Option(x1.$$und1$f);
+        var p13$1 = $as_s_Option(x1.$$und2$f);
+        var x$5$1 = $m_s_None$();
+        if ((x$5$1 === p12$1)) {
+          var x$7$1 = $m_s_None$();
+          if ((x$7$1 === p13$1)) {
+            var this$104 = $m_s_None$();
             break matchEnd19
           }
         };
         throw new $c_s_MatchError().init___O(x1)
       };
-      if ((!this$103.isEmpty__Z())) {
-        var arg1$4 = this$103.get__O();
-        var this$106 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$4);
-        while (this$106.hasNext__Z()) {
-          var arg1$5 = this$106.next__T2();
+      if ((!this$104.isEmpty__Z())) {
+        var arg1$4 = this$104.get__O();
+        var this$107 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$4);
+        while (this$107.hasNext__Z()) {
+          var arg1$5 = this$107.next__T2();
           selector[$as_T(arg1$5.$$und1__O())] = arg1$5.$$und2__O()
         }
       };
@@ -11120,8 +11129,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         }
       };
       var x1$2 = new $c_T2().init___O__O(jsx$5, ((value$5 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$5)));
-      matchEnd19$1: {
-        var this$193;
+      matchEnd19$2: {
+        var this$195;
         var p2$2 = $as_s_Option(x1$2.$$und1$f);
         var p3$2 = $as_s_Option(x1$2.$$und2$f);
         if ($is_s_Some(p2$2)) {
@@ -11157,7 +11166,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$3 = new $c_T2().init___O__O(jsx$6, ((value$7 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$7)));
-            matchEnd15$1: {
+            matchEnd19$3: {
               var jsx$7;
               var p2$3 = $as_s_Option(x1$3.$$und1$f);
               var p3$3 = $as_s_Option(x1$3.$$und2$f);
@@ -11170,7 +11179,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$10 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$3), new $c_T2().init___O__O("$lte", max$3)]);
                   var y$6 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$10);
                   var jsx$7 = new $c_T2().init___O__O("changePct", y$6);
-                  break matchEnd15$1
+                  break matchEnd19$3
                 }
               };
               var p6$2 = $as_s_Option(x1$3.$$und1$f);
@@ -11183,7 +11192,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$11 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2$1)]);
                   var y$7 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$11);
                   var jsx$7 = new $c_T2().init___O__O("changePct", y$7);
-                  break matchEnd15$1
+                  break matchEnd19$3
                 }
               };
               var p9$2 = $as_s_Option(x1$3.$$und1$f);
@@ -11196,14 +11205,23 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$12 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$1)]);
                   var y$8 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$12);
                   var jsx$7 = new $c_T2().init___O__O("changePct", y$8);
-                  break matchEnd15$1
+                  break matchEnd19$3
+                }
+              };
+              var p12$2 = $as_s_Option(x1$3.$$und1$f);
+              var p13$2 = $as_s_Option(x1$3.$$und2$f);
+              var x$5$2 = $m_s_None$();
+              if ((x$5$2 === p12$2)) {
+                var x$7$2 = $m_s_None$();
+                if ((x$7$2 === p13$2)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$3)
             };
             var kvps$13 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$7]);
-            var this$193 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$13));
-            break matchEnd19$1
+            var this$195 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$13));
+            break matchEnd19$2
           }
         };
         var p6$3 = $as_s_Option(x1$2.$$und1$f);
@@ -11216,8 +11234,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$14 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$4)]);
             var y$9 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$14);
             var kvps$15 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("changePct", y$9)]);
-            var this$193 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$15));
-            break matchEnd19$1
+            var this$195 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$15));
+            break matchEnd19$2
           }
         };
         var p9$3 = $as_s_Option(x1$2.$$und1$f);
@@ -11230,27 +11248,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$16 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$4)]);
             var y$10 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$16);
             var kvps$17 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("changePct", y$10)]);
-            var this$193 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$17));
-            break matchEnd19$1
+            var this$195 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$17));
+            break matchEnd19$2
           }
         };
-        var p12$1 = $as_s_Option(x1$2.$$und1$f);
-        var p13$1 = $as_s_Option(x1$2.$$und2$f);
-        var x$5$1 = $m_s_None$();
-        if ((x$5$1 === p12$1)) {
-          var x$7$1 = $m_s_None$();
-          if ((x$7$1 === p13$1)) {
-            var this$193 = $m_s_None$();
-            break matchEnd19$1
+        var p12$3 = $as_s_Option(x1$2.$$und1$f);
+        var p13$3 = $as_s_Option(x1$2.$$und2$f);
+        var x$5$3 = $m_s_None$();
+        if ((x$5$3 === p12$3)) {
+          var x$7$3 = $m_s_None$();
+          if ((x$7$3 === p13$3)) {
+            var this$195 = $m_s_None$();
+            break matchEnd19$2
           }
         };
         throw new $c_s_MatchError().init___O(x1$2)
       };
-      if ((!this$193.isEmpty__Z())) {
-        var arg1$10 = this$193.get__O();
-        var this$196 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$10);
-        while (this$196.hasNext__Z()) {
-          var arg1$11 = this$196.next__T2();
+      if ((!this$195.isEmpty__Z())) {
+        var arg1$10 = this$195.get__O();
+        var this$198 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$10);
+        while (this$198.hasNext__Z()) {
+          var arg1$11 = this$198.next__T2();
           selector[$as_T(arg1$11.$$und1__O())] = arg1$11.$$und2__O()
         }
       };
@@ -11280,8 +11298,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         }
       };
       var x1$4 = new $c_T2().init___O__O(jsx$8, ((value$9 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$9)));
-      matchEnd19$2: {
-        var this$283;
+      matchEnd19$4: {
+        var this$286;
         var p2$4 = $as_s_Option(x1$4.$$und1$f);
         var p3$4 = $as_s_Option(x1$4.$$und2$f);
         if ($is_s_Some(p2$4)) {
@@ -11317,7 +11335,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$5 = new $c_T2().init___O__O(jsx$9, ((value$11 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$11)));
-            matchEnd15$2: {
+            matchEnd19$5: {
               var jsx$10;
               var p2$5 = $as_s_Option(x1$5.$$und1$f);
               var p3$5 = $as_s_Option(x1$5.$$und2$f);
@@ -11330,7 +11348,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$18 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$5), new $c_T2().init___O__O("$lte", max$5)]);
                   var y$11 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$18);
                   var jsx$10 = new $c_T2().init___O__O("lastTrade", y$11);
-                  break matchEnd15$2
+                  break matchEnd19$5
                 }
               };
               var p6$4 = $as_s_Option(x1$5.$$und1$f);
@@ -11343,7 +11361,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$19 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2$2)]);
                   var y$12 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$19);
                   var jsx$10 = new $c_T2().init___O__O("lastTrade", y$12);
-                  break matchEnd15$2
+                  break matchEnd19$5
                 }
               };
               var p9$4 = $as_s_Option(x1$5.$$und1$f);
@@ -11356,14 +11374,23 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$20 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$2)]);
                   var y$13 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$20);
                   var jsx$10 = new $c_T2().init___O__O("lastTrade", y$13);
-                  break matchEnd15$2
+                  break matchEnd19$5
+                }
+              };
+              var p12$4 = $as_s_Option(x1$5.$$und1$f);
+              var p13$4 = $as_s_Option(x1$5.$$und2$f);
+              var x$5$4 = $m_s_None$();
+              if ((x$5$4 === p12$4)) {
+                var x$7$4 = $m_s_None$();
+                if ((x$7$4 === p13$4)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$5)
             };
             var kvps$21 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$10]);
-            var this$283 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$21));
-            break matchEnd19$2
+            var this$286 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$21));
+            break matchEnd19$4
           }
         };
         var p6$5 = $as_s_Option(x1$4.$$und1$f);
@@ -11376,8 +11403,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$22 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$6)]);
             var y$14 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$22);
             var kvps$23 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("lastTrade", y$14)]);
-            var this$283 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$23));
-            break matchEnd19$2
+            var this$286 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$23));
+            break matchEnd19$4
           }
         };
         var p9$5 = $as_s_Option(x1$4.$$und1$f);
@@ -11390,27 +11417,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$24 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$6)]);
             var y$15 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$24);
             var kvps$25 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("lastTrade", y$15)]);
-            var this$283 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$25));
-            break matchEnd19$2
+            var this$286 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$25));
+            break matchEnd19$4
           }
         };
-        var p12$2 = $as_s_Option(x1$4.$$und1$f);
-        var p13$2 = $as_s_Option(x1$4.$$und2$f);
-        var x$5$2 = $m_s_None$();
-        if ((x$5$2 === p12$2)) {
-          var x$7$2 = $m_s_None$();
-          if ((x$7$2 === p13$2)) {
-            var this$283 = $m_s_None$();
-            break matchEnd19$2
+        var p12$5 = $as_s_Option(x1$4.$$und1$f);
+        var p13$5 = $as_s_Option(x1$4.$$und2$f);
+        var x$5$5 = $m_s_None$();
+        if ((x$5$5 === p12$5)) {
+          var x$7$5 = $m_s_None$();
+          if ((x$7$5 === p13$5)) {
+            var this$286 = $m_s_None$();
+            break matchEnd19$4
           }
         };
         throw new $c_s_MatchError().init___O(x1$4)
       };
-      if ((!this$283.isEmpty__Z())) {
-        var arg1$16 = this$283.get__O();
-        var this$286 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$16);
-        while (this$286.hasNext__Z()) {
-          var arg1$17 = this$286.next__T2();
+      if ((!this$286.isEmpty__Z())) {
+        var arg1$16 = this$286.get__O();
+        var this$289 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$16);
+        while (this$289.hasNext__Z()) {
+          var arg1$17 = this$289.next__T2();
           selector[$as_T(arg1$17.$$und1__O())] = arg1$17.$$und2__O()
         }
       };
@@ -11440,8 +11467,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         }
       };
       var x1$6 = new $c_T2().init___O__O(jsx$11, ((value$13 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$13)));
-      matchEnd19$3: {
-        var this$373;
+      matchEnd19$6: {
+        var this$377;
         var p2$6 = $as_s_Option(x1$6.$$und1$f);
         var p3$6 = $as_s_Option(x1$6.$$und2$f);
         if ($is_s_Some(p2$6)) {
@@ -11477,7 +11504,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$7 = new $c_T2().init___O__O(jsx$12, ((value$15 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$15)));
-            matchEnd15$3: {
+            matchEnd19$7: {
               var jsx$13;
               var p2$7 = $as_s_Option(x1$7.$$und1$f);
               var p3$7 = $as_s_Option(x1$7.$$und2$f);
@@ -11490,7 +11517,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$26 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$7), new $c_T2().init___O__O("$lte", max$7)]);
                   var y$16 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$26);
                   var jsx$13 = new $c_T2().init___O__O("spread", y$16);
-                  break matchEnd15$3
+                  break matchEnd19$7
                 }
               };
               var p6$6 = $as_s_Option(x1$7.$$und1$f);
@@ -11503,7 +11530,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$27 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2$3)]);
                   var y$17 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$27);
                   var jsx$13 = new $c_T2().init___O__O("spread", y$17);
-                  break matchEnd15$3
+                  break matchEnd19$7
                 }
               };
               var p9$6 = $as_s_Option(x1$7.$$und1$f);
@@ -11516,14 +11543,23 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$28 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$3)]);
                   var y$18 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$28);
                   var jsx$13 = new $c_T2().init___O__O("spread", y$18);
-                  break matchEnd15$3
+                  break matchEnd19$7
+                }
+              };
+              var p12$6 = $as_s_Option(x1$7.$$und1$f);
+              var p13$6 = $as_s_Option(x1$7.$$und2$f);
+              var x$5$6 = $m_s_None$();
+              if ((x$5$6 === p12$6)) {
+                var x$7$6 = $m_s_None$();
+                if ((x$7$6 === p13$6)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$7)
             };
             var kvps$29 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$13]);
-            var this$373 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$29));
-            break matchEnd19$3
+            var this$377 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$29));
+            break matchEnd19$6
           }
         };
         var p6$7 = $as_s_Option(x1$6.$$und1$f);
@@ -11536,8 +11572,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$30 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$8)]);
             var y$19 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$30);
             var kvps$31 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("spread", y$19)]);
-            var this$373 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$31));
-            break matchEnd19$3
+            var this$377 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$31));
+            break matchEnd19$6
           }
         };
         var p9$7 = $as_s_Option(x1$6.$$und1$f);
@@ -11550,27 +11586,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$32 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$8)]);
             var y$20 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$32);
             var kvps$33 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("spread", y$20)]);
-            var this$373 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$33));
-            break matchEnd19$3
+            var this$377 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$33));
+            break matchEnd19$6
           }
         };
-        var p12$3 = $as_s_Option(x1$6.$$und1$f);
-        var p13$3 = $as_s_Option(x1$6.$$und2$f);
-        var x$5$3 = $m_s_None$();
-        if ((x$5$3 === p12$3)) {
-          var x$7$3 = $m_s_None$();
-          if ((x$7$3 === p13$3)) {
-            var this$373 = $m_s_None$();
-            break matchEnd19$3
+        var p12$7 = $as_s_Option(x1$6.$$und1$f);
+        var p13$7 = $as_s_Option(x1$6.$$und2$f);
+        var x$5$7 = $m_s_None$();
+        if ((x$5$7 === p12$7)) {
+          var x$7$7 = $m_s_None$();
+          if ((x$7$7 === p13$7)) {
+            var this$377 = $m_s_None$();
+            break matchEnd19$6
           }
         };
         throw new $c_s_MatchError().init___O(x1$6)
       };
-      if ((!this$373.isEmpty__Z())) {
-        var arg1$22 = this$373.get__O();
-        var this$376 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$22);
-        while (this$376.hasNext__Z()) {
-          var arg1$23 = this$376.next__T2();
+      if ((!this$377.isEmpty__Z())) {
+        var arg1$22 = this$377.get__O();
+        var this$380 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$22);
+        while (this$380.hasNext__Z()) {
+          var arg1$23 = this$380.next__T2();
           selector[$as_T(arg1$23.$$und1__O())] = arg1$23.$$und2__O()
         }
       };
@@ -11600,8 +11636,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         }
       };
       var x1$8 = new $c_T2().init___O__O(jsx$14, ((value$17 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$17)));
-      matchEnd19$4: {
-        var this$463;
+      matchEnd19$8: {
+        var this$468;
         var p2$8 = $as_s_Option(x1$8.$$und1$f);
         var p3$8 = $as_s_Option(x1$8.$$und2$f);
         if ($is_s_Some(p2$8)) {
@@ -11637,7 +11673,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$9 = new $c_T2().init___O__O(jsx$15, ((value$19 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$19)));
-            matchEnd15$4: {
+            matchEnd19$9: {
               var jsx$16;
               var p2$9 = $as_s_Option(x1$9.$$und1$f);
               var p3$9 = $as_s_Option(x1$9.$$und2$f);
@@ -11650,7 +11686,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$34 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$9), new $c_T2().init___O__O("$lte", max$9)]);
                   var y$21 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$34);
                   var jsx$16 = new $c_T2().init___O__O("volume", y$21);
-                  break matchEnd15$4
+                  break matchEnd19$9
                 }
               };
               var p6$8 = $as_s_Option(x1$9.$$und1$f);
@@ -11663,7 +11699,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$35 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2$4)]);
                   var y$22 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$35);
                   var jsx$16 = new $c_T2().init___O__O("volume", y$22);
-                  break matchEnd15$4
+                  break matchEnd19$9
                 }
               };
               var p9$8 = $as_s_Option(x1$9.$$und1$f);
@@ -11676,14 +11712,23 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$36 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$4)]);
                   var y$23 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$36);
                   var jsx$16 = new $c_T2().init___O__O("volume", y$23);
-                  break matchEnd15$4
+                  break matchEnd19$9
+                }
+              };
+              var p12$8 = $as_s_Option(x1$9.$$und1$f);
+              var p13$8 = $as_s_Option(x1$9.$$und2$f);
+              var x$5$8 = $m_s_None$();
+              if ((x$5$8 === p12$8)) {
+                var x$7$8 = $m_s_None$();
+                if ((x$7$8 === p13$8)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$9)
             };
             var kvps$37 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$16]);
-            var this$463 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$37));
-            break matchEnd19$4
+            var this$468 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$37));
+            break matchEnd19$8
           }
         };
         var p6$9 = $as_s_Option(x1$8.$$und1$f);
@@ -11696,8 +11741,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$38 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$10)]);
             var y$24 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$38);
             var kvps$39 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("volume", y$24)]);
-            var this$463 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$39));
-            break matchEnd19$4
+            var this$468 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$39));
+            break matchEnd19$8
           }
         };
         var p9$9 = $as_s_Option(x1$8.$$und1$f);
@@ -11710,27 +11755,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$40 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$10)]);
             var y$25 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$40);
             var kvps$41 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("volume", y$25)]);
-            var this$463 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$41));
-            break matchEnd19$4
+            var this$468 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$41));
+            break matchEnd19$8
           }
         };
-        var p12$4 = $as_s_Option(x1$8.$$und1$f);
-        var p13$4 = $as_s_Option(x1$8.$$und2$f);
-        var x$5$4 = $m_s_None$();
-        if ((x$5$4 === p12$4)) {
-          var x$7$4 = $m_s_None$();
-          if ((x$7$4 === p13$4)) {
-            var this$463 = $m_s_None$();
-            break matchEnd19$4
+        var p12$9 = $as_s_Option(x1$8.$$und1$f);
+        var p13$9 = $as_s_Option(x1$8.$$und2$f);
+        var x$5$9 = $m_s_None$();
+        if ((x$5$9 === p12$9)) {
+          var x$7$9 = $m_s_None$();
+          if ((x$7$9 === p13$9)) {
+            var this$468 = $m_s_None$();
+            break matchEnd19$8
           }
         };
         throw new $c_s_MatchError().init___O(x1$8)
       };
-      if ((!this$463.isEmpty__Z())) {
-        var arg1$28 = this$463.get__O();
-        var this$466 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$28);
-        while (this$466.hasNext__Z()) {
-          var arg1$29 = this$466.next__T2();
+      if ((!this$468.isEmpty__Z())) {
+        var arg1$28 = this$468.get__O();
+        var this$471 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$28);
+        while (this$471.hasNext__Z()) {
+          var arg1$29 = this$471.next__T2();
           selector[$as_T(arg1$29.$$und1__O())] = arg1$29.$$und2__O()
         }
       };
@@ -11760,8 +11805,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         }
       };
       var x1$10 = new $c_T2().init___O__O(jsx$17, ((value$21 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$21)));
-      matchEnd19$5: {
-        var this$553;
+      matchEnd19$10: {
+        var this$559;
         var p2$10 = $as_s_Option(x1$10.$$und1$f);
         var p3$10 = $as_s_Option(x1$10.$$und2$f);
         if ($is_s_Some(p2$10)) {
@@ -11797,7 +11842,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
               }
             };
             var x1$11 = new $c_T2().init___O__O(jsx$18, ((value$23 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$23)));
-            matchEnd15$5: {
+            matchEnd19$11: {
               var jsx$19;
               var p2$11 = $as_s_Option(x1$11.$$und1$f);
               var p3$11 = $as_s_Option(x1$11.$$und2$f);
@@ -11810,7 +11855,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$42 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$11), new $c_T2().init___O__O("$lte", max$11)]);
                   var y$26 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$42);
                   var jsx$19 = new $c_T2().init___O__O("avgVolume10Day", y$26);
-                  break matchEnd15$5
+                  break matchEnd19$11
                 }
               };
               var p6$10 = $as_s_Option(x1$11.$$und1$f);
@@ -11823,7 +11868,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$43 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$2$5)]);
                   var y$27 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$43);
                   var jsx$19 = new $c_T2().init___O__O("avgVolume10Day", y$27);
-                  break matchEnd15$5
+                  break matchEnd19$11
                 }
               };
               var p9$10 = $as_s_Option(x1$11.$$und1$f);
@@ -11836,14 +11881,23 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
                   var kvps$44 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$2$5)]);
                   var y$28 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$44);
                   var jsx$19 = new $c_T2().init___O__O("avgVolume10Day", y$28);
-                  break matchEnd15$5
+                  break matchEnd19$11
+                }
+              };
+              var p12$10 = $as_s_Option(x1$11.$$und1$f);
+              var p13$10 = $as_s_Option(x1$11.$$und2$f);
+              var x$5$10 = $m_s_None$();
+              if ((x$5$10 === p12$10)) {
+                var x$7$10 = $m_s_None$();
+                if ((x$7$10 === p13$10)) {
+                  throw new $c_jl_IllegalStateException().init___T("Maximum and minimum values are null and/or undefined")
                 }
               };
               throw new $c_s_MatchError().init___O(x1$11)
             };
             var kvps$45 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$19]);
-            var this$553 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$45));
-            break matchEnd19$5
+            var this$559 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$45));
+            break matchEnd19$10
           }
         };
         var p6$11 = $as_s_Option(x1$10.$$und1$f);
@@ -11856,8 +11910,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$46 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", min$12)]);
             var y$29 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$46);
             var kvps$47 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("avgVolume10Day", y$29)]);
-            var this$553 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$47));
-            break matchEnd19$5
+            var this$559 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$47));
+            break matchEnd19$10
           }
         };
         var p9$11 = $as_s_Option(x1$10.$$und1$f);
@@ -11870,27 +11924,27 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
             var kvps$48 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$lte", max$12)]);
             var y$30 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$48);
             var kvps$49 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("avgVolume10Day", y$30)]);
-            var this$553 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$49));
-            break matchEnd19$5
+            var this$559 = new $c_s_Some().init___O($m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$49));
+            break matchEnd19$10
           }
         };
-        var p12$5 = $as_s_Option(x1$10.$$und1$f);
-        var p13$5 = $as_s_Option(x1$10.$$und2$f);
-        var x$5$5 = $m_s_None$();
-        if ((x$5$5 === p12$5)) {
-          var x$7$5 = $m_s_None$();
-          if ((x$7$5 === p13$5)) {
-            var this$553 = $m_s_None$();
-            break matchEnd19$5
+        var p12$11 = $as_s_Option(x1$10.$$und1$f);
+        var p13$11 = $as_s_Option(x1$10.$$und2$f);
+        var x$5$11 = $m_s_None$();
+        if ((x$5$11 === p12$11)) {
+          var x$7$11 = $m_s_None$();
+          if ((x$7$11 === p13$11)) {
+            var this$559 = $m_s_None$();
+            break matchEnd19$10
           }
         };
         throw new $c_s_MatchError().init___O(x1$10)
       };
-      if ((!this$553.isEmpty__Z())) {
-        var arg1$34 = this$553.get__O();
-        var this$556 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$34);
-        while (this$556.hasNext__Z()) {
-          var arg1$35 = this$556.next__T2();
+      if ((!this$559.isEmpty__Z())) {
+        var arg1$34 = this$559.get__O();
+        var this$562 = new $c_sjs_js_WrappedDictionary$DictionaryIterator().init___sjs_js_Dictionary(arg1$34);
+        while (this$562.hasNext__Z()) {
+          var arg1$35 = this$562.next__T2();
           selector[$as_T(arg1$35.$$und1__O())] = arg1$35.$$und2__O()
         }
       };

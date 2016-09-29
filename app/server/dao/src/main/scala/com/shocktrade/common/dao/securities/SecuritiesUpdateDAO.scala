@@ -1,7 +1,7 @@
 package com.shocktrade.common.dao
 package securities
 
-import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
+import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
 
@@ -68,60 +68,31 @@ object SecuritiesUpdateDAO {
     def updateCompanyInfo(companies: Seq[NASDAQCompanyInfo]) = {
       dao.bulkWrite(
         js.Array(companies map { company =>
-          updateOne(filter = "symbol" $eq company.symbol, update = $set(
-            "symbol" -> company.symbol,
-            "exchange" -> company.exchange,
-            "name" -> company.name,
-            "sector" -> company.sector,
-            "industry" -> company.industry,
-            "marketCap" -> company.marketCap,
-            "IPOyear" -> company.IPOyear,
-            "active" -> true
-          ), upsert = true)
-        }: _*)
-      )
+          updateOne(
+            filter = "symbol" $eq company.symbol,
+            update = $set(
+              "symbol" -> company.symbol,
+              "exchange" -> company.exchange,
+              "name" -> company.name,
+              "sector" -> company.sector,
+              "industry" -> company.industry,
+              "marketCap" -> company.marketCap,
+              "IPOyear" -> company.IPOyear,
+              "active" -> true
+            ), upsert = true)
+        }: _*))
     }
 
     @inline
-    def updateEodQuotes(quotes: Seq[EodDataSecurity]) = {
+    def updateEodQuotes(quotes: Seq[ResearchQuote]) = {
       dao.bulkWrite(js.Array(
         quotes map { quote =>
           updateOne(
             filter = "symbol" $eq quote.symbol,
-            update = $set(
-              "symbol" -> quote.symbol,
-              "exchange" -> quote.exchange,
-              "name" -> quote.name,
-              "high" -> quote.high,
-              "low" -> quote.low,
-              "close" -> quote.close,
-              "volume" -> quote.volume,
-              "change" -> quote.change,
-              "changePct" -> quote.changePct,
-              "active" -> true
-            ), upsert = true)
-        }: _*)
-      )
-    }
-
-    @inline
-    def updateQuote(quote: SecurityUpdateQuote) = {
-      dao.updateOne(
-        filter = "symbol" $eq quote.symbol,
-        update = $set(
-          "exchange" -> quote.exchange,
-          "lastTrade" -> quote.lastTrade,
-          "open" -> quote.open,
-          "close" -> quote.close,
-          "tradeDate" -> quote.tradeDate,
-          "tradeTime" -> quote.tradeTime,
-          "tradeDateTime" -> quote.tradeDateTime,
-          "volume" -> quote.volume,
-          "errorMessage" -> quote.errorMessage,
-          "yfCsvResponseTime" -> quote.yfCsvResponseTime,
-          "yfCsvLastUpdated" -> quote.yfCsvLastUpdated
-        )
-      )
+            update = $set(quote),
+            upsert = true
+          )
+        }: _*))
     }
 
     @inline
@@ -130,21 +101,21 @@ object SecuritiesUpdateDAO {
         quotes map { quote =>
           updateOne(
             filter = "symbol" $eq quote.symbol,
-            update = $set(
-              "exchange" -> quote.exchange,
-              "lastTrade" -> quote.lastTrade,
-              "open" -> quote.open,
-              "close" -> quote.close,
-              "tradeDate" -> quote.tradeDate,
-              "tradeTime" -> quote.tradeTime,
-              "tradeDateTime" -> quote.tradeDateTime,
-              "volume" -> quote.volume,
-              "errorMessage" -> quote.errorMessage,
-              "yfCsvResponseTime" -> quote.yfCsvResponseTime,
-              "yfCsvLastUpdated" -> quote.yfCsvLastUpdated
-            ))
-        }: _*)
-      )
+            update = $set(quote)
+          )
+        }: _*))
+    }
+
+    @inline
+    def updateStatsFragments(quotes: StatisticsFragment*) = {
+      dao.bulkWrite(js.Array(
+        quotes map { quote =>
+          updateOne(
+            filter = "symbol" $eq quote.symbol,
+            update = $set(quote),
+            upsert = false
+          )
+        }: _*))
     }
 
   }

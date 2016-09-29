@@ -36,18 +36,23 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
-  // create a trading clock
-  private val tradingClock = new TradingClock()
-  private var lastRun: js.Date = new js.Date()
-
   // internal fields
+  private var lastRun: js.Date = new js.Date()
   private val separator = "=" * 80
 
   /**
-    * Invokes the process
+    * Indicates whether the daemon is eligible to be executed
+    * @param clock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
     */
-  override def run(): Unit = {
-    val isMarketCloseEvent = !tradingClock.isTradingActive && tradingClock.isTradingActive(lastRun)
+  override def isReady(clock: TradingClock) = clock.isTradingActive || clock.isTradingActive(lastRun)
+
+  /**
+    * Executes the process
+    * @param clock the given [[TradingClock trading clock]]
+    */
+  override def run(clock: TradingClock): Unit = {
+    val isMarketCloseEvent = !clock.isTradingActive && clock.isTradingActive(lastRun)
     val startTime = System.currentTimeMillis()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
@@ -61,7 +66,6 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
         logger.log(s"${claims.size} claim(s) were created")
         logger.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
       case Failure(e) =>
-        lastRun = new js.Date(startTime)
         logger.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
     }

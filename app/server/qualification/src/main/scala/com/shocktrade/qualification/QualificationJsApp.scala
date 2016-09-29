@@ -1,7 +1,7 @@
 package com.shocktrade.qualification
 
 import com.shocktrade.concurrent.daemon.Daemon._
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -42,14 +42,15 @@ object QualificationJsApp extends js.JSApp {
     logger.log("Connecting to '%s'...", connectionString)
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
-    // define the daemons
-    val daemons = Seq(
+    // create the trading clock instance
+    val tradingClock = new TradingClock()
+
+    // schedule the daemons to run
+    schedule(
+      tradingClock,
       //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), delay = 0.seconds, frequency = 30.minutes),
       DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), delay = 0.seconds, frequency = 1.minutes)
     )
-
-    // schedule the daemons to run
-    schedule(daemons)
   }
 
 }

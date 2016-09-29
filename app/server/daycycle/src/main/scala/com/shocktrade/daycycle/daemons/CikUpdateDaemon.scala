@@ -2,9 +2,9 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
-import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
+import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
-import com.shocktrade.services.{CikLookupService, LoggerFactory}
+import com.shocktrade.services.{CikLookupService, LoggerFactory, TradingClock}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -28,13 +28,21 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, requi
   private val processor = new ConcurrentProcessor()
 
   /**
-    * Executes the process
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
     */
-  def run(): Unit = {
+  override def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+
+  /**
+    * Executes the process
+    * @param tradingClock the given [[TradingClock trading clock]]
+    */
+  override def run(tradingClock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForCikUpdate())
-      status <- processor.start(securities, concurrency = 15, handler = new BulkConcurrentTaskUpdateHandler[SecurityRef](securities.size) {
+      status <- processor.start(securities, concurrency = 15, handler = new BulkUpdateHandler[SecurityRef](securities.size) {
         logger.info(s"Scheduling ${securities.size} securities for CIK processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {

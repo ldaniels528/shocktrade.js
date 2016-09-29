@@ -2,16 +2,16 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
-import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.ConcurrentContext
-import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
+import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef, StatisticsFragment}
+import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import com.shocktrade.services._
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
@@ -35,23 +35,36 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   private val tradingClock = new TradingClock()
 
   /**
-    * Executes the process
+    * Indicates whether the daemon is eligible to be executed
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @return true, if the daemon is eligible to be executed
     */
-  def run(): Unit = {
+  def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+
+  /**
+    * Executes the process
+    * @param tradingClock the given [[TradingClock trading clock]]
+    */
+  override def run(tradingClock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- lookupSecurities(tradingClock.getTradeStopTime)
-      stats <- processor.start(securities, concurrency = 15, handler = new BulkConcurrentTaskUpdateHandler[SecurityRef](securities.size) {
-        logger.info(s"Scheduling ${securities.size} securities for Key Statistics processing...")
+      stats <- processor.start(securities, concurrency = 20, handler = new BulkUpdateHandler[SecurityRef](securities.size) {
+        logger.info(s"Scheduling ${securities.size} securities for processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
           for {
             stats_? <- yfKeyStatsSvc(security.symbol)
-            result <- stats_? match {
-              case Some(stats) => keyStatisticsDAO.flatMap(_.saveKeyStatistics(stats.toData(security)))
+            (w1, w2) <- stats_? match {
+              case Some(stats) =>
+                val ks = stats.toData(security)
+                for {
+                  w1 <- keyStatisticsDAO.flatMap(_.saveKeyStatistics(ks))
+                  w2 <- securitiesDAO.flatMap(_.updateStatsFragments(stats.toFragment(ks)))
+                } yield (w1, w2)
               case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
             }
-          } yield (1, result.toBulkWrite)
+          } yield (1, w1.toBulkWrite ++ w2.toBulkWrite)
         }
       })
     } yield stats
@@ -96,7 +109,7 @@ object KeyStatisticsUpdateDaemon {
       new KeyStatisticsData(
         _id = security._id,
         symbol = security.symbol,
-        exchange = stats.price.flatMap(_.exchange),
+        exchange = security.exchange ?? stats.price.flatMap(_.exchange),
         ask = stats.summaryDetail.flatMap(_.ask),
         askSize = stats.summaryDetail.flatMap(_.askSize),
         averageDailyVolume10Day = stats.summaryDetail.flatMap(_.averageDailyVolume10Day),
@@ -146,6 +159,12 @@ object KeyStatisticsUpdateDaemon {
         lastUpdated = new js.Date()
       )
     }
+
+    def toFragment(ks: KeyStatisticsData) = new StatisticsFragment(
+      symbol = ks.symbol.orNull,
+      avgVolume10Day = ks.averageDailyVolume10Day ?? ks.averageVolume10days,
+      beta = ks.beta
+    )
 
   }
 

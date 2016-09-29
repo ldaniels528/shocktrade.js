@@ -3783,7 +3783,7 @@ $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$great
 $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_ResearchQuote$ = this;
   $m_sci_List$();
-  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"]);
+  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"]);
   var this$2 = $m_sci_List$();
   var cbf = this$2.ReusableCBFInstance$2;
   this.Fields$1 = $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(xs, cbf));
@@ -3802,6 +3802,9 @@ $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$great
   return (void 0)
 });
 $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$17__sjs_js_UndefOr = (function() {
   return (void 0)
 });
 $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
@@ -14892,12 +14895,13 @@ function $c_Lcom_shocktrade_common_models_quote_ResearchQuote() {
   var prevClose = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
   var high = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
   var low = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var changePct = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var spread = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var volume = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var avgVolume10Day = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var beta = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
-  var active = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
+  var change = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
+  var changePct = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+  var spread = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+  var volume = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
+  var avgVolume10Day = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
+  var beta = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
+  var active = ((arg$rest[16] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$17__sjs_js_UndefOr() : arg$rest[16]);
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
     "symbol": {
@@ -14980,6 +14984,14 @@ function $c_Lcom_shocktrade_common_models_quote_ResearchQuote() {
     }
   });
   $g.Object.defineProperties(this, {
+    "change": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
     "changePct": {
       "configurable": true,
       "enumerable": true,
@@ -15037,6 +15049,7 @@ function $c_Lcom_shocktrade_common_models_quote_ResearchQuote() {
   this.prevClose = prevClose;
   this.high = high;
   this.low = low;
+  this.change = change;
   this.changePct = changePct;
   this.spread = spread;
   this.volume = volume;

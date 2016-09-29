@@ -1,6 +1,6 @@
 package com.shocktrade.concurrent.daemon
 
-import com.shocktrade.concurrent.daemon.ConcurrentUpdateStatistics._
+import com.shocktrade.concurrent.daemon.BulkUpdateStatistics._
 import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.duration2Int
 
@@ -11,7 +11,7 @@ import scala.scalajs.js
   * Represents the concurrent processing statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ConcurrentUpdateStatistics(val expectedBatches: Int) {
+class BulkUpdateStatistics(val expectedBatches: Int) {
   private val logger = LoggerFactory.getLogger(getClass)
   private var nBatches = 0
   private var successes = 0
@@ -40,7 +40,7 @@ class ConcurrentUpdateStatistics(val expectedBatches: Int) {
     // update the coarse-grained info
     nBatches += 1
     successes += nWritten
-    failures += requested - (result.nInserted + result.nUpserted + result.nMatched)
+    //failures += requested - (result.nInserted + result.nUpserted + result.nMatched)
 
     // (requested - nWritten) - (result.nMatched - result.nModified)
     // (requested - (result.nInserted + result.nUpserted + result.nModified) - (result.nMatched - result.nModified)
@@ -60,7 +60,7 @@ class ConcurrentUpdateStatistics(val expectedBatches: Int) {
   }
 
   override def toString = {
-    "Processed %d pages (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d]".format(
+    "Processed %d batches (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d]".format(
       nBatches, completion, successes, failures, nInserted, nMatched, nModified, nUpserted)
   }
 }
@@ -69,7 +69,7 @@ class ConcurrentUpdateStatistics(val expectedBatches: Int) {
   * Daemon Update Statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object ConcurrentUpdateStatistics {
+object BulkUpdateStatistics {
 
   case class BulkUpdateOutcome(nInserted: Int = 0, nMatched: Int = 0, nModified: Int = 0, nUpserted: Int = 0)
 
