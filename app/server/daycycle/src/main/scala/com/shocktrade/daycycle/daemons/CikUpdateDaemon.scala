@@ -2,9 +2,8 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
-import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
 import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
 import com.shocktrade.services.{CikLookupService, LoggerFactory}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db

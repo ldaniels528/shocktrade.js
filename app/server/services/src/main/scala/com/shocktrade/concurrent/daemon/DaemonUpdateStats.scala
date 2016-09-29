@@ -41,7 +41,11 @@ class DaemonUpdateStats(val expectedBatches: Int) {
     // update the coarse-grained info
     nBatches += 1
     successes += nWritten
-    failures += (requested - nWritten) - (result.nMatched - result.nModified)
+    failures += requested - (result.nInserted + result.nUpserted + result.nMatched)
+
+    // (requested - nWritten) - (result.nMatched - result.nModified)
+    // (requested - (result.nInserted + result.nUpserted + result.nModified) - (result.nMatched - result.nModified)
+    // requested - result.nInserted - result.nUpserted - result.nMatched
 
     // every 5 seconds, report the progress
     if (js.Date.now() - lastUpdated >= 5.seconds) {

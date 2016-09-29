@@ -1,10 +1,9 @@
 package com.shocktrade.concurrent
 
-import com.shocktrade.concurrent.ConcurrentProcessor._
 import org.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
 
 import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ExecutionContext, Promise}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -30,7 +29,7 @@ class ConcurrentProcessor() {
     val proxy = new ConcurrentTaskHandler[IN, OUT, SUMMARY] {
       override def onNext(ctx: ConcurrentContext, item: IN) = handler.onNext(ctx, item)
 
-      override def onSuccess(ctx: ConcurrentContext, result: OUT) = handler.onSuccess(ctx, result)
+      override def onSuccess(ctx: ConcurrentContext, outcome: OUT) = handler.onSuccess(ctx, outcome)
 
       override def onFailure(ctx: ConcurrentContext, cause: Throwable) = handler.onFailure(ctx, cause)
 
@@ -80,59 +79,10 @@ class ConcurrentProcessor() {
     * @param handler the given [[ConcurrentTaskHandler task handler]]
     */
   private def scheduleNext[IN, OUT, SUMMARY](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext): Unit = {
-    if (ctx.paused)
+    if (ctx.isPaused)
       setTimeout(() => scheduleNext(queue, ctx, handler), 1.seconds)
     else
       setImmediate(() => handleTask(queue, ctx, handler))
-  }
-
-}
-
-/**
-  * Batching Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object ConcurrentProcessor {
-
-  /**
-    * Concurrent Context - maintains the state for the queue
-    */
-  class ConcurrentContext() {
-    private[concurrent] var active: Int = 0
-    private[concurrent] var completed: Boolean = false
-    private[concurrent] var paused: Boolean = false
-
-    /**
-      * @return true, if processing is currently paused
-      */
-    def isPaused = paused
-
-    /**
-      * Pauses the process
-      */
-    def pause(): Unit = if (!completed) paused = true
-
-    /**
-      * If the process is paused, execution is resumed
-      */
-    def resume(): Unit = paused = false
-
-  }
-
-  /**
-    * Represents a concurrent task handler
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  trait ConcurrentTaskHandler[IN, OUT, SUMMARY] {
-
-    def onNext(ctx: ConcurrentContext, item: IN): Future[OUT]
-
-    def onSuccess(ctx: ConcurrentContext, outcome: OUT): Any
-
-    def onFailure(ctx: ConcurrentContext, cause: Throwable): Any
-
-    def onComplete(ctx: ConcurrentContext): SUMMARY
-
   }
 
 }

@@ -4,7 +4,7 @@ import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
 import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
+import com.shocktrade.concurrent.ConcurrentContext
 import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}

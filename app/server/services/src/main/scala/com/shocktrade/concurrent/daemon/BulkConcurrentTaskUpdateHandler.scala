@@ -1,7 +1,7 @@
 package com.shocktrade.concurrent.daemon
 
-import com.shocktrade.concurrent.ConcurrentProcessor.{ConcurrentContext, ConcurrentTaskHandler}
 import com.shocktrade.concurrent.daemon.DaemonUpdateStats.DaemonUpdateOutcome
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentTaskHandler}
 
 /**
   * Bulk Task Update Handler
@@ -15,6 +15,5 @@ abstract class BulkConcurrentTaskUpdateHandler[IN](expectedBatches: Int) extends
   override def onFailure(ctx: ConcurrentContext, cause: Throwable) = status.failed(cause)
 
   override def onComplete(ctx: ConcurrentContext) = status
-
 
 }

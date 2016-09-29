@@ -3,8 +3,7 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
-import com.shocktrade.concurrent.ConcurrentProcessor
-import com.shocktrade.concurrent.ConcurrentProcessor.ConcurrentContext
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
 import com.shocktrade.concurrent.daemon.{BulkConcurrentTaskUpdateHandler, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
