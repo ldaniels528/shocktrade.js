@@ -3,8 +3,8 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef, StatisticsFragment}
-import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
+import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import com.shocktrade.services._
@@ -49,7 +49,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     val startTime = js.Date.now()
     val outcome = for {
       securities <- lookupSecurities(tradingClock.getTradeStopTime)
-      stats <- processor.start(securities, concurrency = 20, handler = new BulkUpdateHandler[SecurityRef](securities.size) {
+      stats <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size) {
         logger.info(s"Scheduling ${securities.size} securities for processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
@@ -64,7 +64,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
                 } yield (w1, w2)
               case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
             }
-          } yield (1, w1.toBulkWrite ++ w2.toBulkWrite)
+          } yield w1.toBulkWrite ++ w2.toBulkWrite
         }
       })
     } yield stats

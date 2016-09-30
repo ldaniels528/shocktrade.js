@@ -3,8 +3,8 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
-import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
+import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
@@ -42,21 +42,21 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
   /**
     * Indicates whether the daemon is eligible to be executed
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(tradingClock: TradingClock) = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
+  override def isReady(clock: TradingClock) = clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
     * Executes the process
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(clock: TradingClock) = {
     val startTime = js.Date.now()
     val outcome = for {
-      securities <- getSecurities(tradingClock.getTradeStopTime)
-      results <- processor.start(securities, concurrency = 20, handler = new BulkUpdateHandler[InputBatch](securities.size) {
-        logger.info(s"Scheduling ${securities.size} batches of securities for updates and snapshots...")
+      securities <- getSecurities(clock.getTradeStopTime)
+      results <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputBatch](securities.size) {
+        logger.info(s"Scheduling ${securities.size} pages of securities for updates and snapshots...")
 
         override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
           val symbols = securities.map(_.symbol)
@@ -68,7 +68,7 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
               New[BulkWriteOpResultObject]
             }
             securitiesResults <- updateSecurities(quotes, mapping)
-          } yield (quotes.length, securitiesResults.toBulkWrite)
+          } yield securitiesResults.toBulkWrite
         }
       })
     } yield results

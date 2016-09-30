@@ -4,7 +4,7 @@ import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.securities.IntraDayQuoteData
 import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.common.models.contest.OrderLike
-import com.shocktrade.concurrent.daemon.Daemon
+import com.shocktrade.concurrent.Daemon
 import com.shocktrade.qualification.IntraDayQuoteDaemon._
 import com.shocktrade.services.{NASDAQIntraDayQuotesService, TradingClock}
 import com.shocktrade.services.NASDAQIntraDayQuotesService._

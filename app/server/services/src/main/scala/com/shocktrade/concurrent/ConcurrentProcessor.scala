@@ -11,19 +11,20 @@ import scala.util.{Failure, Success}
   * Concurrent Processor
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ConcurrentProcessor() {
+class ConcurrentProcessor {
 
   /**
     * Starts the concurrent processor. 
     * <b>NOTE</b>: For performance reasons the input items are used directly for processing.
-    * @param queue       the given input [[js.Array queue]]
-    * @param handler     the given [[ConcurrentTaskHandler task handler]]
-    * @param concurrency the number of concurrent processes to use
+    * @param queue   the given [[js.Array input queue]]
+    * @param ctx     the given [[ConcurrentContext concurrent context]]
+    * @param handler the given [[ConcurrentTaskHandler concurrent task handler]]
     * @return the promise of a result
     */
-  def start[IN, OUT, SUMMARY](queue: js.Array[IN], handler: ConcurrentTaskHandler[IN, OUT, SUMMARY], concurrency: Int = 1)(implicit ec: ExecutionContext) = {
+  def start[IN, OUT, SUMMARY](queue: js.Array[IN],
+                              ctx: ConcurrentContext = ConcurrentContext(concurrency = 1),
+                              handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext) = {
     val promise = Promise[SUMMARY]()
-    val ctx = new ConcurrentContext()
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event
     val proxy = new ConcurrentTaskHandler[IN, OUT, SUMMARY] {
@@ -41,7 +42,7 @@ class ConcurrentProcessor() {
     }
 
     // schedule the handlers
-    (0 to concurrency) foreach (_ => scheduleNext(queue, ctx, proxy))
+    (0 to ctx.concurrency) foreach (_ => scheduleNext(queue, ctx, proxy))
     promise.future
   }
 

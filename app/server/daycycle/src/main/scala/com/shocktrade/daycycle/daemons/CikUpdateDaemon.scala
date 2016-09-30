@@ -2,8 +2,8 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
-import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
+import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.services.{CikLookupService, LoggerFactory, TradingClock}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
@@ -29,21 +29,21 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, requi
 
   /**
     * Indicates whether the daemon is eligible to be executed
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+  override def isReady(clock: TradingClock) = !clock.isTradingActive
 
   /**
     * Executes the process
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(clock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForCikUpdate())
-      status <- processor.start(securities, concurrency = 15, handler = new BulkUpdateHandler[SecurityRef](securities.size) {
-        logger.info(s"Scheduling ${securities.size} securities for CIK processing...")
+      status <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size) {
+        logger.info(s"Scheduling ${securities.size} securities for processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
           for {
@@ -52,7 +52,7 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, requi
               case Some(response) => securitiesDAO.flatMap(_.updateCik(security.symbol, response.CIK))
               case None => Future.failed(die(s"No CIK response for symbol ${security.symbol}"))
             }
-          } yield (1, result.toBulkWrite)
+          } yield result.toBulkWrite
         }
       })
     } yield status

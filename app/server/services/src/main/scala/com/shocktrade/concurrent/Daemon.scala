@@ -1,4 +1,6 @@
-package com.shocktrade.concurrent.daemon
+package com.shocktrade.concurrent
+
+import java.util.UUID
 
 import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
@@ -33,26 +35,31 @@ object Daemon {
   private[this] val logger = LoggerFactory.getLogger(getClass)
 
   /**
+    * Executes the daemon if it's eligible
+    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param ref the given [[DaemonRef daemon reference]]
+    */
+  def run(tradingClock: TradingClock, ref: DaemonRef) = {
+    if (ref.daemon.isReady(tradingClock)) {
+      logger.info(s"Starting daemon '${ref.name}'...")
+      ref.daemon.run(tradingClock)
+    }
+  }
+
+  /**
     * Schedules the collection of daemons for execution
     * @param daemons the given collection of [[DaemonRef daemon references]]
     */
-  def schedule(tradingClock: TradingClock, daemons: DaemonRef*) = {
+  def schedule(tradingClock: TradingClock, daemons: Seq[DaemonRef]) = {
     daemons foreach { ref =>
       logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
       setTimeout(() => {
         // attempt to run the daemon
-        if (ref.daemon.isReady(tradingClock)) run(tradingClock, ref)
+        run(tradingClock, ref)
 
-        // set the regular interval runs
-        setInterval(() => if (ref.daemon.isReady(tradingClock)) run(tradingClock, ref), ref.frequency)
+        // set the regular interval runs of the daemon
+        setInterval(() => run(tradingClock, ref), ref.frequency)
       }, ref.delay)
-    }
-  }
-
-  private def run(tradingClock: TradingClock, ref: DaemonRef) = {
-    if (ref.daemon.isReady(tradingClock)) {
-      logger.info(s"Starting daemon '${ref.name}'...")
-      ref.daemon.run(tradingClock)
     }
   }
 
@@ -63,6 +70,8 @@ object Daemon {
     * @param delay     the initial delay before the daemon runs on it's regular interval
     * @param frequency the interval with which the daemon shall run
     */
-  case class DaemonRef(name: String, daemon: Daemon, delay: FiniteDuration, frequency: FiniteDuration)
+  case class DaemonRef(name: String, daemon: Daemon, delay: FiniteDuration, frequency: FiniteDuration) {
+    val id = UUID.randomUUID().toString
+  }
 
 }

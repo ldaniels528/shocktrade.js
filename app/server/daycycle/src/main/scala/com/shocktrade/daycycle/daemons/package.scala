@@ -1,6 +1,6 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.concurrent.daemon.BulkUpdateStatistics.BulkUpdateOutcome
+import com.shocktrade.concurrent.bulk.BulkUpdateOutcome
 import org.scalajs.nodejs.mongodb.BulkWriteOpResultObject
 
 import scala.language.implicitConversions

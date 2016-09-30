@@ -1,6 +1,6 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.concurrent.daemon.Daemon._
+import com.shocktrade.concurrent.Daemon._
 import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
@@ -46,10 +46,9 @@ object QualificationJsApp extends js.JSApp {
     val tradingClock = new TradingClock()
 
     // schedule the daemons to run
-    schedule(
-      tradingClock,
+    schedule(tradingClock, Seq(
       //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), delay = 0.seconds, frequency = 30.minutes),
-      DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), delay = 0.seconds, frequency = 1.minutes)
+      DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), delay = 0.seconds, frequency = 1.minutes))
     )
   }
 

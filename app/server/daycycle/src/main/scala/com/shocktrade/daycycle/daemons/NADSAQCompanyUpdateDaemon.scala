@@ -1,7 +1,7 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.concurrent.daemon.Daemon
+import com.shocktrade.concurrent.Daemon
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import com.shocktrade.services.{LoggerFactory, NASDAQCompanyListService, TradingClock}
 import org.scalajs.nodejs.NodeRequire
@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
   * Company List Update Daemon (supports AMEX, NASDAQ and NYSE)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class CompanyListUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO and service references

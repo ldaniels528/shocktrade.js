@@ -1,9 +1,13 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.concurrent.daemon.Daemon._
+import org.scalajs.sjs.OptionHelper._
+import com.shocktrade.concurrent.Daemon._
 import com.shocktrade.daycycle.daemons._
+import com.shocktrade.daycycle.routes.DaemonRoutes
 import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs.Bootstrap
+import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
+import org.scalajs.nodejs.express.Express
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
 
@@ -27,6 +31,12 @@ object DayCycleJsApp extends js.JSApp {
     val logger = LoggerFactory.getLogger(getClass)
     logger.info("Starting the Day-Cycle Server...")
 
+    // determine the port to listen on
+    val startTime = System.currentTimeMillis()
+
+    // get the web application port
+    val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
+
     // determine the database connection URL
     val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
 
@@ -44,20 +54,38 @@ object DayCycleJsApp extends js.JSApp {
     implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
 
     // create the trading clock instance
-    val tradingClock = new TradingClock()
+    implicit val tradingClock = new TradingClock()
 
-    //new KeyStatisticsUpdateDaemon(dbFuture).run()
-    //new SecuritiesUpdateDaemon(dbFuture).execute(js.Date.now())
+    logger.log("Loading Express modules...")
+    implicit val express = Express()
+    implicit val app = express()
+
+    // setup the body parsers
+    logger.log("Setting up body parsers...")
+    val bodyParser = BodyParser()
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
+
+    // disable caching
+    app.disable("etag")
+
+    // define the daemons
+    val daemons = Seq(
+      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 12.hours),
+      DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
+      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
+      DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 3.minutes))
+
+    // setup all other routes
+    DaemonRoutes.init(app, daemons, dbFuture)
 
     // schedule the daemons to run
-    schedule(
-      tradingClock,
-      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 12.hours),
-      DaemonRef("CompanyListUpdate", new CompanyListUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
-      DaemonRef("FullMarketUpdate", new FullMarketUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
-      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 5.minutes)
-    )
+    schedule(tradingClock, daemons)
+
+    // start the listener
+    app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
+    ()
   }
 
 }

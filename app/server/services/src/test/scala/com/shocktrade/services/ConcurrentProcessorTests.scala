@@ -2,7 +2,7 @@ package com.shocktrade.services
 
 import java.util.UUID
 
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
+import com.shocktrade.concurrent.{BasicConcurrentContext, ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
 import org.scalajs.nodejs.console
 import utest._
 
@@ -20,7 +20,7 @@ class ConcurrentProcessorTests extends TestSuite {
   override val tests = this {
     "concurrent processes data" - {
       val dataSet = js.Array((1 to 100).map(_ => UUID.randomUUID()): _*)
-      processor.start(dataSet, new ConcurrentTaskHandler[UUID, String, Int] {
+      processor.start(queue = dataSet, ctx = new BasicConcurrentContext(concurrency = 5), handler = new ConcurrentTaskHandler[UUID, String, Int] {
 
         override def onNext(ctx: ConcurrentContext, item: UUID) = {
           Future.successful(item.toString)
@@ -38,7 +38,7 @@ class ConcurrentProcessorTests extends TestSuite {
           console.log("Done")
           100
         }
-      }, concurrency = 10)
+      })
     }
   }
 

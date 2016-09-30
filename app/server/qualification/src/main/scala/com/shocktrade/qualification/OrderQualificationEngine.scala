@@ -5,7 +5,7 @@ import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
-import com.shocktrade.concurrent.daemon.Daemon
+import com.shocktrade.concurrent.Daemon
 import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.services.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._

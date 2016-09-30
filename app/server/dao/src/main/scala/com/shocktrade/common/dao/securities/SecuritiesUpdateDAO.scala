@@ -1,7 +1,7 @@
 package com.shocktrade.common.dao
 package securities
 
-import com.shocktrade.common.models.quote.ResearchQuote
+import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
 
@@ -71,7 +71,6 @@ object SecuritiesUpdateDAO {
           updateOne(
             filter = "symbol" $eq company.symbol,
             update = $set(
-              "symbol" -> company.symbol,
               "exchange" -> company.exchange,
               "name" -> company.name,
               "sector" -> company.sector,
@@ -84,12 +83,22 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def updateEodQuotes(quotes: Seq[ResearchQuote]) = {
+    def updateEodQuotes(quotes: Seq[EodDataSecurity]) = {
       dao.bulkWrite(js.Array(
-        quotes map { quote =>
+        quotes map { eod =>
           updateOne(
-            filter = "symbol" $eq quote.symbol,
-            update = $set(quote),
+            filter = "symbol" $eq eod.symbol,
+            update = $set(
+              "exchange" -> eod.exchange,
+              "name" -> eod.name,
+              "high" -> eod.high,
+              "low" -> eod.low,
+              "close" -> eod.close,
+              "volume" -> eod.volume,
+              "change" -> eod.change,
+              "changePct" -> eod.changePct,
+              "active" -> true
+            ),
             upsert = true
           )
         }: _*))

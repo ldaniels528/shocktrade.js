@@ -1,11 +1,9 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.models.quote.ResearchQuote
-import com.shocktrade.concurrent.daemon.{BulkUpdateHandler, Daemon}
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor}
-import com.shocktrade.daycycle.daemons.FullMarketUpdateDaemon._
-import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
+import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
+import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
 import com.shocktrade.services.{EodDataSecuritiesService, LoggerFactory, TradingClock}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
@@ -20,7 +18,7 @@ import scala.util.{Failure, Success}
   * Full Market Update Daemon (supports AMEX, NASDAQ, NYSE and OTCBB)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class FullMarketUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
   private val logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances
@@ -44,14 +42,14 @@ class FullMarketUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   override def run(tradingClock: TradingClock): Unit = {
     val startTime = js.Date.now()
     val inputs = getInputPages
-    val outcome = processor.start(inputs, concurrency = 20, handler = new BulkUpdateHandler[InputPages](inputs.size) {
+    val outcome = processor.start(inputs, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputPages](inputs.size) {
       logger.info(s"Scheduling ${inputs.size} pages of securities for processing...")
 
       override def onNext(ctx: ConcurrentContext, inputData: InputPages) = {
         for {
           quotes <- eodDataService(inputData.exchange, inputData.letterCode)
-          results <- securitiesDAO.flatMap(_.updateEodQuotes(quotes.map(_.toQuote)))
-        } yield (quotes.size, results.toBulkWrite)
+          results <- securitiesDAO.flatMap(_.updateEodQuotes(quotes))
+        } yield results.toBulkWrite
       }
     })
 
@@ -77,25 +75,7 @@ class FullMarketUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
   * Full Market Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object FullMarketUpdateDaemon {
-
-  implicit class EodSecurityExtensions(val eod: EodDataSecurity) extends AnyVal {
-
-    @inline
-    def toQuote = new ResearchQuote(
-      symbol = eod.symbol,
-      exchange = eod.exchange,
-      name = eod.name,
-      high = eod.high,
-      low = eod.low,
-      close = eod.close,
-      volume = eod.volume,
-      change = eod.change,
-      changePct = eod.changePct,
-      active = true
-    )
-
-  }
+object EodDataCompanyUpdateDaemon {
 
   /**
     * Represents an input object containing an exchange and letter code

@@ -1,6 +1,5 @@
-package com.shocktrade.concurrent.daemon
+package com.shocktrade.concurrent.bulk
 
-import com.shocktrade.concurrent.daemon.BulkUpdateStatistics._
 import com.shocktrade.services.LoggerFactory
 import org.scalajs.nodejs.duration2Int
 
@@ -11,9 +10,9 @@ import scala.scalajs.js
   * Represents the concurrent processing statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BulkUpdateStatistics(val expectedBatches: Int) {
+class BulkUpdateStatistics(expectedPages: Int) {
   private val logger = LoggerFactory.getLogger(getClass)
-  private var nBatches = 0
+  private var nPages = 0
   private var successes = 0
   private var failures = 0
   private var lastUpdated = js.Date.now()
@@ -23,12 +22,12 @@ class BulkUpdateStatistics(val expectedBatches: Int) {
   private var nModified = 0
   private var nUpserted = 0
 
-  def completion = 100.0 * nBatches / expectedBatches
+  def completion = 100.0 * nPages / expectedPages
 
   def failed(cause: Throwable) = failures += 1
 
-  def update(outcome: DaemonUpdateOutcome) {
-    val (requested, result) = outcome
+  def update(outcome: BulkUpdateOutcome) {
+    val result = outcome
     val nWritten = result.nInserted + result.nUpserted + result.nModified
 
     // adjust the detail-level persistence info
@@ -38,13 +37,8 @@ class BulkUpdateStatistics(val expectedBatches: Int) {
     nUpserted += result.nUpserted
 
     // update the coarse-grained info
-    nBatches += 1
+    nPages += 1
     successes += nWritten
-    //failures += requested - (result.nInserted + result.nUpserted + result.nMatched)
-
-    // (requested - nWritten) - (result.nMatched - result.nModified)
-    // (requested - (result.nInserted + result.nUpserted + result.nModified) - (result.nMatched - result.nModified)
-    // requested - result.nInserted - result.nUpserted - result.nMatched
 
     // every 5 seconds, report the progress
     if (js.Date.now() - lastUpdated >= 5.seconds) {
@@ -60,19 +54,7 @@ class BulkUpdateStatistics(val expectedBatches: Int) {
   }
 
   override def toString = {
-    "Processed %d batches (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d]".format(
-      nBatches, completion, successes, failures, nInserted, nMatched, nModified, nUpserted)
+    "Processed %d pages (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d]".format(
+      nPages, completion, successes, failures, nInserted, nMatched, nModified, nUpserted)
   }
-}
-
-/**
-  * Daemon Update Statistics
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object BulkUpdateStatistics {
-
-  case class BulkUpdateOutcome(nInserted: Int = 0, nMatched: Int = 0, nModified: Int = 0, nUpserted: Int = 0)
-
-  type DaemonUpdateOutcome = (Int, BulkUpdateOutcome)
-
 }
