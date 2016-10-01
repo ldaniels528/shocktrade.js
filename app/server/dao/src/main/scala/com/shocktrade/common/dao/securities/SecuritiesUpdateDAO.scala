@@ -37,7 +37,7 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def findSymbolsForUpdate(cutOffTime: js.Date) = {
+    def findSymbolsForFinanceUpdate(cutOffTime: js.Date) = {
       dao.find(
         selector = doc("active" $eq true, "symbol" $ne null /*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
         projection = SecurityRef.Fields.toProjection)
@@ -56,75 +56,65 @@ object SecuritiesUpdateDAO {
 
     @inline
     def updateCik(symbol: String, cik: String) = {
-      dao.bulkWrite(js.Array(
-        updateOne(
-          filter = "symbol" $eq symbol,
-          update = $set("cikNumber" -> cik),
-          upsert = false
-        )))
+      dao.updateOne(filter = "symbol" $eq symbol, update = $set("cikNumber" -> cik))
     }
 
     @inline
     def updateCompanyInfo(companies: Seq[NASDAQCompanyInfo]) = {
-      dao.bulkWrite(
-        js.Array(companies map { company =>
-          updateOne(
-            filter = "symbol" $eq company.symbol,
-            update = $set(
-              "exchange" -> company.exchange,
-              "name" -> company.name,
-              "sector" -> company.sector,
-              "industry" -> company.industry,
-              "marketCap" -> company.marketCap,
-              "IPOyear" -> company.IPOyear,
-              "active" -> true
-            ), upsert = true)
-        }: _*))
+      dao.bulkWrite(js.Array(companies map { company =>
+        updateOne(
+          filter = "symbol" $eq company.symbol,
+          update = $set(
+            "exchange" -> company.exchange,
+            "name" -> company.name,
+            "sector" -> company.sector,
+            "industry" -> company.industry,
+            "marketCap" -> company.marketCap,
+            "IPOyear" -> company.IPOyear,
+            "active" -> true
+          ), upsert = true)
+      }: _*))
     }
 
     @inline
     def updateEodQuotes(quotes: Seq[EodDataSecurity]) = {
-      dao.bulkWrite(js.Array(
-        quotes map { eod =>
-          updateOne(
-            filter = "symbol" $eq eod.symbol,
-            update = $set(
-              "exchange" -> eod.exchange,
-              "name" -> eod.name,
-              "high" -> eod.high,
-              "low" -> eod.low,
-              "close" -> eod.close,
-              "volume" -> eod.volume,
-              "change" -> eod.change,
-              "changePct" -> eod.changePct,
-              "active" -> true
-            ),
-            upsert = true
-          )
-        }: _*))
+      dao.bulkWrite(js.Array(quotes map { eod =>
+        updateOne(
+          filter = "symbol" $eq eod.symbol,
+          update = $set(
+            "exchange" -> eod.exchange,
+            "name" -> eod.name,
+            "high" -> eod.high,
+            "low" -> eod.low,
+            "close" -> eod.close,
+            "volume" -> eod.volume,
+            "change" -> eod.change,
+            "changePct" -> eod.changePct,
+            "active" -> true
+          ),
+          upsert = true
+        )
+      }: _*))
+    }
+
+    /**
+      * Update the given key statistics data object
+      * @param keyStats the given collection of [[KeyStatisticsData key statistics]] data objects
+      * @return the promise of an [[BulkWriteOpResultObject bulk update result]]
+      */
+    @inline
+    def updateKeyStatistics(keyStats: KeyStatisticsData)(implicit ec: ExecutionContext) = {
+      dao.updateOne(filter = "symbol" $eq keyStats.symbol, update = $set(keyStats))
     }
 
     @inline
-    def updateQuotes(quotes: Seq[SecurityUpdateQuote]) = {
-      dao.bulkWrite(js.Array(
-        quotes map { quote =>
-          updateOne(
-            filter = "symbol" $eq quote.symbol,
-            update = $set(quote)
-          )
-        }: _*))
-    }
-
-    @inline
-    def updateStatsFragments(quotes: StatisticsFragment*) = {
-      dao.bulkWrite(js.Array(
-        quotes map { quote =>
-          updateOne(
-            filter = "symbol" $eq quote.symbol,
-            update = $set(quote),
-            upsert = false
-          )
-        }: _*))
+    def updateSecurities(quotes: Seq[SecurityUpdateQuote]) = {
+      dao.bulkWrite(js.Array(quotes map { quote =>
+        updateOne(
+          filter = "symbol" $eq quote.symbol,
+          update = $set(quote)
+        )
+      }: _*))
     }
 
   }

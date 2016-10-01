@@ -43,6 +43,7 @@ lazy val appSettings = Seq(
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
   resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+  testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
@@ -50,9 +51,7 @@ lazy val appSettings = Seq(
     //
     // Testing dependencies
     //
-    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
-    "org.mockito" % "mockito-all" % "1.9.5" % "test",
-    "org.scalatest" %% "scalatest" % "2.2.2" % "test"
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
   ))
 
 lazy val moduleSettings = Seq(
@@ -63,6 +62,7 @@ lazy val moduleSettings = Seq(
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
   resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+  testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
@@ -70,9 +70,7 @@ lazy val moduleSettings = Seq(
     //
     // Testing dependencies
     //
-    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
-    "org.mockito" % "mockito-all" % "1.9.5" % "test",
-    "org.scalatest" %% "scalatest" % "2.2.2" % "test"
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
   ))
 
 lazy val common = (project in file("./app/shared/common"))

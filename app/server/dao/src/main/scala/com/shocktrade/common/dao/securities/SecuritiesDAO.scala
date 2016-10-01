@@ -21,7 +21,6 @@ trait SecuritiesDAO extends Collection
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object SecuritiesDAO {
-  private val assetTypes = js.Array("Common Stock", "ETF")
 
   /**
     * Securities DAO Enrichment
@@ -32,7 +31,7 @@ object SecuritiesDAO {
     @inline
     def exploreIndustries(sector: String)(implicit ec: ExecutionContext) = {
       dao.aggregate(js.Array(
-        $match("active" $eq true, "assetType" $in assetTypes, "sector" $eq sector, "industry" $ne null),
+        $match("active" $eq true, "sector" $eq sector, "industry" $ne null),
         $group("_id" -> "$industry", "total" $sum 1)
       )).toArrayFuture[ExploreQuote]
     }
@@ -40,7 +39,7 @@ object SecuritiesDAO {
     @inline
     def exploreSectors(implicit ec: ExecutionContext) = {
       dao.aggregate(js.Array(
-        $match("active" $eq true, "assetType" $in assetTypes, "sector" $ne null),
+        $match("active" $eq true, "sector" $ne null),
         $group("_id" -> "$sector", "total" $sum 1)
       )).toArrayFuture[ExploreQuote]
     }
@@ -48,7 +47,7 @@ object SecuritiesDAO {
     @inline
     def exploreSubIndustries(sector: String, industry: String)(implicit ec: ExecutionContext) = {
       dao.aggregate(js.Array(
-        $match("active" $eq true, "assetType" $in assetTypes, "sector" $eq sector, "industry" $eq industry, "subIndustry" $ne null),
+        $match("active" $eq true, "sector" $eq sector, "industry" $eq industry, "subIndustry" $ne null),
         $group("_id" -> "$subIndustry", "total" $sum 1)
       )).toArrayFuture[ExploreQuote]
     }
@@ -60,7 +59,7 @@ object SecuritiesDAO {
 
     @inline
     def findQuotesByIndustry(sector: String, industry: String, subIndustry: String)(implicit ec: ExecutionContext) = {
-      val query = doc("active" $eq true, "assetType" $in assetTypes, "sector" $eq sector, "industry" $eq industry, "subIndustry" $eq subIndustry)
+      val query = doc("active" $eq true, "sector" $eq sector, "industry" $eq industry, "subIndustry" $eq subIndustry)
       dao.find(query, projection = ResearchQuote.Fields.toProjection).toArrayFuture[ResearchQuote]
     }
 

@@ -7,10 +7,14 @@ import com.shocktrade.common.dao.securities.SICDAO._
 import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, ResearchQuote}
+import com.shocktrade.services.YahooFinanceCSVHistoryService
+import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb._
+import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -23,11 +27,12 @@ import scala.util.{Failure, Success}
   */
 object QuoteRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit require: NodeRequire, ec: ExecutionContext, mongo: MongoDB) = {
     implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
     implicit val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
     implicit val naicsDAO = dbFuture.flatMap(_.getNAICSDAO)
     implicit val sicDAO = dbFuture.flatMap(_.getSICDAO)
+    val historySvc = new YahooFinanceCSVHistoryService()
 
     // collections of quotes
     app.get("/api/quotes/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
@@ -37,6 +42,7 @@ object QuoteRoutes {
     app.get("/api/quote/:symbol/discover", (request: Request, response: Response, next: NextFunction) => quoteBySymbol(request, response, next))
     app.get("/api/quote/:symbol/full", (request: Request, response: Response, next: NextFunction) => fullQuote(request, response, next))
     app.get("/api/quote/:symbol/history", (request: Request, response: Response, next: NextFunction) => tradingHistory(request, response, next))
+    app.get("/api/quote/:symbol/statistics", (request: Request, response: Response, next: NextFunction) => statistics(request, response, next))
 
     //////////////////////////////////////////////////////////////////////////////////////
     //      API Methods
@@ -87,10 +93,21 @@ object QuoteRoutes {
       }
     }
 
+    def statistics(request: Request, response: Response, next: NextFunction) = {
+      val symbol = request.getSymbol
+      keyStatisticsDAO.flatMap(_.findBySymbol(symbol)) onComplete {
+        case Success(Some(keystats)) => response.send(keystats); next()
+        case Success(None) => response.notFound(); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
     def tradingHistory(request: Request, response: Response, next: NextFunction) = {
       val symbol = request.getSymbol
-      response.send(doc())
-      next()
+      historySvc(symbol, from = new js.Date() - 30.days, to = new js.Date()) onComplete {
+        case Success(history) => response.send(history.quotes); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
     }
 
     /**
@@ -114,8 +131,8 @@ object QuoteRoutes {
   private def copyValues(q: DiscoverQuote, ks: KeyStatisticsData): Unit = {
     q.avgVolume10Day = ks.averageVolume10days
     q.beta = ks.beta
-    q.movingAverage200Day = ks.twoHundredDayAverage
-    q.movingAverage50Day = ks.fiftyDayAverage
+    q.movingAverage200Day = ks.movingAverage200Day
+    q.movingAverage50Day = ks.movingAverage50Day
     q.forwardPE = ks.forwardPE
 
     // TODO add the other fields

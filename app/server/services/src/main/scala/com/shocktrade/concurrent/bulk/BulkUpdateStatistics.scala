@@ -10,7 +10,7 @@ import scala.scalajs.js
   * Represents the concurrent processing statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BulkUpdateStatistics(expectedPages: Int) {
+class BulkUpdateStatistics(expectedPages: Int, reportInterval: FiniteDuration = 5.seconds) {
   private val logger = LoggerFactory.getLogger(getClass)
   private var nPages = 0
   private var successes = 0
@@ -41,7 +41,7 @@ class BulkUpdateStatistics(expectedPages: Int) {
     successes += nWritten
 
     // every 5 seconds, report the progress
-    if (js.Date.now() - lastUpdated >= 5.seconds) {
+    if (js.Date.now() - lastUpdated >= reportInterval) {
       lastUpdated = js.Date.now()
       logger.info(this.toString)
 

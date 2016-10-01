@@ -4,6 +4,7 @@ import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
@@ -85,7 +86,7 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
   private def getSecurities(cutOffTime: js.Date) = {
     for {
-      securities <- securitiesDAO.flatMap(_.findSymbolsForUpdate(cutOffTime))
+      securities <- securitiesDAO.flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches
   }
@@ -107,7 +108,7 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
   private def updateSecurities(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
     Try(quotes.map(_.toUpdateQuote(mapping))) match {
-      case Success(securities) => securitiesDAO.flatMap(_.updateQuotes(securities).toFuture)
+      case Success(securities) => securitiesDAO.flatMap(_.updateSecurities(securities).toFuture)
       case Failure(e) =>
         Future.failed(die(s"Failed to convert at least one object to a security: ${e.getMessage}"))
     }

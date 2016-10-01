@@ -3282,7 +3282,6 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine.prototype.init___T__s_conc
   this.util$1 = $m_Lorg_scalajs_nodejs_util_Util$().apply__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_util_Util(require);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x$1$2) {
-      $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
         return (function(err$2, result$2) {
@@ -4511,37 +4510,6 @@ var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO = new $TypeData().ini
   Lcom_shocktrade_common_dao_securities_SecuritiesDAO: 1,
   Lorg_scalajs_nodejs_mongodb_Collection: 1
 }, true, (void 0), $noIsInstance);
-/** @constructor */
-function $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
-  $c_O.call(this);
-  this.com$shocktrade$common$dao$securities$SecuritiesDAO$$assetTypes$1 = null
-}
-$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.constructor = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$;
-/** @constructor */
-function $h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype;
-$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.init___ = (function() {
-  $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = this;
-  this.com$shocktrade$common$dao$securities$SecuritiesDAO$$assetTypes$1 = ["Common Stock", "ETF"];
-  return this
-});
-var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$: 0
-}, false, "com.shocktrade.common.dao.securities.SecuritiesDAO$", {
-  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$.prototype.$classData = $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$;
-var $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = (void 0);
-function $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$() {
-  if ((!$n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$)) {
-    $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$ = new $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$().init___()
-  };
-  return $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$
-}
 /** @constructor */
 function $c_Lcom_shocktrade_common_events_OrderEvents$() {
   $c_O.call(this)
@@ -15532,7 +15500,6 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
         var quantity$2 = $uD(p3.$$und3$1);
         var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbol$1$1, ec$2) {
           return (function(x$23$2) {
-            $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
             var fields = $m_Lcom_shocktrade_autonomous_AutonomousTradingEngine$PricingQuote$().Fields$1;
             var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", symbol$1$1));
             var this$33 = $m_sjsr_package$();
@@ -16153,7 +16120,6 @@ $c_Lcom_shocktrade_autonomous_AutonomousTradingEngine$$anonfun$com$shocktrade$au
     var options = x2$1.x$2;
     var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(options$1, ec$1) {
       return (function(x$17$2) {
-        $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$();
         var jsx$9 = new $c_T2().init___O__O("active", true);
         var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$ne", null)]);
         var y = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);

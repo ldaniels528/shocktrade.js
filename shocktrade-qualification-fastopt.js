@@ -14177,7 +14177,7 @@ $c_Lcom_shocktrade_concurrent_Daemon$DaemonRef.prototype.equals__O__Z = (functio
     if ((this.name$1 === DaemonRef$1.name$1)) {
       var x = this.daemon$1;
       var x$2 = DaemonRef$1.daemon$1;
-      var jsx$2 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+      var jsx$2 = (x === x$2)
     } else {
       var jsx$2 = false
     };

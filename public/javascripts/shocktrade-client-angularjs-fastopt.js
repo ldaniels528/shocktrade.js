@@ -3552,220 +3552,6 @@ function $m_Lcom_shocktrade_common_models_contest_PortfolioRanking$() {
   return $n_Lcom_shocktrade_common_models_contest_PortfolioRanking$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_common_models_quote_CompleteQuote$() {
-  $c_O.call(this)
-}
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.constructor = $c_Lcom_shocktrade_common_models_quote_CompleteQuote$;
-/** @constructor */
-function $h_Lcom_shocktrade_common_models_quote_CompleteQuote$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype = $c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype;
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$62__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$59__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$19__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$60__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$17__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$21__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$18__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$61__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$22__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$25__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$28__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$29__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$20__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$23__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$26__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$24__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$27__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$31__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$34__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$35__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$32__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$38__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$39__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$36__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$30__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$33__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$37__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$40__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$47__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$44__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$41__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$42__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$45__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$48__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$43__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$46__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$49__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$53__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$50__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$56__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$57__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$54__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$51__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$55__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$52__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$$lessinit$greater$default$58__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-var $d_Lcom_shocktrade_common_models_quote_CompleteQuote$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_models_quote_CompleteQuote$: 0
-}, false, "com.shocktrade.common.models.quote.CompleteQuote$", {
-  Lcom_shocktrade_common_models_quote_CompleteQuote$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote$.prototype.$classData = $d_Lcom_shocktrade_common_models_quote_CompleteQuote$;
-var $n_Lcom_shocktrade_common_models_quote_CompleteQuote$ = (void 0);
-function $m_Lcom_shocktrade_common_models_quote_CompleteQuote$() {
-  if ((!$n_Lcom_shocktrade_common_models_quote_CompleteQuote$)) {
-    $n_Lcom_shocktrade_common_models_quote_CompleteQuote$ = new $c_Lcom_shocktrade_common_models_quote_CompleteQuote$().init___()
-  };
-  return $n_Lcom_shocktrade_common_models_quote_CompleteQuote$
-}
-/** @constructor */
 function $c_Lcom_shocktrade_common_models_quote_ResearchQuote$() {
   $c_O.call(this);
   this.Fields$1 = null
@@ -3777,9 +3563,6 @@ function $h_Lcom_shocktrade_common_models_quote_ResearchQuote$() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype = $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype;
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
 $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_ResearchQuote$ = this;
   $m_sci_List$();
@@ -3789,53 +3572,11 @@ $c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.init___ = (funct
   this.Fields$1 = $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(xs, cbf));
   return this
 });
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$17__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
+$c_Lcom_shocktrade_common_models_quote_ResearchQuote$.prototype.apply__T__Lcom_shocktrade_common_models_quote_ResearchQuote = (function(symbol) {
+  var quote = {};
+  quote.symbol = symbol;
+  quote.active = true;
+  return quote
 });
 var $d_Lcom_shocktrade_common_models_quote_ResearchQuote$ = new $TypeData().initClass({
   Lcom_shocktrade_common_models_quote_ResearchQuote$: 0
@@ -10992,7 +10733,7 @@ $c_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialogController.prototype.init___
   this.com$shocktrade$stockguru$dialogs$NewsQuoteDialogController$$$modalInstance$f = $$modalInstance;
   this.com$shocktrade$stockguru$dialogs$NewsQuoteDialogController$$toaster$f = toaster;
   this.com$shocktrade$stockguru$dialogs$NewsQuoteDialogController$$quoteService$f = quoteService;
-  var value = new $c_Lcom_shocktrade_common_models_quote_ResearchQuote(symbol);
+  var value = $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().apply__T__Lcom_shocktrade_common_models_quote_ResearchQuote(symbol);
   $$scope.quote = value;
   $$scope.init = (function(f) {
     return (function(arg1) {
@@ -14877,194 +14618,6 @@ $h_Lcom_shocktrade_common_models_contest_PortfolioRanking.prototype = $g.Object.
 $c_Lcom_shocktrade_common_models_contest_PortfolioRanking.prototype = new $h_Lcom_shocktrade_common_models_contest_PortfolioRanking();
 $c_Lcom_shocktrade_common_models_contest_PortfolioRanking.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_PortfolioRanking;
 /** @constructor */
-function $c_Lcom_shocktrade_common_models_quote_ResearchQuote() {
-  var jsx$1 = (arguments.length | 0);
-  var jsx$2 = 0;
-  var arg$rest = [];
-  while ((jsx$2 < jsx$1)) {
-    arg$rest.push(arguments[jsx$2]);
-    jsx$2 = ((jsx$2 + 1) | 0)
-  };
-  var symbol = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var name = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var exchange = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var market = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var lastTrade = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var open = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var close = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var prevClose = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var high = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var low = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var change = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var changePct = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var spread = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var volume = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var avgVolume10Day = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
-  var beta = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
-  var active = ((arg$rest[16] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().$$lessinit$greater$default$17__sjs_js_UndefOr() : arg$rest[16]);
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "symbol": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "name": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "exchange": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "market": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "lastTrade": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "open": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "close": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "prevClose": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "high": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "low": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "change": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "changePct": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "spread": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "volume": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "avgVolume10Day": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "beta": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "active": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this.symbol = symbol;
-  this.name = name;
-  this.exchange = exchange;
-  this.market = market;
-  this.lastTrade = lastTrade;
-  this.open = open;
-  this.close = close;
-  this.prevClose = prevClose;
-  this.high = high;
-  this.low = low;
-  this.change = change;
-  this.changePct = changePct;
-  this.spread = spread;
-  this.volume = volume;
-  this.avgVolume10Day = avgVolume10Day;
-  this.beta = beta;
-  this.active = active
-}
-/** @constructor */
-function $h_Lcom_shocktrade_common_models_quote_ResearchQuote() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_models_quote_ResearchQuote.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote.prototype = new $h_Lcom_shocktrade_common_models_quote_ResearchQuote();
-$c_Lcom_shocktrade_common_models_quote_ResearchQuote.prototype.constructor = $c_Lcom_shocktrade_common_models_quote_ResearchQuote;
-/** @constructor */
 function $c_Lcom_shocktrade_stockguru_Award(arg$1, arg$2, arg$3, arg$4) {
   var name = $as_T(arg$1);
   var code = $as_T(arg$2);
@@ -16265,7 +15818,23 @@ $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController.prototype.init___L
   var x$19 = params.quantity;
   var x$20 = params.accountType;
   $$scope.form = new $c_Lcom_shocktrade_common_forms_NewOrderForm(x$18, (void 0), x$20, (void 0), (void 0), (void 0), x$19, (void 0), (void 0), true);
-  $$scope.quote = new $c_Lcom_shocktrade_common_models_quote_ResearchQuote($$scope.form.symbol);
+  var value = $$scope.form.symbol;
+  var x1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
+  if ($is_s_Some(x1)) {
+    var x2 = $as_s_Some(x1);
+    var symbol = $as_T(x2.x$2);
+    var jsx$1 = $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().apply__T__Lcom_shocktrade_common_models_quote_ResearchQuote(symbol)
+  } else {
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      $m_Lcom_shocktrade_common_models_quote_ResearchQuote$();
+      var jsx$1 = {}
+    } else {
+      var jsx$1;
+      throw new $c_s_MatchError().init___O(x1)
+    }
+  };
+  $$scope.quote = jsx$1;
   $$scope.init = (function(f) {
     return (function() {
       return f.apply__O()
@@ -16306,17 +15875,17 @@ $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController.prototype.init___L
       return f$3.apply__O__O(arg1$2)
     })
   })(new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController$$anonfun$10().init___Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController(this));
-  var this$5 = mySession.portfolio$und$qmark$1;
-  if (this$5.isEmpty__Z()) {
-    var this$9 = $m_s_None$()
+  var this$10 = mySession.portfolio$und$qmark$1;
+  if (this$10.isEmpty__Z()) {
+    var this$14 = $m_s_None$()
   } else {
-    var arg1$3 = this$5.get__O();
-    var value = arg1$3._id;
-    var this$9 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
+    var arg1$3 = this$10.get__O();
+    var value$1 = arg1$3._id;
+    var this$14 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1))
   };
   var f$4 = new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController$$anonfun$13().init___Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController(this);
-  if ((!this$9.isEmpty__Z())) {
-    var v1 = this$9.get__O();
+  if ((!this$14.isEmpty__Z())) {
+    var v1 = this$14.get__O();
     f$4.apply__T__V($as_T(v1))
   };
   return this
@@ -20755,644 +20324,6 @@ $h_Lcom_shocktrade_common_models_Profile.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_Profile.prototype = new $h_Lcom_shocktrade_common_models_Profile();
 $c_Lcom_shocktrade_common_models_Profile.prototype.constructor = $c_Lcom_shocktrade_common_models_Profile;
 /** @constructor */
-function $c_Lcom_shocktrade_common_models_quote_CompleteQuote() {
-  var jsx$1 = (arguments.length | 0);
-  var jsx$2 = 0;
-  var arg$rest = [];
-  while ((jsx$2 < jsx$1)) {
-    arg$rest.push(arguments[jsx$2]);
-    jsx$2 = ((jsx$2 + 1) | 0)
-  };
-  var change52Week = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var change52WeekSNP500 = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var high52Week = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var low52Week = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var movingAverage50Day = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var movingAverage200Day = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var revenue = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var revenuePerShare = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var revenueGrowthQuarterly = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var grossProfit = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var EBITDA = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var netIncomeAvailToCommon = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var dilutedEPS = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var earningsGrowthQuarterly = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var totalCash = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
-  var totalDebt = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
-  var currentRatio = ((arg$rest[16] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$17__sjs_js_UndefOr() : arg$rest[16]);
-  var totalCashPerShare = ((arg$rest[17] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$18__sjs_js_UndefOr() : arg$rest[17]);
-  var totalDebtOverEquity = ((arg$rest[18] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$19__sjs_js_UndefOr() : arg$rest[18]);
-  var bookValuePerShare = ((arg$rest[19] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$20__sjs_js_UndefOr() : arg$rest[19]);
-  var returnOnAssets = ((arg$rest[20] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$21__sjs_js_UndefOr() : arg$rest[20]);
-  var profitMargin = ((arg$rest[21] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$22__sjs_js_UndefOr() : arg$rest[21]);
-  var mostRecentQuarterDate = ((arg$rest[22] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$23__sjs_js_UndefOr() : arg$rest[22]);
-  var returnOnEquity = ((arg$rest[23] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$24__sjs_js_UndefOr() : arg$rest[23]);
-  var operatingMargin = ((arg$rest[24] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$25__sjs_js_UndefOr() : arg$rest[24]);
-  var fiscalYearEndDate = ((arg$rest[25] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$26__sjs_js_UndefOr() : arg$rest[25]);
-  var enterpriseValue = ((arg$rest[26] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$27__sjs_js_UndefOr() : arg$rest[26]);
-  var trailingPE = ((arg$rest[27] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$28__sjs_js_UndefOr() : arg$rest[27]);
-  var forwardPE = ((arg$rest[28] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$29__sjs_js_UndefOr() : arg$rest[28]);
-  var pegRatio = ((arg$rest[29] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$30__sjs_js_UndefOr() : arg$rest[29]);
-  var priceOverSales = ((arg$rest[30] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$31__sjs_js_UndefOr() : arg$rest[30]);
-  var priceOverBookValue = ((arg$rest[31] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$32__sjs_js_UndefOr() : arg$rest[31]);
-  var enterpriseValueOverRevenue = ((arg$rest[32] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$33__sjs_js_UndefOr() : arg$rest[32]);
-  var enterpriseValueOverEBITDA = ((arg$rest[33] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$34__sjs_js_UndefOr() : arg$rest[33]);
-  var operatingCashFlow = ((arg$rest[34] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$35__sjs_js_UndefOr() : arg$rest[34]);
-  var leveredFreeCashFlow = ((arg$rest[35] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$36__sjs_js_UndefOr() : arg$rest[35]);
-  var avgVolume3Month = ((arg$rest[36] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$37__sjs_js_UndefOr() : arg$rest[36]);
-  var sharesOutstanding = ((arg$rest[37] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$38__sjs_js_UndefOr() : arg$rest[37]);
-  var sharesFloat = ((arg$rest[38] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$39__sjs_js_UndefOr() : arg$rest[38]);
-  var pctHeldByInsiders = ((arg$rest[39] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$40__sjs_js_UndefOr() : arg$rest[39]);
-  var pctHeldByInstitutions = ((arg$rest[40] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$41__sjs_js_UndefOr() : arg$rest[40]);
-  var sharesShort = ((arg$rest[41] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$42__sjs_js_UndefOr() : arg$rest[41]);
-  var shortRatio = ((arg$rest[42] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$43__sjs_js_UndefOr() : arg$rest[42]);
-  var shortPctOfFloat = ((arg$rest[43] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$44__sjs_js_UndefOr() : arg$rest[43]);
-  var sharesShortPriorMonth = ((arg$rest[44] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$45__sjs_js_UndefOr() : arg$rest[44]);
-  var forwardAnnualDividendRate = ((arg$rest[45] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$46__sjs_js_UndefOr() : arg$rest[45]);
-  var forwardAnnualDividendYield = ((arg$rest[46] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$47__sjs_js_UndefOr() : arg$rest[46]);
-  var trailingAnnualDividendYield = ((arg$rest[47] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$48__sjs_js_UndefOr() : arg$rest[47]);
-  var divYield5YearAvg = ((arg$rest[48] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$49__sjs_js_UndefOr() : arg$rest[48]);
-  var payoutRatio = ((arg$rest[49] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$50__sjs_js_UndefOr() : arg$rest[49]);
-  var dividendDate = ((arg$rest[50] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$51__sjs_js_UndefOr() : arg$rest[50]);
-  var exDividendDate = ((arg$rest[51] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$52__sjs_js_UndefOr() : arg$rest[51]);
-  var lastSplitFactor = ((arg$rest[52] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$53__sjs_js_UndefOr() : arg$rest[52]);
-  var lastSplitDate = ((arg$rest[53] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$54__sjs_js_UndefOr() : arg$rest[53]);
-  var products = ((arg$rest[54] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$55__sjs_js_UndefOr() : arg$rest[54]);
-  var legalType = ((arg$rest[55] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$56__sjs_js_UndefOr() : arg$rest[55]);
-  var assetClass = ((arg$rest[56] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$57__sjs_js_UndefOr() : arg$rest[56]);
-  var assetType = ((arg$rest[57] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$58__sjs_js_UndefOr() : arg$rest[57]);
-  var naicsNumber = ((arg$rest[58] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$59__sjs_js_UndefOr() : arg$rest[58]);
-  var sicNumber = ((arg$rest[59] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$60__sjs_js_UndefOr() : arg$rest[59]);
-  var businessSummary = ((arg$rest[60] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$61__sjs_js_UndefOr() : arg$rest[60]);
-  var executives = ((arg$rest[61] === (void 0)) ? $m_Lcom_shocktrade_common_models_quote_CompleteQuote$().$$lessinit$greater$default$62__sjs_js_UndefOr() : arg$rest[61]);
-  $c_Lcom_shocktrade_common_models_quote_ResearchQuote.call(this);
-  $g.Object.defineProperties(this, {
-    "change52Week": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "change52WeekSNP500": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "high52Week": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "low52Week": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "movingAverage50Day": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "movingAverage200Day": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "revenue": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "revenuePerShare": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "revenueGrowthQuarterly": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "grossProfit": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "EBITDA": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "netIncomeAvailToCommon": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "dilutedEPS": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "earningsGrowthQuarterly": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "totalCash": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "totalDebt": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "currentRatio": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "totalCashPerShare": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "totalDebtOverEquity": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "bookValuePerShare": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "returnOnAssets": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "profitMargin": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "mostRecentQuarterDate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "returnOnEquity": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "operatingMargin": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "fiscalYearEndDate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "enterpriseValue": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "trailingPE": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "forwardPE": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "pegRatio": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "priceOverSales": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "priceOverBookValue": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "enterpriseValueOverRevenue": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "enterpriseValueOverEBITDA": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "operatingCashFlow": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "leveredFreeCashFlow": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "avgVolume3Month": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "sharesOutstanding": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "sharesFloat": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "pctHeldByInsiders": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "pctHeldByInstitutions": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "sharesShort": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "shortRatio": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "shortPctOfFloat": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "sharesShortPriorMonth": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "forwardAnnualDividendRate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "forwardAnnualDividendYield": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "trailingAnnualDividendYield": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "divYield5YearAvg": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "payoutRatio": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "dividendDate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "exDividendDate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "lastSplitFactor": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "lastSplitDate": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "products": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "legalType": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "assetClass": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "assetType": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "naicsNumber": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "sicNumber": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "businessSummary": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "executives": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this.change52Week = change52Week;
-  this.change52WeekSNP500 = change52WeekSNP500;
-  this.high52Week = high52Week;
-  this.low52Week = low52Week;
-  this.movingAverage50Day = movingAverage50Day;
-  this.movingAverage200Day = movingAverage200Day;
-  this.revenue = revenue;
-  this.revenuePerShare = revenuePerShare;
-  this.revenueGrowthQuarterly = revenueGrowthQuarterly;
-  this.grossProfit = grossProfit;
-  this.EBITDA = EBITDA;
-  this.netIncomeAvailToCommon = netIncomeAvailToCommon;
-  this.dilutedEPS = dilutedEPS;
-  this.earningsGrowthQuarterly = earningsGrowthQuarterly;
-  this.totalCash = totalCash;
-  this.totalDebt = totalDebt;
-  this.currentRatio = currentRatio;
-  this.totalCashPerShare = totalCashPerShare;
-  this.totalDebtOverEquity = totalDebtOverEquity;
-  this.bookValuePerShare = bookValuePerShare;
-  this.returnOnAssets = returnOnAssets;
-  this.profitMargin = profitMargin;
-  this.mostRecentQuarterDate = mostRecentQuarterDate;
-  this.returnOnEquity = returnOnEquity;
-  this.operatingMargin = operatingMargin;
-  this.fiscalYearEndDate = fiscalYearEndDate;
-  this.enterpriseValue = enterpriseValue;
-  this.trailingPE = trailingPE;
-  this.forwardPE = forwardPE;
-  this.pegRatio = pegRatio;
-  this.priceOverSales = priceOverSales;
-  this.priceOverBookValue = priceOverBookValue;
-  this.enterpriseValueOverRevenue = enterpriseValueOverRevenue;
-  this.enterpriseValueOverEBITDA = enterpriseValueOverEBITDA;
-  this.operatingCashFlow = operatingCashFlow;
-  this.leveredFreeCashFlow = leveredFreeCashFlow;
-  this.avgVolume3Month = avgVolume3Month;
-  this.sharesOutstanding = sharesOutstanding;
-  this.sharesFloat = sharesFloat;
-  this.pctHeldByInsiders = pctHeldByInsiders;
-  this.pctHeldByInstitutions = pctHeldByInstitutions;
-  this.sharesShort = sharesShort;
-  this.shortRatio = shortRatio;
-  this.shortPctOfFloat = shortPctOfFloat;
-  this.sharesShortPriorMonth = sharesShortPriorMonth;
-  this.forwardAnnualDividendRate = forwardAnnualDividendRate;
-  this.forwardAnnualDividendYield = forwardAnnualDividendYield;
-  this.trailingAnnualDividendYield = trailingAnnualDividendYield;
-  this.divYield5YearAvg = divYield5YearAvg;
-  this.payoutRatio = payoutRatio;
-  this.dividendDate = dividendDate;
-  this.exDividendDate = exDividendDate;
-  this.lastSplitFactor = lastSplitFactor;
-  this.lastSplitDate = lastSplitDate;
-  this.products = products;
-  this.legalType = legalType;
-  this.assetClass = assetClass;
-  this.assetType = assetType;
-  this.naicsNumber = naicsNumber;
-  this.sicNumber = sicNumber;
-  this.businessSummary = businessSummary;
-  this.executives = executives
-}
-/** @constructor */
-function $h_Lcom_shocktrade_common_models_quote_CompleteQuote() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_models_quote_CompleteQuote.prototype = $c_Lcom_shocktrade_common_models_quote_ResearchQuote.prototype;
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote.prototype = new $h_Lcom_shocktrade_common_models_quote_CompleteQuote();
-$c_Lcom_shocktrade_common_models_quote_CompleteQuote.prototype.constructor = $c_Lcom_shocktrade_common_models_quote_CompleteQuote;
-/** @constructor */
 function $c_Lcom_shocktrade_stockguru_contest_GameSearchController() {
   $c_Lcom_shocktrade_stockguru_contest_GameController.call(this);
   this.com$shocktrade$stockguru$contest$GameSearchController$$$scope$f = null;
@@ -21738,7 +20669,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
   $c_Lcom_shocktrade_stockguru_AutoCompletionController.prototype.init___Lcom_shocktrade_stockguru_AutoCompletionControllerScope__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_stockguru_discover_QuoteService.call(this, $$scope, $$q, quoteService);
   this.com$shocktrade$stockguru$discover$DiscoverController$$usMarketStatus$2 = ($m_s_package$(), new $c_s_util_Right().init___O(false));
   $$scope.ticker = null;
-  $$scope.q = new $c_Lcom_shocktrade_common_models_quote_CompleteQuote();
+  $$scope.q = {};
   var value = $$cookies.get("chart_range");
   var jsx$1 = new $c_Lcom_shocktrade_stockguru_discover_DiscoverOptions($as_T(((value === (void 0)) ? "5d" : value)));
   $$scope.options = jsx$1;
@@ -21779,61 +20710,56 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
       return f$4.apply__O__O__O__O(arg1$4, arg2, arg3)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$6().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.hasHoldings = (function(f$5) {
+  $$scope.addFavoriteSymbol = (function(f$5) {
     return (function(arg1$5) {
       return f$5.apply__O__O(arg1$5)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.addFavoriteSymbol = (function(f$6) {
+  $$scope.isFavorite = (function(f$6) {
     return (function(arg1$6) {
       return f$6.apply__O__O(arg1$6)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.isFavorite = (function(f$7) {
+  $$scope.removeFavoriteSymbol = (function(f$7) {
     return (function(arg1$7) {
       return f$7.apply__O__O(arg1$7)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.removeFavoriteSymbol = (function(f$8) {
+  $$scope.addRecentSymbol = (function(f$8) {
     return (function(arg1$8) {
       return f$8.apply__O__O(arg1$8)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$10().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.addRecentSymbol = (function(f$9) {
+  $$scope.isRecentSymbol = (function(f$9) {
     return (function(arg1$9) {
       return f$9.apply__O__O(arg1$9)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.isRecentSymbol = (function(f$10) {
+  $$scope.removeRecentSymbol = (function(f$10) {
     return (function(arg1$10) {
       return f$10.apply__O__O(arg1$10)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.removeRecentSymbol = (function(f$11) {
+  $$scope.getBetaClass = (function(f$11) {
     return (function(arg1$11) {
       return f$11.apply__O__O(arg1$11)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.getBetaClass = (function(f$12) {
+  $$scope.getRiskClass = (function(f$12) {
     return (function(arg1$12) {
       return f$12.apply__O__O(arg1$12)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$14().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.getRiskClass = (function(f$13) {
+  $$scope.getRiskDescription = (function(f$13) {
     return (function(arg1$13) {
       return f$13.apply__O__O(arg1$13)
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$15().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.getRiskDescription = (function(f$14) {
-    return (function(arg1$14) {
-      return f$14.apply__O__O(arg1$14)
+  $$scope.isUSMarketsOpen = (function(f$14) {
+    return (function() {
+      return f$14.apply__O()
     })
   })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
-  $$scope.isUSMarketsOpen = (function(f$15) {
-    return (function() {
-      return f$15.apply__O()
-    })
-  })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this));
   var value$7 = $$scope.q.symbol;
   if ((value$7 === (void 0))) {
     var value$8 = $$routeParams.symbol;
@@ -21849,11 +20775,11 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
     var symbol = $as_T(jsx$7);
     this.com$shocktrade$stockguru$discover$DiscoverController$$updateQuote__T__V(symbol)
   };
-  $$scope.$watch("options.range", (function(f$16) {
-    return (function(arg1$15, arg2$1) {
-      return f$16.apply__O__O__O(arg1$15, arg2$1)
+  $$scope.$watch("options.range", (function(f$15) {
+    return (function(arg1$14, arg2$1) {
+      return f$15.apply__O__O__O(arg1$14, arg2$1)
     })
-  })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this)));
+  })(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18().init___Lcom_shocktrade_stockguru_discover_DiscoverController(this)));
   return this
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController = new $TypeData().initClass({
@@ -34411,7 +33337,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$10.prototype.a
       return (void 0)
     } else {
       var userId = $as_T(value);
-      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
+      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.addRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
       return value$1
     }
   }
@@ -34448,21 +33374,14 @@ function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11() 
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype;
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
+  return this.apply__sjs_js_UndefOr__Z(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
-  if ((aSymbol === (void 0))) {
-    return (void 0)
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__sjs_js_UndefOr__Z = (function(symbol) {
+  if ((symbol !== (void 0))) {
+    var symbol$1 = $as_T(symbol);
+    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isRecentSymbol__T__Z(symbol$1)
   } else {
-    var symbol = $as_T(aSymbol);
-    var value = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.userProfile$1._id;
-    if ((value === (void 0))) {
-      return (void 0)
-    } else {
-      var userId = $as_T(value);
-      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.addRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
-      return value$1
-    }
+    return false
   }
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
@@ -34497,51 +33416,9 @@ function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12() 
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype;
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__Z(v1)
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.apply__sjs_js_UndefOr__Z = (function(symbol) {
-  if ((symbol !== (void 0))) {
-    var symbol$1 = $as_T(symbol);
-    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isRecentSymbol__T__Z(symbol$1)
-  } else {
-    return false
-  }
-});
-var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12: 0
-}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$12", {
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype;
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
   if ((aSymbol === (void 0))) {
     return (void 0)
   } else {
@@ -34556,12 +33433,49 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.a
     }
   }
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12: 0
+}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$12", {
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$12;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13() {
+  $c_sr_AbstractFunction1.call(this)
+}
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(beta) {
+  if ((beta === (void 0))) {
+    return (void 0)
+  } else {
+    var x0$3 = $uD(beta);
+    var value = (((x0$3 > 1.3) || (x0$3 < (-1.3))) ? "volatile_red" : ((x0$3 >= 0.0) ? "volatile_green" : ((x0$3 < 0) ? "volatile_yellow" : (void 0))));
+    return value
+  }
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   return this
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$13 = new $TypeData().initClass({
@@ -34589,12 +33503,22 @@ $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$14.prototype =
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$14.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$14.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(beta) {
-  if ((beta === (void 0))) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$14.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(riskLevel) {
+  if ((riskLevel === (void 0))) {
     return (void 0)
   } else {
-    var x0$3 = $uD(beta);
-    var value = (((x0$3 > 1.3) || (x0$3 < (-1.3))) ? "volatile_red" : ((x0$3 >= 0.0) ? "volatile_green" : ((x0$3 < 0) ? "volatile_yellow" : (void 0))));
+    var x0$4 = $as_T(riskLevel);
+    if (((x0$4 !== null) && (x0$4 !== (void 0)))) {
+      var this$8 = new $c_sci_StringOps().init___T(x0$4);
+      var jsx$1 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$8)
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      var value = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["risk_", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(x0$4.toLowerCase())]))
+    } else {
+      var value = (void 0)
+    };
     return value
   }
 });
@@ -34630,18 +33554,8 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$15.prototype.a
   if ((riskLevel === (void 0))) {
     return (void 0)
   } else {
-    var x0$4 = $as_T(riskLevel);
-    if (((x0$4 !== null) && (x0$4 !== (void 0)))) {
-      var this$8 = new $c_sci_StringOps().init___T(x0$4);
-      var jsx$1 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$8)
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var value = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["risk_", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(x0$4.toLowerCase())]))
-    } else {
-      var value = (void 0)
-    };
+    var x0$5 = $as_T(riskLevel);
+    var value = ((x0$5 === "Low") ? "Generally recommended for investment" : ((x0$5 === "Medium") ? "Not recommended for inexperienced investors" : ((x0$5 === "High") ? "Not recommended for investment" : ((x0$5 === "Unknown") ? "The risk level could not be determined" : "The risk level could not be determined"))));
     return value
   }
 });
@@ -34661,54 +33575,17 @@ var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$15 = new $
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$15.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$15;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16() {
-  $c_sr_AbstractFunction1.call(this)
+  $c_sr_AbstractFunction0.call(this);
+  this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype = new $h_sr_AbstractFunction0();
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16;
 /** @constructor */
 function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype;
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(riskLevel) {
-  if ((riskLevel === (void 0))) {
-    return (void 0)
-  } else {
-    var x0$5 = $as_T(riskLevel);
-    var value = ((x0$5 === "Low") ? "Generally recommended for investment" : ((x0$5 === "Medium") ? "Not recommended for inexperienced investors" : ((x0$5 === "High") ? "Not recommended for investment" : ((x0$5 === "Unknown") ? "The risk level could not be determined" : "The risk level could not be determined"))));
-    return value
-  }
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
-  return this
-});
-var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16: 0
-}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$16", {
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17() {
-  $c_sr_AbstractFunction0.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype;
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.apply__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.apply__sjs_js_UndefOr = (function() {
   var x1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$usMarketStatus$2;
   if ($is_s_util_Left(x1)) {
     var x2 = $as_s_util_Left(x1);
@@ -34726,17 +33603,17 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.a
     if ((!loading)) {
       this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$usMarketStatus$2 = ($m_s_package$(), new $c_s_util_Right().init___O(true));
       $g.console.log("Retrieving market status...");
-      $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$marketStatus$f.getMarketStatus__Lorg_scalajs_angularjs_http_HttpResponse()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28().init___Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+      $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$marketStatus$f.getMarketStatus__Lorg_scalajs_angularjs_http_HttpResponse()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25().init___Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
     };
     return (void 0)
   } else {
     throw new $c_s_MatchError().init___O(x1)
   }
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.apply__O = (function() {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.apply__O = (function() {
   return this.apply__sjs_js_UndefOr()
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -34744,30 +33621,33 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.i
   };
   return this
 });
-var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17: 0
-}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$17", {
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17: 1,
+var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16: 0
+}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$16", {
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16: 1,
   sr_AbstractFunction0: 1,
   O: 1,
   F0: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28() {
+function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28() {
+function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype;
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17 = (function($$outer) {
+$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -34775,10 +33655,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$ap
   };
   return this
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype.apply__O__O = (function(v1) {
-  return this.apply__s_util_Try__O($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype.apply__s_util_Try__O = (function(x0$6) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype.apply__s_util_Try__O = (function(x0$6) {
   if ($is_s_util_Success(x0$6)) {
     var x2 = $as_s_util_Success(x0$6);
     var status = x2.value$2;
@@ -34825,38 +33702,38 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$ap
     throw new $c_s_MatchError().init___O(x0$6)
   }
 });
-var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28: 0
-}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$17$$anonfun$apply$28", {
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28: 1,
+var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25: 0
+}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$16$$anonfun$apply$25", {
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$17$$anonfun$apply$28;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$16$$anonfun$apply$25;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19() {
+function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18() {
   $c_sr_AbstractFunction2.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype = new $h_sr_AbstractFunction2();
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype = new $h_sr_AbstractFunction2();
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19() {
+function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype;
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.apply__sjs_js_UndefOr__sjs_js_Any__V = (function(newValue, oldValue) {
+$h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype.apply__sjs_js_UndefOr__sjs_js_Any__V = (function(newValue, oldValue) {
   if ((newValue !== (void 0))) {
     this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$$cookies$f.put("chart_range", newValue)
   }
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.apply__O__O__O = (function(v1, v2) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype.apply__O__O__O = (function(v1, v2) {
   this.apply__sjs_js_UndefOr__sjs_js_Any__V(v1, v2)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -34864,17 +33741,17 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.i
   };
   return this
 });
-var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19: 0
-}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$19", {
-  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19: 1,
+var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18: 0
+}, false, "com.shocktrade.stockguru.discover.DiscoverController$$anonfun$18", {
+  Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18: 1,
   sr_AbstractFunction2: 1,
   O: 1,
   F2: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$19;
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$18;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$2() {
   $c_sr_AbstractFunction1.call(this);
@@ -35144,7 +34021,8 @@ var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$6 = new $T
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$6.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$6;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7() {
-  $c_sr_AbstractFunction1.call(this)
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
 }
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype.constructor = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7;
@@ -35154,29 +34032,30 @@ function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7() {
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype;
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__Z(v1)
+  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
+  if ((aSymbol === (void 0))) {
+    return (void 0)
+  } else {
+    var symbol = $as_T(aSymbol);
+    var value = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.userProfile$1._id;
+    if ((value === (void 0))) {
+      return (void 0)
+    } else {
+      var userId = $as_T(value);
+      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.addFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
+      return value$1
+    }
+  }
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
-  return this
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.legalType;
-    if ((value !== (void 0))) {
-      var x$2 = $as_T(value);
-      var jsx$1 = (x$2 === "ETF")
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var value$1 = aQuote.products;
-      return ((value$1 !== (void 0)) && ($uI(value$1.length) !== 0))
-    } else {
-      return false
-    }
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
-    return false
-  }
+    this.$$outer$2 = $$outer
+  };
+  return this
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$7: 0
@@ -35202,21 +34081,14 @@ function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8() {
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype;
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
+  return this.apply__sjs_js_UndefOr__Z(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
-  if ((aSymbol === (void 0))) {
-    return (void 0)
-  } else {
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__sjs_js_UndefOr__Z = (function(aSymbol) {
+  if ((aSymbol !== (void 0))) {
     var symbol = $as_T(aSymbol);
-    var value = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.userProfile$1._id;
-    if ((value === (void 0))) {
-      return (void 0)
-    } else {
-      var userId = $as_T(value);
-      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.addFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
-      return value$1
-    }
+    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isFavoriteSymbol__T__Z(symbol)
+  } else {
+    return false
   }
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
@@ -35251,7 +34123,22 @@ function $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9() {
 }
 $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype = $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype;
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_UndefOr__Z(v1)
+  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aSymbol) {
+  if ((aSymbol === (void 0))) {
+    return (void 0)
+  } else {
+    var symbol = $as_T(aSymbol);
+    var value = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.userProfile$1._id;
+    if ((value === (void 0))) {
+      return (void 0)
+    } else {
+      var userId = $as_T(value);
+      var value$1 = this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$profileService$f.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, symbol);
+      return value$1
+    }
+  }
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
@@ -35260,14 +34147,6 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype.in
     this.$$outer$2 = $$outer
   };
   return this
-});
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9.prototype.apply__sjs_js_UndefOr__Z = (function(aSymbol) {
-  if ((aSymbol !== (void 0))) {
-    var symbol = $as_T(aSymbol);
-    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isFavoriteSymbol__T__Z(symbol)
-  } else {
-    return false
-  }
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$9: 0
@@ -35386,77 +34265,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isBalanceSheet
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isBalanceSheet$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.totalCash;
-    if ((value !== (void 0))) {
-      var jsx$10 = true
-    } else {
-      var value$1 = aQuote.totalDebt;
-      var jsx$10 = (value$1 !== (void 0))
-    };
-    if (jsx$10) {
-      var jsx$9 = true
-    } else {
-      var value$2 = aQuote.currentRatio;
-      var jsx$9 = (value$2 !== (void 0))
-    };
-    if (jsx$9) {
-      var jsx$8 = true
-    } else {
-      var value$3 = aQuote.totalCashPerShare;
-      var jsx$8 = (value$3 !== (void 0))
-    };
-    if (jsx$8) {
-      var jsx$7 = true
-    } else {
-      var value$4 = aQuote.totalDebtOverEquity;
-      var jsx$7 = (value$4 !== (void 0))
-    };
-    if (jsx$7) {
-      var jsx$6 = true
-    } else {
-      var value$5 = aQuote.bookValuePerShare;
-      var jsx$6 = (value$5 !== (void 0))
-    };
-    if (jsx$6) {
-      var jsx$5 = true
-    } else {
-      var value$6 = aQuote.returnOnAssets;
-      var jsx$5 = (value$6 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$7 = aQuote.profitMargin;
-      var jsx$4 = (value$7 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$8 = aQuote.mostRecentQuarterDate;
-      var jsx$3 = (value$8 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$9 = aQuote.returnOnEquity;
-      var jsx$2 = (value$9 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$10 = aQuote.operatingMargin;
-      var jsx$1 = (value$10 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$11 = aQuote.fiscalYearEndDate;
-      return (value$11 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isBalanceSheet$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isBalanceSheet$1: 0
@@ -35487,59 +34296,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isDividendsSpl
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isDividendsSplits$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.forwardAnnualDividendRate;
-    if ((value !== (void 0))) {
-      var jsx$7 = true
-    } else {
-      var value$1 = aQuote.forwardAnnualDividendYield;
-      var jsx$7 = (value$1 !== (void 0))
-    };
-    if (jsx$7) {
-      var jsx$6 = true
-    } else {
-      var value$2 = aQuote.trailingAnnualDividendYield;
-      var jsx$6 = (value$2 !== (void 0))
-    };
-    if (jsx$6) {
-      var jsx$5 = true
-    } else {
-      var value$3 = aQuote.divYield5YearAvg;
-      var jsx$5 = (value$3 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$4 = aQuote.payoutRatio;
-      var jsx$4 = (value$4 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$5 = aQuote.dividendDate;
-      var jsx$3 = (value$5 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$6 = aQuote.exDividendDate;
-      var jsx$2 = (value$6 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$7 = aQuote.lastSplitFactor;
-      var jsx$1 = (value$7 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$8 = aQuote.lastSplitDate;
-      return (value$8 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isDividendsSplits$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isDividendsSplits$1: 0
@@ -35570,53 +34327,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isIncomeStatem
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isIncomeStatement$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.revenue;
-    if ((value !== (void 0))) {
-      var jsx$6 = true
-    } else {
-      var value$1 = aQuote.revenuePerShare;
-      var jsx$6 = (value$1 !== (void 0))
-    };
-    if (jsx$6) {
-      var jsx$5 = true
-    } else {
-      var value$2 = aQuote.revenueGrowthQuarterly;
-      var jsx$5 = (value$2 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$3 = aQuote.grossProfit;
-      var jsx$4 = (value$3 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$4 = aQuote.EBITDA;
-      var jsx$3 = (value$4 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$5 = aQuote.netIncomeAvailToCommon;
-      var jsx$2 = (value$5 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$6 = aQuote.dilutedEPS;
-      var jsx$1 = (value$6 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$7 = aQuote.earningsGrowthQuarterly;
-      return (value$7 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isIncomeStatement$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isIncomeStatement$1: 0
@@ -35647,47 +34358,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isPerformanceR
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isPerformanceRisk$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.high52Week;
-    if ((value !== (void 0))) {
-      var jsx$5 = true
-    } else {
-      var value$1 = aQuote.low52Week;
-      var jsx$5 = (value$1 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$2 = aQuote.change52Week;
-      var jsx$4 = (value$2 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$3 = aQuote.movingAverage50Day;
-      var jsx$3 = (value$3 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$4 = aQuote.movingAverage200Day;
-      var jsx$2 = (value$4 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$5 = aQuote.change52WeekSNP500;
-      var jsx$1 = (value$5 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$6 = aQuote.beta;
-      return (value$6 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isPerformanceRisk$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isPerformanceRisk$1: 0
@@ -35718,65 +34389,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isShareStatist
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isShareStatistics$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.avgVolume3Month;
-    if ((value !== (void 0))) {
-      var jsx$8 = true
-    } else {
-      var value$1 = aQuote.avgVolume10Day;
-      var jsx$8 = (value$1 !== (void 0))
-    };
-    if (jsx$8) {
-      var jsx$7 = true
-    } else {
-      var value$2 = aQuote.sharesOutstanding;
-      var jsx$7 = (value$2 !== (void 0))
-    };
-    if (jsx$7) {
-      var jsx$6 = true
-    } else {
-      var value$3 = aQuote.sharesFloat;
-      var jsx$6 = (value$3 !== (void 0))
-    };
-    if (jsx$6) {
-      var jsx$5 = true
-    } else {
-      var value$4 = aQuote.pctHeldByInsiders;
-      var jsx$5 = (value$4 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$5 = aQuote.pctHeldByInstitutions;
-      var jsx$4 = (value$5 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$6 = aQuote.sharesShort;
-      var jsx$3 = (value$6 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$7 = aQuote.shortRatio;
-      var jsx$2 = (value$7 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$8 = aQuote.shortPctOfFloat;
-      var jsx$1 = (value$8 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$9 = aQuote.sharesShortPriorMonth;
-      return (value$9 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isShareStatistics$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isShareStatistics$1: 0
@@ -35807,65 +34420,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isValuationMea
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isValuationMeasures$1.prototype.apply__sjs_js_UndefOr__Z = (function(aQuote) {
-  if ((aQuote !== (void 0))) {
-    var value = aQuote.enterpriseValue;
-    if ((value !== (void 0))) {
-      var jsx$8 = true
-    } else {
-      var value$1 = aQuote.trailingPE;
-      var jsx$8 = (value$1 !== (void 0))
-    };
-    if (jsx$8) {
-      var jsx$7 = true
-    } else {
-      var value$2 = aQuote.forwardPE;
-      var jsx$7 = (value$2 !== (void 0))
-    };
-    if (jsx$7) {
-      var jsx$6 = true
-    } else {
-      var value$3 = aQuote.pegRatio;
-      var jsx$6 = (value$3 !== (void 0))
-    };
-    if (jsx$6) {
-      var jsx$5 = true
-    } else {
-      var value$4 = aQuote.priceOverSales;
-      var jsx$5 = (value$4 !== (void 0))
-    };
-    if (jsx$5) {
-      var jsx$4 = true
-    } else {
-      var value$5 = aQuote.priceOverBookValue;
-      var jsx$4 = (value$5 !== (void 0))
-    };
-    if (jsx$4) {
-      var jsx$3 = true
-    } else {
-      var value$6 = aQuote.enterpriseValueOverRevenue;
-      var jsx$3 = (value$6 !== (void 0))
-    };
-    if (jsx$3) {
-      var jsx$2 = true
-    } else {
-      var value$7 = aQuote.enterpriseValueOverEBITDA;
-      var jsx$2 = (value$7 !== (void 0))
-    };
-    if (jsx$2) {
-      var jsx$1 = true
-    } else {
-      var value$8 = aQuote.operatingCashFlow;
-      var jsx$1 = (value$8 !== (void 0))
-    };
-    if (jsx$1) {
-      return true
-    } else {
-      var value$9 = aQuote.leveredFreeCashFlow;
-      return (value$9 !== (void 0))
-    }
-  } else {
-    return false
-  }
+  return (aQuote !== (void 0))
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isValuationMeasures$1 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$isValuationMeasures$1: 0

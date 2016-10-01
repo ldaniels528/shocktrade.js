@@ -1,21 +1,22 @@
 package com.shocktrade.common.models.quote
 
 import scala.scalajs.js
+import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Discover Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
+@ScalaJSDefined
 trait DiscoverQuote extends CompleteQuote {
   // standard codes
-  var advisory: js.UndefOr[String] = js.native
-  var advisoryType: js.UndefOr[String] = js.native
-  var naicsDescription: js.UndefOr[String] = js.native
-  var sicDescription: js.UndefOr[String] = js.native
+  var advisory: js.UndefOr[String]
+  var advisoryType: js.UndefOr[String]
+  var naicsDescription: js.UndefOr[String]
+  var sicDescription: js.UndefOr[String]
 
   // risk
-  var riskLevel: js.UndefOr[String] = js.native
+  var riskLevel: js.UndefOr[String]
 
 }
 

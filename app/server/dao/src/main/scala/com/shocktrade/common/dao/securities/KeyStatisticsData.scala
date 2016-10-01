@@ -1,5 +1,6 @@
 package com.shocktrade.common.dao.securities
 
+import com.shocktrade.common.models.quote.KeyStatistics
 import org.scalajs.nodejs.mongodb.ObjectID
 
 import scala.scalajs.js
@@ -27,9 +28,9 @@ class KeyStatisticsData(var _id: js.UndefOr[ObjectID],
                         var dividendYield: js.UndefOr[Double],
                         var exDividendDate: js.UndefOr[Double],
                         var expireDate: js.UndefOr[Double],
-                        var fiftyDayAverage: js.UndefOr[Double],
-                        var fiftyTwoWeekHigh: js.UndefOr[Double],
-                        var fiftyTwoWeekLow: js.UndefOr[Double],
+                        var movingAverage50Day: js.UndefOr[Double],
+                        var high52Week: js.UndefOr[Double],
+                        var low52Week: js.UndefOr[Double],
                         var fiveYearAvgDividendYield: js.UndefOr[Double],
                         var forwardPE: js.UndefOr[Double],
                         var marketCap: js.UndefOr[Double],
@@ -55,8 +56,8 @@ class KeyStatisticsData(var _id: js.UndefOr[ObjectID],
                         var trailingAnnualDividendRate: js.UndefOr[Double],
                         var trailingAnnualDividendYield: js.UndefOr[Double],
                         var trailingPE: js.UndefOr[Double],
-                        var twoHundredDayAverage: js.UndefOr[Double],
+                        var movingAverage200Day: js.UndefOr[Double],
                         var volume: js.UndefOr[Double],
                         var `yield`: js.UndefOr[Double],
                         var ytdReturn: js.UndefOr[Double],
-                        var lastUpdated: js.UndefOr[js.Date]) extends js.Object
+                        var lastUpdated: js.UndefOr[js.Date]) extends KeyStatistics

@@ -1,5 +1,7 @@
 package com.shocktrade.common.models.quote
 
+import org.scalajs.nodejs.util.ScalaJsHelper._
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
 
@@ -8,23 +10,25 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class ResearchQuote(var symbol: js.UndefOr[String] = js.undefined,
-                    var name: js.UndefOr[String] = js.undefined,
-                    var exchange: js.UndefOr[String] = js.undefined,
-                    var market: js.UndefOr[String] = js.undefined,
-                    var lastTrade: js.UndefOr[Double] = js.undefined,
-                    var open: js.UndefOr[Double] = js.undefined,
-                    var close: js.UndefOr[Double] = js.undefined,
-                    var prevClose: js.UndefOr[Double] = js.undefined,
-                    var high: js.UndefOr[Double] = js.undefined,
-                    var low: js.UndefOr[Double] = js.undefined,
-                    var change: js.UndefOr[Double] = js.undefined,
-                    var changePct: js.UndefOr[Double] = js.undefined,
-                    var spread: js.UndefOr[Double] = js.undefined,
-                    var volume: js.UndefOr[Double] = js.undefined,
-                    var avgVolume10Day: js.UndefOr[Double] = js.undefined,
-                    var beta: js.UndefOr[Double] = js.undefined,
-                    var active: js.UndefOr[Boolean] = js.undefined) extends js.Object
+trait ResearchQuote extends js.Object {
+  var symbol: js.UndefOr[String]
+  var name: js.UndefOr[String]
+  var exchange: js.UndefOr[String]
+  var market: js.UndefOr[String]
+  var lastTrade: js.UndefOr[Double]
+  var open: js.UndefOr[Double]
+  var close: js.UndefOr[Double]
+  var prevClose: js.UndefOr[Double]
+  var high: js.UndefOr[Double]
+  var low: js.UndefOr[Double]
+  var change: js.UndefOr[Double]
+  var changePct: js.UndefOr[Double]
+  var spread: js.UndefOr[Double]
+  var volume: js.UndefOr[Double]
+  var avgVolume10Day: js.UndefOr[Double]
+  var beta: js.UndefOr[Double]
+  var active: js.UndefOr[Boolean]
+}
 
 /**
   * Research Quote Companion
@@ -36,6 +40,15 @@ object ResearchQuote {
     "symbol", "name", "exchange", "market", "lastTrade", "open", "close", "prevClose", "high", "low",
     "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"
   )
+
+  def apply() = New[ResearchQuote]
+
+  def apply(symbol: String) = {
+    val quote = New[ResearchQuote]
+    quote.symbol = symbol
+    quote.active = true
+    quote
+  }
 
   /**
     * Basic Quote Extensions

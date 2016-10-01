@@ -1,9 +1,9 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef, StatisticsFragment}
+import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
 import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.services.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
@@ -27,44 +27,37 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
 
   // create the DAO and services instances
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
-  private val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
   private val yfKeyStatsSvc = new YahooFinanceKeyStatisticsService()
 
   // internal variables
   private val processor = new ConcurrentProcessor()
-  private val tradingClock = new TradingClock()
 
   /**
     * Indicates whether the daemon is eligible to be executed
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+  def isReady(clock: TradingClock) = !clock.isTradingActive
 
   /**
     * Executes the process
-    * @param tradingClock the given [[TradingClock trading clock]]
+    * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(clock: TradingClock) = {
     val startTime = js.Date.now()
     val outcome = for {
-      securities <- lookupSecurities(tradingClock.getTradeStopTime)
+      securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(clock.getTradeStopTime))
       stats <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size) {
         logger.info(s"Scheduling ${securities.size} securities for processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
           for {
             stats_? <- yfKeyStatsSvc(security.symbol)
-            (w1, w2) <- stats_? match {
-              case Some(stats) =>
-                val ks = stats.toData(security)
-                for {
-                  w1 <- keyStatisticsDAO.flatMap(_.saveKeyStatistics(ks))
-                  w2 <- securitiesDAO.flatMap(_.updateStatsFragments(stats.toFragment(ks)))
-                } yield (w1, w2)
+            w <- stats_? match {
+              case Some(stats) => securitiesDAO.flatMap(_.updateKeyStatistics(stats.toData(security)))
               case None => Future.failed(die(s"No key statistics response for symbol ${security.symbol}"))
             }
-          } yield w1.toBulkWrite ++ w2.toBulkWrite
+          } yield w.toBulkWrite
         }
       })
     } yield stats
@@ -76,11 +69,6 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-  }
-
-  @inline
-  def lookupSecurities(cutOffTime: js.Date) = {
-    securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(cutOffTime))
   }
 
 }
@@ -124,9 +112,9 @@ object KeyStatisticsUpdateDaemon {
         dividendYield = stats.summaryDetail.flatMap(_.dividendYield),
         exDividendDate = stats.summaryDetail.flatMap(_.exDividendDate),
         expireDate = stats.summaryDetail.flatMap(_.expireDate),
-        fiftyDayAverage = stats.summaryDetail.flatMap(_.fiftyDayAverage),
-        fiftyTwoWeekHigh = stats.summaryDetail.flatMap(_.fiftyTwoWeekHigh),
-        fiftyTwoWeekLow = stats.summaryDetail.flatMap(_.fiftyTwoWeekLow),
+        movingAverage50Day = stats.summaryDetail.flatMap(_.fiftyDayAverage),
+        high52Week = stats.summaryDetail.flatMap(_.fiftyTwoWeekHigh),
+        low52Week = stats.summaryDetail.flatMap(_.fiftyTwoWeekLow),
         fiveYearAvgDividendYield = stats.summaryDetail.flatMap(_.fiveYearAvgDividendYield),
         forwardPE = stats.summaryDetail.flatMap(_.forwardPE),
         marketCap = stats.summaryDetail.flatMap(_.marketCap),
@@ -152,19 +140,13 @@ object KeyStatisticsUpdateDaemon {
         trailingAnnualDividendRate = stats.summaryDetail.flatMap(_.trailingAnnualDividendRate),
         trailingAnnualDividendYield = stats.summaryDetail.flatMap(_.trailingAnnualDividendYield),
         trailingPE = stats.summaryDetail.flatMap(_.trailingPE),
-        twoHundredDayAverage = stats.summaryDetail.flatMap(_.twoHundredDayAverage),
+        movingAverage200Day = stats.summaryDetail.flatMap(_.twoHundredDayAverage),
         volume = stats.summaryDetail.flatMap(_.volume),
         `yield` = stats.summaryDetail.flatMap(_.`yield`),
         ytdReturn = stats.summaryDetail.flatMap(_.ytdReturn),
         lastUpdated = new js.Date()
       )
     }
-
-    def toFragment(ks: KeyStatisticsData) = new StatisticsFragment(
-      symbol = ks.symbol.orNull,
-      avgVolume10Day = ks.averageDailyVolume10Day ?? ks.averageVolume10days,
-      beta = ks.beta
-    )
 
   }
 

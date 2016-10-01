@@ -6,6 +6,7 @@ import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.request.Request
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
+import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -20,7 +21,7 @@ class YahooFinanceCSVHistoryService()(implicit require: NodeRequire) {
   private val request = Request()
   private val moment = Moment()
 
-  def apply(symbol: String, from: js.Date, to: js.Date) = {
+  def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext) = {
     val startTime = js.Date.now()
     request.getFuture(toURL(symbol, from, to)) map { case (response, data) =>
       new YFHistoricalQuotes(symbol = symbol, quotes = parseHistory(data), responseTime = js.Date.now() - startTime)

@@ -67,7 +67,10 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     emailNotify = true
   )
 
-  $scope.quote = new ResearchQuote(symbol = $scope.form.symbol)
+  $scope.quote = $scope.form.symbol.toOption match {
+    case Some(symbol) => ResearchQuote(symbol = symbol)
+    case None => ResearchQuote()
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions

@@ -40,7 +40,7 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
 
   // setup the public variables
   $scope.ticker = null
-  $scope.q = new CompleteQuote()
+  $scope.q = CompleteQuote()
 
   // define the display options
   $scope.options = new DiscoverOptions(range = $cookies.getOrElse("chart_range", "5d"))
@@ -159,14 +159,6 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
       console.log(s"Loading '$symbol' => ${angular.toJson(aModel)}")
       $scope.loadQuote(symbol)
     }
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          ETF Holdings / Products
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.hasHoldings = (aQuote: js.UndefOr[CompleteQuote]) => aQuote exists { q =>
-    q.legalType.exists(_ == "ETF") && q.products.exists(_.nonEmpty)
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -302,42 +294,48 @@ object DiscoverController {
   val LastSymbolCookie = "QuoteService_lastSymbol"
 
   def isPerformanceRisk: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.high52Week.nonEmpty || q.low52Week.nonEmpty || q.change52Week.nonEmpty ||
+    /*q.high52Week.nonEmpty || q.low52Week.nonEmpty || q.change52Week.nonEmpty ||
       q.movingAverage50Day.nonEmpty || q.movingAverage200Day.nonEmpty ||
-      q.change52WeekSNP500.nonEmpty || q.beta.nonEmpty
+      q.change52WeekSNP500.nonEmpty || q.beta.nonEmpty*/
+    true
   }
 
   def isIncomeStatement: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.revenue.nonEmpty || q.revenuePerShare.nonEmpty || q.revenueGrowthQuarterly.nonEmpty ||
+    /*q.revenue.nonEmpty || q.revenuePerShare.nonEmpty || q.revenueGrowthQuarterly.nonEmpty ||
       q.grossProfit.nonEmpty || q.EBITDA.nonEmpty || q.netIncomeAvailToCommon.nonEmpty ||
-      q.dilutedEPS.nonEmpty || q.earningsGrowthQuarterly.nonEmpty
+      q.dilutedEPS.nonEmpty || q.earningsGrowthQuarterly.nonEmpty*/
+    true
   }
 
   def isBalanceSheet: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.totalCash.nonEmpty || q.totalDebt.nonEmpty || q.currentRatio.nonEmpty ||
+    /*q.totalCash.nonEmpty || q.totalDebt.nonEmpty || q.currentRatio.nonEmpty ||
       q.totalCashPerShare.nonEmpty || q.totalDebtOverEquity.nonEmpty || q.bookValuePerShare.nonEmpty ||
       q.returnOnAssets.nonEmpty || q.profitMargin.nonEmpty || q.mostRecentQuarterDate.nonEmpty ||
-      q.returnOnEquity.nonEmpty || q.operatingMargin.nonEmpty || q.fiscalYearEndDate.nonEmpty
+      q.returnOnEquity.nonEmpty || q.operatingMargin.nonEmpty || q.fiscalYearEndDate.nonEmpty*/
+    true
   }
 
   def isValuationMeasures: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.enterpriseValue.nonEmpty || q.trailingPE.nonEmpty || q.forwardPE.nonEmpty ||
+    /*q.enterpriseValue.nonEmpty || q.trailingPE.nonEmpty || q.forwardPE.nonEmpty ||
       q.pegRatio.nonEmpty || q.priceOverSales.nonEmpty || q.priceOverBookValue.nonEmpty ||
       q.enterpriseValueOverRevenue.nonEmpty || q.enterpriseValueOverEBITDA.nonEmpty ||
-      q.operatingCashFlow.nonEmpty || q.leveredFreeCashFlow.nonEmpty
+      q.operatingCashFlow.nonEmpty || q.leveredFreeCashFlow.nonEmpty*/
+    true
   }
 
   def isShareStatistics: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.avgVolume3Month.nonEmpty || q.avgVolume10Day.nonEmpty || q.sharesOutstanding.nonEmpty ||
+    /*q.avgVolume3Month.nonEmpty || q.avgVolume10Day.nonEmpty || q.sharesOutstanding.nonEmpty ||
       q.sharesFloat.nonEmpty || q.pctHeldByInsiders.nonEmpty || q.pctHeldByInstitutions.nonEmpty ||
-      q.sharesShort.nonEmpty || q.shortRatio.nonEmpty || q.shortPctOfFloat.nonEmpty || q.sharesShortPriorMonth.nonEmpty
+      q.sharesShort.nonEmpty || q.shortRatio.nonEmpty || q.shortPctOfFloat.nonEmpty || q.sharesShortPriorMonth.nonEmpty*/
+    true
   }
 
   def isDividendsSplits: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
-    q.forwardAnnualDividendRate.nonEmpty || q.forwardAnnualDividendYield.nonEmpty ||
+    /*q.forwardAnnualDividendRate.nonEmpty || q.forwardAnnualDividendYield.nonEmpty ||
       q.trailingAnnualDividendYield.nonEmpty || q.divYield5YearAvg.nonEmpty ||
       q.payoutRatio.nonEmpty || q.dividendDate.nonEmpty || q.exDividendDate.nonEmpty ||
-      q.lastSplitFactor.nonEmpty || q.lastSplitDate.nonEmpty
+      q.lastSplitFactor.nonEmpty || q.lastSplitDate.nonEmpty*/
+    true
   }
 
   /**
@@ -368,7 +366,6 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope {
 
   // functions
   var expandSection: js.Function1[js.UndefOr[ModuleExpander], Unit] = js.native
-  var hasHoldings: js.Function1[js.UndefOr[CompleteQuote], Boolean] = js.native
   var isUSMarketsOpen: js.Function0[js.UndefOr[Boolean]] = js.native
   var loadQuote: js.Function1[js.UndefOr[Any], Unit] = js.native
   var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native

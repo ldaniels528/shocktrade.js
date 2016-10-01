@@ -2,6 +2,7 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
 import com.shocktrade.services.{EodDataSecuritiesService, LoggerFactory, TradingClock}

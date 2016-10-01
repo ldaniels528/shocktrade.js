@@ -1,5 +1,6 @@
 package com.shocktrade.daycycle.daemons
 
+import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
 import com.shocktrade.concurrent.bulk.BulkUpdateHandler

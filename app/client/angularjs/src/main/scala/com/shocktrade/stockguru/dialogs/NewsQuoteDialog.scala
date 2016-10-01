@@ -48,7 +48,7 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
                                 @injected("symbol") symbol: String)
   extends Controller {
 
-  $scope.quote = new ResearchQuote(symbol = symbol)
+  $scope.quote = ResearchQuote(symbol = symbol)
 
   $scope.init = (aSymbol: js.UndefOr[String]) => aSymbol foreach { symbol =>
     quoteService.getBasicQuote(symbol) onComplete {

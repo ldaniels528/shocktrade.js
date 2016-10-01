@@ -25,7 +25,7 @@
 
 <div ng-include src="'/views/discover/fund_summary.html'"></div>
 
-<div ng-if="q.assetType === 'Common Stock'" style="margin-top: 5px">
+<div style="margin-top: 5px">
 	<div ng-repeat="module in expanders">
 		<div class="quote_title contest_colors" ng-if="!module.visible || module.visible(q)">
 			<i class="fa clickable st_orange bold" ng-class="module.expanded ? 'fa-minus-square' : 'fa-plus-square'"

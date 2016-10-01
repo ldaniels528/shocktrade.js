@@ -36,6 +36,10 @@ class QuoteService($http: Http) extends Service {
     $http.post[js.Dynamic]("/api/quotes/filter/mini", filter)
   }
 
+  def getKeyStatistics(symbol: String) = {
+    $http.get[KeyStatistics](s"/api/quote/$symbol/statistics")
+  }
+
   def getTradingHistory(symbol: String) = {
     $http.get[js.Array[HistoricalQuote]](s"/api/quote/$symbol/history")
   }
