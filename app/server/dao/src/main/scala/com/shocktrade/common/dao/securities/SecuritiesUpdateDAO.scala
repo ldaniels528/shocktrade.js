@@ -1,6 +1,9 @@
 package com.shocktrade.common.dao
 package securities
 
+import com.shocktrade.services.BarChartProfileService.BarChartProfile
+import com.shocktrade.services.BloombergQuoteService.BloombergQuote
+import com.shocktrade.services.CikLookupService.CikLookupResponse
 import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
 import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
@@ -28,9 +31,9 @@ object SecuritiesUpdateDAO {
   implicit class SecuritiesUpdateDAOEnrichment(val dao: SecuritiesUpdateDAO) extends AnyVal {
 
     @inline
-    def findSymbolsForCikUpdate() = {
+    def findSymbolsIfEmpty(field: String) = {
       dao.find(
-        selector = doc("active" $eq true, "symbol" $ne null, $or("cikNumber" $exists false, "cikNumber" $eq null)),
+        selector = doc("active" $eq true, "symbol" $ne null, $or(field $exists false, field $eq null)),
         projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
         .toArrayFuture[SecurityRef]
@@ -55,8 +58,19 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def updateCik(symbol: String, cik: String) = {
-      dao.updateOne(filter = "symbol" $eq symbol, update = $set("cikNumber" -> cik))
+    def updateBloomberg(symbol: String, data: BloombergQuote) = {
+      dao.updateOne(
+        filter = "symbol" $eq symbol,
+        update = $set(
+          "sector" -> data.detailedQuote.flatMap(_.bicsSector),
+          "industry" -> data.detailedQuote.flatMap(_.bicsIndustry),
+          "subIndustry" -> data.detailedQuote.flatMap(_.bicsSubIndustry)
+        ))
+    }
+
+    @inline
+    def updateCik(cik: CikLookupResponse) = {
+      dao.updateOne(filter = "symbol" $eq cik.symbol, update = $set("cikNumber" -> cik.CIK))
     }
 
     @inline
@@ -105,6 +119,16 @@ object SecuritiesUpdateDAO {
     @inline
     def updateKeyStatistics(keyStats: KeyStatisticsData)(implicit ec: ExecutionContext) = {
       dao.updateOne(filter = "symbol" $eq keyStats.symbol, update = $set(keyStats))
+    }
+
+    @inline
+    def updateProfile(profile: BarChartProfile) = {
+      dao.updateOne(
+        filter = "symbol" $eq profile.symbol,
+        update = $set(
+          "ceoPresident" -> profile.ceoPresident,
+          "description" -> profile.description
+        ))
     }
 
     @inline

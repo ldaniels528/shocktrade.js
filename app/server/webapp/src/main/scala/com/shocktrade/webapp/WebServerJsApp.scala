@@ -1,6 +1,6 @@
 package com.shocktrade.webapp
 
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory
 import com.shocktrade.util.StringHelper._
 import com.shocktrade.webapp.routes._
 import org.scalajs.nodejs._
@@ -103,6 +103,7 @@ object WebServerJsApp extends js.JSApp {
     RemoteEventRoutes.init(app, dbFuture)
     QuoteRoutes.init(app, dbFuture)
     ResearchRoutes.init(app, dbFuture)
+    SocialRoutes.init(app, dbFuture)
     TradingClockRoutes.init(app, dbFuture)
 
     // start the listener

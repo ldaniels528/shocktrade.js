@@ -1,5 +1,7 @@
 package com.shocktrade.concurrent
 
+import com.shocktrade.serverside.LoggerFactory.Logger
+
 import scala.concurrent.Future
 
 /**
@@ -10,7 +12,7 @@ trait ConcurrentTaskHandler[IN, OUT, SUMMARY] {
 
   def onNext(ctx: ConcurrentContext, item: IN): Future[OUT]
 
-  def onSuccess(ctx: ConcurrentContext, outcome: OUT): Unit
+  def onSuccess(ctx: ConcurrentContext, outcome: OUT)(implicit logger: Logger): Unit
 
   def onFailure(ctx: ConcurrentContext, cause: Throwable): Unit
 

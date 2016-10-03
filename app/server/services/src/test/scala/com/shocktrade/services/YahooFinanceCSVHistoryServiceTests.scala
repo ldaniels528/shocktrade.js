@@ -1,5 +1,6 @@
 package com.shocktrade.services
 
+import com.shocktrade.services.yahoo.YahooFinanceCSVHistoryService
 import org.scalajs.nodejs.NodeRequire.require
 import org.scalajs.nodejs.console
 import org.scalajs.sjs.DateHelper._

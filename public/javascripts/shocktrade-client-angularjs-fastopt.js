@@ -5167,9 +5167,6 @@ $h_Lorg_scalajs_nodejs_util_ScalaJsHelper$.prototype = $c_Lorg_scalajs_nodejs_ut
 $c_Lorg_scalajs_nodejs_util_ScalaJsHelper$.prototype.init___ = (function() {
   return this
 });
-$c_Lorg_scalajs_nodejs_util_ScalaJsHelper$.prototype.emptyArray__sjs_js_Array = (function() {
-  return []
-});
 $c_Lorg_scalajs_nodejs_util_ScalaJsHelper$.prototype.promise2Future__sjs_js_Promise__s_concurrent_Future = (function(task) {
   return $m_sjs_js_Thenable$ThenableOps$().toFuture$extension__sjs_js_Thenable__s_concurrent_Future(task)
 });
@@ -8899,63 +8896,75 @@ $h_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype = $c_Lcom_shocktrade_stoc
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.configureSocialNetworkCallbacks__p1__V = (function() {
-  $g.fbAsyncInit = (function(f) {
-    return (function() {
-      return f.apply__O()
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.com$shocktrade$stockguru$WebClientJsApp$$configureSocialNetworkCallbacks__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_social_SocialServices__V = (function(mySession, socialServices) {
+  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(socialServices.getFacebookAppInfo__Lorg_scalajs_angularjs_http_HttpResponse()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mySession$1) {
+    return (function(x0$1$2) {
+      var x0$1 = $as_s_util_Try(x0$1$2);
+      if ($is_s_util_Success(x0$1)) {
+        var x2 = $as_s_util_Success(x0$1);
+        var appInfo = x2.value$2;
+        $m_Lcom_shocktrade_stockguru_WebClientJsApp$().com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_common_models_FacebookAppInfo__V(mySession$1, appInfo)
+      } else if ($is_s_util_Failure(x0$1)) {
+        $g.console.error("Error initializing Facebook App")
+      } else {
+        throw new $c_s_MatchError().init___O(x0$1)
+      }
     })
-  })(new $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1().init___())
+  })(mySession)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.configureServices__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.service("ChatService", ["$http", (function(x$macro$82$2) {
-    return new $c_Lcom_shocktrade_stockguru_contest_ChatService().init___Lorg_scalajs_angularjs_http_Http(x$macro$82$2)
+  module.service("ChatService", ["$http", (function(x$macro$65$2) {
+    return new $c_Lcom_shocktrade_stockguru_contest_ChatService().init___Lorg_scalajs_angularjs_http_Http(x$macro$65$2)
   })]);
-  module.service("ConnectService", ["$http", (function(x$macro$83$2) {
-    return new $c_Lcom_shocktrade_stockguru_social_ConnectService().init___Lorg_scalajs_angularjs_http_Http(x$macro$83$2)
+  module.service("ConnectService", ["$http", (function(x$macro$66$2) {
+    return new $c_Lcom_shocktrade_stockguru_social_ConnectService().init___Lorg_scalajs_angularjs_http_Http(x$macro$66$2)
   })]);
-  module.service("ContestService", ["$http", (function(x$macro$84$2) {
-    return new $c_Lcom_shocktrade_stockguru_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$84$2)
+  module.service("ContestService", ["$http", (function(x$macro$67$2) {
+    return new $c_Lcom_shocktrade_stockguru_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$67$2)
   })]);
-  module.service("ExploreService", ["$http", (function(x$macro$85$2) {
-    return new $c_Lcom_shocktrade_stockguru_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
+  module.service("ExploreService", ["$http", (function(x$macro$68$2) {
+    return new $c_Lcom_shocktrade_stockguru_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$68$2)
   })]);
-  module.service("Facebook", ["$q", (function(x$macro$86$2) {
-    return new $c_Lorg_scalajs_angularjs_facebook_FacebookService().init___Lorg_scalajs_angularjs_Q(x$macro$86$2)
+  module.service("Facebook", ["$q", (function(x$macro$69$2) {
+    return new $c_Lorg_scalajs_angularjs_facebook_FacebookService().init___Lorg_scalajs_angularjs_Q(x$macro$69$2)
   })]);
-  module.service("MarketStatus", ["$http", (function(x$macro$87$2) {
-    return new $c_Lcom_shocktrade_stockguru_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$87$2)
+  module.service("MarketStatus", ["$http", (function(x$macro$70$2) {
+    return new $c_Lcom_shocktrade_stockguru_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$70$2)
   })]);
-  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "ProfileService", "QuoteCache", (function(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2, x$macro$94$2, x$macro$95$2, x$macro$96$2) {
-    var x$macro$91 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$91$2);
-    var x$macro$92 = $as_Lcom_shocktrade_stockguru_contest_ChatService(x$macro$92$2);
-    var x$macro$93 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$93$2);
-    var x$macro$94 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$94$2);
-    var x$macro$95 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$95$2);
-    var x$macro$96 = $as_Lcom_shocktrade_stockguru_QuoteCache(x$macro$96$2);
-    return new $c_Lcom_shocktrade_stockguru_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_contest_ChatService__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_QuoteCache(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91, x$macro$92, x$macro$93, x$macro$94, x$macro$95, x$macro$96)
+  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "ProfileService", "QuoteCache", (function(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2, x$macro$77$2, x$macro$78$2, x$macro$79$2) {
+    var x$macro$74 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$74$2);
+    var x$macro$75 = $as_Lcom_shocktrade_stockguru_contest_ChatService(x$macro$75$2);
+    var x$macro$76 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$76$2);
+    var x$macro$77 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$77$2);
+    var x$macro$78 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$78$2);
+    var x$macro$79 = $as_Lcom_shocktrade_stockguru_QuoteCache(x$macro$79$2);
+    return new $c_Lcom_shocktrade_stockguru_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_contest_ChatService__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_QuoteCache(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74, x$macro$75, x$macro$76, x$macro$77, x$macro$78, x$macro$79)
   })]);
-  module.service("NewsService", ["$http", (function(x$macro$97$2) {
-    return new $c_Lcom_shocktrade_stockguru_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$97$2)
+  module.service("NewsService", ["$http", (function(x$macro$80$2) {
+    return new $c_Lcom_shocktrade_stockguru_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$80$2)
   })]);
-  module.service("PortfolioService", ["$http", (function(x$macro$98$2) {
-    return new $c_Lcom_shocktrade_stockguru_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$98$2)
+  module.service("PortfolioService", ["$http", (function(x$macro$81$2) {
+    return new $c_Lcom_shocktrade_stockguru_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$81$2)
   })]);
-  module.service("ProfileService", ["$http", (function(x$macro$99$2) {
-    return new $c_Lcom_shocktrade_stockguru_profile_ProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$99$2)
+  module.service("ProfileService", ["$http", (function(x$macro$82$2) {
+    return new $c_Lcom_shocktrade_stockguru_profile_ProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$82$2)
   })]);
-  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$100$2, x$macro$101$2) {
-    var x$macro$101 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$101$2);
-    return new $c_Lcom_shocktrade_stockguru_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$100$2, x$macro$101)
+  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$83$2, x$macro$84$2) {
+    var x$macro$84 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$84$2);
+    return new $c_Lcom_shocktrade_stockguru_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$83$2, x$macro$84)
   })]);
-  module.service("QuoteService", ["$http", (function(x$macro$102$2) {
-    return new $c_Lcom_shocktrade_stockguru_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$102$2)
+  module.service("QuoteService", ["$http", (function(x$macro$85$2) {
+    return new $c_Lcom_shocktrade_stockguru_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
   })]);
-  module.service("ResearchService", ["$http", (function(x$macro$103$2) {
-    return new $c_Lcom_shocktrade_stockguru_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$103$2)
+  module.service("ResearchService", ["$http", (function(x$macro$86$2) {
+    return new $c_Lcom_shocktrade_stockguru_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$86$2)
   })]);
-  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$104$2, x$macro$105$2, x$macro$106$2, x$macro$107$2, x$macro$108$2, x$macro$109$2) {
-    var x$macro$109 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$109$2);
-    return new $c_Lcom_shocktrade_stockguru_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService(x$macro$104$2, x$macro$105$2, x$macro$106$2, x$macro$107$2, x$macro$108$2, x$macro$109)
+  module.service("SocialServices", ["$http", (function(x$macro$87$2) {
+    return new $c_Lcom_shocktrade_stockguru_social_SocialServices().init___Lorg_scalajs_angularjs_http_Http(x$macro$87$2)
+  })]);
+  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2) {
+    var x$macro$93 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$93$2);
+    return new $c_Lcom_shocktrade_stockguru_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93)
   })])
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.main__V = (function() {
@@ -8996,246 +9005,229 @@ $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.main__V = (function() {
   self$1.filter("quoteChange", $m_Lcom_shocktrade_stockguru_Filters$().quoteChange$1);
   self$1.filter("quoteNumber", $m_Lcom_shocktrade_stockguru_Filters$().quoteNumber$1);
   self$1.filter("yesno", $m_Lcom_shocktrade_stockguru_Filters$().yesNo$1);
-  this.configureSocialNetworkCallbacks__p1__V();
   this.configureServices__p1__Lorg_scalajs_angularjs_Module__V(self$1);
   this.configureControllers__p1__Lorg_scalajs_angularjs_Module__V(self$1);
   this.configureDialogs__p1__Lorg_scalajs_angularjs_Module__V(self$1);
   var dependencySet = ["$routeProvider", (function($$$routeProvider) {
-    $$$routeProvider.when("/about/investors", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/investors.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/about/me", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/me.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/about/us", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/us.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/dashboard", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("DashboardController", (void 0), (void 0), (void 0), (void 0), "/views/dashboard/dashboard.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/dashboard/:contestId", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("DashboardController", (void 0), (void 0), (void 0), (void 0), "/views/dashboard/dashboard.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/discover", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("DiscoverController", (void 0), (void 0), (void 0), (void 0), "/views/discover/discover.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/discover/:symbol", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("DiscoverController", (void 0), (void 0), (void 0), (void 0), "/views/discover/discover.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/explore", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("ExploreController", (void 0), (void 0), (void 0), (void 0), "/views/explore/drill_down.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/home", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("HomeController", (void 0), (void 0), (void 0), (void 0), "/views/profile/home.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/news", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("NewsController", (void 0), (void 0), (void 0), (void 0), "/views/news/news_center.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/research", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("ResearchController", (void 0), (void 0), (void 0), (void 0), "/views/research/research.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/search", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo("GameSearchController", (void 0), (void 0), (void 0), (void 0), "/views/contest/search.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).otherwise($m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), null, "/about/us", (void 0), (void 0), (void 0)))
+    var jsx$9 = $$$routeProvider.when("/about/investors", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/investors.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/about/me", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/me.html", (void 0), null, (void 0), (void 0), (void 0), (void 0))).when("/about/us", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), "/views/about/us.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value = $d_Lcom_shocktrade_stockguru_contest_DashboardController.getClassOf().getSimpleName__T();
+    var jsx$8 = jsx$9.when("/dashboard", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value, (void 0), (void 0), (void 0), (void 0), "/views/dashboard/dashboard.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$1 = $d_Lcom_shocktrade_stockguru_contest_DashboardController.getClassOf().getSimpleName__T();
+    var jsx$7 = jsx$8.when("/dashboard/:contestId", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$1, (void 0), (void 0), (void 0), (void 0), "/views/dashboard/dashboard.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$2 = $d_Lcom_shocktrade_stockguru_discover_DiscoverController.getClassOf().getSimpleName__T();
+    var jsx$6 = jsx$7.when("/discover", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$2, (void 0), (void 0), (void 0), (void 0), "/views/discover/discover.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$3 = $d_Lcom_shocktrade_stockguru_explore_ExploreController.getClassOf().getSimpleName__T();
+    var jsx$5 = jsx$6.when("/explore", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$3, (void 0), (void 0), (void 0), (void 0), "/views/explore/drill_down.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$4 = $d_Lcom_shocktrade_stockguru_profile_HomeController.getClassOf().getSimpleName__T();
+    var jsx$4 = jsx$5.when("/home", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$4, (void 0), (void 0), (void 0), (void 0), "/views/profile/home.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$5 = $d_Lcom_shocktrade_stockguru_news_NewsController.getClassOf().getSimpleName__T();
+    var jsx$3 = jsx$4.when("/news", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$5, (void 0), (void 0), (void 0), (void 0), "/views/news/news_center.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$6 = $d_Lcom_shocktrade_stockguru_discover_ResearchController.getClassOf().getSimpleName__T();
+    var jsx$2 = jsx$3.when("/research", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$6, (void 0), (void 0), (void 0), (void 0), "/views/research/research.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    var value$7 = $d_Lcom_shocktrade_stockguru_contest_GameSearchController.getClassOf().getSimpleName__T();
+    var jsx$1 = jsx$2.when("/search", $m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo(value$7, (void 0), (void 0), (void 0), (void 0), "/views/contest/search.html", (void 0), null, (void 0), (void 0), (void 0), (void 0)));
+    jsx$1.otherwise($m_Lorg_scalajs_angularjs_uirouter_RouteTo$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Dictionary__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lorg_scalajs_angularjs_uirouter_RouteTo((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), null, "/about/us", (void 0), (void 0), (void 0)))
   })];
   self$1.config(dependencySet);
-  var initializationFn = ["$rootScope", "WebSocketService", (function($$$rootScope, WebSocketService$2) {
+  var initializationFn = ["$rootScope", "MySessionService", "SocialServices", "WebSocketService", (function($$$rootScope, MySessionService$2, SocialServices$2, WebSocketService$2) {
+    var MySessionService = $as_Lcom_shocktrade_stockguru_MySessionService(MySessionService$2);
+    var SocialServices = $as_Lcom_shocktrade_stockguru_social_SocialServices(SocialServices$2);
     var WebSocketService = $as_Lcom_shocktrade_stockguru_WebSocketService(WebSocketService$2);
+    $m_Lcom_shocktrade_stockguru_WebClientJsApp$().com$shocktrade$stockguru$WebClientJsApp$$configureSocialNetworkCallbacks__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_social_SocialServices__V(MySessionService, SocialServices);
     WebSocketService.init__V()
   })];
   self$1.run(initializationFn)
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.configureDialogs__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.service("ComposeMessageDialog", ["$http", "$modal", (function(x$macro$20$2, x$macro$21$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$20$2, x$macro$21$2)
+  module.service("ComposeMessageDialog", ["$http", "$modal", (function(x$macro$3$2, x$macro$4$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$3$2, x$macro$4$2)
   })]);
-  module.service("InvitePlayerDialog", ["$http", "$modal", (function(x$macro$22$2, x$macro$23$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$22$2, x$macro$23$2)
+  module.service("InvitePlayerDialog", ["$http", "$modal", (function(x$macro$5$2, x$macro$6$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$5$2, x$macro$6$2)
   })]);
-  module.service("NewGameDialog", ["$http", "$modal", (function(x$macro$24$2, x$macro$25$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewGameDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$24$2, x$macro$25$2)
+  module.service("NewGameDialog", ["$http", "$modal", (function(x$macro$7$2, x$macro$8$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewGameDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$7$2, x$macro$8$2)
   })]);
-  module.service("NewOrderDialog", ["$http", "$modal", (function(x$macro$26$2, x$macro$27$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$26$2, x$macro$27$2)
+  module.service("NewOrderDialog", ["$http", "$modal", (function(x$macro$9$2, x$macro$10$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$9$2, x$macro$10$2)
   })]);
-  module.service("NewsQuoteDialog", ["$http", "$modal", (function(x$macro$28$2, x$macro$29$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$28$2, x$macro$29$2)
+  module.service("NewsQuoteDialog", ["$http", "$modal", (function(x$macro$11$2, x$macro$12$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$11$2, x$macro$12$2)
   })]);
-  module.service("PerksDialog", ["$http", "$modal", (function(x$macro$30$2, x$macro$31$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_PerksDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$30$2, x$macro$31$2)
+  module.service("PerksDialog", ["$http", "$modal", (function(x$macro$13$2, x$macro$14$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_PerksDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$13$2, x$macro$14$2)
   })]);
-  module.service("SignUpDialog", ["$http", "$modal", (function(x$macro$32$2, x$macro$33$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_SignUpDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$32$2, x$macro$33$2)
+  module.service("SignUpDialog", ["$http", "$modal", (function(x$macro$15$2, x$macro$16$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_SignUpDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$15$2, x$macro$16$2)
   })]);
-  module.service("TransferFundsDialog", ["$http", "$modal", (function(x$macro$34$2, x$macro$35$2) {
-    return new $c_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$34$2, x$macro$35$2)
+  module.service("TransferFundsDialog", ["$http", "$modal", (function(x$macro$17$2, x$macro$18$2) {
+    return new $c_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$17$2, x$macro$18$2)
   })]);
-  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$36$2, x$macro$37$2, x$macro$38$2) {
-    var x$macro$38 = $as_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$38$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_stockguru_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$36$2, x$macro$37$2, x$macro$38)
+  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$19$2, x$macro$20$2, x$macro$21$2) {
+    var x$macro$21 = $as_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$21$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_stockguru_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$19$2, x$macro$20$2, x$macro$21)
   })]);
-  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$39$2, x$macro$40$2, x$macro$41$2) {
-    var x$macro$41 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$41$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_stockguru_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_stockguru_MySessionService(x$macro$39$2, x$macro$40$2, x$macro$41)
+  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$22$2, x$macro$23$2, x$macro$24$2) {
+    var x$macro$24 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$24$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_stockguru_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_stockguru_MySessionService(x$macro$22$2, x$macro$23$2, x$macro$24)
   })]);
-  module.controller("NewGameDialogController", ["$scope", "$http", "$modalInstance", "$timeout", "toaster", "MySessionService", "NewGameDialog", (function(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47$2, x$macro$48$2) {
-    var x$macro$47 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$47$2);
-    var x$macro$48 = $as_Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$48$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewGameDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47, x$macro$48)
+  module.controller("NewGameDialogController", ["$scope", "$http", "$modalInstance", "$timeout", "toaster", "MySessionService", "NewGameDialog", (function(x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28$2, x$macro$29$2, x$macro$30$2, x$macro$31$2) {
+    var x$macro$30 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$30$2);
+    var x$macro$31 = $as_Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$31$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewGameDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28$2, x$macro$29$2, x$macro$30, x$macro$31)
   })]);
-  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2, x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58$2, x$macro$59$2) {
-    var x$macro$54 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$54$2);
-    var x$macro$55 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$55$2);
-    var x$macro$56 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$56$2);
-    var x$macro$57 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$57$2);
-    var x$macro$58 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$58$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_dialogs_PerksDialog__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_discover_QuoteService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController$NewOrderParams(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2, x$macro$53$2, x$macro$54, x$macro$55, x$macro$56, x$macro$57, x$macro$58, x$macro$59$2)
+  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36$2, x$macro$37$2, x$macro$38$2, x$macro$39$2, x$macro$40$2, x$macro$41$2, x$macro$42$2) {
+    var x$macro$37 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$37$2);
+    var x$macro$38 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$38$2);
+    var x$macro$39 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$39$2);
+    var x$macro$40 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$40$2);
+    var x$macro$41 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$41$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_dialogs_PerksDialog__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_discover_QuoteService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialogController$NewOrderParams(x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36$2, x$macro$37, x$macro$38, x$macro$39, x$macro$40, x$macro$41, x$macro$42$2)
   })]);
-  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2, x$macro$64$2, x$macro$65$2) {
-    var x$macro$63 = $as_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog(x$macro$63$2);
-    var x$macro$64 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$64$2);
-    var x$macro$65 = $as_T(x$macro$65$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog__Lcom_shocktrade_stockguru_discover_QuoteService__T(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63, x$macro$64, x$macro$65)
+  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47$2, x$macro$48$2) {
+    var x$macro$46 = $as_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog(x$macro$46$2);
+    var x$macro$47 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$47$2);
+    var x$macro$48 = $as_T(x$macro$48$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_stockguru_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_dialogs_NewsQuoteDialog__Lcom_shocktrade_stockguru_discover_QuoteService__T(x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46, x$macro$47, x$macro$48)
   })]);
-  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$66$2, x$macro$67$2, x$macro$68$2, x$macro$69$2, x$macro$70$2) {
-    var x$macro$69 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$69$2);
-    var x$macro$70 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$70$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_PerksDialogController().init___Lcom_shocktrade_stockguru_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$66$2, x$macro$67$2, x$macro$68$2, x$macro$69, x$macro$70)
+  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2, x$macro$53$2) {
+    var x$macro$52 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$52$2);
+    var x$macro$53 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$53$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_PerksDialogController().init___Lcom_shocktrade_stockguru_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52, x$macro$53)
   })]);
-  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2) {
-    var x$macro$75 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$75$2);
-    var x$macro$76 = $as_Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$76$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_SignUpDialogController().init___Lcom_shocktrade_stockguru_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75, x$macro$76)
+  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58$2, x$macro$59$2) {
+    var x$macro$58 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$58$2);
+    var x$macro$59 = $as_Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$59$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_SignUpDialogController().init___Lcom_shocktrade_stockguru_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58, x$macro$59)
   })]);
-  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "TransferFundsDialog", (function(x$macro$77$2, x$macro$78$2, x$macro$79$2, x$macro$80$2, x$macro$81$2) {
-    var x$macro$80 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$80$2);
-    var x$macro$81 = $as_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$81$2);
-    return new $c_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_stockguru_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$77$2, x$macro$78$2, x$macro$79$2, x$macro$80, x$macro$81)
+  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "TransferFundsDialog", (function(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2, x$macro$64$2) {
+    var x$macro$63 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$63$2);
+    var x$macro$64 = $as_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$64$2);
+    return new $c_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_stockguru_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63, x$macro$64)
   })])
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.com$shocktrade$stockguru$WebClientJsApp$$getFacebookAppID__T__T = (function(hostname) {
-  if ((hostname === "localhost")) {
-    return "522523074535098"
-  } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(hostname, "shocktrade.biz")) {
-    return "616941558381179"
-  } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(hostname, "shocktrade.com")) {
-    return "364507947024983"
-  } else if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(hostname, "shocktrade.net")) {
-    return "616569495084446"
-  } else {
-    var jsx$1 = $g.console;
-    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Unrecognized hostname '", "'"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.location.hostname)]));
-    jsx$1.log(s);
-    return "522523074535098"
-  }
-});
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.com$shocktrade$stockguru$WebClientJsApp$$onload__sjs_js_Function1__sjs_js_Function0__sjs_js_Any = (function(success, failure) {
-  var mainElem = $g.angular.element((0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ShockTradeMain"));
-  var $$scope = mainElem.scope();
-  var injector = mainElem.injector();
-  var value = injector.get("MySessionService");
-  var x1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  if ($is_s_Some(x1)) {
-    var x2 = $as_s_Some(x1);
-    var mySession = $as_Lcom_shocktrade_stockguru_MySessionService(x2.x$2);
-    return $$scope.$apply((function(success$1, mySession$1) {
-      return (function() {
-        return success$1(mySession$1)
-      })
-    })(success, mySession))
-  } else {
-    var x = $m_s_None$();
-    if ((x === x1)) {
-      return $$scope.$apply((function(failure$1) {
-        return (function() {
-          return failure$1()
-        })
-      })(failure))
-    } else {
-      throw new $c_s_MatchError().init___O(x1)
-    }
-  }
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_common_models_FacebookAppInfo__V = (function(mySession, appInfo) {
+  $g.fbAsyncInit = (function(f) {
+    return (function() {
+      return f.apply__O()
+    })
+  })(new $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1().init___Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_common_models_FacebookAppInfo(mySession, appInfo))
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.$$js$exported$meth$main__O = (function() {
   this.main__V()
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.configureControllers__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$110$2, x$macro$111$2, x$macro$112$2) {
-    var x$macro$112 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$112$2);
-    return new $c_Lcom_shocktrade_stockguru_profile_AwardsController().init___Lcom_shocktrade_stockguru_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_stockguru_MySessionService(x$macro$110$2, x$macro$111$2, x$macro$112)
+  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$94$2, x$macro$95$2, x$macro$96$2) {
+    var x$macro$96 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$96$2);
+    return new $c_Lcom_shocktrade_stockguru_profile_AwardsController().init___Lcom_shocktrade_stockguru_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_stockguru_MySessionService(x$macro$94$2, x$macro$95$2, x$macro$96)
   })]);
-  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$113$2, x$macro$114$2, x$macro$115$2) {
-    var x$macro$115 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$115$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_CashAccountController().init___Lcom_shocktrade_stockguru_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService(x$macro$113$2, x$macro$114$2, x$macro$115)
+  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$97$2, x$macro$98$2, x$macro$99$2) {
+    var x$macro$99 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$99$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_CashAccountController().init___Lcom_shocktrade_stockguru_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService(x$macro$97$2, x$macro$98$2, x$macro$99)
   })]);
-  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121$2, x$macro$122$2) {
-    var x$macro$120 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$120$2);
-    var x$macro$121 = $as_Lcom_shocktrade_stockguru_contest_ChatService(x$macro$121$2);
-    var x$macro$122 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$122$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_ChatController().init___Lcom_shocktrade_stockguru_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_ChatService__Lcom_shocktrade_stockguru_contest_ContestService(x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120, x$macro$121, x$macro$122)
+  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104$2, x$macro$105$2, x$macro$106$2) {
+    var x$macro$104 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$104$2);
+    var x$macro$105 = $as_Lcom_shocktrade_stockguru_contest_ChatService(x$macro$105$2);
+    var x$macro$106 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$106$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_ChatController().init___Lcom_shocktrade_stockguru_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_ChatService__Lcom_shocktrade_stockguru_contest_ContestService(x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104, x$macro$105, x$macro$106)
   })]);
-  module.controller("ConnectController", ["$scope", "toaster", "ComposeMessageDialog", "ConnectService", "MySessionService", (function(x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2) {
-    var x$macro$125 = $as_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$125$2);
-    var x$macro$126 = $as_Lcom_shocktrade_stockguru_social_ConnectService(x$macro$126$2);
-    var x$macro$127 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$127$2);
-    return new $c_Lcom_shocktrade_stockguru_social_ConnectController().init___Lcom_shocktrade_stockguru_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog__Lcom_shocktrade_stockguru_social_ConnectService__Lcom_shocktrade_stockguru_MySessionService(x$macro$123$2, x$macro$124$2, x$macro$125, x$macro$126, x$macro$127)
+  module.controller("ConnectController", ["$scope", "toaster", "ComposeMessageDialog", "ConnectService", "MySessionService", (function(x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110$2, x$macro$111$2) {
+    var x$macro$109 = $as_Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog(x$macro$109$2);
+    var x$macro$110 = $as_Lcom_shocktrade_stockguru_social_ConnectService(x$macro$110$2);
+    var x$macro$111 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$111$2);
+    return new $c_Lcom_shocktrade_stockguru_social_ConnectController().init___Lcom_shocktrade_stockguru_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_dialogs_ComposeMessageDialog__Lcom_shocktrade_stockguru_social_ConnectService__Lcom_shocktrade_stockguru_MySessionService(x$macro$107$2, x$macro$108$2, x$macro$109, x$macro$110, x$macro$111)
   })]);
-  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2) {
-    var x$macro$132 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$132$2);
-    var x$macro$133 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$133$2);
-    var x$macro$134 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$134$2);
-    var x$macro$135 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$135$2);
-    var x$macro$136 = $as_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$136$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_DashboardController().init___Lcom_shocktrade_stockguru_contest_DashboardScope__Lcom_shocktrade_stockguru_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_PerksDialog__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132, x$macro$133, x$macro$134, x$macro$135, x$macro$136)
+  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$112$2, x$macro$113$2, x$macro$114$2, x$macro$115$2, x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2) {
+    var x$macro$116 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$116$2);
+    var x$macro$117 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$117$2);
+    var x$macro$118 = $as_Lcom_shocktrade_stockguru_dialogs_PerksDialog(x$macro$118$2);
+    var x$macro$119 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$119$2);
+    var x$macro$120 = $as_Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$120$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_DashboardController().init___Lcom_shocktrade_stockguru_contest_DashboardScope__Lcom_shocktrade_stockguru_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_PerksDialog__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_dialogs_TransferFundsDialog(x$macro$112$2, x$macro$113$2, x$macro$114$2, x$macro$115$2, x$macro$116, x$macro$117, x$macro$118, x$macro$119, x$macro$120)
   })]);
-  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "ProfileService", "QuoteService", (function(x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143$2, x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2) {
-    var x$macro$144 = $as_Lcom_shocktrade_stockguru_discover_MarketStatusService(x$macro$144$2);
-    var x$macro$145 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$145$2);
-    var x$macro$146 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$146$2);
-    var x$macro$147 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$147$2);
-    var x$macro$148 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$148$2);
-    return new $c_Lcom_shocktrade_stockguru_discover_DiscoverController().init___Lcom_shocktrade_stockguru_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_stockguru_discover_DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_MarketStatusService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143$2, x$macro$144, x$macro$145, x$macro$146, x$macro$147, x$macro$148)
+  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "ProfileService", "QuoteService", (function(x$macro$121$2, x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2) {
+    var x$macro$128 = $as_Lcom_shocktrade_stockguru_discover_MarketStatusService(x$macro$128$2);
+    var x$macro$129 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$129$2);
+    var x$macro$130 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$130$2);
+    var x$macro$131 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$131$2);
+    var x$macro$132 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$132$2);
+    return new $c_Lcom_shocktrade_stockguru_discover_DiscoverController().init___Lcom_shocktrade_stockguru_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_stockguru_discover_DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_MarketStatusService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$121$2, x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128, x$macro$129, x$macro$130, x$macro$131, x$macro$132)
   })]);
-  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$149$2, x$macro$150$2, x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2) {
-    var x$macro$156 = $as_Lcom_shocktrade_stockguru_explore_ExploreService(x$macro$156$2);
-    return new $c_Lcom_shocktrade_stockguru_explore_ExploreController().init___Lcom_shocktrade_stockguru_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_stockguru_explore_ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_explore_ExploreService(x$macro$149$2, x$macro$150$2, x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156)
+  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140$2) {
+    var x$macro$140 = $as_Lcom_shocktrade_stockguru_explore_ExploreService(x$macro$140$2);
+    return new $c_Lcom_shocktrade_stockguru_explore_ExploreController().init___Lcom_shocktrade_stockguru_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_stockguru_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_explore_ExploreService(x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140)
   })]);
-  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$157$2, x$macro$158$2, x$macro$159$2) {
-    var x$macro$159 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$159$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_ExposureController().init___Lcom_shocktrade_stockguru_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$157$2, x$macro$158$2, x$macro$159)
+  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$141$2, x$macro$142$2, x$macro$143$2) {
+    var x$macro$143 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$143$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_ExposureController().init___Lcom_shocktrade_stockguru_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$141$2, x$macro$142$2, x$macro$143)
   })]);
-  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2, x$macro$166$2, x$macro$167$2) {
-    var x$macro$164 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$164$2);
-    var x$macro$165 = $as_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog(x$macro$165$2);
-    var x$macro$166 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$166$2);
-    var x$macro$167 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$167$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_GameSearchController().init___Lcom_shocktrade_stockguru_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164, x$macro$165, x$macro$166, x$macro$167)
+  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2, x$macro$149$2, x$macro$150$2, x$macro$151$2) {
+    var x$macro$148 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$148$2);
+    var x$macro$149 = $as_Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog(x$macro$149$2);
+    var x$macro$150 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$150$2);
+    var x$macro$151 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$151$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_GameSearchController().init___Lcom_shocktrade_stockguru_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_dialogs_InvitePlayerDialog__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148, x$macro$149, x$macro$150, x$macro$151)
   })]);
-  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "ProfileService", (function(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172$2) {
+  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "ProfileService", (function(x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2) {
+    var x$macro$155 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$155$2);
+    var x$macro$156 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$156$2);
+    return new $c_Lcom_shocktrade_stockguru_profile_HomeController().init___Lcom_shocktrade_stockguru_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155, x$macro$156)
+  })]);
+  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "ProfileService", "SignUpDialog", (function(x$macro$157$2, x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2, x$macro$166$2) {
+    var x$macro$162 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$162$2);
+    var x$macro$163 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$163$2);
+    var x$macro$164 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$164$2);
+    var x$macro$165 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$165$2);
+    var x$macro$166 = $as_Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$166$2);
+    return new $c_Lcom_shocktrade_stockguru_MainController().init___Lcom_shocktrade_stockguru_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$157$2, x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2, x$macro$162, x$macro$163, x$macro$164, x$macro$165, x$macro$166)
+  })]);
+  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$167$2, x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172$2) {
+    var x$macro$170 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$170$2);
     var x$macro$171 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$171$2);
-    var x$macro$172 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$172$2);
-    return new $c_Lcom_shocktrade_stockguru_profile_HomeController().init___Lcom_shocktrade_stockguru_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171, x$macro$172)
+    var x$macro$172 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$172$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_MarginAccountController().init___Lcom_shocktrade_stockguru_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$167$2, x$macro$168$2, x$macro$169$2, x$macro$170, x$macro$171, x$macro$172)
   })]);
-  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "ProfileService", "SignUpDialog", (function(x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2, x$macro$180$2, x$macro$181$2, x$macro$182$2) {
-    var x$macro$178 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$178$2);
-    var x$macro$179 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$179$2);
-    var x$macro$180 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$180$2);
-    var x$macro$181 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$181$2);
-    var x$macro$182 = $as_Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$182$2);
-    return new $c_Lcom_shocktrade_stockguru_MainController().init___Lcom_shocktrade_stockguru_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_dialogs_SignUpDialog(x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178, x$macro$179, x$macro$180, x$macro$181, x$macro$182)
+  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2, x$macro$180$2) {
+    var x$macro$177 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$177$2);
+    var x$macro$178 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$178$2);
+    var x$macro$179 = $as_Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$179$2);
+    var x$macro$180 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$180$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_MyGamesController().init___Lcom_shocktrade_stockguru_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewGameDialog__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177, x$macro$178, x$macro$179, x$macro$180)
   })]);
-  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$183$2, x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187$2, x$macro$188$2) {
-    var x$macro$186 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$186$2);
-    var x$macro$187 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$187$2);
-    var x$macro$188 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$188$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_MarginAccountController().init___Lcom_shocktrade_stockguru_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$183$2, x$macro$184$2, x$macro$185$2, x$macro$186, x$macro$187, x$macro$188)
+  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "ProfileService", "QuoteService", (function(x$macro$181$2, x$macro$182$2, x$macro$183$2, x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187$2, x$macro$188$2) {
+    var x$macro$184 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$184$2);
+    var x$macro$185 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$185$2);
+    var x$macro$186 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$186$2);
+    var x$macro$187 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$187$2);
+    var x$macro$188 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$188$2);
+    return new $c_Lcom_shocktrade_stockguru_profile_MyQuotesController().init___Lcom_shocktrade_stockguru_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$181$2, x$macro$182$2, x$macro$183$2, x$macro$184, x$macro$185, x$macro$186, x$macro$187, x$macro$188)
   })]);
-  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2) {
+  module.controller("NavigationController", ["$scope", "$http", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", "WebSocketService", (function(x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2) {
     var x$macro$193 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$193$2);
     var x$macro$194 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$194$2);
-    var x$macro$195 = $as_Lcom_shocktrade_stockguru_dialogs_NewGameDialog(x$macro$195$2);
-    var x$macro$196 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$196$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_MyGamesController().init___Lcom_shocktrade_stockguru_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_dialogs_NewGameDialog__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193, x$macro$194, x$macro$195, x$macro$196)
+    var x$macro$195 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$195$2);
+    var x$macro$196 = $as_Lcom_shocktrade_stockguru_WebSocketService(x$macro$196$2);
+    return new $c_Lcom_shocktrade_stockguru_NavigationController().init___Lcom_shocktrade_stockguru_NavigationControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_WebSocketService(x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193, x$macro$194, x$macro$195, x$macro$196)
   })]);
-  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "ProfileService", "QuoteService", (function(x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2) {
-    var x$macro$200 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$200$2);
-    var x$macro$201 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$201$2);
-    var x$macro$202 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$202$2);
-    var x$macro$203 = $as_Lcom_shocktrade_stockguru_profile_ProfileService(x$macro$203$2);
-    var x$macro$204 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$204$2);
-    return new $c_Lcom_shocktrade_stockguru_profile_MyQuotesController().init___Lcom_shocktrade_stockguru_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_profile_ProfileService__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200, x$macro$201, x$macro$202, x$macro$203, x$macro$204)
+  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201$2) {
+    var x$macro$201 = $as_Lcom_shocktrade_stockguru_news_NewsService(x$macro$201$2);
+    return new $c_Lcom_shocktrade_stockguru_news_NewsController().init___Lcom_shocktrade_stockguru_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_news_NewsService(x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201)
   })]);
-  module.controller("NavigationController", ["$scope", "$http", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", "WebSocketService", (function(x$macro$205$2, x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2, x$macro$211$2, x$macro$212$2) {
-    var x$macro$209 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$209$2);
-    var x$macro$210 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$210$2);
-    var x$macro$211 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$211$2);
-    var x$macro$212 = $as_Lcom_shocktrade_stockguru_WebSocketService(x$macro$212$2);
-    return new $c_Lcom_shocktrade_stockguru_NavigationController().init___Lcom_shocktrade_stockguru_NavigationControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_PortfolioService__Lcom_shocktrade_stockguru_WebSocketService(x$macro$205$2, x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209, x$macro$210, x$macro$211, x$macro$212)
+  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2) {
+    var x$macro$206 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$206$2);
+    var x$macro$207 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$207$2);
+    var x$macro$208 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$208$2);
+    var x$macro$209 = $as_Lcom_shocktrade_stockguru_QuoteCache(x$macro$209$2);
+    var x$macro$210 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$210$2);
+    return new $c_Lcom_shocktrade_stockguru_contest_PortfolioController().init___Lcom_shocktrade_stockguru_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_QuoteCache__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206, x$macro$207, x$macro$208, x$macro$209, x$macro$210)
   })]);
-  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$213$2, x$macro$214$2, x$macro$215$2, x$macro$216$2, x$macro$217$2) {
-    var x$macro$217 = $as_Lcom_shocktrade_stockguru_news_NewsService(x$macro$217$2);
-    return new $c_Lcom_shocktrade_stockguru_news_NewsController().init___Lcom_shocktrade_stockguru_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_news_NewsService(x$macro$213$2, x$macro$214$2, x$macro$215$2, x$macro$216$2, x$macro$217)
+  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2, x$macro$215$2) {
+    var x$macro$215 = $as_Lcom_shocktrade_stockguru_discover_ResearchService(x$macro$215$2);
+    return new $c_Lcom_shocktrade_stockguru_discover_ResearchController().init___Lcom_shocktrade_stockguru_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_ResearchService(x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2, x$macro$215)
   })]);
-  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$218$2, x$macro$219$2, x$macro$220$2, x$macro$221$2, x$macro$222$2, x$macro$223$2, x$macro$224$2, x$macro$225$2, x$macro$226$2) {
-    var x$macro$222 = $as_Lcom_shocktrade_stockguru_MySessionService(x$macro$222$2);
-    var x$macro$223 = $as_Lcom_shocktrade_stockguru_contest_ContestService(x$macro$223$2);
-    var x$macro$224 = $as_Lcom_shocktrade_stockguru_dialogs_NewOrderDialog(x$macro$224$2);
-    var x$macro$225 = $as_Lcom_shocktrade_stockguru_QuoteCache(x$macro$225$2);
-    var x$macro$226 = $as_Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$226$2);
-    return new $c_Lcom_shocktrade_stockguru_contest_PortfolioController().init___Lcom_shocktrade_stockguru_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_stockguru_contest_ContestService__Lcom_shocktrade_stockguru_dialogs_NewOrderDialog__Lcom_shocktrade_stockguru_QuoteCache__Lcom_shocktrade_stockguru_contest_PortfolioService(x$macro$218$2, x$macro$219$2, x$macro$220$2, x$macro$221$2, x$macro$222, x$macro$223, x$macro$224, x$macro$225, x$macro$226)
-  })]);
-  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$227$2, x$macro$228$2, x$macro$229$2, x$macro$230$2, x$macro$231$2) {
-    var x$macro$231 = $as_Lcom_shocktrade_stockguru_discover_ResearchService(x$macro$231$2);
-    return new $c_Lcom_shocktrade_stockguru_discover_ResearchController().init___Lcom_shocktrade_stockguru_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_ResearchService(x$macro$227$2, x$macro$228$2, x$macro$229$2, x$macro$230$2, x$macro$231)
-  })]);
-  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$232$2, x$macro$233$2, x$macro$234$2) {
-    var x$macro$234 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$234$2);
-    return new $c_Lcom_shocktrade_stockguru_discover_TradingHistoryController().init___Lcom_shocktrade_stockguru_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$232$2, x$macro$233$2, x$macro$234)
+  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$216$2, x$macro$217$2, x$macro$218$2) {
+    var x$macro$218 = $as_Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$218$2);
+    return new $c_Lcom_shocktrade_stockguru_discover_TradingHistoryController().init___Lcom_shocktrade_stockguru_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_discover_QuoteService(x$macro$216$2, x$macro$217$2, x$macro$218)
   })])
 });
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$.prototype.main = (function() {
@@ -11578,91 +11570,105 @@ function $h_Lcom_shocktrade_stockguru_explore_ExploreController() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_stockguru_explore_ExploreController.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_SubIndustry__sjs_js_Array__s_Some = (function(subIndustry, quotes) {
-  this.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(subIndustry$3, quotes$1) {
-    return (function() {
-      subIndustry$3.loading = false;
-      subIndustry$3.quotes = quotes$1;
-      subIndustry$3.expanded = true
-    })
-  })(subIndustry, quotes));
-  return new $c_s_Some().init___O(subIndustry)
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__sjs_js_Array__s_Some = (function(sector, data) {
+  sector.loading = false;
+  var array = [];
+  $uI(data.length);
+  var i = 0;
+  var len = $uI(data.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = data[index];
+    var elem = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$Industry($as_T(arg1._id), $uI(arg1.total));
+    array.push(elem);
+    i = ((1 + i) | 0)
+  };
+  sector.industries = array;
+  sector.expanded = true;
+  return new $c_s_Some().init___O(sector)
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$toggleSubIndustry__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__Lcom_shocktrade_stockguru_explore_SubIndustry__V = (function(sector, industry, subIndustry) {
-  var value = subIndustry.expanded;
-  if ((value === (void 0))) {
-    var valueA = (void 0)
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$expandIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__s_concurrent_Future = (function(info, sector) {
+  var value = info.industry;
+  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
+  if (this$4.isEmpty__Z()) {
+    var result = $m_s_None$()
   } else {
-    var opt = $m_s_Option$().apply__O__s_Option(value);
-    if (opt.isEmpty__Z()) {
-      var valueA = (void 0)
+    var v1 = this$4.get__O();
+    var industryName = $as_T(v1);
+    var value$1 = sector.industries;
+    var this$8 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
+    if (this$8.isEmpty__Z()) {
+      var this$10 = $m_s_None$()
     } else {
-      var arg1 = opt.get__O();
-      var valueA = arg1
+      var v1$1 = this$8.get__O();
+      var len = $uI(v1$1.length);
+      var i = 0;
+      while (true) {
+        if ((i < len)) {
+          var index = i;
+          var arg1 = v1$1[index];
+          var jsx$1 = ($as_T(arg1.label) !== industryName)
+        } else {
+          var jsx$1 = false
+        };
+        if (jsx$1) {
+          i = ((1 + i) | 0)
+        } else {
+          break
+        }
+      };
+      var i$1 = i;
+      var this$10 = ((i$1 < $uI(v1$1.length)) ? new $c_s_Some().init___O(v1$1[i$1]) : $m_s_None$())
+    };
+    if (this$10.isEmpty__Z()) {
+      var result = $m_s_None$()
+    } else {
+      var arg1$1 = this$10.get__O();
+      var value$2 = arg1$1.expanded;
+      if ((value$2 === (void 0))) {
+        var valueA = (void 0)
+      } else {
+        var opt = $m_s_Option$().apply__O__s_Option(value$2);
+        if (opt.isEmpty__Z()) {
+          var valueA = (void 0)
+        } else {
+          var arg1$2 = opt.get__O();
+          var valueA = arg1$2
+        }
+      };
+      var result = new $c_s_Some().init___O(new $c_T2().init___O__O(arg1$1, ((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true))))
     }
   };
-  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
-    subIndustry.loading = true;
-    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label), $as_T(subIndustry.label))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, subIndustry$1) {
-      return (function(x0$5$2) {
-        var x0$5 = $as_s_util_Try(x0$5$2);
-        if ($is_s_util_Success(x0$5)) {
-          var x2 = $as_s_util_Success(x0$5);
-          var quotes = x2.value$2;
-          return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_SubIndustry__sjs_js_Array__s_Some(subIndustry$1, quotes)
-        } else if ($is_s_util_Failure(x0$5)) {
-          subIndustry$1.loading = false;
-          return (void 0)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$5)
-        }
-      })
-    })(this, subIndustry)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  } else {
-    subIndustry.expanded = false
-  }
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_Industry__sjs_js_Array__s_Some = (function(industry, data) {
-  this.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(f) {
-    return (function() {
-      return f.apply__O()
-    })
-  })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1().init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Industry__sjs_js_Array(this, industry, data)));
-  return new $c_s_Some().init___O(industry)
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$toggleIndustry__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__V = (function(sector, industry) {
-  var value = industry.expanded;
-  if ((value === (void 0))) {
-    var valueA = (void 0)
-  } else {
-    var opt = $m_s_Option$().apply__O__s_Option(value);
-    if (opt.isEmpty__Z()) {
-      var valueA = (void 0)
-    } else {
-      var arg1 = opt.get__O();
-      var valueA = arg1
+  if ($is_s_Some(result)) {
+    var x2 = $as_s_Some(result);
+    var p3 = $as_T2(x2.x$2);
+    if ((p3 !== null)) {
+      var industry = p3.$$und1__O();
+      var expanded = p3.$$und2$mcZ$sp__Z();
+      if ((!expanded)) {
+        industry.loading = true;
+        var this$27 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustries__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label)));
+        var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13().init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__Lcom_shocktrade_stockguru_explore_ExploreController$Industry(this, sector, industry);
+        var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+        var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$27, f, executor);
+        var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, industry$2) {
+          return (function(x0$6$2) {
+            var x0$6 = $as_T2(x0$6$2);
+            if ((x0$6 !== null)) {
+              var subIndustries = x0$6.$$und1__O();
+              var quotes = x0$6.$$und2__O();
+              return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__sjs_js_Array__sjs_js_Array__s_Some(industry$2, subIndustries, quotes)
+            } else {
+              throw new $c_s_MatchError().init___O(x0$6)
+            }
+          })
+        })(this, industry));
+        var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+        return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(outcome, f$1, executor$1)
+      }
     }
   };
-  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
-    industry.loading = true;
-    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustries__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, industry$1) {
-      return (function(x0$4$2) {
-        var x0$4 = $as_s_util_Try(x0$4$2);
-        if ($is_s_util_Success(x0$4)) {
-          var x2 = $as_s_util_Success(x0$4);
-          var data = x2.value$2;
-          return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_Industry__sjs_js_Array__s_Some(industry$1, data)
-        } else if ($is_s_util_Failure(x0$4)) {
-          industry$1.loading = false;
-          return (void 0)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$4)
-        }
-      })
-    })(this, industry)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  } else {
-    industry.expanded = false
-  }
+  return $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$expandAllForSymbol__T__V = (function(symbol) {
   var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
@@ -11671,57 +11677,59 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$
   var t = $m_jl_System$().currentTimeMillis__J();
   var lo = t.lo$2;
   var hi = t.hi$2;
-  var this$4 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSectorInfo__T__Lorg_scalajs_angularjs_http_HttpResponse(symbol));
+  var this$7 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSectorInfo__T__Lorg_scalajs_angularjs_http_HttpResponse(symbol));
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(info$2) {
     var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
     var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["info => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(info$2))]));
     jsx$2.log(s$1);
     var x$1 = (void 0);
-    var jsx$3 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-    var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding sector ", "..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([info$2.sector]));
-    jsx$3.log(s$2);
+    var jsx$4 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+    var jsx$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding sector ", "..."]));
+    var value = info$2.sector;
+    var s$2 = jsx$3.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value === (void 0)) ? null : value)]));
+    jsx$4.log(s$2);
     var x$2 = (void 0);
     return new $c_T3().init___O__O__O(info$2, x$1, x$2)
   }));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var this$5 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f, executor);
-  var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8().init___Lcom_shocktrade_stockguru_explore_ExploreController(this);
+  var this$8 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$7, f, executor);
+  var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10().init___Lcom_shocktrade_stockguru_explore_ExploreController(this);
   var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var results = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f$1, executor$1);
+  var results = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$8, f$1, executor$1);
   results.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, symbol$1, startTime$1) {
-    return (function(x0$2$2) {
-      var x0$2 = $as_s_util_Try(x0$2$2);
-      if ($is_s_util_Success(x0$2)) {
-        var x2 = $as_s_util_Success(x0$2);
+    return (function(x0$5$2) {
+      var x0$5 = $as_s_util_Try(x0$5$2);
+      if ($is_s_util_Success(x0$5)) {
+        var x2 = $as_s_util_Success(x0$5);
         var p3 = $as_T4(x2.value$2);
         if ((p3 !== null)) {
-          var jsx$5 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-          var jsx$4 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Finished expanding sectors in ", " msecs"]));
+          var jsx$6 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+          var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Finished expanding sectors in ", " msecs"]));
           var t$1 = $m_jl_System$().currentTimeMillis__J();
           var lo$1 = t$1.lo$2;
           var hi$1 = t$1.hi$2;
           var bhi = startTime$1.hi$2;
           var lo$2 = ((lo$1 - startTime$1.lo$2) | 0);
           var hi$2 = ((((-2147483648) ^ lo$2) > ((-2147483648) ^ lo$1)) ? (((-1) + ((hi$1 - bhi) | 0)) | 0) : ((hi$1 - bhi) | 0));
-          var s$3 = jsx$4.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_sjsr_RuntimeLong().init___I__I(lo$2, hi$2)]));
-          jsx$5.log(s$3);
+          var s$3 = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_sjsr_RuntimeLong().init___I__I(lo$2, hi$2)]));
+          jsx$6.log(s$3);
           arg$outer.com$shocktrade$stockguru$explore$ExploreController$$$location$f.hash(symbol$1);
           return (0, arg$outer.com$shocktrade$stockguru$explore$ExploreController$$$anchorScroll$f)(symbol$1)
         }
       };
-      if ($is_s_util_Failure(x0$2)) {
-        var x4 = $as_s_util_Failure(x0$2);
+      if ($is_s_util_Failure(x0$5)) {
+        var x4 = $as_s_util_Failure(x0$5);
         var e = x4.exception$2;
         var toaster = arg$outer.com$shocktrade$stockguru$explore$ExploreController$$toaster$f;
         var s$4 = e.getMessage__T();
         var s$5 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
         toaster.pop(s$5, s$4, null);
-        var jsx$6 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+        var jsx$7 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
         var s$6 = e.getMessage__T();
-        jsx$6.error(s$6);
+        jsx$7.error(s$6);
         return (void 0)
       };
-      throw new $c_s_MatchError().init___O(x0$2)
+      throw new $c_s_MatchError().init___O(x0$5)
     })
   })(this, symbol, new $c_sjsr_RuntimeLong().init___I__I(lo, hi))), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
@@ -11783,9 +11791,9 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$
         jsx$2.info(s);
         sector.loading = true;
         var this$24 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustries__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label)));
-        var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, sector$3) {
+        var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, sector$2) {
           return (function(x$9$2) {
-            return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_Sector__sjs_js_Array__s_Some(sector$3, x$9$2)
+            return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__sjs_js_Array__s_Some(sector$2, x$9$2)
           })
         })(this, sector));
         var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
@@ -11795,7 +11803,31 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$
   };
   return $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$expandSubIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__s_concurrent_Future = (function(info, sector, industry) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__sjs_js_Array__s_Some = (function(subIndustry, quotes) {
+  subIndustry.loading = false;
+  subIndustry.quotes = quotes;
+  subIndustry.expanded = true;
+  return new $c_s_Some().init___O(subIndustry)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__sjs_js_Array__sjs_js_Array__s_Some = (function(industry, data, quotes) {
+  industry.loading = false;
+  industry.quotes = quotes;
+  var array = [];
+  $uI(data.length);
+  var i = 0;
+  var len = $uI(data.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = data[index];
+    var elem = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry($as_T(arg1._id), $uI(arg1.total));
+    array.push(elem);
+    i = ((1 + i) | 0)
+  };
+  industry.subIndustries = array;
+  industry.expanded = true;
+  return new $c_s_Some().init___O(industry)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$expandSubIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__s_concurrent_Future = (function(info, sector, industry) {
   var value = info.subIndustry;
   var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
   if (this$4.isEmpty__Z()) {
@@ -11803,34 +11835,40 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$
   } else {
     var v1 = this$4.get__O();
     var subIndustryName = $as_T(v1);
-    var array = industry.subIndustries;
-    var len = $uI(array.length);
-    var i = 0;
-    while (true) {
-      if ((i < len)) {
-        var index = i;
-        var arg1 = array[index];
-        var jsx$1 = ($as_T(arg1.label) !== subIndustryName)
-      } else {
-        var jsx$1 = false
+    var value$1 = industry.subIndustries;
+    var this$8 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
+    if (this$8.isEmpty__Z()) {
+      var this$10 = $m_s_None$()
+    } else {
+      var v1$1 = this$8.get__O();
+      var len = $uI(v1$1.length);
+      var i = 0;
+      while (true) {
+        if ((i < len)) {
+          var index = i;
+          var arg1 = v1$1[index];
+          var jsx$1 = ($as_T(arg1.label) !== subIndustryName)
+        } else {
+          var jsx$1 = false
+        };
+        if (jsx$1) {
+          i = ((1 + i) | 0)
+        } else {
+          break
+        }
       };
-      if (jsx$1) {
-        i = ((1 + i) | 0)
-      } else {
-        break
-      }
+      var i$1 = i;
+      var this$10 = ((i$1 < $uI(v1$1.length)) ? new $c_s_Some().init___O(v1$1[i$1]) : $m_s_None$())
     };
-    var i$1 = i;
-    var this$6 = ((i$1 < $uI(array.length)) ? new $c_s_Some().init___O(array[i$1]) : $m_s_None$());
-    if (this$6.isEmpty__Z()) {
+    if (this$10.isEmpty__Z()) {
       var result = $m_s_None$()
     } else {
-      var arg1$1 = this$6.get__O();
-      var value$1 = arg1$1.expanded;
-      if ((value$1 === (void 0))) {
+      var arg1$1 = this$10.get__O();
+      var value$2 = arg1$1.expanded;
+      if ((value$2 === (void 0))) {
         var valueA = (void 0)
       } else {
-        var opt = $m_s_Option$().apply__O__s_Option(value$1);
+        var opt = $m_s_Option$().apply__O__s_Option(value$2);
         if (opt.isEmpty__Z()) {
           var valueA = (void 0)
         } else {
@@ -11849,115 +11887,20 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$
       var expanded = p3.$$und2$mcZ$sp__Z();
       if ((!expanded)) {
         subIndustry.loading = true;
-        var this$23 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label), $as_T(subIndustry.label)));
-        var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, subIndustry$2) {
-          return (function(x$13$2) {
-            return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_SubIndustry__sjs_js_Array__s_Some(subIndustry$2, x$13$2)
+        var this$27 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label), $as_T(subIndustry.label)));
+        var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, subIndustry$1) {
+          return (function(x$14$2) {
+            return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__sjs_js_Array__s_Some(subIndustry$1, x$14$2)
           })
         })(this, subIndustry));
         var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-        return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f, executor)
+        return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$27, f, executor)
       }
     }
   };
   return $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_Sector__sjs_js_Array__s_Some = (function(sector, data) {
-  this.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(f) {
-    return (function() {
-      return f.apply__O()
-    })
-  })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1().init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Sector__sjs_js_Array(this, sector, data)));
-  return new $c_s_Some().init___O(sector)
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$toggleSector__Lcom_shocktrade_stockguru_explore_Sector__V = (function(sector) {
-  var value = sector.expanded;
-  if ((value === (void 0))) {
-    var valueA = (void 0)
-  } else {
-    var opt = $m_s_Option$().apply__O__s_Option(value);
-    if (opt.isEmpty__Z()) {
-      var valueA = (void 0)
-    } else {
-      var arg1 = opt.get__O();
-      var valueA = arg1
-    }
-  };
-  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
-    sector.loading = true;
-    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustries__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1().init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Sector(this, sector), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  } else {
-    sector.expanded = false
-  }
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.com$shocktrade$stockguru$explore$ExploreController$$expandIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_Sector__s_concurrent_Future = (function(info, sector) {
-  var value = info.industry;
-  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  if (this$4.isEmpty__Z()) {
-    var result = $m_s_None$()
-  } else {
-    var v1 = this$4.get__O();
-    var industryName = $as_T(v1);
-    var array = sector.industries;
-    var len = $uI(array.length);
-    var i = 0;
-    while (true) {
-      if ((i < len)) {
-        var index = i;
-        var arg1 = array[index];
-        var jsx$1 = ($as_T(arg1.label) !== industryName)
-      } else {
-        var jsx$1 = false
-      };
-      if (jsx$1) {
-        i = ((1 + i) | 0)
-      } else {
-        break
-      }
-    };
-    var i$1 = i;
-    var this$6 = ((i$1 < $uI(array.length)) ? new $c_s_Some().init___O(array[i$1]) : $m_s_None$());
-    if (this$6.isEmpty__Z()) {
-      var result = $m_s_None$()
-    } else {
-      var arg1$1 = this$6.get__O();
-      var value$1 = arg1$1.expanded;
-      if ((value$1 === (void 0))) {
-        var valueA = (void 0)
-      } else {
-        var opt = $m_s_Option$().apply__O__s_Option(value$1);
-        if (opt.isEmpty__Z()) {
-          var valueA = (void 0)
-        } else {
-          var arg1$2 = opt.get__O();
-          var valueA = arg1$2
-        }
-      };
-      var result = new $c_s_Some().init___O(new $c_T2().init___O__O(arg1$1, ((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true))))
-    }
-  };
-  if ($is_s_Some(result)) {
-    var x2 = $as_s_Some(result);
-    var p3 = $as_T2(x2.x$2);
-    if ((p3 !== null)) {
-      var industry = p3.$$und1__O();
-      var expanded = p3.$$und2$mcZ$sp__Z();
-      if ((!expanded)) {
-        industry.loading = true;
-        var this$23 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustries__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label), $as_T(industry.label)));
-        var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, industry$3) {
-          return (function(x$11$2) {
-            return arg$outer.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_Industry__sjs_js_Array__s_Some(industry$3, x$11$2)
-          })
-        })(this, industry));
-        var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-        return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f, executor)
-      }
-    }
-  };
-  return $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_stockguru_explore_ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_explore_ExploreService = (function($$scope, $$anchorScroll, $$cookies, $$location, $$routeParams, $$timeout, toaster, exploreService) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_stockguru_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_stockguru_explore_ExploreService = (function($$scope, $$anchorScroll, $$cookies, $$location, $$routeParams, $$timeout, toaster, exploreService) {
   this.com$shocktrade$stockguru$explore$ExploreController$$$scope$f = $$scope;
   this.com$shocktrade$stockguru$explore$ExploreController$$$anchorScroll$f = $$anchorScroll;
   this.com$shocktrade$stockguru$explore$ExploreController$$$cookies$f = $$cookies;
@@ -11980,26 +11923,31 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController.prototype.init___Lcom_sho
       return f.apply__O__O(arg1)
     })
   })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$3().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
-  $$scope.expandOrCollapseIndustry = (function(f$1) {
-    return (function(arg1$1, arg2) {
-      return f$1.apply__O__O__O(arg1$1, arg2)
+  $$scope.collapseOrExpandSector = (function(f$1) {
+    return (function(arg1$1) {
+      return f$1.apply__O__O(arg1$1)
     })
   })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
-  $$scope.expandOrCollapseSector = (function(f$2) {
-    return (function(arg1$2) {
-      return f$2.apply__O__O(arg1$2)
+  $$scope.collapseOrExpandIndustry = (function(f$2) {
+    return (function(arg1$2, arg2) {
+      return f$2.apply__O__O__O(arg1$2, arg2)
     })
   })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
-  $$scope.expandOrCollapseSubIndustry = (function(f$3) {
+  $$scope.collapseOrExpandSubIndustry = (function(f$3) {
     return (function(arg1$3, arg2$1, arg3) {
       return f$3.apply__O__O__O__O(arg1$3, arg2$1, arg3)
     })
-  })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
+  })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
   $$scope.refreshTree = (function(f$4) {
     return (function() {
       return f$4.apply__O()
     })
   })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
+  $$scope.selectQuote = (function(f$5) {
+    return (function(arg1$4) {
+      return f$5.apply__O__O(arg1$4)
+    })
+  })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8().init___Lcom_shocktrade_stockguru_explore_ExploreController(this));
   return this
 });
 var $d_Lcom_shocktrade_stockguru_explore_ExploreController = new $TypeData().initClass({
@@ -12022,24 +11970,55 @@ function $h_Lcom_shocktrade_stockguru_explore_ExploreService() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_stockguru_explore_ExploreService.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(sector, industry, subIndustry) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/quotes?sector=", "&industry=", "&subIndustry=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, $g.encodeURI)(sector)), $as_T((0, $g.encodeURI)(industry)), $as_T((0, $g.encodeURI)(subIndustry))])))
-});
 $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
   this.$$http$1 = $$http;
   return this
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadSubIndustries__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(sector, industry) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/subIndustries?sector=", "&industry=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, $g.encodeURI)(sector)), $as_T((0, $g.encodeURI)(industry))])))
+  var jsx$3 = this.$$http$1;
+  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/subIndustries?sector=", "&industry=", ""]));
+  var x = $as_T((0, $g.encodeURI)(sector));
+  var this$4 = new $c_sci_StringOps().init___T(x);
+  var jsx$1 = $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$4, "&", "%26");
+  var x$1 = $as_T((0, $g.encodeURI)(industry));
+  var this$8 = new $c_sci_StringOps().init___T(x$1);
+  return jsx$3.get(jsx$2.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$1, $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$8, "&", "%26")])))
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadSectorInfo__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(symbol) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/symbol/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbol])))
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadIndustries__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(sector) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/industries?sector=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T((0, $g.encodeURI)(sector))])))
+  var jsx$2 = this.$$http$1;
+  var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/industries?sector=", ""]));
+  var x = $as_T((0, $g.encodeURI)(sector));
+  var this$4 = new $c_sci_StringOps().init___T(x);
+  return jsx$2.get(jsx$1.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$4, "&", "%26")])))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadIndustryQuotes__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(sector, industry) {
+  var jsx$3 = this.$$http$1;
+  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/quotes?sector=", "&industry=", ""]));
+  var x = $as_T((0, $g.encodeURI)(sector));
+  var this$4 = new $c_sci_StringOps().init___T(x);
+  var jsx$1 = $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$4, "&", "%26");
+  var x$1 = $as_T((0, $g.encodeURI)(industry));
+  var this$8 = new $c_sci_StringOps().init___T(x$1);
+  return jsx$3.get(jsx$2.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$1, $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$8, "&", "%26")])))
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadSectors__Lorg_scalajs_angularjs_http_HttpResponse = (function() {
   return this.$$http$1.get("/api/explore/sectors")
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreService.prototype.loadSubIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(sector, industry, subIndustry) {
+  var jsx$4 = this.$$http$1;
+  var jsx$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/explore/quotes?sector=", "&industry=", "&subIndustry=", ""]));
+  var x = $as_T((0, $g.encodeURI)(sector));
+  var this$4 = new $c_sci_StringOps().init___T(x);
+  var jsx$2 = $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$4, "&", "%26");
+  var x$1 = $as_T((0, $g.encodeURI)(industry));
+  var this$8 = new $c_sci_StringOps().init___T(x$1);
+  var jsx$1 = $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$8, "&", "%26");
+  var x$2 = $as_T((0, $g.encodeURI)(subIndustry));
+  var this$12 = new $c_sci_StringOps().init___T(x$2);
+  return jsx$4.get(jsx$3.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$2, jsx$1, $s_sci_StringLike$class__replaceAllLiterally__sci_StringLike__T__T__T(this$12, "&", "%26")])))
 });
 function $is_Lcom_shocktrade_stockguru_explore_ExploreService(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_stockguru_explore_ExploreService)))
@@ -12543,6 +12522,54 @@ var $d_Lcom_shocktrade_stockguru_social_ConnectService = new $TypeData().initCla
   Lorg_scalajs_angularjs_Service: 1
 });
 $c_Lcom_shocktrade_stockguru_social_ConnectService.prototype.$classData = $d_Lcom_shocktrade_stockguru_social_ConnectService;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_social_SocialServices() {
+  $c_O.call(this);
+  this.$$http$1 = null
+}
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype = new $h_O();
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype.constructor = $c_Lcom_shocktrade_stockguru_social_SocialServices;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_social_SocialServices() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_social_SocialServices.prototype = $c_Lcom_shocktrade_stockguru_social_SocialServices.prototype;
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
+  this.$$http$1 = $$http;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype.getFacebookAppInfo__Lorg_scalajs_angularjs_http_HttpResponse = (function() {
+  return this.$$http$1.get("/api/social/facebook")
+});
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype.$$js$exported$prop$getFacebookAppInfo__O = (function() {
+  return this.getFacebookAppInfo__Lorg_scalajs_angularjs_http_HttpResponse()
+});
+Object.defineProperty($c_Lcom_shocktrade_stockguru_social_SocialServices.prototype, "getFacebookAppInfo", {
+  "get": (function() {
+    return this.$$js$exported$prop$getFacebookAppInfo__O()
+  }),
+  "enumerable": true
+});
+function $is_Lcom_shocktrade_stockguru_social_SocialServices(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_stockguru_social_SocialServices)))
+}
+function $as_Lcom_shocktrade_stockguru_social_SocialServices(obj) {
+  return (($is_Lcom_shocktrade_stockguru_social_SocialServices(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.stockguru.social.SocialServices"))
+}
+function $isArrayOf_Lcom_shocktrade_stockguru_social_SocialServices(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_stockguru_social_SocialServices)))
+}
+function $asArrayOf_Lcom_shocktrade_stockguru_social_SocialServices(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_stockguru_social_SocialServices(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.stockguru.social.SocialServices;", depth))
+}
+var $d_Lcom_shocktrade_stockguru_social_SocialServices = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_social_SocialServices: 0
+}, false, "com.shocktrade.stockguru.social.SocialServices", {
+  Lcom_shocktrade_stockguru_social_SocialServices: 1,
+  O: 1,
+  Lorg_scalajs_angularjs_Service: 1
+});
+$c_Lcom_shocktrade_stockguru_social_SocialServices.prototype.$classData = $d_Lcom_shocktrade_stockguru_social_SocialServices;
 /** @constructor */
 function $c_Lorg_scalajs_angularjs_facebook_FacebookService() {
   $c_O.call(this);
@@ -16323,65 +16350,7 @@ var $d_Lcom_shocktrade_stockguru_discover_ResearchController = new $TypeData().i
 });
 $c_Lcom_shocktrade_stockguru_discover_ResearchController.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_ResearchController;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_Industry(arg$1, arg$2) {
-  var label = $as_T(arg$1);
-  var total = $uI(arg$2);
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "label": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "total": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": 0
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "subIndustries": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "expanded": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "loading": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this.label = label;
-  this.total = total;
-  this.subIndustries = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().emptyArray__sjs_js_Array();
-  this.expanded = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
-  this.loading = $m_sjs_js_package$().$undefined__sjs_js_UndefOr()
-}
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_Industry() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_Industry.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_stockguru_explore_Industry.prototype = new $h_Lcom_shocktrade_stockguru_explore_Industry();
-$c_Lcom_shocktrade_stockguru_explore_Industry.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_Industry;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_Sector(arg$1, arg$2) {
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$Sector(arg$1, arg$2) {
   var label = $as_T(arg$1);
   var total = $uI(arg$2);
   $g.Object.call(this);
@@ -16427,75 +16396,17 @@ function $c_Lcom_shocktrade_stockguru_explore_Sector(arg$1, arg$2) {
   });
   this.label = label;
   this.total = total;
-  this.industries = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().emptyArray__sjs_js_Array();
+  this.industries = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
   this.expanded = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
   this.loading = $m_sjs_js_package$().$undefined__sjs_js_UndefOr()
 }
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_Sector() {
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$Sector() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_explore_Sector.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_stockguru_explore_Sector.prototype = new $h_Lcom_shocktrade_stockguru_explore_Sector();
-$c_Lcom_shocktrade_stockguru_explore_Sector.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_Sector;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_SubIndustry(arg$1, arg$2) {
-  var label = $as_T(arg$1);
-  var total = $uI(arg$2);
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "label": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "total": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": 0
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "quotes": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "expanded": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "loading": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this.label = label;
-  this.total = total;
-  this.quotes = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().emptyArray__sjs_js_Array();
-  this.expanded = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
-  this.loading = $m_sjs_js_package$().$undefined__sjs_js_UndefOr()
-}
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_SubIndustry() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_SubIndustry.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_stockguru_explore_SubIndustry.prototype = new $h_Lcom_shocktrade_stockguru_explore_SubIndustry();
-$c_Lcom_shocktrade_stockguru_explore_SubIndustry.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_SubIndustry;
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$Sector.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$Sector.prototype = new $h_Lcom_shocktrade_stockguru_explore_ExploreController$Sector();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$Sector.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$Sector;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_news_NewsController() {
   $c_O.call(this);
@@ -20673,6 +20584,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
   var value = $$cookies.get("chart_range");
   var jsx$1 = new $c_Lcom_shocktrade_stockguru_discover_DiscoverOptions($as_T(((value === (void 0)) ? "5d" : value)));
   $$scope.options = jsx$1;
+  var jsx$7 = new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Historical Quotes", "/views/discover/quotes/trading_history.html", "fa-calendar");
   var value$1 = $m_Lcom_shocktrade_stockguru_discover_DiscoverController$().isPerformanceRisk__sjs_js_Function1();
   var jsx$6 = new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Performance & Risk", "/views/discover/expanders/price_performance.html", "fa-line-chart", (void 0), value$1);
   var value$2 = $m_Lcom_shocktrade_stockguru_discover_DiscoverController$().isIncomeStatement__sjs_js_Function1();
@@ -20684,7 +20596,7 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
   var value$5 = $m_Lcom_shocktrade_stockguru_discover_DiscoverController$().isShareStatistics__sjs_js_Function1();
   var jsx$2 = new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Share Statistics", "/views/discover/expanders/share_statistics.html", "fa-bar-chart", (void 0), value$5);
   var value$6 = $m_Lcom_shocktrade_stockguru_discover_DiscoverController$().isDividendsSplits__sjs_js_Function1();
-  $$scope.expanders = [jsx$6, jsx$5, jsx$4, jsx$3, jsx$2, new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Dividends & Splits", "/views/discover/expanders/dividends_splits.html", "fa-cut", (void 0), value$6), new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Historical Quotes", "/views/discover/quotes/trading_history.html", "fa-calendar")];
+  $$scope.expanders = [jsx$7, jsx$6, jsx$5, jsx$4, jsx$3, jsx$2, new $c_Lcom_shocktrade_stockguru_discover_DiscoverController$ModuleExpander("Dividends & Splits", "/views/discover/expanders/dividends_splits.html", "fa-cut", (void 0), value$6)];
   $$scope.expandSection = (function(f) {
     return (function(arg1) {
       return f.apply__O__O(arg1)
@@ -20768,11 +20680,11 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.init___Lcom_s
       var key = $m_Lcom_shocktrade_stockguru_discover_DiscoverController$().LastSymbolCookie$1;
       var defaultValue = this.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.getMostRecentSymbol__T();
       var value$9 = cookies.get(key);
-      var jsx$7 = $as_T(((value$9 === (void 0)) ? defaultValue : value$9))
+      var jsx$8 = $as_T(((value$9 === (void 0)) ? defaultValue : value$9))
     } else {
-      var jsx$7 = value$8
+      var jsx$8 = value$8
     };
-    var symbol = $as_T(jsx$7);
+    var symbol = $as_T(jsx$8);
     this.com$shocktrade$stockguru$discover$DiscoverController$$updateQuote__T__V(symbol)
   };
   $$scope.$watch("options.range", (function(f$15) {
@@ -20792,6 +20704,131 @@ var $d_Lcom_shocktrade_stockguru_discover_DiscoverController = new $TypeData().i
   Lcom_shocktrade_stockguru_GlobalLoading: 1
 });
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController.prototype.$classData = $d_Lcom_shocktrade_stockguru_discover_DiscoverController;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$Industry(arg$1, arg$2) {
+  var label = $as_T(arg$1);
+  var total = $uI(arg$2);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "label": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "total": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": 0
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "quotes": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "subIndustries": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "expanded": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "loading": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.label = label;
+  this.total = total;
+  this.quotes = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
+  this.subIndustries = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
+  this.expanded = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
+  this.loading = $m_sjs_js_package$().$undefined__sjs_js_UndefOr()
+}
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$Industry() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$Industry.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$Industry.prototype = new $h_Lcom_shocktrade_stockguru_explore_ExploreController$Industry();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$Industry.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$Industry;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry(arg$1, arg$2) {
+  var label = $as_T(arg$1);
+  var total = $uI(arg$2);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "label": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "total": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": 0
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "quotes": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "expanded": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "loading": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.label = label;
+  this.total = total;
+  this.quotes = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
+  this.expanded = $m_sjs_js_package$().$undefined__sjs_js_UndefOr();
+  this.loading = $m_sjs_js_package$().$undefined__sjs_js_UndefOr()
+}
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry.prototype = new $h_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry;
 /** @constructor */
 function $c_Ljava_io_FilterOutputStream() {
   $c_Ljava_io_OutputStream.call(this);
@@ -24864,48 +24901,53 @@ var $d_Lcom_shocktrade_stockguru_NavigationController$$anonfun$9 = new $TypeData
 });
 $c_Lcom_shocktrade_stockguru_NavigationController$$anonfun$9.prototype.$classData = $d_Lcom_shocktrade_stockguru_NavigationController$$anonfun$9;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1() {
-  $c_sr_AbstractFunction0.call(this)
+function $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1() {
+  $c_sr_AbstractFunction0.call(this);
+  this.mySession$2$f = null;
+  this.appInfo$1$2 = null
 }
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1;
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype = new $h_sr_AbstractFunction0();
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1() {
+function $h_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype = $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype;
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype.init___ = (function() {
+$h_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype = $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype;
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype.init___Lcom_shocktrade_stockguru_MySessionService__Lcom_shocktrade_common_models_FacebookAppInfo = (function(mySession$2, appInfo$1) {
+  this.mySession$2$f = mySession$2;
+  this.appInfo$1$2 = appInfo$1;
   return this
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype.apply__sjs_js_Any = (function() {
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype.apply__sjs_js_Any = (function() {
   $g.console.log("fbAsyncInit: Setting up Facebook integration...");
-  var config = $m_Lorg_scalajs_nodejs_social_facebook_FacebookAppConfig$().apply__T__Z__Z__T__Lorg_scalajs_nodejs_social_facebook_FacebookAppConfig($m_Lcom_shocktrade_stockguru_WebClientJsApp$().com$shocktrade$stockguru$WebClientJsApp$$getFacebookAppID__T__T($as_T($g.location.hostname)), true, true, "v2.5");
+  var config = $m_Lorg_scalajs_nodejs_social_facebook_FacebookAppConfig$().apply__T__Z__Z__T__Lorg_scalajs_nodejs_social_facebook_FacebookAppConfig($as_T(this.appInfo$1$2.appId), true, true, "v2.5");
   $g.FB.init(config);
   var jsx$1 = $g.console;
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Initialized Facebook SDK (App ID # ", ") and version (", ") on the Angular Facebook service..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(config.appId), $as_T(config.version)]));
   jsx$1.log(s);
-  return $m_Lcom_shocktrade_stockguru_WebClientJsApp$().com$shocktrade$stockguru$WebClientJsApp$$onload__sjs_js_Function1__sjs_js_Function0__sjs_js_Any((function(mySession$2) {
-    var mySession = $as_Lcom_shocktrade_stockguru_MySessionService(mySession$2);
-    $g.console.info("Initializing Facebook API...");
-    mySession.doFacebookLogin__V()
-  }), (function() {
-    $g.console.error("Facebook: The MySessionService service could not be retrieved.")
-  }))
+  var mainElem = $g.angular.element((0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ShockTradeMain"));
+  var $$scope = mainElem.scope();
+  return $$scope.$apply((function(arg$outer) {
+    return (function() {
+      $g.console.info("Initializing Facebook API...");
+      arg$outer.mySession$2$f.doFacebookLogin__V()
+    })
+  })(this))
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype.apply__O = (function() {
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype.apply__O = (function() {
   return this.apply__sjs_js_Any()
 });
-var $d_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1: 0
-}, false, "com.shocktrade.stockguru.WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1", {
-  Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1: 1,
+var $d_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1: 0
+}, false, "com.shocktrade.stockguru.WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1", {
+  Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1: 1,
   sr_AbstractFunction0: 1,
   O: 1,
   F0: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$configureSocialNetworkCallbacks$1;
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$com$shocktrade$stockguru$WebClientJsApp$$initializeFacebookApp$1;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$1() {
   $c_sr_AbstractFunction0.call(this)
@@ -25057,8 +25099,8 @@ $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$4.prototype.init___ = 
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$4.prototype.apply__O__O = (function(v1) {
   return this.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object(v1)
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$4.prototype.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object = (function(x$macro$18) {
-  var d1r3ctive = new $c_Lcom_shocktrade_stockguru_directives_NewsDirective().init___Lorg_scalajs_angularjs_sanitize_Sce(x$macro$18);
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$4.prototype.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object = (function(x$macro$1) {
+  var d1r3ctive = new $c_Lcom_shocktrade_stockguru_directives_NewsDirective().init___Lorg_scalajs_angularjs_sanitize_Sce(x$macro$1);
   var jsx$1 = d1r3ctive.scope$1;
   var s = d1r3ctive.template$1;
   return {
@@ -25099,8 +25141,8 @@ $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$5.prototype.init___ = 
 $c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$5.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_stockguru_QuoteCache__sjs_js_Object($as_Lcom_shocktrade_stockguru_QuoteCache(v1))
 });
-$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$5.prototype.apply__Lcom_shocktrade_stockguru_QuoteCache__sjs_js_Object = (function(x$macro$19) {
-  var d1r3ctive = new $c_Lcom_shocktrade_stockguru_directives_StockQuoteDirective().init___Lcom_shocktrade_stockguru_QuoteCache(x$macro$19);
+$c_Lcom_shocktrade_stockguru_WebClientJsApp$$anonfun$main$5.prototype.apply__Lcom_shocktrade_stockguru_QuoteCache__sjs_js_Object = (function(x$macro$2) {
+  var d1r3ctive = new $c_Lcom_shocktrade_stockguru_directives_StockQuoteDirective().init___Lcom_shocktrade_stockguru_QuoteCache(x$macro$2);
   var jsx$1 = d1r3ctive.scope$1;
   var s = d1r3ctive.template$1;
   return {
@@ -33376,14 +33418,6 @@ $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype =
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__sjs_js_UndefOr__Z = (function(symbol) {
-  if ((symbol !== (void 0))) {
-    var symbol$1 = $as_T(symbol);
-    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isRecentSymbol__T__Z(symbol$1)
-  } else {
-    return false
-  }
-});
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
@@ -33391,6 +33425,14 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.i
     this.$$outer$2 = $$outer
   };
   return this
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11.prototype.apply__sjs_js_UndefOr__Z = (function(symbol) {
+  if ((symbol !== (void 0))) {
+    var symbol$1 = $as_T(symbol);
+    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isRecentSymbol__T__Z(symbol$1)
+  } else {
+    return false
+  }
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$11: 0
@@ -34083,14 +34125,6 @@ $h_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype = 
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_UndefOr__Z(v1)
 });
-$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__sjs_js_UndefOr__Z = (function(aSymbol) {
-  if ((aSymbol !== (void 0))) {
-    var symbol = $as_T(aSymbol);
-    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isFavoriteSymbol__T__Z(symbol)
-  } else {
-    return false
-  }
-});
 $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.init___Lcom_shocktrade_stockguru_discover_DiscoverController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
@@ -34098,6 +34132,14 @@ $c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.in
     this.$$outer$2 = $$outer
   };
   return this
+});
+$c_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8.prototype.apply__sjs_js_UndefOr__Z = (function(aSymbol) {
+  if ((aSymbol !== (void 0))) {
+    var symbol = $as_T(aSymbol);
+    return this.$$outer$2.com$shocktrade$stockguru$discover$DiscoverController$$mySession$f.isFavoriteSymbol__T__Z(symbol)
+  } else {
+    return false
+  }
 });
 var $d_Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_discover_DiscoverController$$anonfun$8: 0
@@ -35094,9 +35136,9 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply
   };
   return this
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1.prototype.apply__s_util_Try__V = (function(x0$1) {
-  if ($is_s_util_Success(x0$1)) {
-    var x2 = $as_s_util_Success(x0$1);
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1.prototype.apply__s_util_Try__V = (function(x0$4) {
+  if ($is_s_util_Success(x0$4)) {
+    var x2 = $as_s_util_Success(x0$4);
     var data = x2.value$2;
     var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
     var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Loaded ", " sectors"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$uI(data.length)]));
@@ -35105,14 +35147,14 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply
       return (function() {
         return f.apply__O()
       })
-    })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1__sjs_js_Array(this, data)));
+    })(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1__sjs_js_Array(this, data)));
     var value = this.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.selectedSymbol;
-    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1(this);
+    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1(this);
     if ((value !== (void 0))) {
       f$1.apply__T__sjs_js_Promise($as_T(value))
     }
-  } else if ($is_s_util_Failure(x0$1)) {
-    var x3 = $as_s_util_Failure(x0$1);
+  } else if ($is_s_util_Failure(x0$4)) {
+    var x3 = $as_s_util_Failure(x0$4);
     var e = x3.exception$2;
     var toaster = this.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$toaster$f;
     var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
@@ -35153,7 +35195,7 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply
     };
     jsx$2.error(s$3)
   } else {
-    throw new $c_s_MatchError().init___O(x0$1)
+    throw new $c_s_MatchError().init___O(x0$4)
   }
 });
 var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1 = new $TypeData().initClass({
@@ -35168,28 +35210,28 @@ var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$a
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11() {
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11() {
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype.apply__O__O = (function(v1) {
   return this.apply__T__sjs_js_Promise($as_T(v1))
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype.apply__T__sjs_js_Promise = (function(symbol) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype.apply__T__sjs_js_Promise = (function(symbol) {
   return (0, this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$$timeout$f)((function(arg$outer, symbol$2) {
     return (function() {
       arg$outer.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$expandAllForSymbol__T__V(symbol$2)
     })
   })(this, symbol), 500)
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1 = (function($$outer) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -35197,17 +35239,261 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply
   };
   return this
 });
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11: 1,
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$11;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$20;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype.apply__O__O = (function(v1) {
+  return this.apply__T3__s_concurrent_Future($as_T3(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype.apply__T3__s_concurrent_Future = (function(x$7) {
+  if ((x$7 !== null)) {
+    var info = x$7.$$und1$1;
+    var this$5 = this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandSector__Lcom_shocktrade_common_models_quote_SectorInfoQuote__s_concurrent_Future(info);
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(info$1) {
+      return (function(sectorOpt$2) {
+        var sectorOpt = $as_s_Option(sectorOpt$2);
+        var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+        var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding industry ", "..."]));
+        var value = info$1.industry;
+        var s = jsx$1.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value === (void 0)) ? null : value)]));
+        jsx$2.log(s);
+        var x$3 = (void 0);
+        return new $c_T2().init___O__O(sectorOpt, x$3)
+      })
+    })(info));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var this$6 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f, executor);
+    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10__Lcom_shocktrade_common_models_quote_SectorInfoQuote(this, info);
+    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$6, f$1, executor$1)
+  } else {
+    throw new $c_s_MatchError().init___O(x$7)
+  }
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$10", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.info$1$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype.apply__O__O = (function(v1) {
+  return this.apply__T2__s_concurrent_Future($as_T2(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10__Lcom_shocktrade_common_models_quote_SectorInfoQuote = (function($$outer, info$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.info$1$f = info$1;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype.apply__T2__s_concurrent_Future = (function(x$6) {
+  if ((x$6 !== null)) {
+    var sectorOpt = $as_s_Option(x$6.$$und1__O());
+    if ($is_s_Some(sectorOpt)) {
+      var x2 = $as_s_Some(sectorOpt);
+      var sector = x2.x$2;
+      var this$5 = this.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__s_concurrent_Future(this.info$1$f, sector)
+    } else {
+      var x = $m_s_None$();
+      if ((!(x === sectorOpt))) {
+        throw new $c_s_MatchError().init___O(sectorOpt)
+      };
+      var this$5 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
+    };
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+      return (function(industryOpt$2) {
+        var industryOpt = $as_s_Option(industryOpt$2);
+        var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+        var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding sub-industry ", "..."]));
+        var value = arg$outer.info$1$f.subIndustry;
+        var s = jsx$1.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value === (void 0)) ? null : value)]));
+        jsx$2.log(s);
+        var x$4 = (void 0);
+        return new $c_T2().init___O__O(industryOpt, x$4)
+      })
+    })(this));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var this$6 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f, executor);
+    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23__s_Option(this, sectorOpt);
+    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$6, f$1, executor$1)
+  } else {
+    throw new $c_s_MatchError().init___O(x$6)
+  }
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$10$$anonfun$apply$23", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.sectorOpt$1$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23__s_Option = (function($$outer, sectorOpt$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.sectorOpt$1$f = sectorOpt$1;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype.apply__O__O = (function(v1) {
+  return this.apply__T2__s_concurrent_Future($as_T2(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype.apply__T2__s_concurrent_Future = (function(x$5) {
+  if ((x$5 !== null)) {
+    var industryOpt = $as_s_Option(x$5.$$und1__O());
+    var _1 = this.sectorOpt$1$f;
+    matchEnd7: {
+      var this$1;
+      if ($is_s_Some(_1)) {
+        var x4 = $as_s_Some(_1);
+        var sector = x4.x$2;
+        if ($is_s_Some(industryOpt)) {
+          var x5 = $as_s_Some(industryOpt);
+          var industry = x5.x$2;
+          var this$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandSubIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__s_concurrent_Future(this.$$outer$2.info$1$f, sector, industry);
+          break matchEnd7
+        }
+      };
+      var this$1 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
+    };
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, industryOpt$1) {
+      return (function(subIndustryOpt$2) {
+        var subIndustryOpt = $as_s_Option(subIndustryOpt$2);
+        return new $c_T4().init___O__O__O__O(arg$outer.$$outer$2.info$1$f, arg$outer.sectorOpt$1$f, industryOpt$1, subIndustryOpt)
+      })
+    })(this, industryOpt));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+  } else {
+    throw new $c_s_MatchError().init___O(x$5)
+  }
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$10$$anonfun$apply$23$$anonfun$apply$25;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.sector$1$2 = null;
+  this.industry$2$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_Array__s_concurrent_Future(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype.apply__sjs_js_Array__s_concurrent_Future = (function(subIndustries) {
+  var this$1 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustryQuotes__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(this.sector$1$2.label), $as_T(this.industry$2$2.label)));
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(subIndustries$3) {
+    return (function(quotes$2) {
+      return new $c_T2().init___O__O(subIndustries$3, quotes$2)
+    })
+  })(subIndustries));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__Lcom_shocktrade_stockguru_explore_ExploreController$Industry = (function($$outer, sector$1, industry$2) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.sector$1$2 = sector$1;
+  this.industry$2$2 = industry$2;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$13", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$13;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$3() {
   $c_sr_AbstractFunction1.call(this);
@@ -35250,10 +35536,10 @@ var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$3 = new $Typ
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$3.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$3;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4() {
-  $c_sr_AbstractFunction2.call(this);
+  $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype = new $h_sr_AbstractFunction2();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4;
 /** @constructor */
 function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4() {
@@ -35268,33 +35554,146 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.init
   };
   return this
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__V = (function(aSector, aIndustry) {
-  if ((aSector !== (void 0))) {
-    if ((aIndustry !== (void 0))) {
-      this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toggleIndustry__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__V(aSector, aIndustry)
-    }
-  }
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.apply__O__O = (function(v1) {
+  this.apply__sjs_js_UndefOr__V(v1)
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.apply__O__O__O = (function(v1, v2) {
-  this.apply__sjs_js_UndefOr__sjs_js_UndefOr__V(v1, v2)
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.apply__sjs_js_UndefOr__V = (function(aSector) {
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4(this);
+  if ((aSector !== (void 0))) {
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(aSector)
+  }
 });
 var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4: 0
 }, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$4", {
   Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4: 1,
-  sr_AbstractFunction2: 1,
+  sr_AbstractFunction1: 1,
   O: 1,
-  F2: 1,
+  F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5() {
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V = (function(sector) {
+  var value = sector.expanded;
+  if ((value === (void 0))) {
+    var valueA = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(value);
+    if (opt.isEmpty__Z()) {
+      var valueA = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var valueA = arg1
+    }
+  };
+  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
+    sector.loading = true;
+    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustries__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(sector.label))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7__Lcom_shocktrade_stockguru_explore_ExploreController$Sector(this, sector), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  } else {
+    sector.expanded = false
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$4$$anonfun$apply$7", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.sector$3$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7__Lcom_shocktrade_stockguru_explore_ExploreController$Sector = (function($$outer, sector$3) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.sector$3$f = sector$3;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__s_util_Try__O = (function(x0$1) {
+  if ($is_s_util_Success(x0$1)) {
+    var x2 = $as_s_util_Success(x0$1);
+    var data = x2.value$2;
+    return this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer, data$1) {
+      return (function() {
+        return arg$outer.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__sjs_js_Array__s_Some(arg$outer.sector$3$f, data$1)
+      })
+    })(this, data))
+  } else if ($is_s_util_Failure(x0$1)) {
+    this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer$1) {
+      return (function() {
+        arg$outer$1.sector$3$f.loading = false
+      })
+    })(this));
+    var toaster = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toaster$f;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error expanding ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(this.sector$3$f.label)]));
+    var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s$1, s, null);
+    return (void 0)
+  } else {
+    throw new $c_s_MatchError().init___O(x0$1)
+  }
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$4$$anonfun$apply$7$$anonfun$apply$8;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5() {
+  $c_sr_AbstractFunction2.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype = new $h_sr_AbstractFunction2();
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5;
 /** @constructor */
 function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5() {
@@ -35309,38 +35708,252 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.init
   };
   return this
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.apply__sjs_js_UndefOr__V = (function(aSector) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__V = (function(aSector, aIndustry) {
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5__sjs_js_UndefOr(this, aIndustry);
   if ((aSector !== (void 0))) {
-    this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toggleSector__Lcom_shocktrade_stockguru_explore_Sector__V(aSector)
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(aSector)
   }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.apply__O__O__O = (function(v1, v2) {
+  this.apply__sjs_js_UndefOr__sjs_js_UndefOr__V(v1, v2)
 });
 var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5 = new $TypeData().initClass({
   Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5: 0
 }, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$5", {
   Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5: 1,
+  sr_AbstractFunction2: 1,
+  O: 1,
+  F2: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.aIndustry$1$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V = (function(sector) {
+  var value = this.aIndustry$1$2;
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10__Lcom_shocktrade_stockguru_explore_ExploreController$Sector(this, sector);
+  if ((value !== (void 0))) {
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V(value)
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5__sjs_js_UndefOr = (function($$outer, aIndustry$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.aIndustry$1$2 = aIndustry$1;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$5$$anonfun$apply$10", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6() {
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.sector$4$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V = (function(industry) {
+  var value = industry.expanded;
+  if ((value === (void 0))) {
+    var valueA = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(value);
+    if (opt.isEmpty__Z()) {
+      var valueA = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var valueA = arg1
+    }
+  };
+  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
+    industry.loading = true;
+    var this$17 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustries__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(this.sector$4$f.label), $as_T(industry.label)));
+    var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11__Lcom_shocktrade_stockguru_explore_ExploreController$Industry(this, industry);
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$17, f, executor);
+    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11__Lcom_shocktrade_stockguru_explore_ExploreController$Industry(this, industry), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  } else {
+    industry.expanded = false
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10__Lcom_shocktrade_stockguru_explore_ExploreController$Sector = (function($$outer, sector$4) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.sector$4$f = sector$4;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.industry$3$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_Array__s_concurrent_Future(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11__Lcom_shocktrade_stockguru_explore_ExploreController$Industry = (function($$outer, industry$3) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.industry$3$2 = industry$3;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype.apply__sjs_js_Array__s_concurrent_Future = (function(subIndustries) {
+  var this$1 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadIndustryQuotes__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(this.$$outer$2.sector$4$f.label), $as_T(this.industry$3$2.label)));
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(subIndustries$2) {
+    return (function(quotes$2) {
+      return new $c_T2().init___O__O(subIndustries$2, quotes$2)
+    })
+  })(subIndustries));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$6;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.industry$3$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11__Lcom_shocktrade_stockguru_explore_ExploreController$Industry = (function($$outer, industry$3) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.industry$3$f = industry$3;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype.apply__s_util_Try__O = (function(x0$2) {
+  if ($is_s_util_Success(x0$2)) {
+    var x2 = $as_s_util_Success(x0$2);
+    var p3 = $as_T2(x2.value$2);
+    if ((p3 !== null)) {
+      var subIndustries = p3.$$und1__O();
+      var quotes = p3.$$und2__O();
+      return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer, subIndustries$1, quotes$1) {
+        return (function() {
+          return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$updateIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__sjs_js_Array__sjs_js_Array__s_Some(arg$outer.industry$3$f, subIndustries$1, quotes$1)
+        })
+      })(this, subIndustries, quotes))
+    }
+  };
+  if ($is_s_util_Failure(x0$2)) {
+    this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer$1) {
+      return (function() {
+        arg$outer$1.industry$3$f.loading = false
+      })
+    })(this));
+    var toaster = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toaster$f;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error expanding ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(this.industry$3$f.label)]));
+    var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s$1, s, null);
+    return (void 0)
+  };
+  throw new $c_s_MatchError().init___O(x0$2)
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$5$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$13;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7() {
   $c_sr_AbstractFunction3.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype = new $h_sr_AbstractFunction3();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype = new $h_sr_AbstractFunction3();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6() {
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController = (function($$outer) {
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -35348,29 +35961,230 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.init
   };
   return this
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__V = (function(aSector, aIndustry, aSubIndustry) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__V = (function(aSector, aIndustry, aSubIndustry) {
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7__sjs_js_UndefOr__sjs_js_UndefOr(this, aIndustry, aSubIndustry);
   if ((aSector !== (void 0))) {
-    if ((aIndustry !== (void 0))) {
-      if ((aSubIndustry !== (void 0))) {
-        this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toggleSubIndustry__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__Lcom_shocktrade_stockguru_explore_SubIndustry__V(aSector, aIndustry, aSubIndustry)
-      }
-    }
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(aSector)
   }
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.apply__O__O__O__O = (function(v1, v2, v3) {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype.apply__O__O__O__O = (function(v1, v2, v3) {
   this.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__V(v1, v2, v3)
 });
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$6", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6: 1,
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$7", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7: 1,
   sr_AbstractFunction3: 1,
   O: 1,
   F3: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$6;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.aIndustry$2$2 = null;
+  this.aSubIndustry$1$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V = (function(sector) {
+  var value = this.aIndustry$2$2;
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15__Lcom_shocktrade_stockguru_explore_ExploreController$Sector(this, sector);
+  if ((value !== (void 0))) {
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V(value)
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Sector__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7__sjs_js_UndefOr__sjs_js_UndefOr = (function($$outer, aIndustry$2, aSubIndustry$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.aIndustry$2$2 = aIndustry$2;
+  this.aSubIndustry$1$f = aSubIndustry$1;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$7$$anonfun$apply$15", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.sector$5$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$Industry__V = (function(industry) {
+  var value = this.$$outer$2.aSubIndustry$1$f;
+  var f = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16__Lcom_shocktrade_stockguru_explore_ExploreController$Industry(this, industry);
+  if ((value !== (void 0))) {
+    f.apply__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__V(value)
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15__Lcom_shocktrade_stockguru_explore_ExploreController$Sector = (function($$outer, sector$5) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.sector$5$f = sector$5;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.industry$4$2 = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype.apply__O__O = (function(v1) {
+  this.apply__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__V(v1)
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype.apply__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__V = (function(subIndustry) {
+  var value = subIndustry.expanded;
+  if ((value === (void 0))) {
+    var valueA = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(value);
+    if (opt.isEmpty__Z()) {
+      var valueA = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var valueA = arg1
+    }
+  };
+  if ((!((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)))) {
+    subIndustry.loading = true;
+    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$exploreService$f.loadSubIndustryQuotes__T__T__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(this.$$outer$2.sector$5$f.label), $as_T(this.industry$4$2.label), $as_T(subIndustry.label))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry(this, subIndustry), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  } else {
+    subIndustry.expanded = false
+  }
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16__Lcom_shocktrade_stockguru_explore_ExploreController$Industry = (function($$outer, industry$4) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.industry$4$2 = industry$4;
+  return this
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17;
+/** @constructor */
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.subIndustry$2$f = null
+}
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18;
+/** @constructor */
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry = (function($$outer, subIndustry$2) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.subIndustry$2$f = subIndustry$2;
+  return this
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype.apply__s_util_Try__O = (function(x0$3) {
+  if ($is_s_util_Success(x0$3)) {
+    var x2 = $as_s_util_Success(x0$3);
+    var quotes = x2.value$2;
+    return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer, quotes$2) {
+      return (function() {
+        return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$updateSubIndustry__Lcom_shocktrade_stockguru_explore_ExploreController$SubIndustry__sjs_js_Array__s_Some(arg$outer.subIndustry$2$f, quotes$2)
+      })
+    })(this, quotes))
+  } else if ($is_s_util_Failure(x0$3)) {
+    this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer$1) {
+      return (function() {
+        arg$outer$1.subIndustry$2$f.loading = false
+      })
+    })(this));
+    var toaster = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$toaster$f;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error expanding ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(this.subIndustry$2$f.label)]));
+    var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s$1, s, null);
+    return (void 0)
+  } else {
+    throw new $c_s_MatchError().init___O(x0$3)
+  }
+});
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$7$$anonfun$apply$15$$anonfun$apply$16$$anonfun$apply$17$$anonfun$apply$18;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8() {
   $c_sr_AbstractFunction1.call(this);
@@ -35392,29 +36206,11 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8.prototype.init
   return this
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8.prototype.apply__O__O = (function(v1) {
-  return this.apply__T3__s_concurrent_Future($as_T3(v1))
+  this.apply__sjs_js_UndefOr__V(v1)
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8.prototype.apply__T3__s_concurrent_Future = (function(x$7) {
-  if ((x$7 !== null)) {
-    var info = x$7.$$und1$1;
-    var this$2 = this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandSector__Lcom_shocktrade_common_models_quote_SectorInfoQuote__s_concurrent_Future(info);
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(info$1) {
-      return (function(sectorOpt$2) {
-        var sectorOpt = $as_s_Option(sectorOpt$2);
-        var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding industry ", "..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([info$1.industry]));
-        jsx$1.log(s);
-        var x$3 = (void 0);
-        return new $c_T2().init___O__O(sectorOpt, x$3)
-      })
-    })(info));
-    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var this$3 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8__Lcom_shocktrade_common_models_quote_SectorInfoQuote(this, info);
-    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f$1, executor$1)
-  } else {
-    throw new $c_s_MatchError().init___O(x$7)
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8.prototype.apply__sjs_js_UndefOr__V = (function(aQuote) {
+  if ((aQuote !== (void 0))) {
+    this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.selectedSymbol = aQuote.symbol
   }
 });
 var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8 = new $TypeData().initClass({
@@ -35428,196 +36224,6 @@ var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8 = new $Typ
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.info$1$f = null
-}
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype.apply__O__O = (function(v1) {
-  return this.apply__T2__s_concurrent_Future($as_T2(v1))
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8__Lcom_shocktrade_common_models_quote_SectorInfoQuote = (function($$outer, info$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.info$1$f = info$1;
-  return this
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype.apply__T2__s_concurrent_Future = (function(x$6) {
-  if ((x$6 !== null)) {
-    var sectorOpt = $as_s_Option(x$6.$$und1__O());
-    if ($is_s_Some(sectorOpt)) {
-      var x2 = $as_s_Some(sectorOpt);
-      var sector = x2.x$2;
-      var this$2 = this.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_Sector__s_concurrent_Future(this.info$1$f, sector)
-    } else {
-      var x = $m_s_None$();
-      if ((!(x === sectorOpt))) {
-        throw new $c_s_MatchError().init___O(sectorOpt)
-      };
-      var this$2 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
-    };
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-      return (function(industryOpt$2) {
-        var industryOpt = $as_s_Option(industryOpt$2);
-        var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Expanding sub-industry ", "..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([arg$outer.info$1$f.subIndustry]));
-        jsx$1.log(s);
-        var x$4 = (void 0);
-        return new $c_T2().init___O__O(industryOpt, x$4)
-      })
-    })(this));
-    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var this$3 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor);
-    var f$1 = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15().init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13__s_Option(this, sectorOpt);
-    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f$1, executor$1)
-  } else {
-    throw new $c_s_MatchError().init___O(x$6)
-  }
-});
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$8$$anonfun$apply$13", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.sectorOpt$1$f = null
-}
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype.apply__O__O = (function(v1) {
-  return this.apply__T2__s_concurrent_Future($as_T2(v1))
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype.apply__T2__s_concurrent_Future = (function(x$5) {
-  if ((x$5 !== null)) {
-    var industryOpt = $as_s_Option(x$5.$$und1__O());
-    var _1 = this.sectorOpt$1$f;
-    matchEnd7: {
-      var this$1;
-      if ($is_s_Some(_1)) {
-        var x4 = $as_s_Some(_1);
-        var sector = x4.x$2;
-        if ($is_s_Some(industryOpt)) {
-          var x5 = $as_s_Some(industryOpt);
-          var industry = x5.x$2;
-          var this$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$expandSubIndustry__Lcom_shocktrade_common_models_quote_SectorInfoQuote__Lcom_shocktrade_stockguru_explore_Sector__Lcom_shocktrade_stockguru_explore_Industry__s_concurrent_Future(this.$$outer$2.info$1$f, sector, industry);
-          break matchEnd7
-        }
-      };
-      var this$1 = $m_s_concurrent_Future$().successful__O__s_concurrent_Future($m_s_None$())
-    };
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, industryOpt$1) {
-      return (function(subIndustryOpt$2) {
-        var subIndustryOpt = $as_s_Option(subIndustryOpt$2);
-        return new $c_T4().init___O__O__O__O(arg$outer.$$outer$2.info$1$f, arg$outer.sectorOpt$1$f, industryOpt$1, subIndustryOpt)
-      })
-    })(this, industryOpt));
-    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
-  } else {
-    throw new $c_s_MatchError().init___O(x$5)
-  }
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13__s_Option = (function($$outer, sectorOpt$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.sectorOpt$1$f = sectorOpt$1;
-  return this
-});
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$8$$anonfun$apply$13$$anonfun$apply$15;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.sector$1$f = null
-}
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype.apply__O__O = (function(v1) {
-  return this.apply__s_util_Try__sjs_js_Any($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Sector = (function($$outer, sector$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.sector$1$f = sector$1;
-  return this
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype.apply__s_util_Try__sjs_js_Any = (function(x0$3) {
-  if ($is_s_util_Success(x0$3)) {
-    var x2 = $as_s_util_Success(x0$3);
-    var data = x2.value$2;
-    return this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer, data$4) {
-      return (function() {
-        return arg$outer.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$updateSector__Lcom_shocktrade_stockguru_explore_Sector__sjs_js_Array__s_Some(arg$outer.sector$1$f, data$4)
-      })
-    })(this, data))
-  } else if ($is_s_util_Failure(x0$3)) {
-    return this.$$outer$2.com$shocktrade$stockguru$explore$ExploreController$$$scope$f.$apply((function(arg$outer$1) {
-      return (function() {
-        arg$outer$1.sector$1$f.loading = false
-      })
-    })(this))
-  } else {
-    throw new $c_s_MatchError().init___O(x0$3)
-  }
-});
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$toggleSector$1;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_news_NewsController$$anonfun$1$$anonfun$apply$mcV$sp$2() {
   $c_sr_AbstractFunction1.call(this);
@@ -43745,132 +44351,29 @@ var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1 = new $Typ
 });
 $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1;
 /** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1() {
+function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4() {
   $c_sr_AbstractFunction0$mcV$sp.call(this);
   this.$$outer$3 = null;
-  this.data$1$3 = null
+  this.data$2$3 = null
 }
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype = new $h_sr_AbstractFunction0$mcV$sp();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype = new $h_sr_AbstractFunction0$mcV$sp();
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4;
 /** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1() {
+function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1__sjs_js_Array = (function($$outer, data$1) {
+$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1__sjs_js_Array = (function($$outer, data$2) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$3 = $$outer
   };
-  this.data$1$3 = data$1;
-  return this
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype.apply$mcV$sp__V = (function() {
-  var jsx$1 = this.$$outer$3.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$$scope$f;
-  var array = this.data$1$3;
-  var array$1 = [];
-  $uI(array.length);
-  var i = 0;
-  var len = $uI(array.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = array[index];
-    var elem = new $c_Lcom_shocktrade_stockguru_explore_Sector($as_T(arg1._id), $uI(arg1.total));
-    array$1.push(elem);
-    i = ((1 + i) | 0)
-  };
-  jsx$1.sectors = array$1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype.apply__O = (function() {
-  this.apply$mcV$sp__V()
-});
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1: 1,
-  sr_AbstractFunction0$mcV$sp: 1,
-  sr_AbstractFunction0: 1,
-  O: 1,
-  F0: 1,
-  s_Function0$mcV$sp: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1() {
-  $c_sr_AbstractFunction0$mcV$sp.call(this);
-  this.industry$4$3 = null;
-  this.data$3$3 = null
-}
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype = new $h_sr_AbstractFunction0$mcV$sp();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Industry__sjs_js_Array = (function($$outer, industry$4, data$3) {
-  this.industry$4$3 = industry$4;
-  this.data$3$3 = data$3;
-  return this
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype.apply$mcV$sp__V = (function() {
-  this.industry$4$3.loading = false;
-  var jsx$1 = this.industry$4$3;
-  var array = this.data$3$3;
-  var array$1 = [];
-  $uI(array.length);
-  var i = 0;
-  var len = $uI(array.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = array[index];
-    var elem = new $c_Lcom_shocktrade_stockguru_explore_SubIndustry($as_T(arg1._id), $uI(arg1.total));
-    array$1.push(elem);
-    i = ((1 + i) | 0)
-  };
-  jsx$1.subIndustries = array$1;
-  this.industry$4$3.expanded = true
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype.apply__O = (function() {
-  this.apply$mcV$sp__V()
-});
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1: 1,
-  sr_AbstractFunction0$mcV$sp: 1,
-  sr_AbstractFunction0: 1,
-  O: 1,
-  F0: 1,
-  s_Function0$mcV$sp: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateIndustry$1;
-/** @constructor */
-function $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1() {
-  $c_sr_AbstractFunction0$mcV$sp.call(this);
-  this.sector$4$3 = null;
-  this.data$2$3 = null
-}
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype = new $h_sr_AbstractFunction0$mcV$sp();
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype.constructor = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1;
-/** @constructor */
-function $h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype = $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype;
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype.init___Lcom_shocktrade_stockguru_explore_ExploreController__Lcom_shocktrade_stockguru_explore_Sector__sjs_js_Array = (function($$outer, sector$4, data$2) {
-  this.sector$4$3 = sector$4;
   this.data$2$3 = data$2;
   return this
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype.apply$mcV$sp__V = (function() {
-  this.sector$4$3.loading = false;
-  var jsx$1 = this.sector$4$3;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype.apply$mcV$sp__V = (function() {
+  var jsx$1 = this.$$outer$3.$$outer$2.$$outer$3.com$shocktrade$stockguru$explore$ExploreController$$$scope$f;
   var array = this.data$2$3;
   var array$1 = [];
   $uI(array.length);
@@ -43879,20 +44382,19 @@ $c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$s
   while ((i < len)) {
     var index = i;
     var arg1 = array[index];
-    var elem = new $c_Lcom_shocktrade_stockguru_explore_Industry($as_T(arg1._id), $uI(arg1.total));
+    var elem = new $c_Lcom_shocktrade_stockguru_explore_ExploreController$Sector($as_T(arg1._id), $uI(arg1.total));
     array$1.push(elem);
     i = ((1 + i) | 0)
   };
-  jsx$1.industries = array$1;
-  this.sector$4$3.expanded = true
+  jsx$1.sectors = array$1
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype.apply__O = (function() {
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype.apply__O = (function() {
   this.apply$mcV$sp__V()
 });
-var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1 = new $TypeData().initClass({
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1: 0
-}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1", {
-  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1: 1,
+var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4 = new $TypeData().initClass({
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4: 0
+}, false, "com.shocktrade.stockguru.explore.ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4", {
+  Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4: 1,
   sr_AbstractFunction0$mcV$sp: 1,
   sr_AbstractFunction0: 1,
   O: 1,
@@ -43901,7 +44403,7 @@ var $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktra
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$com$shocktrade$stockguru$explore$ExploreController$$updateSector$1;
+$c_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_stockguru_explore_ExploreController$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$4;
 /** @constructor */
 function $c_Lcom_shocktrade_stockguru_news_NewsController$$anonfun$1() {
   $c_sr_AbstractFunction0$mcV$sp.call(this);

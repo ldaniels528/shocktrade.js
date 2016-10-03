@@ -1,6 +1,6 @@
-package com.shocktrade.services
+package com.shocktrade.services.yahoo
 
-import com.shocktrade.services.YahooFinanceCSVQuotesService._
+import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService._
 import com.shocktrade.util.ParsingHelper._
 import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.moment.Moment

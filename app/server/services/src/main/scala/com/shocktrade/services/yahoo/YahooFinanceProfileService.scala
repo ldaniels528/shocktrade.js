@@ -1,6 +1,6 @@
-package com.shocktrade.services
+package com.shocktrade.services.yahoo
 
-import com.shocktrade.services.BarChartProfileService._
+import com.shocktrade.services.yahoo.YahooFinanceProfileService.{Tag, YFProfile}
 import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
 import org.scalajs.nodejs.request.Request
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -13,24 +13,19 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 
 /**
-  * Bar Chart Company Profile Service
+  * Yahoo! Finance Profile Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BarChartProfileService()(implicit require: NodeRequire) {
+class YahooFinanceProfileService()(implicit require: NodeRequire) {
   private val htmlParser = HtmlParser2()
   private val request = Request()
 
-  /**
-    * Returns the promise of an option of a Bar Chart company profile for the given symbol
-    * @param symbol the given symbol (e.g. "AAPL")
-    * @return the promise of an option of a [[BarChartProfile Bar Chart profile]]
-    */
   def apply(symbol: String)(implicit ec: ExecutionContext) = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- request.getFuture(toURL(symbol))
-      profileOpt <- parseHtml(symbol, html, startTime)
-    } yield profileOpt
+      (response, html) <- request.getFuture(s"https://finance.yahoo.com/quote/$symbol/profile")
+      profile_? <- parseHtml(symbol, html, startTime)
+    } yield profile_?
   }
 
   /**
@@ -38,10 +33,10 @@ class BarChartProfileService()(implicit require: NodeRequire) {
     * @param symbol    the given symbol (e.g. "AAPL")
     * @param html      the given HTML document
     * @param startTime the given service execution start time
-    * @return the option of a [[BarChartProfile Bar Chart profile]]
+    * @return the option of a [[YFProfile Bar Chart profile]]
     */
-  private def parseHtml(symbol: String, html: String, startTime: Double)(implicit ec: ExecutionContext) = {
-    val promise = Promise[Option[BarChartProfile]]()
+  private def parseHtml(symbol: String, html: String, startTime: Double) = {
+    val promise = Promise[Option[YFProfile]]()
     val parser = htmlParser.Parser(new ParserHandler {
       val tagStack = js.Array[Tag]()
       val mappings = js.Dictionary[String]()
@@ -70,13 +65,8 @@ class BarChartProfileService()(implicit require: NodeRequire) {
           ceoPresident <- mappings.get("CEO / President:")
           industrySector <- mappings.get("Industry/Sector:").map(_.split("[,]").map(_.trim).filter(_.nonEmpty).toJSArray)
         } yield {
-          new BarChartProfile(
+          new YFProfile(
             symbol = symbol,
-            exchange = exchange,
-            contactInfo = contactInfo,
-            ceoPresident = ceoPresident,
-            description = description,
-            industrySector = industrySector,
             responseTime = js.Date.now() - startTime)
         }
         promise.success(quote)
@@ -101,16 +91,13 @@ class BarChartProfileService()(implicit require: NodeRequire) {
     promise.future
   }
 
-  @inline
-  private def toURL(symbol: String) = s"http://www.barchart.com/profile/stocks/$symbol"
-
 }
 
 /**
-  * Bar Chart Company Profile Service Companion
+  * Yahoo! Finance Profile Service Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object BarChartProfileService {
+object YahooFinanceProfileService {
 
   /**
     * Represents an HTML tag
@@ -125,15 +112,11 @@ object BarChartProfileService {
   }
 
   /**
-    * Represents a Bar Chart company profile
+    * Represents a Yahoo! Finance profile
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
   @ScalaJSDefined
-  class BarChartProfile(val symbol: String,
-                        val exchange: js.UndefOr[String],
-                        val contactInfo: js.UndefOr[js.Array[String]],
-                        val ceoPresident: js.UndefOr[String],
-                        val description: js.UndefOr[String],
-                        val industrySector: js.UndefOr[js.Array[String]],
-                        val responseTime: Double) extends js.Object
+  class YFProfile(val symbol: String,
+                  val responseTime: Double) extends js.Object
 
 }

@@ -11,7 +11,8 @@ import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.PositionLike
 import com.shocktrade.common.models.quote.ResearchQuote
-import com.shocktrade.services.{LoggerFactory, RemoteEventService, TradingClock}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
+import com.shocktrade.services.RemoteEventService
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}

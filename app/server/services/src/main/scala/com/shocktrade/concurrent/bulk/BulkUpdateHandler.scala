@@ -1,6 +1,7 @@
 package com.shocktrade.concurrent.bulk
 
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentTaskHandler}
+import com.shocktrade.serverside.LoggerFactory.Logger
 
 import scala.language.implicitConversions
 
@@ -11,7 +12,7 @@ import scala.language.implicitConversions
 abstract class BulkUpdateHandler[IN](expectedBatches: Int) extends ConcurrentTaskHandler[IN, BulkUpdateOutcome, BulkUpdateStatistics] {
   private val status = new BulkUpdateStatistics(expectedBatches)
 
-  override def onSuccess(ctx: ConcurrentContext, outcome: BulkUpdateOutcome) = status.update(outcome)
+  override def onSuccess(ctx: ConcurrentContext, outcome: BulkUpdateOutcome)(implicit logger: Logger) = status.update(outcome)
 
   override def onFailure(ctx: ConcurrentContext, cause: Throwable) = status.failed(cause)
 

@@ -2,7 +2,7 @@ package com.shocktrade.daycycle.routes
 
 import com.shocktrade.concurrent.Daemon
 import com.shocktrade.concurrent.Daemon.DaemonRef
-import com.shocktrade.services.TradingClock
+import com.shocktrade.serverside.TradingClock
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.{NodeRequire, duration2Int}
@@ -76,7 +76,7 @@ object DaemonRoutes {
       val id = request.params("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
-          Daemon.run(clock, daemon)
+          Daemon.start(clock, daemon)
           response.send("started")
         case None => response.notFound(id)
       }

@@ -16,8 +16,8 @@
 	<div class="col-md-4">
 		<span class="qm_header">Updated</span>
 		<span class="plain pull-right">
-			<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
-			<span ng-hide="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma Z' }}</span>
+			<span ng-show="q.tradeDateTime">{{ q.tradeDateTime | date:'MM/dd hh:mma' }} ET</span>
+			<span ng-hide="q.tradeDateTime" class="null">N/A</span>
 		</span>
 	</div>
 </div>
@@ -48,8 +48,10 @@
     </div>
 
 	<div class="col-md-4">
-        <span class="qm_header">Close</span>
-	    <span class="qm_detail pull-right">{{ q.close | quoteNumber }}</span>
+		<span class="qm_header">Spread</span>
+		<span class="qm_detail pull-right">
+            <span ng-show="q.spread">{{ q.spread | number:2 }}%</span>
+        </span>
     </div>
 
 	<div class="col-md-4">
@@ -72,9 +74,9 @@
     </div>
 
 	<div class="col-md-4">
-        <span class="qm_header">Spread</span>
+        <span class="qm_header">52-Week High</span>
         <span class="qm_detail pull-right">
-            <span ng-show="q.spread">{{ q.spread | number:2 }}%</span>
+            <span ng-show="q.high52Week">{{ q.high52Week | quoteNumber }}</span>
         </span>
     </div>
 </div>
@@ -91,8 +93,10 @@
     </div>
 
 	<div class="col-md-4">
-        <span class="qm_header">Target</span> <span class="small">(1-Year)</span>
-	    <span class="qm_detail pull-right">{{ q.target1Y | quoteNumber }}</span>
+		<span class="qm_header">52-Week Low</span>
+		<span class="qm_detail pull-right">
+            <span ng-show="q.low52Week">{{ q.low52Week | quoteNumber }}</span>
+        </span>
     </div>
 </div>
 

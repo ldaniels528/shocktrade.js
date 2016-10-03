@@ -6,7 +6,7 @@ import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, UpdateWriteOpResultO
   * Bulk Update Outcome
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-case class BulkUpdateOutcome(nInserted: Int = 0, nMatched: Int = 0, nModified: Int = 0, nUpserted: Int = 0)
+case class BulkUpdateOutcome(nInserted: Int = 0, nMatched: Int = 0, nModified: Int = 0, nUpserted: Int = 0, nFailures: Int = 0)
 
 /**
   * Bulk Update Outcome Companion
@@ -66,9 +66,9 @@ object BulkUpdateOutcome {
     def toBulkWrite = {
       BulkUpdateOutcome(
         nInserted = 0,
-        nMatched = result.matchedCount,
-        nModified = result.nModified,
-        nUpserted = result.upsertedCount
+        nMatched = 0,
+        nModified = result.result.nModified,
+        nUpserted = 0
       )
     }
   }

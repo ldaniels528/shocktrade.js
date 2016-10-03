@@ -1,6 +1,6 @@
 package com.shocktrade.autonomous
 
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB

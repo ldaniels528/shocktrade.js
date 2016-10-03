@@ -1,7 +1,7 @@
 package com.shocktrade.qualification
 
 import com.shocktrade.concurrent.Daemon._
-import com.shocktrade.services.{LoggerFactory, TradingClock}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB

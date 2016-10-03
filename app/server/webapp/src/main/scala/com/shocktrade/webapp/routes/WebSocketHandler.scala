@@ -3,7 +3,7 @@ package com.shocktrade.webapp.routes
 import java.util.UUID
 
 import com.shocktrade.common.events.RemoteEvent
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.Request
 import org.scalajs.nodejs.expressws.WebSocket

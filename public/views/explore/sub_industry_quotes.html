@@ -12,7 +12,7 @@
         <th class="results">Symbol</th>
         <th class="results_num">Last</th>
         <th class="results_num">Open</th>
-        <th class="results_num">Close</th>
+        <th class="results_num">Prev Close</th>
         <th class="results_num">Chg %</th>
         <th class="results_num">Low</th>
         <th class="results_num">High</th>
@@ -22,7 +22,7 @@
     <tr ng-repeat="quote in subIndustry.quotes | orderBy:'symbol'"
         ng-class="quote.symbol === selectedSymbol ? 'explore_selected' : ''">
         <td class="results">
-            <a class="links" ng-href="#/discover/{{ quote.symbol }}">
+            <a class="links" ng-click="selectQuote(quote)">
                 <i ng-class="getPreferenceIcon(row)"></i>
                 <div id="{{ quote.symbol }}"
                     ng-class="quote.exchange"
@@ -40,8 +40,8 @@
             <span ng-show="quote.open == null" class="null center">&#8212;</span>
         </td>
         <td class="results_num">
-            <span ng-show="quote.close != null">{{ quote.close | quoteNumber }}</span>
-            <span ng-show="quote.close == null" class="null center">&#8212;</span>
+            <span ng-show="quote.prevClose != null">{{ quote.prevClose | quoteNumber }}</span>
+            <span ng-show="quote.prevClose == null" class="null center">&#8212;</span>
         </td>
         <td class="results_num">
             <span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | number:1 }}</span>

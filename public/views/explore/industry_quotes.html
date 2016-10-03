@@ -1,0 +1,66 @@
+<div>
+    <i class="fa fa-globe st_text_color"></i>
+    <span class="sector_H">{{ sector.label }}</span>
+    <i class="fa fa-chevron-circle-right st_control"></i>
+    <span class="industry_H">{{ industry.label }}</span>
+</div>
+
+<table class="results">
+    <tr>
+        <th class="results">Symbol</th>
+        <th class="results_num">Last</th>
+        <th class="results_num">Open</th>
+        <th class="results_num">Prev Close</th>
+        <th class="results_num">Chg %</th>
+        <th class="results_num">Low</th>
+        <th class="results_num">High</th>
+        <th class="results_num">Spread %</th>
+        <th class="results_bignum">Volume</th>
+    </tr>
+    <tr ng-repeat="quote in industry.quotes | orderBy:'symbol'"
+        ng-class="quote.symbol === selectedSymbol ? 'explore_selected' : ''">
+        <td class="results">
+            <a class="links" ng-click="selectQuote(quote)">
+                <i ng-class="getPreferenceIcon(row)"></i>
+                <div id="{{ quote.symbol }}"
+                     ng-class="quote.exchange"
+                     popover="{{ quote.name }}"
+                     popover-placement="right"
+                     popover-trigger="mouseenter">{{ quote.symbol }}</div>
+            </a>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
+            <span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.open != null">{{ quote.open | quoteNumber }}</span>
+            <span ng-show="quote.open == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.prevClose != null">{{ quote.prevClose | quoteNumber }}</span>
+            <span ng-show="quote.prevClose == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | number:1 }}</span>
+            <span ng-show="quote.changePct == null" class="null center">&#8212;</span>
+            <changearrow ng-show="quote.changePct != null" value="{{ quote.changePct }}"></changearrow>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>
+            <span ng-show="quote.low == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.high != null">{{ quote.high | quoteNumber }}</span>
+            <span ng-show="quote.high == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_num">
+            <span ng-show="quote.spread != null" ng-class="quote.spread > 50 ? 'positive' : ''">{{ quote.spread | number:2 }}</span>
+            <span ng-show="quote.spread == null" class="null center">&#8212;</span>
+        </td>
+        <td class="results_bignum">
+            <span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
+            <span ng-show="quote.volume == null" class="null center">&#8212;</span>
+        </td>
+    </tr>
+</table>

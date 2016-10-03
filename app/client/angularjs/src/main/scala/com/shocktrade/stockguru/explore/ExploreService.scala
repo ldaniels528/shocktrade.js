@@ -1,6 +1,7 @@
 package com.shocktrade.stockguru.explore
 
-import com.shocktrade.common.models.quote.SectorInfoQuote
+import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
+import com.shocktrade.stockguru.explore.ExploreService._
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
 import org.scalajs.dom.browser.encodeURI
@@ -20,33 +21,49 @@ class ExploreService($http: Http) extends Service {
   def loadNAICSSectors() = $http.get[js.Array[AggregatedSectorData]]("/api/explore/naics/sectors")
 
   def loadIndustries(sector: String) = {
-    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/industries?sector=${encodeURI(sector)}")
+    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/industries?sector=${sector.encode}")
+  }
+
+  def loadIndustryQuotes(sector: String, industry: String) = {
+    $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}")
   }
 
   def loadSubIndustries(sector: String, industry: String) = {
-    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/subIndustries?sector=${encodeURI(sector)}&industry=${encodeURI(industry)}")
+    $http.get[js.Array[AggregatedSectorData]](s"/api/explore/subIndustries?sector=${sector.encode}&industry=${industry.encode}")
   }
 
-  def loadIndustryQuotes(sector: String, industry: String, subIndustry: String) = {
-    $http.get[js.Array[SectorQuote]](s"/api/explore/quotes?sector=${encodeURI(sector)}&industry=${encodeURI(industry)}&subIndustry=${encodeURI(subIndustry)}")
+  def loadSubIndustryQuotes(sector: String, industry: String, subIndustry: String) = {
+    $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}&subIndustry=${subIndustry.encode}")
   }
 
 }
 
 /**
-  * Aggregated Sector/Industry data
+  * Explore Service Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
-trait AggregatedSectorData extends js.Object {
-  var _id: String = js.native
-  var total: Int = js.native
-}
+object ExploreService {
 
-/**
-  * Sector/Industry Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-@js.native
-trait SectorQuote extends js.Object
+  /**
+    * URL encodes the given string; replacing the amperstand (&) in the string identifier to fix URL encoding problems
+    * @param s the given string identifier
+    */
+  implicit class URLStringFix(val s: String) extends AnyVal {
+
+    @inline
+    def encode = encodeURI(s).replaceAllLiterally("&", "%26")
+
+  }
+
+  /**
+    * Aggregated Sector/Industry data
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  @js.native
+  trait AggregatedSectorData extends js.Object {
+    val _id: String = js.native
+    val total: Int = js.native
+  }
+
+}
 

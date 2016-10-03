@@ -11,36 +11,45 @@
 				</span>
 			</div>
 
+            <!-- Sectors -->
 			<div ng-repeat="sector in sectors | orderBy:sortField:sortDesc" class="pad-left-10">
 				<img ng-show="sector.loading" src="/images/status/loading16.gif">
-				<a ng-click="expandOrCollapseSector(sector)">
+				<a ng-click="collapseOrExpandSector(sector)">
 					<i ng-hide="sector.loading" class="fa st_control" ng-class="sector.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
 					<span class="sector_H">{{ sector.label }}</span>
 				</a>
 				<span class="null center">(<span style="color: blue">{{ sector.total }}</span>)</span>
-			
-				<div ng-if="sector.expanded && sector.industries" class="pad-left-20"
-                     ng-repeat="industry in sector.industries | orderBy:'label'">
+
+                <!-- Industries by Sector -->
+				<div ng-if="sector.expanded" class="pad-left-20" ng-repeat="industry in sector.industries | orderBy:'label'">
 					<img ng-show="industry.loading" src="/images/status/loading16.gif">
-					<a ng-click="expandOrCollapseIndustry(sector, industry)">
+					<a ng-click="collapseOrExpandIndustry(sector, industry)">
 						<i ng-hide="industry.loading" class="fa st_control" ng-class="industry.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
 						<span class="industry_H">{{ industry.label }}</span>
 					</a>
 					<span class="null center">(<span class="st_blue">{{ industry.total }}</span>)</span>
-				
-					<div ng-if="industry.expanded && industry.subIndustries.length > 0" class="pad-left-20"
-                         ng-repeat="subIndustry in industry.subIndustries | orderBy:'label'">
-						<img ng-show="subIndustry.loading" src="/images/status/loading16.gif">
-						<a ng-click="expandOrCollapseSubIndustry(sector, industry, subIndustry)">
-							<i ng-hide="subIndustry.loading" class="fa st_control" ng-class="subIndustry.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
-							<span class="sub_industry_H">{{ subIndustry.label }}</span>
-						</a>
-						<span class="null center">(<span style="color: blue">{{ subIndustry.total }}</span>)</span>
-					
-						<div ng-if="subIndustry.expanded && subIndustry.quotes.length > 0" class="pad-left-20">
-							<div ng-include src="'/views/explore/explore_quotes.html'"></div>
-						</div>
-					</div>
+
+                    <div class="pad-left-20">
+                        <!-- Quotes by Industry -->
+                        <div ng-if="industry.expanded && industry.quotes.length" class="pad-left-20">
+                            <div ng-include src="'/views/explore/industry_quotes.html'"></div>
+                        </div>
+
+                        <!-- Sub-Industries by Industry -->
+                        <div ng-if="industry.expanded" ng-repeat="subIndustry in industry.subIndustries | orderBy:'label'">
+                            <img ng-show="subIndustry.loading" src="/images/status/loading16.gif">
+                            <a ng-click="collapseOrExpandSubIndustry(sector, industry, subIndustry)">
+                                <i ng-hide="subIndustry.loading" class="fa st_control" ng-class="subIndustry.expanded ? 'fa-minus-square' : 'fa-plus-square'"></i>
+                                <span class="sub_industry_H">{{ subIndustry.label }}</span>
+                            </a>
+                            <span class="null center">(<span style="color: blue">{{ subIndustry.total }}</span>)</span>
+
+                            <!-- Quotes by Sub-Industry -->
+                            <div ng-if="subIndustry.expanded && subIndustry.quotes.length" class="pad-left-20">
+                                <div ng-include src="'/views/explore/sub_industry_quotes.html'"></div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>

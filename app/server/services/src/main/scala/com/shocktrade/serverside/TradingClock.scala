@@ -1,6 +1,6 @@
-package com.shocktrade.services
+package com.shocktrade.serverside
 
-import com.shocktrade.services.TradingClock._
+import com.shocktrade.serverside.TradingClock._
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment._
 import org.scalajs.nodejs.moment.timezone._

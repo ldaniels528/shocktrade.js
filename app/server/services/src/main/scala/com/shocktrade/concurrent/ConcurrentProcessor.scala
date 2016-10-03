@@ -1,5 +1,6 @@
 package com.shocktrade.concurrent
 
+import com.shocktrade.serverside.LoggerFactory.Logger
 import org.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
 
 import scala.concurrent.duration._
@@ -23,14 +24,14 @@ class ConcurrentProcessor {
     */
   def start[IN, OUT, SUMMARY](queue: js.Array[IN],
                               ctx: ConcurrentContext = ConcurrentContext(concurrency = 1),
-                              handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext) = {
+                              handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger) = {
     val promise = Promise[SUMMARY]()
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event
     val proxy = new ConcurrentTaskHandler[IN, OUT, SUMMARY] {
       override def onNext(ctx: ConcurrentContext, item: IN) = handler.onNext(ctx, item)
 
-      override def onSuccess(ctx: ConcurrentContext, outcome: OUT) = handler.onSuccess(ctx, outcome)
+      override def onSuccess(ctx: ConcurrentContext, outcome: OUT)(implicit logger: Logger) = handler.onSuccess(ctx, outcome)
 
       override def onFailure(ctx: ConcurrentContext, cause: Throwable) = handler.onFailure(ctx, cause)
 
@@ -51,7 +52,7 @@ class ConcurrentProcessor {
     * @param ctx     the given [[ConcurrentContext processing context]]
     * @param handler the given [[ConcurrentTaskHandler task handler]]
     */
-  private def handleTask[IN, OUT, RESULT](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext): Unit = {
+  private def handleTask[IN, OUT, RESULT](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext, logger: Logger): Unit = {
     val anItem = if (queue.nonEmpty) Option(queue.pop()) else None
     anItem match {
       case Some(item) =>
@@ -79,7 +80,7 @@ class ConcurrentProcessor {
     * @param ctx     the given [[ConcurrentContext processing context]]
     * @param handler the given [[ConcurrentTaskHandler task handler]]
     */
-  private def scheduleNext[IN, OUT, SUMMARY](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext): Unit = {
+  private def scheduleNext[IN, OUT, SUMMARY](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger): Unit = {
     if (ctx.isPaused)
       setTimeout(() => scheduleNext(queue, ctx, handler), 1.seconds)
     else

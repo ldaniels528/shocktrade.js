@@ -1,4 +1,4 @@
-package com.shocktrade.services
+package com.shocktrade.serverside
 
 import org.scalajs.nodejs.console
 

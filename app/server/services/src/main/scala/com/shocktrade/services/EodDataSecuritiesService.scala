@@ -1,10 +1,11 @@
 package com.shocktrade.services
 
+import com.shocktrade.serverside.LoggerFactory
 import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
 import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
 import org.scalajs.nodejs.request.Request
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, console, errors}
+import org.scalajs.nodejs.{NodeRequire, errors}
 
 import scala.concurrent.{ExecutionContext, Promise}
 import scala.scalajs.js
@@ -46,13 +47,13 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
           override def onopentag = (tag: String, attributes: js.Dictionary[String]) => {
             currentTag = tag
             attributesStack.push(attributes)
-            if(!inTable && tag == "table" && attributes.get("class").contains("quotes")) inTable = true
+            if (!inTable && tag == "table" && attributes.get("class").contains("quotes")) inTable = true
           }
 
           override def onclosetag = (tag: String) => {
             val attributes = attributesStack.pop()
             val text = textStack.remove(tag).map(_.toString()).getOrElse("")
-            if(skip > 0) skip -= 1
+            if (skip > 0) skip -= 1
             else if (!done && inTable) {
               tag match {
                 case "a" if columns.isEmpty => columns.append(text); skip = 1
@@ -92,7 +93,7 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
     val mapping = js.Dictionary(headers zip columns: _*)
     val symbol = mapping.get("Code").orUndefined
     new EodDataSecurity(
-      symbol = if(exchange == "OTCBB") symbol.map(_ + ".OB") else symbol,
+      symbol = symbol, //if(exchange == "OTCBB") symbol.map(_ + ".OB") else symbol,
       exchange = exchange,
       name = mapping.get("Name").orUndefined,
       high = mapping.get("High").flatMap(toDouble("high", _)).orUndefined,
@@ -106,7 +107,7 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
 
   @inline
   private def toDouble(fieldName: String, value: String) = {
-    if(value.isEmpty) None
+    if (value.isEmpty) None
     else {
       Try(value.filter(c => c == '.' || c.isDigit).toDouble) match {
         case Success(v) => Option(v)
@@ -116,7 +117,7 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
       }
     }
   }
-  
+
 }
 
 /**

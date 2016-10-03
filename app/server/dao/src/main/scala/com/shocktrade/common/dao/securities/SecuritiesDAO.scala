@@ -58,7 +58,13 @@ object SecuritiesDAO {
     }
 
     @inline
-    def findQuotesByIndustry(sector: String, industry: String, subIndustry: String)(implicit ec: ExecutionContext) = {
+    def findQuotesByIndustry(sector: String, industry: String)(implicit ec: ExecutionContext) = {
+      val query = doc("active" $eq true, "sector" $eq sector, "industry" $eq industry, $or("subIndustry" $eq null, "subIndustry" $eq "", "subIndustry" $exists false))
+      dao.find(query, projection = ResearchQuote.Fields.toProjection).toArrayFuture[ResearchQuote]
+    }
+
+    @inline
+    def findQuotesBySubIndustry(sector: String, industry: String, subIndustry: String)(implicit ec: ExecutionContext) = {
       val query = doc("active" $eq true, "sector" $eq sector, "industry" $eq industry, "subIndustry" $eq subIndustry)
       dao.find(query, projection = ResearchQuote.Fields.toProjection).toArrayFuture[ResearchQuote]
     }

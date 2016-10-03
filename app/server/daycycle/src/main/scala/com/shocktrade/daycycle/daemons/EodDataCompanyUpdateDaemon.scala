@@ -5,7 +5,8 @@ import com.shocktrade.concurrent.bulk.BulkUpdateHandler
 import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
-import com.shocktrade.services.{EodDataSecuritiesService, LoggerFactory, TradingClock}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
+import com.shocktrade.services.EodDataSecuritiesService
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -20,7 +21,7 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
-  private val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)

@@ -1,6 +1,6 @@
-package com.shocktrade.services
+package com.shocktrade.services.yahoo
 
-import com.shocktrade.services.YahooFinanceCSVHistoryService.{YFHistoricalQuote, YFHistoricalQuotes}
+import com.shocktrade.services.yahoo.YahooFinanceCSVHistoryService._
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.request.Request
@@ -29,7 +29,7 @@ class YahooFinanceCSVHistoryService()(implicit require: NodeRequire) {
   }
 
   private def parseHistory(data: String) = {
-    data.split("[\n]") flatMap  { line =>
+    data.split("[\n]") flatMap { line =>
       line.split("[,]") match {
         case Array(date, open, high, low, close, volume, adjClose) if date != "Date" =>
           Option(new YFHistoricalQuote(
@@ -47,8 +47,8 @@ class YahooFinanceCSVHistoryService()(implicit require: NodeRequire) {
   }
 
   private def toURL(symbol: String, from: js.Date, to: js.Date) = {
-    val (m0, d0, y0) = (from.getMonth() - 1, from.getDay(), from.getFullYear())
-    val (m1, d1, y1) = (to.getMonth() - 1, to.getDay(), to.getFullYear())
+    val (m0, d0, y0) = (from.getMonth(), from.getDay(), from.getFullYear())
+    val (m1, d1, y1) = (to.getMonth(), to.getDay(), to.getFullYear())
     s"http://chart.finance.yahoo.com/table.csv?s=$symbol&a=$m0&b=$d0&c=$y0&d=$m1&e=$d1&f=$y1&g=d&ignore=.csv"
   }
 

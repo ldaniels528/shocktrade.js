@@ -1,5 +1,6 @@
 package com.shocktrade.services
 
+import com.shocktrade.services.yahoo.YahooFinanceKeyStatisticsService
 import org.scalajs.nodejs.NodeRequire._
 import org.scalajs.nodejs.console
 import utest._

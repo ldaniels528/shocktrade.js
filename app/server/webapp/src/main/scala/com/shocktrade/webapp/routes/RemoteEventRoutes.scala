@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.events.RemoteEvent
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.Db

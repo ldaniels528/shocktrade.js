@@ -1,15 +1,15 @@
 package com.shocktrade.daycycle
 
-import org.scalajs.sjs.OptionHelper._
 import com.shocktrade.concurrent.Daemon._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.daycycle.routes.DaemonRoutes
-import com.shocktrade.services.{LoggerFactory, TradingClock}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import org.scalajs.nodejs.express.Express
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
@@ -71,11 +71,13 @@ object DayCycleJsApp extends js.JSApp {
 
     // define the daemons
     val daemons = Seq(
+      DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), delay = 5.hours, frequency = 12.hours),
+      DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), delay = 5.hours, frequency = 12.hours),
       DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 12.hours),
       DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
       DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
       DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 3.minutes))
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 1.minutes))
 
     // setup all other routes
     DaemonRoutes.init(app, daemons, dbFuture)

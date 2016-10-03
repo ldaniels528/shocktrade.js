@@ -3,6 +3,8 @@ package com.shocktrade.services
 import java.util.UUID
 
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
+import com.shocktrade.serverside.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory.Logger
 import org.scalajs.nodejs.console
 import utest._
 
@@ -15,6 +17,7 @@ import scala.scalajs.js
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class ConcurrentProcessorTests extends TestSuite {
+  private implicit val logger = LoggerFactory.getLogger(getClass)
   private val processor = new ConcurrentProcessor()
 
   override val tests = this {
@@ -26,7 +29,7 @@ class ConcurrentProcessorTests extends TestSuite {
           Future.successful(item.toString)
         }
 
-        override def onSuccess(ctx: ConcurrentContext, result: String) = {
+        override def onSuccess(ctx: ConcurrentContext, result: String)(implicit logger: Logger) = {
           console.log(s"result: $result")
         }
 

@@ -6,7 +6,8 @@ import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.common.models.contest.OrderLike
 import com.shocktrade.concurrent.Daemon
 import com.shocktrade.qualification.IntraDayQuoteDaemon._
-import com.shocktrade.services.{NASDAQIntraDayQuotesService, TradingClock}
+import com.shocktrade.serverside.TradingClock
+import com.shocktrade.services.NASDAQIntraDayQuotesService
 import com.shocktrade.services.NASDAQIntraDayQuotesService._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.Db

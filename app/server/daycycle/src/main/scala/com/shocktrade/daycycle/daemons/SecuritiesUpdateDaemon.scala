@@ -3,15 +3,16 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
-import com.shocktrade.concurrent.bulk.BulkUpdateHandler
 import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
+import com.shocktrade.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome}
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
-import com.shocktrade.services.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.services.{LoggerFactory, TradingClock, YahooFinanceCSVQuotesService}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
+import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
+import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.util.ExchangeHelper
 import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
+import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.OptionHelper._
 
@@ -24,13 +25,14 @@ import scala.util.{Failure, Success, Try}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
-  private val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
   // get service references
   private val csvQuoteSvc = new YahooFinanceCSVQuotesService()
   private val cvsQuoteParams = csvQuoteSvc.getParams(
-    "symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume", "errorMessage"
+    "symbol", "exchange", "lastTrade", "open", "prevClose", "close", "high", "low", "change", "changePct",
+    "high52Week", "low52Week", "tradeDate", "tradeTime", "volume", "marketCap", "target1Y", "errorMessage"
   )
 
   // get DAO references
@@ -64,12 +66,15 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
           val mapping = js.Dictionary(securities.map(s => s.symbol -> s): _*)
           for {
             quotes <- getYahooCSVQuotes(symbols)
-            snapshotResults <- createSnapshots(quotes, mapping) recover { case e =>
-              logger.error("Snapshot write error: %s", e.getMessage)
-              New[BulkWriteOpResultObject]
+            w1 <- createSnapshots(quotes, mapping).map(_.toBulkWrite) recover { case e =>
+              logger.error("Snapshot insert error: %s", e.getMessage)
+              BulkUpdateOutcome(nFailures = quotes.size)
             }
-            securitiesResults <- updateSecurities(quotes, mapping)
-          } yield securitiesResults.toBulkWrite
+            w2 <- updateSecurities(quotes, mapping).map(_.toBulkWrite) recover { case e =>
+              logger.error("Security update error: %s", e.getMessage)
+              BulkUpdateOutcome(nFailures = quotes.size)
+            }
+          } yield w1 + w2
         }
       })
     } yield results
@@ -136,17 +141,35 @@ object SecuritiesUpdateDaemon {
       exchange = quote.normalizedExchange(mapping),
       subExchange = quote.exchange,
       lastTrade = quote.lastTrade,
+      prevClose = quote.prevClose,
       open = quote.open,
       close = quote.close,
+      high = quote.high,
+      low = quote.low,
+      spread = quote.spread,
+      change = quote.change,
+      changePct = quote.changePct,
+      high52Week = quote.high52Week,
+      low52Week = quote.low52Week,
       tradeDateTime = quote.tradeDateTime,
       tradeDate = quote.tradeDate,
       tradeTime = quote.tradeTime,
       volume = quote.volume,
+      marketCap = quote.marketCap,
+      target1Yr = quote.target1Yr,
       active = true,
       errorMessage = quote.errorMessage,
       yfCsvResponseTime = quote.responseTimeMsec,
       yfCsvLastUpdated = new js.Date()
     )
+
+    @inline
+    def spread = {
+      for {
+        high <- quote.high
+        low <- quote.low
+      } yield if (high > 0) 100.0 * ((high - low) / high.toDouble) else 0.00
+    }
 
     @inline
     def toSnapshot(mapping: js.Dictionary[SecurityRef]) = new SnapshotQuote(

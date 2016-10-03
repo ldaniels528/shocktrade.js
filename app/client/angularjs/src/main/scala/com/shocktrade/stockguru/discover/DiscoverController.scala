@@ -47,6 +47,9 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
 
   // define the quote section expanders
   $scope.expanders = js.Array(
+    new ModuleExpander(title = "Historical Quotes",
+      url = "/views/discover/quotes/trading_history.html",
+      icon = "fa-calendar"),
     new ModuleExpander(title = "Performance & Risk",
       url = "/views/discover/expanders/price_performance.html",
       icon = "fa-line-chart",
@@ -70,10 +73,7 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
     new ModuleExpander(title = "Dividends & Splits",
       url = "/views/discover/expanders/dividends_splits.html",
       icon = "fa-cut",
-      visible = isDividendsSplits),
-    new ModuleExpander(title = "Historical Quotes",
-      url = "/views/discover/quotes/trading_history.html",
-      icon = "fa-calendar")
+      visible = isDividendsSplits)
   )
 
   ///////////////////////////////////////////////////////////////////////////

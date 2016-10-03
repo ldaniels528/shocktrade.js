@@ -19,7 +19,7 @@ object ExploreRoutes {
     implicit val quoteDAO = dbFuture.flatMap(_.getSecuritiesDAO)
 
     app.get("/api/explore/industries", (request: Request, response: Response, next: NextFunction) => industries(request, response, next))
-    app.get("/api/explore/quotes", (request: Request, response: Response, next: NextFunction) => quotes(request, response, next))
+    app.get("/api/explore/quotes", (request: Request, response: Response, next: NextFunction) => industryQuotes(request, response, next))
     app.get("/api/explore/sectors", (request: Request, response: Response, next: NextFunction) => sectors(request, response, next))
     app.get("/api/explore/subIndustries", (request: Request, response: Response, next: NextFunction) => subIndustries(request, response, next))
     app.get("/api/explore/symbol/:symbol", (request: Request, response: Response, next: NextFunction) => sectorInfo(request, response, next))
@@ -37,6 +37,29 @@ object ExploreRoutes {
           }
         case None =>
           response.badRequest("One or more required parameters (sector) is missing"); next()
+      }
+    }
+
+    def industryQuotes(request: Request, response: Response, next: NextFunction) = {
+      val result = for {
+        sector <- request.query.get("sector")
+        industry <- request.query.get("industry")
+        subIndustry_? = request.query.get("subIndustry")
+      } yield (sector, industry, subIndustry_?)
+
+      result match {
+        case Some((sector, industry, subIndustry_?)) =>
+          val outcome = subIndustry_? match {
+            case Some(subIndustry) => quoteDAO.flatMap(_.findQuotesBySubIndustry(sector, industry, subIndustry))
+            case None => quoteDAO.flatMap(_.findQuotesByIndustry(sector, industry))
+          }
+
+          outcome onComplete {
+            case Success(quotes) => response.send(quotes); next()
+            case Failure(e) => response.internalServerError(e); next()
+          }
+        case None =>
+          response.badRequest("One or more required parameters (sector, industry) is missing"); next()
       }
     }
 
@@ -70,24 +93,6 @@ object ExploreRoutes {
           }
         case None =>
           response.badRequest("One or more required parameters (sector, industry) is missing"); next()
-      }
-    }
-
-    def quotes(request: Request, response: Response, next: NextFunction) = {
-      val result = for {
-        sector <- request.query.get("sector")
-        industry <- request.query.get("industry")
-        subIndustry <- request.query.get("subIndustry")
-      } yield (sector, industry, subIndustry)
-
-      result match {
-        case Some((sector, industry, subIndustry)) =>
-          quoteDAO.flatMap(_.findQuotesByIndustry(sector, industry, subIndustry)) onComplete {
-            case Success(quotes) => response.send(quotes); next()
-            case Failure(e) => response.internalServerError(e); next()
-          }
-        case None =>
-          response.badRequest("One or more required parameters (sector, industry, subIndustry) is missing"); next()
       }
     }
 

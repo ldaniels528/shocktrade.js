@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.services.TradingClock
+import com.shocktrade.serverside.TradingClock
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.moment._

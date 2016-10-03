@@ -7,7 +7,7 @@ import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
 import com.shocktrade.concurrent.Daemon
 import com.shocktrade.qualification.OrderQualificationEngine._
-import com.shocktrade.services.{LoggerFactory, TradingClock}
+import com.shocktrade.serverside.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, ObjectID}

@@ -1,6 +1,7 @@
 package com.shocktrade.services
 
 import com.shocktrade.common.events.RemoteEvent
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.request.{Request, RequestOptions}

@@ -2,7 +2,7 @@ package com.shocktrade.autonomous
 
 import com.shocktrade.autonomous.RuleProcessor._
 import com.shocktrade.common.models.quote.ResearchQuote
-import com.shocktrade.services.LoggerFactory
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.moment.Moment
 

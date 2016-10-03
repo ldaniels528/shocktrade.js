@@ -1,5 +1,6 @@
 package com.shocktrade.stockguru
 
+import com.shocktrade.common.models.FacebookAppInfo
 import com.shocktrade.stockguru.contest._
 import com.shocktrade.stockguru.dialogs._
 import com.shocktrade.stockguru.directives._
@@ -11,11 +12,13 @@ import com.shocktrade.stockguru.social._
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
 import org.scalajs.angularjs.{Module, Scope, angular}
-import org.scalajs.dom.browser.{console, location}
+import org.scalajs.dom.browser.console
 import org.scalajs.jquery._
 import org.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 /**
   * ShockTrade Web Application Client
@@ -46,9 +49,6 @@ object WebClientJsApp extends js.JSApp {
     module.filter("quoteNumber", Filters.quoteNumber)
     module.filter("yesno", Filters.yesNo)
 
-    // configure the Social Network callbacks
-    configureSocialNetworkCallbacks()
-
     // add the controllers and services
     configureServices(module)
     configureControllers(module)
@@ -56,25 +56,28 @@ object WebClientJsApp extends js.JSApp {
 
     // define the routes
     module.config({ ($routeProvider: RouteProvider) =>
+      // configure the routes
       $routeProvider
         .when("/about/investors", RouteTo(templateUrl = "/views/about/investors.html"))
         .when("/about/me", RouteTo(templateUrl = "/views/about/me.html"))
         .when("/about/us", RouteTo(templateUrl = "/views/about/us.html"))
-        .when("/dashboard", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = "DashboardController"))
-        .when("/dashboard/:contestId", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = "DashboardController"))
-        .when("/discover", RouteTo(templateUrl = "/views/discover/discover.html", controller = "DiscoverController"))
-        .when("/discover/:symbol", RouteTo(templateUrl = "/views/discover/discover.html", controller = "DiscoverController"))
-        .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = "ExploreController"))
-        .when("/home", RouteTo(templateUrl = "/views/profile/home.html", controller = "HomeController"))
-        .when("/news", RouteTo(templateUrl = "/views/news/news_center.html", controller = "NewsController"))
-        .when("/research", RouteTo(templateUrl = "/views/research/research.html", controller = "ResearchController"))
-        .when("/search", RouteTo(templateUrl = "/views/contest/search.html", controller = "GameSearchController"))
+        .when("/dashboard", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
+        .when("/dashboard/:contestId", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
+        .when("/discover", RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
+        .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName))
+        .when("/home", RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
+        .when("/news", RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
+        .when("/research", RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
+        .when("/search", RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
         .otherwise(RouteTo(redirectTo = "/about/us"))
       ()
     })
 
     // initialize the application
-    module.run({ ($rootScope: Scope, WebSocketService: WebSocketService) =>
+    module.run({ ($rootScope: Scope, MySessionService: MySessionService, SocialServices: SocialServices, WebSocketService: WebSocketService) =>
+      // configure the Social Network callbacks
+      configureSocialNetworkCallbacks(MySessionService, SocialServices)
+
       // initialize the web socket service
       WebSocketService.init()
     })
@@ -114,6 +117,7 @@ object WebClientJsApp extends js.JSApp {
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
+    module.serviceOf[SocialServices]("SocialServices")
     module.serviceOf[WebSocketService]("WebSocketService")
   }
 
@@ -139,45 +143,29 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
   }
 
-  private def configureSocialNetworkCallbacks(): Unit = {
+  private def configureSocialNetworkCallbacks(mySession: MySessionService, socialServices: SocialServices): Unit = {
+    socialServices.getFacebookAppInfo onComplete {
+      case Success(appInfo) => initializeFacebookApp(mySession, appInfo)
+      case Failure(e) => console.error("Error initializing Facebook App")
+    }
+  }
+
+  private def initializeFacebookApp(mySession: MySessionService, appInfo: FacebookAppInfo) = {
     // setup the initialization callback for Facebook
     js.Dynamic.global.fbAsyncInit = () => {
       console.log("fbAsyncInit: Setting up Facebook integration...")
-      val config = FacebookAppConfig(appId = getFacebookAppID(location.hostname), status = true, xfbml = true)
+      val config = FacebookAppConfig(appId = appInfo.appId, status = true, xfbml = true)
       FB.init(config)
       console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
 
       // asynchronously initialize Facebook
-      onload(
-        success = (mySession: MySessionService) => {
-          console.info("Initializing Facebook API...")
-          mySession.doFacebookLogin()
-        },
-        failure = () => console.error("Facebook: The MySessionService service could not be retrieved.")
-      )
+      val mainElem = angular.element(jQuery("#ShockTradeMain"))
+      val $scope = mainElem.scope()
+      $scope.$apply { () =>
+        console.info("Initializing Facebook API...")
+        mySession.doFacebookLogin()
+      }
     }
-  }
-
-  private def onload(success: js.Function1[MySessionService, Any], failure: js.Function0[Any]) = {
-    val mainElem = angular.element(jQuery("#ShockTradeMain"))
-    val $scope = mainElem.scope()
-    val injector = mainElem.injector()
-    injector.get[MySessionService]("MySessionService").toOption match {
-      case Some(mySession) =>
-        $scope.$apply(() => success(mySession))
-      case None =>
-        $scope.$apply(() => failure())
-    }
-  }
-
-  private def getFacebookAppID(hostname: String) = hostname match {
-    case "localhost" => "522523074535098" // local dev
-    case s if s.endsWith("shocktrade.biz") => "616941558381179"
-    case s if s.endsWith("shocktrade.com") => "364507947024983"
-    case s if s.endsWith("shocktrade.net") => "616569495084446"
-    case _ =>
-      console.log(s"Unrecognized hostname '${location.hostname}'")
-      "522523074535098" // unknown, so local dev
   }
 
 }

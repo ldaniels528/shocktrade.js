@@ -1,0 +1,1 @@
+db.Snapshots.createIndex({ "tradeDateTime": 1 }, { expireAfterSeconds: 3600*24*10 } );
