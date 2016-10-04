@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<!-- Market Image -->
 		<i ng-show="q.active" ng-class="getAssetIcon(q)"></i>
-		<i ng-show="!q.active" class="fa fa-warning warning"
+		<i ng-show="q && !q.active" class="fa fa-warning warning"
 			popover="Asset is inactive" 
 			popover-trigger="mouseenter"
 			popover-placement="right"></i>

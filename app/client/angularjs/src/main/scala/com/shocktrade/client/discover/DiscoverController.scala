@@ -1,12 +1,12 @@
 package com.shocktrade.client.discover
 
-import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import com.shocktrade.client._
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
 import com.shocktrade.client.models.Profile
 import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.http.HttpResponse
@@ -27,14 +27,14 @@ import scala.util.{Failure, Success, Try}
   * Discover Controller
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
-                         $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
-                         @injected("MarketStatus") marketStatus: MarketStatusService,
-                         @injected("MySessionService") mySession: MySessionService,
-                         @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                         @injected("ProfileService") profileService: ProfileService,
-                         @injected("QuoteService") quoteService: QuoteService)
-  extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading {
+case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
+                              $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
+                              @injected("MarketStatus") marketStatus: MarketStatusService,
+                              @injected("MySessionService") mySession: MySessionService,
+                              @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                              @injected("ProfileService") profileService: ProfileService,
+                              @injected("QuoteService") quoteService: QuoteService)
+  extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading with GlobalSelectedSymbol {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 
@@ -119,9 +119,6 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
 
           // update the address bar
           $location.search("symbol", quote.symbol)
-
-          // store the last symbol
-          $cookies.put(LastSymbolCookie, quote.symbol)
 
           // add the symbol to the Recently-viewed Symbols
           mySession.addRecentSymbol(symbol)
@@ -268,18 +265,18 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
 
-  // load the symbol
-  if ($scope.q.symbol.isEmpty) {
-    // get the symbol
-    val symbol = $routeParams.symbol getOrElse $cookies.getOrElse(LastSymbolCookie, mySession.getMostRecentSymbol)
-
-    // load the symbol
-    updateQuote(symbol)
+  $routeParams.symbol foreach { symbol =>
+    $scope.selectedSymbol = symbol
   }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
+
+  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) = {
+    console.log(s"The selected symbol has changed to '$newSymbol'")
+    updateQuote(newSymbol)
+  }
 
   // setup the chart range
   $scope.$watch("options.range", (newValue: js.UndefOr[Any], oldValue: js.Any) => newValue.foreach($cookies.put("chart_range", _)))
@@ -291,7 +288,6 @@ class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $lo
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object DiscoverController {
-  val LastSymbolCookie = "QuoteService_lastSymbol"
 
   def isPerformanceRisk: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
     /*q.high52Week.nonEmpty || q.low52Week.nonEmpty || q.change52Week.nonEmpty ||
@@ -339,6 +335,15 @@ object DiscoverController {
   }
 
   /**
+    * Discover Route Parameters
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  @js.native
+  trait DiscoverRouteParams extends js.Object {
+    var symbol: js.UndefOr[String] = js.native
+  }
+
+  /**
     * Module Expander
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
@@ -356,7 +361,7 @@ object DiscoverController {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @js.native
-trait DiscoverControllerScope extends AutoCompletionControllerScope {
+trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalSelectedSymbolScope {
   // variables
   var expanders: js.Array[ModuleExpander] = js.native
   var options: DiscoverOptions = js.native
@@ -397,13 +402,3 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope {
   */
 @ScalaJSDefined
 class DiscoverOptions(var range: String) extends js.Object
-
-/**
-  * Discover Route Parameters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-@js.native
-trait DiscoverRouteParams extends js.Object {
-  var symbol: js.UndefOr[String] = js.native
-
-}

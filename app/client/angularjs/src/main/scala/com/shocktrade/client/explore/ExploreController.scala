@@ -2,12 +2,13 @@ package com.shocktrade.client.explore
 
 import com.shocktrade.client.explore.ExploreController._
 import com.shocktrade.client.explore.ExploreService._
+import com.shocktrade.client.{GlobalSelectedSymbol, GlobalSelectedSymbolScope}
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.anchorscroll.AnchorScroll
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Location, Scope, Timeout, injected}
+import org.scalajs.angularjs.{Controller, Location, Timeout, injected}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
@@ -22,14 +23,14 @@ import scala.util.{Failure, Success}
   * Explore Controller
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cookies: Cookies,
-                        $location: Location, $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
-                        @injected("ExploreService") exploreService: ExploreService)
-  extends Controller {
+case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cookies: Cookies, $location: Location,
+                             $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
+                             @injected("ExploreService") exploreService: ExploreService)
+  extends Controller with GlobalSelectedSymbol {
 
   // initialize scope variables
   $scope.sectors = emptyArray
-  $scope.selectedSymbol = $routeParams.symbol ?? $cookies.getOrElse("symbol", "AAPL")
+  //$scope.selectedSymbol = $routeParams.symbol ?? $cookies.getOrElse("symbol", "AAPL")
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -112,7 +113,6 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
 
   $scope.selectQuote = (aQuote: js.UndefOr[ResearchQuote]) => aQuote foreach { quote =>
     $scope.selectedSymbol = quote.symbol
-    $scope.q = quote
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -135,11 +135,13 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     results onComplete {
       case Success((info, sectorOpt, industryOpt, subIndustryOpt)) =>
         console.log(s"Finished expanding sectors in ${System.currentTimeMillis() - startTime} msecs")
+        $scope.q = info
+        $location.search("symbol", symbol)
         $location.hash(symbol)
         $anchorScroll(symbol)
       case Failure(e) =>
-        toaster.error(s"Error expanding the $symbol")
-        console.error(s"Error expanding the $symbol: ${e.displayMessage}")
+        toaster.error(s"Error expanding $symbol")
+        console.error(s"Error expanding $symbol: ${e.displayMessage}")
     }
   }
 
@@ -213,6 +215,22 @@ class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cook
     Some(subIndustry)
   }
 
+  /////////////////////////////////////////////////////////////////////
+  //          Event Listeners
+  /////////////////////////////////////////////////////////////////////
+
+  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) {
+    if (!oldSymbol.contains(newSymbol)) {
+      exploreService.loadSectorInfo(newSymbol) onComplete {
+        case Success(info) =>
+          $location.search("symbol", newSymbol)
+          $scope.$apply(() => $scope.q = info)
+        case Failure(e) =>
+          console.error(s"Failed to load sector info for $newSymbol")
+      }
+    }
+  }
+
 }
 
 /**
@@ -257,8 +275,8 @@ object ExploreController {
     */
   @ScalaJSDefined
   class Industry(val label: String, val total: Int) extends IndustryLike {
-    override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
     var subIndustries: js.UndefOr[js.Array[SubIndustry]] = js.undefined
+    override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
     override var expanded: js.UndefOr[Boolean] = js.undefined
     override var loading: js.UndefOr[Boolean] = js.undefined
   }
@@ -280,11 +298,10 @@ object ExploreController {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @js.native
-trait ExploreScope extends Scope {
+trait ExploreScope extends GlobalSelectedSymbolScope {
   // variables
-  var q: js.UndefOr[ResearchQuote] = js.native
+  var q: js.UndefOr[SectorInfoQuote] = js.native
   var sectors: js.Array[Sector] = js.native
-  var selectedSymbol: js.UndefOr[String] = js.native
 
   // functions
   var collapseOrExpandSector: js.Function1[js.UndefOr[Sector], Unit] = js.native

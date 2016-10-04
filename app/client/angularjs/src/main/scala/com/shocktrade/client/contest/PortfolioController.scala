@@ -1,16 +1,14 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.models.contest._
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioController.PortfolioTab
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.discover.DiscoverController
 import com.shocktrade.client.models.contest.{Order, Performance, Position}
-import com.shocktrade.client.{GlobalLoading, MySessionService, QuoteCache}
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
+import org.scalajs.angularjs.{Controller, Timeout, injected}
 import org.scalajs.dom.console
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -23,13 +21,13 @@ import scala.util.{Failure, Success}
   * Portfolio Controller
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                          @injected("MySessionService") mySession: MySessionService,
-                          @injected("ContestService") contestService: ContestService,
-                          @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                          @injected("QuoteCache") quoteCache: QuoteCache,
-                          @injected("PortfolioService") portfolioService: PortfolioService)
-  extends Controller with GlobalLoading {
+case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                               @injected("MySessionService") mySession: MySessionService,
+                               @injected("ContestService") contestService: ContestService,
+                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                               @injected("QuoteCache") quoteCache: QuoteCache,
+                               @injected("PortfolioService") portfolioService: PortfolioService)
+  extends Controller with GlobalLoading with GlobalSelectedSymbol {
 
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
@@ -97,10 +95,10 @@ class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: T
 
   $scope.isOrderSelected = () => $scope.getActiveOrders().nonEmpty && $scope.selectedOrder.nonEmpty
 
-  $scope.popupNewOrderDialog = (anAccountType: js.UndefOr[String]) => anAccountType map { accountType =>
+  $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String], anAccountType: js.UndefOr[String]) => {
     newOrderDialog.popup(new NewOrderParams(
-      symbol = $cookies.getOrElse(DiscoverController.LastSymbolCookie, "AAPL"),
-      accountType = accountType
+      symbol = aSymbol,
+      accountType = anAccountType
     ))
   }
 
@@ -240,7 +238,7 @@ object PortfolioController {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @js.native
-trait PortfolioScope extends Scope {
+trait PortfolioScope extends GlobalSelectedSymbolScope {
   // variables
   var portfolioTabs: js.Array[PortfolioTab] = js.native
   var selectedClosedOrder: js.UndefOr[Order] = js.native
@@ -262,7 +260,7 @@ trait PortfolioScope extends Scope {
   var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
   var isOrderSelected: js.Function0[Boolean] = js.native
   var selectOrder: js.Function1[js.UndefOr[Order], Unit] = js.native
-  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
+  var popupNewOrderDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], js.Promise[NewOrderDialogResult]] = js.native
   var toggleSelectedOrder: js.Function0[Unit] = js.native
 
   // performance functions

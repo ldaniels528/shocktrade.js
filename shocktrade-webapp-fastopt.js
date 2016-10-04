@@ -3952,7 +3952,7 @@ function $h_Lcom_shocktrade_common_models_quote_SectorInfoQuote$() {
 $h_Lcom_shocktrade_common_models_quote_SectorInfoQuote$.prototype = $c_Lcom_shocktrade_common_models_quote_SectorInfoQuote$.prototype;
 $c_Lcom_shocktrade_common_models_quote_SectorInfoQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_SectorInfoQuote$ = this;
-  this.Fields$1 = ["symbol", "sector", "industry", "subIndustry", "lastTrade"];
+  this.Fields$1 = ["symbol", "exchange", "name", "lastTrade", "active", "sector", "industry", "subIndustry"];
   return this
 });
 var $d_Lcom_shocktrade_common_models_quote_SectorInfoQuote$ = new $TypeData().initClass({

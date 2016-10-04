@@ -1,6 +1,5 @@
 package com.shocktrade.client
 
-import com.shocktrade.common.models.FacebookAppInfo
 import com.shocktrade.client.contest._
 import com.shocktrade.client.dialogs._
 import com.shocktrade.client.directives._
@@ -9,6 +8,7 @@ import com.shocktrade.client.explore._
 import com.shocktrade.client.news._
 import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
+import com.shocktrade.common.models.FacebookAppInfo
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
 import org.scalajs.angularjs.{Module, Scope, angular}
@@ -64,7 +64,7 @@ object WebClientJsApp extends js.JSApp {
         .when("/dashboard", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/dashboard/:contestId", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/discover", RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
-        .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName))
+        .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
         .when("/home", RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
         .when("/news", RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
         .when("/research", RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
