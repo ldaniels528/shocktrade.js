@@ -1,13 +1,13 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.Commissions
-import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.common.models.quote.{AutoCompleteQuote, ResearchQuote}
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope, MySessionService}
+import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.toaster.Toaster
@@ -15,7 +15,9 @@ import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.angularjs.{Q, Service, Timeout, angular, injected, _}
 import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -68,8 +70,8 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   )
 
   $scope.quote = $scope.form.symbol.toOption match {
-    case Some(symbol) => ResearchQuote(symbol = symbol)
-    case None => ResearchQuote()
+    case Some(symbol) => OrderQuote(symbol = symbol)
+    case None => OrderQuote()
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -85,28 +87,35 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   $scope.isProcessing = () => processing
 
   $scope.ok = (aForm: js.UndefOr[NewOrderForm]) => aForm foreach { form =>
-    if (isValid(form)) {
-      val outcome = for {
-        playerId <- mySession.userProfile._id.toOption
-        contestId <- mySession.contest_?.flatMap(_._id.toOption)
-      } yield (playerId, contestId)
+    messages.removeAll()
+    val inputs = for {
+      portfolioId <- mySession.portfolio_?.flatMap(_._id.toOption)
+      playerId <- mySession.userProfile._id.toOption
+    } yield (portfolioId, playerId)
 
-      outcome match {
-        case Some((playerId, contestId)) =>
-          processing = true
-          portfolioService.createOrder(contestId, playerId, $scope.form) onComplete {
-            case Success(portfolio) =>
-              $timeout(() => processing = false, 0.5.seconds)
-              $modalInstance.close(portfolio)
-            case Failure(e) =>
-              $timeout(() => processing = false, 0.5.seconds)
-              messages.push(s"The order could not be processed")
-              console.error(s"order processing error: contestId = $contestId, playerId = $playerId, form = ${angular.toJson(form)}")
-              e.printStackTrace()
-          }
-        case None =>
-          toaster.error("User session error")
-      }
+    inputs match {
+      case Some((portfolioId, playerId)) =>
+        processing = true
+        val outcome = for {
+          messages <- validate(form)
+          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(portfolioId, $scope.form).map(Option(_)) else Future.successful(None)
+        } yield (messages, portfolio_?)
+
+        outcome onComplete {
+          case Success((_, Some(portfolio))) =>
+            $timeout(() => processing = false, 0.5.seconds)
+            $modalInstance.close(portfolio)
+          case Success((errors, _)) =>
+            $timeout(() => processing = false, 0.5.seconds)
+            messages.push(errors: _*)
+          case Failure(e) =>
+            $timeout(() => processing = false, 0.5.seconds)
+            messages.push(s"The order could not be processed")
+            console.error(s"order processing error: portfolioId = $portfolioId, playerId = $playerId, form = ${angular.toJson(form)}")
+            e.printStackTrace()
+        }
+      case None =>
+        toaster.error("User session error")
     }
   }
 
@@ -149,7 +158,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   }
 
   private def lookupSymbolQuote(symbol: String) = {
-    quoteService.getBasicQuote(symbol) onComplete {
+    quoteService.getOrderQuote(symbol) onComplete {
       case Success(quote) =>
         $scope.quote = quote
         $scope.form.symbol = quote.symbol
@@ -160,19 +169,19 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     }
   }
 
-  private def isValid(form: NewOrderForm) = {
-    messages.removeAll()
-
-    // perform the validations
-    if (!isDefined(form.accountType)) messages.push("Please selected the account to use (Cash or Margin)")
-    if (isDefined(form.accountType) && form.accountType.toOption.contains("MARGIN") && mySession.marginAccount_?.isEmpty) {
-      messages.push("You do not have a Margin Account (must buy the Perk)")
+  private def validate(form: NewOrderForm) = {
+    val messages = form.validate
+    if (form.isMarginAccount && mySession.marginAccount_?.isEmpty) messages.push("You do not have a Margin Account (must buy the Perk)")
+    if (messages.isEmpty) {
+      form.symbol.toOption match {
+        case Some(symbol) => quoteService.getOrderQuote(symbol) map { quote =>
+          if (quote.lastTrade.nonAssigned) messages.push(s"Current pricing could not be determined for $symbol")
+          messages
+        }
+        case None => Future.successful(messages)
+      }
     }
-    if (!isDefined(form.orderType)) messages.push("No Order Type (BUY or SELL) specified")
-    if (!isDefined(form.priceType)) messages.push("No Pricing Method specified")
-    if (!isDefined(form.orderTerm)) messages.push("No Order Term specified")
-    if (!isDefined(form.quantity) || form.quantity.exists(_ == 0)) messages.push("No quantity specified")
-    messages.isEmpty
+    else Future.successful(messages)
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -217,7 +226,7 @@ object NewOrderDialogController {
 trait NewOrderScope extends AutoCompletionControllerScope {
   // variables
   var form: NewOrderForm = js.native
-  var quote: ResearchQuote = js.native
+  var quote: OrderQuote = js.native
   var ticker: js.Any = js.native
 
   // functions

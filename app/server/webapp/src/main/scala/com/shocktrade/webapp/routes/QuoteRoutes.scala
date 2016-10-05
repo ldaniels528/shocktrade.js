@@ -6,7 +6,7 @@ import com.shocktrade.common.dao.securities.NAICSDAO._
 import com.shocktrade.common.dao.securities.SICDAO._
 import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
-import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, ResearchQuote}
+import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, OrderQuote, ResearchQuote}
 import com.shocktrade.services.yahoo.YahooFinanceCSVHistoryService
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
@@ -42,6 +42,7 @@ object QuoteRoutes {
     app.get("/api/quote/:symbol/discover", (request: Request, response: Response, next: NextFunction) => quoteBySymbol(request, response, next))
     app.get("/api/quote/:symbol/full", (request: Request, response: Response, next: NextFunction) => fullQuote(request, response, next))
     app.get("/api/quote/:symbol/history", (request: Request, response: Response, next: NextFunction) => tradingHistory(request, response, next))
+    app.get("/api/quote/:symbol/order", (request: Request, response: Response, next: NextFunction) => orderQuote(request, response, next))
     app.get("/api/quote/:symbol/statistics", (request: Request, response: Response, next: NextFunction) => statistics(request, response, next))
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +81,15 @@ object QuoteRoutes {
     def fullQuote(request: Request, response: Response, next: NextFunction) = {
       val symbol = request.getSymbol
       securitiesDAO.flatMap(_.findCompleteQuote(symbol)) onComplete {
+        case Success(Some(quote)) => response.send(quote); next()
+        case Success(None) => response.notFound(); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
+    def orderQuote(request: Request, response: Response, next: NextFunction) = {
+      val symbol = request.getSymbol
+      securitiesDAO.flatMap(_.findQuote[OrderQuote](symbol, fields = OrderQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
         case Success(None) => response.notFound(); next()
         case Failure(e) => response.internalServerError(e); next()

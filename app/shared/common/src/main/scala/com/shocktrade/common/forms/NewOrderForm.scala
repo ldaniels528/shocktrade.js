@@ -57,7 +57,12 @@ object NewOrderForm {
     @inline
     def validate = {
       val messages = js.Array[String]()
-      if (form.symbol.isEmpty) messages.append("Symbol is required")
+      if (form.symbol.nonAssigned) messages.append("Symbol is required")
+      if (form.accountType.nonAssigned) messages.push("Please selected the account to use (Cash or Margin)")
+      if (form.orderTerm.nonAssigned) messages.push("No Order Term specified")
+      if (form.orderType.nonAssigned) messages.push("No Order Type (BUY or SELL) specified")
+      if (form.priceType.nonAssigned) messages.push("No Pricing Method specified")
+      if (form.quantity.nonAssigned || form.quantity.exists(_ <= 0)) messages.push("No quantity specified")
       if (form.isLimitOrder && form.limitPrice.nonAssigned) messages.append("Price is required for Limit orders")
       if (!form.isBuyOrder && !form.isSellOrder) messages.append("BUY or SELL is required")
       messages

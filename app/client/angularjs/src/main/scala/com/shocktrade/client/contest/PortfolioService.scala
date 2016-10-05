@@ -25,12 +25,12 @@ class PortfolioService($http: Http) extends Service {
   //			Positions & Orders
   /////////////////////////////////////////////////////////////////////////////
 
-  def createOrder(contestId: String, playerId: String, order: NewOrderForm) = {
-    $http.put[Portfolio](s"/api/order/$contestId/$playerId", order)
+  def cancelOrder(portfolioId: String, orderId: String) = {
+    $http.delete[Portfolio](s"/api/portfolio/$portfolioId/order/$orderId")
   }
 
-  def deleteOrder(contestId: String, playerId: String, orderId: String) = {
-    $http.delete[Portfolio](s"/api/order/$contestId/$playerId/$orderId")
+  def createOrder(portfolioId: String, order: NewOrderForm) = {
+    $http.post[Portfolio](s"/api/portfolio/$portfolioId/order", data = order)
   }
 
   def getOrders(portfolioId: String) = {

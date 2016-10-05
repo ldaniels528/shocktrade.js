@@ -7,8 +7,8 @@ import com.shocktrade.common.dao.contest.PortfolioDAO._
 import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData}
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.contest.{PortfolioRanking, PositionLike, TotalInvestment}
-import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService
+import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
@@ -39,13 +39,14 @@ object PortfolioRoutes {
 
     // individual objects
     app.get("/api/portfolio/contest/:contestID/player/:playerID", (request: Request, response: Response, next: NextFunction) => portfolioByPlayer(request, response, next))
+    app.delete("/api/portfolio/:portfolioID/order/:orderID", (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
+    app.post("/api/portfolio/:portfolioID/order", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
     app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => perksByID(request, response, next))
     app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
     app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => positionsByID(request, response, next))
     app.get("/api/portfolio/:playerID/positions/symbols", (request: Request, response: Response, next: NextFunction) => heldSecurities(request, response, next))
 
     // collections
-    app.get("/api/order/:contestID/:playerID", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
     app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => portfoliosByContest(request, response, next))
     app.get("/api/portfolios/contest/:contestID/rankings", (request: Request, response: Response, next: NextFunction) => rankingsByContest(request, response, next))
     app.get("/api/portfolios/player/:playerID", (request: Request, response: Response, next: NextFunction) => portfoliosByPlayer(request, response, next))
@@ -55,20 +56,32 @@ object PortfolioRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
+    def cancelOrder(request: Request, response: Response, next: NextFunction) = {
+      val portfolioID = request.params("portfolioID")
+      val orderID = request.params("orderID")
+      portfolioDAO.flatMap(_.cancelOrder(portfolioID, orderID)) onComplete {
+        case Success(results) if results.isOk && results.value != null => response.send(results.value); next()
+        case Success(results) =>
+          console.error("failed result = %j", results)
+          response.notFound(s"Order for portfolio # $portfolioID")
+          next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
     def createOrder(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("contestID")
-      val playerID = request.params("playerID")
-      val form = request.queryAs[NewOrderForm]
+      val portfolioID = request.params("portfolioID")
+      val form = request.bodyAs[NewOrderForm]
 
       form.validate match {
         case messages if messages.nonEmpty => response.badRequest(messages); next()
         case _ =>
           val order = form.toOrder
-          portfolioDAO.flatMap(_.createOrder(contestID, playerID, order)) onComplete {
+          portfolioDAO.flatMap(_.createOrder(portfolioID, order)) onComplete {
             case Success(results) if results.isOk && results.value != null => response.send(results.value); next()
             case Success(results) =>
               console.error("failed result = %j", results)
-              response.notFound(s"Order for contest # $contestID, player # $playerID")
+              response.notFound(s"Order for portfolio # $portfolioID")
               next()
             case Failure(e) => response.internalServerError(e); next()
           }

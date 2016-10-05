@@ -90,26 +90,26 @@
         <div class="row">
             <div class="col-md-3">
                 <span ng-hide="quote.prevClose" class="null">N/A</span>
-                <span ng-show="quote.prevClose">{{ quote.prevClose | number:2 }}</span>
+                <span ng-show="quote.prevClose">{{ quote.prevClose | quoteNumber }}</span>
             </div>
             <div class="col-md-3">
                 <span ng-hide="quote.open" class="null">N/A</span>
-                <span ng-show="quote.open">{{ quote.open | number:2 }}</span>
+                <span ng-show="quote.open">{{ quote.open | quoteNumber }}</span>
             </div>
             <div class="col-md-3">
                 <span ng-hide="quote.high" class="null">N/A</span>
-                <span ng-show="quote.high">{{ quote.high | number:2 }}</span>
+                <span ng-show="quote.high">{{ quote.high | quoteNumber }}</span>
             </div>
             <div class="col-md-3">
                 <span ng-hide="quote.low" class="null">N/A</span>
-                <span ng-show="quote.low">{{ quote.low | number:2 }}</span>
+                <span ng-show="quote.low">{{ quote.low | quoteNumber }}</span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3 header">Volume</div>
             <div class="col-md-3 header">Spread %</div>
-            <div class="col-md-3 header">52-Wk High</div>
-            <div class="col-md-3 header">52-Wk Low</div>
+            <div class="col-md-3 header">52-Week High</div>
+            <div class="col-md-3 header">52-Week Low</div>
         </div>
         <div class="row">
             <div class="col-md-3">
@@ -122,16 +122,19 @@
             </div>
             <div class="col-md-3">
                 <span ng-hide="quote.high52Week" class="null">N/A</span>
-                <span ng-show="quote.high52Week">{{ quote.high52Week | number:2 }}</span>
+                <span ng-show="quote.high52Week">{{ quote.high52Week | quoteNumber }}</span>
             </div>
             <div class="col-md-3">
                 <span ng-hide="quote.low52Week" class="null">N/A</span>
-                <span ng-show="quote.low52Week">{{ quote.low52Week | number:2 }}</span>
+                <span ng-show="quote.low52Week">{{ quote.low52Week | quoteNumber }}</span>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3 header" colspan="2">Total Cost</div>
-            <div class="col-md-3"><span class="positive">$ {{ getTotal(form) | number:2 }}</span></div>
+            <div class="col-md-3 header" colspan="2">Total Cost (w/fees)</div>
+            <div class="col-md-3">
+                <span ng-show="getTotal(form)" class="positive">$ {{ getTotal(form) | quoteNumber }}</span>
+                <span ng-hide="getTotal(form)" class="null">N/A</span>
+            </div>
             <div class="col-md-6">
                 <label class="pull-left">
                     <input ng-model="form.emailNotify" type="checkbox"> Notify by Email

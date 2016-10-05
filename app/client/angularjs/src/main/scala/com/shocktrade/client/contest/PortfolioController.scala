@@ -6,6 +6,7 @@ import com.shocktrade.client.contest.PortfolioController.PortfolioTab
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.models.contest.{Order, Performance, Position}
+import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Timeout, injected}
@@ -67,21 +68,21 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   //          Active Order Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
-
-  $scope.cancelOrder = (aContestId: js.UndefOr[String], aPlayerId: js.UndefOr[String], anOrderId: js.UndefOr[String]) => {
+  $scope.cancelOrder = (aPortfolioId: js.UndefOr[String], anOrderId: js.UndefOr[String]) => {
     for {
-      contestId <- aContestId
-      playerId <- aPlayerId
+      portfolioId <- aPortfolioId
       orderId <- anOrderId
     } {
-      asyncLoading($scope)(portfolioService.deleteOrder(contestId, playerId, orderId)) onComplete {
+      asyncLoading($scope)(portfolioService.cancelOrder(portfolioId, orderId)) onComplete {
         case Success(portfolio) => $scope.$apply(() => mySession.updatePortfolio(portfolio))
         case Failure(err) =>
           toaster.error("Failed to cancel order")
+          console.error(s"Failed to cancel order: ${err.displayMessage}")
       }
     }
   }
+
+  $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
   $scope.getActiveOrders = () => {
     val orders = mySession.getOrders filter (_.accountType == $scope.getAccountType())
@@ -254,7 +255,7 @@ trait PortfolioScope extends GlobalSelectedSymbolScope {
 
   // order functions
   var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
-  var cancelOrder: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
+  var cancelOrder: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
   var getActiveOrders: js.Function0[js.Array[Order]] = js.native
   var getAccountType: js.Function0[String] = js.native
   var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native

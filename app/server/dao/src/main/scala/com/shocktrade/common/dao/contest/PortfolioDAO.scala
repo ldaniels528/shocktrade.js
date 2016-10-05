@@ -2,6 +2,8 @@ package com.shocktrade.common.dao.contest
 
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.sjs.JsUnderOrHelper._
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -26,11 +28,15 @@ object PortfolioDAO {
   implicit class PortfolioDAOExtensions(val dao: PortfolioDAO) {
 
     @inline
-    def createOrder(contestID: String, playerID: String, order: OrderData)(implicit ec: ExecutionContext) = {
-      dao.findOneAndUpdate(
-        filter = doc("contestID" $eq contestID, "playerID" $eq playerID),
-        update = "orders" $addToSet order
-      )
+    def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      for {
+        portfolio <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
+        order = portfolio.orders.toOption.flatMap(_.find(_._id.contains(orderID))) orDie s"Order # $orderID not found"
+        result <- dao.findOneAndUpdate(
+          filter = doc("_id" $eq portfolioID.$oid),
+          update = doc("orders" $pull ("_id" -> orderID), "orderHistory" $addToSet order)
+        )
+      } yield result
     }
 
     @inline
