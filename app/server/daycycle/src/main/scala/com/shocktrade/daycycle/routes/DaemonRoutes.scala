@@ -36,6 +36,9 @@ object DaemonRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+      * Returns a daemon by its unique identifier
+      */
     def daemonById(request: Request, response: Response, next: NextFunction) = {
       val id = request.params("id")
       daemonDict.get(id) match {
@@ -45,39 +48,51 @@ object DaemonRoutes {
       next()
     }
 
+    /**
+      * Returns the list of configured daemons
+      */
     def listDaemons(request: Request, response: Response, next: NextFunction) = {
       response.send(daemonDict.values.toJSArray)
       next()
     }
 
+    /**
+      * Pauses the daemon process, if running.
+      */
     def pauseDaemon(request: Request, response: Response, next: NextFunction) = {
       val id = request.params("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           //Daemon.run(clock, daemon)
-          response.send("paused")
+          response.send(s"${daemon.name} paused")
         case None => response.notFound(id)
       }
       next()
     }
 
+    /**
+      * Resume the daemon process, if paused.
+      */
     def resumeDaemon(request: Request, response: Response, next: NextFunction) = {
       val id = request.params("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           //Daemon.run(clock, daemon)
-          response.send("resumed")
+          response.send(s"${daemon.name} resumed")
         case None => response.notFound(id)
       }
       next()
     }
 
+    /**
+      * Starts the daemon process
+      */
     def startDaemon(request: Request, response: Response, next: NextFunction) = {
       val id = request.params("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           Daemon.start(clock, daemon)
-          response.send("started")
+          response.send(s"${daemon.name} started")
         case None => response.notFound(id)
       }
       next()
@@ -85,6 +100,13 @@ object DaemonRoutes {
 
   }
 
+  /**
+    * The JSON representation of a daemon reference
+    * @param id        the given daemon identifier
+    * @param name      the name of the daemon
+    * @param delay     the initial delay before the process runs
+    * @param frequency the frequency/interval of the process
+    */
   @ScalaJSDefined
   class DaemonJs(val id: String, val name: String, val delay: Int, val frequency: Int) extends js.Object
 

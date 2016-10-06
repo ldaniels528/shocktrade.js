@@ -8,6 +8,7 @@ import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import org.scalajs.nodejs.express.Express
 import org.scalajs.nodejs.globals.process
+import org.scalajs.nodejs.kafkanode.KafkaNode
 import org.scalajs.nodejs.mongodb.MongoDB
 import org.scalajs.sjs.OptionHelper._
 
@@ -38,7 +39,8 @@ object DayCycleJsApp extends js.JSApp {
     val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
 
     // determine the database connection URL
-    val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
+    val mongoConnectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
+    val kafkaConnectionString = process.env.get("kafka_connection") getOrElse "localhost:2181"
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>
@@ -46,17 +48,25 @@ object DayCycleJsApp extends js.JSApp {
       logger.error(err.stack)
     }
 
-    logger.log("Loading MongoDB module...")
+    logger.info("Loading the MongoDB module...")
     implicit val mongo = MongoDB()
 
+    logger.info("Loading the Kafka module...")
+    implicit val kafka = KafkaNode()
+
     // setup mongodb connection
-    logger.log("Connecting to '%s'...", connectionString)
-    implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
+    logger.info("Connecting to '%s'...", mongoConnectionString)
+    implicit val dbFuture = mongo.MongoClient.connectFuture(mongoConnectionString)
+
+    // setup kafka connection
+    logger.info("Connecting to '%s'...", kafkaConnectionString)
+    implicit val kafkaClient = kafka.Client(kafkaConnectionString)
+    implicit val kafkaProducer = kafka.Producer(kafkaClient)
 
     // create the trading clock instance
     implicit val tradingClock = new TradingClock()
 
-    logger.log("Loading Express modules...")
+    logger.info("Loading Express modules...")
     implicit val express = Express()
     implicit val app = express()
 
@@ -77,17 +87,21 @@ object DayCycleJsApp extends js.JSApp {
       DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
       DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
       DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 1.minutes))
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 1.minutes),
+      DaemonRef("SecuritiesRefreshKafka", new SecuritiesRefreshKafkaDaemon(dbFuture), delay = 10.days, frequency = 3.days)
+    )
 
     // setup all other routes
     DaemonRoutes.init(app, daemons, dbFuture)
 
-    // schedule the daemons to run
-    schedule(tradingClock, daemons)
-
     // start the listener
     app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
-    ()
+
+    // wait for the Kafka producer to be ready
+    kafkaProducer.onReady(() => {
+      // schedule the daemons to run
+      schedule(tradingClock, daemons)
+    })
   }
 
 }

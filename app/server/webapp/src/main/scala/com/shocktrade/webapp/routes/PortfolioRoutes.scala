@@ -195,7 +195,7 @@ object PortfolioRoutes {
         contest <- contestDAO.flatMap(_.findById[ContestData](contestID))
         portfolios <- portfolioDAO.flatMap(_.findByContest(contestID)).map(_.toList)
         symbols = portfolios.flatMap(_.positions.toList.flatMap(_.toList)).flatMap(_.symbol.toOption).distinct
-        quotes <- yfCsvQuoteSvc.getQuotes(cvsParams, symbols)
+        quotes <- yfCsvQuoteSvc.getQuotes(cvsParams, symbols: _*)
         mapping = Map(quotes.map(q => q.symbol -> q): _*)
 
         rankings = portfolios map { portfolio =>

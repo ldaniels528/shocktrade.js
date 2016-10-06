@@ -1,31 +1,32 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
-import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome}
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
+import com.shocktrade.daycycle.daemons.SecuritiesRefreshKafkaDaemon._
 import com.shocktrade.serverside.{LoggerFactory, TradingClock}
-import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService
+import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.util.ExchangeHelper
 import org.scalajs.nodejs.NodeRequire
+import org.scalajs.nodejs.kafkanode.{Payload, Producer}
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.util.{Failure, Success, Try}
+import scala.scalajs.js.JSON
+import scala.util.{Failure, Success}
 
 /**
-  * Securities Update Daemon
+  * Securities Update Kafka Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire, kafkaProducer: Producer) extends Daemon {
   private implicit val logger = LoggerFactory.getLogger(getClass)
+  private val topic = "com.shocktrade.yahoo.quotes.csv"
   private val batchSize = 40
 
   // get service references
@@ -37,7 +38,6 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
   // get DAO references
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
-  private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
   // internal variables
   private val processor = new ConcurrentProcessor()
@@ -63,18 +63,10 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
         override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
           val symbols = securities.map(_.symbol)
-          val mapping = js.Dictionary(securities.map(s => s.symbol -> s): _*)
           for {
             quotes <- getYahooCSVQuotes(symbols)
-            w1 <- createSnapshots(quotes, mapping).map(_.toBulkWrite) recover { case e =>
-              logger.error("Snapshot insert error: %s", e.getMessage)
-              BulkUpdateOutcome(nFailures = quotes.size)
-            }
-            w2 <- updateSecurities(quotes, mapping).map(_.toBulkWrite) recover { case e =>
-              logger.error("Security update error: %s", e.getMessage)
-              BulkUpdateOutcome(nFailures = quotes.size)
-            }
-          } yield w1 + w2
+            w <- persistSecurities(quotes).map(n => BulkUpdateOutcome(nInserted = n))
+          } yield w
         }
       })
     } yield results
@@ -103,29 +95,20 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
     }
   }
 
-  private def createSnapshots(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
-    Try(quotes.map(_.toSnapshot(mapping))) match {
-      case Success(snapshots) => snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture)
-      case Failure(e) =>
-        Future.failed(die(s"Failed to convert at least one object to a snapshot: ${e.getMessage}"))
-    }
-  }
-
-  private def updateSecurities(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
-    Try(quotes.map(_.toUpdateQuote(mapping))) match {
-      case Success(securities) => securitiesDAO.flatMap(_.updateSecurities(securities).toFuture)
-      case Failure(e) =>
-        Future.failed(die(s"Failed to convert at least one object to a security: ${e.getMessage}"))
-    }
+  private def persistSecurities(quotes: Seq[YFCSVQuote]) = {
+    val payloads = js.Array(quotes.zipWithIndex map { case (q, n) =>
+      Payload(topic, messages = JSON.stringify(q), partition = n % 10)
+    }: _*)
+    kafkaProducer.sendFuture(payloads) map (_ => quotes.length)
   }
 
 }
 
 /**
-  * Securities Update Daemon Companion
+  * Securities Update Kafka Daemon Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object SecuritiesUpdateDaemon {
+object SecuritiesRefreshKafkaDaemon {
 
   type InputBatch = Seq[SecurityRef]
 

@@ -7,14 +7,14 @@ import com.shocktrade.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.serverside.{LoggerFactory, TradingClock}
-import com.shocktrade.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
-import com.shocktrade.services._
 import com.shocktrade.services.yahoo.YahooFinanceKeyStatisticsService
+import com.shocktrade.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.scalajs.js
@@ -49,7 +49,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(clock.getTradeStopTime))
-      stats <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size) {
+      stats <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size, reportInterval = 15.seconds) {
         logger.info(s"Scheduling ${securities.size} securities for processing...")
 
         override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
