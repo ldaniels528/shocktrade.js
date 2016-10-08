@@ -35,6 +35,7 @@ object QuoteRoutes {
     val historySvc = new YahooFinanceCSVHistoryService()
 
     // collections of quotes
+    app.post("/api/quotes/list", (request: Request, response: Response, next: NextFunction) => quotesList(request, response, next))
     app.get("/api/quotes/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
     // individual quotes
@@ -92,6 +93,14 @@ object QuoteRoutes {
       securitiesDAO.flatMap(_.findQuote[OrderQuote](symbol, fields = OrderQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
         case Success(None) => response.notFound(); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
+    def quotesList(request: Request, response: Response, next: NextFunction) = {
+      val symbols = request.bodyAs[js.Array[String]]
+      securitiesDAO.flatMap(_.findQuotesBySymbols[OrderQuote](symbols, fields = OrderQuote.Fields)) onComplete {
+        case Success(quotes) => response.send(quotes); next()
         case Failure(e) => response.internalServerError(e); next()
       }
     }

@@ -10,7 +10,7 @@ val appScalaVersion = "2.11.8"
 val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
-val scalaJsNodeVersion = "0.2.3.1"
+val scalaJsNodeVersion = "0.2.3.2"
 
 scalaJSUseRhino in Global := false
 

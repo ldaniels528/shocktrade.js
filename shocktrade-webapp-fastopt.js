@@ -3918,7 +3918,7 @@ $h_Lcom_shocktrade_common_models_quote_OrderQuote$.prototype = $c_Lcom_shocktrad
 $c_Lcom_shocktrade_common_models_quote_OrderQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_OrderQuote$ = this;
   $m_sci_List$();
-  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"]);
+  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "tradeDateTime", "open", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"]);
   var this$2 = $m_sci_List$();
   var cbf = this$2.ReusableCBFInstance$2;
   this.Fields$1 = $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(xs, cbf));
@@ -10994,21 +10994,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     })
   })(symbol));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4) {
-    return (function(x0$4$2) {
-      var x0$4 = $as_s_util_Try(x0$4$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$5, next$5) {
+    return (function(x0$5$2) {
+      var x0$5 = $as_s_util_Try(x0$5$2);
       var rc10 = false;
       var x2 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$4)) {
+        if ($is_s_util_Success(x0$5)) {
           rc10 = true;
-          x2 = $as_s_util_Success(x0$4);
+          x2 = $as_s_util_Success(x0$5);
           var p3 = $as_s_Option(x2.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var quote = x4.x$2;
-            response$4.send(quote);
-            $asUnit(next$4());
+            response$5.send(quote);
+            $asUnit(next$5());
             break matchEnd11
           }
         };
@@ -11016,21 +11016,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
           var p6 = $as_s_Option(x2.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$4.sendStatus(404);
-            $asUnit(next$4());
+            response$5.sendStatus(404);
+            $asUnit(next$5());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$4)) {
-          var x7 = $as_s_util_Failure(x0$4);
+        if ($is_s_util_Failure(x0$5)) {
+          var x7 = $as_s_util_Failure(x0$5);
           var e = x7.exception$2;
-          var jsx$1 = response$4.status(500);
+          var jsx$1 = response$5.status(500);
           var s = e.getMessage__T();
           jsx$1.send(s);
-          $asUnit(next$4());
+          $asUnit(next$5());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$4)
+        throw new $c_s_MatchError().init___O(x0$5)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11045,8 +11045,8 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     if ((value === (void 0))) {
       var valueA = (void 0)
     } else {
-      var x0$8 = $as_T(value);
-      var value$1 = ((x0$8 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$8 === "Currency") ? "fa fa-dollar st_blue" : ((x0$8 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
+      var x0$9 = $as_T(value);
+      var value$1 = ((x0$9 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$9 === "Currency") ? "fa fa-dollar st_blue" : ((x0$9 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
       var valueA = value$1
     };
     arg1.icon = ((valueA !== (void 0)) ? valueA : "fa fa-globe st_blue");
@@ -11062,7 +11062,7 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     var searchTerm = $as_T(x2.x$2);
     var maxResults = $m_Lcom_shocktrade_webapp_routes_package$RequestExtensions$().getMaxResults$extension__Lorg_scalajs_nodejs_express_Request__I__I(request, 20);
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(searchTerm$1, maxResults$1) {
-      return (function(x$18$2) {
+      return (function(x$19$2) {
         $m_sjs_concurrent_JSExecutionContext$Implicits$();
         var jsx$4 = new $c_T2().init___O__O("active", true);
         var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$ne", null)]);
@@ -11096,7 +11096,7 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
         var jsx$5 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$4);
         var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
         var fields = $m_Lcom_shocktrade_common_models_quote_AutoCompleteQuote$().Fields$1;
-        var qual$3 = x$18$2.find(jsx$5, jsx$1.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
+        var qual$3 = x$19$2.find(jsx$5, jsx$1.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
         var x$12 = ["name", 1];
         var qual$4 = qual$3.sort(x$12);
         var cursor = qual$4.limit(maxResults$1);
@@ -11116,23 +11116,23 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
       })
     })(searchTerm, maxResults));
     var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1) {
-      return (function(x0$1$2) {
-        var x0$1 = $as_s_util_Try(x0$1$2);
-        if ($is_s_util_Success(x0$1)) {
-          var x2$1 = $as_s_util_Success(x0$1);
+    $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
+      return (function(x0$2$2) {
+        var x0$2 = $as_s_util_Try(x0$2$2);
+        if ($is_s_util_Success(x0$2)) {
+          var x2$1 = $as_s_util_Success(x0$2);
           var results = x2$1.value$2;
-          response$1.send($m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$enrichSearchResults__sjs_js_Array__sjs_js_Array(results));
-          $asUnit(next$1())
-        } else if ($is_s_util_Failure(x0$1)) {
-          var x3 = $as_s_util_Failure(x0$1);
+          response$2.send($m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$enrichSearchResults__sjs_js_Array__sjs_js_Array(results));
+          $asUnit(next$2())
+        } else if ($is_s_util_Failure(x0$2)) {
+          var x3 = $as_s_util_Failure(x0$2);
           var e = x3.exception$2;
-          var jsx$6 = response$1.status(500);
+          var jsx$6 = response$2.status(500);
           var s$2 = e.getMessage__T();
           jsx$6.send(s$2);
-          $asUnit(next$1())
+          $asUnit(next$2())
         } else {
-          throw new $c_s_MatchError().init___O(x0$1)
+          throw new $c_s_MatchError().init___O(x0$2)
         }
       })
     })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11177,21 +11177,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
   var f$2 = new $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6().init___s_concurrent_Future__s_concurrent_Future(naicsDAO$1, sicDAO$1);
   var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$15, f$2, executor$1);
-  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
-    return (function(x0$3$2) {
-      var x0$3 = $as_s_util_Try(x0$3$2);
+  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4) {
+    return (function(x0$4$2) {
+      var x0$4 = $as_s_util_Try(x0$4$2);
       var rc10 = false;
       var x2 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$3)) {
+        if ($is_s_util_Success(x0$4)) {
           rc10 = true;
-          x2 = $as_s_util_Success(x0$3);
+          x2 = $as_s_util_Success(x0$4);
           var p3 = $as_s_Option(x2.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var quote = x4.x$2;
-            response$3.send(quote);
-            $asUnit(next$3());
+            response$4.send(quote);
+            $asUnit(next$4());
             break matchEnd11
           }
         };
@@ -11199,21 +11199,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
           var p6 = $as_s_Option(x2.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$3.sendStatus(404);
-            $asUnit(next$3());
+            response$4.sendStatus(404);
+            $asUnit(next$4());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$3)) {
-          var x7 = $as_s_util_Failure(x0$3);
+        if ($is_s_util_Failure(x0$4)) {
+          var x7 = $as_s_util_Failure(x0$4);
           var e = x7.exception$2;
-          var jsx$1 = response$3.status(500);
+          var jsx$1 = response$4.status(500);
           var s = e.getMessage__T();
           jsx$1.send(s);
-          $asUnit(next$3());
+          $asUnit(next$4());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$3)
+        throw new $c_s_MatchError().init___O(x0$4)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11221,10 +11221,10 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$statistics$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, keyStatisticsDAO$1) {
   var symbol = $m_Lcom_shocktrade_webapp_routes_package$RequestExtensions$().getSymbol$extension__Lorg_scalajs_nodejs_express_Request__T(request);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbol$5) {
-    return (function(x$17$2) {
+    return (function(x$18$2) {
       var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
       var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", symbol$5));
-      var qual$1 = x$17$2.find(selector);
+      var qual$1 = x$18$2.find(selector);
       var eta$0$1 = qual$1.limit(1);
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -11245,21 +11245,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     })
   })(symbol));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(keyStatisticsDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$7, next$7) {
-    return (function(x0$7$2) {
-      var x0$7 = $as_s_util_Try(x0$7$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(keyStatisticsDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$8, next$8) {
+    return (function(x0$8$2) {
+      var x0$8 = $as_s_util_Try(x0$8$2);
       var rc10 = false;
       var x2 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$7)) {
+        if ($is_s_util_Success(x0$8)) {
           rc10 = true;
-          x2 = $as_s_util_Success(x0$7);
+          x2 = $as_s_util_Success(x0$8);
           var p3 = $as_s_Option(x2.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var keystats = x4.x$2;
-            response$7.send(keystats);
-            $asUnit(next$7());
+            response$8.send(keystats);
+            $asUnit(next$8());
             break matchEnd11
           }
         };
@@ -11267,21 +11267,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
           var p6 = $as_s_Option(x2.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$7.sendStatus(404);
-            $asUnit(next$7());
+            response$8.sendStatus(404);
+            $asUnit(next$8());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$7)) {
-          var x7 = $as_s_util_Failure(x0$7);
+        if ($is_s_util_Failure(x0$8)) {
+          var x7 = $as_s_util_Failure(x0$8);
           var e = x7.exception$2;
-          var jsx$1 = response$7.status(500);
+          var jsx$1 = response$8.status(500);
           var s = e.getMessage__T();
           jsx$1.send(s);
-          $asUnit(next$7());
+          $asUnit(next$8());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$7)
+        throw new $c_s_MatchError().init___O(x0$8)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11404,39 +11404,44 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.init__Lorg_scalajs_nodej
   var executor$3 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var sicDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$7, executor$3);
   var historySvc = new $c_Lcom_shocktrade_services_yahoo_YahooFinanceCSVHistoryService().init___Lorg_scalajs_nodejs_NodeRequire(require);
-  app.get("/api/quotes/search", (function(securitiesDAO$1) {
+  app.post("/api/quotes/list", (function(securitiesDAO$1) {
     return (function(request$2, response$2, next$2) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2, response$2, next$2, securitiesDAO$1)
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$quotesList$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2, response$2, next$2, securitiesDAO$1)
     })
   })(securitiesDAO));
-  app.get("/api/quote/:symbol/basic", (function(securitiesDAO$1$1) {
+  app.get("/api/quotes/search", (function(securitiesDAO$1$1) {
     return (function(request$2$1, response$2$1, next$2$1) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$basicQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, securitiesDAO$1$1)
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, securitiesDAO$1$1)
     })
   })(securitiesDAO));
-  app.get("/api/quote/:symbol/discover", (function(securitiesDAO$1$2, naicsDAO$1, sicDAO$1) {
+  app.get("/api/quote/:symbol/basic", (function(securitiesDAO$1$2) {
     return (function(request$2$2, response$2$2, next$2$2) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$quoteBySymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, securitiesDAO$1$2, naicsDAO$1, sicDAO$1)
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$basicQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, securitiesDAO$1$2)
+    })
+  })(securitiesDAO));
+  app.get("/api/quote/:symbol/discover", (function(securitiesDAO$1$3, naicsDAO$1, sicDAO$1) {
+    return (function(request$2$3, response$2$3, next$2$3) {
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$quoteBySymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, securitiesDAO$1$3, naicsDAO$1, sicDAO$1)
     })
   })(securitiesDAO, naicsDAO, sicDAO));
-  app.get("/api/quote/:symbol/full", (function(securitiesDAO$1$3) {
-    return (function(request$2$3, response$2$3, next$2$3) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$fullQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, securitiesDAO$1$3)
+  app.get("/api/quote/:symbol/full", (function(securitiesDAO$1$4) {
+    return (function(request$2$4, response$2$4, next$2$4) {
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$fullQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$4, response$2$4, next$2$4, securitiesDAO$1$4)
     })
   })(securitiesDAO));
   app.get("/api/quote/:symbol/history", (function(historySvc$1) {
-    return (function(request$2$4, response$2$4, next$2$4) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$tradingHistory$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_yahoo_YahooFinanceCSVHistoryService__V(request$2$4, response$2$4, next$2$4, historySvc$1)
+    return (function(request$2$5, response$2$5, next$2$5) {
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$tradingHistory$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lcom_shocktrade_services_yahoo_YahooFinanceCSVHistoryService__V(request$2$5, response$2$5, next$2$5, historySvc$1)
     })
   })(historySvc));
-  app.get("/api/quote/:symbol/order", (function(securitiesDAO$1$4) {
-    return (function(request$2$5, response$2$5, next$2$5) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$orderQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$5, response$2$5, next$2$5, securitiesDAO$1$4)
+  app.get("/api/quote/:symbol/order", (function(securitiesDAO$1$5) {
+    return (function(request$2$6, response$2$6, next$2$6) {
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$orderQuote$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$6, response$2$6, next$2$6, securitiesDAO$1$5)
     })
   })(securitiesDAO));
   app.get("/api/quote/:symbol/statistics", (function(keyStatisticsDAO$1) {
-    return (function(request$2$6, response$2$6, next$2$6) {
-      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$statistics$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$6, response$2$6, next$2$6, keyStatisticsDAO$1)
+    return (function(request$2$7, response$2$7, next$2$7) {
+      $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().com$shocktrade$webapp$routes$QuoteRoutes$$statistics$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2$7, response$2$7, next$2$7, keyStatisticsDAO$1)
     })
   })(keyStatisticsDAO))
 });
@@ -11452,23 +11457,71 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
   var lo = t.lo$2;
   var hi = t.hi$2;
   var jsx$1 = new jsx$3((jsx$2 - $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi)));
-  historySvc$1.apply__T__sjs_js_Date__sjs_js_Date__s_concurrent_ExecutionContext__s_concurrent_Future(symbol, jsx$1, new $g.Date(), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$5, next$5) {
-    return (function(x0$5$2) {
-      var x0$5 = $as_s_util_Try(x0$5$2);
-      if ($is_s_util_Success(x0$5)) {
-        var x2 = $as_s_util_Success(x0$5);
+  historySvc$1.apply__T__sjs_js_Date__sjs_js_Date__s_concurrent_ExecutionContext__s_concurrent_Future(symbol, jsx$1, new $g.Date(), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$6, next$6) {
+    return (function(x0$6$2) {
+      var x0$6 = $as_s_util_Try(x0$6$2);
+      if ($is_s_util_Success(x0$6)) {
+        var x2 = $as_s_util_Success(x0$6);
         var history = x2.value$2;
-        response$5.send(history.quotes);
-        $asUnit(next$5())
-      } else if ($is_s_util_Failure(x0$5)) {
-        var x3 = $as_s_util_Failure(x0$5);
+        response$6.send(history.quotes);
+        $asUnit(next$6())
+      } else if ($is_s_util_Failure(x0$6)) {
+        var x3 = $as_s_util_Failure(x0$6);
         var e = x3.exception$2;
-        var jsx$4 = response$5.status(500);
+        var jsx$4 = response$6.status(500);
         var s = e.getMessage__T();
         jsx$4.send(s);
-        $asUnit(next$5())
+        $asUnit(next$6())
       } else {
-        throw new $c_s_MatchError().init___O(x0$5)
+        throw new $c_s_MatchError().init___O(x0$6)
+      }
+    })
+  })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+});
+$c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$routes$QuoteRoutes$$quotesList$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, securitiesDAO$1) {
+  var symbols = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbols$1) {
+    return (function(x$17$2) {
+      var fields = $m_Lcom_shocktrade_common_models_quote_OrderQuote$().Fields$1;
+      $m_sjs_concurrent_JSExecutionContext$Implicits$();
+      var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+      var y = symbols$1;
+      var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$in", y)]);
+      var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+      var cursor = x$17$2.find(jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", y$1)), $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$().toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
+      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1 = (function(promise$1) {
+        return (function(err$2, result$2) {
+          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+          } else {
+            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+          }
+        })
+      })(promise);
+      cursor.toArray(arg1);
+      return promise
+    })
+  })(symbols));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1) {
+    return (function(x0$1$2) {
+      var x0$1 = $as_s_util_Try(x0$1$2);
+      if ($is_s_util_Success(x0$1)) {
+        var x2 = $as_s_util_Success(x0$1);
+        var quotes = x2.value$2;
+        response$1.send(quotes);
+        $asUnit(next$1())
+      } else if ($is_s_util_Failure(x0$1)) {
+        var x3 = $as_s_util_Failure(x0$1);
+        var e = x3.exception$2;
+        var jsx$2 = response$1.status(500);
+        var s = e.getMessage__T();
+        jsx$2.send(s);
+        $asUnit(next$1())
+      } else {
+        throw new $c_s_MatchError().init___O(x0$1)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11530,21 +11583,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     })
   })(symbol));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
-    return (function(x0$2$2) {
-      var x0$2 = $as_s_util_Try(x0$2$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
+    return (function(x0$3$2) {
+      var x0$3 = $as_s_util_Try(x0$3$2);
       var rc10 = false;
       var x2$1 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$2)) {
+        if ($is_s_util_Success(x0$3)) {
           rc10 = true;
-          x2$1 = $as_s_util_Success(x0$2);
+          x2$1 = $as_s_util_Success(x0$3);
           var p3 = $as_s_Option(x2$1.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var quote = x4.x$2;
-            response$2.send(quote);
-            $asUnit(next$2());
+            response$3.send(quote);
+            $asUnit(next$3());
             break matchEnd11
           }
         };
@@ -11552,21 +11605,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
           var p6 = $as_s_Option(x2$1.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$2.sendStatus(404);
-            $asUnit(next$2());
+            response$3.sendStatus(404);
+            $asUnit(next$3());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$2)) {
-          var x7 = $as_s_util_Failure(x0$2);
+        if ($is_s_util_Failure(x0$3)) {
+          var x7 = $as_s_util_Failure(x0$3);
           var e = x7.exception$2;
-          var jsx$2 = response$2.status(500);
+          var jsx$2 = response$3.status(500);
           var s = e.getMessage__T();
           jsx$2.send(s);
-          $asUnit(next$2());
+          $asUnit(next$3());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$2)
+        throw new $c_s_MatchError().init___O(x0$3)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -11628,21 +11681,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
     })
   })(symbol));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$6, next$6) {
-    return (function(x0$6$2) {
-      var x0$6 = $as_s_util_Try(x0$6$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(securitiesDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$7, next$7) {
+    return (function(x0$7$2) {
+      var x0$7 = $as_s_util_Try(x0$7$2);
       var rc10 = false;
       var x2$1 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$6)) {
+        if ($is_s_util_Success(x0$7)) {
           rc10 = true;
-          x2$1 = $as_s_util_Success(x0$6);
+          x2$1 = $as_s_util_Success(x0$7);
           var p3 = $as_s_Option(x2$1.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var quote = x4.x$2;
-            response$6.send(quote);
-            $asUnit(next$6());
+            response$7.send(quote);
+            $asUnit(next$7());
             break matchEnd11
           }
         };
@@ -11650,21 +11703,21 @@ $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$.prototype.com$shocktrade$webapp$ro
           var p6 = $as_s_Option(x2$1.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$6.sendStatus(404);
-            $asUnit(next$6());
+            response$7.sendStatus(404);
+            $asUnit(next$7());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$6)) {
-          var x7 = $as_s_util_Failure(x0$6);
+        if ($is_s_util_Failure(x0$7)) {
+          var x7 = $as_s_util_Failure(x0$7);
           var e = x7.exception$2;
-          var jsx$2 = response$6.status(500);
+          var jsx$2 = response$7.status(500);
           var s = e.getMessage__T();
           jsx$2.send(s);
-          $asUnit(next$6());
+          $asUnit(next$7());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$6)
+        throw new $c_s_MatchError().init___O(x0$7)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)

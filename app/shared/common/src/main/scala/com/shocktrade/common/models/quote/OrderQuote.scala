@@ -16,6 +16,9 @@ trait OrderQuote extends js.Object {
   var exchange: js.UndefOr[String]
   var market: js.UndefOr[String]
   var lastTrade: js.UndefOr[Double]
+  var tradeDateTime: js.UndefOr[js.Date]
+  var tradeDate: js.UndefOr[js.Date]
+  var tradeTime: js.UndefOr[String]
   var open: js.UndefOr[Double]
   var prevClose: js.UndefOr[Double]
   var high: js.UndefOr[Double]
@@ -35,7 +38,7 @@ trait OrderQuote extends js.Object {
   */
 object OrderQuote {
   val Fields = List(
-    "symbol", "name", "exchange", "market", "lastTrade", "open", "prevClose", "high", "low",
+    "symbol", "name", "exchange", "market", "lastTrade", "tradeDateTime", "open", "prevClose", "high", "low",
     "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"
   )
 

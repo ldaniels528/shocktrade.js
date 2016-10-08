@@ -56,8 +56,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     this.fbProfile_? = profileFB
     this.facebookID = fbProfile_?.map(_.id)
 
-    console.info(s"profile = ${angular.toJson(profile)}, facebookID = $facebookID, profileFB = ${angular.toJson(profileFB)}")
-
     // broadcast the user profile change event
     $rootScope.emitUserProfileChanged(profile)
     ()
@@ -118,7 +116,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   /////////////////////////////////////////////////////////////////////
 
   def deduct(amount: Double) = {
-    console.log(f"Deducting $amount%.2f from ${userProfile.netWorth}")
     userProfile.netWorth = userProfile.netWorth.map(_ - amount)
   }
 

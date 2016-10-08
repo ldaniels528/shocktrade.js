@@ -61,7 +61,6 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     * @return the promise of a quote
     */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext) = {
-    console.log(s"Attempting to retrieve quote for '$symbol'...")
     val response = quoteService.getCompleteQuote(symbol)
     response onFailure { case e =>
       console.log(s"Failed to load quote for symbol: $symbol - ${e.displayMessage}")

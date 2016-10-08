@@ -1,9 +1,9 @@
 package com.shocktrade.client.profile
 
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.http.Http
 import com.shocktrade.client.profile.AwardsController._
 import com.shocktrade.client.{Award, MySessionService}
+import org.scalajs.angularjs._
+import org.scalajs.angularjs.http.Http
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -14,8 +14,7 @@ import scala.scalajs.js.JSConverters._
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class AwardsController($scope: AwardsControllerScope, $http: Http,
-                       @injected("MySessionService") mySession: MySessionService)
-  extends Controller {
+                       @injected("MySessionService") mySession: MySessionService) extends Controller {
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -30,11 +29,11 @@ class AwardsController($scope: AwardsControllerScope, $http: Http,
   }
 
   $scope.getAwardImage = (aCode: js.UndefOr[String]) => {
-    aCode.toOption.flatMap(code => AwardIconsByCode.get(code)).orUndefined
+    aCode.toOption.flatMap(AwardIconsByCode.get).orUndefined
   }
 
   $scope.getMyAwards = () => {
-    mySession.getMyAwards flatMap (code => AwardsByCode.get(code))
+    mySession.getMyAwards flatMap AwardsByCode.get
   }
 
 }
@@ -44,9 +43,9 @@ class AwardsController($scope: AwardsControllerScope, $http: Http,
   */
 object AwardsController {
 
-  private val AwardsByCode = js.Dictionary[Award](Award.AvailableAwards map { award => (award.code, award) }: _*)
+  private val AwardsByCode = js.Dictionary(Award.AvailableAwards.map(award => award.code -> award): _*)
 
-  private val AwardIconsByCode = js.Dictionary[String](Award.AvailableAwards map { award => (award.code, award.icon) }: _*)
+  private val AwardIconsByCode = js.Dictionary(Award.AvailableAwards.map(award => award.code -> award.icon): _*)
 
 }
 

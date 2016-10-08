@@ -1,11 +1,11 @@
 package com.shocktrade.client.profile
 
-import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.profile.MyQuotesController._
+import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, _}
 import org.scalajs.dom.console
@@ -71,7 +71,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
     quoteSets.get(name) foreach { obj =>
       obj.expanded = !obj.expanded
       if (obj.expanded && !isDefined(obj.quotes)) {
-        obj.quotes = emptyArray[ResearchQuote]
+        obj.quotes = emptyArray[OrderQuote]
         name match {
           case Favorites => loadQuotes(name, mySession.getFavoriteSymbols getOrElse emptyArray, obj)
           case Held => loadHeldSecurities(obj)
@@ -86,7 +86,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
   private def loadQuotes(name: String, symbols: js.Array[String], obj: Expandable) {
     if (symbols.nonEmpty) {
       quoteService.getBasicQuotes(symbols) onComplete {
-        case Success(updatedQuotes) => obj.quotes = updatedQuotes
+        case Success(updatedQuotes) => $scope.$apply(() => obj.quotes = updatedQuotes)
         case Failure(e) =>
           toaster.error(s"Failed to load $name")
           console.error(s"Failed to load $name: ${e.getMessage}")
@@ -104,8 +104,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
       } yield quotes
 
       outcome onComplete {
-        case Success(updatedQuotes) =>
-          obj.quotes = updatedQuotes
+        case Success(updatedQuotes) => $scope.$apply(() => obj.quotes = updatedQuotes)
         case Failure(e) =>
           toaster.error("Failed to load Held Securities")
           console.error(s"Failed to load Held Securities: ${e.getMessage}")
@@ -160,7 +159,7 @@ object MyQuotesController {
 
   @ScalaJSDefined
   class Expandable(val icon: String = null,
-                   var quotes: js.Array[ResearchQuote] = null,
+                   var quotes: js.Array[OrderQuote] = null,
                    var expanded: Boolean = false,
                    var loading: Boolean = false) extends js.Object
 

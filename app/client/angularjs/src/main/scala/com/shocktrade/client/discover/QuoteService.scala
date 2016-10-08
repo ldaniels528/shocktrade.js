@@ -21,7 +21,7 @@ class QuoteService($http: Http) extends Service {
   }
 
   def getBasicQuotes(symbols: js.Array[String]) = {
-    $http.post[js.Array[ResearchQuote]]("/api/quotes/list", symbols)
+    $http.post[js.Array[OrderQuote]]("/api/quotes/list", data = symbols)
   }
 
   def getCompleteQuote(symbol: String) = {

@@ -2,11 +2,10 @@ package com.shocktrade.client.directives
 
 import org.scalajs.angularjs.Directive._
 import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope, angular}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.nodejs.social.facebook.TaggableFriend
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
@@ -26,9 +25,8 @@ class AvatarDirective extends Directive with ElementRestriction with LinkSupport
 
   private def populateScope(scope: AvatarDirectiveScope, newValue: Any, oldValue: Any) {
     // determine the image URL
-    scope.url = Option(scope.id).orUndefined.map(id => s"http://graph.facebook.com/$id/picture") ??
-      (Option(scope.link).orUndefined map angular.fromJson flatMap (_.picture.data.url.asOpt[String].orUndefined)) ??
-      UNKNOWN_PERSON
+    scope.url = scope.id.map(id => s"http://graph.facebook.com/$id/picture") ??
+      (scope.link map angular.fromJson[TaggableFriend] map (_.picture.data.url)) ?? UNKNOWN_PERSON
 
     // set the class
     scope.myClass = if (scope.url.contains(UNKNOWN_PERSON)) "spectatorAvatar" else "playerAvatar"
@@ -40,7 +38,7 @@ class AvatarDirective extends Directive with ElementRestriction with LinkSupport
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class AvatarDirectiveInputs(val id: String, val link: String, val `class`: String, val style: String) extends js.Object
+class AvatarDirectiveInputs(val id: js.UndefOr[String], val link: js.UndefOr[String], val `class`: String, val style: String) extends js.Object
 
 /**
   * Avatar Directive Scope

@@ -1,8 +1,8 @@
 package com.shocktrade.client.profile
 
 import com.shocktrade.client.MySessionService
-import org.scalajs.angularjs.{Timeout, _}
 import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.angularjs.{Timeout, _}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.social.facebook.TaggableFriend
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -43,26 +43,24 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 
   $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
 
-  $scope.selectFriend = (friendMaybe: js.UndefOr[TaggableFriend]) => {
-    friendMaybe foreach { friend =>
-      console.log(s"selecting friend ${angular.toJson(friend)}")
-      $scope.selectedFriend = friend
+  $scope.selectFriend = (friendOpt: js.UndefOr[TaggableFriend]) => friendOpt foreach { friend =>
+    console.log(s"selecting friend ${angular.toJson(friend)}")
+    $scope.selectedFriend = friend
 
-      if (!isDefined(friend.dynamic.profile)) {
-        $timeout(() => {
-          friend.dynamic.profile = JS()
-          friend.dynamic.error = "Failure to load status information"
-        }, 3.seconds)
-        /*
-        profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {
-          case Success(profile) =>
-            friend.profile = profile
-          case Failure(e) =>
-            friend.profile = JS()
-            friend.error = e.getMessage
-            console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
-    }*/
-      }
+    if (!isDefined(friend.dynamic.profile)) {
+      $timeout(() => {
+        friend.dynamic.profile = JS()
+        friend.dynamic.error = "Failure to load status information"
+      }, 3.seconds)
+      /*
+      profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {
+        case Success(profile) =>
+          friend.profile = profile
+        case Failure(e) =>
+          friend.profile = JS()
+          friend.error = e.getMessage
+          console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
+  }*/
     }
   }
 

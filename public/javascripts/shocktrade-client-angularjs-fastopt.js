@@ -1036,17 +1036,12 @@ function $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__getCo
   return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, ec)
 }
 function $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__getContestRankings__Lcom_shocktrade_client_contest_ContestRankingCapability__Lcom_shocktrade_client_models_contest_Contest__T__s_concurrent_ExecutionContext__s_concurrent_Future($$this, contest, playerId, ec) {
-  var jsx$2 = $g.console;
-  var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Loading rankings for ", ""]));
+  var jsx$2 = $m_Lorg_scalajs_angularjs_http_HttpResponse$();
+  var jsx$1 = $$this.portfolioService$1;
   var value = contest._id;
-  var s = jsx$1.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value === (void 0)) ? null : value)]));
-  jsx$2.log(s);
-  var jsx$4 = $m_Lorg_scalajs_angularjs_http_HttpResponse$();
-  var jsx$3 = $$this.portfolioService$1;
-  var value$1 = contest._id;
-  var this$8 = jsx$4.promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(jsx$3.getPortfoliosByContest__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(((value$1 === (void 0)) ? null : value$1))));
+  var this$4 = jsx$2.promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(jsx$1.getPortfoliosByContest__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(((value === (void 0)) ? null : value))));
   var f = new $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRankings$1().init___Lcom_shocktrade_client_contest_ContestRankingCapability__Lcom_shocktrade_client_models_contest_Contest__T__s_concurrent_ExecutionContext($$this, contest, playerId, ec);
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$8, f, ec)
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f, ec)
 }
 function $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__getPortfolioRankings__Lcom_shocktrade_client_contest_ContestRankingCapability__Lcom_shocktrade_client_models_contest_Contest__sjs_js_Array__s_concurrent_ExecutionContext__s_concurrent_Future($$this, contest, portfolios, ec) {
   var this$5 = $m_s_concurrent_Future$();
@@ -1116,9 +1111,9 @@ function $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__com$s
   var jsx$1 = $as_sc_TraversableOnce(positions.map__F1__scg_CanBuildFrom__O(jsx$2, this$1.ReusableCBFInstance$2));
   var this$2 = $m_sc_Seq$();
   var this$3 = jsx$3.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$1, this$2.ReusableCBFInstance$2, ec);
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$11$2) {
-    var x$11 = $as_sc_Seq(x$11$2);
-    return $uD(x$11.sum__s_math_Numeric__O($m_s_math_Numeric$DoubleIsFractional$()))
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$12$2) {
+    var x$12 = $as_sc_Seq(x$12$2);
+    return $uD(x$12.sum__s_math_Numeric__O($m_s_math_Numeric$DoubleIsFractional$()))
   }));
   return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f, ec)
 }
@@ -3901,7 +3896,8 @@ $c_Lcom_shocktrade_client_profile_AwardsController$.prototype.init___ = (functio
   while ((i < len)) {
     var index = i;
     var arg1 = array[index];
-    var elem = new $c_T2().init___O__O($as_T(arg1.code), arg1);
+    var self = $as_T(arg1.code);
+    var elem = new $c_T2().init___O__O(self, arg1);
     array$1.push(elem);
     i = ((1 + i) | 0)
   };
@@ -3915,7 +3911,9 @@ $c_Lcom_shocktrade_client_profile_AwardsController$.prototype.init___ = (functio
   while ((i$1 < len$1)) {
     var index$1 = i$1;
     var arg1$1 = array$2[index$1];
-    var elem$1 = new $c_T2().init___O__O($as_T(arg1$1.code), $as_T(arg1$1.icon));
+    var self$1 = $as_T(arg1$1.code);
+    var y = $as_T(arg1$1.icon);
+    var elem$1 = new $c_T2().init___O__O(self$1, y);
     array$3.push(elem$1);
     i$1 = ((1 + i$1) | 0)
   };
@@ -4533,7 +4531,7 @@ $h_Lcom_shocktrade_common_models_quote_OrderQuote$.prototype = $c_Lcom_shocktrad
 $c_Lcom_shocktrade_common_models_quote_OrderQuote$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_common_models_quote_OrderQuote$ = this;
   $m_sci_List$();
-  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "open", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"]);
+  var xs = new $c_sjs_js_WrappedArray().init___sjs_js_Array(["symbol", "name", "exchange", "market", "lastTrade", "tradeDateTime", "open", "prevClose", "high", "low", "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"]);
   var this$2 = $m_sci_List$();
   var cbf = this$2.ReusableCBFInstance$2;
   this.Fields$1 = $as_sci_List($s_sc_TraversableLike$class__to__sc_TraversableLike__scg_CanBuildFrom__O(xs, cbf));
@@ -8808,13 +8806,10 @@ function $h_Lcom_shocktrade_client_QuoteCache() {
 }
 $h_Lcom_shocktrade_client_QuoteCache.prototype = $c_Lcom_shocktrade_client_QuoteCache.prototype;
 $c_Lcom_shocktrade_client_QuoteCache.prototype.com$shocktrade$client$QuoteCache$$loadQuote__T__s_concurrent_ExecutionContext__s_concurrent_Future = (function(symbol, ec) {
-  var jsx$1 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Attempting to retrieve quote for '", "'..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([symbol]));
-  jsx$1.log(s);
   var response = this.quoteService$1.getCompleteQuote__T__Lorg_scalajs_angularjs_http_HttpResponse(symbol);
-  var this$2 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(response);
+  var this$1 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(response);
   var pf = new $c_Lcom_shocktrade_client_QuoteCache$$anonfun$com$shocktrade$client$QuoteCache$$loadQuote$1().init___Lcom_shocktrade_client_QuoteCache__T(this, symbol);
-  $s_s_concurrent_Future$class__onFailure__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__V(this$2, pf, ec);
+  $s_s_concurrent_Future$class__onFailure__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__V(this$1, pf, ec);
   return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(response)
 });
 $c_Lcom_shocktrade_client_QuoteCache.prototype.get__T__s_concurrent_ExecutionContext__s_concurrent_Future = (function(symbol, ec) {
@@ -11789,28 +11784,7 @@ function $h_Lcom_shocktrade_client_profile_MyQuotesController() {
 $h_Lcom_shocktrade_client_profile_MyQuotesController.prototype = $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype;
 $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$loadQuotes__T__sjs_js_Array__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V = (function(name, symbols, obj) {
   if (($uI(symbols.length) !== 0)) {
-    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$client$profile$MyQuotesController$$quoteService$f.getBasicQuotes__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(symbols)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, name$2, obj$1) {
-      return (function(x0$4$2) {
-        var x0$4 = $as_s_util_Try(x0$4$2);
-        if ($is_s_util_Success(x0$4)) {
-          var x2 = $as_s_util_Success(x0$4);
-          var updatedQuotes = x2.value$2;
-          obj$1.quotes = updatedQuotes
-        } else if ($is_s_util_Failure(x0$4)) {
-          var x3 = $as_s_util_Failure(x0$4);
-          var e = x3.exception$2;
-          var toaster = arg$outer.com$shocktrade$client$profile$MyQuotesController$$toaster$f;
-          var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([name$2]));
-          var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-          toaster.pop(s$1, s, null);
-          var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-          var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load ", ": ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([name$2, e.getMessage__T()]));
-          jsx$1.error(s$2)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$4)
-        }
-      })
-    })(this, name, obj)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+    $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$client$profile$MyQuotesController$$quoteService$f.getBasicQuotes__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(symbols)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1().init___Lcom_shocktrade_client_profile_MyQuotesController__T__Lcom_shocktrade_client_profile_MyQuotesController$Expandable(this, name, obj), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
   }
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol__T__V = (function(symbol) {
@@ -14600,8 +14574,8 @@ $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams.protot
 $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams;
 /** @constructor */
 function $c_Lcom_shocktrade_client_directives_AvatarDirectiveInputs(arg$1, arg$2, arg$3, arg$4) {
-  var id = $as_T(arg$1);
-  var link = $as_T(arg$2);
+  var id = arg$1;
+  var link = arg$2;
   var $class = $as_T(arg$3);
   var style = $as_T(arg$4);
   $g.Object.call(this);
@@ -25555,32 +25529,10 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2.prototype.
     var jsx$3 = b$1.toList__sci_List()
   };
   var positions = $as_sci_List(jsx$3);
-  var jsx$8 = $g.console;
-  var jsx$7 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["computing investment - ", ""]));
-  var jsx$6 = $g.angular;
-  if ($is_sjs_js_ArrayOps(positions)) {
-    var x2 = $as_sjs_js_ArrayOps(positions);
-    var jsx$5 = x2.scala$scalajs$js$ArrayOps$$array$f
-  } else if ($is_sjs_js_WrappedArray(positions)) {
-    var x3 = $as_sjs_js_WrappedArray(positions);
-    var jsx$5 = x3.array$6
-  } else {
-    var result = [];
-    var these$1 = positions;
-    while ((!these$1.isEmpty__Z())) {
-      var arg1$4 = these$1.head__O();
-      $uI(result.push(arg1$4));
-      these$1 = $as_sci_List(these$1.tail__O())
-    };
-    var jsx$5 = result
-  };
-  var jsx$4 = jsx$6.toJson(jsx$5);
-  var s = jsx$7.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(jsx$4)]));
-  jsx$8.log(s);
-  var this$23 = $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment__Lcom_shocktrade_client_contest_ContestRankingCapability__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2, positions, this.ec$3$2);
+  var this$19 = $s_Lcom_shocktrade_client_contest_ContestRankingCapability$class__com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment__Lcom_shocktrade_client_contest_ContestRankingCapability__sc_Seq__s_concurrent_ExecutionContext__s_concurrent_Future(this.$$outer$2, positions, this.ec$3$2);
   var f$1 = new $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2$$anonfun$apply$7().init___Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2__sjs_js_UndefOr__Lcom_shocktrade_client_models_contest_Portfolio(this, player, portfolio);
   var executor = this.ec$3$2;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$23, f$1, executor)
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$19, f$1, executor)
 });
 $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_client_models_contest_Portfolio__s_concurrent_Future(v1)
@@ -25723,7 +25675,7 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktra
         var symbol$1 = $as_T(p3.$$und1__O());
         var quantity$1 = $uD(p3.$$und2__O());
         var this$11 = this.$$outer$2.quoteCache$1.get__T__s_concurrent_ExecutionContext__s_concurrent_Future(symbol$1, this.ec$1$2);
-        var f = new $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9().init___Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1__T__D(this, symbol$1, quantity$1);
+        var f = new $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9().init___Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1__D(this, quantity$1);
         var executor = this.ec$1$2;
         var outcome = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$11, f, executor);
         break matchEnd6
@@ -25736,10 +25688,10 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktra
     };
     throw new $c_s_MatchError().init___O(result)
   };
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$10$2) {
-    var x$10 = $as_sci_List(x$10$2);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$11$2) {
+    var x$11 = $as_sci_List(x$11$2);
     var num = $m_s_math_Numeric$DoubleIsFractional$();
-    return $uD($s_sc_TraversableOnce$class__sum__sc_TraversableOnce__s_math_Numeric__O(x$10, num))
+    return $uD($s_sc_TraversableOnce$class__sum__sc_TraversableOnce__s_math_Numeric__O(x$11, num))
   }));
   var executor$1 = this.ec$1$2;
   return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(outcome, f$1, executor$1)
@@ -25758,7 +25710,6 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktra
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9() {
   $c_sr_AbstractFunction1.call(this);
-  this.symbol$1$2 = null;
   this.quantity$1$f = 0.0
 }
 $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype = new $h_sr_AbstractFunction1();
@@ -25771,23 +25722,19 @@ $h_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktra
 $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__sci_List(v1)
 });
-$c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__sci_List = (function(quote) {
-  var jsx$1 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["The quote (", ") was loaded"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.symbol$1$2]));
-  jsx$1.log(s);
-  var jsx$2 = $m_sjs_js_UndefOrOps$();
-  var value = quote.lastTrade;
+$c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__sci_List = (function(x$9) {
+  var jsx$1 = $m_sjs_js_UndefOrOps$();
+  var value = x$9.lastTrade;
   if ((value === (void 0))) {
     var value$2 = (void 0)
   } else {
-    var x$9 = $uD(value);
-    var value$1 = (x$9 * this.quantity$1$f);
+    var x$10 = $uD(value);
+    var value$1 = (x$10 * this.quantity$1$f);
     var value$2 = value$1
   };
-  return jsx$2.toList$extension__sjs_js_UndefOr__sci_List(value$2)
+  return jsx$1.toList$extension__sjs_js_UndefOr__sci_List(value$2)
 });
-$c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype.init___Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1__T__D = (function($$outer, symbol$1, quantity$1) {
-  this.symbol$1$2 = symbol$1;
+$c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1$$anonfun$9.prototype.init___Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$com$shocktrade$client$contest$ContestRankingCapability$$computeInvestment$1__D = (function($$outer, quantity$1) {
   this.quantity$1$f = quantity$1;
   return this
 });
@@ -25874,16 +25821,13 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRa
   return this
 });
 $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRankings$2.prototype.apply__sjs_js_Array__Lcom_shocktrade_common_models_contest_ContestRankings = (function(participantRankings) {
-  var jsx$1 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["participantRankings = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(participantRankings))]));
-  jsx$1.log(s);
-  var this$4 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(participantRankings);
-  var opt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$4);
+  var this$3 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(participantRankings);
+  var opt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$3);
   if (opt.isEmpty__Z()) {
-    var jsx$5 = (void 0)
+    var jsx$4 = (void 0)
   } else {
     var arg1 = opt.get__O();
-    var jsx$5 = arg1
+    var jsx$4 = arg1
   };
   var len = $uI(participantRankings.length);
   var i = 0;
@@ -25894,17 +25838,17 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRa
       var valueA = arg1$1._id;
       var value = this.playerID$1$f;
       if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, value))) {
-        var jsx$3 = true
+        var jsx$2 = true
       } else {
         var valueA$1 = arg1$1.facebookID;
         var value$1 = this.playerID$1$f;
-        var jsx$3 = ((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, value$1))
+        var jsx$2 = ((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, value$1))
       };
-      var jsx$2 = (!jsx$3)
+      var jsx$1 = (!jsx$2)
     } else {
-      var jsx$2 = false
+      var jsx$1 = false
     };
-    if (jsx$2) {
+    if (jsx$1) {
       i = ((1 + i) | 0)
     } else {
       break
@@ -25913,12 +25857,12 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRa
   var i$1 = i;
   var opt$1 = ((i$1 < $uI(participantRankings.length)) ? new $c_s_Some().init___O(participantRankings[i$1]) : $m_s_None$());
   if (opt$1.isEmpty__Z()) {
-    var jsx$4 = (void 0)
+    var jsx$3 = (void 0)
   } else {
     var arg1$2 = opt$1.get__O();
-    var jsx$4 = arg1$2
+    var jsx$3 = arg1$2
   };
-  return new $c_Lcom_shocktrade_common_models_contest_ContestRankings(participantRankings, jsx$5, jsx$4)
+  return new $c_Lcom_shocktrade_common_models_contest_ContestRankings(participantRankings, jsx$4, jsx$3)
 });
 var $d_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRankings$2 = new $TypeData().initClass({
   Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$getContestRankings$2: 0
@@ -36060,14 +36004,14 @@ $c_Lcom_shocktrade_client_profile_AwardsController$$anonfun$2.prototype.apply__O
   return this.apply__sjs_js_UndefOr__sjs_js_UndefOr(v1)
 });
 $c_Lcom_shocktrade_client_profile_AwardsController$$anonfun$2.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr = (function(aCode) {
-  var this$4 = ((aCode === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(aCode));
-  if (this$4.isEmpty__Z()) {
+  var this$5 = ((aCode === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(aCode));
+  var dict = $m_Lcom_shocktrade_client_profile_AwardsController$().com$shocktrade$client$profile$AwardsController$$AwardIconsByCode$1;
+  if (this$5.isEmpty__Z()) {
     var opt = $m_s_None$()
   } else {
-    var arg1 = this$4.get__O();
-    var code = $as_T(arg1);
-    var dict = $m_Lcom_shocktrade_client_profile_AwardsController$().com$shocktrade$client$profile$AwardsController$$AwardIconsByCode$1;
-    var opt = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, code)) ? new $c_s_Some().init___O(dict[code]) : $m_s_None$())
+    var arg1 = this$5.get__O();
+    var key = $as_T(arg1);
+    var opt = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, key)) ? new $c_s_Some().init___O(dict[key]) : $m_s_None$())
   };
   if (opt.isEmpty__Z()) {
     return (void 0)
@@ -36104,15 +36048,15 @@ function $h_Lcom_shocktrade_client_profile_AwardsController$$anonfun$3() {
 $h_Lcom_shocktrade_client_profile_AwardsController$$anonfun$3.prototype = $c_Lcom_shocktrade_client_profile_AwardsController$$anonfun$3.prototype;
 $c_Lcom_shocktrade_client_profile_AwardsController$$anonfun$3.prototype.apply__sjs_js_Array = (function() {
   var array = this.$$outer$2.com$shocktrade$client$profile$AwardsController$$mySession$f.getMyAwards__sjs_js_Array();
+  var dict = $m_Lcom_shocktrade_client_profile_AwardsController$().com$shocktrade$client$profile$AwardsController$$AwardsByCode$1;
   var array$1 = [];
   var i = 0;
   var len = $uI(array.length);
   while ((i < len)) {
     var index = i;
     var arg1 = array[index];
-    var code = $as_T(arg1);
-    var dict = $m_Lcom_shocktrade_client_profile_AwardsController$().com$shocktrade$client$profile$AwardsController$$AwardsByCode$1;
-    var xo = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, code)) ? new $c_s_Some().init___O(dict[code]) : $m_s_None$());
+    var key = $as_T(arg1);
+    var xo = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, key)) ? new $c_s_Some().init___O(dict[key]) : $m_s_None$());
     var this$6 = xo.toList__sci_List();
     if ((this$6 !== null)) {
       var xs = this$6;
@@ -36274,13 +36218,13 @@ $c_Lcom_shocktrade_client_profile_HomeController$$anonfun$7.prototype.init___Lco
 $c_Lcom_shocktrade_client_profile_HomeController$$anonfun$7.prototype.apply__O__O = (function(v1) {
   this.apply__sjs_js_UndefOr__V(v1)
 });
-$c_Lcom_shocktrade_client_profile_HomeController$$anonfun$7.prototype.apply__sjs_js_UndefOr__V = (function(friendMaybe) {
-  if ((friendMaybe !== (void 0))) {
+$c_Lcom_shocktrade_client_profile_HomeController$$anonfun$7.prototype.apply__sjs_js_UndefOr__V = (function(friendOpt) {
+  if ((friendOpt !== (void 0))) {
     var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["selecting friend ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(friendMaybe))]));
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["selecting friend ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(friendOpt))]));
     jsx$1.log(s);
-    this.$$outer$2.com$shocktrade$client$profile$HomeController$$$scope$f.selectedFriend = friendMaybe;
-    var obj = friendMaybe.profile;
+    this.$$outer$2.com$shocktrade$client$profile$HomeController$$$scope$f.selectedFriend = friendOpt;
+    var obj = friendOpt.profile;
     if ((!((obj !== null) && (obj !== (void 0))))) {
       var jsx$3 = this.$$outer$2.com$shocktrade$client$profile$HomeController$$$timeout$f;
       var jsx$2 = $m_Lorg_scalajs_angularjs_package$();
@@ -36291,7 +36235,7 @@ $c_Lcom_shocktrade_client_profile_HomeController$$anonfun$7.prototype.apply__sjs
           friend$1.profile = {};
           friend$1.error = "Failure to load status information"
         })
-      })(friendMaybe), jsx$2.durationToInt__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$15.scala$concurrent$duration$DurationInt$$n$1, unit)))
+      })(friendOpt), jsx$2.durationToInt__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$15.scala$concurrent$duration$DurationInt$$n$1, unit)))
     }
   }
 });
@@ -36583,27 +36527,7 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$cli
   var f = new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$9().init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1(this);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor);
-  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(x0$5$2) {
-      var x0$5 = $as_s_util_Try(x0$5$2);
-      if ($is_s_util_Success(x0$5)) {
-        var x2 = $as_s_util_Success(x0$5);
-        var updatedQuotes = x2.value$2;
-        arg$outer.obj$2$f.quotes = updatedQuotes
-      } else if ($is_s_util_Failure(x0$5)) {
-        var x3 = $as_s_util_Failure(x0$5);
-        var e = x3.exception$2;
-        var toaster = arg$outer.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$toaster$f;
-        var s = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-        toaster.pop(s, "Failed to load Held Securities", null);
-        var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-        var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load Held Securities: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
-        jsx$1.error(s$1)
-      } else {
-        throw new $c_s_MatchError().init___O(x0$5)
-      }
-    })
-  })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13().init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController__Lcom_shocktrade_client_profile_MyQuotesController$Expandable = (function($$outer, obj$2) {
   if (($$outer === null)) {
@@ -36668,6 +36592,125 @@ var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$9.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$9;
 /** @constructor */
+function $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype.constructor = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13;
+/** @constructor */
+function $h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype;
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype.apply__s_util_Try__O = (function(x0$5) {
+  if ($is_s_util_Success(x0$5)) {
+    var x2 = $as_s_util_Success(x0$5);
+    var updatedQuotes = x2.value$2;
+    return this.$$outer$2.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$$scope$f.$apply((function(arg$outer, updatedQuotes$2) {
+      return (function() {
+        arg$outer.$$outer$2.obj$2$f.quotes = updatedQuotes$2
+      })
+    })(this, updatedQuotes))
+  } else if ($is_s_util_Failure(x0$5)) {
+    var x3 = $as_s_util_Failure(x0$5);
+    var e = x3.exception$2;
+    var toaster = this.$$outer$2.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$toaster$f;
+    var s = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s, "Failed to load Held Securities", null);
+    var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+    var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load Held Securities: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
+    jsx$1.error(s$1);
+    return (void 0)
+  } else {
+    throw new $c_s_MatchError().init___O(x0$5)
+  }
+});
+var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13 = new $TypeData().initClass({
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13: 0
+}, false, "com.shocktrade.client.profile.MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13", {
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1$$anonfun$apply$13;
+/** @constructor */
+function $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.name$2$2 = null;
+  this.obj$1$f = null
+}
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype.constructor = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1;
+/** @constructor */
+function $h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype;
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController__T__Lcom_shocktrade_client_profile_MyQuotesController$Expandable = (function($$outer, name$2, obj$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.name$2$2 = name$2;
+  this.obj$1$f = obj$1;
+  return this
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype.apply__s_util_Try__O = (function(x0$4) {
+  if ($is_s_util_Success(x0$4)) {
+    var x2 = $as_s_util_Success(x0$4);
+    var updatedQuotes = x2.value$2;
+    return this.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$$scope$f.$apply((function(arg$outer, updatedQuotes$1) {
+      return (function() {
+        arg$outer.obj$1$f.quotes = updatedQuotes$1
+      })
+    })(this, updatedQuotes))
+  } else if ($is_s_util_Failure(x0$4)) {
+    var x3 = $as_s_util_Failure(x0$4);
+    var e = x3.exception$2;
+    var toaster = this.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$toaster$f;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.name$2$2]));
+    var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s$1, s, null);
+    var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+    var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load ", ": ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.name$2$2, e.getMessage__T()]));
+    jsx$1.error(s$2);
+    return (void 0)
+  } else {
+    throw new $c_s_MatchError().init___O(x0$4)
+  }
+});
+var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1 = new $TypeData().initClass({
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1: 0
+}, false, "com.shocktrade.client.profile.MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1", {
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadQuotes$1;
+/** @constructor */
 function $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
@@ -36684,7 +36727,7 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$cli
   this.apply__T__V($as_T(v1))
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1.prototype.apply__T__V = (function(userId) {
-  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$profileService$f.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, this.symbol$2$2)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12().init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$profileService$f.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse(userId, this.symbol$2$2)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14().init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController__T = (function($$outer, symbol$2) {
   if (($$outer === null)) {
@@ -36707,21 +36750,21 @@ var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12() {
+function $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype.constructor = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12;
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype.constructor = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14;
 /** @constructor */
-function $h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12() {
+function $h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype;
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype = $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype;
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype.apply__O__O = (function(v1) {
   return this.apply__s_util_Try__O($as_s_util_Try(v1))
 });
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1 = (function($$outer) {
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype.init___Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -36729,7 +36772,7 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$cli
   };
   return this
 });
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype.apply__s_util_Try__O = (function(x0$3) {
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype.apply__s_util_Try__O = (function(x0$3) {
   if ($is_s_util_Success(x0$3)) {
     return this.$$outer$2.$$outer$2.com$shocktrade$client$profile$MyQuotesController$$$scope$f.$apply((function() {
       return (void 0)
@@ -36748,17 +36791,17 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$cli
     throw new $c_s_MatchError().init___O(x0$3)
   }
 });
-var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12 = new $TypeData().initClass({
-  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12: 0
-}, false, "com.shocktrade.client.profile.MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12", {
-  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12: 1,
+var $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14 = new $TypeData().initClass({
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14: 0
+}, false, "com.shocktrade.client.profile.MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14", {
+  Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$12;
+$c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$removeFavoriteSymbol$1$$anonfun$apply$14;
 /** @constructor */
 function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12() {
   $c_sr_AbstractFunction1.call(this);
@@ -39865,13 +39908,7 @@ $c_Lcom_shocktrade_client_directives_AvatarDirective.prototype.init___ = (functi
   return this
 });
 $c_Lcom_shocktrade_client_directives_AvatarDirective.prototype.com$shocktrade$client$directives$AvatarDirective$$populateScope__Lcom_shocktrade_client_directives_AvatarDirectiveScope__O__O__V = (function(scope, newValue, oldValue) {
-  var opt = $m_s_Option$().apply__O__s_Option($as_T(scope.id));
-  if (opt.isEmpty__Z()) {
-    var value = (void 0)
-  } else {
-    var arg1 = opt.get__O();
-    var value = arg1
-  };
+  var value = scope.id;
   if ((value === (void 0))) {
     var valueA = (void 0)
   } else {
@@ -39882,13 +39919,7 @@ $c_Lcom_shocktrade_client_directives_AvatarDirective.prototype.com$shocktrade$cl
   if ((valueA !== (void 0))) {
     var valueA$1 = valueA
   } else {
-    var opt$1 = $m_s_Option$().apply__O__s_Option($as_T(scope.link));
-    if (opt$1.isEmpty__Z()) {
-      var value$2 = (void 0)
-    } else {
-      var arg1$1 = opt$1.get__O();
-      var value$2 = arg1$1
-    };
+    var value$2 = scope.link;
     if ((value$2 === (void 0))) {
       var value$4 = (void 0)
     } else {
@@ -39899,26 +39930,20 @@ $c_Lcom_shocktrade_client_directives_AvatarDirective.prototype.com$shocktrade$cl
     if ((value$4 === (void 0))) {
       var valueA$1 = (void 0)
     } else {
-      var obj = value$4.picture.data.url;
-      var opt$2 = ((obj === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(obj));
-      if (opt$2.isEmpty__Z()) {
-        var valueA$1 = (void 0)
-      } else {
-        var arg1$2 = opt$2.get__O();
-        var valueA$1 = arg1$2
-      }
+      var value$5 = $as_T(value$4.picture.data.url);
+      var valueA$1 = value$5
     }
   };
   if ((valueA$1 !== (void 0))) {
     var jsx$1 = valueA$1
   } else {
-    var value$5 = this.com$shocktrade$client$directives$AvatarDirective$$UNKNOWN$undPERSON$1;
-    var jsx$1 = value$5
+    var value$6 = this.com$shocktrade$client$directives$AvatarDirective$$UNKNOWN$undPERSON$1;
+    var jsx$1 = value$6
   };
   scope.url = jsx$1;
   var valueA$2 = scope.url;
-  var value$6 = this.com$shocktrade$client$directives$AvatarDirective$$UNKNOWN$undPERSON$1;
-  scope.myClass = (((valueA$2 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$2, value$6)) ? "spectatorAvatar" : "playerAvatar")
+  var value$7 = this.com$shocktrade$client$directives$AvatarDirective$$UNKNOWN$undPERSON$1;
+  scope.myClass = (((valueA$2 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$2, value$7)) ? "spectatorAvatar" : "playerAvatar")
 });
 $c_Lcom_shocktrade_client_directives_AvatarDirective.prototype.link__Lcom_shocktrade_client_directives_AvatarDirectiveScope__Lorg_scalajs_angularjs_JQLite__Lorg_scalajs_angularjs_Attributes__V = (function(scope, element, attrs) {
   scope.$watch("id", (function(arg$outer, scope$1) {
@@ -42475,14 +42500,11 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.setUserProfile__Lcom_shockt
     var jsx$1 = value$1
   };
   this.facebookID$1 = jsx$1;
-  var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["profile = ", ", facebookID = ", ", profileFB = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(profile)), this.facebookID$1, $as_T($g.angular.toJson(profileFB))]));
-  jsx$2.info(s);
   var $$scope = this.$$rootScope$1;
   var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
-  var jsx$3 = $g.console;
-  var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
-  jsx$3.info(s$1);
+  var jsx$2 = $g.console;
+  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
+  jsx$2.info(s);
   $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.hashCode__I = (function() {
