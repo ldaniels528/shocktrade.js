@@ -10,7 +10,7 @@ val appScalaVersion = "2.11.8"
 val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
-val scalaJsNodeVersion = "0.2.3.0"
+val scalaJsNodeVersion = "0.2.3.1"
 
 scalaJSUseRhino in Global := false
 
@@ -42,7 +42,7 @@ lazy val appSettings = Seq(
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
-  resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+  resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
@@ -61,7 +61,7 @@ lazy val moduleSettings = Seq(
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
-  resolvers += "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2",
+  resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
