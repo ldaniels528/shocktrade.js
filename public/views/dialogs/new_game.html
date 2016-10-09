@@ -21,8 +21,8 @@
             <div class="col-md-12">
                 <label for="startingBalance" class="bold">Buy-In / Initial Funds</label>
                 <select id="startingBalance" class="form-control"
-                        ng-model="form.startingBalance">
-                    <option ng-repeat="bal in startingBalances" value="{{ bal }}">${{ bal | number }}</option>
+                        ng-model="form.startingBalance"
+                        ng-options="b.label for b in startingBalances">
                 </select>
             </div>
             <div class="col-md-12">

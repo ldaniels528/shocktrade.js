@@ -1,5 +1,7 @@
 package com.shocktrade.common.models.contest
 
+import java.util.UUID
+
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
@@ -13,7 +15,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 class Participant(var _id: js.UndefOr[String],
                   var name: js.UndefOr[String],
                   var facebookID: js.UndefOr[String],
-                  var joinedTime: js.UndefOr[js.Date]) extends js.Object
+                  var joinedTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
 
 /**
   * Participant Companion

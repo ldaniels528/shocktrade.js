@@ -1,11 +1,11 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.forms.PlayerInfoForm
-import com.shocktrade.common.models.contest._
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
+import com.shocktrade.common.forms.{ContestCreateForm, PlayerInfoForm}
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
 
+import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
@@ -17,6 +17,14 @@ class ContestService($http: Http) extends Service {
   ///////////////////////////////////////////////////////////////
   //          Basic C.R.U.D.
   ///////////////////////////////////////////////////////////////
+
+  /**
+    * Creates a new game
+    * @return the promise of the result of creating a new game
+    */
+  def createNewGame(form: ContestCreateForm): Future[Contest] = {
+    $http.post[Contest]("/api/contest", form)
+  }
 
   def deleteContest(contestId: String) = {
     $http.delete[js.Dynamic](s"/api/contest/$contestId")

@@ -1,5 +1,7 @@
 package com.shocktrade.common.models.contest
 
+import java.util.UUID
+
 import com.shocktrade.common.models.PlayerRef
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -11,10 +13,10 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class ChatMessage(val _id: js.UndefOr[String] = js.undefined,
-                  val sender: js.UndefOr[PlayerRef] = js.undefined,
-                  val text: js.UndefOr[String] = js.undefined,
-                  val sentTime: js.UndefOr[js.Date] = js.undefined) extends js.Object
+class ChatMessage(val _id: js.UndefOr[String] = UUID.randomUUID().toString,
+                  val sender: js.UndefOr[PlayerRef],
+                  val text: js.UndefOr[String],
+                  val sentTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
 
 /**
   * Chat Message Companion

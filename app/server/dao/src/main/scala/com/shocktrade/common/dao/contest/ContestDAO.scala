@@ -1,7 +1,7 @@
 package com.shocktrade.common.dao.contest
 
 import com.shocktrade.common.forms.ContestSearchForm
-import com.shocktrade.common.models.contest.ChatMessage
+import com.shocktrade.common.models.contest.{ChatMessage, Participant}
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
@@ -53,6 +53,16 @@ object ContestDAO {
     @inline
     def findByPlayer(playerID: String)(implicit ec: ExecutionContext) = {
       dao.find("participants._id" $eq playerID).toArrayFuture[ContestData]
+    }
+
+    @inline
+    def findUnoccupied(playerID: String)(implicit ec: ExecutionContext) = {
+      dao.find("participants" $not $elemMatch("_id" $eq playerID)).toArrayFuture[ContestData]
+    }
+
+    @inline
+    def join(contestID: String, participant: Participant)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.findOneAndUpdate(filter = "_id" $eq contestID.$oid, update = "participants" $addToSet participant)
     }
 
     @inline

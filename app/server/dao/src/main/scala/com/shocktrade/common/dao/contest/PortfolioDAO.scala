@@ -22,10 +22,13 @@ trait PortfolioDAO extends Collection
 object PortfolioDAO {
 
   /**
-    * Portfolio DAO Extensions
+    * Portfolio DAO Enrichment
     * @param dao the given [[PortfolioDAO Portfolio DAO]]
     */
-  implicit class PortfolioDAOExtensions(val dao: PortfolioDAO) {
+  implicit class PortfolioDAOEnrichment(val dao: PortfolioDAO) {
+
+    @inline
+    def create(portfolio: PortfolioData) = dao.insert(portfolio)
 
     @inline
     def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {

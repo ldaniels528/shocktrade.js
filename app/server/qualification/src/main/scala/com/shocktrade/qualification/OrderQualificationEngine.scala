@@ -45,7 +45,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock) = clock.isTradingActive || clock.isTradingActive(lastRun)
+  override def isReady(clock: TradingClock) = true // clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
     * Executes the process
@@ -76,7 +76,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     logger.log(s"Processing portfolio # ${portfolio._id}")
 
     // determine the as-of date
-    val asOfTime = portfolio.lastUpdate.getOrElse(new js.Date())
+    val asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
     logger.log(s"as-of date: $asOfTime\n")
 
     // attempt to find eligible orders

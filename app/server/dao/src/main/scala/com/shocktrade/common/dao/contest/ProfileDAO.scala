@@ -19,10 +19,20 @@ trait ProfileDAO extends Collection
 object ProfileDAO {
 
   /**
-    * Profile DAO Extensions
+    * Profile DAO Enrichment
     * @param dao the given [[ProfileDAO profile DAO]]
     */
-  implicit class ProfileDAOExtensions(val dao: ProfileDAO) extends AnyVal {
+  implicit class ProfileDAOEnrichment(val dao: ProfileDAO) extends AnyVal {
+
+    @inline
+    def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.updateOne(filter = doc("_id" $eq userID.$oid, "netWorth" $gte amount), update = "netWorth" $inc -amount)
+    }
+
+    @inline
+    def depositFunds(userID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.updateOne(filter = "_id" $eq userID.$oid, update = "netWorth" $inc amount)
+    }
 
     @inline
     def findOneByID(userID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {

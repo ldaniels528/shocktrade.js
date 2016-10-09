@@ -4,32 +4,31 @@ import com.shocktrade.common.models.contest._
 import org.scalajs.nodejs.mongodb.ObjectID
 
 import scala.scalajs.js
+import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Portfolio Data model for the Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
-trait PortfolioData extends PortfolioLike {
-  var _id: js.UndefOr[ObjectID] = js.native
-  var contestID: js.UndefOr[ObjectID] = js.native
+@ScalaJSDefined
+class PortfolioData(var _id: js.UndefOr[ObjectID] = js.undefined,
+                    var contestID: js.UndefOr[String] = js.undefined,
+                    var contestName: js.UndefOr[String] = js.undefined,
 
-  // common fields
-  var playerID: js.UndefOr[String] = js.native
-  var cashAccount: js.UndefOr[CashAccount] = js.native
-  var marginAccount: js.UndefOr[MarginAccount] = js.native
-  var orders: js.UndefOr[js.Array[OrderData]] = js.native
-  var closedOrders: js.UndefOr[js.Array[OrderData]] = js.native
-  var performance: js.UndefOr[js.Array[PerformanceLike]] = js.native
-  var perks: js.UndefOr[js.Array[String]] = js.native
-  var positions: js.UndefOr[js.Array[PositionData]] = js.native
+                    // common fields
+                    var playerID: js.UndefOr[String] = js.undefined,
+                    var cashAccount: js.UndefOr[CashAccount] = js.undefined,
+                    var marginAccount: js.UndefOr[MarginAccount] = js.undefined,
+                    var orders: js.UndefOr[js.Array[OrderData]] = js.undefined,
+                    var closedOrders: js.UndefOr[js.Array[OrderData]] = js.undefined,
+                    var performance: js.UndefOr[js.Array[PerformanceLike]] = js.undefined,
+                    var perks: js.UndefOr[js.Array[String]] = js.undefined,
+                    var positions: js.UndefOr[js.Array[PositionData]] = js.undefined,
 
-  // administrative fields
-  var lastUpdate: js.UndefOr[js.Date] = js.native
-  var nextUpdate: js.UndefOr[js.Date] = js.native
-  var processingHost: js.UndefOr[String] = js.native
-
-}
+                    // administrative fields
+                    var lastUpdate: js.UndefOr[js.Date] = js.undefined,
+                    var nextUpdate: js.UndefOr[js.Date] = js.undefined,
+                    var processingHost: js.UndefOr[String] = js.undefined) extends PortfolioLike
 
 /**
   * Portfolio Data Companion

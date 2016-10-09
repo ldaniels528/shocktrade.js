@@ -3,6 +3,7 @@ package securities
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
+import com.shocktrade.serverside.LoggerFactory
 import org.scalajs.nodejs.mongodb._
 import org.scalajs.sjs.JsUnderOrHelper._
 
@@ -94,6 +95,7 @@ object SecuritiesDAO {
       toRange("spread", options.spreadMin, options.spreadMax) foreach (selector ++= _)
       toRange("volume", options.volumeMin, options.volumeMax) foreach (selector ++= _)
       toRange("avgVolume10Day", options.avgVolumeMin, options.avgVolumeMax) foreach (selector ++= _)
+      LoggerFactory.getLogger(getClass()).info("query: %j", selector)
 
       // is there an array of sort fields?
       val sortFields: js.Array[js.Any] = options.sortFields map (_ flatMap { sf =>

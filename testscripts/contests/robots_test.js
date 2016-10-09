@@ -1,8 +1,15 @@
+db.Contests.find({
+    participants: { $not : { $elemMatch : {  _id : "554d8d313400002b00ff4ed5" } } }
+});
+
+
+
 db.Robots.update(
     {playerID: "554d8d313400002b00ff4ed5"},
     {
         playerID: "554d8d313400002b00ff4ed5",
         name: "Gadgie-Bot",
+        facebookID: "613646325380649",
         lastActivated: new ISODate(),
         active: true,
         tradingStrategy: {
@@ -15,7 +22,7 @@ db.Robots.update(
                     priceMin: 0.0001,
                     priceMax: 2.00,
                     volumeMin: 1e+5,
-                    avgVolumeMin: 1e+6,
+                    //avgVolumeMin: 1e+6,
                     sortFields: [{field:"avgVolume10Day", direction:-1}, {field:"spread", direction:-1}, {field:"lastTrade", direction:1}]
                 },
                 rules: [{
@@ -50,6 +57,7 @@ db.Robots.update(
     {
         playerID: "51a308ac50c70a97d375a6b5",
         name: "Daisy-Bot",
+        facebookID: "100001992439064",
         lastActivated: new ISODate(),
         active: true,
         tradingStrategy: {
@@ -62,7 +70,7 @@ db.Robots.update(
                     priceMin: 0.0001,
                     priceMax: 2.00,
                     volumeMin: 1e+5,
-                    avgVolumeMin: 1e+6,
+                    //avgVolumeMin: 1e+6,
                     sortFields: [{field:"avgVolume10Day", direction:-1}, {field:"spread", direction:-1}, {field:"lastTrade", direction:1}]
                 },
                 rules: [{

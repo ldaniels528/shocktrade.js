@@ -3132,73 +3132,6 @@ var $d_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions = new 
 });
 $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_ContestData$() {
-  $c_O.call(this)
-}
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_ContestData$;
-/** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_ContestData$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_dao_contest_ContestData$.prototype = $c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype;
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-var $d_Lcom_shocktrade_common_dao_contest_ContestData$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_ContestData$: 0
-}, false, "com.shocktrade.common.dao.contest.ContestData$", {
-  Lcom_shocktrade_common_dao_contest_ContestData$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_common_dao_contest_ContestData$.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_ContestData$;
-var $n_Lcom_shocktrade_common_dao_contest_ContestData$ = (void 0);
-function $m_Lcom_shocktrade_common_dao_contest_ContestData$() {
-  if ((!$n_Lcom_shocktrade_common_dao_contest_ContestData$)) {
-    $n_Lcom_shocktrade_common_dao_contest_ContestData$ = new $c_Lcom_shocktrade_common_dao_contest_ContestData$().init___()
-  };
-  return $n_Lcom_shocktrade_common_dao_contest_ContestData$
-}
-/** @constructor */
 function $c_Lcom_shocktrade_common_dao_contest_OrderData$() {
   $c_O.call(this)
 }
@@ -3275,28 +3208,98 @@ var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO = new $TypeData().initCla
   Lorg_scalajs_nodejs_mongodb_Collection: 1
 }, true, (void 0), $noIsInstance);
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment() {
   $c_O.call(this);
   this.dao$1 = null
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype = new $h_O();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype = new $h_O();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO = (function(dao) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO = (function(dao) {
   this.dao$1 = dao;
   return this
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment: 1,
   O: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment;
+/** @constructor */
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioData$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioData$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioData$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioData$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioData$: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioData$", {
+  Lcom_shocktrade_common_dao_contest_PortfolioData$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData$.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioData$;
+var $n_Lcom_shocktrade_common_dao_contest_PortfolioData$ = (void 0);
+function $m_Lcom_shocktrade_common_dao_contest_PortfolioData$() {
+  if ((!$n_Lcom_shocktrade_common_dao_contest_PortfolioData$)) {
+    $n_Lcom_shocktrade_common_dao_contest_PortfolioData$ = new $c_Lcom_shocktrade_common_dao_contest_PortfolioData$().init___()
+  };
+  return $n_Lcom_shocktrade_common_dao_contest_PortfolioData$
+}
 var $d_Lcom_shocktrade_common_dao_contest_ProfileDAO = new $TypeData().initClass({
   Lcom_shocktrade_common_dao_contest_ProfileDAO: 0
 }, false, "com.shocktrade.common.dao.contest.ProfileDAO", {
@@ -3373,6 +3376,84 @@ var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO = new $TypeData().ini
   Lcom_shocktrade_common_dao_securities_SecuritiesDAO: 1,
   Lorg_scalajs_nodejs_mongodb_Collection: 1
 }, true, (void 0), $noIsInstance);
+/** @constructor */
+function $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment() {
+  $c_O.call(this);
+  this.dao$1 = null
+}
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype = new $h_O();
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype.constructor = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment;
+/** @constructor */
+function $h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype;
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype.equals__O__Z = (function(x$1) {
+  return $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$().equals$extension__Lcom_shocktrade_common_dao_securities_SecuritiesDAO__O__Z(this.dao$1, x$1)
+});
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype.hashCode__I = (function() {
+  var $$this = this.dao$1;
+  return $objectHashCode($$this)
+});
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype.init___Lcom_shocktrade_common_dao_securities_SecuritiesDAO = (function(dao) {
+  this.dao$1 = dao;
+  return this
+});
+function $is_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment)))
+}
+function $as_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj) {
+  return (($is_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.common.dao.securities.SecuritiesDAO$SecuritiesDAOEnrichment"))
+}
+function $isArrayOf_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment)))
+}
+function $asArrayOf_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.common.dao.securities.SecuritiesDAO$SecuritiesDAOEnrichment;", depth))
+}
+var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment: 0
+}, false, "com.shocktrade.common.dao.securities.SecuritiesDAO$SecuritiesDAOEnrichment", {
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.prototype.$classData = $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment;
+/** @constructor */
+function $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype.constructor = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype = $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype;
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype.equals$extension__Lcom_shocktrade_common_dao_securities_SecuritiesDAO__O__Z = (function($$this, x$1) {
+  if ($is_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(x$1)) {
+    var SecuritiesDAOEnrichment$1 = ((x$1 === null) ? null : $as_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment(x$1).dao$1);
+    return $m_sr_BoxesRunTime$().equals__O__O__Z($$this, SecuritiesDAOEnrichment$1)
+  } else {
+    return false
+  }
+});
+var $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$: 0
+}, false, "com.shocktrade.common.dao.securities.SecuritiesDAO$SecuritiesDAOEnrichment$", {
+  Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$.prototype.$classData = $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$;
+var $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$ = (void 0);
+function $m_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$() {
+  if ((!$n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$)) {
+    $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$ = new $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$().init___()
+  };
+  return $n_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$
+}
 /** @constructor */
 function $c_Lcom_shocktrade_common_events_RemoteEvent$() {
   $c_O.call(this);
@@ -3510,6 +3591,40 @@ function $m_Lcom_shocktrade_common_models_OnlineStatus$() {
   return $n_Lcom_shocktrade_common_models_OnlineStatus$
 }
 /** @constructor */
+function $c_Lcom_shocktrade_common_models_contest_CashAccount$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_CashAccount$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_contest_CashAccount$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_contest_CashAccount$.prototype = $c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype;
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_common_models_contest_CashAccount$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_contest_CashAccount$: 0
+}, false, "com.shocktrade.common.models.contest.CashAccount$", {
+  Lcom_shocktrade_common_models_contest_CashAccount$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_contest_CashAccount$.prototype.$classData = $d_Lcom_shocktrade_common_models_contest_CashAccount$;
+var $n_Lcom_shocktrade_common_models_contest_CashAccount$ = (void 0);
+function $m_Lcom_shocktrade_common_models_contest_CashAccount$() {
+  if ((!$n_Lcom_shocktrade_common_models_contest_CashAccount$)) {
+    $n_Lcom_shocktrade_common_models_contest_CashAccount$ = new $c_Lcom_shocktrade_common_models_contest_CashAccount$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_contest_CashAccount$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_common_models_contest_ChatMessage$() {
   $c_O.call(this)
 }
@@ -3524,16 +3639,12 @@ $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.init___ = (funct
   return this
 });
 $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
+  var value = new $g.Date();
+  return value
 });
 $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
+  var value = $m_ju_UUID$().randomUUID__ju_UUID().toString__T();
+  return value
 });
 var $d_Lcom_shocktrade_common_models_contest_ChatMessage$ = new $TypeData().initClass({
   Lcom_shocktrade_common_models_contest_ChatMessage$: 0
@@ -3582,6 +3693,38 @@ function $m_Lcom_shocktrade_common_models_contest_ContestLike$() {
     $n_Lcom_shocktrade_common_models_contest_ContestLike$ = new $c_Lcom_shocktrade_common_models_contest_ContestLike$().init___()
   };
   return $n_Lcom_shocktrade_common_models_contest_ContestLike$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_contest_Participant$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_contest_Participant$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_contest_Participant$.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_Participant$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_contest_Participant$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_contest_Participant$.prototype = $c_Lcom_shocktrade_common_models_contest_Participant$.prototype;
+$c_Lcom_shocktrade_common_models_contest_Participant$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_contest_Participant$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+  var value = new $g.Date();
+  return value
+});
+var $d_Lcom_shocktrade_common_models_contest_Participant$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_contest_Participant$: 0
+}, false, "com.shocktrade.common.models.contest.Participant$", {
+  Lcom_shocktrade_common_models_contest_Participant$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_contest_Participant$.prototype.$classData = $d_Lcom_shocktrade_common_models_contest_Participant$;
+var $n_Lcom_shocktrade_common_models_contest_Participant$ = (void 0);
+function $m_Lcom_shocktrade_common_models_contest_Participant$() {
+  if ((!$n_Lcom_shocktrade_common_models_contest_Participant$)) {
+    $n_Lcom_shocktrade_common_models_contest_Participant$ = new $c_Lcom_shocktrade_common_models_contest_Participant$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_contest_Participant$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_models_contest_PortfolioRanking$() {
@@ -7211,7 +7354,7 @@ $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.init___ = (function() {
 $c_Lcom_shocktrade_webapp_routes_ChartRoutes$.prototype.getExposureByXXX$1__p1__T__T__F1__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future = (function(contestId, playerId, fx, ec$1, portfolioDAO$1, securitiesDAO$1) {
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, contestId$1, playerId$1) {
     return (function(x$8$2) {
-      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$8$2);
+      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$8$2);
       var coll = this$2.dao$1;
       var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("contestID", contestId$1), new $c_T2().init___O__O("playerID", playerId$1)]);
       var selector = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
@@ -7813,13 +7956,199 @@ $h_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype = $c_Lcom_shocktrade_w
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.init___ = (function() {
   return this
 });
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$createContest$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, ec$1, mongo$1, contestDAO$1, portfolioDAO$1, profileDAO$1) {
+  var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
+  $g.console.log("form = %j", form);
+  var messages = [];
+  var value = form.name;
+  if ((value !== (void 0))) {
+    var x$1 = $as_T(value);
+    var x = $as_T(x$1.trim());
+    var this$13 = new $c_sci_StringOps().init___T(x);
+    var jsx$1 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$13)
+  } else {
+    var jsx$1 = false
+  };
+  if ((!jsx$1)) {
+    $uI(messages.push("The game name is required"))
+  };
+  var value$1 = form.playerId;
+  if ((value$1 !== (void 0))) {
+    var x$2 = $as_T(value$1);
+    var x$3 = $as_T(x$2.trim());
+    var this$21 = new $c_sci_StringOps().init___T(x$3);
+    var jsx$3 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$21)
+  } else {
+    var jsx$3 = false
+  };
+  if ((!jsx$3)) {
+    var jsx$2 = true
+  } else {
+    var value$2 = form.playerName;
+    if ((value$2 !== (void 0))) {
+      var x$3$1 = $as_T(value$2);
+      var x$4 = $as_T(x$3$1.trim());
+      var this$29 = new $c_sci_StringOps().init___T(x$4);
+      var jsx$4 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$29)
+    } else {
+      var jsx$4 = false
+    };
+    var jsx$2 = (!jsx$4)
+  };
+  if (jsx$2) {
+    $uI(messages.push("The creator information is missing"))
+  };
+  var value$3 = form.levelCapAllowed;
+  if ((value$3 === (void 0))) {
+    var valueA = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(value$3);
+    if (opt.isEmpty__Z()) {
+      var valueA = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var valueA = arg1
+    }
+  };
+  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true))) {
+    var value$4 = form.levelCap;
+    var jsx$5 = (value$4 === (void 0))
+  } else {
+    var jsx$5 = false
+  };
+  if (jsx$5) {
+    $uI(messages.push("Level cap must be specified"))
+  };
+  var valueA$1 = form.duration;
+  if ((valueA$1 === (void 0))) {
+    var value$5 = (void 0)
+  } else {
+    var opt$1 = $m_s_Option$().apply__O__s_Option(valueA$1);
+    if (opt$1.isEmpty__Z()) {
+      var value$5 = (void 0)
+    } else {
+      var arg1$1 = opt$1.get__O();
+      var value$5 = arg1$1
+    }
+  };
+  if ((value$5 === (void 0))) {
+    $uI(messages.push("The game duration is required"))
+  };
+  if (($uI(messages.length) === 0)) {
+    var x$18 = form.name;
+    var x$3$2 = form.playerId;
+    var x$4$1 = form.facebookId;
+    var x$5 = form.playerName;
+    var value$6 = new $c_Lcom_shocktrade_common_models_PlayerRef(x$3$2, x$5, x$4$1);
+    var value$7 = form.startingBalance;
+    if ((value$7 === (void 0))) {
+      var x$20 = (void 0)
+    } else {
+      var value$8 = $uD(value$7.value);
+      var x$20 = value$8
+    };
+    var value$9 = new $g.Date();
+    var value$10 = form.duration;
+    if ((value$10 === (void 0))) {
+      var x$22 = (void 0)
+    } else {
+      var n = $uI(value$10.value);
+      var this$72 = new $c_s_concurrent_duration_package$DurationInt().init___I(n);
+      var unit = $m_ju_concurrent_TimeUnit$().DAYS$1;
+      var duration = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$72.scala$concurrent$duration$DurationInt$$n$1, unit);
+      var date = new $g.Date();
+      var jsx$7 = $g.Date;
+      var jsx$6 = $uD(date.getTime());
+      var t = duration.unit$2.toMillis__J__J(duration.length$2);
+      var lo = t.lo$2;
+      var hi = t.hi$2;
+      var value$11 = new jsx$7((jsx$6 + $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi)));
+      var x$22 = value$11
+    };
+    var value$12 = $m_Lcom_shocktrade_common_models_contest_ContestLike$().StatusActive$1;
+    var x$6 = form.playerId;
+    var x$7 = form.facebookId;
+    var x$8 = form.playerName;
+    var value$13 = [new $c_Lcom_shocktrade_common_models_contest_Participant(x$6, x$8, x$7)];
+    var x$10 = form.playerId;
+    var x$11 = form.facebookId;
+    var x$12 = form.playerName;
+    var value$14 = new $c_Lcom_shocktrade_common_models_PlayerRef(x$10, x$12, x$11);
+    var value$15 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Welcome to ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([form.name]));
+    var value$16 = [new $c_Lcom_shocktrade_common_models_contest_ChatMessage((void 0), value$14, value$15)];
+    var valueA$2 = form.friendsOnly;
+    var x$26 = ((valueA$2 !== (void 0)) && valueA$2);
+    var valueA$3 = form.invitationOnly;
+    var x$27 = ((valueA$3 !== (void 0)) && valueA$3);
+    var x$28 = form.levelCap;
+    var valueA$4 = form.perksAllowed;
+    var x$29 = ((valueA$4 !== (void 0)) && valueA$4);
+    var valueA$5 = form.robotsAllowed;
+    var x$30 = ((valueA$5 !== (void 0)) && valueA$5);
+    var contest = new $c_Lcom_shocktrade_common_dao_contest_ContestData((void 0), x$18, value$6, value$9, x$22, x$20, value$12, value$13, value$16, x$26, x$27, x$28, x$29, x$30);
+    var this$105 = this.createNewContest$1__p1__Lcom_shocktrade_common_dao_contest_ContestData__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future(contest, ec$1, contestDAO$1);
+    var f = new $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5().init___s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__Lcom_shocktrade_common_dao_contest_ContestData(ec$1, mongo$1, portfolioDAO$1, profileDAO$1, contest);
+    var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$105, f, ec$1);
+    outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
+      return (function(x0$3$2) {
+        var x0$3 = $as_s_util_Try(x0$3$2);
+        var rc14 = false;
+        var x2 = null;
+        matchEnd15: {
+          if ($is_s_util_Success(x0$3)) {
+            rc14 = true;
+            x2 = $as_s_util_Success(x0$3);
+            var p3 = $as_T3(x2.value$2);
+            if ((p3 !== null)) {
+              var p4 = $as_s_Option(p3.$$und1$1);
+              var p5 = $as_s_Option(p3.$$und2$1);
+              var p6 = $uZ(p3.$$und3$1);
+              if ($is_s_Some(p4)) {
+                var x7 = $as_s_Some(p4);
+                var newContest = x7.x$2;
+                if ($is_s_Some(p5)) {
+                  var x8 = $as_s_Some(p5);
+                  var portfolio = x8.x$2;
+                  if ((p6 === true)) {
+                    response$2.send(new $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio(newContest, portfolio));
+                    $asUnit(next$2());
+                    break matchEnd15
+                  }
+                }
+              }
+            }
+          };
+          if (rc14) {
+            response$2.status(400).send("Contest could not be created");
+            $asUnit(next$2());
+            break matchEnd15
+          };
+          if ($is_s_util_Failure(x0$3)) {
+            var x11 = $as_s_util_Failure(x0$3);
+            var e = x11.exception$2;
+            var jsx$8 = response$2.status(500);
+            var s = e.getMessage__T();
+            jsx$8.send(s);
+            $asUnit(next$2());
+            break matchEnd15
+          };
+          throw new $c_s_MatchError().init___O(x0$3)
+        }
+      })
+    })(response, next)), ec$1)
+  } else {
+    var json = new $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors(messages);
+    response.status(400).json(json);
+    $asUnit(next())
+  }
+});
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V = (function(request, response, next, ec$1, contestDAO$1) {
   var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
   var x1 = $m_Lcom_shocktrade_common_forms_ContestSearchForm$ContestSearchValidations$().validate$extension__Lcom_shocktrade_common_forms_ContestSearchForm__sjs_js_Array(form);
   if (($uI(x1.length) === 0)) {
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(form$1) {
-      return (function(x$7$2) {
-        var this$5 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$7$2);
+      return (function(x$14$2) {
+        var this$5 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$14$2);
         var jsx$9 = $m_sc_Seq$();
         var value = form$1.activeOnly;
         var this$9 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
@@ -7956,22 +8285,22 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
       })
     })(form));
     $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(contestDAO$1, f, ec$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$5, next$5) {
-      return (function(x0$5$2) {
-        var x0$5 = $as_s_util_Try(x0$5$2);
-        if ($is_s_util_Success(x0$5)) {
-          var x2 = $as_s_util_Success(x0$5);
+      return (function(x0$6$2) {
+        var x0$6 = $as_s_util_Try(x0$6$2);
+        if ($is_s_util_Success(x0$6)) {
+          var x2 = $as_s_util_Success(x0$6);
           var contests = x2.value$2;
           response$5.send(contests);
           $asUnit(next$5())
-        } else if ($is_s_util_Failure(x0$5)) {
-          var x3 = $as_s_util_Failure(x0$5);
+        } else if ($is_s_util_Failure(x0$6)) {
+          var x3 = $as_s_util_Failure(x0$6);
           var e = x3.exception$2;
           var jsx$10 = response$5.status(500);
           var s = e.getMessage__T();
           jsx$10.send(s);
           $asUnit(next$5())
         } else {
-          throw new $c_s_MatchError().init___O(x0$5)
+          throw new $c_s_MatchError().init___O(x0$6)
         }
       })
     })(response, next)), ec$1)
@@ -7988,8 +8317,8 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
   };
   var contestID = $as_T(dict.id);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, contestID$1) {
-    return (function(x$4$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$4$2);
+    return (function(x$6$2) {
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$6$2);
       var coll = this$4.dao$1;
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
       var $class = mongo$1$1.ObjectID;
@@ -8074,157 +8403,10 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
     })
   })(response, next, contestID)), ec$1)
 });
-$c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$createContest$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V = (function(request, response, next, ec$1, contestDAO$1) {
-  var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
-  var messages = [];
-  var value = form.name;
-  if ((value !== (void 0))) {
-    var x$1 = $as_T(value);
-    var x = $as_T(x$1.trim());
-    var this$12 = new $c_sci_StringOps().init___T(x);
-    var jsx$1 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$12)
-  } else {
-    var jsx$1 = false
-  };
-  if ((!jsx$1)) {
-    $uI(messages.push("The game name is required"))
-  };
-  var value$1 = form.playerId;
-  if ((value$1 !== (void 0))) {
-    var x$2 = $as_T(value$1);
-    var x$3 = $as_T(x$2.trim());
-    var this$20 = new $c_sci_StringOps().init___T(x$3);
-    var jsx$3 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$20)
-  } else {
-    var jsx$3 = false
-  };
-  if ((!jsx$3)) {
-    var jsx$2 = true
-  } else {
-    var value$2 = form.playerName;
-    if ((value$2 !== (void 0))) {
-      var x$3$1 = $as_T(value$2);
-      var x$4 = $as_T(x$3$1.trim());
-      var this$28 = new $c_sci_StringOps().init___T(x$4);
-      var jsx$4 = $s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$28)
-    } else {
-      var jsx$4 = false
-    };
-    var jsx$2 = (!jsx$4)
-  };
-  if (jsx$2) {
-    $uI(messages.push("The creator information is missing"))
-  };
-  var value$3 = form.levelCapAllowed;
-  if ((value$3 === (void 0))) {
-    var valueA = (void 0)
-  } else {
-    var opt = $m_s_Option$().apply__O__s_Option(value$3);
-    if (opt.isEmpty__Z()) {
-      var valueA = (void 0)
-    } else {
-      var arg1 = opt.get__O();
-      var valueA = arg1
-    }
-  };
-  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true))) {
-    var value$4 = form.levelCap;
-    var jsx$5 = (value$4 === (void 0))
-  } else {
-    var jsx$5 = false
-  };
-  if (jsx$5) {
-    $uI(messages.push("Level cap must be specified"))
-  };
-  var valueA$1 = form.duration;
-  if ((valueA$1 === (void 0))) {
-    var value$5 = (void 0)
-  } else {
-    var opt$1 = $m_s_Option$().apply__O__s_Option(valueA$1);
-    if (opt$1.isEmpty__Z()) {
-      var value$5 = (void 0)
-    } else {
-      var arg1$1 = opt$1.get__O();
-      var value$5 = arg1$1
-    }
-  };
-  if ((value$5 === (void 0))) {
-    $uI(messages.push("The game duration is required"))
-  };
-  if (($uI(messages.length) === 0)) {
-    var x$4$1 = form.name;
-    var x$1$1 = form.playerId;
-    var x$2$1 = form.facebookId;
-    var x$3$2 = form.name;
-    var value$6 = new $c_Lcom_shocktrade_common_models_PlayerRef(x$1$1, x$3$2, x$2$1);
-    var value$7 = new $g.Date();
-    var value$8 = $m_Lcom_shocktrade_common_models_contest_ContestLike$().StatusActive$1;
-    var value$9 = [];
-    var value$10 = [];
-    var valueA$2 = form.friendsOnly;
-    var x$10 = ((valueA$2 !== (void 0)) && valueA$2);
-    var valueA$3 = form.invitationOnly;
-    var x$11 = ((valueA$3 !== (void 0)) && valueA$3);
-    var x$12 = form.levelCap;
-    var valueA$4 = form.perksAllowed;
-    var x$13 = ((valueA$4 !== (void 0)) && valueA$4);
-    var valueA$5 = form.robotsAllowed;
-    var x$14 = ((valueA$5 !== (void 0)) && valueA$5);
-    var contest = new $c_Lcom_shocktrade_common_dao_contest_ContestData((void 0), x$4$1, value$6, value$7, (void 0), value$8, value$9, value$10, x$10, x$11, x$12, x$13, x$14);
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(contest$1) {
-      return (function(x$5$2) {
-        var jsx$6 = $m_sjs_js_Thenable$ThenableOps$();
-        var this$91 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$5$2);
-        var p = this$91.dao$1.insert(contest$1);
-        return jsx$6.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
-      })
-    })(contest));
-    $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(contestDAO$1, f, ec$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
-      return (function(x0$2$2) {
-        var x0$2 = $as_s_util_Try(x0$2$2);
-        var rc6 = false;
-        var x2 = null;
-        matchEnd7: {
-          if ($is_s_util_Success(x0$2)) {
-            rc6 = true;
-            x2 = $as_s_util_Success(x0$2);
-            var result = x2.value$2;
-            if (($uI(result.insertedCount) >= 1)) {
-              response$2.send(result.ops);
-              $asUnit(next$2());
-              break matchEnd7
-            }
-          };
-          if (rc6) {
-            var result$2 = x2.value$2;
-            $g.console.log("result = %j", result$2);
-            response$2.status(400).send("Contest could not be created");
-            $asUnit(next$2());
-            break matchEnd7
-          };
-          if ($is_s_util_Failure(x0$2)) {
-            var x4 = $as_s_util_Failure(x0$2);
-            var e = x4.exception$2;
-            var jsx$7 = response$2.status(500);
-            var s = e.getMessage__T();
-            jsx$7.send(s);
-            $asUnit(next$2());
-            break matchEnd7
-          };
-          throw new $c_s_MatchError().init___O(x0$2)
-        }
-      })
-    })(response, next)), ec$1)
-  } else {
-    var json = new $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors(messages);
-    response.status(400).json(json);
-    $asUnit(next())
-  }
-});
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$availablePerks$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V = (function(request, response, next, ec$1, perksDAO$1) {
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1) {
-    return (function(x$3$2) {
-      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PerksDAO$PerksDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PerksDAO(x$3$2);
+    return (function(x$5$2) {
+      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PerksDAO$PerksDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PerksDAO(x$5$2);
       var cursor = this$2.dao$1.find();
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -8242,22 +8424,22 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
     })
   })(ec$1));
   $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(perksDAO$1, f, ec$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
-    return (function(x0$3$2) {
-      var x0$3 = $as_s_util_Try(x0$3$2);
-      if ($is_s_util_Success(x0$3)) {
-        var x2 = $as_s_util_Success(x0$3);
+    return (function(x0$4$2) {
+      var x0$4 = $as_s_util_Try(x0$4$2);
+      if ($is_s_util_Success(x0$4)) {
+        var x2 = $as_s_util_Success(x0$4);
         var perks = x2.value$2;
         response$3.send(perks);
         $asUnit(next$3())
-      } else if ($is_s_util_Failure(x0$3)) {
-        var x3 = $as_s_util_Failure(x0$3);
+      } else if ($is_s_util_Failure(x0$4)) {
+        var x3 = $as_s_util_Failure(x0$4);
         var e = x3.exception$2;
         var jsx$1 = response$3.status(500);
         var s = e.getMessage__T();
         jsx$1.send(s);
         $asUnit(next$3())
       } else {
-        throw new $c_s_MatchError().init___O(x0$3)
+        throw new $c_s_MatchError().init___O(x0$4)
       }
     })
   })(response, next)), ec$1)
@@ -8269,8 +8451,8 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
   };
   var playerID = $as_T(dict.playerID);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, playerID$1) {
-    return (function(x$6$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$6$2);
+    return (function(x$13$2) {
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$13$2);
       var cursor = this$4.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("participants._id", playerID$1)));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -8288,25 +8470,110 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
     })
   })(ec$1, playerID));
   $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(contestDAO$1, f, ec$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4) {
-    return (function(x0$4$2) {
-      var x0$4 = $as_s_util_Try(x0$4$2);
-      if ($is_s_util_Success(x0$4)) {
-        var x2 = $as_s_util_Success(x0$4);
+    return (function(x0$5$2) {
+      var x0$5 = $as_s_util_Try(x0$5$2);
+      if ($is_s_util_Success(x0$5)) {
+        var x2 = $as_s_util_Success(x0$5);
         var contests = x2.value$2;
         response$4.send(contests);
         $asUnit(next$4())
-      } else if ($is_s_util_Failure(x0$4)) {
-        var x3 = $as_s_util_Failure(x0$4);
+      } else if ($is_s_util_Failure(x0$5)) {
+        var x3 = $as_s_util_Failure(x0$5);
         var e = x3.exception$2;
         var jsx$1 = response$4.status(500);
         var s = e.getMessage__T();
         jsx$1.send(s);
         $asUnit(next$4())
       } else {
-        throw new $c_s_MatchError().init___O(x0$4)
+        throw new $c_s_MatchError().init___O(x0$5)
       }
     })
   })(response, next)), ec$1)
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$deductEntryFee$1__s_Option__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future = (function(newContestOpt, ec$1, mongo$1, profileDAO$1) {
+  if (newContestOpt.isEmpty__Z()) {
+    var result = $m_s_None$()
+  } else {
+    var v1 = newContestOpt.get__O();
+    var value = v1.creator;
+    var value$1 = ((value === (void 0)) ? (void 0) : value._id);
+    var this$7 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
+    if (this$7.isEmpty__Z()) {
+      var result = $m_s_None$()
+    } else {
+      var v1$1 = this$7.get__O();
+      var userID = $as_T(v1$1);
+      var value$2 = v1.startingBalance;
+      var this$11 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
+      if (this$11.isEmpty__Z()) {
+        var result = $m_s_None$()
+      } else {
+        var arg1 = this$11.get__O();
+        var entryFee = $uD(arg1);
+        var result = new $c_s_Some().init___O(new $c_T3().init___O__O__O(userID, v1, entryFee))
+      }
+    }
+  };
+  if ($is_s_Some(result)) {
+    var x2 = $as_s_Some(result);
+    var p3 = $as_T3(x2.x$2);
+    if ((p3 !== null)) {
+      var userID$1 = $as_T(p3.$$und1$1);
+      var entryFee$1 = $uD(p3.$$und3$1);
+      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, userID$1$1, entryFee$1$1) {
+        return (function(x$12$2) {
+          var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
+          var $class = mongo$1$1.ObjectID;
+          var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID$1$1]));
+          if ($is_sjs_js_ArrayOps(args)) {
+            var x2$1 = $as_sjs_js_ArrayOps(args);
+            var jsx$2 = x2$1.scala$scalajs$js$ArrayOps$$array$f
+          } else if ($is_sjs_js_WrappedArray(args)) {
+            var x3 = $as_sjs_js_WrappedArray(args);
+            var jsx$2 = x3.array$6
+          } else {
+            var result$1 = [];
+            var i = 0;
+            var len = args.length__I();
+            while ((i < len)) {
+              var arg1$1 = args.apply__I__O(i);
+              $uI(result$1.push(arg1$1));
+              i = ((1 + i) | 0)
+            };
+            var jsx$2 = result$1
+          };
+          var y = $newJSObjectWithVarargs($class, jsx$2);
+          var jsx$3 = new $c_T2().init___O__O("_id", y);
+          var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", entryFee$1$1)]);
+          var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+          var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$3, new $c_T2().init___O__O("netWorth", y$1)]);
+          var jsx$4 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1);
+          var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+          var value$3 = (-entryFee$1$1);
+          var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("netWorth", value$3)]);
+          var y$2 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$2);
+          var p = x$12$2.updateOne(jsx$4, jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$inc", y$2)));
+          return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+        })
+      })(ec$1, mongo$1, userID$1, entryFee$1));
+      var this$47 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f, ec$1);
+      var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x0$2$2) {
+        var result$2 = x0$2$2.result;
+        if (($uI(result$2.ok) === 1)) {
+          return true
+        } else {
+          $g.console.warn("Error deducting entry fee; w => %j", x0$2$2);
+          return false
+        }
+      }));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$47, f$1, ec$1)
+    }
+  };
+  var x = $m_s_None$();
+  if ((x === result)) {
+    return $m_s_concurrent_Future$().successful__O__s_concurrent_Future(false)
+  };
+  throw new $c_s_MatchError().init___O(result)
 });
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V = (function(app, dbFuture, ec, mongo, require) {
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1) {
@@ -8351,9 +8618,9 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.init__Lorg_scalajs_nod
           }
         })
       })(promise$2);
-      x$2$2.collection("Perks", null, arg1$1);
+      x$2$2.collection("Portfolios", null, arg1$1);
       var ec$3 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-      var boxedClass$2 = ($d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf());
+      var boxedClass$2 = ($d_Lcom_shocktrade_common_dao_contest_PortfolioDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_contest_PortfolioDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO.getClassOf());
       $m_s_Predef$().require__Z__V((boxedClass$2 !== null));
       var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, boxedClass$3) {
         return (function(s$2$1) {
@@ -8366,32 +8633,188 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.init__Lorg_scalajs_nod
       return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$2, f$2, ec$3)
     })
   })(ec));
-  var perksDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$3, ec);
-  app.get("/api/contest/:id", (function(ec$1$2, mongo$1, contestDAO$1) {
+  var portfolioDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$3, ec);
+  var f$5 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$2) {
+    return (function(x$3$2) {
+      var promise$3 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1$2 = (function(promise$1$2) {
+        return (function(err$2$2, result$2$2) {
+          if ((!((err$2$2 !== null) && (err$2$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$2, result$2$2)
+          } else {
+            var cause$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$2, cause$2)
+          }
+        })
+      })(promise$3);
+      x$3$2.collection("Players", null, arg1$2);
+      var ec$4 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+      var boxedClass$4 = ($d_Lcom_shocktrade_common_dao_contest_ProfileDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_contest_ProfileDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_contest_ProfileDAO.getClassOf());
+      $m_s_Predef$().require__Z__V((boxedClass$4 !== null));
+      var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$2, boxedClass$5) {
+        return (function(s$2$2) {
+          if (((boxedClass$5 === $d_sr_Nothing$.getClassOf()) || (((s$2$2 !== null) && (!boxedClass$5.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$5.isInstance__O__Z(s$2$2))))) {
+            throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$2, " is not an instance of ")) + boxedClass$5.getName__T())))
+          };
+          return s$2$2
+        })
+      })(promise$3, boxedClass$4));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$3, f$4, ec$4)
+    })
+  })(ec));
+  var profileDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$5, ec);
+  var f$7 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$3) {
+    return (function(x$4$2) {
+      var promise$4 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1$3 = (function(promise$1$3) {
+        return (function(err$2$3, result$2$3) {
+          if ((!((err$2$3 !== null) && (err$2$3 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$3, result$2$3)
+          } else {
+            var cause$3 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$3);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$3, cause$3)
+          }
+        })
+      })(promise$4);
+      x$4$2.collection("Perks", null, arg1$3);
+      var ec$5 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+      var boxedClass$6 = ($d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf())) : $d_Lcom_shocktrade_common_dao_contest_PerksDAO.getClassOf());
+      $m_s_Predef$().require__Z__V((boxedClass$6 !== null));
+      var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$3, boxedClass$7) {
+        return (function(s$2$3) {
+          if (((boxedClass$7 === $d_sr_Nothing$.getClassOf()) || (((s$2$3 !== null) && (!boxedClass$7.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$7.isInstance__O__Z(s$2$3))))) {
+            throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$3, " is not an instance of ")) + boxedClass$7.getName__T())))
+          };
+          return s$2$3
+        })
+      })(promise$4, boxedClass$6));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$4, f$6, ec$5)
+    })
+  })(ec));
+  var perksDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$7, ec);
+  app.get("/api/contest/:id", (function(ec$1$4, mongo$1, contestDAO$1) {
     return (function(request$2, response$2, next$2) {
-      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$contestByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2, response$2, next$2, ec$1$2, mongo$1, contestDAO$1)
+      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$contestByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2, response$2, next$2, ec$1$4, mongo$1, contestDAO$1)
     })
   })(ec, mongo, contestDAO));
-  app.post("/api/contest", (function(ec$1$3, contestDAO$1$1) {
+  app.post("/api/contest", (function(ec$1$5, mongo$1$1, contestDAO$1$1, portfolioDAO$1, profileDAO$1) {
     return (function(request$2$1, response$2$1, next$2$1) {
-      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$createContest$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, ec$1$3, contestDAO$1$1)
+      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$createContest$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, ec$1$5, mongo$1$1, contestDAO$1$1, portfolioDAO$1, profileDAO$1)
     })
-  })(ec, contestDAO));
-  app.get("/api/contests/perks", (function(ec$1$4, perksDAO$1) {
+  })(ec, mongo, contestDAO, portfolioDAO, profileDAO));
+  app.get("/api/contests/perks", (function(ec$1$6, perksDAO$1) {
     return (function(request$2$2, response$2$2, next$2$2) {
-      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$availablePerks$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, ec$1$4, perksDAO$1)
+      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$availablePerks$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, ec$1$6, perksDAO$1)
     })
   })(ec, perksDAO));
-  app.get("/api/contests/player/:playerID", (function(ec$1$5, contestDAO$1$2) {
+  app.get("/api/contests/player/:playerID", (function(ec$1$7, contestDAO$1$2) {
     return (function(request$2$3, response$2$3, next$2$3) {
-      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$contestsByPlayer$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, ec$1$5, contestDAO$1$2)
+      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$contestsByPlayer$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, ec$1$7, contestDAO$1$2)
     })
   })(ec, contestDAO));
-  app.post("/api/contests/search", (function(ec$1$6, contestDAO$1$3) {
+  app.post("/api/contests/search", (function(ec$1$8, contestDAO$1$3) {
     return (function(request$2$4, response$2$4, next$2$4) {
-      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$4, response$2$4, next$2$4, ec$1$6, contestDAO$1$3)
+      $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$search$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__V(request$2$4, response$2$4, next$2$4, ec$1$8, contestDAO$1$3)
     })
   })(ec, contestDAO))
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$routes$ContestRoutes$$createNewPortfolio$1__Lcom_shocktrade_common_dao_contest_ContestData__s_Option__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future = (function(contest, newContestOpt, ec$1, portfolioDAO$1) {
+  if ((!$is_s_Some(newContestOpt))) {
+    var x = $m_s_None$();
+    if ((x === newContestOpt)) {
+      var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Owner's portfolio for Contest '", "' creation failed"]));
+      var value$9 = contest.name;
+      var message = jsx$1.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value$9 === (void 0)) ? null : value$9)]));
+      throw new $c_jl_IllegalStateException().init___T(message)
+    };
+    throw new $c_s_MatchError().init___O(newContestOpt)
+  };
+  var x2 = $as_s_Some(newContestOpt);
+  var newContest = x2.x$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(newContest$1) {
+    return (function(x$9$2) {
+      var jsx$2 = $m_sjs_js_Thenable$ThenableOps$();
+      var this$22 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$9$2);
+      var value = newContest$1._id;
+      if ((value === (void 0))) {
+        var x$17 = (void 0)
+      } else {
+        var value$1 = $as_T(value.toHexString());
+        var x$17 = value$1
+      };
+      var x$18 = newContest$1.name;
+      var value$2 = newContest$1.creator;
+      var x$19 = ((value$2 === (void 0)) ? (void 0) : value$2._id);
+      var value$3 = new $c_Lcom_shocktrade_common_models_contest_CashAccount(newContest$1.startingBalance, newContest$1.startTime);
+      var value$4 = [];
+      var value$5 = [];
+      var value$6 = [];
+      var value$7 = [];
+      var value$8 = [];
+      var portfolio = new $c_Lcom_shocktrade_common_dao_contest_PortfolioData((void 0), x$17, x$18, x$19, value$3, (void 0), value$4, value$5, value$7, value$8, value$6);
+      var p = this$22.dao$1.insert(portfolio);
+      return jsx$2.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+    })
+  })(newContest));
+  var this$36 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(portfolioDAO$1, f, ec$1);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(w0$2) {
+    if (($uI(w0$2.insertedCount) < 1)) {
+      $g.console.warn("Failed portfolio outcome = %j", w0$2);
+      throw new $c_jl_IllegalStateException().init___T("Failed to create portfolio")
+    };
+    var array = w0$2.ops;
+    var this$33 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
+    var portfolioOpt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$33);
+    return new $c_T2().init___O__O(w0$2, portfolioOpt)
+  }));
+  var this$37 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$36, f$1, ec$1);
+  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$10$2) {
+    var x$10 = $as_T2(x$10$2);
+    if ((x$10 !== null)) {
+      var portfolioOpt$1 = $as_s_Option(x$10.$$und2__O());
+      return portfolioOpt$1
+    } else {
+      throw new $c_s_MatchError().init___O(x$10)
+    }
+  }));
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$37, f$2, ec$1)
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.createNewContest$1__p1__Lcom_shocktrade_common_dao_contest_ContestData__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future = (function(contest, ec$1, contestDAO$1) {
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(contest$2) {
+    return (function(x$7$2) {
+      var jsx$1 = $m_sjs_js_Thenable$ThenableOps$();
+      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions().init___Lcom_shocktrade_common_dao_contest_ContestDAO(x$7$2);
+      var p = this$2.dao$1.insert(contest$2);
+      return jsx$1.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+    })
+  })(contest));
+  var this$15 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(contestDAO$1, f, ec$1);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(contest$2$1) {
+    return (function(w0$2) {
+      if (($uI(w0$2.insertedCount) < 1)) {
+        $g.console.warn("Failed contest outcome = %j", w0$2);
+        var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Contest '", "' creation failed"]));
+        var value = contest$2$1.name;
+        var message = jsx$2.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([((value === (void 0)) ? null : value)]));
+        throw new $c_jl_IllegalStateException().init___T(message)
+      };
+      var array = w0$2.ops;
+      var this$9 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
+      var newContest = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$9);
+      return new $c_T2().init___O__O(w0$2, newContest)
+    })
+  })(contest));
+  var this$16 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$15, f$1, ec$1);
+  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$8$2) {
+    var x$8 = $as_T2(x$8$2);
+    if ((x$8 !== null)) {
+      var newContest$1 = $as_s_Option(x$8.$$und2__O());
+      return newContest$1
+    } else {
+      throw new $c_s_MatchError().init___O(x$8)
+    }
+  }));
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$16, f$2, ec$1)
 });
 var $d_Lcom_shocktrade_webapp_routes_ContestRoutes$ = new $TypeData().initClass({
   Lcom_shocktrade_webapp_routes_ContestRoutes$: 0
@@ -9377,7 +9800,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var contestID = $as_T(dict.contestID);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, contestID$2) {
     return (function(x$16$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$16$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$16$2);
       var cursor = this$4.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("contestID", contestID$2)));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -9514,7 +9937,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var playerID = $as_T(dict.playerID);
   var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, playerID$4) {
     return (function(x$36$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$36$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$36$2);
       var cursor = this$4.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("playerID", playerID$4)));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -9528,7 +9951,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
         })
       })(promise);
       cursor.toArray(arg1);
-      var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions(this$4);
+      var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment(this$4);
       var this$16 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$1$1);
       var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$9$2) {
         var x$9 = $as_T2(x$9$2);
@@ -9571,7 +9994,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var portfolioID = $as_T(dict.portfolioID);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, portfolioID$3) {
     return (function(x$7$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$7$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$7$2);
       var coll = this$4.dao$1;
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
       var $class = mongo$1$1.ObjectID;
@@ -9856,7 +10279,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, portfolioID$2, order$1) {
       return (function(x$5$2) {
         var jsx$9 = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$();
-        var this$118 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$5$2);
+        var this$118 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$5$2);
         var jsx$8 = this$118.dao$1;
         var $class = mongo$1$1.ObjectID;
         var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [portfolioID$2]));
@@ -9939,7 +10362,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var orderID = $as_T(dict$1.orderID);
   var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, portfolioID$1, orderID$1) {
     return (function(x$4$2) {
-      var this$6 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$4$2);
+      var this$6 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$4$2);
       var coll = this$6.dao$1;
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
       var $class = mongo$1$1.ObjectID;
@@ -10007,9 +10430,9 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
         })
       })(portfolioID$1));
       var this$33 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$32, f$1, ec$1$1);
-      var f$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions__T(this$6, orderID$1);
+      var f$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment__T(this$6, orderID$1);
       var this$34 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$33, f$2, ec$1$1);
-      var f$3 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions__T__T__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB(this$6, portfolioID$1, orderID$1, ec$1$1, mongo$1$1);
+      var f$3 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment__T__T__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB(this$6, portfolioID$1, orderID$1, ec$1$1, mongo$1$1);
       return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$34, f$3, ec$1$1)
     })
   })(ec$1, mongo$1, portfolioID, orderID));
@@ -10064,7 +10487,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var playerID = $as_T(dict$1.playerID);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, contestID$1, playerID$1) {
     return (function(x$15$2) {
-      var this$6 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$15$2);
+      var this$6 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$15$2);
       var coll = this$6.dao$1;
       var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("contestID", contestID$1), new $c_T2().init___O__O("playerID", playerID$1)]);
       var selector = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
@@ -10138,7 +10561,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var playerID = $as_T(dict.playerID);
   var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, playerID$2) {
     return (function(x$6$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$6$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$6$2);
       var jsx$3 = this$4.dao$1;
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("playerID", playerID$2));
       var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
@@ -10156,7 +10579,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
         })
       })(promise);
       cursor.toArray(arg1);
-      var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions(this$4);
+      var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment(this$4);
       var this$18 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$1$1);
       var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbols$2) {
         var symbols = $as_sci_List(symbols$2);
@@ -10209,7 +10632,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var portfolioID = $as_T(dict.portfolioID);
   var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, portfolioID$5) {
     return (function(x$14$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$14$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$14$2);
       var coll = this$4.dao$1;
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
       var $class = mongo$1$1.ObjectID;
@@ -10265,7 +10688,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
         return $m_s_Option$().apply__O__s_Option(x$4$2)
       }));
       var this$28 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$1$1);
-      var f$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions(this$4);
+      var f$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment(this$4);
       return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$28, f$1, ec$1$1)
     })
   })(ec$1, mongo$1, portfolioID));
@@ -10538,7 +10961,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
   var playerID = $as_T(dict.playerID);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, playerID$3) {
     return (function(x$17$2) {
-      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$17$2);
+      var this$4 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$17$2);
       var cursor = this$4.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("playerID", playerID$3)));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1 = (function(promise$1) {
@@ -12895,28 +13318,75 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           selector[$as_T(arg1$35.$$und1__O())] = arg1$35.$$und2__O()
         }
       };
+      var this$564 = $m_Lcom_shocktrade_serverside_LoggerFactory$();
+      new $c_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment().init___Lcom_shocktrade_common_dao_securities_SecuritiesDAO(x$2$2);
+      var $class = $d_Lcom_shocktrade_common_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment.getClassOf();
+      var this$565 = this$564.getLogger__T__Lcom_shocktrade_serverside_LoggerFactory$Logger($class.getSimpleName__T());
+      var array = [selector];
+      var jsx$20 = $g.console;
+      var jsx$25 = jsx$20.info;
+      var jsx$24 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " INFO  [", "] ", ""]));
+      var date = new $g.Date();
+      var x$15 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
+      var this$567 = new $c_sci_StringOps().init___T(x$15);
+      var array$1 = [((1 + $uI(date.getMonth())) | 0), $uI(date.getDate()), $uI(date.getHours()), $uI(date.getMinutes()), $uI(date.getSeconds())];
+      var jsx$23 = $m_sjsr_RuntimeString$();
+      var $$this = this$567.repr$1;
+      $m_sc_Seq$();
+      $m_sjs_js_WrappedArray$();
+      var array$2 = [];
+      $uI(array$1.length);
+      var i = 0;
+      var len = $uI(array$1.length);
+      while ((i < len)) {
+        var index = i;
+        var arg1$36 = array$1[index];
+        var elem = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$567, arg1$36);
+        array$2.push(elem);
+        i = ((1 + i) | 0)
+      };
+      $m_s_reflect_ManifestFactory$ObjectManifest$();
+      var len$1 = $uI(array$2.length);
+      var result = $newArrayObject($d_O.getArrayOf(), [len$1]);
+      var len$2 = result.u.length;
+      var i$1 = 0;
+      var j = 0;
+      var x$16 = $uI(array$2.length);
+      var x$17 = ((x$16 < len$2) ? x$16 : len$2);
+      var that = result.u.length;
+      var end = ((x$17 < that) ? x$17 : that);
+      while ((i$1 < end)) {
+        var jsx$22 = j;
+        var index$1 = i$1;
+        result.u[jsx$22] = array$2[index$1];
+        i$1 = ((1 + i$1) | 0);
+        j = ((1 + j) | 0)
+      };
+      var s = jsx$24.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$23.format__T__AO__T($$this, result), this$565.com$shocktrade$serverside$LoggerFactory$Logger$$className$f, "query: %j"]));
+      var jsx$21 = [s].concat(array);
+      jsx$25.apply(jsx$20, jsx$21);
       var value$24 = options$1.sortFields;
       if ((value$24 === (void 0))) {
         var value$25 = (void 0)
       } else {
-        var array = [];
-        var i = 0;
-        var len = $uI(value$24.length);
-        while ((i < len)) {
-          var index = i;
-          var arg1$36 = value$24[index];
-          var array$1 = [$as_T(arg1$36.field), $uI(arg1$36.direction)];
-          var i$1 = 0;
-          var len$1 = $uI(array$1.length);
-          while ((i$1 < len$1)) {
-            var index$1 = i$1;
-            var arg1$37 = array$1[index$1];
-            array.push(arg1$37);
-            i$1 = ((1 + i$1) | 0)
+        var array$3 = [];
+        var i$2 = 0;
+        var len$3 = $uI(value$24.length);
+        while ((i$2 < len$3)) {
+          var index$2 = i$2;
+          var arg1$37 = value$24[index$2];
+          var array$4 = [$as_T(arg1$37.field), $uI(arg1$37.direction)];
+          var i$3 = 0;
+          var len$4 = $uI(array$4.length);
+          while ((i$3 < len$4)) {
+            var index$3 = i$3;
+            var arg1$38 = array$4[index$3];
+            array$3.push(arg1$38);
+            i$3 = ((1 + i$3) | 0)
           };
-          i = ((1 + i) | 0)
+          i$2 = ((1 + i$2) | 0)
         };
-        var value$25 = array
+        var value$25 = array$3
       };
       if ((value$25 === (void 0))) {
         var valueA = options$1.sortBy;
@@ -12927,8 +13397,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           if (opt$24.isEmpty__Z()) {
             var value$26 = (void 0)
           } else {
-            var arg1$38 = opt$24.get__O();
-            var value$26 = arg1$38
+            var arg1$39 = opt$24.get__O();
+            var value$26 = arg1$39
           }
         };
         var sortField = $as_T(((value$26 === (void 0)) ? "symbol" : value$26));
@@ -12940,8 +13410,8 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           if (opt$25.isEmpty__Z()) {
             var valueA$1 = (void 0)
           } else {
-            var arg1$39 = opt$25.get__O();
-            var valueA$1 = arg1$39
+            var arg1$40 = opt$25.get__O();
+            var valueA$1 = arg1$40
           }
         };
         if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, true))) {
@@ -12961,18 +13431,18 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
         if (opt$26.isEmpty__Z()) {
           var value$28 = (void 0)
         } else {
-          var arg1$40 = opt$26.get__O();
-          var value$28 = arg1$40
+          var arg1$41 = opt$26.get__O();
+          var value$28 = arg1$41
         }
       };
       var maxResults = $uI(((value$28 === (void 0)) ? 25 : value$28));
-      var jsx$20 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
+      var jsx$26 = $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$();
       var fields = $m_Lcom_shocktrade_common_models_quote_ResearchQuote$().Fields$1;
-      var qual$1 = x$2$2.find(selector, jsx$20.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
+      var qual$1 = x$2$2.find(selector, jsx$26.toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
       var qual$2 = qual$1.limit(maxResults);
       var cursor = qual$2.sort(sortFields);
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-      var arg1$41 = (function(promise$1) {
+      var arg1$42 = (function(promise$1) {
         return (function(err$2, result$2) {
           if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
             return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
@@ -12982,7 +13452,7 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
           }
         })
       })(promise);
-      cursor.toArray(arg1$41);
+      cursor.toArray(arg1$42);
       return promise
     })
   })(options));
@@ -12998,9 +13468,9 @@ $c_Lcom_shocktrade_webapp_routes_ResearchRoutes$.prototype.com$shocktrade$webapp
       } else if ($is_s_util_Failure(x0$1)) {
         var x3 = $as_s_util_Failure(x0$1);
         var e = x3.exception$2;
-        var jsx$21 = response$1.status(500);
-        var s = e.getMessage__T();
-        jsx$21.send(s);
+        var jsx$27 = response$1.status(500);
+        var s$1 = e.getMessage__T();
+        jsx$27.send(s$1);
         $asUnit(next$1())
       } else {
         throw new $c_s_MatchError().init___O(x0$1)
@@ -17875,8 +18345,14 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   };
   var port = $as_T((this$25.isEmpty__Z() ? "1337" : this$25.get__O()));
   var dict$2 = $g.process.env;
-  var this$28 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$2, "db_connection")) ? new $c_s_Some().init___O(dict$2.db_connection) : $m_s_None$());
-  var connectionString = $as_T((this$28.isEmpty__Z() ? "mongodb://localhost:27017/shocktrade" : this$28.get__O()));
+  var valueA$1 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$2, "db_connection")) ? new $c_s_Some().init___O(dict$2.db_connection) : $m_s_None$());
+  if (valueA$1.isDefined__Z()) {
+    var this$32 = valueA$1
+  } else {
+    var dict$3 = $g.process.env;
+    var this$32 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$3, "DB_CONNECTION")) ? new $c_s_Some().init___O(dict$3.DB_CONNECTION) : $m_s_None$())
+  };
+  var connectionString = $as_T((this$32.isEmpty__Z() ? "mongodb://localhost:27017/shocktrade" : this$32.get__O()));
   var jsx$7 = $m_Lorg_scalajs_nodejs_globals_Process$ProcessExtensions$();
   var process = $g.process;
   jsx$7.onUncaughtException$extension__Lorg_scalajs_nodejs_globals_Process__F1__Lorg_scalajs_nodejs_globals_Process(process, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(logger$1) {
@@ -17887,10 +18363,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
       var jsx$12 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " ERROR [", "] ", ""]));
       var date$1 = new $g.Date();
       var x$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-      var this$31 = new $c_sci_StringOps().init___T(x$3);
+      var this$35 = new $c_sci_StringOps().init___T(x$3);
       var array$4 = [((1 + $uI(date$1.getMonth())) | 0), $uI(date$1.getDate()), $uI(date$1.getHours()), $uI(date$1.getMinutes()), $uI(date$1.getSeconds())];
       var jsx$11 = $m_sjsr_RuntimeString$();
-      var $$this$1 = this$31.repr$1;
+      var $$this$1 = this$35.repr$1;
       $m_sc_Seq$();
       $m_sjs_js_WrappedArray$();
       var array$5 = [];
@@ -17900,7 +18376,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
       while ((i$2 < len$3)) {
         var index$2 = i$2;
         var arg1$1 = array$4[index$2];
-        var elem$1 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$31, arg1$1);
+        var elem$1 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$35, arg1$1);
         array$5.push(elem$1);
         i$2 = ((1 + i$2) | 0)
       };
@@ -17934,10 +18410,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   var jsx$18 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
   var date$2 = new $g.Date();
   var x$6 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-  var this$48 = new $c_sci_StringOps().init___T(x$6);
+  var this$52 = new $c_sci_StringOps().init___T(x$6);
   var array$7 = [((1 + $uI(date$2.getMonth())) | 0), $uI(date$2.getDate()), $uI(date$2.getHours()), $uI(date$2.getMinutes()), $uI(date$2.getSeconds())];
   var jsx$17 = $m_sjsr_RuntimeString$();
-  var $$this$2 = this$48.repr$1;
+  var $$this$2 = this$52.repr$1;
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var array$8 = [];
@@ -17947,7 +18423,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   while ((i$4 < len$6)) {
     var index$4 = i$4;
     var arg1$2 = array$7[index$4];
-    var elem$2 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$48, arg1$2);
+    var elem$2 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$52, arg1$2);
     array$8.push(elem$2);
     i$4 = ((1 + i$4) | 0)
   };
@@ -17981,10 +18457,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   var jsx$24 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
   var date$3 = new $g.Date();
   var x$9 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-  var this$67 = new $c_sci_StringOps().init___T(x$9);
+  var this$71 = new $c_sci_StringOps().init___T(x$9);
   var array$10 = [((1 + $uI(date$3.getMonth())) | 0), $uI(date$3.getDate()), $uI(date$3.getHours()), $uI(date$3.getMinutes()), $uI(date$3.getSeconds())];
   var jsx$23 = $m_sjsr_RuntimeString$();
-  var $$this$3 = this$67.repr$1;
+  var $$this$3 = this$71.repr$1;
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var array$11 = [];
@@ -17994,7 +18470,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   while ((i$6 < len$9)) {
     var index$6 = i$6;
     var arg1$3 = array$10[index$6];
-    var elem$3 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$67, arg1$3);
+    var elem$3 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$71, arg1$3);
     array$11.push(elem$3);
     i$6 = ((1 + i$6) | 0)
   };
@@ -18025,10 +18501,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   var jsx$30 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
   var date$4 = new $g.Date();
   var x$12 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-  var this$84 = new $c_sci_StringOps().init___T(x$12);
+  var this$88 = new $c_sci_StringOps().init___T(x$12);
   var array$13 = [((1 + $uI(date$4.getMonth())) | 0), $uI(date$4.getDate()), $uI(date$4.getHours()), $uI(date$4.getMinutes()), $uI(date$4.getSeconds())];
   var jsx$29 = $m_sjsr_RuntimeString$();
-  var $$this$4 = this$84.repr$1;
+  var $$this$4 = this$88.repr$1;
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var array$14 = [];
@@ -18038,7 +18514,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   while ((i$8 < len$12)) {
     var index$8 = i$8;
     var arg1$4 = array$13[index$8];
-    var elem$4 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$84, arg1$4);
+    var elem$4 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$88, arg1$4);
     array$14.push(elem$4);
     i$8 = ((1 + i$8) | 0)
   };
@@ -18073,10 +18549,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   var jsx$37 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
   var date$5 = new $g.Date();
   var x$15 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-  var this$105 = new $c_sci_StringOps().init___T(x$15);
+  var this$109 = new $c_sci_StringOps().init___T(x$15);
   var array$16 = [((1 + $uI(date$5.getMonth())) | 0), $uI(date$5.getDate()), $uI(date$5.getHours()), $uI(date$5.getMinutes()), $uI(date$5.getSeconds())];
   var jsx$36 = $m_sjsr_RuntimeString$();
-  var $$this$5 = this$105.repr$1;
+  var $$this$5 = this$109.repr$1;
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var array$17 = [];
@@ -18086,7 +18562,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   while ((i$10 < len$15)) {
     var index$10 = i$10;
     var arg1$5 = array$16[index$10];
-    var elem$5 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$105, arg1$5);
+    var elem$5 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$109, arg1$5);
     array$17.push(elem$5);
     i$10 = ((1 + i$10) | 0)
   };
@@ -18125,10 +18601,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   var jsx$43 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
   var date$6 = new $g.Date();
   var x$18 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-  var this$122 = new $c_sci_StringOps().init___T(x$18);
+  var this$126 = new $c_sci_StringOps().init___T(x$18);
   var array$19 = [((1 + $uI(date$6.getMonth())) | 0), $uI(date$6.getDate()), $uI(date$6.getHours()), $uI(date$6.getMinutes()), $uI(date$6.getSeconds())];
   var jsx$42 = $m_sjsr_RuntimeString$();
-  var $$this$6 = this$122.repr$1;
+  var $$this$6 = this$126.repr$1;
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var array$20 = [];
@@ -18138,7 +18614,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
   while ((i$12 < len$18)) {
     var index$12 = i$12;
     var arg1$7 = array$19[index$12];
-    var elem$6 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$122, arg1$7);
+    var elem$6 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$126, arg1$7);
     array$20.push(elem$6);
     i$12 = ((1 + i$12) | 0)
   };
@@ -18207,10 +18683,10 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
       var jsx$49 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " DEBUG [", "] ", ""]));
       var date$7 = new $g.Date();
       var x$21 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["%02d/%02d %02d:%02d:%02d"])).s__sc_Seq__T($m_sci_Nil$());
-      var this$149 = new $c_sci_StringOps().init___T(x$21);
+      var this$153 = new $c_sci_StringOps().init___T(x$21);
       var array$22 = [((1 + $uI(date$7.getMonth())) | 0), $uI(date$7.getDate()), $uI(date$7.getHours()), $uI(date$7.getMinutes()), $uI(date$7.getSeconds())];
       var jsx$48 = $m_sjsr_RuntimeString$();
-      var $$this$7 = this$149.repr$1;
+      var $$this$7 = this$153.repr$1;
       $m_sc_Seq$();
       $m_sjs_js_WrappedArray$();
       var array$23 = [];
@@ -18220,7 +18696,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
       while ((i$14 < len$21)) {
         var index$14 = i$14;
         var arg1$10 = array$22[index$14];
-        var elem$7 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$149, arg1$10);
+        var elem$7 = $s_sci_StringLike$class__unwrapArg__p0__sci_StringLike__O__O(this$153, arg1$10);
         array$23.push(elem$7);
         i$14 = ((1 + i$14) | 0)
       };
@@ -19574,6 +20050,44 @@ $h_Lcom_shocktrade_common_models_PlayerRef.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_PlayerRef.prototype = new $h_Lcom_shocktrade_common_models_PlayerRef();
 $c_Lcom_shocktrade_common_models_PlayerRef.prototype.constructor = $c_Lcom_shocktrade_common_models_PlayerRef;
 /** @constructor */
+function $c_Lcom_shocktrade_common_models_contest_CashAccount() {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 0;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var cashFunds = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_CashAccount$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var asOfDate = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_CashAccount$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "cashFunds": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "asOfDate": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.cashFunds = cashFunds;
+  this.asOfDate = asOfDate
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_contest_CashAccount() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_contest_CashAccount.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_models_contest_CashAccount.prototype = new $h_Lcom_shocktrade_common_models_contest_CashAccount();
+$c_Lcom_shocktrade_common_models_contest_CashAccount.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_CashAccount;
+/** @constructor */
 function $c_Lcom_shocktrade_common_models_contest_ChatMessage() {
   var jsx$1 = (arguments.length | 0);
   var jsx$2 = 0;
@@ -19583,8 +20097,8 @@ function $c_Lcom_shocktrade_common_models_contest_ChatMessage() {
     jsx$2 = ((jsx$2 + 1) | 0)
   };
   var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var sender = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var text = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var sender = arg$rest[1];
+  var text = arg$rest[2];
   var sentTime = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
@@ -19631,6 +20145,64 @@ function $h_Lcom_shocktrade_common_models_contest_ChatMessage() {
 $h_Lcom_shocktrade_common_models_contest_ChatMessage.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_contest_ChatMessage.prototype = new $h_Lcom_shocktrade_common_models_contest_ChatMessage();
 $c_Lcom_shocktrade_common_models_contest_ChatMessage.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_ChatMessage;
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_contest_Participant(arg$1, arg$2, arg$3) {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 3;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var _id = arg$1;
+  var name = arg$2;
+  var facebookID = arg$3;
+  var joinedTime = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_Participant$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[0]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "_id": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "name": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "facebookID": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "joinedTime": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this._id = _id;
+  this.name = name;
+  this.facebookID = facebookID;
+  this.joinedTime = joinedTime
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_contest_Participant() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_contest_Participant.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_models_contest_Participant.prototype = new $h_Lcom_shocktrade_common_models_contest_Participant();
+$c_Lcom_shocktrade_common_models_contest_Participant.prototype.constructor = $c_Lcom_shocktrade_common_models_contest_Participant;
 /** @constructor */
 function $c_Lcom_shocktrade_common_models_contest_PortfolioRanking() {
   var jsx$1 = (arguments.length | 0);
@@ -21028,6 +21600,37 @@ function $h_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuo
 $h_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuote.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuote.prototype = new $h_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuote();
 $c_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuote.prototype.constructor = $c_Lcom_shocktrade_services_yahoo_YahooFinanceCSVQuotesService$YFCSVQuote;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio(arg$1, arg$2) {
+  var contest = arg$1;
+  var portfolio = arg$2;
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "contest": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "portfolio": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.contest = contest;
+  this.portfolio = portfolio
+}
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio.prototype = new $h_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio();
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ContestAndPortfolio;
 /** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors(arg$1) {
   var messages = arg$1;
@@ -24538,27 +25141,21 @@ var $d_sr_Nothing$ = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_ContestData() {
-  var jsx$1 = (arguments.length | 0);
-  var jsx$2 = 0;
-  var arg$rest = [];
-  while ((jsx$2 < jsx$1)) {
-    arg$rest.push(arguments[jsx$2]);
-    jsx$2 = ((jsx$2 + 1) | 0)
-  };
-  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var name = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var creator = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var startTime = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var startingBalance = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var status = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var participants = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var messages = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var friendsOnly = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var invitationOnly = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var levelCap = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var perksAllowed = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var robotsAllowed = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_ContestData$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+function $c_Lcom_shocktrade_common_dao_contest_ContestData(arg$1, arg$2, arg$3, arg$4, arg$5, arg$6, arg$7, arg$8, arg$9, arg$10, arg$11, arg$12, arg$13, arg$14) {
+  var _id = arg$1;
+  var name = arg$2;
+  var creator = arg$3;
+  var startTime = arg$4;
+  var expirationTime = arg$5;
+  var startingBalance = arg$6;
+  var status = arg$7;
+  var participants = arg$8;
+  var messages = arg$9;
+  var friendsOnly = arg$10;
+  var invitationOnly = arg$11;
+  var levelCap = arg$12;
+  var perksAllowed = arg$13;
+  var robotsAllowed = arg$14;
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
     "_id": {
@@ -24586,6 +25183,14 @@ function $c_Lcom_shocktrade_common_dao_contest_ContestData() {
   });
   $g.Object.defineProperties(this, {
     "startTime": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "expirationTime": {
       "configurable": true,
       "enumerable": true,
       "writable": true,
@@ -24668,6 +25273,7 @@ function $c_Lcom_shocktrade_common_dao_contest_ContestData() {
   this.name = name;
   this.creator = creator;
   this.startTime = startTime;
+  this.expirationTime = expirationTime;
   this.startingBalance = startingBalance;
   this.status = status;
   this.participants = participants;
@@ -24823,6 +25429,164 @@ function $h_Lcom_shocktrade_common_dao_contest_OrderData() {
 $h_Lcom_shocktrade_common_dao_contest_OrderData.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_dao_contest_OrderData.prototype = new $h_Lcom_shocktrade_common_dao_contest_OrderData();
 $c_Lcom_shocktrade_common_dao_contest_OrderData.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_OrderData;
+/** @constructor */
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioData() {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 0;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var contestID = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var contestName = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var playerID = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  var cashAccount = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
+  var marginAccount = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
+  var orders = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
+  var closedOrders = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
+  var performance = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
+  var perks = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
+  var positions = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
+  var lastUpdate = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+  var nextUpdate = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+  var processingHost = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_common_dao_contest_PortfolioData$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "_id": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "contestID": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "contestName": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "playerID": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "cashAccount": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "marginAccount": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "orders": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "closedOrders": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "performance": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "perks": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "positions": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "lastUpdate": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "nextUpdate": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "processingHost": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this._id = _id;
+  this.contestID = contestID;
+  this.contestName = contestName;
+  this.playerID = playerID;
+  this.cashAccount = cashAccount;
+  this.marginAccount = marginAccount;
+  this.orders = orders;
+  this.closedOrders = closedOrders;
+  this.performance = performance;
+  this.perks = perks;
+  this.positions = positions;
+  this.lastUpdate = lastUpdate;
+  this.nextUpdate = nextUpdate;
+  this.processingHost = processingHost
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioData() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_dao_contest_PortfolioData.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData.prototype = new $h_Lcom_shocktrade_common_dao_contest_PortfolioData();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioData.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioData;
 /** @constructor */
 function $c_Ljava_io_FilterOutputStream() {
   $c_Ljava_io_OutputStream.call(this);
@@ -26509,21 +27273,25 @@ var $d_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions$$anonf
 });
 $c_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions$$anonfun$findChatMessages$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_ContestDAO$ContestDAOExtensions$$anonfun$findChatMessages$2;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3() {
   $c_sr_AbstractFunction1.call(this);
   this.orderID$1$f = null
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__T2(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__T2 = (function(portfolio) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment__T = (function($$outer, orderID$1) {
+  this.orderID$1$f = orderID$1;
+  return this
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__T2 = (function(portfolio) {
   var value = portfolio.orders;
   var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
   if (this$4.isEmpty__Z()) {
@@ -26558,23 +27326,19 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
   var order = valueA$1.get__O();
   return new $c_T2().init___O__O(portfolio, order)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions__T = (function($$outer, orderID$1) {
-  this.orderID$1$f = orderID$1;
-  return this
-});
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$3;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$3;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.portfolioID$1$f = null;
@@ -26582,17 +27346,29 @@ function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensio
   this.ec$1$2 = null;
   this.mongo$1$f = null
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype.apply__O__O = (function(v1) {
   return this.apply__T2__s_concurrent_Future($as_T2(v1))
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype.apply__T2__s_concurrent_Future = (function(x$4) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment__T__T__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB = (function($$outer, portfolioID$1, orderID$1, ec$1, mongo$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.portfolioID$1$f = portfolioID$1;
+  this.orderID$1$f = orderID$1;
+  this.ec$1$2 = ec$1;
+  this.mongo$1$f = mongo$1;
+  return this
+});
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype.apply__T2__s_concurrent_Future = (function(x$4) {
   if ((x$4 !== null)) {
     var order = x$4.$$und2__O();
     var jsx$7 = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$();
@@ -26641,83 +27417,71 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
     throw new $c_s_MatchError().init___O(x$4)
   }
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions__T__T__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB = (function($$outer, portfolioID$1, orderID$1, ec$1, mongo$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.portfolioID$1$f = portfolioID$1;
-  this.orderID$1$f = orderID$1;
-  this.ec$1$2 = ec$1;
-  this.mongo$1$f = mongo$1;
-  return this
-});
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$cancelOrder$4;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$cancelOrder$4;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype.apply__sjs_js_Array__sci_List = (function(portfolios) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype.apply__sjs_js_Array__sci_List = (function(portfolios) {
   var this$2 = $m_sci_List$();
   var cbf = this$2.ReusableCBFInstance$2;
   var b = cbf.apply__scm_Builder();
   b.sizeHint__I__V($uI(portfolios.length));
   b.$$plus$plus$eq__sc_TraversableOnce__scg_Growable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(portfolios));
   var jsx$2 = $as_sci_List(b.result__O());
-  var jsx$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2(this);
+  var jsx$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2(this);
   var this$3 = $m_sci_List$();
   return $as_sci_List(jsx$2.flatMap__F1__scg_CanBuildFrom__O(jsx$1, this$3.ReusableCBFInstance$2))
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype.apply__O__O = (function(v1) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_Array__sci_List(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sci_List(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sci_List = (function(portfolio) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sci_List = (function(portfolio) {
   var jsx$1 = $m_sjs_js_UndefOrOps$();
   var value = portfolio.positions;
   var this$5 = jsx$1.toList$extension__sjs_js_UndefOr__sci_List(value);
@@ -26891,38 +27655,38 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
   };
   return $as_sci_List(jsx$3)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2 = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2 = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findHeldSecurities$2$$anonfun$apply$7;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findHeldSecurities$2$$anonfun$apply$7;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype.apply__O__O = (function(v1) {
   return this.apply__s_Option__s_Option($as_s_Option(v1))
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment = (function($$outer) {
   return this
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype.apply__s_Option__s_Option = (function(x$6) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype.apply__s_Option__s_Option = (function(x$6) {
   if (x$6.isEmpty__Z()) {
     return $m_s_None$()
   } else {
@@ -26931,36 +27695,36 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
     return new $c_s_Some().init___O(((value === (void 0)) ? [] : value))
   }
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$findPositions$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$findPositions$2;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_Array__T2(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment = (function($$outer) {
   return this
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype.apply__sjs_js_Array__T2 = (function(portfolios) {
-  var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1(this);
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype.apply__sjs_js_Array__T2 = (function(portfolios) {
+  var f = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1(this);
   $m_sc_Seq$();
   $m_sjs_js_WrappedArray$();
   var b = new $c_sjs_js_WrappedArray().init___();
@@ -26975,35 +27739,35 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
   };
   return new $c_T2().init___O__O(portfolios, b)
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sc_Seq(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1 = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1 = (function($$outer) {
   return this
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sc_Seq = (function(portfolio) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype.apply__Lcom_shocktrade_common_dao_contest_PortfolioData__sc_Seq = (function(portfolio) {
   var value = portfolio.positions;
   var xo = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
   var this$5 = xo.toList__sci_List();
@@ -27052,36 +27816,36 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
     var jsx$3 = b.toList__sci_List()
   };
   var jsx$2 = $as_sc_TraversableLike(jsx$3);
-  var jsx$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2(this);
+  var jsx$1 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2(this);
   var this$12 = $m_sc_Seq$();
   return $as_sc_Seq(jsx$2.flatMap__F1__scg_CanBuildFrom__O(jsx$1, this$12.ReusableCBFInstance$2))
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2;
 /** @constructor */
-function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14() {
+function $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.constructor = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14;
 /** @constructor */
-function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14() {
+function $h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype;
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype = $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_common_dao_contest_PositionData__sc_Seq(v1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.apply__Lcom_shocktrade_common_dao_contest_PositionData__sc_Seq = (function(position) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.apply__Lcom_shocktrade_common_dao_contest_PositionData__sc_Seq = (function(position) {
   var value = position.pricePaid;
   if ((value === (void 0))) {
     var value$3 = (void 0)
@@ -27133,20 +27897,20 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonf
   };
   return $as_sc_Seq(jsx$1)
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2 = (function($$outer) {
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.init___Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2 = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14 = new $TypeData().initClass({
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14: 0
-}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14", {
-  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14: 1,
+var $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14 = new $TypeData().initClass({
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14: 0
+}, false, "com.shocktrade.common.dao.contest.PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14", {
+  Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14;
+$c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14.prototype.$classData = $d_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment$$anonfun$totalInvestment$1$$anonfun$2$$anonfun$apply$14;
 /** @constructor */
 function $c_Lcom_shocktrade_services_RSSFeedParser$$anonfun$parse$3() {
   $c_sr_AbstractFunction1.call(this);
@@ -28460,6 +29224,97 @@ var $d_Lcom_shocktrade_webapp_routes_ChartRoutes$RawData = new $TypeData().initC
 });
 $c_Lcom_shocktrade_webapp_routes_ChartRoutes$RawData.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ChartRoutes$RawData;
 /** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5() {
+  $c_sr_AbstractFunction1.call(this);
+  this.ec$1$f = null;
+  this.mongo$1$f = null;
+  this.portfolioDAO$1$2 = null;
+  this.profileDAO$1$f = null;
+  this.contest$1$2 = null
+}
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype;
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_Option__s_concurrent_Future($as_s_Option(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype.init___s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__Lcom_shocktrade_common_dao_contest_ContestData = (function(ec$1, mongo$1, portfolioDAO$1, profileDAO$1, contest$1) {
+  this.ec$1$f = ec$1;
+  this.mongo$1$f = mongo$1;
+  this.portfolioDAO$1$2 = portfolioDAO$1;
+  this.profileDAO$1$f = profileDAO$1;
+  this.contest$1$2 = contest$1;
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype.apply__s_Option__s_concurrent_Future = (function(newContestOpt) {
+  var this$1 = $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$createNewPortfolio$1__Lcom_shocktrade_common_dao_contest_ContestData__s_Option__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future(this.contest$1$2, newContestOpt, this.ec$1$f, this.portfolioDAO$1$2);
+  var f = new $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1().init___Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5__s_Option(this, newContestOpt);
+  var executor = this.ec$1$f;
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+});
+var $d_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5: 0
+}, false, "com.shocktrade.webapp.routes.ContestRoutes$$anonfun$5", {
+  Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.newContestOpt$1$f = null
+}
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype;
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_Option__s_concurrent_Future($as_s_Option(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype.init___Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5__s_Option = (function($$outer, newContestOpt$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.newContestOpt$1$f = newContestOpt$1;
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype.apply__s_Option__s_concurrent_Future = (function(portfolioOpt) {
+  var this$1 = $m_Lcom_shocktrade_webapp_routes_ContestRoutes$().com$shocktrade$webapp$routes$ContestRoutes$$deductEntryFee$1__s_Option__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future(this.newContestOpt$1$f, this.$$outer$2.ec$1$f, this.$$outer$2.mongo$1$f, this.$$outer$2.profileDAO$1$f);
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, portfolioOpt$1) {
+    return (function(deducted$2) {
+      var deducted = $uZ(deducted$2);
+      return new $c_T3().init___O__O__O(arg$outer.newContestOpt$1$f, portfolioOpt$1, deducted)
+    })
+  })(this, portfolioOpt));
+  var executor = this.$$outer$2.ec$1$f;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
+});
+var $d_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1: 0
+}, false, "com.shocktrade.webapp.routes.ContestRoutes$$anonfun$5$$anonfun$apply$1", {
+  Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ContestRoutes$$anonfun$5$$anonfun$apply$1;
+/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_NewsRoutes$$anonfun$3() {
   $c_sr_AbstractFunction1.call(this)
 }
@@ -28707,7 +29562,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$$anonfun$14.prototype.apply__T3
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, perksCost$1) {
       return (function(x$12$2) {
         var jsx$7 = $m_sjs_js_Thenable$ThenableOps$();
-        var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$12$2);
+        var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$12$2);
         var portfolioID = arg$outer.portfolioID$4$f;
         var perkCodes = arg$outer.purchasePerkCodes$1$f;
         var mongo = arg$outer.mongo$1$f;
@@ -28797,7 +29652,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$$anonfun$16.prototype.apply__s_
   var this$14 = this.portfolioDAO$1$2;
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x$19$2) {
-      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOExtensions().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$19$2);
+      var this$2 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$19$2);
       var contestID = arg$outer.contestID$3$f;
       var cursor = this$2.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("contestID", contestID)));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();

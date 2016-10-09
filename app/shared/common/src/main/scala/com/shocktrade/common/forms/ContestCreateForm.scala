@@ -1,5 +1,6 @@
 package com.shocktrade.common.forms
 
+import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
 import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
@@ -12,25 +13,35 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class ContestCreateForm(val name: js.UndefOr[String],
-                        val playerId: js.UndefOr[String],
-                        val playerName: js.UndefOr[String],
-                        val facebookId: js.UndefOr[String],
-                        val startingBalance: js.UndefOr[Double],
-                        val startAutomatically: js.UndefOr[Boolean],
-                        val duration: js.UndefOr[Int],
-                        val friendsOnly: js.UndefOr[Boolean],
-                        val invitationOnly: js.UndefOr[Boolean],
-                        val levelCapAllowed: js.UndefOr[Boolean],
-                        val levelCap: js.UndefOr[String],
-                        val perksAllowed: js.UndefOr[Boolean],
-                        val robotsAllowed: js.UndefOr[Boolean]) extends js.Object
+class ContestCreateForm(var name: js.UndefOr[String] = js.undefined,
+                        var playerId: js.UndefOr[String] = js.undefined,
+                        var playerName: js.UndefOr[String] = js.undefined,
+                        var facebookId: js.UndefOr[String] = js.undefined,
+                        var startingBalance: js.UndefOr[GameBalance] = js.undefined,
+                        var startAutomatically: js.UndefOr[Boolean] = js.undefined,
+                        var duration: js.UndefOr[GameDuration] = js.undefined,
+                        var friendsOnly: js.UndefOr[Boolean] = js.undefined,
+                        var invitationOnly: js.UndefOr[Boolean] = js.undefined,
+                        var levelCapAllowed: js.UndefOr[Boolean] = js.undefined,
+                        var levelCap: js.UndefOr[String] = js.undefined,
+                        var perksAllowed: js.UndefOr[Boolean] = js.undefined,
+                        var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends js.Object
 
 /**
   * Contest Creation Form
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object ContestCreateForm {
+
+  @ScalaJSDefined
+  class GameBalance(val label: String, val value: Double) extends js.Object
+
+  /**
+    * Game Duration
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  @ScalaJSDefined
+  class GameDuration(var label: String, var value: Int) extends js.Object
 
   /**
     * Contest Creation Extensions

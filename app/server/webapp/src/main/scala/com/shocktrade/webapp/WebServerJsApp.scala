@@ -8,7 +8,7 @@ import org.scalajs.nodejs.bodyparser._
 import org.scalajs.nodejs.express.fileupload.ExpressFileUpload
 import org.scalajs.nodejs.express.{Express, Request, Response}
 import org.scalajs.nodejs.expressws.{ExpressWS, WebSocket, WsRouterExtensions}
-import org.scalajs.nodejs.globals._
+import org.scalajs.nodejs.globals.{Process, process}
 import org.scalajs.nodejs.mongodb.MongoDB
 import org.scalajs.sjs.OptionHelper._
 
@@ -35,11 +35,9 @@ object WebServerJsApp extends js.JSApp {
     // determine the port to listen on
     val startTime = System.currentTimeMillis()
 
-    // get the web application port
-    val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
-
-    // determine the database connection URL
-    val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
+    // get the web application port and the database connection URL
+    val port = process.port getOrElse "1337"
+    val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>
@@ -83,8 +81,8 @@ object WebServerJsApp extends js.JSApp {
     })
 
     // setup mongodb connection
-    logger.log("Connecting to database '%s'...", connectionString)
-    implicit val dbFuture = mongo.MongoClient.connectFuture(connectionString)
+    logger.log("Connecting to database '%s'...", dbConnect)
+    implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnect)
 
     // setup web socket routes
     app.ws("/websocket", callback = (ws: WebSocket, request: Request) => {
@@ -109,6 +107,28 @@ object WebServerJsApp extends js.JSApp {
     // start the listener
     app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
     ()
+  }
+
+  /**
+    * Process configuration extensions
+    * @param process the given [[Process process]]
+    */
+  implicit class ProcessConfigExtensions(val process: Process) extends AnyVal {
+
+    /**
+      * Attempts to returns the web application listen port
+      * @return the option of the web application listen port
+      */
+    @inline
+    def port = process.env.get("port") ?? process.env.get("PORT")
+
+    /**
+      * Attempts to returns the database connection URL
+      * @return the option of the database connection URL
+      */
+    @inline
+    def dbConnect = process.env.get("db_connection") ?? process.env.get("DB_CONNECTION")
+
   }
 
 }

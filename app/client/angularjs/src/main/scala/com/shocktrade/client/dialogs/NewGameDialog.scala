@@ -1,12 +1,11 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.MySessionService
-import com.shocktrade.client.dialogs.NewGameDialogController.{NewGameDialogResult, _}
-import com.shocktrade.common.forms.NewGameForm
-import com.shocktrade.common.forms.NewGameForm.GameDuration
-import com.shocktrade.common.models.PlayerRef
+import com.shocktrade.client.contest.ContestService
+import com.shocktrade.client.dialogs.NewGameDialogController._
 import com.shocktrade.client.models.contest.Contest
-import org.scalajs.angularjs.http.Http
+import com.shocktrade.common.forms.ContestCreateForm
+import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.angularjs.{Service, Timeout, _}
@@ -17,13 +16,14 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
   * New Game Dialog Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NewGameDialog($http: Http, $modal: Modal) extends Service {
+class NewGameDialog($modal: Modal) extends Service {
 
   /**
     * Sign-up Modal Dialog
@@ -37,21 +37,15 @@ class NewGameDialog($http: Http, $modal: Modal) extends Service {
     $modalInstance.result
   }
 
-  /**
-    * Creates a new game
-    * @return the promise of the result of creating a new game
-    */
-  def createNewGame(form: NewGameForm): Future[Contest] = {
-    $http.put[Contest]("/api/contest", form)
-  }
 }
 
 /**
   * New Game Dialog Controller
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
-                              $modalInstance: ModalInstance[NewGameDialogResult], $timeout: Timeout, toaster: Toaster,
+class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toaster: Toaster,
+                              $modalInstance: ModalInstance[NewGameDialogResult],
+                              @injected("ContestService") contestService: ContestService,
                               @injected("MySessionService") mySession: MySessionService,
                               @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends Controller {
@@ -65,13 +59,11 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
 
   $scope.durations = GameDurations
   $scope.startingBalances = StartingBalances
-  $scope.restrictionTypes = emptyArray[js.Dynamic]
-
-  $scope.form = new NewGameForm(
+  $scope.form = new ContestCreateForm(
     perksAllowed = true,
     robotsAllowed = true,
     startAutomatically = true,
-    startingBalance = StartingBalances.head
+    startingBalance = StartingBalances.headOption.orUndefined
   )
 
   /////////////////////////////////////////////////////////////////////////////
@@ -80,7 +72,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  $scope.createGame = (aForm: js.UndefOr[NewGameForm]) => aForm foreach { form =>
+  $scope.createGame = (aForm: js.UndefOr[ContestCreateForm]) => aForm foreach { form =>
     if (isValidForm(form)) {
       mySession.userProfile._id.toOption match {
         case Some(userId) =>
@@ -88,14 +80,12 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
           val promise = $timeout(() => processing = false, 30.seconds)
 
           // add the player info
-          $scope.form.player = new PlayerRef(
-            _id = userId,
-            name = mySession.getUserName,
-            facebookID = mySession.getFacebookID
-          )
+          $scope.form.playerId = userId
+          $scope.form.playerName = mySession.getUserName
+          $scope.form.facebookId = mySession.getFacebookID
 
           // create the new game
-          newGameDialog.createNewGame(form) onComplete {
+          contestService.createNewGame(form) onComplete {
             case Success(response) =>
               $modalInstance.close(response)
               $timeout.cancel(promise)
@@ -122,7 +112,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $http: Http,
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def isValidForm(form: NewGameForm) = {
+  private def isValidForm(form: ContestCreateForm) = {
     errors.removeAll()
 
     if (!mySession.isAuthenticated) errors.push("You must login to create games")
@@ -144,9 +134,20 @@ object NewGameDialogController {
   val GameDurations = js.Array(
     new GameDuration(label = "1 Week", value = 7),
     new GameDuration(label = "2 Weeks", value = 14),
-    new GameDuration(label = "1 Month", value = 30))
+    new GameDuration(label = "3 Weeks", value = 21),
+    new GameDuration(label = "4 Weeks", value = 28),
+    new GameDuration(label = "5 Weeks", value = 35),
+    new GameDuration(label = "6 Weeks", value = 42))
 
-  val StartingBalances = js.Array(1000, 2500, 5000, 10000, 25000, 50000, 100000)
+  val StartingBalances = js.Array(
+    new GameBalance(label = "$ 1,000", value = 1000.00),
+    new GameBalance(label = "$ 2,500", value = 2500.00),
+    new GameBalance(label = "$ 5,000", value = 5000.00),
+    new GameBalance(label = "$10,000", value = 10000.00),
+    new GameBalance(label = "$25,000", value = 25000.00),
+    new GameBalance(label = "$50,000", value = 50000.00),
+    new GameBalance(label = "$75,000", value = 75000.00),
+    new GameBalance(label = "$100,000", value = 100000.00))
 
 }
 
@@ -158,13 +159,12 @@ object NewGameDialogController {
 trait NewGameDialogScope extends Scope {
   // variables
   var durations: js.Array[GameDuration] = js.native
-  var form: NewGameForm = js.native
-  var restrictionTypes: js.Array[js.Dynamic] = js.native
-  var startingBalances: js.Array[Int] = js.native
+  var form: ContestCreateForm = js.native
+  var startingBalances: js.Array[GameBalance] = js.native
 
   // functions
   var cancel: js.Function0[Unit] = js.native
-  var createGame: js.Function1[js.UndefOr[NewGameForm], Unit] = js.native
+  var createGame: js.Function1[js.UndefOr[ContestCreateForm], Unit] = js.native
   var enforceInvitationOnly: js.Function0[Unit] = js.native
   var getMessages: js.Function0[js.Array[String]] = js.native
   var isProcessing: js.Function0[Boolean] = js.native

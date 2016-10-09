@@ -3443,8 +3443,8 @@ function $h_Lcom_shocktrade_client_dialogs_NewGameDialogController$() {
 $h_Lcom_shocktrade_client_dialogs_NewGameDialogController$.prototype = $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$.prototype;
 $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_client_dialogs_NewGameDialogController$ = this;
-  this.GameDurations$1 = [new $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration("1 Week", 7), new $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration("2 Weeks", 14), new $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration("1 Month", 30)];
-  this.StartingBalances$1 = [1000, 2500, 5000, 10000, 25000, 50000, 100000];
+  this.GameDurations$1 = [new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("1 Week", 7), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("2 Weeks", 14), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("3 Weeks", 21), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("4 Weeks", 28), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("5 Weeks", 35), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration("6 Weeks", 42)];
+  this.StartingBalances$1 = [new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$ 1,000", 1000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$ 2,500", 2500.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$ 5,000", 5000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$10,000", 10000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$25,000", 25000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$50,000", 50000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$75,000", 75000.0), new $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance("$100,000", 100000.0)];
   return this
 });
 var $d_Lcom_shocktrade_client_dialogs_NewGameDialogController$ = new $TypeData().initClass({
@@ -4069,56 +4069,71 @@ function $m_Lcom_shocktrade_common_events_RemoteEvent$() {
   return $n_Lcom_shocktrade_common_events_RemoteEvent$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_common_forms_NewGameForm$() {
+function $c_Lcom_shocktrade_common_forms_ContestCreateForm$() {
   $c_O.call(this)
 }
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype = new $h_O();
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.constructor = $c_Lcom_shocktrade_common_forms_NewGameForm$;
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.constructor = $c_Lcom_shocktrade_common_forms_ContestCreateForm$;
 /** @constructor */
-function $h_Lcom_shocktrade_common_forms_NewGameForm$() {
+function $h_Lcom_shocktrade_common_forms_ContestCreateForm$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_forms_NewGameForm$.prototype = $c_Lcom_shocktrade_common_forms_NewGameForm$.prototype;
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.init___ = (function() {
+$h_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype = $c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype;
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-var $d_Lcom_shocktrade_common_forms_NewGameForm$ = new $TypeData().initClass({
-  Lcom_shocktrade_common_forms_NewGameForm$: 0
-}, false, "com.shocktrade.common.forms.NewGameForm$", {
-  Lcom_shocktrade_common_forms_NewGameForm$: 1,
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_common_forms_ContestCreateForm$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_forms_ContestCreateForm$: 0
+}, false, "com.shocktrade.common.forms.ContestCreateForm$", {
+  Lcom_shocktrade_common_forms_ContestCreateForm$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_common_forms_NewGameForm$.prototype.$classData = $d_Lcom_shocktrade_common_forms_NewGameForm$;
-var $n_Lcom_shocktrade_common_forms_NewGameForm$ = (void 0);
-function $m_Lcom_shocktrade_common_forms_NewGameForm$() {
-  if ((!$n_Lcom_shocktrade_common_forms_NewGameForm$)) {
-    $n_Lcom_shocktrade_common_forms_NewGameForm$ = new $c_Lcom_shocktrade_common_forms_NewGameForm$().init___()
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$.prototype.$classData = $d_Lcom_shocktrade_common_forms_ContestCreateForm$;
+var $n_Lcom_shocktrade_common_forms_ContestCreateForm$ = (void 0);
+function $m_Lcom_shocktrade_common_forms_ContestCreateForm$() {
+  if ((!$n_Lcom_shocktrade_common_forms_ContestCreateForm$)) {
+    $n_Lcom_shocktrade_common_forms_ContestCreateForm$ = new $c_Lcom_shocktrade_common_forms_ContestCreateForm$().init___()
   };
-  return $n_Lcom_shocktrade_common_forms_NewGameForm$
+  return $n_Lcom_shocktrade_common_forms_ContestCreateForm$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_NewOrderForm$() {
@@ -4300,16 +4315,12 @@ $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.init___ = (funct
   return this
 });
 $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
+  var value = new $g.Date();
+  return value
 });
 $c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_common_models_contest_ChatMessage$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
+  var value = $m_ju_UUID$().randomUUID__ju_UUID().toString__T();
+  return value
 });
 var $d_Lcom_shocktrade_common_models_contest_ChatMessage$ = new $TypeData().initClass({
   Lcom_shocktrade_common_models_contest_ChatMessage$: 0
@@ -8871,58 +8882,58 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.init___ = (function() {
   return this
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureServices__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.service("ChatService", ["$http", (function(x$macro$82$2) {
-    return new $c_Lcom_shocktrade_client_contest_ChatService().init___Lorg_scalajs_angularjs_http_Http(x$macro$82$2)
+  module.service("ChatService", ["$http", (function(x$macro$64$2) {
+    return new $c_Lcom_shocktrade_client_contest_ChatService().init___Lorg_scalajs_angularjs_http_Http(x$macro$64$2)
   })]);
-  module.service("ConnectService", ["$http", (function(x$macro$83$2) {
-    return new $c_Lcom_shocktrade_client_social_ConnectService().init___Lorg_scalajs_angularjs_http_Http(x$macro$83$2)
+  module.service("ConnectService", ["$http", (function(x$macro$65$2) {
+    return new $c_Lcom_shocktrade_client_social_ConnectService().init___Lorg_scalajs_angularjs_http_Http(x$macro$65$2)
   })]);
-  module.service("ContestService", ["$http", (function(x$macro$84$2) {
-    return new $c_Lcom_shocktrade_client_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$84$2)
+  module.service("ContestService", ["$http", (function(x$macro$66$2) {
+    return new $c_Lcom_shocktrade_client_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$66$2)
   })]);
-  module.service("ExploreService", ["$http", (function(x$macro$85$2) {
-    return new $c_Lcom_shocktrade_client_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
+  module.service("ExploreService", ["$http", (function(x$macro$67$2) {
+    return new $c_Lcom_shocktrade_client_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$67$2)
   })]);
-  module.service("Facebook", ["$q", (function(x$macro$86$2) {
-    return new $c_Lorg_scalajs_angularjs_facebook_FacebookService().init___Lorg_scalajs_angularjs_Q(x$macro$86$2)
+  module.service("Facebook", ["$q", (function(x$macro$68$2) {
+    return new $c_Lorg_scalajs_angularjs_facebook_FacebookService().init___Lorg_scalajs_angularjs_Q(x$macro$68$2)
   })]);
-  module.service("MarketStatus", ["$http", (function(x$macro$87$2) {
-    return new $c_Lcom_shocktrade_client_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$87$2)
+  module.service("MarketStatus", ["$http", (function(x$macro$69$2) {
+    return new $c_Lcom_shocktrade_client_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$69$2)
   })]);
-  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "ProfileService", "QuoteCache", (function(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2, x$macro$94$2, x$macro$95$2, x$macro$96$2) {
-    var x$macro$91 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$91$2);
-    var x$macro$92 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$92$2);
-    var x$macro$93 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$93$2);
-    var x$macro$94 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$94$2);
-    var x$macro$95 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$95$2);
-    var x$macro$96 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$96$2);
-    return new $c_Lcom_shocktrade_client_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_QuoteCache(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91, x$macro$92, x$macro$93, x$macro$94, x$macro$95, x$macro$96)
+  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "ProfileService", "QuoteCache", (function(x$macro$70$2, x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2, x$macro$77$2, x$macro$78$2) {
+    var x$macro$73 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$73$2);
+    var x$macro$74 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$74$2);
+    var x$macro$75 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$75$2);
+    var x$macro$76 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$76$2);
+    var x$macro$77 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$77$2);
+    var x$macro$78 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$78$2);
+    return new $c_Lcom_shocktrade_client_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_QuoteCache(x$macro$70$2, x$macro$71$2, x$macro$72$2, x$macro$73, x$macro$74, x$macro$75, x$macro$76, x$macro$77, x$macro$78)
   })]);
-  module.service("NewsService", ["$http", (function(x$macro$97$2) {
-    return new $c_Lcom_shocktrade_client_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$97$2)
+  module.service("NewsService", ["$http", (function(x$macro$79$2) {
+    return new $c_Lcom_shocktrade_client_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$79$2)
   })]);
-  module.service("PortfolioService", ["$http", (function(x$macro$98$2) {
-    return new $c_Lcom_shocktrade_client_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$98$2)
+  module.service("PortfolioService", ["$http", (function(x$macro$80$2) {
+    return new $c_Lcom_shocktrade_client_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$80$2)
   })]);
-  module.service("ProfileService", ["$http", (function(x$macro$99$2) {
-    return new $c_Lcom_shocktrade_client_profile_ProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$99$2)
+  module.service("ProfileService", ["$http", (function(x$macro$81$2) {
+    return new $c_Lcom_shocktrade_client_profile_ProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$81$2)
   })]);
-  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$100$2, x$macro$101$2) {
-    var x$macro$101 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$101$2);
-    return new $c_Lcom_shocktrade_client_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_client_discover_QuoteService(x$macro$100$2, x$macro$101)
+  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$82$2, x$macro$83$2) {
+    var x$macro$83 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$83$2);
+    return new $c_Lcom_shocktrade_client_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_client_discover_QuoteService(x$macro$82$2, x$macro$83)
   })]);
-  module.service("QuoteService", ["$http", (function(x$macro$102$2) {
-    return new $c_Lcom_shocktrade_client_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$102$2)
+  module.service("QuoteService", ["$http", (function(x$macro$84$2) {
+    return new $c_Lcom_shocktrade_client_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$84$2)
   })]);
-  module.service("ResearchService", ["$http", (function(x$macro$103$2) {
-    return new $c_Lcom_shocktrade_client_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$103$2)
+  module.service("ResearchService", ["$http", (function(x$macro$85$2) {
+    return new $c_Lcom_shocktrade_client_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
   })]);
-  module.service("SocialServices", ["$http", (function(x$macro$104$2) {
-    return new $c_Lcom_shocktrade_client_social_SocialServices().init___Lorg_scalajs_angularjs_http_Http(x$macro$104$2)
+  module.service("SocialServices", ["$http", (function(x$macro$86$2) {
+    return new $c_Lcom_shocktrade_client_social_SocialServices().init___Lorg_scalajs_angularjs_http_Http(x$macro$86$2)
   })]);
-  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$105$2, x$macro$106$2, x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110$2) {
-    var x$macro$110 = $as_Lcom_shocktrade_client_MySessionService(x$macro$110$2);
-    return new $c_Lcom_shocktrade_client_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$105$2, x$macro$106$2, x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110)
+  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$87$2, x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2) {
+    var x$macro$92 = $as_Lcom_shocktrade_client_MySessionService(x$macro$92$2);
+    return new $c_Lcom_shocktrade_client_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$87$2, x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.main__V = (function() {
@@ -8997,188 +9008,189 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.main__V = (function() {
   self$1.run(initializationFn)
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureDialogs__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.service("ComposeMessageDialog", ["$http", "$modal", (function(x$macro$20$2, x$macro$21$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$20$2, x$macro$21$2)
+  module.service("ComposeMessageDialog", ["$http", "$modal", (function(x$macro$3$2, x$macro$4$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$3$2, x$macro$4$2)
   })]);
-  module.service("InvitePlayerDialog", ["$http", "$modal", (function(x$macro$22$2, x$macro$23$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$22$2, x$macro$23$2)
+  module.service("InvitePlayerDialog", ["$http", "$modal", (function(x$macro$5$2, x$macro$6$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$5$2, x$macro$6$2)
   })]);
-  module.service("NewGameDialog", ["$http", "$modal", (function(x$macro$24$2, x$macro$25$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$24$2, x$macro$25$2)
+  module.service("NewGameDialog", ["$modal", (function(x$macro$7$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialog().init___Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$7$2)
   })]);
-  module.service("NewOrderDialog", ["$http", "$modal", (function(x$macro$26$2, x$macro$27$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$26$2, x$macro$27$2)
+  module.service("NewOrderDialog", ["$http", "$modal", (function(x$macro$8$2, x$macro$9$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$8$2, x$macro$9$2)
   })]);
-  module.service("NewsQuoteDialog", ["$http", "$modal", (function(x$macro$28$2, x$macro$29$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$28$2, x$macro$29$2)
+  module.service("NewsQuoteDialog", ["$http", "$modal", (function(x$macro$10$2, x$macro$11$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$10$2, x$macro$11$2)
   })]);
-  module.service("PerksDialog", ["$http", "$modal", (function(x$macro$30$2, x$macro$31$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_PerksDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$30$2, x$macro$31$2)
+  module.service("PerksDialog", ["$http", "$modal", (function(x$macro$12$2, x$macro$13$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_PerksDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$12$2, x$macro$13$2)
   })]);
-  module.service("SignUpDialog", ["$http", "$modal", (function(x$macro$32$2, x$macro$33$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$32$2, x$macro$33$2)
+  module.service("SignUpDialog", ["$http", "$modal", (function(x$macro$14$2, x$macro$15$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$14$2, x$macro$15$2)
   })]);
-  module.service("TransferFundsDialog", ["$http", "$modal", (function(x$macro$34$2, x$macro$35$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$34$2, x$macro$35$2)
+  module.service("TransferFundsDialog", ["$http", "$modal", (function(x$macro$16$2, x$macro$17$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$16$2, x$macro$17$2)
   })]);
-  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$36$2, x$macro$37$2, x$macro$38$2) {
-    var x$macro$38 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$38$2);
-    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_client_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$36$2, x$macro$37$2, x$macro$38)
+  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$18$2, x$macro$19$2, x$macro$20$2) {
+    var x$macro$20 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$20$2);
+    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_client_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$18$2, x$macro$19$2, x$macro$20)
   })]);
-  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$39$2, x$macro$40$2, x$macro$41$2) {
-    var x$macro$41 = $as_Lcom_shocktrade_client_MySessionService(x$macro$41$2);
-    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_client_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_MySessionService(x$macro$39$2, x$macro$40$2, x$macro$41)
+  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$21$2, x$macro$22$2, x$macro$23$2) {
+    var x$macro$23 = $as_Lcom_shocktrade_client_MySessionService(x$macro$23$2);
+    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_client_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_MySessionService(x$macro$21$2, x$macro$22$2, x$macro$23)
   })]);
-  module.controller("NewGameDialogController", ["$scope", "$http", "$modalInstance", "$timeout", "toaster", "MySessionService", "NewGameDialog", (function(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47$2, x$macro$48$2) {
-    var x$macro$47 = $as_Lcom_shocktrade_client_MySessionService(x$macro$47$2);
-    var x$macro$48 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$48$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController().init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47, x$macro$48)
+  module.controller("NewGameDialogController", ["$scope", "$timeout", "toaster", "$modalInstance", "ContestService", "MySessionService", "NewGameDialog", (function(x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28$2, x$macro$29$2, x$macro$30$2) {
+    var x$macro$28 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$28$2);
+    var x$macro$29 = $as_Lcom_shocktrade_client_MySessionService(x$macro$29$2);
+    var x$macro$30 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$30$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController().init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28, x$macro$29, x$macro$30)
   })]);
-  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2, x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58$2, x$macro$59$2) {
-    var x$macro$54 = $as_Lcom_shocktrade_client_MySessionService(x$macro$54$2);
-    var x$macro$55 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$55$2);
-    var x$macro$56 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$56$2);
-    var x$macro$57 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$57$2);
-    var x$macro$58 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$58$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController().init___Lcom_shocktrade_client_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_discover_QuoteService__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2, x$macro$53$2, x$macro$54, x$macro$55, x$macro$56, x$macro$57, x$macro$58, x$macro$59$2)
+  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36$2, x$macro$37$2, x$macro$38$2, x$macro$39$2, x$macro$40$2, x$macro$41$2) {
+    var x$macro$36 = $as_Lcom_shocktrade_client_MySessionService(x$macro$36$2);
+    var x$macro$37 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$37$2);
+    var x$macro$38 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$38$2);
+    var x$macro$39 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$39$2);
+    var x$macro$40 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$40$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController().init___Lcom_shocktrade_client_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_discover_QuoteService__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36, x$macro$37, x$macro$38, x$macro$39, x$macro$40, x$macro$41$2)
   })]);
-  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2, x$macro$64$2, x$macro$65$2) {
-    var x$macro$63 = $as_Lcom_shocktrade_client_dialogs_NewsQuoteDialog(x$macro$63$2);
-    var x$macro$64 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$64$2);
-    var x$macro$65 = $as_T(x$macro$65$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_client_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_NewsQuoteDialog__Lcom_shocktrade_client_discover_QuoteService__T(x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63, x$macro$64, x$macro$65)
+  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47$2) {
+    var x$macro$45 = $as_Lcom_shocktrade_client_dialogs_NewsQuoteDialog(x$macro$45$2);
+    var x$macro$46 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$46$2);
+    var x$macro$47 = $as_T(x$macro$47$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_client_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_NewsQuoteDialog__Lcom_shocktrade_client_discover_QuoteService__T(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45, x$macro$46, x$macro$47)
   })]);
-  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$66$2, x$macro$67$2, x$macro$68$2, x$macro$69$2, x$macro$70$2) {
-    var x$macro$69 = $as_Lcom_shocktrade_client_MySessionService(x$macro$69$2);
-    var x$macro$70 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$70$2);
-    return new $c_Lcom_shocktrade_client_dialogs_PerksDialogController().init___Lcom_shocktrade_client_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$66$2, x$macro$67$2, x$macro$68$2, x$macro$69, x$macro$70)
+  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$48$2, x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2) {
+    var x$macro$51 = $as_Lcom_shocktrade_client_MySessionService(x$macro$51$2);
+    var x$macro$52 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$52$2);
+    return new $c_Lcom_shocktrade_client_dialogs_PerksDialogController().init___Lcom_shocktrade_client_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$48$2, x$macro$49$2, x$macro$50$2, x$macro$51, x$macro$52)
   })]);
-  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2) {
-    var x$macro$75 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$75$2);
-    var x$macro$76 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$76$2);
-    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialogController().init___Lcom_shocktrade_client_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75, x$macro$76)
+  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58$2) {
+    var x$macro$57 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$57$2);
+    var x$macro$58 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$58$2);
+    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialogController().init___Lcom_shocktrade_client_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57, x$macro$58)
   })]);
-  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "TransferFundsDialog", (function(x$macro$77$2, x$macro$78$2, x$macro$79$2, x$macro$80$2, x$macro$81$2) {
-    var x$macro$80 = $as_Lcom_shocktrade_client_MySessionService(x$macro$80$2);
-    var x$macro$81 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$81$2);
-    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$77$2, x$macro$78$2, x$macro$79$2, x$macro$80, x$macro$81)
+  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "TransferFundsDialog", (function(x$macro$59$2, x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2) {
+    var x$macro$62 = $as_Lcom_shocktrade_client_MySessionService(x$macro$62$2);
+    var x$macro$63 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$63$2);
+    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$59$2, x$macro$60$2, x$macro$61$2, x$macro$62, x$macro$63)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.$$js$exported$meth$main__O = (function() {
   this.main__V()
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureControllers__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$111$2, x$macro$112$2, x$macro$113$2) {
-    var x$macro$113 = $as_Lcom_shocktrade_client_MySessionService(x$macro$113$2);
-    return new $c_Lcom_shocktrade_client_profile_AwardsController().init___Lcom_shocktrade_client_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_client_MySessionService(x$macro$111$2, x$macro$112$2, x$macro$113)
+  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$93$2, x$macro$94$2, x$macro$95$2) {
+    var x$macro$95 = $as_Lcom_shocktrade_client_MySessionService(x$macro$95$2);
+    return new $c_Lcom_shocktrade_client_profile_AwardsController().init___Lcom_shocktrade_client_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_client_MySessionService(x$macro$93$2, x$macro$94$2, x$macro$95)
   })]);
-  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$114$2, x$macro$115$2, x$macro$116$2) {
+  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$96$2, x$macro$97$2, x$macro$98$2) {
+    var x$macro$98 = $as_Lcom_shocktrade_client_MySessionService(x$macro$98$2);
+    return new $c_Lcom_shocktrade_client_contest_CashAccountController().init___Lcom_shocktrade_client_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$96$2, x$macro$97$2, x$macro$98)
+  })]);
+  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$99$2, x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104$2, x$macro$105$2) {
+    var x$macro$103 = $as_Lcom_shocktrade_client_MySessionService(x$macro$103$2);
+    var x$macro$104 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$104$2);
+    var x$macro$105 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$105$2);
+    return new $c_Lcom_shocktrade_client_contest_ChatController().init___Lcom_shocktrade_client_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService(x$macro$99$2, x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103, x$macro$104, x$macro$105)
+  })]);
+  module.controller("ConnectController", ["$scope", "toaster", "ComposeMessageDialog", "ConnectService", "MySessionService", (function(x$macro$106$2, x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110$2) {
+    var x$macro$108 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$108$2);
+    var x$macro$109 = $as_Lcom_shocktrade_client_social_ConnectService(x$macro$109$2);
+    var x$macro$110 = $as_Lcom_shocktrade_client_MySessionService(x$macro$110$2);
+    return new $c_Lcom_shocktrade_client_social_ConnectController().init___Lcom_shocktrade_client_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_ComposeMessageDialog__Lcom_shocktrade_client_social_ConnectService__Lcom_shocktrade_client_MySessionService(x$macro$106$2, x$macro$107$2, x$macro$108, x$macro$109, x$macro$110)
+  })]);
+  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$111$2, x$macro$112$2, x$macro$113$2, x$macro$114$2, x$macro$115$2, x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2) {
+    var x$macro$115 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$115$2);
     var x$macro$116 = $as_Lcom_shocktrade_client_MySessionService(x$macro$116$2);
-    return new $c_Lcom_shocktrade_client_contest_CashAccountController().init___Lcom_shocktrade_client_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$114$2, x$macro$115$2, x$macro$116)
+    var x$macro$117 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$117$2);
+    var x$macro$118 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$118$2);
+    var x$macro$119 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$119$2);
+    return new $c_Lcom_shocktrade_client_contest_DashboardController().init___Lcom_shocktrade_client_contest_DashboardScope__Lcom_shocktrade_client_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$111$2, x$macro$112$2, x$macro$113$2, x$macro$114$2, x$macro$115, x$macro$116, x$macro$117, x$macro$118, x$macro$119)
   })]);
-  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121$2, x$macro$122$2, x$macro$123$2) {
-    var x$macro$121 = $as_Lcom_shocktrade_client_MySessionService(x$macro$121$2);
-    var x$macro$122 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$122$2);
-    var x$macro$123 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$123$2);
-    return new $c_Lcom_shocktrade_client_contest_ChatController().init___Lcom_shocktrade_client_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService(x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121, x$macro$122, x$macro$123)
-  })]);
-  module.controller("ConnectController", ["$scope", "toaster", "ComposeMessageDialog", "ConnectService", "MySessionService", (function(x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128$2) {
-    var x$macro$126 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$126$2);
-    var x$macro$127 = $as_Lcom_shocktrade_client_social_ConnectService(x$macro$127$2);
+  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "ProfileService", "QuoteService", (function(x$macro$120$2, x$macro$121$2, x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2) {
+    var x$macro$127 = $as_Lcom_shocktrade_client_discover_MarketStatusService(x$macro$127$2);
     var x$macro$128 = $as_Lcom_shocktrade_client_MySessionService(x$macro$128$2);
-    return new $c_Lcom_shocktrade_client_social_ConnectController().init___Lcom_shocktrade_client_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_ComposeMessageDialog__Lcom_shocktrade_client_social_ConnectService__Lcom_shocktrade_client_MySessionService(x$macro$124$2, x$macro$125$2, x$macro$126, x$macro$127, x$macro$128)
+    var x$macro$129 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$129$2);
+    var x$macro$130 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$130$2);
+    var x$macro$131 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$131$2);
+    return new $c_Lcom_shocktrade_client_discover_DiscoverController().init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$120$2, x$macro$121$2, x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127, x$macro$128, x$macro$129, x$macro$130, x$macro$131)
   })]);
-  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2) {
-    var x$macro$133 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$133$2);
-    var x$macro$134 = $as_Lcom_shocktrade_client_MySessionService(x$macro$134$2);
-    var x$macro$135 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$135$2);
-    var x$macro$136 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$136$2);
-    var x$macro$137 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$137$2);
-    return new $c_Lcom_shocktrade_client_contest_DashboardController().init___Lcom_shocktrade_client_contest_DashboardScope__Lcom_shocktrade_client_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133, x$macro$134, x$macro$135, x$macro$136, x$macro$137)
+  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139$2) {
+    var x$macro$139 = $as_Lcom_shocktrade_client_explore_ExploreService(x$macro$139$2);
+    return new $c_Lcom_shocktrade_client_explore_ExploreController().init___Lcom_shocktrade_client_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_client_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_explore_ExploreService(x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139)
   })]);
-  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "ProfileService", "QuoteService", (function(x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143$2, x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2, x$macro$149$2) {
-    var x$macro$145 = $as_Lcom_shocktrade_client_discover_MarketStatusService(x$macro$145$2);
-    var x$macro$146 = $as_Lcom_shocktrade_client_MySessionService(x$macro$146$2);
-    var x$macro$147 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$147$2);
-    var x$macro$148 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$148$2);
-    var x$macro$149 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$149$2);
-    return new $c_Lcom_shocktrade_client_discover_DiscoverController().init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143$2, x$macro$144$2, x$macro$145, x$macro$146, x$macro$147, x$macro$148, x$macro$149)
+  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$140$2, x$macro$141$2, x$macro$142$2) {
+    var x$macro$142 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$142$2);
+    return new $c_Lcom_shocktrade_client_contest_ExposureController().init___Lcom_shocktrade_client_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService(x$macro$140$2, x$macro$141$2, x$macro$142)
   })]);
-  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$150$2, x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2, x$macro$157$2) {
-    var x$macro$157 = $as_Lcom_shocktrade_client_explore_ExploreService(x$macro$157$2);
-    return new $c_Lcom_shocktrade_client_explore_ExploreController().init___Lcom_shocktrade_client_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_client_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_explore_ExploreService(x$macro$150$2, x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2, x$macro$157)
+  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$143$2, x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2, x$macro$149$2, x$macro$150$2) {
+    var x$macro$147 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$147$2);
+    var x$macro$148 = $as_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(x$macro$148$2);
+    var x$macro$149 = $as_Lcom_shocktrade_client_MySessionService(x$macro$149$2);
+    var x$macro$150 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$150$2);
+    return new $c_Lcom_shocktrade_client_contest_GameSearchController().init___Lcom_shocktrade_client_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_InvitePlayerDialog__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$143$2, x$macro$144$2, x$macro$145$2, x$macro$146$2, x$macro$147, x$macro$148, x$macro$149, x$macro$150)
   })]);
-  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$158$2, x$macro$159$2, x$macro$160$2) {
-    var x$macro$160 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$160$2);
-    return new $c_Lcom_shocktrade_client_contest_ExposureController().init___Lcom_shocktrade_client_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService(x$macro$158$2, x$macro$159$2, x$macro$160)
+  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "ProfileService", (function(x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2) {
+    var x$macro$154 = $as_Lcom_shocktrade_client_MySessionService(x$macro$154$2);
+    var x$macro$155 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$155$2);
+    return new $c_Lcom_shocktrade_client_profile_HomeController().init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService(x$macro$151$2, x$macro$152$2, x$macro$153$2, x$macro$154, x$macro$155)
   })]);
-  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2, x$macro$166$2, x$macro$167$2, x$macro$168$2) {
-    var x$macro$165 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$165$2);
-    var x$macro$166 = $as_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(x$macro$166$2);
-    var x$macro$167 = $as_Lcom_shocktrade_client_MySessionService(x$macro$167$2);
-    var x$macro$168 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$168$2);
-    return new $c_Lcom_shocktrade_client_contest_GameSearchController().init___Lcom_shocktrade_client_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_InvitePlayerDialog__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165, x$macro$166, x$macro$167, x$macro$168)
+  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "ProfileService", "SignUpDialog", (function(x$macro$156$2, x$macro$157$2, x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2) {
+    var x$macro$161 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$161$2);
+    var x$macro$162 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$162$2);
+    var x$macro$163 = $as_Lcom_shocktrade_client_MySessionService(x$macro$163$2);
+    var x$macro$164 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$164$2);
+    var x$macro$165 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$165$2);
+    return new $c_Lcom_shocktrade_client_MainController().init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$156$2, x$macro$157$2, x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161, x$macro$162, x$macro$163, x$macro$164, x$macro$165)
   })]);
-  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "ProfileService", (function(x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172$2, x$macro$173$2) {
-    var x$macro$172 = $as_Lcom_shocktrade_client_MySessionService(x$macro$172$2);
-    var x$macro$173 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$173$2);
-    return new $c_Lcom_shocktrade_client_profile_HomeController().init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService(x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172, x$macro$173)
+  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$166$2, x$macro$167$2, x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2) {
+    var x$macro$169 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$169$2);
+    var x$macro$170 = $as_Lcom_shocktrade_client_MySessionService(x$macro$170$2);
+    var x$macro$171 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$171$2);
+    return new $c_Lcom_shocktrade_client_contest_MarginAccountController().init___Lcom_shocktrade_client_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$166$2, x$macro$167$2, x$macro$168$2, x$macro$169, x$macro$170, x$macro$171)
   })]);
-  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "ProfileService", "SignUpDialog", (function(x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2, x$macro$180$2, x$macro$181$2, x$macro$182$2, x$macro$183$2) {
-    var x$macro$179 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$179$2);
-    var x$macro$180 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$180$2);
-    var x$macro$181 = $as_Lcom_shocktrade_client_MySessionService(x$macro$181$2);
-    var x$macro$182 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$182$2);
-    var x$macro$183 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$183$2);
-    return new $c_Lcom_shocktrade_client_MainController().init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179, x$macro$180, x$macro$181, x$macro$182, x$macro$183)
+  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$172$2, x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2) {
+    var x$macro$176 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$176$2);
+    var x$macro$177 = $as_Lcom_shocktrade_client_MySessionService(x$macro$177$2);
+    var x$macro$178 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$178$2);
+    var x$macro$179 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$179$2);
+    return new $c_Lcom_shocktrade_client_contest_MyGamesController().init___Lcom_shocktrade_client_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog__Lcom_shocktrade_client_contest_PortfolioService(x$macro$172$2, x$macro$173$2, x$macro$174$2, x$macro$175$2, x$macro$176, x$macro$177, x$macro$178, x$macro$179)
   })]);
-  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187$2, x$macro$188$2, x$macro$189$2) {
-    var x$macro$187 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$187$2);
-    var x$macro$188 = $as_Lcom_shocktrade_client_MySessionService(x$macro$188$2);
-    var x$macro$189 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$189$2);
-    return new $c_Lcom_shocktrade_client_contest_MarginAccountController().init___Lcom_shocktrade_client_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187, x$macro$188, x$macro$189)
+  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "ProfileService", "QuoteService", (function(x$macro$180$2, x$macro$181$2, x$macro$182$2, x$macro$183$2, x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187$2) {
+    var x$macro$183 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$183$2);
+    var x$macro$184 = $as_Lcom_shocktrade_client_MySessionService(x$macro$184$2);
+    var x$macro$185 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$185$2);
+    var x$macro$186 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$186$2);
+    var x$macro$187 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$187$2);
+    return new $c_Lcom_shocktrade_client_profile_MyQuotesController().init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$180$2, x$macro$181$2, x$macro$182$2, x$macro$183, x$macro$184, x$macro$185, x$macro$186, x$macro$187)
   })]);
-  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2, x$macro$197$2) {
-    var x$macro$194 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$194$2);
-    var x$macro$195 = $as_Lcom_shocktrade_client_MySessionService(x$macro$195$2);
-    var x$macro$196 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$196$2);
-    var x$macro$197 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$197$2);
-    return new $c_Lcom_shocktrade_client_contest_MyGamesController().init___Lcom_shocktrade_client_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog__Lcom_shocktrade_client_contest_PortfolioService(x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193$2, x$macro$194, x$macro$195, x$macro$196, x$macro$197)
+  module.controller("NavigationController", ["$scope", "$http", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", "WebSocketService", (function(x$macro$188$2, x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2) {
+    var x$macro$192 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$192$2);
+    var x$macro$193 = $as_Lcom_shocktrade_client_MySessionService(x$macro$193$2);
+    var x$macro$194 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$194$2);
+    var x$macro$195 = $as_Lcom_shocktrade_client_WebSocketService(x$macro$195$2);
+    return new $c_Lcom_shocktrade_client_NavigationController().init___Lcom_shocktrade_client_NavigationControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_WebSocketService(x$macro$188$2, x$macro$189$2, x$macro$190$2, x$macro$191$2, x$macro$192, x$macro$193, x$macro$194, x$macro$195)
   })]);
-  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "ProfileService", "QuoteService", (function(x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2) {
-    var x$macro$201 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$201$2);
-    var x$macro$202 = $as_Lcom_shocktrade_client_MySessionService(x$macro$202$2);
-    var x$macro$203 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$203$2);
-    var x$macro$204 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$204$2);
-    var x$macro$205 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$205$2);
-    return new $c_Lcom_shocktrade_client_profile_MyQuotesController().init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201, x$macro$202, x$macro$203, x$macro$204, x$macro$205)
+  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$196$2, x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200$2) {
+    var x$macro$200 = $as_Lcom_shocktrade_client_news_NewsService(x$macro$200$2);
+    return new $c_Lcom_shocktrade_client_news_NewsController().init___Lcom_shocktrade_client_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_news_NewsService(x$macro$196$2, x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200)
   })]);
-  module.controller("NavigationController", ["$scope", "$http", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", "WebSocketService", (function(x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2, x$macro$211$2, x$macro$212$2, x$macro$213$2) {
-    var x$macro$210 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$210$2);
-    var x$macro$211 = $as_Lcom_shocktrade_client_MySessionService(x$macro$211$2);
-    var x$macro$212 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$212$2);
-    var x$macro$213 = $as_Lcom_shocktrade_client_WebSocketService(x$macro$213$2);
-    return new $c_Lcom_shocktrade_client_NavigationController().init___Lcom_shocktrade_client_NavigationControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_WebSocketService(x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210, x$macro$211, x$macro$212, x$macro$213)
+  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2) {
+    var x$macro$205 = $as_Lcom_shocktrade_client_MySessionService(x$macro$205$2);
+    var x$macro$206 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$206$2);
+    var x$macro$207 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$207$2);
+    var x$macro$208 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$208$2);
+    var x$macro$209 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$209$2);
+    return new $c_Lcom_shocktrade_client_contest_PortfolioController().init___Lcom_shocktrade_client_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_QuoteCache__Lcom_shocktrade_client_contest_PortfolioService(x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205, x$macro$206, x$macro$207, x$macro$208, x$macro$209)
   })]);
-  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$214$2, x$macro$215$2, x$macro$216$2, x$macro$217$2, x$macro$218$2) {
-    var x$macro$218 = $as_Lcom_shocktrade_client_news_NewsService(x$macro$218$2);
-    return new $c_Lcom_shocktrade_client_news_NewsController().init___Lcom_shocktrade_client_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_news_NewsService(x$macro$214$2, x$macro$215$2, x$macro$216$2, x$macro$217$2, x$macro$218)
+  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$210$2, x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2) {
+    var x$macro$214 = $as_Lcom_shocktrade_client_discover_ResearchService(x$macro$214$2);
+    return new $c_Lcom_shocktrade_client_discover_ResearchController().init___Lcom_shocktrade_client_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_ResearchService(x$macro$210$2, x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214)
   })]);
-  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$219$2, x$macro$220$2, x$macro$221$2, x$macro$222$2, x$macro$223$2, x$macro$224$2, x$macro$225$2, x$macro$226$2, x$macro$227$2) {
-    var x$macro$223 = $as_Lcom_shocktrade_client_MySessionService(x$macro$223$2);
-    var x$macro$224 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$224$2);
-    var x$macro$225 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$225$2);
-    var x$macro$226 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$226$2);
-    var x$macro$227 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$227$2);
-    return new $c_Lcom_shocktrade_client_contest_PortfolioController().init___Lcom_shocktrade_client_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_QuoteCache__Lcom_shocktrade_client_contest_PortfolioService(x$macro$219$2, x$macro$220$2, x$macro$221$2, x$macro$222$2, x$macro$223, x$macro$224, x$macro$225, x$macro$226, x$macro$227)
-  })]);
-  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$228$2, x$macro$229$2, x$macro$230$2, x$macro$231$2, x$macro$232$2) {
-    var x$macro$232 = $as_Lcom_shocktrade_client_discover_ResearchService(x$macro$232$2);
-    return new $c_Lcom_shocktrade_client_discover_ResearchController().init___Lcom_shocktrade_client_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_ResearchService(x$macro$228$2, x$macro$229$2, x$macro$230$2, x$macro$231$2, x$macro$232)
-  })]);
-  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$233$2, x$macro$234$2, x$macro$235$2) {
-    var x$macro$235 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$235$2);
-    return new $c_Lcom_shocktrade_client_discover_TradingHistoryController().init___Lcom_shocktrade_client_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_QuoteService(x$macro$233$2, x$macro$234$2, x$macro$235)
+  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$215$2, x$macro$216$2, x$macro$217$2) {
+    var x$macro$217 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$217$2);
+    return new $c_Lcom_shocktrade_client_discover_TradingHistoryController().init___Lcom_shocktrade_client_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_QuoteService(x$macro$215$2, x$macro$216$2, x$macro$217)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.com$shocktrade$client$WebClientJsApp$$configureSocialNetworkCallbacks__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_social_SocialServices__V = (function(mySession, socialServices) {
@@ -9775,6 +9787,9 @@ $c_Lcom_shocktrade_client_contest_ContestService.prototype.getContestByID__T__Lo
 });
 $c_Lcom_shocktrade_client_contest_ContestService.prototype.startContest__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(contestId) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/contest/", "/start"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestId])))
+});
+$c_Lcom_shocktrade_client_contest_ContestService.prototype.createNewGame__Lcom_shocktrade_common_forms_ContestCreateForm__s_concurrent_Future = (function(form) {
+  return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$http$1.post("/api/contest", form))
 });
 $c_Lcom_shocktrade_client_contest_ContestService.prototype.getContestsByPlayerID__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(playerId) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/contests/player/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([playerId])))
@@ -10441,7 +10456,6 @@ $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController.prototype.$classD
 /** @constructor */
 function $c_Lcom_shocktrade_client_dialogs_NewGameDialog() {
   $c_O.call(this);
-  this.$$http$1 = null;
   this.$$modal$1 = null
 }
 $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype = new $h_O();
@@ -10457,11 +10471,7 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.popup__s_concurrent_Fu
   var $$modalInstance = jsx$1.open(new $c_Lorg_scalajs_angularjs_uibootstrap_ModalOptions((void 0), "new_game_dialog.html", value));
   return $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
 });
-$c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.createNewGame__Lcom_shocktrade_common_forms_NewGameForm__s_concurrent_Future = (function(form) {
-  return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$http$1.put("/api/contest", form))
-});
-$c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal = (function($$http, $$modal) {
-  this.$$http$1 = $$http;
+$c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.init___Lorg_scalajs_angularjs_uibootstrap_Modal = (function($$modal) {
   this.$$modal$1 = $$modal;
   return this
 });
@@ -10489,11 +10499,11 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.$classData = $d_Lcom_s
 function $c_Lcom_shocktrade_client_dialogs_NewGameDialogController() {
   $c_O.call(this);
   this.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f = null;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f = null;
   this.com$shocktrade$client$dialogs$NewGameDialogController$$$timeout$f = null;
   this.com$shocktrade$client$dialogs$NewGameDialogController$$toaster$f = null;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f = null;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$contestService$f = null;
   this.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f = null;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$newGameDialog$f = null;
   this.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1 = null;
   this.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1 = false
 }
@@ -10504,50 +10514,7 @@ function $h_Lcom_shocktrade_client_dialogs_NewGameDialogController() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype = $c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype;
-$c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype.init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog = (function($$scope, $$http, $$modalInstance, $$timeout, toaster, mySession, newGameDialog) {
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f = $$scope;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f = $$modalInstance;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$$timeout$f = $$timeout;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$toaster$f = toaster;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f = mySession;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$newGameDialog$f = newGameDialog;
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1 = [];
-  this.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1 = false;
-  $$scope.durations = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().GameDurations$1;
-  $$scope.startingBalances = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().StartingBalances$1;
-  $$scope.restrictionTypes = [];
-  var array = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().StartingBalances$1;
-  var this$7 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
-  var value = $s_sc_IndexedSeqOptimized$class__head__sc_IndexedSeqOptimized__O(this$7);
-  $$scope.form = new $c_Lcom_shocktrade_common_forms_NewGameForm((void 0), (void 0), (void 0), true, (void 0), true, true, value);
-  $$scope.cancel = (function(arg$outer) {
-    return (function() {
-      arg$outer.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f.dismiss("cancel")
-    })
-  })(this);
-  $$scope.createGame = (function(f) {
-    return (function(arg1) {
-      return f.apply__O__O(arg1)
-    })
-  })(new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5().init___Lcom_shocktrade_client_dialogs_NewGameDialogController(this));
-  $$scope.enforceInvitationOnly = (function(arg$outer$1) {
-    return (function() {
-      arg$outer$1.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form.friendsOnly = false
-    })
-  })(this);
-  $$scope.isProcessing = (function(arg$outer$2) {
-    return (function() {
-      return arg$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1
-    })
-  })(this);
-  $$scope.getMessages = (function(arg$outer$3) {
-    return (function() {
-      return arg$outer$3.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1
-    })
-  })(this);
-  return this
-});
-$c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype.com$shocktrade$client$dialogs$NewGameDialogController$$isValidForm__Lcom_shocktrade_common_forms_NewGameForm__Z = (function(form) {
+$c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype.com$shocktrade$client$dialogs$NewGameDialogController$$isValidForm__Lcom_shocktrade_common_forms_ContestCreateForm__Z = (function(form) {
   var array = this.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1;
   var count = $uI(array.length);
   array.splice(0, count);
@@ -10585,6 +10552,54 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype.com$shocktra
   };
   var array$1 = this.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1;
   return ($uI(array$1.length) === 0)
+});
+$c_Lcom_shocktrade_client_dialogs_NewGameDialogController.prototype.init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog = (function($$scope, $$timeout, toaster, $$modalInstance, contestService, mySession, newGameDialog) {
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f = $$scope;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$$timeout$f = $$timeout;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$toaster$f = toaster;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f = $$modalInstance;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$contestService$f = contestService;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f = mySession;
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1 = [];
+  this.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1 = false;
+  $$scope.durations = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().GameDurations$1;
+  $$scope.startingBalances = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().StartingBalances$1;
+  var array = $m_Lcom_shocktrade_client_dialogs_NewGameDialogController$().StartingBalances$1;
+  var this$6 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
+  var opt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$6);
+  if (opt.isEmpty__Z()) {
+    var x$18 = (void 0)
+  } else {
+    var arg1 = opt.get__O();
+    var x$18 = arg1
+  };
+  $$scope.form = new $c_Lcom_shocktrade_common_forms_ContestCreateForm((void 0), (void 0), (void 0), (void 0), x$18, true, (void 0), (void 0), (void 0), (void 0), (void 0), true, true);
+  $$scope.cancel = (function(arg$outer) {
+    return (function() {
+      arg$outer.com$shocktrade$client$dialogs$NewGameDialogController$$$modalInstance$f.dismiss("cancel")
+    })
+  })(this);
+  $$scope.createGame = (function(f) {
+    return (function(arg1$1) {
+      return f.apply__O__O(arg1$1)
+    })
+  })(new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5().init___Lcom_shocktrade_client_dialogs_NewGameDialogController(this));
+  $$scope.enforceInvitationOnly = (function(arg$outer$1) {
+    return (function() {
+      arg$outer$1.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form.friendsOnly = false
+    })
+  })(this);
+  $$scope.isProcessing = (function(arg$outer$2) {
+    return (function() {
+      return arg$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1
+    })
+  })(this);
+  $$scope.getMessages = (function(arg$outer$3) {
+    return (function() {
+      return arg$outer$3.com$shocktrade$client$dialogs$NewGameDialogController$$errors$1
+    })
+  })(this);
+  return this
 });
 var $d_Lcom_shocktrade_client_dialogs_NewGameDialogController = new $TypeData().initClass({
   Lcom_shocktrade_client_dialogs_NewGameDialogController: 0
@@ -12593,6 +12608,60 @@ function $isArrayOf_jl_Throwable(obj, depth) {
 function $asArrayOf_jl_Throwable(obj, depth) {
   return (($isArrayOf_jl_Throwable(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.Throwable;", depth))
 }
+/** @constructor */
+function $c_ju_Random() {
+  $c_O.call(this);
+  this.seedHi$1 = 0;
+  this.seedLo$1 = 0;
+  this.nextNextGaussian$1 = 0.0;
+  this.haveNextNextGaussian$1 = false
+}
+$c_ju_Random.prototype = new $h_O();
+$c_ju_Random.prototype.constructor = $c_ju_Random;
+/** @constructor */
+function $h_ju_Random() {
+  /*<skip>*/
+}
+$h_ju_Random.prototype = $c_ju_Random.prototype;
+$c_ju_Random.prototype.init___ = (function() {
+  $c_ju_Random.prototype.init___J.call(this, $m_ju_Random$().java$util$Random$$randomSeed__J());
+  return this
+});
+$c_ju_Random.prototype.init___J = (function(seed_in) {
+  this.haveNextNextGaussian$1 = false;
+  this.setSeed__J__V(seed_in);
+  return this
+});
+$c_ju_Random.prototype.next__I__I = (function(bits) {
+  var oldSeedHi = this.seedHi$1;
+  var oldSeedLo = this.seedLo$1;
+  var loProd = (11 + (15525485 * oldSeedLo));
+  var hiProd = ((1502 * oldSeedLo) + (15525485 * oldSeedHi));
+  var x = (loProd / 16777216);
+  var newSeedHi = (16777215 & (($uI((x | 0)) + (16777215 & $uI((hiProd | 0)))) | 0));
+  var newSeedLo = (16777215 & $uI((loProd | 0)));
+  this.seedHi$1 = newSeedHi;
+  this.seedLo$1 = newSeedLo;
+  var result32 = ((newSeedHi << 8) | (newSeedLo >> 16));
+  return ((result32 >>> ((32 - bits) | 0)) | 0)
+});
+$c_ju_Random.prototype.setSeed__J__V = (function(seed_in) {
+  var lo = ((-554899859) ^ seed_in.lo$2);
+  var hi = (5 ^ seed_in.hi$2);
+  var hi$1 = (65535 & hi);
+  var lo$1 = (((lo >>> 24) | 0) | (hi$1 << 8));
+  this.seedHi$1 = lo$1;
+  this.seedLo$1 = (16777215 & lo);
+  this.haveNextNextGaussian$1 = false
+});
+var $d_ju_Random = new $TypeData().initClass({
+  ju_Random: 0
+}, false, "java.util.Random", {
+  ju_Random: 1,
+  O: 1,
+  Ljava_io_Serializable: 1
+});
+$c_ju_Random.prototype.$classData = $d_ju_Random;
 /** @constructor */
 function $c_ju_regex_Matcher() {
   $c_O.call(this);
@@ -15529,7 +15598,7 @@ var $d_Lcom_shocktrade_client_social_ConnectController = new $TypeData().initCla
 });
 $c_Lcom_shocktrade_client_social_ConnectController.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController;
 /** @constructor */
-function $c_Lcom_shocktrade_common_forms_NewGameForm() {
+function $c_Lcom_shocktrade_common_forms_ContestCreateForm() {
   var jsx$1 = (arguments.length | 0);
   var jsx$2 = 0;
   var arg$rest = [];
@@ -15537,17 +15606,62 @@ function $c_Lcom_shocktrade_common_forms_NewGameForm() {
     arg$rest.push(arguments[jsx$2]);
     jsx$2 = ((jsx$2 + 1) | 0)
   };
-  var name = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var duration = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var friendsOnly = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var perksAllowed = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var player = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var robotsAllowed = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var startAutomatically = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var startingBalance = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_forms_NewGameForm$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
+  var name = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var playerId = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var playerName = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var facebookId = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  var startingBalance = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
+  var startAutomatically = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
+  var duration = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
+  var friendsOnly = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
+  var invitationOnly = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
+  var levelCapAllowed = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
+  var levelCap = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
+  var perksAllowed = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+  var robotsAllowed = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_common_forms_ContestCreateForm$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
     "name": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "playerId": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "playerName": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "facebookId": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "startingBalance": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "startAutomatically": {
       "configurable": true,
       "enumerable": true,
       "writable": true,
@@ -15571,7 +15685,7 @@ function $c_Lcom_shocktrade_common_forms_NewGameForm() {
     }
   });
   $g.Object.defineProperties(this, {
-    "perksAllowed": {
+    "invitationOnly": {
       "configurable": true,
       "enumerable": true,
       "writable": true,
@@ -15579,7 +15693,23 @@ function $c_Lcom_shocktrade_common_forms_NewGameForm() {
     }
   });
   $g.Object.defineProperties(this, {
-    "player": {
+    "levelCapAllowed": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "levelCap": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "perksAllowed": {
       "configurable": true,
       "enumerable": true,
       "writable": true,
@@ -15594,40 +15724,60 @@ function $c_Lcom_shocktrade_common_forms_NewGameForm() {
       "value": null
     }
   });
-  $g.Object.defineProperties(this, {
-    "startAutomatically": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "startingBalance": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
   this.name = name;
+  this.playerId = playerId;
+  this.playerName = playerName;
+  this.facebookId = facebookId;
+  this.startingBalance = startingBalance;
+  this.startAutomatically = startAutomatically;
   this.duration = duration;
   this.friendsOnly = friendsOnly;
+  this.invitationOnly = invitationOnly;
+  this.levelCapAllowed = levelCapAllowed;
+  this.levelCap = levelCap;
   this.perksAllowed = perksAllowed;
-  this.player = player;
-  this.robotsAllowed = robotsAllowed;
-  this.startAutomatically = startAutomatically;
-  this.startingBalance = startingBalance
+  this.robotsAllowed = robotsAllowed
 }
 /** @constructor */
-function $h_Lcom_shocktrade_common_forms_NewGameForm() {
+function $h_Lcom_shocktrade_common_forms_ContestCreateForm() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_forms_NewGameForm.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_forms_NewGameForm.prototype = new $h_Lcom_shocktrade_common_forms_NewGameForm();
-$c_Lcom_shocktrade_common_forms_NewGameForm.prototype.constructor = $c_Lcom_shocktrade_common_forms_NewGameForm;
+$h_Lcom_shocktrade_common_forms_ContestCreateForm.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_forms_ContestCreateForm.prototype = new $h_Lcom_shocktrade_common_forms_ContestCreateForm();
+$c_Lcom_shocktrade_common_forms_ContestCreateForm.prototype.constructor = $c_Lcom_shocktrade_common_forms_ContestCreateForm;
 /** @constructor */
-function $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration(arg$1, arg$2) {
+function $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance(arg$1, arg$2) {
+  var label = $as_T(arg$1);
+  var value = $uD(arg$2);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "label": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "value": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": 0.0
+    }
+  });
+  this.label = label;
+  this.value = value
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance.prototype = new $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance();
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance.prototype.constructor = $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameBalance;
+/** @constructor */
+function $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration(arg$1, arg$2) {
   var label = $as_T(arg$1);
   var value = $uI(arg$2);
   $g.Object.call(this);
@@ -15651,12 +15801,12 @@ function $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration(arg$1, arg$2) 
   this.value = value
 }
 /** @constructor */
-function $h_Lcom_shocktrade_common_forms_NewGameForm$GameDuration() {
+function $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_common_forms_NewGameForm$GameDuration.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration.prototype = new $h_Lcom_shocktrade_common_forms_NewGameForm$GameDuration();
-$c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration.prototype.constructor = $c_Lcom_shocktrade_common_forms_NewGameForm$GameDuration;
+$h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype = new $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration();
+$c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype.constructor = $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration;
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_NewOrderForm() {
   var jsx$1 = (arguments.length | 0);
@@ -16053,8 +16203,8 @@ function $c_Lcom_shocktrade_common_models_contest_ChatMessage() {
     jsx$2 = ((jsx$2 + 1) | 0)
   };
   var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var sender = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var text = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var sender = arg$rest[1];
+  var text = arg$rest[2];
   var sentTime = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_contest_ChatMessage$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
@@ -17300,6 +17450,198 @@ var $d_ju_Formatter = new $TypeData().initClass({
   Ljava_io_Flushable: 1
 });
 $c_ju_Formatter.prototype.$classData = $d_ju_Formatter;
+/** @constructor */
+function $c_ju_Random$() {
+  $c_O.call(this)
+}
+$c_ju_Random$.prototype = new $h_O();
+$c_ju_Random$.prototype.constructor = $c_ju_Random$;
+/** @constructor */
+function $h_ju_Random$() {
+  /*<skip>*/
+}
+$h_ju_Random$.prototype = $c_ju_Random$.prototype;
+$c_ju_Random$.prototype.init___ = (function() {
+  return this
+});
+$c_ju_Random$.prototype.java$util$Random$$randomSeed__J = (function() {
+  var value = this.randomInt__p1__I();
+  var value$1 = this.randomInt__p1__I();
+  return new $c_sjsr_RuntimeLong().init___I__I(value$1, value)
+});
+$c_ju_Random$.prototype.randomInt__p1__I = (function() {
+  var a = (4.294967296E9 * $uD($g.Math.random()));
+  return $doubleToInt(((-2.147483648E9) + $uD($g.Math.floor(a))))
+});
+var $d_ju_Random$ = new $TypeData().initClass({
+  ju_Random$: 0
+}, false, "java.util.Random$", {
+  ju_Random$: 1,
+  O: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_ju_Random$.prototype.$classData = $d_ju_Random$;
+var $n_ju_Random$ = (void 0);
+function $m_ju_Random$() {
+  if ((!$n_ju_Random$)) {
+    $n_ju_Random$ = new $c_ju_Random$().init___()
+  };
+  return $n_ju_Random$
+}
+/** @constructor */
+function $c_ju_UUID() {
+  $c_O.call(this);
+  this.i1$1 = 0;
+  this.i2$1 = 0;
+  this.i3$1 = 0;
+  this.i4$1 = 0;
+  this.l1$1 = null;
+  this.l2$1 = null
+}
+$c_ju_UUID.prototype = new $h_O();
+$c_ju_UUID.prototype.constructor = $c_ju_UUID;
+/** @constructor */
+function $h_ju_UUID() {
+  /*<skip>*/
+}
+$h_ju_UUID.prototype = $c_ju_UUID.prototype;
+$c_ju_UUID.prototype.equals__O__Z = (function(that) {
+  if ($is_ju_UUID(that)) {
+    var x2 = $as_ju_UUID(that);
+    return ((((this.i1$1 === x2.i1$1) && (this.i2$1 === x2.i2$1)) && (this.i3$1 === x2.i3$1)) && (this.i4$1 === x2.i4$1))
+  } else {
+    return false
+  }
+});
+$c_ju_UUID.prototype.toString__T = (function() {
+  var i = this.i1$1;
+  var x = $uD((i >>> 0));
+  var jsx$10 = x.toString(16);
+  var s = $as_T(jsx$10);
+  var beginIndex = $uI(s.length);
+  var jsx$11 = $as_T("00000000".substring(beginIndex));
+  var i$1 = ((this.i2$1 >>> 16) | 0);
+  var x$1 = $uD((i$1 >>> 0));
+  var jsx$8 = x$1.toString(16);
+  var s$1 = $as_T(jsx$8);
+  var beginIndex$1 = $uI(s$1.length);
+  var jsx$9 = $as_T("0000".substring(beginIndex$1));
+  var i$2 = (65535 & this.i2$1);
+  var x$2 = $uD((i$2 >>> 0));
+  var jsx$6 = x$2.toString(16);
+  var s$2 = $as_T(jsx$6);
+  var beginIndex$2 = $uI(s$2.length);
+  var jsx$7 = $as_T("0000".substring(beginIndex$2));
+  var i$3 = ((this.i3$1 >>> 16) | 0);
+  var x$3 = $uD((i$3 >>> 0));
+  var jsx$4 = x$3.toString(16);
+  var s$3 = $as_T(jsx$4);
+  var beginIndex$3 = $uI(s$3.length);
+  var jsx$5 = $as_T("0000".substring(beginIndex$3));
+  var i$4 = (65535 & this.i3$1);
+  var x$4 = $uD((i$4 >>> 0));
+  var jsx$2 = x$4.toString(16);
+  var s$4 = $as_T(jsx$2);
+  var beginIndex$4 = $uI(s$4.length);
+  var jsx$3 = $as_T("0000".substring(beginIndex$4));
+  var i$5 = this.i4$1;
+  var x$5 = $uD((i$5 >>> 0));
+  var jsx$1 = x$5.toString(16);
+  var s$5 = $as_T(jsx$1);
+  var beginIndex$5 = $uI(s$5.length);
+  return ((((((((((("" + jsx$11) + s) + "-") + (("" + jsx$9) + s$1)) + "-") + (("" + jsx$7) + s$2)) + "-") + (("" + jsx$5) + s$3)) + "-") + (("" + jsx$3) + s$4)) + (("" + $as_T("00000000".substring(beginIndex$5))) + s$5))
+});
+$c_ju_UUID.prototype.init___I__I__I__I__jl_Long__jl_Long = (function(i1, i2, i3, i4, l1, l2) {
+  this.i1$1 = i1;
+  this.i2$1 = i2;
+  this.i3$1 = i3;
+  this.i4$1 = i4;
+  this.l1$1 = l1;
+  this.l2$1 = l2;
+  return this
+});
+$c_ju_UUID.prototype.hashCode__I = (function() {
+  return (((this.i1$1 ^ this.i2$1) ^ this.i3$1) ^ this.i4$1)
+});
+function $is_ju_UUID(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.ju_UUID)))
+}
+function $as_ju_UUID(obj) {
+  return (($is_ju_UUID(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.util.UUID"))
+}
+function $isArrayOf_ju_UUID(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.ju_UUID)))
+}
+function $asArrayOf_ju_UUID(obj, depth) {
+  return (($isArrayOf_ju_UUID(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.util.UUID;", depth))
+}
+var $d_ju_UUID = new $TypeData().initClass({
+  ju_UUID: 0
+}, false, "java.util.UUID", {
+  ju_UUID: 1,
+  O: 1,
+  Ljava_io_Serializable: 1,
+  jl_Comparable: 1
+});
+$c_ju_UUID.prototype.$classData = $d_ju_UUID;
+/** @constructor */
+function $c_ju_UUID$() {
+  $c_O.call(this);
+  this.TimeBased$1 = 0;
+  this.DCESecurity$1 = 0;
+  this.NameBased$1 = 0;
+  this.Random$1 = 0;
+  this.rng$1 = null;
+  this.bitmap$0$1 = false
+}
+$c_ju_UUID$.prototype = new $h_O();
+$c_ju_UUID$.prototype.constructor = $c_ju_UUID$;
+/** @constructor */
+function $h_ju_UUID$() {
+  /*<skip>*/
+}
+$h_ju_UUID$.prototype = $c_ju_UUID$.prototype;
+$c_ju_UUID$.prototype.init___ = (function() {
+  return this
+});
+$c_ju_UUID$.prototype.rng$lzycompute__p1__ju_Random = (function() {
+  if ((!this.bitmap$0$1)) {
+    this.rng$1 = new $c_ju_Random().init___();
+    this.bitmap$0$1 = true
+  };
+  return this.rng$1
+});
+$c_ju_UUID$.prototype.rng__p1__ju_Random = (function() {
+  return ((!this.bitmap$0$1) ? this.rng$lzycompute__p1__ju_Random() : this.rng$1)
+});
+$c_ju_UUID$.prototype.randomUUID__ju_UUID = (function() {
+  var this$1 = this.rng__p1__ju_Random();
+  var i1 = this$1.next__I__I(32);
+  var this$2 = this.rng__p1__ju_Random();
+  var i2 = (16384 | ((-61441) & this$2.next__I__I(32)));
+  var this$3 = this.rng__p1__ju_Random();
+  var i3 = ((-2147483648) | (1073741823 & this$3.next__I__I(32)));
+  var this$4 = this.rng__p1__ju_Random();
+  var i4 = this$4.next__I__I(32);
+  return new $c_ju_UUID().init___I__I__I__I__jl_Long__jl_Long(i1, i2, i3, i4, null, null)
+});
+var $d_ju_UUID$ = new $TypeData().initClass({
+  ju_UUID$: 0
+}, false, "java.util.UUID$", {
+  ju_UUID$: 1,
+  O: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_ju_UUID$.prototype.$classData = $d_ju_UUID$;
+var $n_ju_UUID$ = (void 0);
+function $m_ju_UUID$() {
+  if ((!$n_ju_UUID$)) {
+    $n_ju_UUID$ = new $c_ju_UUID$().init___()
+  };
+  return $n_ju_UUID$
+}
 /** @constructor */
 function $c_ju_concurrent_TimeUnit$() {
   $c_O.call(this);
@@ -24422,8 +24764,8 @@ $c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$4.prototype.init___ = (fu
 $c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$4.prototype.apply__O__O = (function(v1) {
   return this.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object(v1)
 });
-$c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$4.prototype.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object = (function(x$macro$18) {
-  var d1r3ctive = new $c_Lcom_shocktrade_client_directives_NewsDirective().init___Lorg_scalajs_angularjs_sanitize_Sce(x$macro$18);
+$c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$4.prototype.apply__Lorg_scalajs_angularjs_sanitize_Sce__sjs_js_Object = (function(x$macro$1) {
+  var d1r3ctive = new $c_Lcom_shocktrade_client_directives_NewsDirective().init___Lorg_scalajs_angularjs_sanitize_Sce(x$macro$1);
   var jsx$1 = d1r3ctive.scope$1;
   var s = d1r3ctive.template$1;
   return {
@@ -24464,8 +24806,8 @@ $c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$5.prototype.init___ = (fu
 $c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$5.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_client_QuoteCache__sjs_js_Object($as_Lcom_shocktrade_client_QuoteCache(v1))
 });
-$c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$5.prototype.apply__Lcom_shocktrade_client_QuoteCache__sjs_js_Object = (function(x$macro$19) {
-  var d1r3ctive = new $c_Lcom_shocktrade_client_directives_StockQuoteDirective().init___Lcom_shocktrade_client_QuoteCache(x$macro$19);
+$c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$main$5.prototype.apply__Lcom_shocktrade_client_QuoteCache__sjs_js_Object = (function(x$macro$2) {
+  var d1r3ctive = new $c_Lcom_shocktrade_client_directives_StockQuoteDirective().init___Lcom_shocktrade_client_QuoteCache(x$macro$2);
   var jsx$1 = d1r3ctive.scope$1;
   var s = d1r3ctive.template$1;
   return {
@@ -31029,7 +31371,7 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5.prototype.a
 $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5.prototype.apply__sjs_js_UndefOr__V = (function(aForm) {
   var f = new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1().init___Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5(this);
   if ((aForm !== (void 0))) {
-    f.apply__Lcom_shocktrade_common_forms_NewGameForm__V(aForm)
+    f.apply__Lcom_shocktrade_common_forms_ContestCreateForm__V(aForm)
   }
 });
 $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5.prototype.init___Lcom_shocktrade_client_dialogs_NewGameDialogController = (function($$outer) {
@@ -31064,7 +31406,7 @@ function $h_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$a
 }
 $h_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype = $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype;
 $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype.apply__O__O = (function(v1) {
-  this.apply__Lcom_shocktrade_common_forms_NewGameForm__V(v1)
+  this.apply__Lcom_shocktrade_common_forms_ContestCreateForm__V(v1)
 });
 $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype.init___Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5 = (function($$outer) {
   if (($$outer === null)) {
@@ -31074,8 +31416,8 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$ap
   };
   return this
 });
-$c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype.apply__Lcom_shocktrade_common_forms_NewGameForm__V = (function(form) {
-  if (this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$isValidForm__Lcom_shocktrade_common_forms_NewGameForm__Z(form)) {
+$c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$apply$1.prototype.apply__Lcom_shocktrade_common_forms_ContestCreateForm__V = (function(form) {
+  if (this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$isValidForm__Lcom_shocktrade_common_forms_ContestCreateForm__Z(form)) {
     var value = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f.userProfile$1._id;
     var x1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
     if ($is_s_Some(x1)) {
@@ -31091,12 +31433,12 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$ap
           arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1 = false
         })
       })(this), jsx$1.durationToInt__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$5.scala$concurrent$duration$DurationInt$$n$1, unit)));
-      var jsx$4 = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form;
-      var jsx$3 = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f.getUserName__sjs_js_UndefOr();
+      this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form.playerId = userId;
+      this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form.playerName = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f.getUserName__sjs_js_UndefOr();
+      var jsx$3 = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$$scope$f.form;
       var this$7 = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$mySession$f;
-      var value$1 = new $c_Lcom_shocktrade_common_models_PlayerRef(userId, jsx$3, this$7.facebookID$1);
-      jsx$4.player = value$1;
-      this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$newGameDialog$f.createNewGame__Lcom_shocktrade_common_forms_NewGameForm__s_concurrent_Future(form).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer$1, promise$1, form$1) {
+      jsx$3.facebookId = this$7.facebookID$1;
+      this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$contestService$f.createNewGame__Lcom_shocktrade_common_forms_ContestCreateForm__s_concurrent_Future(form).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer$1, promise$1, form$1) {
         return (function(x0$1$2) {
           var x0$1 = $as_s_util_Try(x0$1$2);
           if ($is_s_util_Success(x0$1)) {
@@ -31108,9 +31450,9 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialogController$$anonfun$5$$anonfun$ap
           } else if ($is_s_util_Failure(x0$1)) {
             var x3 = $as_s_util_Failure(x0$1);
             var e = x3.exception$2;
-            var jsx$5 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+            var jsx$4 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
             var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error creating New Game: ", " => form = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T(), $as_T($g.angular.toJson(form$1))]));
-            jsx$5.error(s);
+            jsx$4.error(s);
             arg$outer$1.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$$timeout$f.cancel(promise$1);
             arg$outer$1.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$NewGameDialogController$$processing$1 = false
           } else {

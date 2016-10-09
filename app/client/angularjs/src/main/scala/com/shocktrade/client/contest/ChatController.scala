@@ -107,8 +107,8 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
         if (messageText.trim.nonEmpty) {
           // build the message blob
           val message = new ChatMessage(
-            text = messageText,
-            sender = new PlayerRef(_id = playerId, name = mySession.getUserName, facebookID = facebookID)
+            sender = new PlayerRef(_id = playerId, name = mySession.getUserName, facebookID = facebookID),
+            text = messageText
           )
 
           // transmit the message

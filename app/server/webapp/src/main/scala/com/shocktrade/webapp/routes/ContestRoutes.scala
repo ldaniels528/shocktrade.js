@@ -1,13 +1,17 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.dao.contest.ContestDAO._
-import com.shocktrade.common.dao.contest.ContestData
 import com.shocktrade.common.dao.contest.ContestData._
 import com.shocktrade.common.dao.contest.PerksDAO._
+import com.shocktrade.common.dao.contest.PortfolioDAO._
+import com.shocktrade.common.dao.contest.ProfileDAO._
+import com.shocktrade.common.dao.contest.{ContestData, _}
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
+import com.shocktrade.common.models.contest.{CashAccount, PerformanceLike}
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.{NodeRequire, console}
+import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -21,8 +25,10 @@ import scala.util.{Failure, Success}
 object ContestRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
-    implicit val contestDAO = dbFuture.flatMap(_.getContestDAO)
-    implicit val perksDAO = dbFuture.flatMap(_.getPerksDAO)
+    val contestDAO = dbFuture.flatMap(_.getContestDAO)
+    val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
+    val profileDAO = dbFuture.flatMap(_.getProfileDAO)
+    val perksDAO = dbFuture.flatMap(_.getPerksDAO)
 
     // individual contests
     app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
@@ -61,19 +67,69 @@ object ContestRoutes {
       */
     def createContest(request: Request, response: Response, next: NextFunction) = {
       val form = request.bodyAs[ContestCreateForm]
+      console.log("form = %j", form)
       form.validate match {
         case messages if messages.isEmpty =>
           val contest = form.toContest
-          contestDAO.flatMap(_.create(contest).toFuture) onComplete {
-            case Success(result) if result.isOk => response.send(result.opsAs[ContestData]); next()
-            case Success(result) =>
-              console.log("result = %j", result)
-              response.badRequest("Contest could not be created")
-              next()
+          val outcome = for {
+            newContestOpt <- createNewContest(contest)
+            portfolioOpt <- createNewPortfolio(contest, newContestOpt)
+            deducted <- deductEntryFee(newContestOpt)
+          } yield (newContestOpt, portfolioOpt, deducted)
+
+          outcome onComplete {
+            case Success((Some(newContest), Some(portfolio), true)) => response.send(new ContestAndPortfolio(newContest, portfolio)); next()
+            case Success(_) => response.badRequest("Contest could not be created"); next()
             case Failure(e) => response.internalServerError(e); next()
           }
         case messages =>
           response.badRequest(new ValidationErrors(messages)); next()
+      }
+    }
+
+    def createNewContest(contest: ContestData) = {
+      for {
+        w0 <- contestDAO.flatMap(_.create(contest).toFuture)
+        newContest = w0 match {
+          case w if w.isOk => w.opsAs[ContestData].headOption
+          case w =>
+            console.warn("Failed contest outcome = %j", w)
+            die(s"Contest '${contest.name.orNull}' creation failed")
+        }
+      } yield newContest
+    }
+
+    def createNewPortfolio(contest: ContestData, newContestOpt: Option[ContestData]) = {
+      for {
+        w0 <- newContestOpt match {
+          case Some(newContest) => portfolioDAO.flatMap(_.create(newContest.toOwnersPortfolio).toFuture)
+          case None => die(s"Owner's portfolio for Contest '${contest.name.orNull}' creation failed")
+        }
+        portfolioOpt = w0 match {
+          case w if w.isOk => w.opsAs[PortfolioData].headOption
+          case w =>
+            console.warn("Failed portfolio outcome = %j", w)
+            die("Failed to create portfolio")
+        }
+      } yield portfolioOpt
+    }
+
+    def deductEntryFee(newContestOpt: Option[ContestData]) = {
+      val result = for {
+        newContest <- newContestOpt
+        userID <- newContest.creator.flatMap(_._id).toOption
+        entryFee <- newContest.startingBalance.toOption
+      } yield (userID, newContest, entryFee)
+
+      result match {
+        case Some((userID, newContest, entryFee)) =>
+          profileDAO.flatMap(_.deductFunds(userID, entryFee).toFuture) map {
+            case w if w.result.isOk => true
+            case w =>
+              console.warn("Error deducting entry fee; w => %j", w)
+              false
+          }
+        case None => Future.successful(false)
       }
     }
 
@@ -107,6 +163,30 @@ object ContestRoutes {
   }
 
   @ScalaJSDefined
+  class ContestAndPortfolio(val contest: ContestData, val portfolio: PortfolioData) extends js.Object
+
+  @ScalaJSDefined
   class ValidationErrors(val messages: js.Array[String]) extends js.Object
+
+  /**
+    * Contest Conversion
+    * @param contest the given [[ContestData contest]]
+    */
+  implicit class ContestConversion(val contest: ContestData) extends AnyVal {
+
+    @inline
+    def toOwnersPortfolio = {
+      new PortfolioData(
+        contestID = contest._id.map(_.toHexString()),
+        contestName = contest.name,
+        playerID = contest.creator.flatMap(_._id),
+        cashAccount = new CashAccount(cashFunds = contest.startingBalance, asOfDate = contest.startTime),
+        orders = emptyArray[OrderData],
+        closedOrders = emptyArray[OrderData],
+        positions = emptyArray[PositionData],
+        performance = emptyArray[PerformanceLike],
+        perks = emptyArray[String])
+    }
+  }
 
 }
