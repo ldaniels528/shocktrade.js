@@ -7,7 +7,7 @@ import com.shocktrade.common.dao.securities.SICDAO._
 import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, OrderQuote, ResearchQuote}
-import com.shocktrade.services.yahoo.YahooFinanceCSVHistoryService
+import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb._

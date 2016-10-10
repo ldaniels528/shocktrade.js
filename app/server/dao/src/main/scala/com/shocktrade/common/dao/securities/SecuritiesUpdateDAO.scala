@@ -1,11 +1,11 @@
 package com.shocktrade.common.dao
 package securities
 
-import com.shocktrade.services.BarChartProfileService.BarChartProfile
-import com.shocktrade.services.BloombergQuoteService.BloombergQuote
-import com.shocktrade.services.CikLookupService.CikLookupResponse
-import com.shocktrade.services.EodDataSecuritiesService.EodDataSecurity
-import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
+import com.shocktrade.server.services.BarChartProfileService.BarChartProfile
+import com.shocktrade.server.services.BloombergQuoteService.BloombergQuote
+import com.shocktrade.server.services.CikLookupService.CikLookupResponse
+import com.shocktrade.server.services.EodDataSecuritiesService.EodDataSecurity
+import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.mongodb._
 
 import scala.concurrent.ExecutionContext

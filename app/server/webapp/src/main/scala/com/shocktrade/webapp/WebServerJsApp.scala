@@ -1,6 +1,7 @@
 package com.shocktrade.webapp
 
-import com.shocktrade.serverside.LoggerFactory
+import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.util.StringHelper._
 import com.shocktrade.webapp.routes._
 import org.scalajs.nodejs._
@@ -8,9 +9,8 @@ import org.scalajs.nodejs.bodyparser._
 import org.scalajs.nodejs.express.fileupload.ExpressFileUpload
 import org.scalajs.nodejs.express.{Express, Request, Response}
 import org.scalajs.nodejs.expressws.{ExpressWS, WebSocket, WsRouterExtensions}
-import org.scalajs.nodejs.globals.{Process, process}
+import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.sjs.OptionHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -107,28 +107,6 @@ object WebServerJsApp extends js.JSApp {
     // start the listener
     app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
     ()
-  }
-
-  /**
-    * Process configuration extensions
-    * @param process the given [[Process process]]
-    */
-  implicit class ProcessConfigExtensions(val process: Process) extends AnyVal {
-
-    /**
-      * Attempts to returns the web application listen port
-      * @return the option of the web application listen port
-      */
-    @inline
-    def port = process.env.get("port") ?? process.env.get("PORT")
-
-    /**
-      * Attempts to returns the database connection URL
-      * @return the option of the database connection URL
-      */
-    @inline
-    def dbConnect = process.env.get("db_connection") ?? process.env.get("DB_CONNECTION")
-
   }
 
 }

@@ -1,9 +1,10 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.concurrent.Daemon._
+import com.shocktrade.server.common.ProcessHelper._
+import com.shocktrade.server.concurrent.Daemon._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.daycycle.routes.DaemonRoutes
-import com.shocktrade.serverside.{LoggerFactory, TradingClock}
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import org.scalajs.nodejs.express.Express
@@ -38,9 +39,9 @@ object DayCycleJsApp extends js.JSApp {
     // get the web application port
     val port = (process.env.get("port") ?? process.env.get("PORT")) getOrElse "1337"
 
-    // determine the database connection URL
-    val mongoConnectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
-    val kafkaConnectionString = process.env.get("kafka_connection") getOrElse "localhost:2181"
+    // determine the MongoDB and Zookeeper connection URLs
+    val mongoConnectionString = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
+    val zkConnectionString = process.zookeeperConnect getOrElse "localhost:2181"
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>
@@ -59,8 +60,8 @@ object DayCycleJsApp extends js.JSApp {
     implicit val dbFuture = mongo.MongoClient.connectFuture(mongoConnectionString)
 
     // setup kafka connection
-    logger.info("Connecting to '%s'...", kafkaConnectionString)
-    implicit val kafkaClient = kafka.Client(kafkaConnectionString)
+    logger.info("Connecting to '%s'...", zkConnectionString)
+    implicit val kafkaClient = kafka.Client(zkConnectionString)
     implicit val kafkaProducer = kafka.Producer(kafkaClient)
 
     // create the trading clock instance

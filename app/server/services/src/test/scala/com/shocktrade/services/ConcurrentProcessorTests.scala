@@ -2,9 +2,9 @@ package com.shocktrade.services
 
 import java.util.UUID
 
-import com.shocktrade.concurrent.{ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
-import com.shocktrade.serverside.LoggerFactory
-import com.shocktrade.serverside.LoggerFactory.Logger
+import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
+import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.server.common.LoggerFactory.Logger
 import org.scalajs.nodejs.console
 import utest._
 

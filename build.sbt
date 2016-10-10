@@ -111,9 +111,24 @@ lazy val angularjs = (project in file("./app/client/angularjs"))
       "com.github.ldaniels528" %%% "scalajs-social-facebook" % scalaJsNodeVersion
     ))
 
+lazy val server_common = (project in file("./app/server/common"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(moduleSettings: _*)
+  .settings(
+    name := "shocktrade-server-common",
+    organization := "com.shocktrade",
+    version := appVersion,
+    libraryDependencies ++= Seq(
+      "com.github.ldaniels528" %%% "scalajs-common" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-global" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-mongodb" % scalaJsNodeVersion
+    ))
+
 lazy val webapp = (project in file("./app/server/webapp"))
-  .aggregate(common, dao, services)
-  .dependsOn(common, dao, services)
+  .aggregate(common, server_common, dao, services)
+  .dependsOn(common, server_common, dao, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -131,8 +146,8 @@ lazy val webapp = (project in file("./app/server/webapp"))
     ))
 
 lazy val daycycle = (project in file("./app/server/daycycle"))
-  .aggregate(common, dao, services)
-  .dependsOn(common, dao, services)
+  .aggregate(common, server_common, dao, services)
+  .dependsOn(common, server_common, dao, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -150,8 +165,8 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
-  .aggregate(common, dao, services)
-  .dependsOn(common, dao, services)
+  .aggregate(common, server_common, dao, services)
+  .dependsOn(common, server_common, dao, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -168,8 +183,8 @@ lazy val qualification = (project in file("./app/server/qualification"))
     ))
 
 lazy val robots = (project in file("./app/server/robots"))
-  .aggregate(common, dao)
-  .dependsOn(common, dao)
+  .aggregate(common, server_common, dao)
+  .dependsOn(common, server_common, dao)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -202,8 +217,8 @@ lazy val dao = (project in file("./app/server/dao"))
     ))
 
 lazy val services = (project in file("./app/server/services"))
-  .aggregate(common)
-  .dependsOn(common)
+  .aggregate(common, server_common)
+  .dependsOn(common, server_common)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(

@@ -7,8 +7,8 @@ import com.shocktrade.common.dao.contest.PortfolioDAO._
 import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData}
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.contest.{PortfolioRanking, PositionLike, TotalInvestment}
-import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService
-import com.shocktrade.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
+import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
+import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.util.StringHelper._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}

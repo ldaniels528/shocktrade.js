@@ -1,7 +1,8 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.concurrent.Daemon._
-import com.shocktrade.serverside.{LoggerFactory, TradingClock}
+import com.shocktrade.server.concurrent.Daemon._
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.common.ProcessHelper._
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -27,7 +28,7 @@ object QualificationJsApp extends js.JSApp {
     logger.log("Starting the Qualification Server...")
 
     // determine the database connection URL
-    val connectionString = process.env.get("db_connection") getOrElse "mongodb://localhost:27017/shocktrade"
+    val connectionString = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
 
     // handle any uncaught exceptions
     process.onUncaughtException { err =>

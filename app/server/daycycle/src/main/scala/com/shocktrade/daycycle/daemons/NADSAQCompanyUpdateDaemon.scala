@@ -1,10 +1,10 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.concurrent.Daemon
-import com.shocktrade.serverside.{LoggerFactory, TradingClock}
-import com.shocktrade.services.NASDAQCompanyListService.NASDAQCompanyInfo
-import com.shocktrade.services.NASDAQCompanyListService
+import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.services.NASDAQCompanyListService
+import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._

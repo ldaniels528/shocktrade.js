@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.dao.NewsDAO._
-import com.shocktrade.services.RSSFeedParser
+import com.shocktrade.server.services.RSSFeedParser
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
