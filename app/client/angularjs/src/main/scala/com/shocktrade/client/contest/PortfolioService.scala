@@ -1,10 +1,9 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.common.models.contest._
-import com.shocktrade.client.contest.PortfolioService.MarginMarketValue
 import com.shocktrade.client.models.contest
 import com.shocktrade.client.models.contest.{Contest, Order, Portfolio}
+import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.models.contest._
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.{Service, angular}
 import org.scalajs.dom._
@@ -65,8 +64,12 @@ class PortfolioService($http: Http) extends Service {
   //			Participants
   /////////////////////////////////////////////////////////////////////////////
 
-  def getMarginMarketValue(contestId: String, playerId: String) = {
-    $http.get[MarginMarketValue](s"/api/contest/$contestId/margin/$playerId/marketValue")
+  def getCashAccountMarketValue(portfolioId: String) = {
+    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/cashAccount/marketValue")
+  }
+
+  def getMarginAccountMarketValue(portfolioId: String) = {
+    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/marginAccount/marketValue")
   }
 
   def getRankings(contestId: String) = {
@@ -139,25 +142,6 @@ class PortfolioService($http: Http) extends Service {
 
   def getTotalInvestment(playerID: String) = {
     $http.get[TotalInvestment](s"/api/portfolios/player/$playerID/totalInvestment")
-  }
-
-}
-
-/**
-  * Portfolio Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object PortfolioService {
-
-  /**
-    * Represents a Margin Market Value
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  @js.native
-  trait MarginMarketValue extends js.Object {
-    var _id: js.UndefOr[String] = js.native
-    var name: String = js.native
-    var marginMarketValue: Double = js.native
   }
 
 }

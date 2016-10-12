@@ -2,12 +2,12 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
 import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
+import org.scalajs.angularjs._
 
+import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -34,17 +34,16 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
     investmentMarketValue = investmentCost
 
     for {
-      contestID <- mySession.contest_?.flatMap(_._id.toOption)
-      userID <- mySession.userProfile._id.toOption
+      portfolioID <- mySession.portfolio_?.flatMap(_._id.toOption)
     } {
       // load the margin accounts market value
-      portfolioService.getMarginMarketValue(contestID, userID) onComplete {
-        case Success(contest) =>
-          investmentMarketValue = contest.marginMarketValue
+      portfolioService.getMarginAccountMarketValue(portfolioID) onComplete {
+        case Success(response) =>
+          investmentMarketValue = response.marketValue
         case Failure(e) =>
           toaster.error("Failed to retrieve the Margin Account's market value")
           attemptsLeft -= 1
-          if (attemptsLeft > 0) $timeout(() => $scope.initMarginAccount(), 5000)
+          if (attemptsLeft > 0) $timeout(() => $scope.initMarginAccount(), 5.seconds)
       }
     }
   }
@@ -53,13 +52,13 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.getAsOfDate = () => mySession.marginAccount_?.flatMap(a => a.asOfDate.toOption) getOrElse new js.Date()
+  $scope.getAsOfDate = () => mySession.marginAccount_?.flatMap(_.asOfDate.toOption) getOrElse new js.Date()
 
   $scope.getBuyingPower = () => cashFunds / initialMargin
 
   $scope.getCashFunds = () => cashFunds
 
-  $scope.getInterestPaid = () => mySession.marginAccount_?.flatMap(a => a.interestPaid.toOption) getOrElse 0.0d
+  $scope.getInterestPaid = () => mySession.marginAccount_?.flatMap(_.interestPaid.toOption) getOrElse 0.0d
 
   $scope.getInterestRate = () => interestRate
 
@@ -84,7 +83,7 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def cashFunds = mySession.marginAccount_?.orUndefined.flatMap(_.cashFunds) getOrElse 0.0d
+  private def cashFunds = mySession.marginAccount_?.flatMap(_.cashFunds.toOption) getOrElse 0.0d
 
   private def investmentCost = {
     val outcome = for {
@@ -114,19 +113,19 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 @js.native
 trait MarginAccountScope extends Scope {
   // functions
-  var initMarginAccount: js.Function0[Unit]
-  var getAsOfDate: js.Function0[js.Date]
-  var getBuyingPower: js.Function0[Double]
-  var getCashFunds: js.Function0[Double]
-  var getInterestPaid: js.Function0[Double]
-  var getInterestRate: js.Function0[Double]
-  var getInitialMargin: js.Function0[Double]
-  var getMaintenanceMargin: js.Function0[Double]
-  var getInvestmentCost: js.Function0[Double]
-  var getInvestmentMarketValue: js.Function0[Double]
-  var isAccountInGoodStanding: js.Function0[Boolean]
-  var getMarginAccountEquity: js.Function0[Double]
-  var getMaintenanceMarginAmount: js.Function0[Double]
-  var getMarginCallAmount: js.Function0[Double]
+  var initMarginAccount: js.Function0[Unit] = js.native
+  var getAsOfDate: js.Function0[js.Date] = js.native
+  var getBuyingPower: js.Function0[Double] = js.native
+  var getCashFunds: js.Function0[Double] = js.native
+  var getInterestPaid: js.Function0[Double] = js.native
+  var getInterestRate: js.Function0[Double] = js.native
+  var getInitialMargin: js.Function0[Double] = js.native
+  var getMaintenanceMargin: js.Function0[Double] = js.native
+  var getInvestmentCost: js.Function0[Double] = js.native
+  var getInvestmentMarketValue: js.Function0[Double] = js.native
+  var isAccountInGoodStanding: js.Function0[Boolean] = js.native
+  var getMarginAccountEquity: js.Function0[Double] = js.native
+  var getMaintenanceMarginAmount: js.Function0[Double] = js.native
+  var getMarginCallAmount: js.Function0[Double] = js.native
 
 }

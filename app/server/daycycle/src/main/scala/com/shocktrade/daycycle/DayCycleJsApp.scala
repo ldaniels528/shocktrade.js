@@ -1,10 +1,10 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.server.common.ProcessHelper._
-import com.shocktrade.server.concurrent.Daemon._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.daycycle.routes.DaemonRoutes
+import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.concurrent.Daemon._
 import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import org.scalajs.nodejs.express.Express
@@ -82,14 +82,14 @@ object DayCycleJsApp extends js.JSApp {
 
     // define the daemons
     val daemons = Seq(
-      DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), delay = 5.hours, frequency = 12.hours),
-      DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), delay = 5.hours, frequency = 12.hours),
-      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), delay = 4.hours, frequency = 12.hours),
-      DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), delay = 1.hours, frequency = 12.hours),
-      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), delay = 2.hours, frequency = 12.hours),
-      DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), delay = 3.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), delay = 0.seconds, frequency = 1.minutes),
-      DaemonRef("SecuritiesRefreshKafka", new SecuritiesRefreshKafkaDaemon(dbFuture), delay = 10.days, frequency = 3.days)
+      DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
+      DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
+      DaemonRef("CikUpdate", new CikUpdateDaemon(dbFuture), kafkaReqd = false, delay = 4.hours, frequency = 12.hours),
+      DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 1.hours, frequency = 12.hours),
+      DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), kafkaReqd = false, delay = 2.hours, frequency = 12.hours),
+      DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 3.hours, frequency = 12.hours),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes),
+      DaemonRef("SecuritiesRefreshKafka", new SecuritiesRefreshKafkaDaemon(dbFuture), kafkaReqd = true, delay = 10.days, frequency = 3.days)
     )
 
     // setup all other routes
@@ -98,11 +98,14 @@ object DayCycleJsApp extends js.JSApp {
     // start the listener
     app.listen(port, () => logger.log("Server now listening on port %s [%d msec]", port, System.currentTimeMillis() - startTime))
 
-    // wait for the Kafka producer to be ready
-    kafkaProducer.onReady(() => {
-      // schedule the daemons to run
-      schedule(tradingClock, daemons)
-    })
+    // separate the daemons by Kafka dependency
+    val (daemonsKafka, daemonsNonKafka) = daemons.partition(_.kafkaReqd)
+
+    // start the daemons without a Kafka dependency
+    schedule(tradingClock, daemonsNonKafka)
+
+    // wait for the Kafka producer to be ready, then schedule the Kafka-dependent daemons to run
+    kafkaProducer.onReady(() => schedule(tradingClock, daemonsKafka))
   }
 
 }

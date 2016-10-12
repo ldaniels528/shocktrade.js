@@ -7,7 +7,7 @@ import com.shocktrade.common.dao.contest.PortfolioDAO._
 import com.shocktrade.common.dao.contest.ProfileDAO._
 import com.shocktrade.common.dao.contest.{ContestData, _}
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
-import com.shocktrade.common.models.contest.{CashAccount, PerformanceLike}
+import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
@@ -172,7 +172,7 @@ object ContestRoutes {
     * Contest Conversion
     * @param contest the given [[ContestData contest]]
     */
-  implicit class ContestConversion(val contest: ContestData) extends AnyVal {
+  final implicit class ContestConversion(val contest: ContestData) extends AnyVal {
 
     @inline
     def toOwnersPortfolio = {
@@ -181,6 +181,7 @@ object ContestRoutes {
         contestName = contest.name,
         playerID = contest.creator.flatMap(_._id),
         cashAccount = new CashAccount(cashFunds = contest.startingBalance, asOfDate = contest.startTime),
+        marginAccount = new MarginAccount(cashFunds = 0.0, asOfDate = contest.startTime),
         orders = emptyArray[OrderData],
         closedOrders = emptyArray[OrderData],
         positions = emptyArray[PositionData],

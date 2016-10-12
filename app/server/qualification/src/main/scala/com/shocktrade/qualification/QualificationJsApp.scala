@@ -1,8 +1,8 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.server.concurrent.Daemon._
-import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.common.ProcessHelper._
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.concurrent.Daemon._
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.mongodb.MongoDB
@@ -49,7 +49,7 @@ object QualificationJsApp extends js.JSApp {
     // schedule the daemons to run
     schedule(tradingClock, Seq(
       //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), delay = 0.seconds, frequency = 30.minutes),
-      DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), delay = 0.seconds, frequency = 1.minutes))
+      DaemonRef("OrderQualification", new OrderQualificationEngine(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes))
     )
   }
 

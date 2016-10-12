@@ -2071,6 +2071,16 @@ function $s_sc_TraversableLike$class__stringPrefix__sc_TraversableLike__T($$this
   };
   return string
 }
+function $s_sc_TraversableLike$class__partition__sc_TraversableLike__F1__T2($$this, p) {
+  var l = $$this.newBuilder__scm_Builder();
+  var r = $$this.newBuilder__scm_Builder();
+  $$this.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, l$1, r$1, p$1) {
+    return (function(x$2) {
+      return ($uZ(p$1.apply__O__O(x$2)) ? l$1 : r$1).$$plus$eq__O__scm_Builder(x$2)
+    })
+  })($$this, l, r, p)));
+  return new $c_T2().init___O__O(l.result__O(), r.result__O())
+}
 function $s_sc_TraversableLike$class__last__sc_TraversableLike__O($$this) {
   var elem = $$this.head__O();
   var lst = new $c_sr_ObjectRef().init___O(elem);
@@ -13084,56 +13094,56 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer__Lorg_scalajs_n
   var jsx$74 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$177.scala$concurrent$duration$DurationInt$$n$1, unit);
   var this$179 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$1 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$73 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("BarChartProfileUpdate", jsx$75, jsx$74, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$179.scala$concurrent$duration$DurationInt$$n$1, unit$1));
+  var jsx$73 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("BarChartProfileUpdate", jsx$75, false, jsx$74, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$179.scala$concurrent$duration$DurationInt$$n$1, unit$1));
   var jsx$72 = new $c_Lcom_shocktrade_daycycle_daemons_BloombergUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$181 = new $c_s_concurrent_duration_package$DurationInt().init___I(5);
   var unit$2 = $m_ju_concurrent_TimeUnit$().HOURS$1;
   var jsx$71 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$181.scala$concurrent$duration$DurationInt$$n$1, unit$2);
   var this$183 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$3 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$70 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("BloombergUpdate", jsx$72, jsx$71, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$183.scala$concurrent$duration$DurationInt$$n$1, unit$3));
+  var jsx$70 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("BloombergUpdate", jsx$72, false, jsx$71, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$183.scala$concurrent$duration$DurationInt$$n$1, unit$3));
   var jsx$69 = new $c_Lcom_shocktrade_daycycle_daemons_CikUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$185 = new $c_s_concurrent_duration_package$DurationInt().init___I(4);
   var unit$4 = $m_ju_concurrent_TimeUnit$().HOURS$1;
   var jsx$68 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$185.scala$concurrent$duration$DurationInt$$n$1, unit$4);
   var this$187 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$5 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$67 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("CikUpdate", jsx$69, jsx$68, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$187.scala$concurrent$duration$DurationInt$$n$1, unit$5));
+  var jsx$67 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("CikUpdate", jsx$69, false, jsx$68, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$187.scala$concurrent$duration$DurationInt$$n$1, unit$5));
   var jsx$66 = new $c_Lcom_shocktrade_daycycle_daemons_EodDataCompanyUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$189 = new $c_s_concurrent_duration_package$DurationInt().init___I(1);
   var unit$6 = $m_ju_concurrent_TimeUnit$().HOURS$1;
   var jsx$65 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$189.scala$concurrent$duration$DurationInt$$n$1, unit$6);
   var this$191 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$7 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$64 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("EodDataCompanyUpdate", jsx$66, jsx$65, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$191.scala$concurrent$duration$DurationInt$$n$1, unit$7));
+  var jsx$64 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("EodDataCompanyUpdate", jsx$66, false, jsx$65, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$191.scala$concurrent$duration$DurationInt$$n$1, unit$7));
   var jsx$63 = new $c_Lcom_shocktrade_daycycle_daemons_KeyStatisticsUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$193 = new $c_s_concurrent_duration_package$DurationInt().init___I(2);
   var unit$8 = $m_ju_concurrent_TimeUnit$().HOURS$1;
   var jsx$62 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$193.scala$concurrent$duration$DurationInt$$n$1, unit$8);
   var this$195 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$9 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$61 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("KeyStatisticsUpdate", jsx$63, jsx$62, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$195.scala$concurrent$duration$DurationInt$$n$1, unit$9));
+  var jsx$61 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("KeyStatisticsUpdate", jsx$63, false, jsx$62, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$195.scala$concurrent$duration$DurationInt$$n$1, unit$9));
   var jsx$60 = new $c_Lcom_shocktrade_daycycle_daemons_NADSAQCompanyUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$197 = new $c_s_concurrent_duration_package$DurationInt().init___I(3);
   var unit$10 = $m_ju_concurrent_TimeUnit$().HOURS$1;
   var jsx$59 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$197.scala$concurrent$duration$DurationInt$$n$1, unit$10);
   var this$199 = new $c_s_concurrent_duration_package$DurationInt().init___I(12);
   var unit$11 = $m_ju_concurrent_TimeUnit$().HOURS$1;
-  var jsx$58 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("NADSAQCompanyUpdate", jsx$60, jsx$59, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$199.scala$concurrent$duration$DurationInt$$n$1, unit$11));
+  var jsx$58 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("NADSAQCompanyUpdate", jsx$60, false, jsx$59, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$199.scala$concurrent$duration$DurationInt$$n$1, unit$11));
   var jsx$57 = new $c_Lcom_shocktrade_daycycle_daemons_SecuritiesUpdateDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   var this$201 = new $c_s_concurrent_duration_package$DurationInt().init___I(0);
   var unit$12 = $m_ju_concurrent_TimeUnit$().SECONDS$1;
   var jsx$56 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$201.scala$concurrent$duration$DurationInt$$n$1, unit$12);
   var this$203 = new $c_s_concurrent_duration_package$DurationInt().init___I(1);
   var unit$13 = $m_ju_concurrent_TimeUnit$().MINUTES$1;
-  var jsx$55 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("SecuritiesUpdate", jsx$57, jsx$56, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$203.scala$concurrent$duration$DurationInt$$n$1, unit$13));
+  var jsx$55 = new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("SecuritiesUpdate", jsx$57, false, jsx$56, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$203.scala$concurrent$duration$DurationInt$$n$1, unit$13));
   var jsx$54 = new $c_Lcom_shocktrade_daycycle_daemons_SecuritiesRefreshKafkaDaemon().init___s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_kafkanode_Producer(promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, kafkaProducer);
   var this$205 = new $c_s_concurrent_duration_package$DurationInt().init___I(10);
   var unit$14 = $m_ju_concurrent_TimeUnit$().DAYS$1;
   var jsx$53 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$205.scala$concurrent$duration$DurationInt$$n$1, unit$14);
   var this$207 = new $c_s_concurrent_duration_package$DurationInt().init___I(3);
   var unit$15 = $m_ju_concurrent_TimeUnit$().DAYS$1;
-  var daemons = $as_sc_Seq(jsx$76.apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$73, jsx$70, jsx$67, jsx$64, jsx$61, jsx$58, jsx$55, new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("SecuritiesRefreshKafka", jsx$54, jsx$53, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$207.scala$concurrent$duration$DurationInt$$n$1, unit$15))])));
+  var daemons = $as_sc_Seq(jsx$76.apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$73, jsx$70, jsx$67, jsx$64, jsx$61, jsx$58, jsx$55, new $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef().init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration("SecuritiesRefreshKafka", jsx$54, true, jsx$53, $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$207.scala$concurrent$duration$DurationInt$$n$1, unit$15))])));
   $m_Lcom_shocktrade_daycycle_routes_DaemonRoutes$().init__Lorg_scalajs_nodejs_express_Application__sc_Seq__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(app, daemons, promise, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
   app.listen(port, (function(logger$1$1, startTime$1, port$1) {
     return (function() {
@@ -13188,11 +13198,21 @@ $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer__Lorg_scalajs_n
       jsx$82.apply(jsx$77, jsx$78)
     })
   })(logger, new $c_sjsr_RuntimeLong().init___I__I(lo, hi), port));
-  var callback = (function(tradingClock$1, daemons$1) {
+  var x1 = daemons.partition__F1__T2(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$1$2) {
+    var x$1$1 = $as_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef(x$1$2);
+    return x$1$1.kafkaReqd$1
+  })));
+  if ((x1 === null)) {
+    throw new $c_s_MatchError().init___O(x1)
+  };
+  var daemonsKafka = $as_sc_Seq(x1.$$und1__O());
+  var daemonsNonKafka = $as_sc_Seq(x1.$$und2__O());
+  $m_Lcom_shocktrade_server_concurrent_Daemon$().schedule__Lcom_shocktrade_server_common_TradingClock__sc_Seq__V(tradingClock, daemonsNonKafka);
+  var callback = (function(tradingClock$1, daemonsKafka$1) {
     return (function() {
-      $m_Lcom_shocktrade_server_concurrent_Daemon$().schedule__Lcom_shocktrade_server_common_TradingClock__sc_Seq__V(tradingClock$1, daemons$1)
+      $m_Lcom_shocktrade_server_concurrent_Daemon$().schedule__Lcom_shocktrade_server_common_TradingClock__sc_Seq__V(tradingClock$1, daemonsKafka$1)
     })
-  })(tradingClock, daemons);
+  })(tradingClock, daemonsKafka);
   kafkaProducer.on("ready", callback)
 });
 $c_Lcom_shocktrade_daycycle_DayCycleJsApp$.prototype.startServer = (function(arg$1) {
@@ -26790,6 +26810,7 @@ function $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef() {
   $c_O.call(this);
   this.name$1 = null;
   this.daemon$1 = null;
+  this.kafkaReqd$1 = false;
   this.delay$1 = null;
   this.frequency$1 = null;
   this.id$1 = null
@@ -26805,7 +26826,7 @@ $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.productPrefix__T
   return "DaemonRef"
 });
 $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.productArity__I = (function() {
-  return 4
+  return 5
 });
 $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
@@ -26819,7 +26840,7 @@ $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.equals__O__Z = (
     } else {
       var jsx$2 = false
     };
-    if (jsx$2) {
+    if ((jsx$2 && (this.kafkaReqd$1 === DaemonRef$1.kafkaReqd$1))) {
       var x$3 = this.delay$1;
       var x$4 = DaemonRef$1.delay$1;
       var jsx$1 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
@@ -26848,10 +26869,14 @@ $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.productElement__
       break
     }
     case 2: {
-      return this.delay$1;
+      return this.kafkaReqd$1;
       break
     }
     case 3: {
+      return this.delay$1;
+      break
+    }
+    case 4: {
       return this.frequency$1;
       break
     }
@@ -26863,17 +26888,23 @@ $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.productElement__
 $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
-$c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.init___T__Lcom_shocktrade_server_concurrent_Daemon__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration = (function(name, daemon, delay, frequency) {
+$c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.init___T__Lcom_shocktrade_server_concurrent_Daemon__Z__s_concurrent_duration_FiniteDuration__s_concurrent_duration_FiniteDuration = (function(name, daemon, kafkaReqd, delay, frequency) {
   this.name$1 = name;
   this.daemon$1 = daemon;
+  this.kafkaReqd$1 = kafkaReqd;
   this.delay$1 = delay;
   this.frequency$1 = frequency;
   this.id$1 = $m_ju_UUID$().randomUUID__ju_UUID().toString__T();
   return this
 });
 $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__I(this, (-889275714))
+  var acc = (-889275714);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.name$1));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.daemon$1));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, (this.kafkaReqd$1 ? 1231 : 1237));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.delay$1));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.frequency$1));
+  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 5)
 });
 $c_Lcom_shocktrade_server_concurrent_Daemon$DaemonRef.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
@@ -35957,6 +35988,15 @@ $c_sci_Stream$.prototype.init___ = (function() {
   $c_scg_GenTraversableFactory.prototype.init___.call(this);
   return this
 });
+$c_sci_Stream$.prototype.filteredTail__sci_Stream__F1__sci_Stream$Cons = (function(stream, p) {
+  var hd = stream.head__O();
+  var tl = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this, stream$1, p$1) {
+    return (function() {
+      return $as_sci_Stream(stream$1.tail__O()).filter__F1__sci_Stream(p$1)
+    })
+  })(this, stream, p));
+  return new $c_sci_Stream$Cons().init___O__F0(hd, tl)
+});
 $c_sci_Stream$.prototype.from__I__I__sci_Stream = (function(start, step) {
   var tl = new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this, start$1, step$1) {
     return (function() {
@@ -36867,6 +36907,9 @@ $c_sc_AbstractTraversable.prototype.size__I = (function() {
 });
 $c_sc_AbstractTraversable.prototype.$$plus$plus__sc_GenTraversableOnce__scg_CanBuildFrom__O = (function(that, bf) {
   return $s_sc_TraversableLike$class__$$plus$plus__sc_TraversableLike__sc_GenTraversableOnce__scg_CanBuildFrom__O(this, that, bf)
+});
+$c_sc_AbstractTraversable.prototype.partition__F1__T2 = (function(p) {
+  return $s_sc_TraversableLike$class__partition__sc_TraversableLike__F1__T2(this, p)
 });
 $c_sc_AbstractTraversable.prototype.last__O = (function() {
   return $s_sc_TraversableLike$class__last__sc_TraversableLike__O(this)
@@ -42689,6 +42732,18 @@ $c_sci_Stream.prototype.foldLeft__O__F2__O = (function(z, op) {
     }
   }
 });
+$c_sci_Stream.prototype.filter__F1__sci_Stream = (function(p) {
+  var rest = this;
+  while (((!rest.isEmpty__Z()) && (!$uZ(p.apply__O__O(rest.head__O()))))) {
+    rest = $as_sci_Stream(rest.tail__O())
+  };
+  var this$1 = rest;
+  if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$1)) {
+    return $m_sci_Stream$().filteredTail__sci_Stream__F1__sci_Stream$Cons(rest, p)
+  } else {
+    return $m_sci_Stream$Empty$()
+  }
+});
 $c_sci_Stream.prototype.reverse__O = (function() {
   return this.reverse__sci_Stream()
 });
@@ -42729,6 +42784,28 @@ $c_sci_Stream.prototype.zipWithIndex__scg_CanBuildFrom__O = (function(bf) {
 });
 $c_sci_Stream.prototype.seq__sc_Seq = (function() {
   return this
+});
+$c_sci_Stream.prototype.partition__F1__T2 = (function(p) {
+  var jsx$1 = this.filter__F1__sci_Stream(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, p$1) {
+    return (function(x$1$2) {
+      return $uZ(p$1.apply__O__O(x$1$2))
+    })
+  })(this, p)));
+  $m_sci_Stream$();
+  var b = new $c_sci_Stream$StreamBuilder().init___();
+  var _$this = this;
+  _foreach: while (true) {
+    if ((!_$this.isEmpty__Z())) {
+      var arg1 = _$this.head__O();
+      if (($uZ(p.apply__O__O(arg1)) !== true)) {
+        b.$$plus$eq__O__scm_LazyBuilder(arg1)
+      };
+      _$this = $as_sci_Stream(_$this.tail__O());
+      continue _foreach
+    };
+    break
+  };
+  return new $c_T2().init___O__O(jsx$1, b.result__sci_Stream())
 });
 $c_sci_Stream.prototype.take__I__O = (function(n) {
   return this.take__I__sci_Stream(n)

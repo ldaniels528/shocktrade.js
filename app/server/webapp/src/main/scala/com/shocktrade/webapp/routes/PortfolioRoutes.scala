@@ -4,9 +4,11 @@ import com.shocktrade.common.dao._
 import com.shocktrade.common.dao.contest.ContestDAO._
 import com.shocktrade.common.dao.contest.PerksDAO._
 import com.shocktrade.common.dao.contest.PortfolioDAO._
-import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData}
+import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData, PositionData}
+import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
-import com.shocktrade.common.models.contest.{PortfolioRanking, PositionLike, TotalInvestment}
+import com.shocktrade.common.models.contest.{MarketValueResponse, PortfolioRanking, PositionLike, TotalInvestment}
+import com.shocktrade.common.models.quote.PricingQuote
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.util.StringHelper._
@@ -14,6 +16,7 @@ import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{NodeRequire, console}
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -34,11 +37,14 @@ object PortfolioRoutes {
     val contestDAO = dbFuture.flatMap(_.getContestDAO)
     val perkDAO = dbFuture.flatMap(_.getPerksDAO)
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
+    val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
     val yfCsvQuoteSvc = new YahooFinanceCSVQuotesService()
     val cvsParams = yfCsvQuoteSvc.getParams("symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume")
 
     // individual objects
     app.get("/api/portfolio/contest/:contestID/player/:playerID", (request: Request, response: Response, next: NextFunction) => portfolioByPlayer(request, response, next))
+    app.get("/api/portfolio/:portfolioID/cashAccount/marketValue", (request: Request, response: Response, next: NextFunction) => cashAccountMarketValue(request, response, next))
+    app.get("/api/portfolio/:portfolioID/marginAccount/marketValue", (request: Request, response: Response, next: NextFunction) => marginAccountMarketValue(request, response, next))
     app.delete("/api/portfolio/:portfolioID/order/:orderID", (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
     app.post("/api/portfolio/:portfolioID/order", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
     app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => perksByID(request, response, next))
@@ -69,6 +75,14 @@ object PortfolioRoutes {
       }
     }
 
+    def cashAccountMarketValue(request: Request, response: Response, next: NextFunction) = {
+      val portfolioID = request.params("portfolioID")
+      getMarketValue(portfolioID, _.isCashAccount) onComplete {
+        case Success(marketValue) => response.send(new MarketValueResponse(marketValue)); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
     def createOrder(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       val form = request.bodyAs[NewOrderForm]
@@ -94,6 +108,23 @@ object PortfolioRoutes {
         case Success(symbols) => response.send(symbols); next()
         case Failure(e) => response.internalServerError(e); next()
       }
+    }
+
+    def marginAccountMarketValue(request: Request, response: Response, next: NextFunction) = {
+      val portfolioID = request.params("portfolioID")
+      getMarketValue(portfolioID, _.isMarginAccount) onComplete {
+        case Success(marketValue) => response.send(new MarketValueResponse(marketValue)); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
+    def getMarketValue(portfolioID: String, accountTypeFilter: PositionData => Boolean) = {
+      for {
+        positionsOpt <- portfolioDAO.flatMap(_.findPositions(portfolioID))
+        positions = positionsOpt.orDie(s"Portfolio # $portfolioID not found").filter(accountTypeFilter)
+        symbols = positions.flatMap(_.symbol.toOption)
+        quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
+      } yield quotes.flatMap(_.lastTrade.toOption).sum
     }
 
     def perksByID(request: Request, response: Response, next: NextFunction) = {

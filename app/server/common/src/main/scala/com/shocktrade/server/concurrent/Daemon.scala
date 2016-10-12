@@ -78,7 +78,7 @@ object Daemon {
     * @param delay     the initial delay before the daemon runs on it's regular interval
     * @param frequency the interval with which the daemon shall run
     */
-  case class DaemonRef(name: String, daemon: Daemon, delay: FiniteDuration, frequency: FiniteDuration) {
+  case class DaemonRef(name: String, daemon: Daemon, kafkaReqd: Boolean, delay: FiniteDuration, frequency: FiniteDuration) {
     val id = UUID.randomUUID().toString
   }
 

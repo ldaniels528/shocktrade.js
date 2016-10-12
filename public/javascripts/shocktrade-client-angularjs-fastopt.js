@@ -10059,15 +10059,15 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktra
   return ((maintenanceAmount > 0) ? maintenanceAmount : 0.0)
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D = (function() {
-  var opt = this.com$shocktrade$client$contest$MarginAccountController$$mySession$f.marginAccount$und$qmark__s_Option();
-  if (opt.isEmpty__Z()) {
-    var value = (void 0)
+  var this$1 = this.com$shocktrade$client$contest$MarginAccountController$$mySession$f.marginAccount$und$qmark__s_Option();
+  if (this$1.isEmpty__Z()) {
+    var this$5 = $m_s_None$()
   } else {
-    var arg1 = opt.get__O();
-    var value = arg1
+    var arg1 = this$1.get__O();
+    var value = arg1.cashFunds;
+    var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
   };
-  var value$1 = ((value === (void 0)) ? (void 0) : value.cashFunds);
-  return $uD(((value$1 === (void 0)) ? 0.0 : value$1))
+  return $uD((this$5.isEmpty__Z() ? 0.0 : this$5.get__O()))
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D = (function() {
   var myInvestmentCost = this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D();
@@ -10178,6 +10178,9 @@ function $h_Lcom_shocktrade_client_contest_PortfolioService() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_contest_PortfolioService.prototype = $c_Lcom_shocktrade_client_contest_PortfolioService.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getMarginAccountMarketValue__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId) {
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/marginAccount/marketValue"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])))
+});
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
   this.$$http$1 = $$http;
   return this
@@ -10203,9 +10206,6 @@ $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getExposureChartDat
 });
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.cancelOrder__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId, orderId) {
   return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/order/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId, orderId])))
-});
-$c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getMarginMarketValue__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(contestId, playerId) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/contest/", "/margin/", "/marketValue"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestId, playerId])))
 });
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.createOrder__T__Lcom_shocktrade_common_forms_NewOrderForm__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId, order) {
   return this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/order"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])), order)
@@ -29199,14 +29199,8 @@ $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$ap
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2.prototype.apply__T__V = (function(contestID) {
-  var value = this.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$mySession$f.userProfile$1._id;
-  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  var f = new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3().init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2__T(this, contestID);
-  if ((!this$4.isEmpty__Z())) {
-    var v1 = this$4.get__O();
-    f.apply__T__V($as_T(v1))
-  }
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2.prototype.apply__T__V = (function(portfolioID) {
+  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$portfolioService$f.getMarginAccountMarketValue__T__Lorg_scalajs_angularjs_http_HttpResponse(portfolioID)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3().init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1 = (function($$outer) {
   if (($$outer === null)) {
@@ -29230,8 +29224,7 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$ap
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3() {
   $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.contestID$1$2 = null
+  this.$$outer$2 = null
 }
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.constructor = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3;
@@ -29241,19 +29234,43 @@ function $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$a
 }
 $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype;
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.apply__O__O = (function(v1) {
-  this.apply__T__V($as_T(v1))
+  return this.apply__s_util_Try__O($as_s_util_Try(v1))
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.apply__T__V = (function(userID) {
-  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$portfolioService$f.getMarginMarketValue__T__T__Lorg_scalajs_angularjs_http_HttpResponse(this.contestID$1$2, userID)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4().init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2__T = (function($$outer, contestID$1) {
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.contestID$1$2 = contestID$1;
   return this
+});
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.apply__s_util_Try__O = (function(x0$1) {
+  if ($is_s_util_Success(x0$1)) {
+    var x2 = $as_s_util_Success(x0$1);
+    var response = x2.value$2;
+    this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1 = $uD(response.marketValue);
+    return (void 0)
+  } else if ($is_s_util_Failure(x0$1)) {
+    var toaster = this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$toaster$f;
+    var s = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
+    toaster.pop(s, "Failed to retrieve the Margin Account's market value", null);
+    this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1 = (((-1) + this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1) | 0);
+    if ((this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1 > 0)) {
+      var jsx$2 = this.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$$timeout$f;
+      var jsx$1 = $m_Lorg_scalajs_angularjs_package$();
+      var this$6 = new $c_s_concurrent_duration_package$DurationInt().init___I(5);
+      var unit = $m_ju_concurrent_TimeUnit$().SECONDS$1;
+      return jsx$2((function(arg$outer) {
+        return (function() {
+          (0, arg$outer.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$$scope$f.initMarginAccount)()
+        })
+      })(this), jsx$1.durationToInt__s_concurrent_duration_FiniteDuration__I($m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$6.scala$concurrent$duration$DurationInt$$n$1, unit)))
+    } else {
+      return (void 0)
+    }
+  } else {
+    throw new $c_s_MatchError().init___O(x0$1)
+  }
 });
 var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3 = new $TypeData().initClass({
   Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3: 0
@@ -29266,60 +29283,6 @@ var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfu
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3.prototype.$classData = $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3;
-/** @constructor */
-function $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype.constructor = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4;
-/** @constructor */
-function $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype;
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype.apply__O__O = (function(v1) {
-  return this.apply__s_util_Try__O($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype.apply__s_util_Try__O = (function(x0$1) {
-  if ($is_s_util_Success(x0$1)) {
-    var x2 = $as_s_util_Success(x0$1);
-    var contest = x2.value$2;
-    this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1 = $uD(contest.marginMarketValue);
-    return (void 0)
-  } else if ($is_s_util_Failure(x0$1)) {
-    var toaster = this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$toaster$f;
-    var s = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-    toaster.pop(s, "Failed to retrieve the Margin Account's market value", null);
-    this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1 = (((-1) + this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1) | 0);
-    return ((this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$attemptsLeft$1 > 0) ? (0, this.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$$timeout$f)((function(arg$outer) {
-      return (function() {
-        (0, arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$$scope$f.initMarginAccount)()
-      })
-    })(this), 5000) : (void 0))
-  } else {
-    throw new $c_s_MatchError().init___O(x0$1)
-  }
-});
-var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4: 0
-}, false, "com.shocktrade.client.contest.MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4", {
-  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1$$anonfun$apply$mcV$sp$2$$anonfun$apply$3$$anonfun$apply$4;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$14() {
   $c_sr_AbstractFunction0.call(this);
@@ -29452,7 +29415,7 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15.prototype.
     var jsx$4 = b.result__O()
   };
   var jsx$2 = $as_sci_List(jsx$4);
-  var jsx$1 = new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8().init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15(this);
+  var jsx$1 = new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7().init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15(this);
   var this$28 = $m_sci_List$();
   return $as_sci_List(jsx$2.map__F1__scg_CanBuildFrom__O(jsx$1, this$28.ReusableCBFInstance$2))
 });
@@ -29468,22 +29431,22 @@ var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15 = new 
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15.prototype.$classData = $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8() {
+function $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7() {
   $c_sr_AbstractFunction1.call(this)
 }
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype.constructor = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8;
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8() {
+function $h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype;
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype;
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
   return this.apply__T2__D($as_T2(v1))
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype.apply__T2__D = (function(x$5) {
-  if ((x$5 !== null)) {
-    var marginPositions = x$5.$$und2__O();
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype.apply__T2__D = (function(x$7) {
+  if ((x$7 !== null)) {
+    var marginPositions = x$7.$$und2__O();
     var array = [];
     $uI(marginPositions.length);
     var i = 0;
@@ -29532,23 +29495,23 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$a
     };
     return $uD(jsx$1)
   } else {
-    throw new $c_s_MatchError().init___O(x$5)
+    throw new $c_s_MatchError().init___O(x$7)
   }
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15 = (function($$outer) {
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype.init___Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15 = (function($$outer) {
   return this
 });
-var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8: 0
-}, false, "com.shocktrade.client.contest.MarginAccountController$$anonfun$15$$anonfun$apply$8", {
-  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8: 1,
+var $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7: 0
+}, false, "com.shocktrade.client.contest.MarginAccountController$$anonfun$15$$anonfun$apply$7", {
+  Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8.prototype.$classData = $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$8;
+$c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$15$$anonfun$apply$7;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_MyGamesController$$anonfun$2$$anonfun$apply$mcV$sp$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -43479,7 +43442,7 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1.prototype.i
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$1.prototype.apply$mcV$sp__V = (function() {
   this.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1 = this.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D();
-  var this$1 = this.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$mySession$f.contest$und$qmark$1;
+  var this$1 = this.$$outer$3.com$shocktrade$client$contest$MarginAccountController$$mySession$f.portfolio$und$qmark$1;
   if (this$1.isEmpty__Z()) {
     var this$5 = $m_s_None$()
   } else {
