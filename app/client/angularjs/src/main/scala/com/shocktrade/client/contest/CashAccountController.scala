@@ -31,7 +31,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
 
   $scope.getTotalSellOrders = () => computeTotalOrdersByType(orderType = "SELL")
 
-  $scope.getFundsAvailable = () => mySession.cashAccount_?.orUndefined.flatMap(_.cashFunds) getOrElse 0d
+  $scope.getFundsAvailable = () => mySession.cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0d
 
   $scope.getTotalInvestment = () => {
     val outcome = for {

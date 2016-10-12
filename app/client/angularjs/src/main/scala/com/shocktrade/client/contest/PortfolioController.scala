@@ -1,5 +1,6 @@
 package com.shocktrade.client.contest
 
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioController.PortfolioTab
@@ -97,10 +98,14 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   $scope.isOrderSelected = () => $scope.getActiveOrders().nonEmpty && $scope.selectedOrder.nonEmpty
 
   $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String], anAccountType: js.UndefOr[String]) => {
-    newOrderDialog.popup(new NewOrderParams(
+    val promise = newOrderDialog.popup(new NewOrderParams(
       symbol = aSymbol,
       accountType = anAccountType
     ))
+    promise.onSuccess { case portfolio =>
+      mySession.updatePortfolio(portfolio)
+    }
+    promise
   }
 
   $scope.selectOrder = (order: js.UndefOr[Order]) => $scope.selectedOrder = order

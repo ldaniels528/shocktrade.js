@@ -6,23 +6,25 @@ import com.shocktrade.common.dao.contest.PerksDAO._
 import com.shocktrade.common.dao.contest.PortfolioDAO._
 import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData, PositionData}
 import com.shocktrade.common.dao.securities.SecuritiesDAO._
-import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
+import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.contest.{MarketValueResponse, PortfolioRanking, PositionLike, TotalInvestment}
 import com.shocktrade.common.models.quote.PricingQuote
+import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.util.StringHelper._
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, console}
+import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.OptionHelper._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Portfolio Routes
@@ -43,14 +45,14 @@ object PortfolioRoutes {
 
     // individual objects
     app.get("/api/portfolio/contest/:contestID/player/:playerID", (request: Request, response: Response, next: NextFunction) => portfolioByPlayer(request, response, next))
-    app.get("/api/portfolio/:portfolioID/cashAccount/marketValue", (request: Request, response: Response, next: NextFunction) => cashAccountMarketValue(request, response, next))
-    app.get("/api/portfolio/:portfolioID/marginAccount/marketValue", (request: Request, response: Response, next: NextFunction) => marginAccountMarketValue(request, response, next))
+    app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
     app.delete("/api/portfolio/:portfolioID/order/:orderID", (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
     app.post("/api/portfolio/:portfolioID/order", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
     app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => perksByID(request, response, next))
     app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
     app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => positionsByID(request, response, next))
-    app.get("/api/portfolio/:playerID/positions/symbols", (request: Request, response: Response, next: NextFunction) => heldSecurities(request, response, next))
+    app.get("/api/portfolio/:playerID/heldSecurities", (request: Request, response: Response, next: NextFunction) => heldSecurities(request, response, next))
+    app.post("/api/portfolio/:portfolioID/transferFunds", (request: Request, response: Response, next: NextFunction) => transferFunds(request, response, next))
 
     // collections
     app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => portfoliosByContest(request, response, next))
@@ -62,6 +64,9 @@ object PortfolioRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+      * Cancels an order by portfolio and order IDs
+      */
     def cancelOrder(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       val orderID = request.params("orderID")
@@ -75,18 +80,46 @@ object PortfolioRoutes {
       }
     }
 
-    def cashAccountMarketValue(request: Request, response: Response, next: NextFunction) = {
+    /**
+      * Computes the market value of an account by account type and portfolio ID
+      */
+    def computeMarketValue(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
-      getMarketValue(portfolioID, _.isCashAccount) onComplete {
+      val accountFilter: PositionData => Boolean = request.query.get("accountType") match {
+        case Some("cash") => _.isCashAccount
+        case Some("margin") => _.isMarginAccount
+        case Some("all") => _ => true
+        case Some(accountType) => die(s"Invalid account type '$accountType'")
+        case None => die("Missing account type")
+      }
+
+      val outcome = for {
+        positionsOpt <- portfolioDAO.flatMap(_.findPositions(portfolioID))
+        posData = for {
+          position <- positionsOpt.orDie(s"Portfolio # $portfolioID not found").filter(accountFilter)
+          symbol <- position.symbol.toList
+          pricePaid <- position.pricePaid.toList
+          quantity <- position.quantity.toList
+        } yield PricingData(symbol, quantity, pricePaid)
+        quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](posData.map(_.symbol), fields = PricingQuote.Fields))
+      } yield {
+        val mapping = Map(posData.map(p => p.symbol -> p): _*)
+        quotes flatMap (q => mapping.get(q.symbol) map (p => p.quantity * q.lastTrade.getOrElse(p.pricePaid))) sum
+      }
+
+      outcome onComplete {
         case Success(marketValue) => response.send(new MarketValueResponse(marketValue)); next()
+        case Failure(e: IllegalStateException) => response.badRequest(e.getMessage); next()
         case Failure(e) => response.internalServerError(e); next()
       }
     }
 
+    /**
+      * Creates a new order within a portfolio by portfolio ID
+      */
     def createOrder(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       val form = request.bodyAs[NewOrderForm]
-
       form.validate match {
         case messages if messages.nonEmpty => response.badRequest(messages); next()
         case _ =>
@@ -102,6 +135,9 @@ object PortfolioRoutes {
       }
     }
 
+    /**
+      * Returns the symbols for securities currently held in all active portfolios for a given player by player ID
+      */
     def heldSecurities(request: Request, response: Response, next: NextFunction) = {
       val playerID = request.params("playerID")
       portfolioDAO.flatMap(_.findHeldSecurities(playerID)) onComplete {
@@ -110,30 +146,16 @@ object PortfolioRoutes {
       }
     }
 
-    def marginAccountMarketValue(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
-      getMarketValue(portfolioID, _.isMarginAccount) onComplete {
-        case Success(marketValue) => response.send(new MarketValueResponse(marketValue)); next()
-        case Failure(e) => response.internalServerError(e); next()
-      }
-    }
-
-    def getMarketValue(portfolioID: String, accountTypeFilter: PositionData => Boolean) = {
-      for {
-        positionsOpt <- portfolioDAO.flatMap(_.findPositions(portfolioID))
-        positions = positionsOpt.orDie(s"Portfolio # $portfolioID not found").filter(accountTypeFilter)
-        symbols = positions.flatMap(_.symbol.toOption)
-        quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
-      } yield quotes.flatMap(_.lastTrade.toOption).sum
-    }
-
+    /**
+      * Retrieves the purchased perks by portfolio ID
+      */
     def perksByID(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       val outcome = for {
         portfolio <- portfolioDAO.flatMap(_.findPerks(portfolioID))
         perksResponse = portfolio.map { p =>
           new PerksResponse(
-            fundsAvailable = p.cashAccount.flatMap(_.cashFunds),
+            fundsAvailable = p.cashAccount.flatMap(_.funds),
             perkCodes = p.perks getOrElse emptyArray)
         }
       } yield perksResponse
@@ -145,6 +167,9 @@ object PortfolioRoutes {
       }
     }
 
+    /**
+      * Purchases perks via an array of perk codes and a portfolio ID
+      */
     def purchasePerks(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       val purchasePerkCodes = request.bodyAs[js.Array[String]]
@@ -173,6 +198,9 @@ object PortfolioRoutes {
       }
     }
 
+    /**
+      * Retrieves all positions (cash or margin accounts) by portfolio ID
+      */
     def positionsByID(request: Request, response: Response, next: NextFunction) = {
       val portfolioID = request.params("portfolioID")
       portfolioDAO.flatMap(_.findPositions(portfolioID)) onComplete {
@@ -235,9 +263,9 @@ object PortfolioRoutes {
           val totalInvestment = computeInvestment(positions, mapping)
 
           val startingBalance = contest.flatMap(_.startingBalance.toOption).orUndefined
-          val cashFunds = portfolio.cashAccount.flatMap(_.cashFunds)
-          val totalEquity = cashFunds.map(_ + totalInvestment)
-          val gainLoss_% = for {bal <- startingBalance; equity <- totalEquity} yield 100 * ((equity - bal) / bal)
+          val funds = portfolio.cashAccount.flatMap(_.funds)
+          val totalEquity = funds.map(_ + totalInvestment)
+          val gainLoss_% = for (bal <- startingBalance; equity <- totalEquity) yield 100.0 * ((equity - bal) / bal)
 
           new PortfolioRanking(
             _id = portfolio.playerID,
@@ -250,7 +278,7 @@ object PortfolioRoutes {
 
         // sort the rankings and add the position (e.g. "1st")
         sortedRankings = {
-          val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0d))
+          val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0.0))
           myRankings.zipWithIndex foreach { case (ranking, index) =>
             ranking.rank = (index + 1) nth
           }
@@ -276,8 +304,34 @@ object PortfolioRoutes {
       }
     }
 
+    /**
+      * Transfers funds between accounts; from cash to margin or from margin to cash
+      */
+    def transferFunds(request: Request, response: Response, next: NextFunction) = {
+      val portfolioID = request.params("portfolioID")
+      val form = request.bodyAs[FundsTransferRequest]
+      val outcome = form.extract match {
+        case Some(("cash", amount)) => portfolioDAO.flatMap(_.transferCashFunds(portfolioID, amount = amount))
+        case Some(("margin", amount)) => portfolioDAO.flatMap(_.transferMarginFunds(portfolioID, amount = amount))
+        case Some((accountType, _)) => die(s"Invalid account type '$accountType'")
+        case None => die("Missing account type")
+      }
+      outcome onComplete {
+        case Success(result) if result.isOk => response.send(result.value); next()
+        case Success(result) => response.notFound(portfolioID); next()
+        case Failure(e: IllegalStateException) => response.badRequest(e.getMessage); next()
+        case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
   }
 
+  /**
+    * Computes the total investment amount for a specific player
+    * @param positions the given collection of positions
+    * @param mapping   the symbol to quotes mapping
+    * @return the player's total investment
+    */
   private def computeInvestment(positions: Seq[PositionLike], mapping: Map[String, YFCSVQuote]) = {
     positions flatMap { p =>
       (for {
@@ -292,11 +346,20 @@ object PortfolioRoutes {
   }
 
   /**
+    * Represents pricing data
+    * @param symbol    the given securities symbol
+    * @param quantity  the quantity owned
+    * @param pricePaid the price paid per share
+    */
+  case class PricingData(symbol: String, quantity: Double, pricePaid: Double)
+
+  /**
     * New Order Form Extensions
     * @param form the given [[NewOrderForm form]]
     */
   implicit class NewOrderFormExtensions(val form: NewOrderForm) extends AnyVal {
 
+    @inline
     def toOrder = {
       new OrderData(
         _id = js.undefined,
@@ -307,8 +370,8 @@ object PortfolioRoutes {
         priceType = form.priceType,
         price = if (form.isLimitOrder) form.limitPrice else js.undefined,
         quantity = form.quantity,
-        creationTime = new js.Date(),
-        expirationTime = js.undefined, // TODO need to interpret order term
+        creationTime = new js.Date() - 1.day, // TODO remove after testing
+        expirationTime = form.orderTerm.map(s => new js.Date() + Try(s.toInt).getOrElse(3).days),
         processedTime = js.undefined,
         statusMessage = js.undefined)
     }

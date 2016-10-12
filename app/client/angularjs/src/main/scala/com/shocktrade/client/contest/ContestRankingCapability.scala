@@ -3,7 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.QuoteCache
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.common.models.contest._
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,8 +46,8 @@ trait ContestRankingCapability {
 
         computeInvestment(positions) map { totalInvestment =>
           val startingBalance = contest.startingBalance
-          val cashFunds = portfolio.cashAccount.flatMap(_.cashFunds)
-          val totalEquity = cashFunds.map(_ + totalInvestment)
+          val funds = portfolio.cashAccount.flatMap(_.funds)
+          val totalEquity = funds.map(_ + totalInvestment)
           val gainLoss_% = for {bal <- startingBalance; equity <- totalEquity} yield 100 * ((equity - bal) / bal)
 
           new PortfolioRanking(

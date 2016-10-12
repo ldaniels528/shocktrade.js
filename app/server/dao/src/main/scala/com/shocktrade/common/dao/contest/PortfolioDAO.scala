@@ -37,19 +37,25 @@ object PortfolioDAO {
         order = portfolio.orders.toOption.flatMap(_.find(_._id.contains(orderID))) orDie s"Order # $orderID not found"
         result <- dao.findOneAndUpdate(
           filter = doc("_id" $eq portfolioID.$oid),
-          update = doc("orders" $pull ("_id" -> orderID), "orderHistory" $addToSet order)
-        )
+          update = doc("orders" $pull ("_id" -> orderID), "orderHistory" $addToSet order),
+          options = new FindAndUpdateOptions(returnOriginal = false))
       } yield result
     }
 
     @inline
     def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.findOneAndUpdate(filter = doc("_id" $eq portfolioID.$oid), update = "orders" $addToSet order)
+      dao.findOneAndUpdate(
+        filter = doc("_id" $eq portfolioID.$oid),
+        update = "orders" $addToSet order,
+        options = new FindAndUpdateOptions(returnOriginal = false))
     }
 
     @inline
     def createOrders(portfolioID: String, orders: Seq[OrderData])(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.findOneAndUpdate(filter = doc("_id" $eq portfolioID.$oid), update = "orders" $addToSet $each(js.Array(orders: _*)))
+      dao.findOneAndUpdate(
+        filter = doc("_id" $eq portfolioID.$oid),
+        update = "orders" $addToSet $each(js.Array(orders: _*)),
+        options = new FindAndUpdateOptions(returnOriginal = false))
     }
 
     @inline
@@ -64,7 +70,7 @@ object PortfolioDAO {
 
     @inline
     def findHeldSecurities(playerID: String)(implicit ec: ExecutionContext) = {
-      dao.find("playerID" $eq playerID, projection = Seq("positions").toProjection).toArrayFuture[PortfolioData] map { portfolios =>
+      dao.find(doc("playerID" $eq playerID, "active" $eq true), projection = Seq("positions").toProjection).toArrayFuture[PortfolioData] map { portfolios =>
         for {
           portfolio <- portfolios.toList
           position <- portfolio.positions.toList.flatMap(_.toList)
@@ -96,11 +102,9 @@ object PortfolioDAO {
     @inline
     def purchasePerks(portfolioID: String, perkCodes: js.Array[String], perksCost: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
       dao.findOneAndUpdate(
-        filter = doc("_id" $eq portfolioID.$oid, "cashAccount.cashFunds" $gte perksCost, "perks" $nin perkCodes),
-        update = doc(
-          "cashAccount.cashFunds" $inc -perksCost,
-          "perks" $addToSet $each(perkCodes)
-        ))
+        filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte perksCost, "perks" $nin perkCodes),
+        update = doc("cashAccount.funds" $inc -perksCost, "perks" $addToSet $each(perkCodes)),
+        options = new FindAndUpdateOptions(returnOriginal = false))
     }
 
     @inline
@@ -113,6 +117,22 @@ object PortfolioDAO {
           totalCost <- position.totalCost.toOption.toSeq
         } yield totalCost
       } yield results.sum
+    }
+
+    @inline
+    def transferCashFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.findOneAndUpdate(
+        filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte amount),
+        update = $inc("cashAccount.funds" -> -amount, "marginAccount.funds" -> amount),
+        options = new FindAndUpdateOptions(returnOriginal = false))
+    }
+
+    @inline
+    def transferMarginFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.findOneAndUpdate(
+        filter = doc("_id" $eq portfolioID.$oid, "marginAccount.funds" $gte amount),
+        update = $inc("cashAccount.funds" -> amount, "marginAccount.funds" -> -amount),
+        options = new FindAndUpdateOptions(returnOriginal = false))
     }
 
   }

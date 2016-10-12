@@ -111,7 +111,7 @@ object ChartRoutes {
         }
 
         // group the data into tuples
-        tupleData = ("Cash" -> portfolio.cashAccount.flatMap(_.cashFunds).getOrElse(0d)) ::
+        tupleData = ("Cash" -> portfolio.cashAccount.flatMap(_.funds).getOrElse(0d)) ::
           rawData.groupBy(fx).foldLeft[List[(String, Double)]](Nil) {
             case (list, (label, somePositions)) => (label, somePositions.map(_.value).sum) :: list
           }

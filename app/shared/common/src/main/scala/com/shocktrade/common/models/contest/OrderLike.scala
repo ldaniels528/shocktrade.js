@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.contest
 
-import com.shocktrade.Commissions
+import com.shocktrade.common.Commissions
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 

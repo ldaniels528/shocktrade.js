@@ -54,9 +54,9 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 
   $scope.getAsOfDate = () => mySession.marginAccount_?.flatMap(_.asOfDate.toOption) getOrElse new js.Date()
 
-  $scope.getBuyingPower = () => cashFunds / initialMargin
+  $scope.getBuyingPower = () => funds / initialMargin
 
-  $scope.getCashFunds = () => cashFunds
+  $scope.getCashFunds = () => funds
 
   $scope.getInterestPaid = () => mySession.marginAccount_?.flatMap(_.interestPaid.toOption) getOrElse 0.0d
 
@@ -70,20 +70,20 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 
   $scope.getInvestmentMarketValue = () => investmentMarketValue
 
-  $scope.isAccountInGoodStanding = () => cashFunds >= maintenanceMarginAmount
+  $scope.isAccountInGoodStanding = () => funds >= maintenanceMarginAmount
 
   $scope.getMarginAccountEquity = () => marginAccountEquity
 
   $scope.getMaintenanceMarginAmount = () => maintenanceMarginAmount
 
   // TODO round to nearest penny
-  $scope.getMarginCallAmount = () => maintenanceMarginAmount - cashFunds
+  $scope.getMarginCallAmount = () => maintenanceMarginAmount - funds
 
   /////////////////////////////////////////////////////////////////////
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def cashFunds = mySession.marginAccount_?.flatMap(_.cashFunds.toOption) getOrElse 0.0d
+  private def funds = mySession.marginAccount_?.flatMap(_.funds.toOption) getOrElse 0.0d
 
   private def investmentCost = {
     val outcome = for {
@@ -96,7 +96,7 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 
   private def marginAccountEquity = {
     val myInvestmentCost = investmentCost
-    cashFunds + (Math.max(investmentMarketValue, myInvestmentCost) - myInvestmentCost)
+    funds + (Math.max(investmentMarketValue, myInvestmentCost) - myInvestmentCost)
   }
 
   private def maintenanceMarginAmount = {

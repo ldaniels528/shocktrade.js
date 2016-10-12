@@ -1,25 +1,28 @@
 package com.shocktrade.client.dialogs
 
-import org.scalajs.angularjs.http.Http
+import com.shocktrade.client.MySessionService
+import com.shocktrade.client.contest.PortfolioService
+import com.shocktrade.client.dialogs.TransferFundsDialogController._
+import com.shocktrade.client.models.contest.Portfolio
+import com.shocktrade.common.forms.FundsTransferRequest
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.angularjs.{Controller, Scope, Service, injected}
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import com.shocktrade.client.MySessionService
-import com.shocktrade.client.dialogs.TransferFundsDialogController.{TransferFundsResult, _}
-import com.shocktrade.client.models.contest.Contest
 
 import scala.concurrent.Future
+import scala.language.implicitConversions
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
   * Transfer Funds Dialog Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
+class TransferFundsDialog($modal: Modal) extends Service {
 
   /**
     * Transfer Funds pop-up dialog
@@ -32,10 +35,6 @@ class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
     modalInstance.result
   }
 
-  def transferFunds(contestId: String, playerId: String, form: TransferFundsForm): Future[Contest] = {
-    $http.post[Contest](s"/api/contest/$contestId/margin/$playerId", form)
-  }
-
 }
 
 /**
@@ -43,6 +42,7 @@ class TransferFundsDialog($http: Http, $modal: Modal) extends Service {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: ModalInstance[TransferFundsResult], toaster: Toaster,
+                                    @injected("PortfolioService") portfolioService: PortfolioService,
                                     @injected("MySessionService") mySession: MySessionService,
                                     @injected("TransferFundsDialog") dialog: TransferFundsDialog)
   extends Controller {
@@ -50,9 +50,10 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
   private val messages = emptyArray[String]
 
   $scope.actions = TransferActions
-  $scope.form = TransferFundsForm(
-    cashFunds = mySession.cashAccount_?.orUndefined.flatMap(_.cashFunds),
-    marginFunds = mySession.marginAccount_?.orUndefined.flatMap(_.cashFunds)
+
+  $scope.form = new TransferFundsForm(
+    funds = mySession.cashAccount_?.orUndefined.flatMap(_.funds),
+    marginFunds = mySession.marginAccount_?.orUndefined.flatMap(_.funds)
   )
 
   /////////////////////////////////////////////////////////////////////
@@ -72,10 +73,9 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
   $scope.accept = (form: TransferFundsForm) => {
     if (isValidated(form)) {
       (for {
-        contestId <- mySession.contest_?.flatMap(_._id.toOption)
-        userId <- mySession.userProfile._id.toOption
+        portfolioId <- mySession.portfolio_?.flatMap(_._id.toOption)
       } yield {
-        dialog.transferFunds(contestId, userId, form) onComplete {
+        portfolioService.transferFunds(portfolioId, form) onComplete {
           case Success(response) => $modalInstance.close(response)
           case Failure(e) => messages.push("Failed to deposit funds")
         }
@@ -113,8 +113,8 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
     (for {
       action <- form.action.toOption if action.source == CASH
       amount <- form.amount.toOption
-      cashFunds <- form.cashFunds.toOption
-    } yield amount > cashFunds).contains(true)
+      funds <- form.funds.toOption
+    } yield amount > funds).contains(true)
   }
 
   private def isInsufficientMarginFunds(form: TransferFundsForm) = {
@@ -133,14 +133,40 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
   */
 object TransferFundsDialogController {
 
-  type TransferFundsResult = Contest
+  type TransferFundsResult = Portfolio
 
-  private val CASH = "CASH"
-  private val MARGIN = "MARGIN"
+  private val CASH = "cash"
+  private val MARGIN = "margin"
 
   private val TransferActions = js.Array(
-    TransferFundsAction(label = "Cash to Margin Account", source = CASH),
-    TransferFundsAction(label = "Margin Account to Cash", source = MARGIN))
+    new TransferFundsAction(label = "Cash to Margin Account", source = CASH),
+    new TransferFundsAction(label = "Margin Account to Cash", source = MARGIN))
+
+  /**
+    * Implicit conversion from TransferFundsForm to FundsTransferForm
+    * @param form the given [[TransferFundsForm form]]
+    * @return the converted [[FundsTransferRequest form]]
+    */
+  implicit def transferFormConversion(form: TransferFundsForm): FundsTransferRequest = {
+    new FundsTransferRequest(accountType = form.action.flatMap(_.source), amount = form.amount)
+  }
+
+  /**
+    * Transfer Funds Form
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  @ScalaJSDefined
+  class TransferFundsForm(var action: js.UndefOr[TransferFundsAction] = js.undefined,
+                          var amount: js.UndefOr[Double] = js.undefined,
+                          var funds: js.UndefOr[Double] = js.undefined,
+                          var marginFunds: js.UndefOr[Double] = js.undefined) extends js.Object
+
+  /**
+    * Transfer Funds Action
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
+  @ScalaJSDefined
+  class TransferFundsAction(val label: String, val source: String) extends js.Object
 
 }
 
@@ -151,71 +177,14 @@ object TransferFundsDialogController {
 @js.native
 trait TransferFundsScope extends Scope {
   // variables
-  var actions: js.Array[TransferFundsAction]
-  var form: TransferFundsForm
+  var actions: js.Array[TransferFundsAction] = js.native
+  var form: TransferFundsForm = js.native
 
   // functions
-  var init: js.Function0[Unit]
-  var getMessages: js.Function0[js.Array[String]]
-  var hasMessages: js.Function0[Boolean]
-  var cancel: js.Function0[Unit]
-  var accept: js.Function1[TransferFundsForm, Unit]
+  var init: js.Function0[Unit] = js.native
+  var getMessages: js.Function0[js.Array[String]] = js.native
+  var hasMessages: js.Function0[Boolean] = js.native
+  var cancel: js.Function0[Unit] = js.native
+  var accept: js.Function1[TransferFundsForm, Unit] = js.native
 
 }
-
-/**
-  * Transfer Funds Form
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-@js.native
-trait TransferFundsForm extends js.Object {
-  var action: js.UndefOr[TransferFundsAction]
-  var amount: js.UndefOr[Double]
-  var cashFunds: js.UndefOr[Double]
-  var marginFunds: js.UndefOr[Double]
-}
-
-/**
-  * Transfer Funds Form Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object TransferFundsForm {
-
-  def apply(action: js.UndefOr[TransferFundsAction] = js.undefined,
-            amount: js.UndefOr[Double] = js.undefined,
-            cashFunds: js.UndefOr[Double] = js.undefined,
-            marginFunds: js.UndefOr[Double] = js.undefined) = {
-    val form = New[TransferFundsForm]
-    form.action = action
-    form.amount = amount
-    form.cashFunds = cashFunds
-    form.marginFunds = marginFunds
-    form
-  }
-}
-
-/**
-  * Transfer Funds Action
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-@js.native
-trait TransferFundsAction extends js.Object {
-  var label: String
-  var source: String
-}
-
-/**
-  * Transfer Funds Action Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object TransferFundsAction {
-
-  def apply(label: String, source: String) = {
-    val action = New[TransferFundsAction]
-    action.label = label
-    action.source = source
-    action
-  }
-}
-
-

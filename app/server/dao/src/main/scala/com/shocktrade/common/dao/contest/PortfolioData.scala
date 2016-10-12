@@ -17,6 +17,7 @@ class PortfolioData(var _id: js.UndefOr[ObjectID] = js.undefined,
 
                     // common fields
                     var playerID: js.UndefOr[String] = js.undefined,
+                    var active: js.UndefOr[Boolean] = true,
                     var cashAccount: js.UndefOr[CashAccount] = js.undefined,
                     var marginAccount: js.UndefOr[MarginAccount] = js.undefined,
                     var orders: js.UndefOr[js.Array[OrderData]] = js.undefined,

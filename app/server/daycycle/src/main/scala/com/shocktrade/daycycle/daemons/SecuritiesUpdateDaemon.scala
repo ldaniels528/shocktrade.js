@@ -10,7 +10,7 @@ import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutco
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.util.ExchangeHelper
+import com.shocktrade.common.util.ExchangeHelper
 import org.scalajs.nodejs.NodeRequire
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._

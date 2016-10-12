@@ -12,6 +12,8 @@ trait PortfolioLike extends js.Object {
 
   def playerID: js.UndefOr[String]
 
+  def active: js.UndefOr[Boolean]
+
   def perks: js.UndefOr[js.Array[String]]
 
   def cashAccount: js.UndefOr[CashAccount]

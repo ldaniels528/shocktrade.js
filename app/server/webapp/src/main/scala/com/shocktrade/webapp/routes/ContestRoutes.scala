@@ -8,7 +8,7 @@ import com.shocktrade.common.dao.contest.ProfileDAO._
 import com.shocktrade.common.dao.contest.{ContestData, _}
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
 import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
-import org.scalajs.nodejs._
+import org.scalajs.nodejs.{console, _}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.util.ScalaJsHelper._
@@ -180,8 +180,8 @@ object ContestRoutes {
         contestID = contest._id.map(_.toHexString()),
         contestName = contest.name,
         playerID = contest.creator.flatMap(_._id),
-        cashAccount = new CashAccount(cashFunds = contest.startingBalance, asOfDate = contest.startTime),
-        marginAccount = new MarginAccount(cashFunds = 0.0, asOfDate = contest.startTime),
+        cashAccount = new CashAccount(funds = contest.startingBalance, asOfDate = contest.startTime),
+        marginAccount = new MarginAccount(funds = 0.0, asOfDate = contest.startTime, initialMargin = 0.50, interestPaid = 0.00),
         orders = emptyArray[OrderData],
         closedOrders = emptyArray[OrderData],
         positions = emptyArray[PositionData],

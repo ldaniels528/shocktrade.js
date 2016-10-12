@@ -1,4 +1,4 @@
-package com.shocktrade.util
+package com.shocktrade.common.util
 
 import scala.language.reflectiveCalls
 

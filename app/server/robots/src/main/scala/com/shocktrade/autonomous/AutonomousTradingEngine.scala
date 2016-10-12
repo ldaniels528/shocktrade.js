@@ -116,7 +116,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
           contestID = contestId,
           contestName = contest.name,
           playerID = playerID,
-          cashAccount = new CashAccount(cashFunds = contest.startingBalance, asOfDate = new js.Date()),
+          cashAccount = new CashAccount(funds = contest.startingBalance, asOfDate = new js.Date()),
           orders = emptyArray[OrderData],
           closedOrders = emptyArray[OrderData],
           performance = emptyArray[PerformanceLike],
@@ -189,10 +189,10 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
       robot.log("Processing BUY orders...")
 
       (for {
-        cashFunds <- env.portfolio.cashAccount.flatMap(_.cashFunds)
-        availableCash = cashFunds - env.outstandingOrdersCost
+        funds <- env.portfolio.cashAccount.flatMap(_.funds)
+        availableCash = funds - env.outstandingOrdersCost
         preferredSpend <- buyingFlow.preferredSpendPerSecurity
-        numOfSecuritiesToBuy = (cashFunds / preferredSpend).toInt
+        numOfSecuritiesToBuy = (funds / preferredSpend).toInt
         securitiesToBuy = securities.take(numOfSecuritiesToBuy)
         buyOrders = if (availableCash > preferredSpend) {
           robot.log("Cash available: $%d (%d max orders)", availableCash, numOfSecuritiesToBuy)

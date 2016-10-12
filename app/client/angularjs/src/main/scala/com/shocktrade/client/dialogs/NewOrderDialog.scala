@@ -1,11 +1,11 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.Commissions
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope, MySessionService}
+import com.shocktrade.common.Commissions
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
 import org.scalajs.angularjs.AngularJsHelper._

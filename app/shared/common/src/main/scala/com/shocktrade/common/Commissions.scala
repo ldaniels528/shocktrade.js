@@ -1,4 +1,4 @@
-package com.shocktrade
+package com.shocktrade.common
 
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.OrderLike

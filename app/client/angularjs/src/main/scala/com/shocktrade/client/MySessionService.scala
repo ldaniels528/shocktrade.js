@@ -214,18 +214,18 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   def getCompleteFundsAvailable = {
     for {
       cashAccount <- cashAccount_?
-      cashFunds = cashAccount.cashFunds getOrElse 0.00d
+      cashFunds = cashAccount.funds getOrElse 0.00d
       marginAccount <- marginAccount_?
-      marginFunds = marginAccount.cashFunds getOrElse 0.00d
+      marginFunds = marginAccount.funds getOrElse 0.00d
     } yield cashFunds + marginFunds
   }
 
-  def getFundsAvailable = cashAccount_?.orUndefined.flatMap(_.cashFunds) getOrElse 0.00d
+  def getFundsAvailable = cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0.00d
 
   def deductFundsAvailable(amount: Double) = {
     portfolio_? foreach { portfolio =>
-      console.log(s"Deducting funds: $amount from ${portfolio.cashAccount.flatMap(_.cashFunds)}")
-      portfolio.cashAccount.foreach(acct => acct.cashFunds = acct.cashFunds.map(_ - amount))
+      console.log(s"Deducting funds: $amount from ${portfolio.cashAccount.flatMap(_.funds)}")
+      portfolio.cashAccount.foreach(acct => acct.funds = acct.funds.map(_ - amount))
       // TODO rethink this
     }
     ()

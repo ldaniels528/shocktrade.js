@@ -61,9 +61,9 @@ object PortfolioUpdateDAO {
       dao.updateOne(
         filter = doc(
           "_id" $eq wo.portfolioID,
-          "cashAccount.cashFunds" $gte wo.totalCost),
+          "cashAccount.funds" $gte wo.totalCost),
         update = doc(
-          "cashAccount.cashFunds" $inc -wo.totalCost,
+          "cashAccount.funds" $inc -wo.totalCost,
           "cashAccount.asOfDate" $set wo.claim.asOfTime,
           "orders" $pull doc("_id" -> wo.order._id),
           $addToSet(
@@ -138,7 +138,7 @@ object PortfolioUpdateDAO {
                 "positions" $elemMatch("symbol" $eq wo.claim.symbol, "quantity" $gte wo.claim.quantity)),
               update = doc(
                 $inc(
-                  "cashAccount.cashFunds" -> +wo.totalCost,
+                  "cashAccount.funds" -> +wo.totalCost,
                   "positions.$.quantity" -> -wo.claim.quantity,
                   "positions.$.netValue" -> -wo.claim.quantity * wo.claim.price
                 ),

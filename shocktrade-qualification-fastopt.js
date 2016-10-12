@@ -2665,26 +2665,26 @@ function $s_scm_ResizableArray$class__$$init$__scm_ResizableArray__V($$this) {
   $$this.size0$6 = 0
 }
 /** @constructor */
-function $c_Lcom_shocktrade_Commissions$() {
+function $c_Lcom_shocktrade_common_Commissions$() {
   $c_O.call(this);
   this.LIMIT$undCOST$1 = 0.0;
   this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
   this.MARKET$undCOST$1 = 0.0
 }
-$c_Lcom_shocktrade_Commissions$.prototype = new $h_O();
-$c_Lcom_shocktrade_Commissions$.prototype.constructor = $c_Lcom_shocktrade_Commissions$;
+$c_Lcom_shocktrade_common_Commissions$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_Commissions$.prototype.constructor = $c_Lcom_shocktrade_common_Commissions$;
 /** @constructor */
-function $h_Lcom_shocktrade_Commissions$() {
+function $h_Lcom_shocktrade_common_Commissions$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_Commissions$.prototype = $c_Lcom_shocktrade_Commissions$.prototype;
-$c_Lcom_shocktrade_Commissions$.prototype.init___ = (function() {
+$h_Lcom_shocktrade_common_Commissions$.prototype = $c_Lcom_shocktrade_common_Commissions$.prototype;
+$c_Lcom_shocktrade_common_Commissions$.prototype.init___ = (function() {
   this.LIMIT$undCOST$1 = 14.99;
   this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
   this.MARKET$undCOST$1 = 7.99;
   return this
 });
-$c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
+$c_Lcom_shocktrade_common_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
   var valueA = order.priceType;
   if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
     return this.LIMIT$undCOST$1
@@ -2697,19 +2697,19 @@ $c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_c
     }
   }
 });
-var $d_Lcom_shocktrade_Commissions$ = new $TypeData().initClass({
-  Lcom_shocktrade_Commissions$: 0
-}, false, "com.shocktrade.Commissions$", {
-  Lcom_shocktrade_Commissions$: 1,
+var $d_Lcom_shocktrade_common_Commissions$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_Commissions$: 0
+}, false, "com.shocktrade.common.Commissions$", {
+  Lcom_shocktrade_common_Commissions$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_Commissions$.prototype.$classData = $d_Lcom_shocktrade_Commissions$;
-var $n_Lcom_shocktrade_Commissions$ = (void 0);
-function $m_Lcom_shocktrade_Commissions$() {
-  if ((!$n_Lcom_shocktrade_Commissions$)) {
-    $n_Lcom_shocktrade_Commissions$ = new $c_Lcom_shocktrade_Commissions$().init___()
+$c_Lcom_shocktrade_common_Commissions$.prototype.$classData = $d_Lcom_shocktrade_common_Commissions$;
+var $n_Lcom_shocktrade_common_Commissions$ = (void 0);
+function $m_Lcom_shocktrade_common_Commissions$() {
+  if ((!$n_Lcom_shocktrade_common_Commissions$)) {
+    $n_Lcom_shocktrade_common_Commissions$ = new $c_Lcom_shocktrade_common_Commissions$().init___()
   };
-  return $n_Lcom_shocktrade_Commissions$
+  return $n_Lcom_shocktrade_common_Commissions$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_dao_contest_OrderData$() {
@@ -14005,12 +14005,12 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioUpdateDAO$PortfolioDAOExtensions$
         var value$5 = (void 0)
       } else {
         var quantity = $uD(value$3);
-        var value$4 = ((price * quantity) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order));
+        var value$4 = ((price * quantity) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order));
         var value$5 = value$4
       }
     };
     var y$4 = $uD(((value$5 === (void 0)) ? 0.0 : value$5));
-    var jsx$9 = new $c_T2().init___O__O("cashAccount.cashFunds", y$4);
+    var jsx$9 = new $c_T2().init___O__O("cashAccount.funds", y$4);
     var y$5 = (-$uD(this.wo$2$f.claim.quantity));
     var jsx$8 = new $c_T2().init___O__O("positions.$.quantity", y$5);
     var y$6 = ((-$uD(this.wo$2$f.claim.quantity)) * $uD(this.wo$2$f.claim.price));
@@ -14033,7 +14033,7 @@ $c_Lcom_shocktrade_common_dao_contest_PortfolioUpdateDAO$PortfolioDAOExtensions$
       var jsx$3 = (void 0)
     } else {
       var x$1 = $uD(value$10);
-      var value$11 = (x$1 + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$2.order));
+      var value$11 = (x$1 + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$2.order));
       var jsx$3 = value$11
     };
     var y$9 = new $c_Lcom_shocktrade_common_dao_contest_PerformanceData(value$7, jsx$5, jsx$4, value$8, value$9, jsx$3);
@@ -14606,14 +14606,14 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
             var value$4 = (void 0)
           } else {
             var quantity = $uD(value$2);
-            var value$3 = ((price * quantity) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$1));
+            var value$3 = ((price * quantity) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$1));
             var value$4 = value$3
           }
         };
         var value$5 = $uD(((value$4 === (void 0)) ? 0.0 : value$4));
         var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", value$5)]);
         var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-        var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$6, new $c_T2().init___O__O("cashAccount.cashFunds", y$1)]);
+        var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$6, new $c_T2().init___O__O("cashAccount.funds", y$1)]);
         var jsx$7 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1);
         var order$2 = wo$1.order;
         var value$6 = order$2.price;
@@ -14626,12 +14626,12 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
             var value$9 = (void 0)
           } else {
             var quantity$1 = $uD(value$7);
-            var value$8 = ((price$1 * quantity$1) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$2));
+            var value$8 = ((price$1 * quantity$1) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$2));
             var value$9 = value$8
           }
         };
         var value$10 = (-$uD(((value$9 === (void 0)) ? 0.0 : value$9)));
-        var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("cashAccount.cashFunds", value$10)]);
+        var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("cashAccount.funds", value$10)]);
         var y$2 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$2);
         var jsx$5 = new $c_T2().init___O__O("$inc", y$2);
         var y$3 = wo$1.claim.asOfTime;
@@ -14651,12 +14651,12 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
         var y$7 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$5);
         var jsx$3 = new $c_T2().init___O__O("$pull", y$7);
         var value$12 = $m_ju_UUID$().randomUUID__ju_UUID().toString__T();
-        var x$3 = wo$1.order.accountType;
-        var x$4 = wo$1.order.symbol;
+        var x$15 = wo$1.order.accountType;
+        var x$16 = wo$1.order.symbol;
         var value$13 = $as_T(wo$1.claim.exchange);
         var value$14 = $uD(wo$1.claim.price);
         var value$15 = $uD(wo$1.claim.quantity);
-        var value$16 = $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$1.order);
+        var value$16 = $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$1.order);
         var order$3 = wo$1.order;
         var value$17 = order$3.price;
         if ((value$17 === (void 0))) {
@@ -14668,19 +14668,19 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
             var value$20 = (void 0)
           } else {
             var quantity$2 = $uD(value$18);
-            var value$19 = ((price$2 * quantity$2) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$3));
+            var value$19 = ((price$2 * quantity$2) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(order$3));
             var value$20 = value$19
           }
         };
         if ((value$20 === (void 0))) {
-          var x$9 = (void 0)
+          var x$21 = (void 0)
         } else {
           var totalCost = $uD(value$20);
-          var value$21 = (totalCost - $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$1.order));
-          var x$9 = value$21
+          var value$21 = (totalCost - $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(wo$1.order));
+          var x$21 = value$21
         };
         var value$22 = new $g.Date();
-        var y$8 = new $c_Lcom_shocktrade_common_dao_contest_PositionData(value$12, x$4, value$13, value$14, value$15, value$16, value$22, x$3, x$9);
+        var y$8 = new $c_Lcom_shocktrade_common_dao_contest_PositionData(value$12, x$16, value$13, value$14, value$15, value$16, value$22, x$15, x$21);
         var jsx$2 = new $c_T2().init___O__O("positions", y$8);
         var order$4 = wo$1.order;
         var value$23 = wo$1.claim.asOfTime;
@@ -14713,8 +14713,8 @@ $c_Lcom_shocktrade_qualification_OrderQualificationEngine$$anonfun$com$shocktrad
         while ((i < len)) {
           var index = i;
           var arg1 = fields[index];
-          var x$3$1 = $as_T(arg1);
-          var elem = new $c_T2().init___O__O(x$3$1, 1);
+          var x$3 = $as_T(arg1);
+          var elem = new $c_T2().init___O__O(x$3, 1);
           array.push(elem);
           i = ((1 + i) | 0)
         };

@@ -2866,66 +2866,6 @@ function $s_scm_ResizableArray$class__$$init$__scm_ResizableArray__V($$this) {
   $$this.size0$6 = 0
 }
 /** @constructor */
-function $c_Lcom_shocktrade_Commissions$() {
-  $c_O.call(this);
-  this.LIMIT$undCOST$1 = 0.0;
-  this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
-  this.MARKET$undCOST$1 = 0.0
-}
-$c_Lcom_shocktrade_Commissions$.prototype = new $h_O();
-$c_Lcom_shocktrade_Commissions$.prototype.constructor = $c_Lcom_shocktrade_Commissions$;
-/** @constructor */
-function $h_Lcom_shocktrade_Commissions$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_Commissions$.prototype = $c_Lcom_shocktrade_Commissions$.prototype;
-$c_Lcom_shocktrade_Commissions$.prototype.init___ = (function() {
-  this.LIMIT$undCOST$1 = 14.99;
-  this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
-  this.MARKET$undCOST$1 = 7.99;
-  return this
-});
-$c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_forms_NewOrderForm__D = (function(form) {
-  var valueA = form.priceType;
-  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return this.LIMIT$undCOST$1
-  } else {
-    var valueA$1 = form.priceType;
-    if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return this.MARKET$undAT$undCLOSE$undCOST$1
-    } else {
-      return this.MARKET$undCOST$1
-    }
-  }
-});
-$c_Lcom_shocktrade_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
-  var valueA = order.priceType;
-  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
-    return this.LIMIT$undCOST$1
-  } else {
-    var valueA$1 = order.priceType;
-    if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
-      return this.MARKET$undAT$undCLOSE$undCOST$1
-    } else {
-      return this.MARKET$undCOST$1
-    }
-  }
-});
-var $d_Lcom_shocktrade_Commissions$ = new $TypeData().initClass({
-  Lcom_shocktrade_Commissions$: 0
-}, false, "com.shocktrade.Commissions$", {
-  Lcom_shocktrade_Commissions$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_Commissions$.prototype.$classData = $d_Lcom_shocktrade_Commissions$;
-var $n_Lcom_shocktrade_Commissions$ = (void 0);
-function $m_Lcom_shocktrade_Commissions$() {
-  if ((!$n_Lcom_shocktrade_Commissions$)) {
-    $n_Lcom_shocktrade_Commissions$ = new $c_Lcom_shocktrade_Commissions$().init___()
-  };
-  return $n_Lcom_shocktrade_Commissions$
-}
-/** @constructor */
 function $c_Lcom_shocktrade_client_Award$() {
   $c_O.call(this);
   this.FACEBOOK$1 = null;
@@ -3499,40 +3439,6 @@ function $m_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderPara
   return $n_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_client_dialogs_TransferFundsAction$() {
-  $c_O.call(this)
-}
-$c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype = new $h_O();
-$c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsAction$;
-/** @constructor */
-function $h_Lcom_shocktrade_client_dialogs_TransferFundsAction$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype;
-$c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype.apply__T__T__Lcom_shocktrade_client_dialogs_TransferFundsAction = (function(label, source) {
-  var action = {};
-  action.label = label;
-  action.source = source;
-  return action
-});
-var $d_Lcom_shocktrade_client_dialogs_TransferFundsAction$ = new $TypeData().initClass({
-  Lcom_shocktrade_client_dialogs_TransferFundsAction$: 0
-}, false, "com.shocktrade.client.dialogs.TransferFundsAction$", {
-  Lcom_shocktrade_client_dialogs_TransferFundsAction$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsAction$.prototype.$classData = $d_Lcom_shocktrade_client_dialogs_TransferFundsAction$;
-var $n_Lcom_shocktrade_client_dialogs_TransferFundsAction$ = (void 0);
-function $m_Lcom_shocktrade_client_dialogs_TransferFundsAction$() {
-  if ((!$n_Lcom_shocktrade_client_dialogs_TransferFundsAction$)) {
-    $n_Lcom_shocktrade_client_dialogs_TransferFundsAction$ = new $c_Lcom_shocktrade_client_dialogs_TransferFundsAction$().init___()
-  };
-  return $n_Lcom_shocktrade_client_dialogs_TransferFundsAction$
-}
-/** @constructor */
 function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$() {
   $c_O.call(this);
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1 = null;
@@ -3548,10 +3454,20 @@ function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$() {
 $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$.prototype;
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$.prototype.init___ = (function() {
   $n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$ = this;
-  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1 = "CASH";
-  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$MARGIN$1 = "MARGIN";
-  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$TransferActions$1 = [$m_Lcom_shocktrade_client_dialogs_TransferFundsAction$().apply__T__T__Lcom_shocktrade_client_dialogs_TransferFundsAction("Cash to Margin Account", this.com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1), $m_Lcom_shocktrade_client_dialogs_TransferFundsAction$().apply__T__T__Lcom_shocktrade_client_dialogs_TransferFundsAction("Margin Account to Cash", this.com$shocktrade$client$dialogs$TransferFundsDialogController$$MARGIN$1)];
+  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1 = "cash";
+  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$MARGIN$1 = "margin";
+  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$TransferActions$1 = [new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction("Cash to Margin Account", this.com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1), new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction("Margin Account to Cash", this.com$shocktrade$client$dialogs$TransferFundsDialogController$$MARGIN$1)];
   return this
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$.prototype.transferFormConversion__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Lcom_shocktrade_common_forms_FundsTransferRequest = (function(form) {
+  var value = form.action;
+  if ((value === (void 0))) {
+    var jsx$1 = (void 0)
+  } else {
+    var value$1 = $as_T(value.source);
+    var jsx$1 = value$1
+  };
+  return new $c_Lcom_shocktrade_common_forms_FundsTransferRequest(jsx$1, form.amount)
 });
 var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$ = new $TypeData().initClass({
   Lcom_shocktrade_client_dialogs_TransferFundsDialogController$: 0
@@ -3568,40 +3484,44 @@ function $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$() {
   return $n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_client_dialogs_TransferFundsForm$() {
+function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$() {
   $c_O.call(this)
 }
-$c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype = new $h_O();
-$c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsForm$;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype = new $h_O();
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$;
 /** @constructor */
-function $h_Lcom_shocktrade_client_dialogs_TransferFundsForm$() {
+function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype;
-$c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype.init___ = (function() {
+$h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_client_dialogs_TransferFundsForm = (function(action, amount, cashFunds, marginFunds) {
-  var form = {};
-  form.action = action;
-  form.amount = amount;
-  form.cashFunds = cashFunds;
-  form.marginFunds = marginFunds;
-  return form
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+  return (void 0)
 });
-var $d_Lcom_shocktrade_client_dialogs_TransferFundsForm$ = new $TypeData().initClass({
-  Lcom_shocktrade_client_dialogs_TransferFundsForm$: 0
-}, false, "com.shocktrade.client.dialogs.TransferFundsForm$", {
-  Lcom_shocktrade_client_dialogs_TransferFundsForm$: 1,
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$ = new $TypeData().initClass({
+  Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$: 0
+}, false, "com.shocktrade.client.dialogs.TransferFundsDialogController$TransferFundsForm$", {
+  Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsForm$.prototype.$classData = $d_Lcom_shocktrade_client_dialogs_TransferFundsForm$;
-var $n_Lcom_shocktrade_client_dialogs_TransferFundsForm$ = (void 0);
-function $m_Lcom_shocktrade_client_dialogs_TransferFundsForm$() {
-  if ((!$n_Lcom_shocktrade_client_dialogs_TransferFundsForm$)) {
-    $n_Lcom_shocktrade_client_dialogs_TransferFundsForm$ = new $c_Lcom_shocktrade_client_dialogs_TransferFundsForm$().init___()
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$.prototype.$classData = $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$;
+var $n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$ = (void 0);
+function $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$() {
+  if ((!$n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$)) {
+    $n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$ = new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$().init___()
   };
-  return $n_Lcom_shocktrade_client_dialogs_TransferFundsForm$
+  return $n_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_client_discover_DiscoverController$ModuleExpander$() {
@@ -4015,6 +3935,66 @@ function $m_Lcom_shocktrade_client_profile_MyQuotesController$Expandable$() {
     $n_Lcom_shocktrade_client_profile_MyQuotesController$Expandable$ = new $c_Lcom_shocktrade_client_profile_MyQuotesController$Expandable$().init___()
   };
   return $n_Lcom_shocktrade_client_profile_MyQuotesController$Expandable$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_common_Commissions$() {
+  $c_O.call(this);
+  this.LIMIT$undCOST$1 = 0.0;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 0.0;
+  this.MARKET$undCOST$1 = 0.0
+}
+$c_Lcom_shocktrade_common_Commissions$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_Commissions$.prototype.constructor = $c_Lcom_shocktrade_common_Commissions$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_Commissions$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_Commissions$.prototype = $c_Lcom_shocktrade_common_Commissions$.prototype;
+$c_Lcom_shocktrade_common_Commissions$.prototype.init___ = (function() {
+  this.LIMIT$undCOST$1 = 14.99;
+  this.MARKET$undAT$undCLOSE$undCOST$1 = 9.99;
+  this.MARKET$undCOST$1 = 7.99;
+  return this
+});
+$c_Lcom_shocktrade_common_Commissions$.prototype.apply__Lcom_shocktrade_common_forms_NewOrderForm__D = (function(form) {
+  var valueA = form.priceType;
+  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
+    return this.LIMIT$undCOST$1
+  } else {
+    var valueA$1 = form.priceType;
+    if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
+      return this.MARKET$undAT$undCLOSE$undCOST$1
+    } else {
+      return this.MARKET$undCOST$1
+    }
+  }
+});
+$c_Lcom_shocktrade_common_Commissions$.prototype.apply__Lcom_shocktrade_common_models_contest_OrderLike__D = (function(order) {
+  var valueA = order.priceType;
+  if (((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, "LIMIT"))) {
+    return this.LIMIT$undCOST$1
+  } else {
+    var valueA$1 = order.priceType;
+    if (((valueA$1 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$1, "MARKET_AT_CLOSE"))) {
+      return this.MARKET$undAT$undCLOSE$undCOST$1
+    } else {
+      return this.MARKET$undCOST$1
+    }
+  }
+});
+var $d_Lcom_shocktrade_common_Commissions$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_Commissions$: 0
+}, false, "com.shocktrade.common.Commissions$", {
+  Lcom_shocktrade_common_Commissions$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_Commissions$.prototype.$classData = $d_Lcom_shocktrade_common_Commissions$;
+var $n_Lcom_shocktrade_common_Commissions$ = (void 0);
+function $m_Lcom_shocktrade_common_Commissions$() {
+  if ((!$n_Lcom_shocktrade_common_Commissions$)) {
+    $n_Lcom_shocktrade_common_Commissions$ = new $c_Lcom_shocktrade_common_Commissions$().init___()
+  };
+  return $n_Lcom_shocktrade_common_Commissions$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_events_RemoteEvent$() {
@@ -9029,51 +9009,52 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureDialogs__p1__Lorg_s
   module.service("SignUpDialog", ["$http", "$modal", (function(x$macro$14$2, x$macro$15$2) {
     return new $c_Lcom_shocktrade_client_dialogs_SignUpDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$14$2, x$macro$15$2)
   })]);
-  module.service("TransferFundsDialog", ["$http", "$modal", (function(x$macro$16$2, x$macro$17$2) {
-    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$16$2, x$macro$17$2)
+  module.service("TransferFundsDialog", ["$modal", (function(x$macro$16$2) {
+    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog().init___Lorg_scalajs_angularjs_uibootstrap_Modal(x$macro$16$2)
   })]);
-  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$18$2, x$macro$19$2, x$macro$20$2) {
-    var x$macro$20 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$20$2);
-    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_client_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$18$2, x$macro$19$2, x$macro$20)
+  module.controller("ComposeMessageDialogController", ["$scope", "$modalInstance", "ComposeMessageDialog", (function(x$macro$17$2, x$macro$18$2, x$macro$19$2) {
+    var x$macro$19 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$19$2);
+    return new $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialogController().init___Lcom_shocktrade_client_dialogs_ComposeMessageScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$17$2, x$macro$18$2, x$macro$19)
   })]);
-  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$21$2, x$macro$22$2, x$macro$23$2) {
-    var x$macro$23 = $as_Lcom_shocktrade_client_MySessionService(x$macro$23$2);
-    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_client_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_MySessionService(x$macro$21$2, x$macro$22$2, x$macro$23)
+  module.controller("InvitePlayerDialogController", ["$scope", "$modalInstance", "MySessionService", (function(x$macro$20$2, x$macro$21$2, x$macro$22$2) {
+    var x$macro$22 = $as_Lcom_shocktrade_client_MySessionService(x$macro$22$2);
+    return new $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController().init___Lcom_shocktrade_client_dialogs_InvitePlayerScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_MySessionService(x$macro$20$2, x$macro$21$2, x$macro$22)
   })]);
-  module.controller("NewGameDialogController", ["$scope", "$timeout", "toaster", "$modalInstance", "ContestService", "MySessionService", "NewGameDialog", (function(x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28$2, x$macro$29$2, x$macro$30$2) {
-    var x$macro$28 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$28$2);
-    var x$macro$29 = $as_Lcom_shocktrade_client_MySessionService(x$macro$29$2);
-    var x$macro$30 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$30$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController().init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28, x$macro$29, x$macro$30)
+  module.controller("NewGameDialogController", ["$scope", "$timeout", "toaster", "$modalInstance", "ContestService", "MySessionService", "NewGameDialog", (function(x$macro$23$2, x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27$2, x$macro$28$2, x$macro$29$2) {
+    var x$macro$27 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$27$2);
+    var x$macro$28 = $as_Lcom_shocktrade_client_MySessionService(x$macro$28$2);
+    var x$macro$29 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$29$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewGameDialogController().init___Lcom_shocktrade_client_dialogs_NewGameDialogScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$23$2, x$macro$24$2, x$macro$25$2, x$macro$26$2, x$macro$27, x$macro$28, x$macro$29)
   })]);
-  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36$2, x$macro$37$2, x$macro$38$2, x$macro$39$2, x$macro$40$2, x$macro$41$2) {
-    var x$macro$36 = $as_Lcom_shocktrade_client_MySessionService(x$macro$36$2);
-    var x$macro$37 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$37$2);
-    var x$macro$38 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$38$2);
-    var x$macro$39 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$39$2);
-    var x$macro$40 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$40$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController().init___Lcom_shocktrade_client_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_discover_QuoteService__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36, x$macro$37, x$macro$38, x$macro$39, x$macro$40, x$macro$41$2)
+  module.controller("NewOrderDialogController", ["$scope", "$modalInstance", "$q", "$timeout", "toaster", "MySessionService", "NewOrderDialog", "PerksDialog", "PortfolioService", "QuoteService", "params", (function(x$macro$30$2, x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35$2, x$macro$36$2, x$macro$37$2, x$macro$38$2, x$macro$39$2, x$macro$40$2) {
+    var x$macro$35 = $as_Lcom_shocktrade_client_MySessionService(x$macro$35$2);
+    var x$macro$36 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$36$2);
+    var x$macro$37 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$37$2);
+    var x$macro$38 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$38$2);
+    var x$macro$39 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$39$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController().init___Lcom_shocktrade_client_dialogs_NewOrderScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Q__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_discover_QuoteService__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(x$macro$30$2, x$macro$31$2, x$macro$32$2, x$macro$33$2, x$macro$34$2, x$macro$35, x$macro$36, x$macro$37, x$macro$38, x$macro$39, x$macro$40$2)
   })]);
-  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2, x$macro$47$2) {
-    var x$macro$45 = $as_Lcom_shocktrade_client_dialogs_NewsQuoteDialog(x$macro$45$2);
-    var x$macro$46 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$46$2);
-    var x$macro$47 = $as_T(x$macro$47$2);
-    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_client_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_NewsQuoteDialog__Lcom_shocktrade_client_discover_QuoteService__T(x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45, x$macro$46, x$macro$47)
+  module.controller("NewsQuoteDialogController", ["$scope", "$modalInstance", "toaster", "NewsQuoteDialog", "QuoteService", "symbol", (function(x$macro$41$2, x$macro$42$2, x$macro$43$2, x$macro$44$2, x$macro$45$2, x$macro$46$2) {
+    var x$macro$44 = $as_Lcom_shocktrade_client_dialogs_NewsQuoteDialog(x$macro$44$2);
+    var x$macro$45 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$45$2);
+    var x$macro$46 = $as_T(x$macro$46$2);
+    return new $c_Lcom_shocktrade_client_dialogs_NewsQuoteDialogController().init___Lcom_shocktrade_client_dialogs_NewsQuoteScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_NewsQuoteDialog__Lcom_shocktrade_client_discover_QuoteService__T(x$macro$41$2, x$macro$42$2, x$macro$43$2, x$macro$44, x$macro$45, x$macro$46)
   })]);
-  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$48$2, x$macro$49$2, x$macro$50$2, x$macro$51$2, x$macro$52$2) {
-    var x$macro$51 = $as_Lcom_shocktrade_client_MySessionService(x$macro$51$2);
-    var x$macro$52 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$52$2);
-    return new $c_Lcom_shocktrade_client_dialogs_PerksDialogController().init___Lcom_shocktrade_client_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$48$2, x$macro$49$2, x$macro$50$2, x$macro$51, x$macro$52)
+  module.controller("PerksDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "PerksDialog", (function(x$macro$47$2, x$macro$48$2, x$macro$49$2, x$macro$50$2, x$macro$51$2) {
+    var x$macro$50 = $as_Lcom_shocktrade_client_MySessionService(x$macro$50$2);
+    var x$macro$51 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$51$2);
+    return new $c_Lcom_shocktrade_client_dialogs_PerksDialogController().init___Lcom_shocktrade_client_dialogs_PerksDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$47$2, x$macro$48$2, x$macro$49$2, x$macro$50, x$macro$51)
   })]);
-  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2, x$macro$58$2) {
-    var x$macro$57 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$57$2);
-    var x$macro$58 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$58$2);
-    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialogController().init___Lcom_shocktrade_client_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57, x$macro$58)
+  module.controller("SignUpController", ["$scope", "$modalInstance", "$timeout", "toaster", "Facebook", "SignUpDialog", (function(x$macro$52$2, x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56$2, x$macro$57$2) {
+    var x$macro$56 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$56$2);
+    var x$macro$57 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$57$2);
+    return new $c_Lcom_shocktrade_client_dialogs_SignUpDialogController().init___Lcom_shocktrade_client_dialogs_SignUpDialogScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$52$2, x$macro$53$2, x$macro$54$2, x$macro$55$2, x$macro$56, x$macro$57)
   })]);
-  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "MySessionService", "TransferFundsDialog", (function(x$macro$59$2, x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2) {
+  module.controller("TransferFundsDialogController", ["$scope", "$modalInstance", "toaster", "PortfolioService", "MySessionService", "TransferFundsDialog", (function(x$macro$58$2, x$macro$59$2, x$macro$60$2, x$macro$61$2, x$macro$62$2, x$macro$63$2) {
+    var x$macro$61 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$61$2);
     var x$macro$62 = $as_Lcom_shocktrade_client_MySessionService(x$macro$62$2);
     var x$macro$63 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$63$2);
-    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$59$2, x$macro$60$2, x$macro$61$2, x$macro$62, x$macro$63)
+    return new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController().init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$58$2, x$macro$59$2, x$macro$60$2, x$macro$61, x$macro$62, x$macro$63)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.$$js$exported$meth$main__O = (function() {
@@ -10058,20 +10039,20 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktra
   var maintenanceAmount = ((this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D() - this.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D()) * this.com$shocktrade$client$contest$MarginAccountController$$maintenanceMargin$1);
   return ((maintenanceAmount > 0) ? maintenanceAmount : 0.0)
 });
-$c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D = (function() {
+$c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$funds__D = (function() {
   var this$1 = this.com$shocktrade$client$contest$MarginAccountController$$mySession$f.marginAccount$und$qmark__s_Option();
   if (this$1.isEmpty__Z()) {
     var this$5 = $m_s_None$()
   } else {
     var arg1 = this$1.get__O();
-    var value = arg1.cashFunds;
+    var value = arg1.funds;
     var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
   };
   return $uD((this$5.isEmpty__Z() ? 0.0 : this$5.get__O()))
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D = (function() {
   var myInvestmentCost = this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D();
-  var jsx$1 = this.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D();
+  var jsx$1 = this.com$shocktrade$client$contest$MarginAccountController$$funds__D();
   var a = this.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1;
   return (jsx$1 + ($uD($g.Math.max(a, myInvestmentCost)) - myInvestmentCost))
 });
@@ -10098,12 +10079,12 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.init___Lcom_
   })(new $c_Lcom_shocktrade_client_contest_MarginAccountController$$anonfun$14().init___Lcom_shocktrade_client_contest_MarginAccountController(this));
   $$scope.getBuyingPower = (function(arg$outer) {
     return (function() {
-      return (arg$outer.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D() / arg$outer.com$shocktrade$client$contest$MarginAccountController$$initialMargin$1)
+      return (arg$outer.com$shocktrade$client$contest$MarginAccountController$$funds__D() / arg$outer.com$shocktrade$client$contest$MarginAccountController$$initialMargin$1)
     })
   })(this);
   $$scope.getCashFunds = (function(arg$outer$1) {
     return (function() {
-      return arg$outer$1.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D()
+      return arg$outer$1.com$shocktrade$client$contest$MarginAccountController$$funds__D()
     })
   })(this);
   $$scope.getInterestPaid = (function(f$2) {
@@ -10138,7 +10119,7 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.init___Lcom_
   })(this);
   $$scope.isAccountInGoodStanding = (function(arg$outer$7) {
     return (function() {
-      return (arg$outer$7.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D() >= arg$outer$7.com$shocktrade$client$contest$MarginAccountController$$maintenanceMarginAmount__D())
+      return (arg$outer$7.com$shocktrade$client$contest$MarginAccountController$$funds__D() >= arg$outer$7.com$shocktrade$client$contest$MarginAccountController$$maintenanceMarginAmount__D())
     })
   })(this);
   $$scope.getMarginAccountEquity = (function(arg$outer$8) {
@@ -10153,7 +10134,7 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.init___Lcom_
   })(this);
   $$scope.getMarginCallAmount = (function(arg$outer$10) {
     return (function() {
-      return (arg$outer$10.com$shocktrade$client$contest$MarginAccountController$$maintenanceMarginAmount__D() - arg$outer$10.com$shocktrade$client$contest$MarginAccountController$$cashFunds__D())
+      return (arg$outer$10.com$shocktrade$client$contest$MarginAccountController$$maintenanceMarginAmount__D() - arg$outer$10.com$shocktrade$client$contest$MarginAccountController$$funds__D())
     })
   })(this);
   return this
@@ -10179,7 +10160,7 @@ function $h_Lcom_shocktrade_client_contest_PortfolioService() {
 }
 $h_Lcom_shocktrade_client_contest_PortfolioService.prototype = $c_Lcom_shocktrade_client_contest_PortfolioService.prototype;
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getMarginAccountMarketValue__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/marginAccount/marketValue"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])))
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/marketValue?accountType=margin"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])))
 });
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
   this.$$http$1 = $$http;
@@ -10207,11 +10188,14 @@ $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getExposureChartDat
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.cancelOrder__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId, orderId) {
   return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/order/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId, orderId])))
 });
+$c_Lcom_shocktrade_client_contest_PortfolioService.prototype.transferFunds__T__Lcom_shocktrade_common_forms_FundsTransferRequest__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId, form) {
+  return this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/transferFunds"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])), form)
+});
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.createOrder__T__Lcom_shocktrade_common_forms_NewOrderForm__Lorg_scalajs_angularjs_http_HttpResponse = (function(portfolioId, order) {
   return this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/order"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId])), order)
 });
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getHeldSecurities__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(playerId) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/positions/symbols"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([playerId])))
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolio/", "/heldSecurities"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([playerId])))
 });
 function $is_Lcom_shocktrade_client_contest_PortfolioService(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_contest_PortfolioService)))
@@ -11130,7 +11114,6 @@ $c_Lcom_shocktrade_client_dialogs_SignUpDialogController.prototype.$classData = 
 /** @constructor */
 function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog() {
   $c_O.call(this);
-  this.$$http$1 = null;
   this.$$modal$1 = null
 }
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype = new $h_O();
@@ -11146,13 +11129,9 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.popup__s_concurr
   var modalInstance = jsx$1.open(new $c_Lorg_scalajs_angularjs_uibootstrap_ModalOptions((void 0), "transfer_funds_dialog.html", value));
   return $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal = (function($$http, $$modal) {
-  this.$$http$1 = $$http;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.init___Lorg_scalajs_angularjs_uibootstrap_Modal = (function($$modal) {
   this.$$modal$1 = $$modal;
   return this
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.transferFunds__T__T__Lcom_shocktrade_client_dialogs_TransferFundsForm__s_concurrent_Future = (function(contestId, playerId, form) {
-  return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/contest/", "/margin/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestId, playerId])), form))
 });
 function $is_Lcom_shocktrade_client_dialogs_TransferFundsDialog(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_dialogs_TransferFundsDialog)))
@@ -11179,8 +11158,8 @@ function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController() {
   $c_O.call(this);
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$$modalInstance$f = null;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$toaster$f = null;
+  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$portfolioService$f = null;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$mySession$f = null;
-  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$dialog$f = null;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1 = null
 }
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype = new $h_O();
@@ -11190,11 +11169,78 @@ function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype;
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog = (function($$scope, $$modalInstance, toaster, mySession, dialog) {
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.com$shocktrade$client$dialogs$TransferFundsDialogController$$isValidated__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z = (function(form) {
+  var array = this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1;
+  var count = $uI(array.length);
+  array.splice(0, count);
+  var value = form.action;
+  if ((value === (void 0))) {
+    $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please select an Action"))
+  } else {
+    var value$1 = form.amount;
+    if ((value$1 === (void 0))) {
+      $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please enter the desired amount"))
+    } else {
+      var value$2 = form.amount;
+      if ((value$2 !== (void 0))) {
+        var x$4 = $uD(value$2);
+        var jsx$1 = (x$4 <= 0)
+      } else {
+        var jsx$1 = false
+      };
+      if (jsx$1) {
+        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please enter an amount greater than zero"))
+      };
+      if (this.isInsufficientCashFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z(form)) {
+        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Insufficient funds in your cash account to complete the request"))
+      };
+      if (this.isInsufficientMarginFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z(form)) {
+        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Insufficient funds in your margin account to complete the request"))
+      }
+    }
+  };
+  var array$1 = this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1;
+  return ($uI(array$1.length) === 0)
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.isInsufficientCashFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z = (function(form) {
+  var value = form.action;
+  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
+  var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(action$2) {
+    return ($as_T(action$2.source) === $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$().com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1)
+  }));
+  var this$5 = new $c_s_Option$WithFilter().init___s_Option__F1(this$4, p);
+  var this$6 = this$5.$$outer$f;
+  var p$1 = this$5.p$1;
+  var this$7 = ((this$6.isEmpty__Z() || $uZ(p$1.apply__O__O(this$6.get__O()))) ? this$6 : $m_s_None$());
+  if (this$7.isEmpty__Z()) {
+    var jsx$1 = $m_s_None$()
+  } else {
+    this$7.get__O();
+    var value$1 = form.amount;
+    var this$11 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
+    if (this$11.isEmpty__Z()) {
+      var jsx$1 = $m_s_None$()
+    } else {
+      var v1$1 = this$11.get__O();
+      var amount = $uD(v1$1);
+      var value$2 = form.funds;
+      var this$15 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
+      if (this$15.isEmpty__Z()) {
+        var jsx$1 = $m_s_None$()
+      } else {
+        var arg1 = this$15.get__O();
+        var funds = $uD(arg1);
+        var jsx$1 = new $c_s_Some().init___O((amount > funds))
+      }
+    }
+  };
+  return jsx$1.contains__O__Z(true)
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsScope__Lorg_scalajs_angularjs_uibootstrap_ModalInstance__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_TransferFundsDialog = (function($$scope, $$modalInstance, toaster, portfolioService, mySession, dialog) {
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$$modalInstance$f = $$modalInstance;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$toaster$f = toaster;
+  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$portfolioService$f = portfolioService;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$mySession$f = mySession;
-  this.com$shocktrade$client$dialogs$TransferFundsDialogController$$dialog$f = dialog;
   this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1 = [];
   $$scope.actions = $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$().com$shocktrade$client$dialogs$TransferFundsDialogController$$TransferActions$1;
   var opt = mySession.cashAccount$und$qmark__s_Option();
@@ -11204,7 +11250,7 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.init__
     var arg1 = opt.get__O();
     var value = arg1
   };
-  var x$18 = ((value === (void 0)) ? (void 0) : value.cashFunds);
+  var x$19 = ((value === (void 0)) ? (void 0) : value.funds);
   var opt$1 = mySession.marginAccount$und$qmark__s_Option();
   if (opt$1.isEmpty__Z()) {
     var value$1 = (void 0)
@@ -11212,8 +11258,8 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.init__
     var arg1$1 = opt$1.get__O();
     var value$1 = arg1$1
   };
-  var x$19 = ((value$1 === (void 0)) ? (void 0) : value$1.cashFunds);
-  $$scope.form = $m_Lcom_shocktrade_client_dialogs_TransferFundsForm$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_client_dialogs_TransferFundsForm((void 0), (void 0), x$18, x$19);
+  var x$20 = ((value$1 === (void 0)) ? (void 0) : value$1.funds);
+  $$scope.form = new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm((void 0), (void 0), x$19, x$20);
   $$scope.init = (function() {
     return (void 0)
   });
@@ -11240,40 +11286,7 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.init__
   })(new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7().init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController(this));
   return this
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.com$shocktrade$client$dialogs$TransferFundsDialogController$$isValidated__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z = (function(form) {
-  var array = this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1;
-  var count = $uI(array.length);
-  array.splice(0, count);
-  var value = form.action;
-  if ((value === (void 0))) {
-    $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please select an Action"))
-  } else {
-    var value$1 = form.amount;
-    if ((value$1 === (void 0))) {
-      $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please enter the desired amount"))
-    } else {
-      var value$2 = form.amount;
-      if ((value$2 !== (void 0))) {
-        var x$4 = $uD(value$2);
-        var jsx$1 = (x$4 <= 0)
-      } else {
-        var jsx$1 = false
-      };
-      if (jsx$1) {
-        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Please enter an amount greater than zero"))
-      };
-      if (this.isInsufficientCashFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z(form)) {
-        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Insufficient funds in your cash account to complete the request"))
-      };
-      if (this.isInsufficientMarginFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z(form)) {
-        $uI(this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Insufficient funds in your margin account to complete the request"))
-      }
-    }
-  };
-  var array$1 = this.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1;
-  return ($uI(array$1.length) === 0)
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.isInsufficientMarginFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z = (function(form) {
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.isInsufficientMarginFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z = (function(form) {
   var value = form.action;
   var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
   var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(action$2) {
@@ -11302,40 +11315,6 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.isInsu
         var arg1 = this$15.get__O();
         var marginFunds = $uD(arg1);
         var jsx$1 = new $c_s_Some().init___O((amount > marginFunds))
-      }
-    }
-  };
-  return jsx$1.contains__O__Z(true)
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.prototype.isInsufficientCashFunds__p1__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z = (function(form) {
-  var value = form.action;
-  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(action$2) {
-    return ($as_T(action$2.source) === $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$().com$shocktrade$client$dialogs$TransferFundsDialogController$$CASH$1)
-  }));
-  var this$5 = new $c_s_Option$WithFilter().init___s_Option__F1(this$4, p);
-  var this$6 = this$5.$$outer$f;
-  var p$1 = this$5.p$1;
-  var this$7 = ((this$6.isEmpty__Z() || $uZ(p$1.apply__O__O(this$6.get__O()))) ? this$6 : $m_s_None$());
-  if (this$7.isEmpty__Z()) {
-    var jsx$1 = $m_s_None$()
-  } else {
-    this$7.get__O();
-    var value$1 = form.amount;
-    var this$11 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
-    if (this$11.isEmpty__Z()) {
-      var jsx$1 = $m_s_None$()
-    } else {
-      var v1$1 = this$11.get__O();
-      var amount = $uD(v1$1);
-      var value$2 = form.cashFunds;
-      var this$15 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
-      if (this$15.isEmpty__Z()) {
-        var jsx$1 = $m_s_None$()
-      } else {
-        var arg1 = this$15.get__O();
-        var cashFunds = $uD(arg1);
-        var jsx$1 = new $c_s_Some().init___O((amount > cashFunds))
       }
     }
   };
@@ -14642,6 +14621,95 @@ $h_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams.protot
 $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams.prototype = new $h_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams();
 $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams;
 /** @constructor */
+function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction(arg$1, arg$2) {
+  var label = $as_T(arg$1);
+  var source = $as_T(arg$2);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "label": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "source": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.label = label;
+  this.source = source
+}
+/** @constructor */
+function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction.prototype = new $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction();
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsAction;
+/** @constructor */
+function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm() {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 0;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var action = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var amount = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var funds = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var marginFunds = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "action": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "amount": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "funds": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "marginFunds": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.action = action;
+  this.amount = amount;
+  this.funds = funds;
+  this.marginFunds = marginFunds
+}
+/** @constructor */
+function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm.prototype = new $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm();
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm;
+/** @constructor */
 function $c_Lcom_shocktrade_client_directives_AvatarDirectiveInputs(arg$1, arg$2, arg$3, arg$4) {
   var id = arg$1;
   var link = arg$2;
@@ -15807,6 +15875,37 @@ function $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration() {
 $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype = new $h_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration();
 $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration.prototype.constructor = $c_Lcom_shocktrade_common_forms_ContestCreateForm$GameDuration;
+/** @constructor */
+function $c_Lcom_shocktrade_common_forms_FundsTransferRequest(arg$1, arg$2) {
+  var accountType = arg$1;
+  var amount = arg$2;
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "accountType": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "amount": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.accountType = accountType;
+  this.amount = amount
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_forms_FundsTransferRequest() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_forms_FundsTransferRequest.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_forms_FundsTransferRequest.prototype = new $h_Lcom_shocktrade_common_forms_FundsTransferRequest();
+$c_Lcom_shocktrade_common_forms_FundsTransferRequest.prototype.constructor = $c_Lcom_shocktrade_common_forms_FundsTransferRequest;
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_NewOrderForm() {
   var jsx$1 = (arguments.length | 0);
@@ -25050,7 +25149,7 @@ $c_Lcom_shocktrade_client_contest_CashAccountController$$anonfun$10$$anonfun$app
           var value$3 = (void 0)
         } else {
           var quantity = $uD(value$1);
-          var value$2 = ((price * quantity) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(arg1));
+          var value$2 = ((price * quantity) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(arg1));
           var value$3 = value$2
         }
       };
@@ -25920,11 +26019,11 @@ $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2$$anonfun$a
 $c_Lcom_shocktrade_client_contest_ContestRankingCapability$$anonfun$2$$anonfun$apply$7.prototype.apply__D__Lcom_shocktrade_common_models_contest_PortfolioRanking = (function(totalInvestment) {
   var startingBalance = this.$$outer$2.contest$2$f.startingBalance;
   var value = this.portfolio$1$2.cashAccount;
-  var cashFunds = ((value === (void 0)) ? (void 0) : value.cashFunds);
-  if ((cashFunds === (void 0))) {
+  var funds = ((value === (void 0)) ? (void 0) : value.funds);
+  if ((funds === (void 0))) {
     var totalEquity = (void 0)
   } else {
-    var x$5 = $uD(cashFunds);
+    var x$5 = $uD(funds);
     var value$1 = (x$5 + totalInvestment);
     var totalEquity = value$1
   };
@@ -29945,7 +30044,7 @@ function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11() {
 }
 $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11.prototype;
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__V = (function(aPortfolioId, anOrderId) {
-  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11__sjs_js_UndefOr(this, anOrderId);
+  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11__sjs_js_UndefOr(this, anOrderId);
   if ((aPortfolioId !== (void 0))) {
     f.apply__T__V($as_T(aPortfolioId))
   }
@@ -29973,29 +30072,29 @@ var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11 = new $Typ
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.anOrderId$1$2 = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype.apply__T__V = (function(portfolioId) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype.apply__T__V = (function(portfolioId) {
   var value = this.anOrderId$1$2;
-  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4__T(this, portfolioId);
+  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5__T(this, portfolioId);
   if ((value !== (void 0))) {
     f.apply__T__V($as_T(value))
   }
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11__sjs_js_UndefOr = (function($$outer, anOrderId$1) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11__sjs_js_UndefOr = (function($$outer, anOrderId$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -30004,34 +30103,34 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply
   this.anOrderId$1$2 = anOrderId$1;
   return this
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$4", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$5", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.portfolioId$1$f = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__T__V = (function(orderId) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__T__V = (function(orderId) {
   var $$scope = this.$$outer$2.$$outer$2.$$outer$2.$$scope$1;
   var f = (function(arg$outer, orderId$1) {
     return (function() {
@@ -30052,9 +30151,9 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply
       }
     })
   })(promise, $$scope)), ec);
-  $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4__T = (function($$outer, portfolioId$1) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5__T = (function($$outer, portfolioId$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -30063,33 +30162,33 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply
   this.portfolioId$1$f = portfolioId$1;
   return this
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype.apply__O__O = (function(v1) {
   return this.apply__s_util_Try__O($as_s_util_Try(v1))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5 = (function($$outer) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -30097,7 +30196,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply
   };
   return this
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__s_util_Try__O = (function(x0$1) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype.apply__s_util_Try__O = (function(x0$1) {
   if ($is_s_util_Success(x0$1)) {
     var x2 = $as_s_util_Success(x0$1);
     var portfolio = x2.value$2;
@@ -30154,17 +30253,17 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply
     throw new $c_s_MatchError().init___O(x0$1)
   }
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$7;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$11$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$8;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$12() {
   $c_sr_AbstractFunction1.call(this)
@@ -30193,7 +30292,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$12.prototype.appl
         return (void 0)
       } else {
         var quantity = $uD(value$1);
-        var value$2 = ((price * quantity) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(anOrder));
+        var value$2 = ((price * quantity) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_models_contest_OrderLike__D(anOrder));
         return value$2
       }
     }
@@ -30325,6 +30424,48 @@ var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$15 = new $Typ
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$15.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$15;
+/** @constructor */
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16() {
+  $c_sr_AbstractFunction2.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype = new $h_sr_AbstractFunction2();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16;
+/** @constructor */
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Promise = (function(aSymbol, anAccountType) {
+  var promise = this.$$outer$2.newOrderDialog$1.popup__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams__sjs_js_Promise(new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(aSymbol, anAccountType));
+  var this$1 = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(promise);
+  var pf = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16(this);
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  $s_s_concurrent_Future$class__onSuccess__s_concurrent_Future__s_PartialFunction__s_concurrent_ExecutionContext__V(this$1, pf, executor);
+  return promise
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype.apply__O__O__O = (function(v1, v2) {
+  return this.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Promise(v1, v2)
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype.init___Lcom_shocktrade_client_contest_PortfolioController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$16", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16: 1,
+  sr_AbstractFunction2: 1,
+  O: 1,
+  F2: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$20() {
   $c_sr_AbstractFunction1.call(this)
@@ -30803,7 +30944,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1.prototype.apply__Lcom_shocktrade_client_models_contest_Order__V = (function(order) {
   var value = order.symbol;
-  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1__Lcom_shocktrade_client_models_contest_Order(this, order);
+  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1__Lcom_shocktrade_client_models_contest_Order(this, order);
   if ((value !== (void 0))) {
     f.apply__T__V($as_T(value))
   }
@@ -30828,22 +30969,22 @@ var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrad
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.order$1$f = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1__Lcom_shocktrade_client_models_contest_Order = (function($$outer, order$1) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1__Lcom_shocktrade_client_models_contest_Order = (function($$outer, order$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -30852,7 +30993,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
   this.order$1$f = order$1;
   return this
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype.apply__T__V = (function(symbol) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype.apply__T__V = (function(symbol) {
   var this$1 = this.$$outer$2.$$outer$2.quoteCache$1.get__T__s_concurrent_ExecutionContext__s_concurrent_Future(symbol, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(quote$2) {
@@ -30862,17 +31003,17 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   $s_s_concurrent_Future$class__foreach__s_concurrent_Future__F1__s_concurrent_ExecutionContext__V(this$1, f, executor)
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$17;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichOrders$1$$anonfun$apply$18;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -30890,7 +31031,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1.prototype.apply__Lcom_shocktrade_client_models_contest_Position__V = (function(position) {
   var value = position.symbol;
-  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1__Lcom_shocktrade_client_models_contest_Position(this, position);
+  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1__Lcom_shocktrade_client_models_contest_Position(this, position);
   if ((value !== (void 0))) {
     f.apply__T__V($as_T(value))
   }
@@ -30915,22 +31056,22 @@ var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrad
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.position$1$f = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1__Lcom_shocktrade_client_models_contest_Position = (function($$outer, position$1) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1__Lcom_shocktrade_client_models_contest_Position = (function($$outer, position$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -30939,39 +31080,39 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
   this.position$1$f = position$1;
   return this
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype.apply__T__V = (function(symbol) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype.apply__T__V = (function(symbol) {
   var this$1 = this.$$outer$2.$$outer$2.quoteCache$1.get__T__s_concurrent_ExecutionContext__s_concurrent_Future(symbol, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1);
-  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19(this);
+  var f = new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21().init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20(this);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   $s_s_concurrent_Future$class__foreach__s_concurrent_Future__F1__s_concurrent_ExecutionContext__V(this$1, f, executor)
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20;
 /** @constructor */
-function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20() {
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21;
 /** @constructor */
-function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20() {
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype;
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype.apply__O__O = (function(v1) {
   this.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__V(v1)
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__V = (function(quote) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype.apply__Lcom_shocktrade_common_models_quote_CompleteQuote__V = (function(quote) {
   this.$$outer$2.position$1$f.lastTrade = quote.lastTrade;
   var jsx$2 = this.$$outer$2.position$1$f;
   var position = this.$$outer$2.position$1$f;
@@ -31010,7 +31151,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
   };
   jsx$2.gainLossPct = jsx$1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19 = (function($$outer) {
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -31018,17 +31159,17 @@ $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$cl
   };
   return this
 });
-var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20 = new $TypeData().initClass({
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20: 0
-}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20", {
-  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20: 1,
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$19$$anonfun$apply$20;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$com$shocktrade$client$contest$PortfolioController$$enrichPositions$1$$anonfun$apply$20$$anonfun$apply$21;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_PortfolioService$$anonfun$getPlayerRankings$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -31519,7 +31660,7 @@ $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$$anonfun$12.prototype
         return (void 0)
       } else {
         var quantity = $uD(value$1);
-        var value$2 = ((price * quantity) + $m_Lcom_shocktrade_Commissions$().apply__Lcom_shocktrade_common_forms_NewOrderForm__D(aForm));
+        var value$2 = ((price * quantity) + $m_Lcom_shocktrade_common_Commissions$().apply__Lcom_shocktrade_common_forms_NewOrderForm__D(aForm));
         return value$2
       }
     }
@@ -32555,11 +32696,19 @@ function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfu
 }
 $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype;
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype.apply__O__O = (function(v1) {
-  this.apply__Lcom_shocktrade_client_dialogs_TransferFundsForm__V(v1)
+  this.apply__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__V(v1)
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype.apply__Lcom_shocktrade_client_dialogs_TransferFundsForm__V = (function(form) {
-  if (this.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$isValidated__Lcom_shocktrade_client_dialogs_TransferFundsForm__Z(form)) {
-    var this$1 = this.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$mySession$f.contest$und$qmark$1;
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype.apply__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__V = (function(form) {
+  if (this.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$isValidated__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Z(form)) {
+    var this$1 = this.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$mySession$f.portfolio$und$qmark$1;
     if (this$1.isEmpty__Z()) {
       var this$5 = $m_s_None$()
     } else {
@@ -32567,12 +32716,13 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.proto
       var value = arg1._id;
       var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
     };
-    var f = new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5().init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7__Lcom_shocktrade_client_dialogs_TransferFundsForm(this, form);
+    var f = new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5().init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm(this, form);
     if (this$5.isEmpty__Z()) {
       var this$6 = $m_s_None$()
     } else {
       var v1 = this$5.get__O();
-      var this$6 = f.apply__T__s_Option($as_T(v1))
+      f.apply__T__V($as_T(v1));
+      var this$6 = new $c_s_Some().init___O((void 0))
     };
     if (this$6.isEmpty__Z()) {
       var toaster = this.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$toaster$f;
@@ -32582,14 +32732,6 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.proto
       this$6.get__O()
     }
   }
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
 });
 var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7 = new $TypeData().initClass({
   Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7: 0
@@ -32606,7 +32748,7 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7.proto
 function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.form$3$f = null
+  this.form$3$2 = null
 }
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5;
@@ -32616,27 +32758,32 @@ function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfu
 }
 $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype;
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
-  return this.apply__T__s_Option($as_T(v1))
+  this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.apply__T__s_Option = (function(contestId) {
-  var value = this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$mySession$f.userProfile$1._id;
-  var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  var f = new $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6().init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5__T(this, contestId);
-  if (this$4.isEmpty__Z()) {
-    return $m_s_None$()
-  } else {
-    var v1 = this$4.get__O();
-    f.apply__T__V($as_T(v1));
-    return new $c_s_Some().init___O((void 0))
-  }
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.apply__T__V = (function(portfolioId) {
+  $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$portfolioService$f.transferFunds__T__Lcom_shocktrade_common_forms_FundsTransferRequest__Lorg_scalajs_angularjs_http_HttpResponse(portfolioId, $m_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$().transferFormConversion__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm__Lcom_shocktrade_common_forms_FundsTransferRequest(this.form$3$2))).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(x0$1$2) {
+      var x0$1 = $as_s_util_Try(x0$1$2);
+      if ($is_s_util_Success(x0$1)) {
+        var x2 = $as_s_util_Success(x0$1);
+        var response = x2.value$2;
+        arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$$modalInstance$f.close(response);
+        return (void 0)
+      } else if ($is_s_util_Failure(x0$1)) {
+        return $uI(arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Failed to deposit funds"))
+      } else {
+        throw new $c_s_MatchError().init___O(x0$1)
+      }
+    })
+  })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7__Lcom_shocktrade_client_dialogs_TransferFundsForm = (function($$outer, form$3) {
+$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7__Lcom_shocktrade_client_dialogs_TransferFundsDialogController$TransferFundsForm = (function($$outer, form$3) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.form$3$f = form$3;
+  this.form$3$2 = form$3;
   return this
 });
 var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5 = new $TypeData().initClass({
@@ -32650,59 +32797,6 @@ var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5;
-/** @constructor */
-function $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.contestId$1$2 = null
-}
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype.constructor = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6;
-/** @constructor */
-function $h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype = $c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype;
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
-  this.apply__T__V($as_T(v1))
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__T__V = (function(userId) {
-  this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$dialog$f.transferFunds__T__T__Lcom_shocktrade_client_dialogs_TransferFundsForm__s_concurrent_Future(this.contestId$1$2, userId, this.$$outer$2.form$3$f).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
-      if ($is_s_util_Success(x0$1)) {
-        var x2 = $as_s_util_Success(x0$1);
-        var response = x2.value$2;
-        arg$outer.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$$modalInstance$f.close(response);
-        return (void 0)
-      } else if ($is_s_util_Failure(x0$1)) {
-        return $uI(arg$outer.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$dialogs$TransferFundsDialogController$$messages$1.push("Failed to deposit funds"))
-      } else {
-        throw new $c_s_MatchError().init___O(x0$1)
-      }
-    })
-  })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype.init___Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5__T = (function($$outer, contestId$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.contestId$1$2 = contestId$1;
-  return this
-});
-var $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6 = new $TypeData().initClass({
-  Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6: 0
-}, false, "com.shocktrade.client.dialogs.TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6", {
-  Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6.prototype.$classData = $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController$$anonfun$7$$anonfun$apply$5$$anonfun$apply$6;
 /** @constructor */
 function $c_Lcom_shocktrade_client_directives_ChangeArrowDirective$$anonfun$link$1() {
   $c_sr_AbstractFunction2.call(this);
@@ -40191,6 +40285,50 @@ var $d_Lcom_shocktrade_client_contest_DashboardController$$anonfun$10$$anonfun$a
 });
 $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$10$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$3.prototype.$classData = $d_Lcom_shocktrade_client_contest_DashboardController$$anonfun$10$$anonfun$apply$4$$anonfun$apply$5$$anonfun$apply$3;
 /** @constructor */
+function $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3() {
+  $c_sr_AbstractPartialFunction.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype = new $h_sr_AbstractPartialFunction();
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.constructor = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3;
+/** @constructor */
+function $h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype = $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype;
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.init___Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.isDefinedAt__O__Z = (function(x) {
+  return this.isDefinedAt__Lcom_shocktrade_client_models_contest_Portfolio__Z(x)
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.applyOrElse__Lcom_shocktrade_client_models_contest_Portfolio__F1__O = (function(x1, $default) {
+  this.$$outer$2.$$outer$2.mySession$1.updatePortfolio__Lcom_shocktrade_client_models_contest_Portfolio__V(x1)
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.applyOrElse__O__F1__O = (function(x, $default) {
+  return this.applyOrElse__Lcom_shocktrade_client_models_contest_Portfolio__F1__O(x, $default)
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.isDefinedAt__Lcom_shocktrade_client_models_contest_Portfolio__Z = (function(x1) {
+  return true
+});
+var $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3 = new $TypeData().initClass({
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3: 0
+}, false, "com.shocktrade.client.contest.PortfolioController$$anonfun$16$$anonfun$apply$3", {
+  Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3: 1,
+  sr_AbstractPartialFunction: 1,
+  O: 1,
+  F1: 1,
+  s_PartialFunction: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3.prototype.$classData = $d_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16$$anonfun$apply$3;
+/** @constructor */
 function $c_Lcom_shocktrade_client_directives_AvatarDirective() {
   $c_O.call(this);
   this.com$shocktrade$client$directives$AvatarDirective$$UNKNOWN$undPERSON$1 = null;
@@ -42319,7 +42457,7 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.getFundsAvailable__D = (fun
     var arg1 = opt.get__O();
     var value = arg1
   };
-  var value$1 = ((value === (void 0)) ? (void 0) : value.cashFunds);
+  var value$1 = ((value === (void 0)) ? (void 0) : value.funds);
   return $uD(((value$1 === (void 0)) ? 0.0 : value$1))
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.equals__O__Z = (function(x$1) {
@@ -43086,7 +43224,7 @@ $c_Lcom_shocktrade_client_contest_CashAccountController$$anonfun$5.prototype.app
     var arg1 = opt.get__O();
     var value = arg1
   };
-  var value$1 = ((value === (void 0)) ? (void 0) : value.cashFunds);
+  var value$1 = ((value === (void 0)) ? (void 0) : value.funds);
   return $uD(((value$1 === (void 0)) ? 0.0 : value$1))
 });
 $c_Lcom_shocktrade_client_contest_CashAccountController$$anonfun$5.prototype.apply__O = (function() {
@@ -43222,8 +43360,8 @@ $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$6.prototype.apply
       var x0$2 = $as_s_util_Try(x0$2$2);
       if ($is_s_util_Success(x0$2)) {
         var x2 = $as_s_util_Success(x0$2);
-        var contest = x2.value$2;
-        arg$outer.$$outer$3.com$shocktrade$client$contest$DashboardController$$mySession$f.setContest__Lcom_shocktrade_client_models_contest_Contest__V(contest)
+        var portfolio = x2.value$2;
+        arg$outer.$$outer$3.com$shocktrade$client$contest$DashboardController$$mySession$f.updatePortfolio__Lcom_shocktrade_client_models_contest_Portfolio__V(portfolio)
       } else if ($is_s_util_Failure(x0$2)) {
         var x3 = $as_s_util_Failure(x0$2);
         var e = x3.exception$2;
@@ -45990,158 +46128,158 @@ $c_Lcom_shocktrade_client_contest_PortfolioController.prototype.init___Lcom_shoc
       }
     })
   })(this);
-  $$scope.popupNewOrderDialog = (function(arg$outer$4) {
-    return (function(aSymbol$2, anAccountType$2) {
-      return arg$outer$4.newOrderDialog$1.popup__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams__sjs_js_Promise(new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(aSymbol$2, anAccountType$2))
+  $$scope.popupNewOrderDialog = (function(f$5) {
+    return (function(arg1$3, arg2$1) {
+      return f$5.apply__O__O__O(arg1$3, arg2$1)
     })
-  })(this);
-  $$scope.selectOrder = (function(arg$outer$5) {
+  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$16().init___Lcom_shocktrade_client_contest_PortfolioController(this));
+  $$scope.selectOrder = (function(arg$outer$4) {
     return (function(order$2) {
-      arg$outer$5.$$scope$1.selectedOrder = order$2
+      arg$outer$4.$$scope$1.selectedOrder = order$2
     })
   })(this);
-  $$scope.toggleSelectedOrder = (function(arg$outer$6) {
+  $$scope.toggleSelectedOrder = (function(arg$outer$5) {
     return (function() {
-      arg$outer$6.$$scope$1.selectedOrder = (void 0)
+      arg$outer$5.$$scope$1.selectedOrder = (void 0)
     })
   })(this);
-  $$scope.getPerformance = (function(arg$outer$7) {
+  $$scope.getPerformance = (function(arg$outer$6) {
     return (function() {
-      return arg$outer$7.mySession$1.getPerformance__sjs_js_Array()
+      return arg$outer$6.mySession$1.getPerformance__sjs_js_Array()
     })
   })(this);
-  $$scope.isPerformanceSelected = (function(arg$outer$8) {
+  $$scope.isPerformanceSelected = (function(arg$outer$7) {
     return (function() {
-      var array$2 = (0, arg$outer$8.$$scope$1.getPerformance)();
+      var array$2 = (0, arg$outer$7.$$scope$1.getPerformance)();
       if (($uI(array$2.length) !== 0)) {
-        var value$2 = arg$outer$8.$$scope$1.selectedPerformance;
+        var value$2 = arg$outer$7.$$scope$1.selectedPerformance;
         return (value$2 !== (void 0))
       } else {
         return false
       }
     })
   })(this);
-  $$scope.selectPerformance = (function(arg$outer$9) {
+  $$scope.selectPerformance = (function(arg$outer$8) {
     return (function(performance$2) {
-      arg$outer$9.$$scope$1.selectedPerformance = performance$2
+      arg$outer$8.$$scope$1.selectedPerformance = performance$2
     })
   })(this);
-  $$scope.toggleSelectedPerformance = (function(arg$outer$10) {
+  $$scope.toggleSelectedPerformance = (function(arg$outer$9) {
     return (function() {
-      arg$outer$10.$$scope$1.selectedPerformance = (void 0)
+      arg$outer$9.$$scope$1.selectedPerformance = (void 0)
     })
   })(this);
-  $$scope.cost = (function(f$5) {
-    return (function(arg1$3) {
-      return f$5.apply__O__O(arg1$3)
-    })
-  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$20().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.soldValue = (function(f$6) {
+  $$scope.cost = (function(f$6) {
     return (function(arg1$4) {
       return f$6.apply__O__O(arg1$4)
     })
-  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$21().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.proceeds = (function(f$7) {
+  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$20().init___Lcom_shocktrade_client_contest_PortfolioController(this));
+  $$scope.soldValue = (function(f$7) {
     return (function(arg1$5) {
       return f$7.apply__O__O(arg1$5)
     })
-  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$22().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.gainLoss = (function(f$8) {
+  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$21().init___Lcom_shocktrade_client_contest_PortfolioController(this));
+  $$scope.proceeds = (function(f$8) {
     return (function(arg1$6) {
       return f$8.apply__O__O(arg1$6)
     })
+  })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$22().init___Lcom_shocktrade_client_contest_PortfolioController(this));
+  $$scope.gainLoss = (function(f$9) {
+    return (function(arg1$7) {
+      return f$9.apply__O__O(arg1$7)
+    })
   })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$23().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.getPositions = (function(f$9) {
+  $$scope.getPositions = (function(f$10) {
     return (function() {
-      return f$9.apply__O()
+      return f$10.apply__O()
     })
   })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$24().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.isPositionSelected = (function(arg$outer$11) {
+  $$scope.isPositionSelected = (function(arg$outer$10) {
     return (function() {
-      var array$3 = (0, arg$outer$11.$$scope$1.getPositions)();
+      var array$3 = (0, arg$outer$10.$$scope$1.getPositions)();
       if (($uI(array$3.length) !== 0)) {
-        var value$3 = arg$outer$11.$$scope$1.selectedPosition;
+        var value$3 = arg$outer$10.$$scope$1.selectedPosition;
         return (value$3 !== (void 0))
       } else {
         return false
       }
     })
   })(this);
-  $$scope.selectPosition = (function(arg$outer$12) {
+  $$scope.selectPosition = (function(arg$outer$11) {
     return (function(position$2) {
-      arg$outer$12.$$scope$1.selectedPosition = position$2
+      arg$outer$11.$$scope$1.selectedPosition = position$2
     })
   })(this);
-  $$scope.sellPosition = (function(f$10) {
-    return (function(arg1$7, arg2$1) {
-      return f$10.apply__O__O__O(arg1$7, arg2$1)
+  $$scope.sellPosition = (function(f$11) {
+    return (function(arg1$8, arg2$2) {
+      return f$11.apply__O__O__O(arg1$8, arg2$2)
     })
   })(new $c_Lcom_shocktrade_client_contest_PortfolioController$$anonfun$27().init___Lcom_shocktrade_client_contest_PortfolioController(this));
-  $$scope.toggleSelectedPosition = (function(arg$outer$13) {
+  $$scope.toggleSelectedPosition = (function(arg$outer$12) {
     return (function() {
-      arg$outer$13.$$scope$1.selectedPosition = (void 0)
+      arg$outer$12.$$scope$1.selectedPosition = (void 0)
     })
   })(this);
   $$scope.tradingStart = (function() {
     return new $g.Date()
   });
   var this$19 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$14) {
+  var callback = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$13) {
     return (function(x$9$2, contest$2) {
       var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
       var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Contest '", "' selected"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contest$2.name]));
       jsx$1.log(s);
-      arg$outer$14.com$shocktrade$client$contest$PortfolioController$$resetOrders__V();
-      arg$outer$14.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
+      arg$outer$13.com$shocktrade$client$contest$PortfolioController$$resetOrders__V();
+      arg$outer$13.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$19.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestSelected$1, (function(f$11) {
-    return (function(arg1$8, arg2$2) {
-      return f$11.apply__O__O__O(arg1$8, arg2$2)
+  this$19.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestSelected$1, (function(f$12) {
+    return (function(arg1$9, arg2$3) {
+      return f$12.apply__O__O__O(arg1$9, arg2$3)
     })
   })(callback));
   var this$22 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback$1 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$15) {
+  var callback$1 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$14) {
     return (function(x$10$2, contest$2$1) {
       var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
       var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Contest '", "' updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contest$2$1.name]));
       jsx$2.log(s$1);
-      arg$outer$15.com$shocktrade$client$contest$PortfolioController$$resetOrders__V();
-      arg$outer$15.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
+      arg$outer$14.com$shocktrade$client$contest$PortfolioController$$resetOrders__V();
+      arg$outer$14.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$22.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestUpdated$1, (function(f$12) {
-    return (function(arg1$9, arg2$3) {
-      return f$12.apply__O__O__O(arg1$9, arg2$3)
+  this$22.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ContestUpdated$1, (function(f$13) {
+    return (function(arg1$10, arg2$4) {
+      return f$13.apply__O__O__O(arg1$10, arg2$4)
     })
   })(callback$1));
   var this$25 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback$2 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$16) {
+  var callback$2 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$15) {
     return (function(x$11$2, portfolioId$2) {
       var portfolioId = $as_T(portfolioId$2);
       var jsx$3 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
       var s$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Orders for Portfolio '", "' updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([portfolioId]));
       jsx$3.log(s$2);
-      arg$outer$16.com$shocktrade$client$contest$PortfolioController$$resetOrders__V()
+      arg$outer$15.com$shocktrade$client$contest$PortfolioController$$resetOrders__V()
     })
   })(this));
-  this$25.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().OrderUpdated$1, (function(f$13) {
-    return (function(arg1$10, arg2$4) {
-      return f$13.apply__O__O__O(arg1$10, arg2$4)
+  this$25.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().OrderUpdated$1, (function(f$14) {
+    return (function(arg1$11, arg2$5) {
+      return f$14.apply__O__O__O(arg1$11, arg2$5)
     })
   })(callback$2));
   var this$28 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback$3 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$17) {
+  var callback$3 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$16) {
     return (function(x$12$2, participant$2) {
       var jsx$4 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
       var s$3 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["[Portfolio] Player '", "' updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([participant$2.name]));
       jsx$4.log(s$3);
-      arg$outer$17.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
+      arg$outer$16.com$shocktrade$client$contest$PortfolioController$$resetPositions__V()
     })
   })(this));
-  this$28.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ParticipantUpdated$1, (function(f$14) {
-    return (function(arg1$11, arg2$5) {
-      return f$14.apply__O__O__O(arg1$11, arg2$5)
+  this$28.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().ParticipantUpdated$1, (function(f$15) {
+    return (function(arg1$12, arg2$6) {
+      return f$15.apply__O__O__O(arg1$12, arg2$6)
     })
   })(callback$3));
   return this

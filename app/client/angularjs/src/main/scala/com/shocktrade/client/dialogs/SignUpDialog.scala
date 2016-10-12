@@ -1,7 +1,7 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.util.StringHelper._
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
 import org.scalajs.angularjs.{Timeout, _}
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.http.Http

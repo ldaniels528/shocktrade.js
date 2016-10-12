@@ -1,8 +1,7 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest
 import com.shocktrade.client.models.contest.{Contest, Order, Portfolio}
-import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm}
 import com.shocktrade.common.models.contest._
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.{Service, angular}
@@ -20,62 +19,12 @@ import scala.util.{Failure, Success}
   */
 class PortfolioService($http: Http) extends Service {
 
-  /////////////////////////////////////////////////////////////////////////////
-  //			Positions & Orders
-  /////////////////////////////////////////////////////////////////////////////
-
-  def cancelOrder(portfolioId: String, orderId: String) = {
-    $http.delete[Portfolio](s"/api/portfolio/$portfolioId/order/$orderId")
-  }
-
-  def createOrder(portfolioId: String, order: NewOrderForm) = {
-    $http.post[Portfolio](s"/api/portfolio/$portfolioId/order", data = order)
-  }
-
-  def getOrders(portfolioId: String) = {
-    $http.get[js.Array[Order]](s"/api/portfolio/$portfolioId/orders")
-  }
-
-  def getPositions(portfolioId: String) = {
-    $http.get[js.Array[contest.Position]](s"/api/portfolio/$portfolioId/positions")
-  }
-
-  def getHeldSecurities(playerId: String) = {
-    $http.get[js.Array[String]](s"/api/portfolio/$playerId/positions/symbols")
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
-  //			Charts
-  /////////////////////////////////////////////////////////////////////////////
-
-  def getExposureChartData(contestID: String, playerID: String, exposure: String) = {
-    $http.get[js.Array[js.Object]](s"/api/charts/exposure/$exposure/$contestID/$playerID")
-  }
-
-  def getChart(contestID: String, playerName: String, chartName: String) = {
-    // determine the chart type
-    val chartType = if (chartName == "gains" || chartName == "losses") "performance" else "exposure"
-
-    // load the chart representing the securities
-    $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestID/$playerName")
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
-  //			Participants
-  /////////////////////////////////////////////////////////////////////////////
-
-  def getCashAccountMarketValue(portfolioId: String) = {
-    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/cashAccount/marketValue")
-  }
-
-  def getMarginAccountMarketValue(portfolioId: String) = {
-    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/marginAccount/marketValue")
-  }
-
-  def getRankings(contestId: String) = {
-    $http.get[js.Array[PortfolioRanking]](s"/api/portfolios/contest/$contestId/rankings")
-  }
-
+  /**
+    * Retrieves the contest rankings for each player
+    * @param aContest the given [[Contest contest]]
+    * @param aPlayerID the given player ID
+    * @return the [[ContestRankings contest rankings]]
+    */
   def getPlayerRankings(aContest: js.UndefOr[Contest], aPlayerID: js.UndefOr[String])(implicit ec: ExecutionContext): js.UndefOr[ContestRankings] = {
     for {
       contest <- aContest
@@ -108,10 +57,6 @@ class PortfolioService($http: Http) extends Service {
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
-  //			Other
-  /////////////////////////////////////////////////////////////////////////////
-
   /**
     * Retrieves a portfolio by a contest ID and player ID
     * @param contestID the given contest ID
@@ -140,8 +85,68 @@ class PortfolioService($http: Http) extends Service {
     $http.get[js.Array[Portfolio]](s"/api/portfolios/player/$playerID")
   }
 
+  def getRankings(contestId: String) = {
+    $http.get[js.Array[PortfolioRanking]](s"/api/portfolios/contest/$contestId/rankings")
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Positions & Orders
+  /////////////////////////////////////////////////////////////////////////////
+
+  def cancelOrder(portfolioId: String, orderId: String) = {
+    $http.delete[Portfolio](s"/api/portfolio/$portfolioId/order/$orderId")
+  }
+
+  def createOrder(portfolioId: String, order: NewOrderForm) = {
+    $http.post[Portfolio](s"/api/portfolio/$portfolioId/order", data = order)
+  }
+
+  def getOrders(portfolioId: String) = {
+    $http.get[js.Array[Order]](s"/api/portfolio/$portfolioId/orders")
+  }
+
+  def getPositions(portfolioId: String) = {
+    $http.get[js.Array[Position]](s"/api/portfolio/$portfolioId/positions")
+  }
+
+  def getHeldSecurities(playerId: String) = {
+    $http.get[js.Array[String]](s"/api/portfolio/$playerId/heldSecurities")
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Cash & Margin Accounts
+  /////////////////////////////////////////////////////////////////////////////
+
+  def getCashAccountMarketValue(portfolioId: String) = {
+    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/marketValue?accountType=cash")
+  }
+
+  def getMarginAccountMarketValue(portfolioId: String) = {
+    $http.get[MarketValueResponse](s"/api/portfolio/$portfolioId/marketValue?accountType=margin")
+  }
+
   def getTotalInvestment(playerID: String) = {
     $http.get[TotalInvestment](s"/api/portfolios/player/$playerID/totalInvestment")
+  }
+
+  def transferFunds(portfolioId: String, form: FundsTransferRequest) = {
+    $http.post[Portfolio](s"/api/portfolio/$portfolioId/transferFunds", form)
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //			Charts
+  /////////////////////////////////////////////////////////////////////////////
+
+  def getExposureChartData(contestID: String, playerID: String, exposure: String) = {
+    $http.get[js.Array[js.Object]](s"/api/charts/exposure/$exposure/$contestID/$playerID")
+  }
+
+  def getChart(contestID: String, playerName: String, chartName: String) = {
+    // determine the chart type
+    val chartType = if (chartName == "gains" || chartName == "losses") "performance" else "exposure"
+
+    // load the chart representing the securities
+    $http.get[js.Dynamic](s"/api/charts/$chartType/$chartName/$contestID/$playerName")
   }
 
 }

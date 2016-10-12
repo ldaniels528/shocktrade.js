@@ -1,7 +1,7 @@
 package com.shocktrade.common.forms
 
 import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 

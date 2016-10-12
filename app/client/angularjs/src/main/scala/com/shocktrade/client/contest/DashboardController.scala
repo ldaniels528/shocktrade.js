@@ -61,7 +61,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 
   $scope.popupTransferFundsDialog = () => {
     transferFundsDialog.popup() onComplete {
-      case Success(contest) => mySession.setContest(contest)
+      case Success(portfolio) => mySession.updatePortfolio(portfolio)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
           e.printStackTrace()

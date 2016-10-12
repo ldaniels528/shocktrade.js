@@ -2,7 +2,7 @@ package com.shocktrade.common.dao.contest
 
 import java.util.UUID
 
-import com.shocktrade.Commissions
+import com.shocktrade.common.Commissions
 import com.shocktrade.common.dao.Claim
 import org.scalajs.nodejs.mongodb.ObjectID
 

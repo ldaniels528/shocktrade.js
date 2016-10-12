@@ -1,6 +1,6 @@
 package com.shocktrade.server.services
 
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
 import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
 import org.scalajs.nodejs.{NodeRequire, console, errors}
 

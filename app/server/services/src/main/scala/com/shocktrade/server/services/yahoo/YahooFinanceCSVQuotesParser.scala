@@ -2,8 +2,8 @@ package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesParser._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
-import com.shocktrade.util.ParsingHelper._
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.ParsingHelper._
+import com.shocktrade.common.util.StringHelper._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.{NodeRequire, console}

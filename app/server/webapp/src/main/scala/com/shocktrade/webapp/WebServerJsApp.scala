@@ -2,7 +2,7 @@ package com.shocktrade.webapp
 
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
-import com.shocktrade.util.StringHelper._
+import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.webapp.routes._
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.bodyparser._
