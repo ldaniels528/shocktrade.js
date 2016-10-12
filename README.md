@@ -71,3 +71,4 @@ ShockTrade provides the capability of:
     $ node ./robots.js
 
 
+<img src="https://github.com/ldaniels528/shocktrade.js/blob/master/screenshots/discover.png">
