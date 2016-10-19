@@ -11,6 +11,7 @@ Table of Contents
 	* <a href="#build-requirements">Build Requirements</a>
 	* <a href="#project-dependencies">Project Dependencies</a>
 	* <a href="#building-the-code">Building the code</a>
+	* <a href="#installation">Installing the application</a>
 	* <a href="#testing-the-code">Running the tests</a>	
 	* <a href="#running-the-app">Running the application</a>
 	
@@ -50,6 +51,15 @@ ShockTrade provides the capability of:
 ### Building the application
 
     $ sbt fastOptJSCopy
+
+<a name="installation"></a>
+### Installing the application
+    
+The following is an one-time operation to create a working application:
+    
+    $ node ./daycycle.js --install 
+    
+The above will create and populate all of the reference data required by the application.    
     
 <a name="testing-the-code"></a>    
 ### Running the application locally

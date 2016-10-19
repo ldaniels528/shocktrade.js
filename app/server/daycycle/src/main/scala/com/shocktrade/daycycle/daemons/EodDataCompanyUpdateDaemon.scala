@@ -1,7 +1,7 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
   * Full Market Update Daemon (supports AMEX, NASDAQ, NYSE and OTCBB)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances
@@ -41,7 +41,7 @@ class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCon
     * Executes the process
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(tradingClock: TradingClock) = {
     val startTime = js.Date.now()
     val inputs = getInputPages
     val outcome = processor.start(inputs, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputPages](inputs.size) {
@@ -62,6 +62,7 @@ class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCon
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
   private def getInputPages: js.Array[InputPages] = {

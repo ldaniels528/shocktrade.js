@@ -10039,6 +10039,12 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktra
   var maintenanceAmount = ((this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D() - this.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D()) * this.com$shocktrade$client$contest$MarginAccountController$$maintenanceMargin$1);
   return ((maintenanceAmount > 0) ? maintenanceAmount : 0.0)
 });
+$c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D = (function() {
+  var myInvestmentCost = this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D();
+  var jsx$1 = this.com$shocktrade$client$contest$MarginAccountController$$funds__D();
+  var a = this.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1;
+  return (jsx$1 + ($uD($g.Math.max(a, myInvestmentCost)) - myInvestmentCost))
+});
 $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$funds__D = (function() {
   var this$1 = this.com$shocktrade$client$contest$MarginAccountController$$mySession$f.marginAccount$und$qmark__s_Option();
   if (this$1.isEmpty__Z()) {
@@ -10049,12 +10055,6 @@ $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktra
     var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
   };
   return $uD((this$5.isEmpty__Z() ? 0.0 : this$5.get__O()))
-});
-$c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.com$shocktrade$client$contest$MarginAccountController$$marginAccountEquity__D = (function() {
-  var myInvestmentCost = this.com$shocktrade$client$contest$MarginAccountController$$investmentCost__D();
-  var jsx$1 = this.com$shocktrade$client$contest$MarginAccountController$$funds__D();
-  var a = this.com$shocktrade$client$contest$MarginAccountController$$investmentMarketValue$1;
-  return (jsx$1 + ($uD($g.Math.max(a, myInvestmentCost)) - myInvestmentCost))
 });
 $c_Lcom_shocktrade_client_contest_MarginAccountController.prototype.init___Lcom_shocktrade_client_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService = (function($$scope, $$timeout, toaster, contestService, mySession, portfolioService) {
   this.com$shocktrade$client$contest$MarginAccountController$$$scope$f = $$scope;
@@ -10169,11 +10169,11 @@ $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.init___Lorg_scalajs
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getTotalInvestment__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(playerID) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolios/player/", "/totalInvestment"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([playerID])))
 });
-$c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getPortfoliosByContest__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(contestID) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolios/contest/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestID])))
-});
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getRankings__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(contestId) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolios/contest/", "/rankings"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestId])))
+});
+$c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getPortfoliosByContest__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(contestID) {
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/portfolios/contest/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([contestID])))
 });
 $c_Lcom_shocktrade_client_contest_PortfolioService.prototype.getPlayerRankings__sjs_js_UndefOr__sjs_js_UndefOr__s_concurrent_ExecutionContext__sjs_js_UndefOr = (function(aContest, aPlayerID, ec) {
   var f = new $c_Lcom_shocktrade_client_contest_PortfolioService$$anonfun$getPlayerRankings$1().init___Lcom_shocktrade_client_contest_PortfolioService__sjs_js_UndefOr__s_concurrent_ExecutionContext(this, aPlayerID, ec);

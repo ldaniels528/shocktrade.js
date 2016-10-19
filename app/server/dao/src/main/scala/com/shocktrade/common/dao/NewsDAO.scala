@@ -31,7 +31,7 @@ object NewsDAO {
       */
     @inline
     def findByID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.findOneFuture[NewsSource]("_id" $eq id.$oid)
+      dao.findOneFuture[NewsSourceData]("_id" $eq id.$oid)
     }
 
     /**
@@ -40,7 +40,7 @@ object NewsDAO {
       */
     @inline
     def findSources(implicit ec: ExecutionContext) = {
-      dao.find().toArrayFuture[NewsSource]
+      dao.find().toArrayFuture[NewsSourceData]
     }
   }
 

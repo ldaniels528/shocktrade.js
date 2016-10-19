@@ -32,7 +32,7 @@ object NewsRoutes {
       val id = request.params("id")
       val outcome = for {
         sourceOpt <- newsDAO.flatMap(_.findByID(id))
-        url = sourceOpt.map(_.url) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
+        url = sourceOpt.flatMap(_.url.toOption) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
         feeds <- rss.parse(url)
       } yield feeds
 

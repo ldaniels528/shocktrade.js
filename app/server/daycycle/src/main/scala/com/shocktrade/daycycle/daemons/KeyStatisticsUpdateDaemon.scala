@@ -2,7 +2,7 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.{KeyStatisticsData, SecurityRef}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
   * Key Statistics Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
@@ -71,6 +71,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
 }

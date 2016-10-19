@@ -5,13 +5,14 @@ import java.util.UUID
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
 /**
   * Represents a Daemon process
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-trait Daemon {
+trait Daemon[+T] {
 
   /**
     * Indicates whether the daemon is eligible to be executed
@@ -23,7 +24,7 @@ trait Daemon {
   /**
     * Executes the process
     */
-  def run(clock: TradingClock): Unit
+  def run(clock: TradingClock): Future[T]
 
 }
 
@@ -37,18 +38,18 @@ object Daemon {
   /**
     * Executes the daemon if it's eligible
     * @param clock the given [[TradingClock trading clock]]
-    * @param ref the given [[DaemonRef daemon reference]]
+    * @param ref   the given [[DaemonRef daemon reference]]
     */
-  def run(clock: TradingClock, ref: DaemonRef) = {
+  def run[T](clock: TradingClock, ref: DaemonRef[T]) = {
     if (ref.daemon.isReady(clock)) start(clock, ref)
   }
 
   /**
     * Executes the daemon
     * @param clock the given [[TradingClock trading clock]]
-    * @param ref the given [[DaemonRef daemon reference]]
+    * @param ref   the given [[DaemonRef daemon reference]]
     */
-  def start(clock: TradingClock, ref: DaemonRef) = {
+  def start[T](clock: TradingClock, ref: DaemonRef[T]) = {
     logger.info(s"Starting daemon '${ref.name}'...")
     ref.daemon.run(clock)
   }
@@ -58,7 +59,7 @@ object Daemon {
     * Schedules the collection of daemons for execution
     * @param daemons the given collection of [[DaemonRef daemon references]]
     */
-  def schedule(clock: TradingClock, daemons: Seq[DaemonRef]) = {
+  def schedule[T](clock: TradingClock, daemons: Seq[DaemonRef[T]]) = {
     daemons foreach { ref =>
       logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
       setTimeout(() => {
@@ -78,7 +79,7 @@ object Daemon {
     * @param delay     the initial delay before the daemon runs on it's regular interval
     * @param frequency the interval with which the daemon shall run
     */
-  case class DaemonRef(name: String, daemon: Daemon, kafkaReqd: Boolean, delay: FiniteDuration, frequency: FiniteDuration) {
+  case class DaemonRef[+T](name: String, daemon: Daemon[T], kafkaReqd: Boolean, delay: FiniteDuration, frequency: FiniteDuration) {
     val id = UUID.randomUUID().toString
   }
 

@@ -18,7 +18,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   */
 object DaemonRoutes {
 
-  def init(app: Application, daemons: Seq[DaemonRef], dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init[T](app: Application, daemons: Seq[DaemonRef[T]])(implicit ec: ExecutionContext, dbFuture: Future[Db], mongo: MongoDB, require: NodeRequire) = {
     val clock = new TradingClock()
     val daemonDict = js.Dictionary(daemons.map(d => d.id -> new DaemonJs(d.id, d.name, d.delay, d.frequency)): _*)
     val daemonMap = Map(daemons.map(d => d.id -> d): _*)

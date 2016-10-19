@@ -34,7 +34,7 @@ object ProcessHelper {
       * @return the option of the Zookeeper connection URL
       */
     @inline
-    def zookeeperConnect = process.env.get("kafka_connection") ?? process.env.get("KAFKA_CONNECTION")
+    def zookeeperConnect = process.env.get("zk_connection") ?? process.env.get("ZK_CONNECTION")
 
   }
 

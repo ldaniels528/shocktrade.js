@@ -2,7 +2,7 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
-import com.shocktrade.server.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
   * Bloomberg Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO & services
@@ -66,6 +66,7 @@ class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext,
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
 }

@@ -1,8 +1,10 @@
 package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome
+import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.services.NASDAQCompanyListService
 import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import org.scalajs.nodejs.NodeRequire
@@ -17,7 +19,7 @@ import scala.util.{Failure, Success}
   * Company List Update Daemon (supports AMEX, NASDAQ and NYSE)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateOutcome] {
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO and service references
@@ -35,24 +37,23 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     * Executes the process
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(tradingClock: TradingClock) = {
     val startTime = js.Date.now()
     val outcome = for {
       amex <- getCompanyList("AMEX")
       nasdaq <- getCompanyList("NASDAQ")
       nyse <- getCompanyList("NYSE")
       results <- processCompanyList(amex ++ nasdaq ++ nyse)
-    } yield results
+    } yield results.toBulkWrite
 
     outcome onComplete {
-      case Success(results) =>
-        logger.log(s"Process completed in %d seconds", (js.Date.now() - startTime) / 1000)
-        logger.info("records - nInserted: %d, nUpserted: %d, nMatched: %d, nModified: %d",
-          results.nInserted, results.nUpserted, results.nMatched, results.nModified)
+      case Success(stats) =>
+        logger.info(s"$stats in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
   private def processCompanyList(companies: Seq[NASDAQCompanyInfo]) = {

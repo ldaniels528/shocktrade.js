@@ -10,7 +10,7 @@ import com.shocktrade.server.common.TradingClock
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.Db
+import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.{NodeRequire, console}
 
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
   * Intra-Day Quote Daemon (NASDAQ Datafeed)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[BulkWriteOpResultObject]] {
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
@@ -49,7 +49,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, r
     * Persists intra-day quotes for all active orders to disk
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock): Unit = {
+  override def run(tradingClock: TradingClock) = {
     val startTime = js.Date.now()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.findActiveOrders())
@@ -67,6 +67,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, r
         console.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
   /**

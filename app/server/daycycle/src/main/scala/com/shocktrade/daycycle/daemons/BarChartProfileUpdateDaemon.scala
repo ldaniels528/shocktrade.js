@@ -2,7 +2,7 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.common.dao.securities.SecurityRef
-import com.shocktrade.server.concurrent.bulk.BulkUpdateHandler
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
   * Bar Chart Profile Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // get the DAO and service
@@ -60,12 +60,13 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
     } yield status
 
     outcome onComplete {
-      case Success(status) =>
-        logger.info(s"$status in %d seconds", (js.Date.now() - startTime) / 1000)
+      case Success(stats) =>
+        logger.info(s"$stats in %d seconds", (js.Date.now() - startTime) / 1000)
       case Failure(e) =>
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
 }

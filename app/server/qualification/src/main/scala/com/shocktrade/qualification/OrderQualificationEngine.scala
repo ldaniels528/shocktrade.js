@@ -10,7 +10,7 @@ import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, ObjectID}
+import org.scalajs.nodejs.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.DateHelper._
@@ -26,7 +26,7 @@ import scala.util.{Failure, Success, Try}
   * Order Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon {
+class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
@@ -51,7 +51,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock): Unit = {
+  override def run(clock: TradingClock) = {
     val isMarketCloseEvent = !clock.isTradingActive && clock.isTradingActive(lastRun)
     val startTime = System.currentTimeMillis()
     val outcome = for {
@@ -69,6 +69,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
         logger.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
     }
+    outcome
   }
 
   private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
