@@ -10281,74 +10281,83 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
     response.status(400).json(messages);
     $asUnit(next())
   } else {
-    var jsx$13 = form.symbol;
-    var jsx$12 = form.exchange;
-    var jsx$11 = form.accountType;
-    var jsx$10 = form.orderType;
-    var jsx$9 = form.priceType;
+    var jsx$15 = form.symbol;
+    var jsx$14 = form.exchange;
+    var jsx$13 = form.accountType;
+    var jsx$12 = form.orderType;
+    var jsx$11 = form.priceType;
     var valueA$10 = form.priceType;
     if (((valueA$10 !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA$10, "LIMIT"))) {
-      var jsx$8 = form.limitPrice
+      var jsx$10 = form.limitPrice
     } else {
-      var jsx$8 = (void 0)
+      var jsx$10 = (void 0)
     };
-    var jsx$7 = form.quantity;
-    var value$8 = new $g.Date();
+    var jsx$9 = form.quantity;
+    var date0 = new $g.Date();
+    var this$127 = new $c_s_concurrent_duration_package$DurationInt().init___I(1);
+    var unit = $m_ju_concurrent_TimeUnit$().DAYS$1;
+    var duration = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$127.scala$concurrent$duration$DurationInt$$n$1, unit);
+    var jsx$8 = $g.Date;
+    var jsx$7 = $uD(date0.getTime());
+    var t = duration.unit$2.toMillis__J__J(duration.length$2);
+    var lo = t.lo$2;
+    var hi = t.hi$2;
+    var value$8 = new jsx$8((jsx$7 - $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi)));
     var value$9 = form.orderTerm;
     if ((value$9 === (void 0))) {
       var jsx$4 = (void 0)
     } else {
       var s = $as_T(value$9);
-      var date0 = new $g.Date();
+      var date0$1 = new $g.Date();
       try {
-        var this$132 = new $c_sci_StringOps().init___T(s);
-        var this$134 = $m_jl_Integer$();
-        var $$this = this$132.repr$1;
-        var this$135 = new $c_s_util_Success().init___O(this$134.parseInt__T__I__I($$this, 10))
+        var this$136 = new $c_sci_StringOps().init___T(s);
+        var this$138 = $m_jl_Integer$();
+        var $$this = this$136.repr$1;
+        var this$139 = new $c_s_util_Success().init___O(this$138.parseInt__T__I__I($$this, 10))
       } catch (e) {
         var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
         if ((e$2 !== null)) {
           matchEnd8: {
-            var this$135;
+            var this$139;
             var o11 = $m_s_util_control_NonFatal$().unapply__jl_Throwable__s_Option(e$2);
             if ((!o11.isEmpty__Z())) {
               var e$3 = $as_jl_Throwable(o11.get__O());
-              var this$135 = new $c_s_util_Failure().init___jl_Throwable(e$3);
+              var this$139 = new $c_s_util_Failure().init___jl_Throwable(e$3);
               break matchEnd8
             };
             throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
           }
         } else {
-          var this$135;
+          var this$139;
           throw e
         }
       };
-      var n = $uI((this$135.isSuccess__Z() ? this$135.get__O() : 3));
-      var this$137 = new $c_s_concurrent_duration_package$DurationInt().init___I(n);
-      var unit = $m_ju_concurrent_TimeUnit$().DAYS$1;
-      var duration = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$137.scala$concurrent$duration$DurationInt$$n$1, unit);
+      var n = $uI((this$139.isSuccess__Z() ? this$139.get__O() : 3));
+      var this$141 = new $c_s_concurrent_duration_package$DurationInt().init___I(n);
+      var unit$1 = $m_ju_concurrent_TimeUnit$().DAYS$1;
+      var duration$1 = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$141.scala$concurrent$duration$DurationInt$$n$1, unit$1);
       var jsx$6 = $g.Date;
-      var jsx$5 = $uD(date0.getTime());
-      var t = duration.unit$2.toMillis__J__J(duration.length$2);
-      var lo = t.lo$2;
-      var hi = t.hi$2;
-      var value$10 = new jsx$6((jsx$5 + $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo, hi)));
+      var jsx$5 = $uD(date0$1.getTime());
+      var t$1 = duration$1.unit$2.toMillis__J__J(duration$1.length$2);
+      var lo$1 = t$1.lo$2;
+      var hi$1 = t$1.hi$2;
+      var value$10 = new jsx$6((jsx$5 + $m_sjsr_RuntimeLong$().scala$scalajs$runtime$RuntimeLong$$toDouble__I__I__D(lo$1, hi$1)));
       var jsx$4 = value$10
     };
-    var order = new $c_Lcom_shocktrade_common_dao_contest_OrderData((void 0), jsx$13, jsx$12, jsx$11, jsx$10, jsx$9, jsx$8, jsx$7, value$8, jsx$4, (void 0), (void 0));
+    var order = new $c_Lcom_shocktrade_common_dao_contest_OrderData((void 0), jsx$15, jsx$14, jsx$13, jsx$12, jsx$11, jsx$10, jsx$9, value$8, jsx$4, (void 0), (void 0));
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1, mongo$1$1, portfolioID$3, order$1) {
       return (function(x$13$2) {
-        var jsx$19 = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$();
-        var this$141 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$13$2);
-        var jsx$18 = this$141.dao$1;
+        var jsx$21 = $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$();
+        var this$145 = new $c_Lcom_shocktrade_common_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_common_dao_contest_PortfolioDAO(x$13$2);
+        var jsx$20 = this$145.dao$1;
         var $class = mongo$1$1.ObjectID;
         var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [portfolioID$3]));
         if ($is_sjs_js_ArrayOps(args)) {
           var x2 = $as_sjs_js_ArrayOps(args);
-          var jsx$16 = x2.scala$scalajs$js$ArrayOps$$array$f
+          var jsx$18 = x2.scala$scalajs$js$ArrayOps$$array$f
         } else if ($is_sjs_js_WrappedArray(args)) {
           var x3 = $as_sjs_js_WrappedArray(args);
-          var jsx$16 = x3.array$6
+          var jsx$18 = x3.array$6
         } else {
           var result = [];
           var i$3 = 0;
@@ -10358,16 +10367,16 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
             $uI(result.push(arg1$10));
             i$3 = ((1 + i$3) | 0)
           };
-          var jsx$16 = result
+          var jsx$18 = result
         };
-        var y = $newJSObjectWithVarargs($class, jsx$16);
+        var y = $newJSObjectWithVarargs($class, jsx$18);
         var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("_id", y)]);
-        var jsx$17 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-        var jsx$15 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+        var jsx$19 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+        var jsx$17 = $m_Lorg_scalajs_nodejs_mongodb_package$();
         var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("orders", order$1)]);
         var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1);
-        var jsx$14 = jsx$18.findOneAndUpdate(jsx$17, jsx$15.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$addToSet", y$1)), new $c_Lorg_scalajs_nodejs_mongodb_FindAndUpdateOptions((void 0), (void 0), (void 0), (void 0), false));
-        return jsx$19.promise2Future__sjs_js_Promise__s_concurrent_Future(jsx$14)
+        var jsx$16 = jsx$20.findOneAndUpdate(jsx$19, jsx$17.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$addToSet", y$1)), new $c_Lorg_scalajs_nodejs_mongodb_FindAndUpdateOptions((void 0), (void 0), (void 0), (void 0), false));
+        return jsx$21.promise2Future__sjs_js_Promise__s_concurrent_Future(jsx$16)
       })
     })(ec$1, mongo$1, portfolioID, order));
     $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(portfolioDAO$1, f, ec$1).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4, portfolioID$3$1) {
@@ -10397,9 +10406,9 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
           if ($is_s_util_Failure(x0$4)) {
             var x4 = $as_s_util_Failure(x0$4);
             var e$1 = x4.exception$2;
-            var jsx$20 = response$4.status(500);
+            var jsx$22 = response$4.status(500);
             var s$1 = e$1.getMessage__T();
-            jsx$20.send(s$1);
+            jsx$22.send(s$1);
             $asUnit(next$4());
             break matchEnd7
           };
@@ -11517,7 +11526,6 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$.prototype.com$shocktrade$webap
         };
         if (rc9) {
           var e$2 = x4.exception$2;
-          e$2.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1);
           var jsx$16 = response$9.status(500);
           var s = e$2.getMessage__T();
           jsx$16.send(s);
@@ -31110,7 +31118,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$$anonfun$25$$anonfun$apply$23$$
           var gainLoss_$percent = (void 0)
         } else {
           var equity = $uD(totalEquity);
-          var value$5 = (100 * ((equity - bal) / bal));
+          var value$5 = (100.0 * ((equity - bal) / bal));
           var gainLoss_$percent = value$5
         }
       };
@@ -31241,7 +31249,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$$anonfun$25$$anonfun$apply$23$$
             var gainLoss_$percent$1 = (void 0)
           } else {
             var equity$1 = $uD(totalEquity$1);
-            var value$11 = (100 * ((equity$1 - bal$1) / bal$1));
+            var value$11 = (100.0 * ((equity$1 - bal$1) / bal$1));
             var gainLoss_$percent$1 = value$11
           }
         };
@@ -31379,7 +31387,7 @@ $c_Lcom_shocktrade_webapp_routes_PortfolioRoutes$$anonfun$25$$anonfun$apply$23$$
           var gainLoss_$percent$2 = (void 0)
         } else {
           var equity$2 = $uD(totalEquity$2);
-          var value$17 = (100 * ((equity$2 - bal$2) / bal$2));
+          var value$17 = (100.0 * ((equity$2 - bal$2) / bal$2));
           var gainLoss_$percent$2 = value$17
         }
       };
