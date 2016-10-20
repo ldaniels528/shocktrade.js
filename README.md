@@ -45,7 +45,7 @@ ShockTrade provides the capability of:
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [ScalaJs-NodeJs 0.2.3.0] (https://github.com/ldaniels528/scalajs-nodejs)
+* [Transcendent.js 0.2.3.2] (https://github.com/ldaniels528/transcendent.js)
 
 <a name="building-the-code"></a>
 ### Building the application
