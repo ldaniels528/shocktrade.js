@@ -1,10 +1,11 @@
 package com.shocktrade.client.profile
 
 import com.shocktrade.common.forms.ExchangesForm
-import com.shocktrade.common.models.OnlineStatus
 import com.shocktrade.client.models.Profile
+import com.shocktrade.common.models.user.OnlineStatus
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
+import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.scalajs.js
 
@@ -20,9 +21,18 @@ class ProfileService($http: Http) extends Service {
 
   /**
     * Retrieves the current user's profile by FaceBook ID
+    * @param facebookID the given Facebook ID
     */
   def getProfileByFacebookID(facebookID: String) = {
     $http.get[Profile](s"/api/profile/facebook/$facebookID")
+  }
+
+  /**
+    * Retrieves (or creates) the current user's profile by FaceBook ID
+    * @param fbProfile the given [[FacebookProfileResponse Facebook profile]]
+    */
+  def getProfileViaFacebook(fbProfile: FacebookProfileResponse) = {
+    $http.post[Profile](s"/api/profile/facebook", data = fbProfile)
   }
 
   //////////////////////////////////////////////////////////////////////

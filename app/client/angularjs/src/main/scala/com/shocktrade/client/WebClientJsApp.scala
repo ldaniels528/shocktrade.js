@@ -6,6 +6,7 @@ import com.shocktrade.client.directives._
 import com.shocktrade.client.discover._
 import com.shocktrade.client.explore._
 import com.shocktrade.client.news._
+import com.shocktrade.client.posts.{PostController, PostService}
 import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
@@ -29,7 +30,7 @@ object WebClientJsApp extends js.JSApp {
   override def main() {
     // create the application
     val module = angular.createModule("shocktrade",
-      js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3", "toaster", "ui.bootstrap"))
+      js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3", "angularFileUpload", "toaster", "ui.bootstrap"))
 
     // add the custom directives
     module.directiveOf[AvatarDirective]("avatar")
@@ -51,6 +52,7 @@ object WebClientJsApp extends js.JSApp {
 
     // add the controllers and services
     configureServices(module)
+    configureFactories(module)
     configureControllers(module)
     configureDialogs(module)
 
@@ -67,6 +69,7 @@ object WebClientJsApp extends js.JSApp {
         .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
         .when("/home", RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
         .when("/news", RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
+        .when("/posts", RouteTo(templateUrl = "/views/posts/index.html", controller = classOf[PostController].getSimpleName))
         .when("/research", RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
         .when("/search", RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
         .otherwise(RouteTo(redirectTo = "/about/us"))
@@ -103,6 +106,10 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
   }
 
+  private def configureFactories(module: Module): Unit = {
+    module.factoryOf[UserFactory]("UserFactory")
+  }
+
   private def configureServices(module: Module) {
     module.serviceOf[ChatService]("ChatService")
     module.serviceOf[ConnectService]("ConnectService")
@@ -114,10 +121,12 @@ object WebClientJsApp extends js.JSApp {
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[PortfolioService]("PortfolioService")
     module.serviceOf[ProfileService]("ProfileService")
+    module.serviceOf[PostService]("PostService")
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[SocialServices]("SocialServices")
+    module.serviceOf[UserService]("UserService")
     module.serviceOf[WebSocketService]("WebSocketService")
   }
 
@@ -139,6 +148,7 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
     module.controllerOf[PortfolioController]("PortfolioController")
+    module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
   }

@@ -1,8 +1,8 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
-import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._

@@ -2,7 +2,7 @@ package com.shocktrade.common.models.contest
 
 import java.util.UUID
 
-import com.shocktrade.common.models.PlayerRef
+import com.shocktrade.common.models.user.User
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
@@ -14,7 +14,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   */
 @ScalaJSDefined
 class ChatMessage(val _id: js.UndefOr[String] = UUID.randomUUID().toString,
-                  val sender: js.UndefOr[PlayerRef],
+                  val sender: js.UndefOr[User],
                   val text: js.UndefOr[String],
                   val sentTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
 
@@ -32,7 +32,7 @@ object ChatMessage {
 
     @inline
     def copy(_id: js.UndefOr[String] = js.undefined,
-             sender: js.UndefOr[PlayerRef] = js.undefined,
+             sender: js.UndefOr[User] = js.undefined,
              text: js.UndefOr[String] = js.undefined,
              sentTime: js.UndefOr[js.Date] = js.undefined) = {
       new ChatMessage(

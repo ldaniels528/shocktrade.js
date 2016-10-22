@@ -2,8 +2,8 @@ package com.shocktrade.webapp.routes
 
 import java.util.UUID
 
-import com.shocktrade.common.dao.contest.ContestDAO._
-import com.shocktrade.common.dao.contest.ContestData
+import com.shocktrade.server.dao.contest.ContestDAO._
+import com.shocktrade.server.dao.contest.ContestData
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.models.contest.ChatMessage
 import org.scalajs.nodejs.express.{Application, Request, Response}

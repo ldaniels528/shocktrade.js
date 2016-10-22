@@ -3,7 +3,7 @@
     <div ng-if="!contestIsEmpty()" class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
-                <div class="rank_cell" ng-repeat="p in getRankings() track by $index">
+                <div class="rank_cell" ng-repeat="p in getRankings() | orderBy:'rank'">
                     <div class="pull-left" style="display: inline">
                         <avatar id="{{ p.facebookID }}" class="avatar-45"></avatar>
                     </div>

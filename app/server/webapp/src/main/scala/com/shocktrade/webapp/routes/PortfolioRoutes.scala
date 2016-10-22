@@ -1,15 +1,15 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.dao._
-import com.shocktrade.common.dao.contest.ContestDAO._
-import com.shocktrade.common.dao.contest.PerksDAO._
-import com.shocktrade.common.dao.contest.PortfolioDAO._
-import com.shocktrade.common.dao.contest.{ContestData, OrderData, PortfolioData, PositionData}
-import com.shocktrade.common.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm, PerksResponse}
-import com.shocktrade.common.models.contest.{MarketValueResponse, PortfolioRanking, PositionLike, TotalInvestment}
+import com.shocktrade.common.models.contest.{MarketValueResponse, Participant, PositionLike, TotalInvestment}
 import com.shocktrade.common.models.quote.PricingQuote
 import com.shocktrade.common.util.StringHelper._
+import com.shocktrade.server.dao._
+import com.shocktrade.server.dao.contest.ContestDAO._
+import com.shocktrade.server.dao.contest.PerksDAO._
+import com.shocktrade.server.dao.contest.PortfolioDAO._
+import com.shocktrade.server.dao.contest.{ContestData, OrderData, PortfolioData, PositionData}
+import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import org.scalajs.nodejs._
@@ -267,7 +267,7 @@ object PortfolioRoutes {
           val totalEquity = funds.map(_ + totalInvestment)
           val gainLoss_% = for (bal <- startingBalance; equity <- totalEquity) yield 100.0 * ((equity - bal) / bal)
 
-          new PortfolioRanking(
+          new Participant(
             _id = portfolio.playerID,
             facebookID = player.flatMap(_.facebookID),
             name = player.flatMap(_.name),

@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.models.OnlineStatus
+import com.shocktrade.common.models.user.OnlineStatus
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 

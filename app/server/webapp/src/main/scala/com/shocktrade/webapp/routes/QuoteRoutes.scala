@@ -1,10 +1,10 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.dao.securities.KeyStatisticsDAO._
-import com.shocktrade.common.dao.securities.KeyStatisticsData
-import com.shocktrade.common.dao.securities.NAICSDAO._
-import com.shocktrade.common.dao.securities.SICDAO._
-import com.shocktrade.common.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.dao.securities.KeyStatisticsDAO._
+import com.shocktrade.server.dao.securities.KeyStatisticsData
+import com.shocktrade.server.dao.securities.NAICSDAO._
+import com.shocktrade.server.dao.securities.SICDAO._
+import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, OrderQuote, ResearchQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService

@@ -1,17 +1,17 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.dao.contest.ContestDAO._
-import com.shocktrade.common.dao.contest.ContestData._
-import com.shocktrade.common.dao.contest.PerksDAO._
-import com.shocktrade.common.dao.contest.PortfolioDAO._
-import com.shocktrade.common.dao.contest.ProfileDAO._
-import com.shocktrade.common.dao.contest.{ContestData, _}
+import com.shocktrade.server.dao.contest.ContestDAO._
+import com.shocktrade.server.dao.contest.ContestData._
+import com.shocktrade.server.dao.contest.PerksDAO._
+import com.shocktrade.server.dao.contest.PortfolioDAO._
+import com.shocktrade.server.dao.users.ProfileDAO._
+import com.shocktrade.server.dao.contest.{ContestData, _}
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
 import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
-import org.scalajs.nodejs.{console, _}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.nodejs.{console, _}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -181,7 +181,13 @@ object ContestRoutes {
         contestName = contest.name,
         playerID = contest.creator.flatMap(_._id),
         cashAccount = new CashAccount(funds = contest.startingBalance, asOfDate = contest.startTime),
-        marginAccount = new MarginAccount(funds = 0.0, asOfDate = contest.startTime, initialMargin = 0.50, interestPaid = 0.00),
+        marginAccount = new MarginAccount(
+          funds = 0.0,
+          asOfDate = contest.startTime,
+          initialMargin = 0.50,
+          interestPaid = 0.00,
+          interestPaidToDate = new js.Date()
+        ),
         orders = emptyArray[OrderData],
         closedOrders = emptyArray[OrderData],
         positions = emptyArray[PositionData],

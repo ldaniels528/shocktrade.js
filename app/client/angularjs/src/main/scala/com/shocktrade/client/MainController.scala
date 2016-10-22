@@ -1,13 +1,13 @@
 package com.shocktrade.client
 
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.OnlineStatus
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.Profile
 import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.common.models.user.OnlineStatus
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.toaster._
@@ -42,6 +42,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.appTabs = js.Array(
     new MainTab(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),
+    new MainTab(name = "NewsFeed", icon_class = "fa-globe", tool_tip = "My Newsfeed", url = "/posts", authenticationRequired = false),
     new MainTab(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
     new MainTab(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
     new MainTab(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
@@ -123,7 +124,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getFundsAvailable = () => mySession.getFundsAvailable
 
-  $scope.getNetWorth = () => mySession.getNetWorth.getOrElse(0d)
+  $scope.getNetWorth = () => mySession.getNetWorth.orZero
 
   $scope.getUserID = () => mySession.userProfile._id.orNull
 
@@ -225,9 +226,11 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     outcome onComplete {
       case Success((fbProfile, fbFriends, profile)) =>
         console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
-        nonMember = false
-        mySession.setUserProfile(profile, fbProfile)
-        mySession.fbFriends_? = fbFriends
+        $scope.$apply(() => {
+          nonMember = false
+          mySession.setUserProfile(profile, fbProfile)
+          mySession.fbFriends_? = fbFriends
+        })
       case Failure(e) =>
         toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
     }

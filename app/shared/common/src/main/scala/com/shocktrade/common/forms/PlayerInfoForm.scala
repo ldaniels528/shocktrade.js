@@ -1,6 +1,6 @@
 package com.shocktrade.common.forms
 
-import com.shocktrade.common.models.PlayerRef
+import com.shocktrade.common.models.user.User
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -9,4 +9,4 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * PlayerInfoForm
   */
 @ScalaJSDefined
-class PlayerInfoForm(val player: PlayerRef) extends js.Object
+class PlayerInfoForm(val player: User) extends js.Object

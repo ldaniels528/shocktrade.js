@@ -22,16 +22,17 @@
 <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
     <div ng-class="includeExpiry ? 'col-md-4' : 'col-md-6'">
         <img ng-show="c.loading" src="/images/status/loading16.gif">
-        <avatar ng-hide="c.loading" id="{{ c.rankings.leader.facebookID || c.participants[0].facebookID }}" class="avatar-20"></avatar> {{ c.name }}
+        <avatar ng-hide="c.loading" id="{{ c.leader.facebookID || c.participants[0].facebookID }}" class="avatar-20"></avatar> {{ c.name }}
     </div>
 
     <div ng-show="includeExpiry">
         <div ng-show="includeExpiry" class="col-md-2 center">
-            <span ng-if="c.rankings.leader">
-                <avatar id="{{ c.rankings.leader.facebookID }}" class="avatar-20" title="{{ c.rankings.leader.name }}"></avatar>
-                <span ng-class="c.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-                    <changearrow value="{{ c.rankings.leader.gainLoss }}"></changearrow>
-                    {{ c.rankings.leader.gainLoss | abs | number:2 }}%
+            <span ng-if="c.leader">
+                <avatar id="{{ c.leader.facebookID }}" class="avatar-20" title="{{ c.leader.name }}"></avatar>
+                 <span class="positive">$ {{ c.player.totalEquity | number:2 }}</span>
+                <span ng-class="c.leader.gainLoss >= 0 ? 'positive' : 'negative'">
+                    <changearrow value="{{ c.leader.gainLoss }}"></changearrow>
+                    {{ c.leader.gainLoss | abs | number:2 }}%
                 </span>
             </span>
         </div>

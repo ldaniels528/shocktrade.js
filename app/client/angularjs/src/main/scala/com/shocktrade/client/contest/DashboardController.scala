@@ -1,9 +1,9 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.models.contest.{ContestRankings, PortfolioRanking}
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.{PerksDialog, TransferFundsDialog}
+import com.shocktrade.common.models.contest.Participant
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, Timeout, injected}
@@ -79,17 +79,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 
   $scope.getRankings = () => {
     mySession.contest_?.orUndefined flatMap { contest =>
-      // if the rankings are not loaded, load them
-      if (contest.rankings.isEmpty) {
-        mySession.userProfile._id foreach { playerId =>
-          contest.rankings = new ContestRankings()
-          mySession.getContestRankings(contest, playerId) onSuccess { case rankings =>
-            $scope.$apply(() => contest.rankings = rankings)
-          }
-        }
-      }
-
-      contest.rankings.flatMap(_.participants)
+      mySession.updateRankings(contest).participants
     }
   }
 
@@ -140,7 +130,7 @@ trait DashboardScope extends Scope {
   var popupTransferFundsDialog: js.Function0[Unit] = js.native
   var isRankingsShown: js.Function0[Boolean] = js.native
   var toggleRankingsShown: js.Function0[Unit] = js.native
-  var getRankings: js.Function0[js.UndefOr[js.Array[PortfolioRanking]]] = js.native
+  var getRankings: js.Function0[js.UndefOr[js.Array[Participant]]] = js.native
 
 }
 

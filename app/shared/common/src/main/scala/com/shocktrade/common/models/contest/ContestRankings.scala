@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class ContestRankings(var participants: js.UndefOr[js.Array[PortfolioRanking]] = js.undefined,
-                      var leader: js.UndefOr[PortfolioRanking] = js.undefined,
-                      var player: js.UndefOr[PortfolioRanking] = js.undefined) extends js.Object
+class ContestRankings(var participants: js.UndefOr[js.Array[Participant]] = js.undefined,
+                      var leader: js.UndefOr[Participant] = js.undefined,
+                      var player: js.UndefOr[Participant] = js.undefined) extends js.Object
 

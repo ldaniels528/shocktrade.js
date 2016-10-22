@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.contest
 
-import com.shocktrade.common.models.PlayerRef
+import com.shocktrade.common.models.user.User
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
@@ -15,7 +15,7 @@ trait ContestLike extends js.Object {
 
   def name: js.UndefOr[String]
 
-  def creator: js.UndefOr[PlayerRef]
+  def creator: js.UndefOr[User]
 
   def startTime: js.UndefOr[js.Date]
 
@@ -23,13 +23,13 @@ trait ContestLike extends js.Object {
 
   def status: js.UndefOr[String]
 
+  def messages: js.UndefOr[js.Array[ChatMessage]]
+
   /////////////////////////////////////////////////////////////////////////
-  //  Collections
+  //  Participants and Rankings
   /////////////////////////////////////////////////////////////////////////
 
   def participants: js.UndefOr[js.Array[Participant]]
-
-  def messages: js.UndefOr[js.Array[ChatMessage]]
 
   /////////////////////////////////////////////////////////////////////////
   //  Indicators

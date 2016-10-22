@@ -1,0 +1,5 @@
+<div ng-controller="PostController" ng-init="init()" class="row" style="margin-left: 5px">
+    <div ng-show="newPost && getFacebookProfile()" ng-include="'/views/posts/new_post.html'"></div>
+    <div ng-include="'/views/posts/posts_header.html'"></div>
+    <div ng-include="'/views/posts/postings.html'"></div>
+</div>

@@ -23,29 +23,4 @@ db.Stocks.find({ exchange : null, exchangeCategory : { $ne : null }}).forEach(fu
 	db.Stocks.update({ _id : elem._id }, { $set : { exchange : elem.exchangeCategory } });
 });
 
-db.Stocks.find({}, {symbol:1, exchange:1});
-
 db.Stocks.update({exchange:"OTC BB"}, {$set:{exchange : "OTCBB"}}, {multi:true});
-
-db.Stocks.update({symbol: "DLCR"}, {
-	$set: {
-		sector: "Consumer Discretionary",
-		industry: "Apparel & Textile Products",
-		subIndustry: "Apparel, Footwear, Acc Desgn"
-	}
-});
-
-db.zipcodes.aggregate({
-	$group : {
-		_id : "$state",
-		totalPop : {
-			$sum : "$pop"
-		}
-	}
-}, {
-	$match : {
-		totalPop : {
-			$gte : 10 * 1000 * 1000
-		}
-	}
-});

@@ -1,16 +1,16 @@
 package com.shocktrade.client
 
-import com.shocktrade.common.models.contest.{ChatMessage, Participant}
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.contest.{ChatService, ContestRankingCapability, ContestService, PortfolioService}
+import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
 import com.shocktrade.client.models.Profile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.common.models.contest.{ChatMessage, Participant}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs._
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
@@ -35,7 +35,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
                             @injected("PortfolioService") portfolioService: PortfolioService,
                             @injected("ProfileService") profileService: ProfileService,
                             @injected("QuoteCache") quoteCache: QuoteCache)
-  extends Service with ContestRankingCapability {
+  extends Service {
 
   private val notifications = emptyArray[String]
   var facebookID: js.UndefOr[String] = js.undefined
@@ -179,6 +179,14 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     } map (_.headOption)
   }
 
+  def updateRankings(contest: Contest) = {
+    if (contest.leader.nonAssigned || contest.player.nonAssigned) {
+      contest.leader = contest.participants.flatMap(_.find(_.rank.contains("1st")).orUndefined)
+      contest.player = contest.participants.flatMap(_.find(_._id ?== userProfile._id).orUndefined)
+    }
+    contest
+  }
+
   def updatePortfolio(portfolio: Portfolio) = {
     console.log(s"portfolio = ${angular.toJson(portfolio)}")
     portfolio_? = Option(portfolio)
@@ -276,38 +284,21 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     // capture the Facebook user ID
     this.facebookID = facebookID
 
+    console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     val outcome = for {
-    // load the user's ShockTrade profile
-      profile <- {
-        console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
-        profileService.getProfileByFacebookID(facebookID)
-      }
-
-      // load the user"s Facebook profile
-      fbProfile <- {
-        console.log(s"Retrieving Facebook profile for FBID $facebookID...")
-        facebook.getUserProfile
-      }
-
-      fbFriends <- {
-        console.log(s"Loading Facebook friends for FBID $facebookID...")
-        facebook.getTaggableFriends
-      }
-
-      fbCloseFriends <- {
-        console.log(s"Loading Facebook close friends for FBID $facebookID...")
-        facebook.getFriendList()
-      }
-
-    } yield (profile, fbProfile, fbFriends, fbCloseFriends)
+      fbProfile <- facebook.getUserProfile
+      profile <- profileService.getProfileViaFacebook(fbProfile)
+      taggableFriends <- facebook.getTaggableFriends
+      closeFriends <- facebook.getFriendList()
+    } yield (profile, fbProfile, taggableFriends, closeFriends)
 
     outcome onComplete {
-      case Success((profile, fbProfile, fbFriends, fbCloseFriends)) =>
-        console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
-        console.log(s"fbCloseFriends = ${angular.toJson(fbCloseFriends, pretty = true)}")
-        this.fbProfile_? = fbProfile
-        this.fbFriends_? = fbFriends
-        setUserProfile(profile, fbProfile)
+      case Success((profile, fbProfile, taggableFriends, closeFriends)) =>
+        $rootScope.$apply(() => {
+          this.fbProfile_? = fbProfile
+          this.fbFriends_? = taggableFriends
+          setUserProfile(profile, fbProfile)
+        })
       case Failure(e) =>
         toaster.error(s"Profile retrieval error - ${e.displayMessage}")
         console.error(s"Profile retrieval error - ${e.displayMessage}")

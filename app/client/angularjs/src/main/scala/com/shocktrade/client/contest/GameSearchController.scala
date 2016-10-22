@@ -8,6 +8,7 @@ import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.Profile
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
+import com.shocktrade.common.models.user.User
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, angular, injected, _}
 import org.scalajs.dom.console
@@ -135,10 +136,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     } {
       console.log(s"Selecting contest '${contest.name}' ($contestId)")
       splitScreen = true
-
-      if (contest.rankings.nonEmpty) {
-        mySession.userProfile._id.foreach(portfolioService.getPlayerRankings(contest, _))
-      }
+      mySession.updateRankings(contest)
     }
   }
 
@@ -199,7 +197,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       userId <- mySession.userProfile._id.toOption
     } {
       contest.joining = true
-      val form = new PlayerInfoForm(player = new PlayerRef(_id = userId, name = mySession.userProfile.name, facebookID = facebookID))
+      val form = new PlayerInfoForm(player = new User(_id = userId, name = mySession.userProfile.name, facebookID = facebookID))
       asyncLoading($scope)(contestService.joinContest(contestId, form)) onComplete {
         case Success(joinedContest) =>
           $scope.$apply { () =>

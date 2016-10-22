@@ -1,61 +1,19 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest.{Contest, Order, Portfolio}
+import com.shocktrade.client.models.contest.{Order, Portfolio}
 import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm}
 import com.shocktrade.common.models.contest._
+import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.{Service, angular}
 import org.scalajs.dom._
-import org.scalajs.sjs.JsUnderOrHelper._
 
-import scala.concurrent.ExecutionContext
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
-import scala.util.{Failure, Success}
 
 /**
   * Portfolio Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class PortfolioService($http: Http) extends Service {
-
-  /**
-    * Retrieves the contest rankings for each player
-    * @param aContest the given [[Contest contest]]
-    * @param aPlayerID the given player ID
-    * @return the [[ContestRankings contest rankings]]
-    */
-  def getPlayerRankings(aContest: js.UndefOr[Contest], aPlayerID: js.UndefOr[String])(implicit ec: ExecutionContext): js.UndefOr[ContestRankings] = {
-    for {
-      contest <- aContest
-      contestId <- contest._id
-      playerID <- aPlayerID
-    } yield {
-      contest.rankings.toOption match {
-        case Some(rankings) => rankings
-        case None =>
-          // create the rankings object: { participants: [], leader:null, player:null }
-          val rankings = new ContestRankings()
-          contest.rankings = rankings
-          console.log(s"Loading Contest Rankings for '${contest.name}'...")
-
-          // asynchronously retrieve the rankings
-          getRankings(contestId) onComplete {
-            case Success(participantRankings) =>
-              console.log(s"participantRankings = ${angular.toJson(participantRankings)}")
-              contest.rankings.foreach { rankings =>
-                rankings.participants = participantRankings
-                rankings.leader = participantRankings.headOption.orUndefined
-                rankings.player = participantRankings.find(p => p._id.contains(playerID) || p.facebookID.contains(playerID)).orUndefined
-              }
-            case Failure(e) =>
-              console.error(s"Error loading player rankings: ${e.getMessage}")
-              e.printStackTrace()
-          }
-          rankings
-      }
-    }
-  }
 
   /**
     * Retrieves a portfolio by a contest ID and player ID
@@ -86,7 +44,7 @@ class PortfolioService($http: Http) extends Service {
   }
 
   def getRankings(contestId: String) = {
-    $http.get[js.Array[PortfolioRanking]](s"/api/portfolios/contest/$contestId/rankings")
+    $http.get[js.Array[Participant]](s"/api/portfolios/contest/$contestId/rankings")
   }
 
   /////////////////////////////////////////////////////////////////////////////

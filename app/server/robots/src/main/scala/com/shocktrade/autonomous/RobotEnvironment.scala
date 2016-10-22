@@ -1,6 +1,6 @@
 package com.shocktrade.autonomous
 
-import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, PositionData}
+import com.shocktrade.server.dao.contest.{OrderData, PortfolioData, PositionData}
 
 /**
   * Represents a robot's operating environment

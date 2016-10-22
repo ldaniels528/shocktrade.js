@@ -1,8 +1,10 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
-import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs._
+import org.scalajs.angularjs.toaster.Toaster
+import org.scalajs.sjs.JsUnderOrHelper._
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -58,7 +60,7 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
 
   $scope.getCashFunds = () => funds
 
-  $scope.getInterestPaid = () => mySession.marginAccount_?.flatMap(_.interestPaid.toOption) getOrElse 0.0d
+  $scope.getInterestPaid = () => mySession.marginAccount_?.flatMap(_.interestPaid.toOption) orZero
 
   $scope.getInterestRate = () => interestRate
 
@@ -83,14 +85,14 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def funds = mySession.marginAccount_?.flatMap(_.funds.toOption) getOrElse 0.0d
+  private def funds = mySession.marginAccount_?.flatMap(_.funds.toOption) orZero
 
   private def investmentCost = {
     val outcome = for {
       portfolio <- mySession.portfolio_?.toList
       positions <- portfolio.positions.toList
       marginPositions = positions.filter(_.isMarginAccount)
-    } yield marginPositions.map(_.totalCost.getOrElse(0d)).sum
+    } yield marginPositions.map(_.totalCost.orZero).sum
     outcome.sum
   }
 

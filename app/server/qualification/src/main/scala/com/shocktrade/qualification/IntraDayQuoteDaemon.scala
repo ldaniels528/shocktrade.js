@@ -1,8 +1,8 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.common.dao.securities.IntraDayQuoteData
-import com.shocktrade.common.dao.securities.IntraDayQuotesDAO._
+import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
+import com.shocktrade.server.dao.securities.IntraDayQuoteData
+import com.shocktrade.server.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.common.models.contest.OrderLike
 import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.qualification.IntraDayQuoteDaemon._

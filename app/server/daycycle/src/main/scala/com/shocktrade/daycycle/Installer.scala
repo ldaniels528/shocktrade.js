@@ -1,13 +1,13 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.common.dao.NewsDAO._
-import com.shocktrade.common.dao.NewsSourceData
-import com.shocktrade.common.dao.contest.AwardsDAO._
-import com.shocktrade.common.dao.contest.PerksDAO._
-import com.shocktrade.common.dao.contest.{AwardData, PerkData}
+import com.shocktrade.server.dao.NewsDAO._
+import com.shocktrade.server.dao.contest.AwardsDAO._
+import com.shocktrade.server.dao.contest.PerksDAO._
+import com.shocktrade.server.dao.contest.{AwardData, PerkData}
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.server.dao.NewsSourceData
 import org.scalajs.nodejs.mongodb.{Db, WriteOptions}
 import org.scalajs.nodejs.{NodeRequire, setImmediate}
 

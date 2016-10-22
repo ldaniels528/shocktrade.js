@@ -1,7 +1,7 @@
 package com.shocktrade.client.models
 
-import com.shocktrade.common.models.ProfileLike
-import com.shocktrade.common.models.ProfileLike.QuoteFilter
+import com.shocktrade.common.models.user.ProfileLike
+import com.shocktrade.common.models.user.ProfileLike.QuoteFilter
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -23,6 +23,7 @@ class Profile(var _id: js.UndefOr[String] = js.undefined,
               var favoriteSymbols: js.UndefOr[js.Array[String]] = js.undefined,
               var recentSymbols: js.UndefOr[js.Array[String]] = js.undefined,
               var filters: js.UndefOr[js.Array[QuoteFilter]] = js.undefined,
+              var followers: js.UndefOr[js.Array[String]] = js.undefined,
               var friends: js.UndefOr[js.Array[String]] = js.undefined,
               var accomplishments: js.UndefOr[js.Array[String]] = js.undefined,
               var acquaintances: js.UndefOr[js.Array[String]] = js.undefined,

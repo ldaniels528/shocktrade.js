@@ -4,13 +4,12 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 
-val appVersion = "0.1.0"
+val appVersion = "0.1.1"
 
 val appScalaVersion = "2.11.8"
-val paradisePluginVersion = "3.0.0-M1"
 val scalaJsDomVersion = "0.9.0"
 val scalaJsJQueryVersion = "0.9.0"
-val scalaJsNodeVersion = "0.2.3.2"
+val scalaJsNodeVersion = "0.2.3.3"
 
 scalaJSUseRhino in Global := false
 
@@ -41,11 +40,9 @@ lazy val appSettings = Seq(
   persistLauncher in Test := false,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
-  addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
   resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
-    //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
     "org.scala-lang" % "scala-reflect" % appScalaVersion,
     //
@@ -60,7 +57,6 @@ lazy val moduleSettings = Seq(
   scalaVersion := appScalaVersion,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
-  addCompilerPlugin("org.scalamacros" % "paradise" % paradisePluginVersion cross CrossVersion.full),
   resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(

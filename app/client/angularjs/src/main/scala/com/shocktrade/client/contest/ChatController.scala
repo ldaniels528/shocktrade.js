@@ -1,11 +1,11 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.models.PlayerRef
 import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.client.Filters.toDuration
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
+import com.shocktrade.common.models.user.User
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.anchorscroll.AnchorScroll
 import org.scalajs.angularjs.toaster.Toaster
@@ -107,7 +107,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
         if (messageText.trim.nonEmpty) {
           // build the message blob
           val message = new ChatMessage(
-            sender = new PlayerRef(_id = playerId, name = mySession.getUserName, facebookID = facebookID),
+            sender = new User(_id = playerId, name = mySession.getUserName, facebookID = facebookID),
             text = messageText
           )
 

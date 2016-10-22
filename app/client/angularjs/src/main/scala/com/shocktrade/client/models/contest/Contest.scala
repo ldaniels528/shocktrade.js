@@ -1,7 +1,7 @@
 package com.shocktrade.client.models.contest
 
-import com.shocktrade.common.models.PlayerRef
-import com.shocktrade.common.models.contest.{ChatMessage, ContestLike, ContestRankings, Participant}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestLike, Participant}
+import com.shocktrade.common.models.user.User
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -13,27 +13,23 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 @ScalaJSDefined
 class Contest(var _id: js.UndefOr[String] = js.undefined,
               var name: js.UndefOr[String] = js.undefined,
-              var creator: js.UndefOr[PlayerRef] = js.undefined,
+              var creator: js.UndefOr[User] = js.undefined,
               var startTime: js.UndefOr[js.Date] = js.undefined,
               var startingBalance: js.UndefOr[Double] = js.undefined,
               var status: js.UndefOr[String] = js.undefined,
-
-              // collections
-              var participants: js.UndefOr[js.Array[Participant]] = js.undefined,
               var messages: js.UndefOr[js.Array[ChatMessage]] = js.undefined,
-
+              // participants & rankings
+              var participants: js.UndefOr[js.Array[Participant]] = js.undefined,
+              var leader: js.UndefOr[Participant] = js.undefined,
+              var player: js.UndefOr[Participant] = js.undefined,
               // UI-specific elements
               var loading: js.UndefOr[Boolean] = js.undefined,
-
               // indicators
               var friendsOnly: js.UndefOr[Boolean] = js.undefined,
               var invitationOnly: js.UndefOr[Boolean] = js.undefined,
               var levelCap: js.UndefOr[String] = js.undefined,
               var perksAllowed: js.UndefOr[Boolean] = js.undefined,
               var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends ContestLike {
-
-  // UI-specific properties
-  var rankings: js.UndefOr[ContestRankings] = js.undefined
 
   // administrative fields
   var error: js.UndefOr[String] = js.undefined
@@ -42,5 +38,24 @@ class Contest(var _id: js.UndefOr[String] = js.undefined,
   var joining: Boolean = false
   var quitting: Boolean = false
   var starting: Boolean = false
+
+}
+
+/**
+  * Contest Companion
+  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  */
+object Contest {
+
+  /**
+    * Contest Enrichment
+    * @param contest the given [[Contest contest]]
+    */
+  implicit class ContestEnrichment(val contest: Contest) extends AnyVal {
+
+    @inline
+    def totalInvestment = contest.player.flatMap(_.totalEquity)
+
+  }
 
 }

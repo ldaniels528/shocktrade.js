@@ -43,12 +43,14 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     console.log("Loading news sources...")
     asyncLoading($scope)(newsService.getNewsSources) onComplete {
       case Success(sources) =>
-        this.newsSources = sources
+        $scope.$apply { () =>
+          this.newsSources = sources
 
-        // select the ID of the first feed
-        sources.headOption.orUndefined.flatMap(_._id) foreach { feed =>
-          $scope.selection.feed = feed
-          findNewsFeed(feed)
+          // select the ID of the first feed
+          sources.headOption.orUndefined.flatMap(_._id) foreach { feed =>
+            $scope.selection.feed = feed
+            findNewsFeed(feed)
+          }
         }
       case Failure(e) =>
         toaster.error("Failed to load news sources")
@@ -76,9 +78,11 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(feedChannels) =>
-        //populateQuotes(feedChannels) TODO
-        this.newsChannels = feedChannels; //getEnrichedChannels(feedChannels)
-        removeImageTags(feedChannels)
+        $scope.$apply { () =>
+          //populateQuotes(feedChannels) TODO
+          this.newsChannels = feedChannels; //getEnrichedChannels(feedChannels)
+          removeImageTags(feedChannels)
+        }
       case Failure(e) =>
         toaster.error(s"Failed to load news feed $feedId")
     }

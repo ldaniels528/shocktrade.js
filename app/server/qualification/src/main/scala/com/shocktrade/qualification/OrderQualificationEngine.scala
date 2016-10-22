@@ -1,24 +1,28 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.common.dao.Claim
-import com.shocktrade.common.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.common.dao.contest.{OrderData, PortfolioData, WorkOrder}
-import com.shocktrade.common.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.common.models.contest._
-import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.common.models.quote.PricingQuote
+import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import org.scalajs.nodejs._
+import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.server.dao.contest.ContestDAO._
+import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
+import com.shocktrade.server.dao.contest._
+import com.shocktrade.server.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
+import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success, Try}
 
@@ -33,12 +37,14 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   // get DAO and service references
   private val logger = LoggerFactory.getLogger(getClass)
+  private val contestDAO = dbFuture.flatMap(_.getContestDAO)
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
 
   // internal fields
   private var lastRun: js.Date = new js.Date()
-  private val separator = "=" * 80
+  private val separator = "=" * 90
 
   /**
     * Indicates whether the daemon is eligible to be executed
@@ -55,6 +61,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     val isMarketCloseEvent = !clock.isTradingActive && clock.isTradingActive(lastRun)
     val startTime = System.currentTimeMillis()
     val outcome = for {
+      w <- updateContestsWithRankings()
       portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
       claims <- Future.sequence(portfolios.toSeq map (processOrders(_, isMarketCloseEvent))) map (_.flatten)
     } yield claims
@@ -74,7 +81,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
     logger.log(separator)
-    logger.log(s"Processing portfolio # ${portfolio._id}")
+    logger.log(s"Processing portfolio ${portfolio.playerID} / ${portfolio.contestName}")
 
     // determine the as-of date
     val asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
@@ -100,14 +107,8 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     logger.log(s"Processing order fulfillment...")
     Future.sequence {
       workOrders map { wo =>
-        val outcome = if (wo.order.isBuyOrder) {
-          //logger.log("Creating new position - %j", wo)
-          portfolioDAO.flatMap(_.insertPosition(wo))
-        } else {
-          //logger.log("Reducing position - %j", wo)
-          portfolioDAO.flatMap(_.reducePosition(wo))
-        }
-
+        // attempt to fulfill the BUY/SELL order
+        val outcome = portfolioDAO.flatMap(if (wo.order.isBuyOrder) _.insertPosition(wo) else _.reducePosition(wo))
         outcome foreach { result =>
           logger.info(s"Order # ${wo.order._id}: ${wo.order.symbol} x ${wo.order.quantity} - result => ", result.result)
         }
@@ -142,7 +143,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def performQualification(portfolio: PortfolioData, orders: Seq[OrderData], quotes: Seq[WorkQuote]) = {
-    logger.log(s"Performing qualification <portfolio ${portfolio._id.orNull}>")
+    logger.log(s"Performing qualification <portfolio ${portfolio.playerID} / ${portfolio.contestName}>")
     val quoteMapping = js.Dictionary(quotes flatMap (q => q.symbol.map(_ -> q).toOption): _*)
     orders flatMap { order =>
       for {
@@ -186,6 +187,88 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     logger.log("")
   }
 
+  private def updateContestsWithRankings() = {
+    console.log("Updating contests...")
+    val outcome = for {
+      contests <- contestDAO.flatMap(_.findActiveContests())
+      results <- Future.sequence(contests.map(updateContestRankings).toSeq)
+    } yield results
+
+    outcome onComplete {
+      case Success(results) =>
+        console.log(s"Contest Rankings: %d contests", results.length)
+      case Failure(e) =>
+        console.error("An unexpected error occurred: %s", e.getMessage)
+        e.printStackTrace()
+    }
+    outcome
+  }
+
+  private def updateContestRankings(contest: ContestData) = {
+    for {
+    // lookup the contest portfolios
+      portfolios <- contest._id.toOption match {
+        case Some(_id) => portfolioDAO.flatMap(_.findByContest(_id.toHexString()))
+        case None => Future.successful(emptyArray)
+      }
+
+      // get the set of distinct symbols
+      symbols = portfolios.flatMap(_.positions.toList.flatMap(_.toList)).flatMap(_.symbol.toOption).distinct
+
+      // get the quote mapping
+      quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
+      quoteMapping = Map(quotes.map(q => q.symbol -> q): _*)
+
+      // update the rankings
+      portfolioMap = Map(portfolios.map(p => p.playerID.orNull -> p): _*)
+      players = contest.participants.toOption getOrElse emptyArray
+      _ = {
+        for {
+          player <- players
+          portfolio <- portfolioMap.get(player._id.orNull)
+          startingBalance <- contest.startingBalance.toOption
+          positions = portfolio.positions.toList.flatMap(_.toList)
+          totalInvestment = computeInvestment(positions, quoteMapping)
+          cashFunds = portfolio.cashAccount.flatMap(_.funds).orZero
+          marginFunds = portfolio.marginAccount.flat.flatMap(_.funds).orZero
+          totalEquity = cashFunds + marginFunds + totalInvestment
+          gainLoss_% = 100.0 * ((totalEquity - startingBalance) / startingBalance)
+        } yield {
+          player.totalEquity = totalEquity
+          player.gainLoss = gainLoss_%
+        }
+
+        // sort the rankings and add the position (e.g. "1st")
+        players.sortBy(-_.gainLoss.getOrElse(0.0)).zipWithIndex foreach { case (player, index) =>
+          player.rank = (index + 1).nth
+        }
+      }
+
+      // perform the update
+      w <- contestDAO.flatMap(_.updateContest(contest).toFuture)
+
+    } yield w
+  }
+
+  /**
+    * Computes the total investment amount for a specific player
+    * @param positions the given collection of positions
+    * @param mapping   the symbol to quotes mapping
+    * @return the player's total investment
+    */
+  private def computeInvestment(positions: Seq[PositionLike], mapping: Map[String, PricingQuote]) = {
+    positions flatMap { p =>
+      (for {
+        symbol <- p.symbol
+        quantity <- p.quantity
+        pricePaid <- p.pricePaid
+
+        quote <- mapping.get(symbol).orUndefined
+        lastTrade <- quote.lastTrade
+      } yield lastTrade * quantity) toOption
+    } sum
+  }
+
 }
 
 /**
@@ -206,7 +289,7 @@ object OrderQualificationEngine {
     * Order Qualification Logic
     * @param order the given [[OrderLike order]]
     */
-  final implicit class OrderQualification(val order: OrderLike) extends AnyVal {
+  final implicit class OrderQualificationLogic(val order: OrderLike) extends AnyVal {
 
     @inline
     def qualify(quote: WorkQuote) = Try {

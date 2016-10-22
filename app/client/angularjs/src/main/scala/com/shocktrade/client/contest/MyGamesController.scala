@@ -1,10 +1,10 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.MySessionService
+import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
-import com.shocktrade.common.models.contest.{ContestRankings, PortfolioRanking}
 import com.shocktrade.client.models.contest.Contest
+import com.shocktrade.common.models.contest.Participant
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, injected}
@@ -38,19 +38,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
   $scope.getMyContests = () => myContests
 
   $scope.getMyRankings = (aContest: js.UndefOr[Contest]) => aContest flatMap { contest =>
-    if (contest.rankings.isEmpty) {
-      mySession.userProfile._id foreach { playerId =>
-        contest.rankings = new ContestRankings()
-        mySession.getContestRankings(contest, playerId) onComplete {
-          case Success(rankings) =>
-            $scope.$apply(() => contest.rankings = rankings)
-          case Failure(e) =>
-            toaster.error("Failed to retrieve contest rankings")
-            console.error(s"Failed to retrieve contest rankings: ${e.displayMessage}")
-        }
-      }
-    }
-    contest.rankings.flatMap(_.player)
+    mySession.updateRankings(contest).player
   }
 
   $scope.popupNewGameDialog = () => {
@@ -118,7 +106,7 @@ trait MyGamesScope extends GameScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[Contest]] = js.native
-  var getMyRankings: js.Function1[js.UndefOr[Contest], js.UndefOr[PortfolioRanking]] = js.native
+  var getMyRankings: js.Function1[js.UndefOr[Contest], js.UndefOr[Participant]] = js.native
   var popupNewGameDialog: js.Function0[Unit] = js.native
 
 }

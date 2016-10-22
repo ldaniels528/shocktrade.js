@@ -8,7 +8,7 @@ import com.shocktrade.server.concurrent.Daemon._
 import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import org.scalajs.nodejs.express.Express
 import org.scalajs.nodejs.globals.process
-import org.scalajs.nodejs.kafkanode.{KafkaNode, Producer}
+import org.scalajs.npm.kafkanode.{KafkaNode, Producer}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.{Bootstrap, NodeRequire}
 

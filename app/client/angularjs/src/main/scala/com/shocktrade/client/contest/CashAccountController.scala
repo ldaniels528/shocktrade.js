@@ -31,14 +31,14 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
 
   $scope.getTotalSellOrders = () => computeTotalOrdersByType(orderType = "SELL")
 
-  $scope.getFundsAvailable = () => mySession.cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0d
+  $scope.getFundsAvailable = () => mySession.cashAccount_?.orUndefined.flatMap(_.funds) orZero
 
   $scope.getTotalInvestment = () => {
     val outcome = for {
       portfolio <- mySession.portfolio_?.toList
       positions <- portfolio.positions.toList
       cashPositions = positions.filter(_.isCashAccount)
-    } yield cashPositions.map(_.netValue.getOrElse(0d)).sum
+    } yield cashPositions.map(_.netValue.orZero).sum
     outcome.sum
   }
 
@@ -51,7 +51,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
       portfolio <- mySession.portfolio_?.toList
       orders <- portfolio.orders.toList
       cashOrders = orders.filter(o => o.orderType.contains(orderType) && o.isCashAccount)
-    } yield cashOrders.map(_.totalCost.getOrElse(0d)).sum
+    } yield cashOrders.map(_.totalCost.orZero).sum
     outcome.sum
   }
 

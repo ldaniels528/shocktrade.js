@@ -1,7 +1,7 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.common.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.common.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.daycycle.daemons.SecuritiesRefreshKafkaDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
@@ -10,7 +10,7 @@ import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import com.shocktrade.common.util.ExchangeHelper
 import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.kafkanode.{Payload, Producer}
+import org.scalajs.npm.kafkanode.{Payload, Producer}
 import org.scalajs.nodejs.mongodb.Db
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.OptionHelper._

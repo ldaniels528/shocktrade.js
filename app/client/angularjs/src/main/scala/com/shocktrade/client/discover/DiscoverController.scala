@@ -16,7 +16,6 @@ import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
-import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -139,7 +138,6 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
     }
   }
 
-
   //////////////////////////////////////////////////////////////////////
   //              Type-Ahead Functions
   //////////////////////////////////////////////////////////////////////
@@ -237,20 +235,11 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
           console.log("Retrieving market status...")
           marketStatus.getMarketStatus onComplete {
             case Success(status) =>
-              // {"stateChanged":false,"active":false,"sysTime":1392092448795,"delay":-49848795,"start":1392042600000,"end":1392066000000}
-              // retrieve the delay in milliseconds from the server
-              var delay = status.delay
-              if (delay < 0) {
-                delay = Math.max(status.end - status.sysTime, 300000)
-              }
-
-              // set the market status
-              console.log(s"US Markets are ${if (status.active) "Open" else "Closed"}; Waiting for $delay msec until next trading start...")
+              // capture the current status
               $scope.$apply(() => usMarketStatus = Left(status))
 
               // update the status after delay
-              console.log(s"Re-loading market status in ${status.delay.minutes}")
-              $timeout(() => usMarketStatus = Right(false), 5.minutes)
+              $timeout(() => usMarketStatus = Right(false), status.delay.toInt)
 
             case Failure(e) =>
               toaster.error("Failed to retrieve market status")

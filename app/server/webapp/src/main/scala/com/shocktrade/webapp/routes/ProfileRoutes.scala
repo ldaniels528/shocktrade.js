@@ -1,14 +1,16 @@
 package com.shocktrade.webapp.routes
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import com.shocktrade.common.dao.contest.ProfileDAO._
-import com.shocktrade.common.dao.contest.ProfileData
-import org.scalajs.nodejs.NodeRequire
+import com.shocktrade.server.dao.users.ProfileDAO._
+import com.shocktrade.common.models.user.ProfileLike.QuoteFilter
+import com.shocktrade.server.dao.users.ProfileData
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+import org.scalajs.nodejs.{NodeRequire, console}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.js
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -21,6 +23,7 @@ object ProfileRoutes {
     implicit val profileDAO = dbFuture.flatMap(_.getProfileDAO)
 
     app.get("/api/profile/facebook/:fbID", (request: Request, response: Response, next: NextFunction) => profileByFBID(request, response, next))
+    app.post("/api/profile/facebook", (request: Request, response: Response, next: NextFunction) => profileByFacebook(request, response, next))
     app.put("/api/profile/:userID/recent/:symbol", (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +33,7 @@ object ProfileRoutes {
     def addRecentSymbol(request: Request, response: Response, next: NextFunction) = {
       val userID = request.params("userID")
       val symbol = request.params("symbol")
-      profileDAO.flatMap(_.addRecentSymbol(userID, symbol)) onComplete {
+      profileDAO.flatMap(_.addRecentSymbol(userID, symbol).toFuture) onComplete {
         case Success(result) if result.isOk =>
           result.valueAs[ProfileData] match {
             case Some(profile) => response.send(profile); next()
@@ -38,6 +41,47 @@ object ProfileRoutes {
           }
         case Success(result) => response.badRequest(result)
         case Failure(e) => response.internalServerError(e); next()
+      }
+    }
+
+    def profileByFacebook(request: Request, response: Response, next: NextFunction) = {
+      val fbProfile = request.bodyAs[FBProfile]
+      console.log("fbProfile = %j", fbProfile)
+      val form = for {
+        fbId <- fbProfile.id
+        name <- fbProfile.name
+      } yield {
+        new ProfileData(
+          facebookID = fbId,
+          name = name,
+          country = "US",
+          level = 1,
+          rep = 1,
+          netWorth = 250000.00,
+          totalXP = 0,
+          favoriteSymbols = js.Array("AAPL", "MSFT"),
+          recentSymbols = js.Array("AAPL", "MSFT"),
+          filters = js.Array[QuoteFilter](),
+          friends = js.Array[String](),
+          accomplishments = js.Array[String](),
+          acquaintances = js.Array[String](),
+          lastLoginTime = new js.Date())
+      }
+
+      form.toOption match {
+        case Some(newProfile) =>
+          profileDAO.flatMap(_.findOneOrCreateByFacebook(newProfile, newProfile.facebookID.orNull).toFuture) onComplete {
+            case Success(result) if result.isOk =>
+              console.log("result => %j", result)
+              response.send(result.value);
+              next()
+            case Success(result) => response.badRequest("User could not be created"); next()
+            case Failure(e) =>
+              e.printStackTrace()
+              response.internalServerError(e)
+              next()
+          }
+        case None => response.badRequest("Invalid form"); next()
       }
     }
 
@@ -51,5 +95,8 @@ object ProfileRoutes {
     }
 
   }
+
+  @ScalaJSDefined
+  class FBProfile(val id: js.UndefOr[String], val name: js.UndefOr[String]) extends js.Object
 
 }
