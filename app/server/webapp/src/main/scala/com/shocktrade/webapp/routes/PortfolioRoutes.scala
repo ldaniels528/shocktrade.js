@@ -12,7 +12,7 @@ import com.shocktrade.server.dao.contest.{ContestData, OrderData, PortfolioData,
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import org.scalajs.nodejs._
+import org.scalajs.nodejs.{console, _}
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.util.ScalaJsHelper._

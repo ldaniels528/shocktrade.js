@@ -43,6 +43,11 @@ class PortfolioService($http: Http) extends Service {
     $http.get[js.Array[Portfolio]](s"/api/portfolios/player/$playerID")
   }
 
+  /**
+    * Retrieves the rankings for the given contest by ID
+    * @param contestId the given contest ID
+    * @return the array of [[Participant rankings]]
+    */
   def getRankings(contestId: String) = {
     $http.get[js.Array[Participant]](s"/api/portfolios/contest/$contestId/rankings")
   }

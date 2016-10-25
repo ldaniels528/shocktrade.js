@@ -40,38 +40,12 @@
 
 <body ng-controller="MainController" ng-cloak ng-init="mainInit()">
 	<div id="ShockTradeMain">
-        <!-- title bar -->
-        <div class="row" style="border-top: 1px solid #ff8000">
-            <div class="col-md-3">
-                <span class="st_title_bar">
-                    <span class="st_title_1">Shock<span class="st_title_2">Tra<span class="st_title_3">de</span></span></span>
-                </span>
-            </div>
-            <div class="col-md-offset-5 col-md-4">
-                <span class="title_color pull-right" style="margin-right: 20px">
-                    <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-24"></avatar>
-					<span ng-show="nonMember" class="clickable" ng-click="signUp()">
-						<i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign Up
-					</span>
-                    <span ng-hide="isAuthenticated()" class="clickable" ng-click="login()">
-                        <span ng-show="nonMember"> / </span>
-                        <i class="fa fa-lg fa-facebook-square fb_icon"></i> Login
-                    </span>
-                    <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-                    <span ng-show="getFacebookProfile().name"
-                        class="title_color">&#8212; {{ getFacebookProfile().name }}</span>
-                </span>
-            </div>
-        </div>
-
         <toaster-container toaster-options="{'position-class':'toast-container','time-out':3000, 'close-button':true}">
         </toaster-container>
 
         <!-- main view -->
         <div ng-controller="NavigationController" ng-init="initNav()">
-			<div ng-if="isAuthenticated()">
-                <div ng-include src="'/views/app/information_bar.html'"></div>
-            </div>
+            <div ng-include src="'/views/app/information_bar.html'"></div>
 			<div class="row">
 				<div class="col-md-1" style="width: 60px">
                     <div ng-include src="'/views/app/navigation_bar.html'"></div>

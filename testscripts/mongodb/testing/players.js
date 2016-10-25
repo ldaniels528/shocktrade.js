@@ -1,3 +1,5 @@
+db.Players.update({"facebookID": "1796471892"}, { $set : { awards: ["INTNSHPR", "CRYSTBAL", "CHKDFLAG", "MADMONEY", "FBLIKEUS", "TWITTER", "INSTGRAM", "GLDTRPHY"]} });
+
 db.Players.remove({});
 db.Players.insert({
     "_id": ObjectId("51a308ac50c70a97d375a6b5"),

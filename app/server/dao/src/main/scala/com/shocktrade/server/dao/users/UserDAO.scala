@@ -26,6 +26,11 @@ object UserDAO {
   implicit class UserDAOEnrichment(val dao: UserDAO) extends AnyVal {
 
     @inline
+    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.findOneFuture[T](selector = "_id" $eq id.$oid, fields = fields)
+    }
+
+    @inline
     def findUserByID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
       dao.findById[UserData](id, fields = js.Array("facebookID", "name"))
     }
