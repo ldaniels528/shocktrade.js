@@ -1,8 +1,8 @@
 package com.shocktrade.client.profile
 
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.forms.ExchangesForm
-import com.shocktrade.client.models.Profile
-import com.shocktrade.common.models.user.OnlineStatus
+import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
 import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
@@ -10,21 +10,29 @@ import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
 import scala.scalajs.js
 
 /**
-  * Profile Service
+  * User Profile Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ProfileService($http: Http) extends Service {
+class UserProfileService($http: Http) extends Service {
 
   //////////////////////////////////////////////////////////////////////
   //              Profile Lookup Functions
   //////////////////////////////////////////////////////////////////////
 
   /**
+    * Updates and retrieves the user's net worth
+    * @param userID the given user ID
+    */
+  def getNetWorth(userID: String) = {
+    $http.get[NetWorth](s"/api/profile/$userID/netWorth")
+  }
+
+  /**
     * Retrieves the current user's profile by FaceBook ID
     * @param facebookID the given Facebook ID
     */
   def getProfileByFacebookID(facebookID: String) = {
-    $http.get[Profile](s"/api/profile/facebook/$facebookID")
+    $http.get[UserProfile](s"/api/profile/facebook/$facebookID")
   }
 
   /**
@@ -32,7 +40,7 @@ class ProfileService($http: Http) extends Service {
     * @param fbProfile the given [[FacebookProfileResponse Facebook profile]]
     */
   def getProfileViaFacebook(fbProfile: FacebookProfileResponse) = {
-    $http.post[Profile](s"/api/profile/facebook", data = fbProfile)
+    $http.post[UserProfile](s"/api/profile/facebook", data = fbProfile)
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -70,11 +78,11 @@ class ProfileService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   def addFavoriteSymbol(userID: String, symbol: String) = {
-    $http.put[Profile](s"/api/profile/$userID/favorite/$symbol")
+    $http.put[UserProfile](s"/api/profile/$userID/favorite/$symbol")
   }
 
   def removeFavoriteSymbol(userID: String, symbol: String) = {
-    $http.delete[Profile](s"/api/profile/$userID/favorite/$symbol")
+    $http.delete[UserProfile](s"/api/profile/$userID/favorite/$symbol")
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -82,11 +90,11 @@ class ProfileService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   def addRecentSymbol(userID: String, symbol: String) = {
-    $http.put[Profile](s"/api/profile/$userID/recent/$symbol")
+    $http.put[UserProfile](s"/api/profile/$userID/recent/$symbol")
   }
 
   def removeRecentSymbol(userID: String, symbol: String) = {
-    $http.delete[Profile](s"/api/profile/$userID/recent/$symbol")
+    $http.delete[UserProfile](s"/api/profile/$userID/recent/$symbol")
   }
 
 }

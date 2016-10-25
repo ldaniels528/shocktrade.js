@@ -49,7 +49,7 @@ object ContestData {
     def toContest = new ContestData(
       _id = js.undefined,
       name = form.name,
-      creator = new User(_id = form.playerId, facebookID = form.facebookId, name = form.playerName),
+      creator = User(_id = form.playerId, facebookID = form.facebookId, name = form.playerName),
       startingBalance = form.startingBalance.map(_.value),
       startTime = new js.Date(),
       expirationTime = form.duration.map(_.value.days + new js.Date()),
@@ -57,7 +57,7 @@ object ContestData {
       participants = js.Array(new Participant(_id = form.playerId, facebookID = form.facebookId, name = form.playerName)),
       messages = js.Array(
         new ChatMessage(
-          sender = new User(_id = form.playerId, facebookID = form.facebookId, name = form.playerName),
+          sender = User(_id = form.playerId, facebookID = form.facebookId, name = form.playerName),
           text = s"Welcome to ${form.name}"
         )),
       friendsOnly = form.friendsOnly ?? false,

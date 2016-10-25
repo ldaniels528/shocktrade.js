@@ -4069,6 +4069,41 @@ function $m_Lcom_shocktrade_common_models_user_OnlineStatus$() {
   return $n_Lcom_shocktrade_common_models_user_OnlineStatus$
 }
 /** @constructor */
+function $c_Lcom_shocktrade_common_models_user_User$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_user_User$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_user_User$.prototype.constructor = $c_Lcom_shocktrade_common_models_user_User$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_user_User$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_user_User$.prototype = $c_Lcom_shocktrade_common_models_user_User$.prototype;
+$c_Lcom_shocktrade_common_models_user_User$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_user_User$.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User = (function(_id, facebookID, name) {
+  var user = {};
+  user._id = _id;
+  user.facebookID = facebookID;
+  user.name = name;
+  return user
+});
+var $d_Lcom_shocktrade_common_models_user_User$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_user_User$: 0
+}, false, "com.shocktrade.common.models.user.User$", {
+  Lcom_shocktrade_common_models_user_User$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_user_User$.prototype.$classData = $d_Lcom_shocktrade_common_models_user_User$;
+var $n_Lcom_shocktrade_common_models_user_User$ = (void 0);
+function $m_Lcom_shocktrade_common_models_user_User$() {
+  if ((!$n_Lcom_shocktrade_common_models_user_User$)) {
+    $n_Lcom_shocktrade_common_models_user_User$ = new $c_Lcom_shocktrade_common_models_user_User$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_user_User$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_common_util_ParsingHelper$ExtStringA() {
   $c_O.call(this);
   this.src$1 = null
@@ -5111,82 +5146,6 @@ var $d_Lcom_shocktrade_server_dao_users_ProfileDAO = new $TypeData().initClass({
   Lcom_shocktrade_server_dao_users_ProfileDAO: 1,
   Lorg_scalajs_nodejs_mongodb_Collection: 1
 }, true, (void 0), $noIsInstance);
-/** @constructor */
-function $c_Lcom_shocktrade_server_dao_users_ProfileData$() {
-  $c_O.call(this)
-}
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype = new $h_O();
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.constructor = $c_Lcom_shocktrade_server_dao_users_ProfileData$;
-/** @constructor */
-function $h_Lcom_shocktrade_server_dao_users_ProfileData$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_server_dao_users_ProfileData$.prototype = $c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype;
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-var $d_Lcom_shocktrade_server_dao_users_ProfileData$ = new $TypeData().initClass({
-  Lcom_shocktrade_server_dao_users_ProfileData$: 0
-}, false, "com.shocktrade.server.dao.users.ProfileData$", {
-  Lcom_shocktrade_server_dao_users_ProfileData$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_server_dao_users_ProfileData$.prototype.$classData = $d_Lcom_shocktrade_server_dao_users_ProfileData$;
-var $n_Lcom_shocktrade_server_dao_users_ProfileData$ = (void 0);
-function $m_Lcom_shocktrade_server_dao_users_ProfileData$() {
-  if ((!$n_Lcom_shocktrade_server_dao_users_ProfileData$)) {
-    $n_Lcom_shocktrade_server_dao_users_ProfileData$ = new $c_Lcom_shocktrade_server_dao_users_ProfileData$().init___()
-  };
-  return $n_Lcom_shocktrade_server_dao_users_ProfileData$
-}
 var $d_Lcom_shocktrade_server_dao_users_UserDAO = new $TypeData().initClass({
   Lcom_shocktrade_server_dao_users_UserDAO: 0
 }, false, "com.shocktrade.server.dao.users.UserDAO", {
@@ -9509,7 +9468,7 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
   };
   if (($uI(messages.length) === 0)) {
     var x$15 = form.name;
-    var value$6 = new $c_Lcom_shocktrade_common_models_user_User(form.playerId, form.facebookId, form.playerName);
+    var value$6 = $m_Lcom_shocktrade_common_models_user_User$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User(form.playerId, form.facebookId, form.playerName);
     var value$7 = form.startingBalance;
     if ((value$7 === (void 0))) {
       var x$17 = (void 0)
@@ -9540,7 +9499,7 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
     var x$8 = form.facebookId;
     var x$9 = form.playerName;
     var value$13 = [new $c_Lcom_shocktrade_common_models_contest_Participant(x$7, x$9, x$8)];
-    var value$14 = new $c_Lcom_shocktrade_common_models_user_User(form.playerId, form.facebookId, form.playerName);
+    var value$14 = $m_Lcom_shocktrade_common_models_user_User$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User(form.playerId, form.facebookId, form.playerName);
     var value$15 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Welcome to ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([form.name]));
     var value$16 = [new $c_Lcom_shocktrade_common_models_contest_ChatMessage((void 0), value$14, value$15)];
     var valueA$2 = form.friendsOnly;
@@ -10013,11 +9972,11 @@ $c_Lcom_shocktrade_webapp_routes_ContestRoutes$.prototype.com$shocktrade$webapp$
           var jsx$3 = new $c_T2().init___O__O("_id", y);
           var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$gte", entryFee$1$1)]);
           var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-          var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$3, new $c_T2().init___O__O("netWorth", y$1)]);
+          var kvps$1 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$3, new $c_T2().init___O__O("wallet", y$1)]);
           var jsx$4 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1);
           var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
           var value$3 = (-entryFee$1$1);
-          var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("netWorth", value$3)]);
+          var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("wallet", value$3)]);
           var y$2 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$2);
           var p = x$12$2.updateOne(jsx$4, jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$inc", y$2)));
           return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
@@ -13864,569 +13823,6 @@ function $m_Lcom_shocktrade_webapp_routes_PostRoutes$() {
   return $n_Lcom_shocktrade_webapp_routes_PostRoutes$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$() {
-  $c_O.call(this)
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype = new $h_O();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.com$shocktrade$webapp$routes$ProfileRoutes$$netWorth$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, mongo$1, portfolioDAO$1, securitiesDAO$1, userDAO$1) {
-  var dict = request.params;
-  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "userID")))) {
-    throw new $c_ju_NoSuchElementException().init___T("key not found: userID")
-  };
-  var userID = $as_T(dict.userID);
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, userID$1) {
-    return (function(x$6$2) {
-      var fields = $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$().Fields$1;
-      var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-      var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
-      var $class = mongo$1$1.ObjectID;
-      var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID$1]));
-      if ($is_sjs_js_ArrayOps(args)) {
-        var x2 = $as_sjs_js_ArrayOps(args);
-        var jsx$1 = x2.scala$scalajs$js$ArrayOps$$array$f
-      } else if ($is_sjs_js_WrappedArray(args)) {
-        var x3 = $as_sjs_js_WrappedArray(args);
-        var jsx$1 = x3.array$6
-      } else {
-        var result = [];
-        var i = 0;
-        var len = args.length__I();
-        while ((i < len)) {
-          var arg1 = args.apply__I__O(i);
-          $uI(result.push(arg1));
-          i = ((1 + i) | 0)
-        };
-        var jsx$1 = result
-      };
-      var y = $newJSObjectWithVarargs($class, jsx$1);
-      var selector = jsx$2.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y));
-      var jsx$3 = $m_sjs_js_Dictionary$();
-      var array = [];
-      $uI(fields.length);
-      var i$1 = 0;
-      var len$1 = $uI(fields.length);
-      while ((i$1 < len$1)) {
-        var index = i$1;
-        var arg1$1 = fields[index];
-        var x$3 = $as_T(arg1$1);
-        var elem = new $c_T2().init___O__O(x$3, 1);
-        array.push(elem);
-        i$1 = ((1 + i$1) | 0)
-      };
-      var qual$2 = x$6$2.find(selector, jsx$3.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)));
-      var eta$0$2 = qual$2.limit(1);
-      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-      var arg1$2 = (function(promise$1) {
-        return (function(err$2, result$2) {
-          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
-            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
-          } else {
-            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
-            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-          }
-        })
-      })(promise);
-      eta$0$2.next(arg1$2);
-      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
-        return $m_s_Option$().apply__O__s_Option(x$4$2)
-      }));
-      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
-    })
-  })(mongo$1, userID));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var this$30 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f$1, executor);
-  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$7$2) {
-    var x$7 = $as_s_Option(x$7$2);
-    if (x$7.isEmpty__Z()) {
-      throw new $c_jl_IllegalStateException().init___T("User not found")
-    } else {
-      return x$7.get__O()
-    }
-  }));
-  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var this$31 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$30, f$2, executor$1);
-  var f$3 = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7().init___s_concurrent_Future__s_concurrent_Future__T(portfolioDAO$1, securitiesDAO$1, userID);
-  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$31, f$3, executor$2);
-  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
-    return (function(x0$3$2) {
-      var x0$3 = $as_s_util_Try(x0$3$2);
-      if ($is_s_util_Success(x0$3)) {
-        var x2$1 = $as_s_util_Success(x0$3);
-        var total = $uD(x2$1.value$2);
-        response$3.send(new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth(total))
-      } else if ($is_s_util_Failure(x0$3)) {
-        var x3$1 = $as_s_util_Failure(x0$3);
-        var e = x3$1.exception$2;
-        var jsx$4 = response$3.status(500);
-        var s = e.getMessage__T();
-        jsx$4.send(s);
-        $asUnit(next$3())
-      } else {
-        throw new $c_s_MatchError().init___O(x0$3)
-      }
-    })
-  })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.init___ = (function() {
-  return this
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.com$shocktrade$webapp$routes$ProfileRoutes$$profileByFBID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, profileDAO$1) {
-  var dict = request.params;
-  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "fbID")))) {
-    throw new $c_ju_NoSuchElementException().init___T("key not found: fbID")
-  };
-  var fbId = $as_T(dict.fbID);
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(fbId$1) {
-    return (function(x$20$2) {
-      var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-      var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("facebookID", fbId$1));
-      var qual$1 = x$20$2.find(selector);
-      var eta$0$1 = qual$1.limit(1);
-      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-      var arg1 = (function(promise$1) {
-        return (function(err$2, result$2) {
-          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
-            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
-          } else {
-            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
-            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-          }
-        })
-      })(promise);
-      eta$0$1.next(arg1);
-      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2) {
-        return $m_s_Option$().apply__O__s_Option(x$2$2)
-      }));
-      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
-    })
-  })(fbId));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1, fbId$1$1) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
-      var rc10 = false;
-      var x2 = null;
-      matchEnd11: {
-        if ($is_s_util_Success(x0$1)) {
-          rc10 = true;
-          x2 = $as_s_util_Success(x0$1);
-          var p3 = $as_s_Option(x2.value$2);
-          if ($is_s_Some(p3)) {
-            var x4 = $as_s_Some(p3);
-            var profile = x4.x$2;
-            response$1.send(profile);
-            $asUnit(next$1());
-            break matchEnd11
-          }
-        };
-        if (rc10) {
-          var p6 = $as_s_Option(x2.value$2);
-          var x = $m_s_None$();
-          if ((x === p6)) {
-            response$1.status(404).send(fbId$1$1);
-            $asUnit(next$1());
-            break matchEnd11
-          }
-        };
-        if ($is_s_util_Failure(x0$1)) {
-          var x7 = $as_s_util_Failure(x0$1);
-          var e = x7.exception$2;
-          var jsx$1 = response$1.status(500);
-          var s = e.getMessage__T();
-          jsx$1.send(s);
-          $asUnit(next$1());
-          break matchEnd11
-        };
-        throw new $c_s_MatchError().init___O(x0$1)
-      }
-    })
-  })(response, next, fbId)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.com$shocktrade$webapp$routes$ProfileRoutes$$profileByFacebook$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, profileDAO$1) {
-  var fbProfile = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
-  $g.console.log("fbProfile = %j", fbProfile);
-  var value = fbProfile.id;
-  if ((value === (void 0))) {
-    var form = (void 0)
-  } else {
-    var fbId = $as_T(value);
-    var value$1 = fbProfile.name;
-    if ((value$1 === (void 0))) {
-      var form = (void 0)
-    } else {
-      var name = $as_T(value$1);
-      var value$2 = ["AAPL", "MSFT"];
-      var value$3 = ["AAPL", "MSFT"];
-      var value$4 = [];
-      var value$5 = [];
-      var value$6 = [];
-      var value$7 = [];
-      var value$8 = new $g.Date();
-      var value$9 = new $c_Lcom_shocktrade_server_dao_users_ProfileData((void 0), fbId, name, "US", 1, 1, 250000.0, 0, value$2, value$3, value$4, (void 0), value$5, value$6, value$7, value$8);
-      var form = value$9
-    }
-  };
-  var x1 = ((form === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(form));
-  if ($is_s_Some(x1)) {
-    var x2 = $as_s_Some(x1);
-    var newProfile = x2.x$2;
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, newProfile$1) {
-      return (function(x$19$2) {
-        var jsx$2 = $m_sjs_js_Thenable$ThenableOps$();
-        var value$10 = newProfile$1.facebookID;
-        var fbId$1 = $as_T(((value$10 === (void 0)) ? null : value$10));
-        $m_sjs_concurrent_JSExecutionContext$Implicits$();
-        var $class = mongo$1$1.ObjectID;
-        var args = $m_sci_Nil$();
-        var result = [];
-        var these = args;
-        while ((!these.isEmpty__Z())) {
-          var arg1 = these.head__O();
-          $uI(result.push(arg1));
-          these = $as_sci_List(these.tail__O())
-        };
-        var value$11 = $newJSObjectWithVarargs($class, result);
-        newProfile$1._id = value$11;
-        var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("facebookID", fbId$1));
-        var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$setOnInsert", newProfile$1)]);
-        var p = x$19$2.findOneAndUpdate(jsx$1, $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps), new $c_Lorg_scalajs_nodejs_mongodb_FindAndUpdateOptions((void 0), (void 0), (void 0), true, false));
-        return jsx$2.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
-      })
-    })(mongo$1, newProfile));
-    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
-      return (function(x0$4$2) {
-        var x0$4 = $as_s_util_Try(x0$4$2);
-        var rc6 = false;
-        var x2$1 = null;
-        matchEnd7: {
-          if ($is_s_util_Success(x0$4)) {
-            rc6 = true;
-            x2$1 = $as_s_util_Success(x0$4);
-            var result$1 = x2$1.value$2;
-            if (($uI(result$1.ok) === 1)) {
-              response$2.send(result$1.value);
-              $asUnit(next$2());
-              break matchEnd7
-            }
-          };
-          if (rc6) {
-            response$2.status(400).send("User could not be created");
-            $asUnit(next$2());
-            break matchEnd7
-          };
-          if ($is_s_util_Failure(x0$4)) {
-            var x4 = $as_s_util_Failure(x0$4);
-            var e = x4.exception$2;
-            e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1);
-            var jsx$3 = response$2.status(500);
-            var s = e.getMessage__T();
-            jsx$3.send(s);
-            $asUnit(next$2());
-            break matchEnd7
-          };
-          throw new $c_s_MatchError().init___O(x0$4)
-        }
-      })
-    })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  } else {
-    var x = $m_s_None$();
-    if ((x === x1)) {
-      response.status(400).send("Invalid form");
-      $asUnit(next())
-    } else {
-      throw new $c_s_MatchError().init___O(x1)
-    }
-  }
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.com$shocktrade$webapp$routes$ProfileRoutes$$addRecentSymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, profileDAO$1) {
-  var dict = request.params;
-  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "userID")))) {
-    throw new $c_ju_NoSuchElementException().init___T("key not found: userID")
-  };
-  var userID = $as_T(dict.userID);
-  var dict$1 = request.params;
-  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$1, "symbol")))) {
-    throw new $c_ju_NoSuchElementException().init___T("key not found: symbol")
-  };
-  var symbol = $as_T(dict$1.symbol);
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, userID$2, symbol$1) {
-    return (function(x$5$2) {
-      var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
-      $m_sjs_concurrent_JSExecutionContext$Implicits$();
-      var jsx$4 = $m_Lorg_scalajs_nodejs_mongodb_package$();
-      var $class = mongo$1$1.ObjectID;
-      var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID$2]));
-      if ($is_sjs_js_ArrayOps(args)) {
-        var x2 = $as_sjs_js_ArrayOps(args);
-        var jsx$3 = x2.scala$scalajs$js$ArrayOps$$array$f
-      } else if ($is_sjs_js_WrappedArray(args)) {
-        var x3 = $as_sjs_js_WrappedArray(args);
-        var jsx$3 = x3.array$6
-      } else {
-        var result = [];
-        var i = 0;
-        var len = args.length__I();
-        while ((i < len)) {
-          var arg1 = args.apply__I__O(i);
-          $uI(result.push(arg1));
-          i = ((1 + i) | 0)
-        };
-        var jsx$3 = result
-      };
-      var y = $newJSObjectWithVarargs($class, jsx$3);
-      var jsx$2 = jsx$4.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y));
-      var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
-      var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("recentSymbols", symbol$1)]);
-      var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-      var p = x$5$2.findOneAndUpdate(jsx$2, jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$addToSet", y$1)));
-      return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
-    })
-  })(mongo$1, userID, symbol));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4, userID$2$1) {
-    return (function(x0$5$2) {
-      var x0$5 = $as_s_util_Try(x0$5$2);
-      var rc6 = false;
-      var x2$1 = null;
-      matchEnd7: {
-        if ($is_s_util_Success(x0$5)) {
-          rc6 = true;
-          x2$1 = $as_s_util_Success(x0$5);
-          var result$1 = x2$1.value$2;
-          if (($uI(result$1.ok) === 1)) {
-            var this$32 = $m_s_Option$().apply__O__s_Option(result$1.value);
-            if (this$32.isEmpty__Z()) {
-              var x1$2 = $m_s_None$()
-            } else {
-              var arg1$1 = this$32.get__O();
-              var x1$2 = new $c_s_Some().init___O(arg1$1)
-            };
-            if ($is_s_Some(x1$2)) {
-              var x2$2 = $as_s_Some(x1$2);
-              var profile = x2$2.x$2;
-              response$4.send(profile);
-              $asUnit(next$4())
-            } else {
-              var x = $m_s_None$();
-              if ((!(x === x1$2))) {
-                throw new $c_s_MatchError().init___O(x1$2)
-              };
-              response$4.status(404).send(userID$2$1)
-            };
-            break matchEnd7
-          }
-        };
-        if (rc6) {
-          var result$2 = x2$1.value$2;
-          response$4.status(400).json(result$2);
-          break matchEnd7
-        };
-        if ($is_s_util_Failure(x0$5)) {
-          var x4 = $as_s_util_Failure(x0$5);
-          var e = x4.exception$2;
-          var jsx$6 = response$4.status(500);
-          var s = e.getMessage__T();
-          jsx$6.send(s);
-          $asUnit(next$4());
-          break matchEnd7
-        };
-        throw new $c_s_MatchError().init___O(x0$5)
-      }
-    })
-  })(response, next, userID)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V = (function(app, dbFuture, ec, mongo, require) {
-  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$1$2) {
-    $m_sjs_concurrent_JSExecutionContext$Implicits$();
-    var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-    var arg1 = (function(promise$1) {
-      return (function(err$2, result$2) {
-        if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
-          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
-        } else {
-          var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
-          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-        }
-      })
-    })(promise);
-    x$1$2.collection("Portfolios", null, arg1);
-    var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-    var boxedClass = ($d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf());
-    $m_s_Predef$().require__Z__V((boxedClass !== null));
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this, boxedClass$1) {
-      return (function(s$2) {
-        if (((boxedClass$1 === $d_sr_Nothing$.getClassOf()) || (((s$2 !== null) && (!boxedClass$1.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$1.isInstance__O__Z(s$2))))) {
-          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2, " is not an instance of ")) + boxedClass$1.getName__T())))
-        };
-        return s$2
-      })
-    })(promise, boxedClass));
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$2)
-  }));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var portfolioDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$1, executor);
-  var f$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2) {
-    $m_sjs_concurrent_JSExecutionContext$Implicits$();
-    var promise$2 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-    var arg1$1 = (function(promise$1$1) {
-      return (function(err$2$1, result$2$1) {
-        if ((!((err$2$1 !== null) && (err$2$1 !== (void 0))))) {
-          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$1, result$2$1)
-        } else {
-          var cause$1 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$1);
-          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$1, cause$1)
-        }
-      })
-    })(promise$2);
-    x$2$2.collection("Players", null, arg1$1);
-    var ec$4 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-    var boxedClass$2 = ($d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf());
-    $m_s_Predef$().require__Z__V((boxedClass$2 !== null));
-    var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, boxedClass$3) {
-      return (function(s$2$1) {
-        if (((boxedClass$3 === $d_sr_Nothing$.getClassOf()) || (((s$2$1 !== null) && (!boxedClass$3.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$3.isInstance__O__Z(s$2$1))))) {
-          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$1, " is not an instance of ")) + boxedClass$3.getName__T())))
-        };
-        return s$2$1
-      })
-    })(promise$2, boxedClass$2));
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$2, f$2, ec$4)
-  }));
-  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var profileDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$3, executor$1);
-  var f$5 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2) {
-    $m_sjs_concurrent_JSExecutionContext$Implicits$();
-    var promise$3 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-    var arg1$2 = (function(promise$1$2) {
-      return (function(err$2$2, result$2$2) {
-        if ((!((err$2$2 !== null) && (err$2$2 !== (void 0))))) {
-          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$2, result$2$2)
-        } else {
-          var cause$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$2);
-          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$2, cause$2)
-        }
-      })
-    })(promise$3);
-    x$3$2.collection("Securities", null, arg1$2);
-    var ec$6 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-    var boxedClass$4 = ($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf());
-    $m_s_Predef$().require__Z__V((boxedClass$4 !== null));
-    var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$2, boxedClass$5) {
-      return (function(s$2$2) {
-        if (((boxedClass$5 === $d_sr_Nothing$.getClassOf()) || (((s$2$2 !== null) && (!boxedClass$5.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$5.isInstance__O__Z(s$2$2))))) {
-          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$2, " is not an instance of ")) + boxedClass$5.getName__T())))
-        };
-        return s$2$2
-      })
-    })(promise$3, boxedClass$4));
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$3, f$4, ec$6)
-  }));
-  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var securitiesDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$5, executor$2);
-  var f$7 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
-    $m_sjs_concurrent_JSExecutionContext$Implicits$();
-    var promise$4 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-    var arg1$3 = (function(promise$1$3) {
-      return (function(err$2$3, result$2$3) {
-        if ((!((err$2$3 !== null) && (err$2$3 !== (void 0))))) {
-          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$3, result$2$3)
-        } else {
-          var cause$3 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$3);
-          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$3, cause$3)
-        }
-      })
-    })(promise$4);
-    x$4$2.collection("Players", null, arg1$3);
-    var ec$8 = $m_s_concurrent_Future$InternalCallbackExecutor$();
-    var boxedClass$6 = ($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf());
-    $m_s_Predef$().require__Z__V((boxedClass$6 !== null));
-    var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$3, boxedClass$7) {
-      return (function(s$2$3) {
-        if (((boxedClass$7 === $d_sr_Nothing$.getClassOf()) || (((s$2$3 !== null) && (!boxedClass$7.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$7.isInstance__O__Z(s$2$3))))) {
-          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$3, " is not an instance of ")) + boxedClass$7.getName__T())))
-        };
-        return s$2$3
-      })
-    })(promise$4, boxedClass$6));
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$4, f$6, ec$8)
-  }));
-  var executor$3 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var userDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$7, executor$3);
-  app.get("/api/profile/facebook/:fbID", (function(profileDAO$1) {
-    return (function(request$2, response$2, next$2) {
-      $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().com$shocktrade$webapp$routes$ProfileRoutes$$profileByFBID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2, response$2, next$2, profileDAO$1)
-    })
-  })(profileDAO));
-  app.post("/api/profile/facebook", (function(mongo$1, profileDAO$1$1) {
-    return (function(request$2$1, response$2$1, next$2$1) {
-      $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().com$shocktrade$webapp$routes$ProfileRoutes$$profileByFacebook$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, mongo$1, profileDAO$1$1)
-    })
-  })(mongo, profileDAO));
-  app.get("/api/profile/:userID/netWorth", (function(mongo$1$1, portfolioDAO$1, securitiesDAO$1, userDAO$1) {
-    return (function(request$2$2, response$2$2, next$2$2) {
-      $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().com$shocktrade$webapp$routes$ProfileRoutes$$netWorth$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, mongo$1$1, portfolioDAO$1, securitiesDAO$1, userDAO$1)
-    })
-  })(mongo, portfolioDAO, securitiesDAO, userDAO));
-  app.put("/api/profile/:userID/recent/:symbol", (function(mongo$1$2, profileDAO$1$2) {
-    return (function(request$2$3, response$2$3, next$2$3) {
-      $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().com$shocktrade$webapp$routes$ProfileRoutes$$addRecentSymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, mongo$1$2, profileDAO$1$2)
-    })
-  })(mongo, profileDAO))
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$ = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$;
-var $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$ = (void 0);
-function $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$() {
-  if ((!$n_Lcom_shocktrade_webapp_routes_ProfileRoutes$)) {
-    $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$ = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$().init___()
-  };
-  return $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$
-}
-/** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$() {
-  $c_O.call(this);
-  this.Fields$1 = null
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype = new $h_O();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype.init___ = (function() {
-  $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$ = this;
-  this.Fields$1 = ["netWorth"];
-  return this
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$ = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$UserInfo$", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$: 1,
-  O: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$;
-var $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$ = (void 0);
-function $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$() {
-  if ((!$n_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$)) {
-    $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$ = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$().init___()
-  };
-  return $n_Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo$
-}
-/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$() {
   $c_O.call(this)
 }
@@ -16810,6 +16206,567 @@ function $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$() {
     $n_Lcom_shocktrade_webapp_routes_TradingClockRoutes$ = new $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().init___()
   };
   return $n_Lcom_shocktrade_webapp_routes_TradingClockRoutes$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V = (function(app, dbFuture, ec, mongo, require) {
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$1$2) {
+    $m_sjs_concurrent_JSExecutionContext$Implicits$();
+    var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+    var arg1 = (function(promise$1) {
+      return (function(err$2, result$2) {
+        if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+        } else {
+          var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+        }
+      })
+    })(promise);
+    x$1$2.collection("Portfolios", null, arg1);
+    var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+    var boxedClass = ($d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_contest_PortfolioDAO.getClassOf());
+    $m_s_Predef$().require__Z__V((boxedClass !== null));
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this, boxedClass$1) {
+      return (function(s$2) {
+        if (((boxedClass$1 === $d_sr_Nothing$.getClassOf()) || (((s$2 !== null) && (!boxedClass$1.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$1.isInstance__O__Z(s$2))))) {
+          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2, " is not an instance of ")) + boxedClass$1.getName__T())))
+        };
+        return s$2
+      })
+    })(promise, boxedClass));
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$2)
+  }));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var portfolioDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$1, executor);
+  var f$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2) {
+    $m_sjs_concurrent_JSExecutionContext$Implicits$();
+    var promise$2 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+    var arg1$1 = (function(promise$1$1) {
+      return (function(err$2$1, result$2$1) {
+        if ((!((err$2$1 !== null) && (err$2$1 !== (void 0))))) {
+          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$1, result$2$1)
+        } else {
+          var cause$1 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$1);
+          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$1, cause$1)
+        }
+      })
+    })(promise$2);
+    x$2$2.collection("Players", null, arg1$1);
+    var ec$4 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+    var boxedClass$2 = ($d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_users_ProfileDAO.getClassOf());
+    $m_s_Predef$().require__Z__V((boxedClass$2 !== null));
+    var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, boxedClass$3) {
+      return (function(s$2$1) {
+        if (((boxedClass$3 === $d_sr_Nothing$.getClassOf()) || (((s$2$1 !== null) && (!boxedClass$3.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$3.isInstance__O__Z(s$2$1))))) {
+          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$1, " is not an instance of ")) + boxedClass$3.getName__T())))
+        };
+        return s$2$1
+      })
+    })(promise$2, boxedClass$2));
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$2, f$2, ec$4)
+  }));
+  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var profileDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$3, executor$1);
+  var f$5 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$3$2) {
+    $m_sjs_concurrent_JSExecutionContext$Implicits$();
+    var promise$3 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+    var arg1$2 = (function(promise$1$2) {
+      return (function(err$2$2, result$2$2) {
+        if ((!((err$2$2 !== null) && (err$2$2 !== (void 0))))) {
+          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$2, result$2$2)
+        } else {
+          var cause$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$2);
+          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$2, cause$2)
+        }
+      })
+    })(promise$3);
+    x$3$2.collection("Securities", null, arg1$2);
+    var ec$6 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+    var boxedClass$4 = ($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf());
+    $m_s_Predef$().require__Z__V((boxedClass$4 !== null));
+    var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$2, boxedClass$5) {
+      return (function(s$2$2) {
+        if (((boxedClass$5 === $d_sr_Nothing$.getClassOf()) || (((s$2$2 !== null) && (!boxedClass$5.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$5.isInstance__O__Z(s$2$2))))) {
+          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$2, " is not an instance of ")) + boxedClass$5.getName__T())))
+        };
+        return s$2$2
+      })
+    })(promise$3, boxedClass$4));
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$3, f$4, ec$6)
+  }));
+  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var securitiesDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$5, executor$2);
+  var f$7 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
+    $m_sjs_concurrent_JSExecutionContext$Implicits$();
+    var promise$4 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+    var arg1$3 = (function(promise$1$3) {
+      return (function(err$2$3, result$2$3) {
+        if ((!((err$2$3 !== null) && (err$2$3 !== (void 0))))) {
+          return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$3, result$2$3)
+        } else {
+          var cause$3 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$3);
+          return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$3, cause$3)
+        }
+      })
+    })(promise$4);
+    x$4$2.collection("Players", null, arg1$3);
+    var ec$8 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+    var boxedClass$6 = ($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf());
+    $m_s_Predef$().require__Z__V((boxedClass$6 !== null));
+    var f$6 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$3, boxedClass$7) {
+      return (function(s$2$3) {
+        if (((boxedClass$7 === $d_sr_Nothing$.getClassOf()) || (((s$2$3 !== null) && (!boxedClass$7.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$7.isInstance__O__Z(s$2$3))))) {
+          throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$3, " is not an instance of ")) + boxedClass$7.getName__T())))
+        };
+        return s$2$3
+      })
+    })(promise$4, boxedClass$6));
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$4, f$6, ec$8)
+  }));
+  var executor$3 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var userDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$7, executor$3);
+  app.get("/api/profile/facebook/:fbID", (function(profileDAO$1) {
+    return (function(request$2, response$2, next$2) {
+      $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().com$shocktrade$webapp$routes$UserProfileRoutes$$profileByFBID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V(request$2, response$2, next$2, profileDAO$1)
+    })
+  })(profileDAO));
+  app.post("/api/profile/facebook", (function(mongo$1, profileDAO$1$1) {
+    return (function(request$2$1, response$2$1, next$2$1) {
+      $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().com$shocktrade$webapp$routes$UserProfileRoutes$$profileByFacebook$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, mongo$1, profileDAO$1$1)
+    })
+  })(mongo, profileDAO));
+  app.get("/api/profile/:userID/netWorth", (function(mongo$1$1, portfolioDAO$1, profileDAO$1$2, securitiesDAO$1, userDAO$1) {
+    return (function(request$2$2, response$2$2, next$2$2) {
+      $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().com$shocktrade$webapp$routes$UserProfileRoutes$$netWorth$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, mongo$1$1, portfolioDAO$1, profileDAO$1$2, securitiesDAO$1, userDAO$1)
+    })
+  })(mongo, portfolioDAO, profileDAO, securitiesDAO, userDAO));
+  app.put("/api/profile/:userID/recent/:symbol", (function(mongo$1$2, profileDAO$1$3) {
+    return (function(request$2$3, response$2$3, next$2$3) {
+      $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().com$shocktrade$webapp$routes$UserProfileRoutes$$addRecentSymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$3, response$2$3, next$2$3, mongo$1$2, profileDAO$1$3)
+    })
+  })(mongo, profileDAO))
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.com$shocktrade$webapp$routes$UserProfileRoutes$$profileByFacebook$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, profileDAO$1) {
+  var fbProfile = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
+  var value = fbProfile.id;
+  if ((value === (void 0))) {
+    var form = (void 0)
+  } else {
+    var fbId = $as_T(value);
+    var value$1 = fbProfile.name;
+    if ((value$1 === (void 0))) {
+      var form = (void 0)
+    } else {
+      var name = $as_T(value$1);
+      var value$2 = ["AAPL", "MSFT"];
+      var value$3 = ["AAPL", "MSFT"];
+      var value$4 = [];
+      var value$5 = [];
+      var value$6 = [];
+      var value$7 = new $g.Date();
+      var value$8 = new $c_Lcom_shocktrade_server_dao_users_UserProfileData((void 0), fbId, name, "US", 1, 1, 250000.0, 250000.0, 0, value$2, value$3, value$6, value$4, value$5, value$7);
+      var form = value$8
+    }
+  };
+  var x1 = ((form === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(form));
+  if ($is_s_Some(x1)) {
+    var x2 = $as_s_Some(x1);
+    var newProfile = x2.x$2;
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, newProfile$1) {
+      return (function(x$20$2) {
+        var jsx$2 = $m_sjs_js_Thenable$ThenableOps$();
+        var value$9 = newProfile$1.facebookID;
+        var fbId$1 = $as_T(((value$9 === (void 0)) ? null : value$9));
+        $m_sjs_concurrent_JSExecutionContext$Implicits$();
+        var $class = mongo$1$1.ObjectID;
+        var args = $m_sci_Nil$();
+        var result = [];
+        var these = args;
+        while ((!these.isEmpty__Z())) {
+          var arg1 = these.head__O();
+          $uI(result.push(arg1));
+          these = $as_sci_List(these.tail__O())
+        };
+        var value$10 = $newJSObjectWithVarargs($class, result);
+        newProfile$1._id = value$10;
+        var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("facebookID", fbId$1));
+        var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$setOnInsert", newProfile$1)]);
+        var p = x$20$2.findOneAndUpdate(jsx$1, $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps), new $c_Lorg_scalajs_nodejs_mongodb_FindAndUpdateOptions((void 0), (void 0), (void 0), true, false));
+        return jsx$2.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+      })
+    })(mongo$1, newProfile));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
+      return (function(x0$4$2) {
+        var x0$4 = $as_s_util_Try(x0$4$2);
+        var rc6 = false;
+        var x2$1 = null;
+        matchEnd7: {
+          if ($is_s_util_Success(x0$4)) {
+            rc6 = true;
+            x2$1 = $as_s_util_Success(x0$4);
+            var result$1 = x2$1.value$2;
+            if (($uI(result$1.ok) === 1)) {
+              response$2.send(result$1.value);
+              $asUnit(next$2());
+              break matchEnd7
+            }
+          };
+          if (rc6) {
+            response$2.status(400).send("User could not be created");
+            $asUnit(next$2());
+            break matchEnd7
+          };
+          if ($is_s_util_Failure(x0$4)) {
+            var x4 = $as_s_util_Failure(x0$4);
+            var e = x4.exception$2;
+            e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1);
+            var jsx$3 = response$2.status(500);
+            var s = e.getMessage__T();
+            jsx$3.send(s);
+            $asUnit(next$2());
+            break matchEnd7
+          };
+          throw new $c_s_MatchError().init___O(x0$4)
+        }
+      })
+    })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+  } else {
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      response.status(400).send("Invalid form");
+      $asUnit(next())
+    } else {
+      throw new $c_s_MatchError().init___O(x1)
+    }
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.com$shocktrade$webapp$routes$UserProfileRoutes$$addRecentSymbol$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, profileDAO$1) {
+  var dict = request.params;
+  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "userID")))) {
+    throw new $c_ju_NoSuchElementException().init___T("key not found: userID")
+  };
+  var userID = $as_T(dict.userID);
+  var dict$1 = request.params;
+  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$1, "symbol")))) {
+    throw new $c_ju_NoSuchElementException().init___T("key not found: symbol")
+  };
+  var symbol = $as_T(dict$1.symbol);
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, userID$2, symbol$1) {
+    return (function(x$5$2) {
+      var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
+      $m_sjs_concurrent_JSExecutionContext$Implicits$();
+      var jsx$4 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+      var $class = mongo$1$1.ObjectID;
+      var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID$2]));
+      if ($is_sjs_js_ArrayOps(args)) {
+        var x2 = $as_sjs_js_ArrayOps(args);
+        var jsx$3 = x2.scala$scalajs$js$ArrayOps$$array$f
+      } else if ($is_sjs_js_WrappedArray(args)) {
+        var x3 = $as_sjs_js_WrappedArray(args);
+        var jsx$3 = x3.array$6
+      } else {
+        var result = [];
+        var i = 0;
+        var len = args.length__I();
+        while ((i < len)) {
+          var arg1 = args.apply__I__O(i);
+          $uI(result.push(arg1));
+          i = ((1 + i) | 0)
+        };
+        var jsx$3 = result
+      };
+      var y = $newJSObjectWithVarargs($class, jsx$3);
+      var jsx$2 = jsx$4.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y));
+      var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+      var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("recentSymbols", symbol$1)]);
+      var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+      var p = x$5$2.findOneAndUpdate(jsx$2, jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$addToSet", y$1)));
+      return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+    })
+  })(mongo$1, userID, symbol));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$4, next$4, userID$2$1) {
+    return (function(x0$5$2) {
+      var x0$5 = $as_s_util_Try(x0$5$2);
+      var rc6 = false;
+      var x2$1 = null;
+      matchEnd7: {
+        if ($is_s_util_Success(x0$5)) {
+          rc6 = true;
+          x2$1 = $as_s_util_Success(x0$5);
+          var result$1 = x2$1.value$2;
+          if (($uI(result$1.ok) === 1)) {
+            var this$32 = $m_s_Option$().apply__O__s_Option(result$1.value);
+            if (this$32.isEmpty__Z()) {
+              var x1$2 = $m_s_None$()
+            } else {
+              var arg1$1 = this$32.get__O();
+              var x1$2 = new $c_s_Some().init___O(arg1$1)
+            };
+            if ($is_s_Some(x1$2)) {
+              var x2$2 = $as_s_Some(x1$2);
+              var profile = x2$2.x$2;
+              response$4.send(profile);
+              $asUnit(next$4())
+            } else {
+              var x = $m_s_None$();
+              if ((!(x === x1$2))) {
+                throw new $c_s_MatchError().init___O(x1$2)
+              };
+              response$4.status(404).send(userID$2$1)
+            };
+            break matchEnd7
+          }
+        };
+        if (rc6) {
+          var result$2 = x2$1.value$2;
+          response$4.status(400).json(result$2);
+          break matchEnd7
+        };
+        if ($is_s_util_Failure(x0$5)) {
+          var x4 = $as_s_util_Failure(x0$5);
+          var e = x4.exception$2;
+          var jsx$6 = response$4.status(500);
+          var s = e.getMessage__T();
+          jsx$6.send(s);
+          $asUnit(next$4());
+          break matchEnd7
+        };
+        throw new $c_s_MatchError().init___O(x0$5)
+      }
+    })
+  })(response, next, userID)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.com$shocktrade$webapp$routes$UserProfileRoutes$$profileByFBID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_Future__V = (function(request, response, next, profileDAO$1) {
+  var dict = request.params;
+  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "fbID")))) {
+    throw new $c_ju_NoSuchElementException().init___T("key not found: fbID")
+  };
+  var fbId = $as_T(dict.fbID);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(fbId$1) {
+    return (function(x$21$2) {
+      var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+      var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("facebookID", fbId$1));
+      var qual$1 = x$21$2.find(selector);
+      var eta$0$1 = qual$1.limit(1);
+      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1 = (function(promise$1) {
+        return (function(err$2, result$2) {
+          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+          } else {
+            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+          }
+        })
+      })(promise);
+      eta$0$1.next(arg1);
+      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2$2) {
+        return $m_s_Option$().apply__O__s_Option(x$2$2)
+      }));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
+    })
+  })(fbId));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(profileDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1, fbId$1$1) {
+    return (function(x0$1$2) {
+      var x0$1 = $as_s_util_Try(x0$1$2);
+      var rc10 = false;
+      var x2 = null;
+      matchEnd11: {
+        if ($is_s_util_Success(x0$1)) {
+          rc10 = true;
+          x2 = $as_s_util_Success(x0$1);
+          var p3 = $as_s_Option(x2.value$2);
+          if ($is_s_Some(p3)) {
+            var x4 = $as_s_Some(p3);
+            var profile = x4.x$2;
+            response$1.send(profile);
+            $asUnit(next$1());
+            break matchEnd11
+          }
+        };
+        if (rc10) {
+          var p6 = $as_s_Option(x2.value$2);
+          var x = $m_s_None$();
+          if ((x === p6)) {
+            response$1.status(404).send(fbId$1$1);
+            $asUnit(next$1());
+            break matchEnd11
+          }
+        };
+        if ($is_s_util_Failure(x0$1)) {
+          var x7 = $as_s_util_Failure(x0$1);
+          var e = x7.exception$2;
+          var jsx$1 = response$1.status(500);
+          var s = e.getMessage__T();
+          jsx$1.send(s);
+          $asUnit(next$1());
+          break matchEnd11
+        };
+        throw new $c_s_MatchError().init___O(x0$1)
+      }
+    })
+  })(response, next, fbId)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.com$shocktrade$webapp$routes$UserProfileRoutes$$netWorth$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, mongo$1, portfolioDAO$1, profileDAO$1, securitiesDAO$1, userDAO$1) {
+  var dict = request.params;
+  if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, "userID")))) {
+    throw new $c_ju_NoSuchElementException().init___T("key not found: userID")
+  };
+  var userID = $as_T(dict.userID);
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, userID$1) {
+    return (function(x$6$2) {
+      var fields = $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$().Fields$1;
+      var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+      var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+      var $class = mongo$1$1.ObjectID;
+      var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID$1]));
+      if ($is_sjs_js_ArrayOps(args)) {
+        var x2 = $as_sjs_js_ArrayOps(args);
+        var jsx$1 = x2.scala$scalajs$js$ArrayOps$$array$f
+      } else if ($is_sjs_js_WrappedArray(args)) {
+        var x3 = $as_sjs_js_WrappedArray(args);
+        var jsx$1 = x3.array$6
+      } else {
+        var result = [];
+        var i = 0;
+        var len = args.length__I();
+        while ((i < len)) {
+          var arg1 = args.apply__I__O(i);
+          $uI(result.push(arg1));
+          i = ((1 + i) | 0)
+        };
+        var jsx$1 = result
+      };
+      var y = $newJSObjectWithVarargs($class, jsx$1);
+      var selector = jsx$2.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y));
+      var jsx$3 = $m_sjs_js_Dictionary$();
+      var array = [];
+      $uI(fields.length);
+      var i$1 = 0;
+      var len$1 = $uI(fields.length);
+      while ((i$1 < len$1)) {
+        var index = i$1;
+        var arg1$1 = fields[index];
+        var x$3 = $as_T(arg1$1);
+        var elem = new $c_T2().init___O__O(x$3, 1);
+        array.push(elem);
+        i$1 = ((1 + i$1) | 0)
+      };
+      var qual$2 = x$6$2.find(selector, jsx$3.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)));
+      var eta$0$2 = qual$2.limit(1);
+      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1$2 = (function(promise$1) {
+        return (function(err$2, result$2) {
+          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+          } else {
+            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+          }
+        })
+      })(promise);
+      eta$0$2.next(arg1$2);
+      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
+        return $m_s_Option$().apply__O__s_Option(x$4$2)
+      }));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
+    })
+  })(mongo$1, userID));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var this$30 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f$1, executor);
+  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$7$2) {
+    var x$7 = $as_s_Option(x$7$2);
+    if (x$7.isEmpty__Z()) {
+      throw new $c_jl_IllegalStateException().init___T("User not found")
+    } else {
+      return x$7.get__O()
+    }
+  }));
+  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var this$31 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$30, f$2, executor$1);
+  var f$3 = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7().init___Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__T(mongo$1, portfolioDAO$1, profileDAO$1, securitiesDAO$1, userID);
+  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$31, f$3, executor$2);
+  outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
+    return (function(x0$3$2) {
+      var x0$3 = $as_s_util_Try(x0$3$2);
+      if ($is_s_util_Success(x0$3)) {
+        var x2$1 = $as_s_util_Success(x0$3);
+        var total = $uD(x2$1.value$2);
+        response$3.send(new $c_Lcom_shocktrade_common_models_user_NetWorth(total))
+      } else if ($is_s_util_Failure(x0$3)) {
+        var x3$1 = $as_s_util_Failure(x0$3);
+        var e = x3$1.exception$2;
+        var jsx$4 = response$3.status(500);
+        var s = e.getMessage__T();
+        jsx$4.send(s);
+        $asUnit(next$3())
+      } else {
+        throw new $c_s_MatchError().init___O(x0$3)
+      }
+    })
+  })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$;
+var $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$)) {
+    $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$ = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$() {
+  $c_O.call(this);
+  this.Fields$1 = null
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype.init___ = (function() {
+  $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$ = this;
+  this.Fields$1 = ["wallet"];
+  return this
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$UserInfo$", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$;
+var $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$)) {
+    $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$ = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_UserRoutes$() {
@@ -22183,7 +22140,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.configureApplication__Lorg_s
   $m_Lcom_shocktrade_webapp_routes_OnlineStatusRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_PortfolioRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, mongo);
   $m_Lcom_shocktrade_webapp_routes_PostRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_express_fileupload_ExpressFileUpload__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, mongo, fileUpload);
-  $m_Lcom_shocktrade_webapp_routes_ProfileRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
+  $m_Lcom_shocktrade_webapp_routes_UserProfileRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
   $m_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__Lorg_scalajs_nodejs_NodeRequire__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, require, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_ResearchRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
@@ -24082,6 +24039,27 @@ $h_Lcom_shocktrade_common_models_quote_Advisory.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_quote_Advisory.prototype = new $h_Lcom_shocktrade_common_models_quote_Advisory();
 $c_Lcom_shocktrade_common_models_quote_Advisory.prototype.constructor = $c_Lcom_shocktrade_common_models_quote_Advisory;
 /** @constructor */
+function $c_Lcom_shocktrade_common_models_user_NetWorth(arg$1) {
+  var value = $uD(arg$1);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "value": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": 0.0
+    }
+  });
+  this.value = value
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_user_NetWorth() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_user_NetWorth.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_models_user_NetWorth.prototype = new $h_Lcom_shocktrade_common_models_user_NetWorth();
+$c_Lcom_shocktrade_common_models_user_NetWorth.prototype.constructor = $c_Lcom_shocktrade_common_models_user_NetWorth;
+/** @constructor */
 function $c_Lcom_shocktrade_common_models_user_OnlineStatus() {
   var jsx$1 = (arguments.length | 0);
   var jsx$2 = 0;
@@ -25428,27 +25406,6 @@ function $h_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors() {
 $h_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors.prototype = new $h_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors();
 $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ContestRoutes$ValidationErrors;
-/** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth(arg$1) {
-  var value = $uD(arg$1);
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "value": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": 0.0
-    }
-  });
-  this.value = value
-}
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth.prototype = new $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$NetWorth;
 /** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_TradingClockRoutes$TradingStart(arg$1) {
   var delayInMillis = $uD(arg$1);
@@ -29348,47 +29305,6 @@ function $h_Lcom_shocktrade_common_models_post_Post() {
 $h_Lcom_shocktrade_common_models_post_Post.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_post_Post.prototype = new $h_Lcom_shocktrade_common_models_post_Post();
 $c_Lcom_shocktrade_common_models_post_Post.prototype.constructor = $c_Lcom_shocktrade_common_models_post_Post;
-/** @constructor */
-function $c_Lcom_shocktrade_common_models_user_User(arg$1, arg$2, arg$3) {
-  var _id = arg$1;
-  var facebookID = arg$2;
-  var name = arg$3;
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "_id": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "facebookID": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "name": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this._id = _id;
-  this.facebookID = facebookID;
-  this.name = name
-}
-/** @constructor */
-function $h_Lcom_shocktrade_common_models_user_User() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_models_user_User.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_models_user_User.prototype = new $h_Lcom_shocktrade_common_models_user_User();
-$c_Lcom_shocktrade_common_models_user_User.prototype.constructor = $c_Lcom_shocktrade_common_models_user_User;
 /** @constructor */
 function $c_Lcom_shocktrade_server_dao_PostData() {
   var jsx$1 = (arguments.length | 0);
@@ -37012,546 +36928,6 @@ var $d_Lcom_shocktrade_webapp_routes_PostRoutes$$anonfun$com$shocktrade$webapp$r
 });
 $c_Lcom_shocktrade_webapp_routes_PostRoutes$$anonfun$com$shocktrade$webapp$routes$PostRoutes$$uploadAttachment$1$1$$anonfun$7$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_PostRoutes$$anonfun$com$shocktrade$webapp$routes$PostRoutes$$uploadAttachment$1$1$$anonfun$7$$anonfun$apply$4;
 /** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7() {
-  $c_sr_AbstractFunction1.call(this);
-  this.portfolioDAO$1$2 = null;
-  this.securitiesDAO$1$f = null;
-  this.userID$1$f = null
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo__s_concurrent_Future(v1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype.init___s_concurrent_Future__s_concurrent_Future__T = (function(portfolioDAO$1, securitiesDAO$1, userID$1) {
-  this.portfolioDAO$1$2 = portfolioDAO$1;
-  this.securitiesDAO$1$f = securitiesDAO$1;
-  this.userID$1$f = userID$1;
-  return this
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype.apply__Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo__s_concurrent_Future = (function(user) {
-  var this$14 = this.portfolioDAO$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(x$8$2) {
-      var this$2 = new $c_Lcom_shocktrade_server_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_server_dao_contest_PortfolioDAO(x$8$2);
-      var playerID = arg$outer.userID$1$f;
-      $m_sjs_concurrent_JSExecutionContext$Implicits$();
-      var cursor = this$2.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("playerID", playerID)));
-      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-      var arg1 = (function(promise$1) {
-        return (function(err$2, result$2) {
-          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
-            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
-          } else {
-            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
-            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-          }
-        })
-      })(promise);
-      cursor.toArray(arg1);
-      return promise
-    })
-  })(this));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var this$15 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$14, f, executor);
-  var f$1 = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2().init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7(this);
-  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var this$16 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$15, f$1, executor$1);
-  var f$2 = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5().init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7__Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo(this, user);
-  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$16, f$2, executor$2)
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7 = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$$anonfun$7", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7;
-/** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2() {
-  $c_sr_AbstractFunction1.call(this)
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_Array__T6(v1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.apply__sjs_js_Array__T6 = (function(portfolios) {
-  var array = [];
-  var i = 0;
-  var len = $uI(portfolios.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = portfolios[index];
-    var value = arg1.cashAccount;
-    var xo = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-    var this$7 = xo.toList__sci_List();
-    if ((this$7 !== null)) {
-      var xs = this$7;
-      _loop: while (true) {
-        var this$8 = xs;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$8)) {
-          var elem = xs.head__O();
-          array.push(elem);
-          xs = $as_sc_LinearSeq(xs.tail__O());
-          continue _loop
-        };
-        break
-      }
-    } else {
-      var these = this$7;
-      while ((!these.isEmpty__Z())) {
-        var arg1$1 = these.head__O();
-        array.push(arg1$1);
-        these = $as_sci_List(these.tail__O())
-      }
-    };
-    i = ((1 + i) | 0)
-  };
-  var array$1 = [];
-  var i$1 = 0;
-  var len$1 = $uI(array.length);
-  while ((i$1 < len$1)) {
-    var index$1 = i$1;
-    var arg1$2 = array[index$1];
-    var value$1 = arg1$2.funds;
-    var xo$1 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
-    var this$15 = xo$1.toList__sci_List();
-    if ((this$15 !== null)) {
-      var xs$1 = this$15;
-      _loop$1: while (true) {
-        var this$16 = xs$1;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$16)) {
-          var elem$1 = xs$1.head__O();
-          array$1.push(elem$1);
-          xs$1 = $as_sc_LinearSeq(xs$1.tail__O());
-          continue _loop$1
-        };
-        break
-      }
-    } else {
-      var these$1 = this$15;
-      while ((!these$1.isEmpty__Z())) {
-        var arg1$3 = these$1.head__O();
-        array$1.push(arg1$3);
-        these$1 = $as_sci_List(these$1.tail__O())
-      }
-    };
-    i$1 = ((1 + i$1) | 0)
-  };
-  var num = $m_s_math_Numeric$DoubleIsFractional$();
-  var start = 0;
-  var end = $uI(array$1.length);
-  var z = 0;
-  var jsx$1;
-  _foldl: while (true) {
-    if ((start !== end)) {
-      var temp$start = ((1 + start) | 0);
-      var arg1$4 = z;
-      var index$2 = start;
-      var arg2 = array$1[index$2];
-      var x = $uD(arg1$4);
-      var y = $uD(arg2);
-      var temp$z = $s_s_math_Numeric$DoubleIsConflicted$class__plus__s_math_Numeric$DoubleIsConflicted__D__D__D(num, x, y);
-      start = temp$start;
-      z = temp$z;
-      continue _foldl
-    };
-    var jsx$1 = z;
-    break
-  };
-  var cashFunds = $uD(jsx$1);
-  var array$2 = [];
-  var i$2 = 0;
-  var len$2 = $uI(portfolios.length);
-  while ((i$2 < len$2)) {
-    var index$3 = i$2;
-    var arg1$5 = portfolios[index$3];
-    var value$2 = arg1$5.marginAccount;
-    var xo$2 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
-    var this$24 = xo$2.toList__sci_List();
-    if ((this$24 !== null)) {
-      var xs$2 = this$24;
-      _loop$2: while (true) {
-        var this$25 = xs$2;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$25)) {
-          var elem$2 = xs$2.head__O();
-          array$2.push(elem$2);
-          xs$2 = $as_sc_LinearSeq(xs$2.tail__O());
-          continue _loop$2
-        };
-        break
-      }
-    } else {
-      var these$2 = this$24;
-      while ((!these$2.isEmpty__Z())) {
-        var arg1$6 = these$2.head__O();
-        array$2.push(arg1$6);
-        these$2 = $as_sci_List(these$2.tail__O())
-      }
-    };
-    i$2 = ((1 + i$2) | 0)
-  };
-  var array$3 = [];
-  var i$3 = 0;
-  var len$3 = $uI(array$2.length);
-  while ((i$3 < len$3)) {
-    var index$4 = i$3;
-    var arg1$7 = array$2[index$4];
-    var value$3 = arg1$7.funds;
-    var xo$3 = ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3));
-    var this$32 = xo$3.toList__sci_List();
-    if ((this$32 !== null)) {
-      var xs$3 = this$32;
-      _loop$3: while (true) {
-        var this$33 = xs$3;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$33)) {
-          var elem$3 = xs$3.head__O();
-          array$3.push(elem$3);
-          xs$3 = $as_sc_LinearSeq(xs$3.tail__O());
-          continue _loop$3
-        };
-        break
-      }
-    } else {
-      var these$3 = this$32;
-      while ((!these$3.isEmpty__Z())) {
-        var arg1$8 = these$3.head__O();
-        array$3.push(arg1$8);
-        these$3 = $as_sci_List(these$3.tail__O())
-      }
-    };
-    i$3 = ((1 + i$3) | 0)
-  };
-  var num$1 = $m_s_math_Numeric$DoubleIsFractional$();
-  var start$1 = 0;
-  var end$1 = $uI(array$3.length);
-  var z$1 = 0;
-  var jsx$2;
-  _foldl$1: while (true) {
-    if ((start$1 !== end$1)) {
-      var temp$start$1 = ((1 + start$1) | 0);
-      var arg1$9 = z$1;
-      var index$5 = start$1;
-      var arg2$1 = array$3[index$5];
-      var x$1 = $uD(arg1$9);
-      var y$1 = $uD(arg2$1);
-      var temp$z$1 = $s_s_math_Numeric$DoubleIsConflicted$class__plus__s_math_Numeric$DoubleIsConflicted__D__D__D(num$1, x$1, y$1);
-      start$1 = temp$start$1;
-      z$1 = temp$z$1;
-      continue _foldl$1
-    };
-    var jsx$2 = z$1;
-    break
-  };
-  var marginFunds = $uD(jsx$2);
-  var array$4 = [];
-  var i$4 = 0;
-  var len$4 = $uI(portfolios.length);
-  while ((i$4 < len$4)) {
-    var index$6 = i$4;
-    var arg1$10 = portfolios[index$6];
-    var value$4 = arg1$10.positions;
-    var xo$4 = ((value$4 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$4));
-    var this$41 = xo$4.toList__sci_List();
-    if ((this$41 !== null)) {
-      var xs$4 = this$41;
-      _loop$4: while (true) {
-        var this$42 = xs$4;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$42)) {
-          var elem$4 = xs$4.head__O();
-          array$4.push(elem$4);
-          xs$4 = $as_sc_LinearSeq(xs$4.tail__O());
-          continue _loop$4
-        };
-        break
-      }
-    } else {
-      var these$4 = this$41;
-      while ((!these$4.isEmpty__Z())) {
-        var arg1$11 = these$4.head__O();
-        array$4.push(arg1$11);
-        these$4 = $as_sci_List(these$4.tail__O())
-      }
-    };
-    i$4 = ((1 + i$4) | 0)
-  };
-  $m_sjs_js_WrappedArray$();
-  var b = new $c_sjs_js_WrappedArray().init___();
-  var i$5 = 0;
-  var len$5 = $uI(array$4.length);
-  while ((i$5 < len$5)) {
-    var index$7 = i$5;
-    var arg1$12 = array$4[index$7];
-    var i$6 = 0;
-    var len$6 = $uI(arg1$12.length);
-    while ((i$6 < len$6)) {
-      var index$8 = i$6;
-      var arg1$13 = arg1$12[index$8];
-      b.array$6.push(arg1$13);
-      i$6 = ((1 + i$6) | 0)
-    };
-    i$5 = ((1 + i$5) | 0)
-  };
-  $m_sjs_js_WrappedArray$();
-  $m_sjs_js_WrappedArray$();
-  var b$1 = new $c_sjs_js_WrappedArray().init___();
-  var i$7 = 0;
-  var len$7 = $uI(b.array$6.length);
-  while ((i$7 < len$7)) {
-    var index$9 = i$7;
-    var arg1$14 = b.array$6[index$9];
-    var value$5 = arg1$14.symbol;
-    if ((value$5 === (void 0))) {
-      var value$8 = (void 0)
-    } else {
-      var symbol = $as_T(value$5);
-      var value$6 = arg1$14.quantity;
-      if ((value$6 === (void 0))) {
-        var value$8 = (void 0)
-      } else {
-        var qty = $uD(value$6);
-        var value$7 = new $c_Lcom_shocktrade_server_dao_securities_QtyQuote().init___T__D(symbol, qty);
-        var value$8 = value$7
-      }
-    };
-    var xo$5 = ((value$8 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$8));
-    var this$59 = xo$5.toList__sci_List();
-    $as_scm_Builder($s_scg_Growable$class__$$plus$plus$eq__scg_Growable__sc_TraversableOnce__scg_Growable(b$1, this$59));
-    i$7 = ((1 + i$7) | 0)
-  };
-  var this$60 = $m_sjs_js_WrappedArray$();
-  var bf$1 = this$60.ReusableCBFInstance$2;
-  var b$2 = $s_sc_TraversableLike$class__builder$1__p0__sc_TraversableLike__scg_CanBuildFrom__scm_Builder(b$1, bf$1);
-  var i$8 = 0;
-  var len$8 = $uI(b$1.array$6.length);
-  while ((i$8 < len$8)) {
-    var index$10 = i$8;
-    var arg1$15 = b$1.array$6[index$10];
-    var x$14 = $as_Lcom_shocktrade_server_dao_securities_QtyQuote(arg1$15);
-    b$2.$$plus$eq__O__scm_Builder(x$14.symbol$1);
-    i$8 = ((1 + i$8) | 0)
-  };
-  var symbols = $as_sjs_js_WrappedArray($as_sc_SeqLike(b$2.result__O()).distinct__O());
-  return new $c_T6().init___O__O__O__O__O__O(portfolios, cashFunds, marginFunds, b, b$1, symbols)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7 = (function($$outer) {
-  return this
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2 = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$$anonfun$7$$anonfun$apply$2", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$2;
-/** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.user$1$f = null
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7__Lcom_shocktrade_webapp_routes_ProfileRoutes$UserInfo = (function($$outer, user$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.user$1$f = user$1;
-  return this
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
-  return this.apply__T6__s_concurrent_Future($as_T6(v1))
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.apply__T6__s_concurrent_Future = (function(x$18) {
-  if ((x$18 !== null)) {
-    var cashFunds = $uD(x$18.$$und2$1);
-    var marginFunds = $uD(x$18.$$und3$1);
-    var symbolQtys = $as_sjs_js_WrappedArray(x$18.$$und5$1);
-    var symbols = $as_sjs_js_WrappedArray(x$18.$$und6$1);
-    var this$18 = this.$$outer$2.securitiesDAO$1$f;
-    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbols$1) {
-      return (function(x$15$2) {
-        var fields = $m_Lcom_shocktrade_common_models_quote_PricingQuote$().Fields$1;
-        $m_sjs_concurrent_JSExecutionContext$Implicits$();
-        var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
-        if ($is_sjs_js_ArrayOps(symbols$1)) {
-          var x2 = $as_sjs_js_ArrayOps(symbols$1);
-          var y = x2.scala$scalajs$js$ArrayOps$$array$f
-        } else if ((symbols$1 !== null)) {
-          var y = symbols$1.array$6
-        } else {
-          var result = [];
-          var i = 0;
-          var len = $uI(symbols$1.array$6.length);
-          while ((i < len)) {
-            var index = i;
-            var arg1 = symbols$1.array$6[index];
-            $uI(result.push(arg1));
-            i = ((1 + i) | 0)
-          };
-          var y = result
-        };
-        var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$in", y)]);
-        var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-        var cursor = x$15$2.find(jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", y$1)), $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$().toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
-        var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
-        var arg1$1 = (function(promise$1) {
-          return (function(err$2, result$2) {
-            if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
-              return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
-            } else {
-              var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
-              return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
-            }
-          })
-        })(promise);
-        cursor.toArray(arg1$1);
-        return promise
-      })
-    })(symbols));
-    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var this$19 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$18, f, executor);
-    var f$1 = new $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7().init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5__sjs_js_WrappedArray(this, symbolQtys);
-    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var this$20 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$19, f$1, executor$1);
-    var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, cashFunds$1, marginFunds$1) {
-      return (function(x$17$2) {
-        var x$17 = $as_T3(x$17$2);
-        if ((x$17 !== null)) {
-          var investments = $uD(x$17.$$und3$1);
-          return ((($uD(arg$outer.user$1$f.netWorth) + investments) + cashFunds$1) + marginFunds$1)
-        } else {
-          throw new $c_s_MatchError().init___O(x$17)
-        }
-      })
-    })(this, cashFunds, marginFunds));
-    var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$20, f$2, executor$2)
-  } else {
-    throw new $c_s_MatchError().init___O(x$18)
-  }
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5 = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$$anonfun$7$$anonfun$apply$5", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5;
-/** @constructor */
-function $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7() {
-  $c_sr_AbstractFunction1.call(this);
-  this.symbolQtys$1$2 = null
-}
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7;
-/** @constructor */
-function $h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype;
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
-  return this.apply__sjs_js_Array__T3(v1)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__sjs_js_Array__T3 = (function(quotes) {
-  var array = [];
-  $uI(quotes.length);
-  var i = 0;
-  var len = $uI(quotes.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = quotes[index];
-    var self = $as_T(arg1.symbol);
-    var elem = new $c_T2().init___O__O(self, arg1);
-    array.push(elem);
-    i = ((1 + i) | 0)
-  };
-  var this$7 = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
-  var i$1 = 0;
-  var len$1 = $uI(array.length);
-  while ((i$1 < len$1)) {
-    var index$1 = i$1;
-    var arg1$1 = array[index$1];
-    this$7.$$plus$eq__T2__scm_MapBuilder($as_T2(arg1$1));
-    i$1 = ((1 + i$1) | 0)
-  };
-  var quoteMap = $as_sci_Map(this$7.elems$1);
-  var this$9 = this.symbolQtys$1$2;
-  var this$8 = $m_sjs_js_WrappedArray$();
-  var bf = this$8.ReusableCBFInstance$2;
-  var b = $s_sc_TraversableLike$class__builder$1__p0__sc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$9, bf);
-  var i$2 = 0;
-  var len$2 = $uI(this$9.array$6.length);
-  while ((i$2 < len$2)) {
-    var index$2 = i$2;
-    var arg1$2 = this$9.array$6[index$2];
-    var x0$2 = $as_Lcom_shocktrade_server_dao_securities_QtyQuote(arg1$2);
-    if ((x0$2 === null)) {
-      throw new $c_s_MatchError().init___O(x0$2)
-    };
-    var symbol = x0$2.symbol$1;
-    var qty = x0$2.quantity$1;
-    var this$10 = quoteMap.get__O__s_Option(symbol);
-    if (this$10.isEmpty__Z()) {
-      var value$1 = $m_s_None$()
-    } else {
-      var arg1$3 = this$10.get__O();
-      var value = arg1$3.lastTrade;
-      var value$1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
-    };
-    b.$$plus$eq__O__scm_Builder(($uD((value$1.isEmpty__Z() ? 0.0 : value$1.get__O())) * qty));
-    i$2 = ((1 + i$2) | 0)
-  };
-  var investments = $uD($as_sc_TraversableOnce(b.result__O()).sum__s_math_Numeric__O($m_s_math_Numeric$DoubleIsFractional$()));
-  return new $c_T3().init___O__O__O(quotes, quoteMap, investments)
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.init___Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5__sjs_js_WrappedArray = (function($$outer, symbolQtys$1) {
-  this.symbolQtys$1$2 = symbolQtys$1;
-  return this
-});
-var $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7 = new $TypeData().initClass({
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7: 0
-}, false, "com.shocktrade.webapp.routes.ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7", {
-  Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_ProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7;
-/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6() {
   $c_sr_AbstractFunction1.call(this);
   this.naicsDAO$1$f = null;
@@ -37830,6 +37206,637 @@ var $d_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$an
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$anonfun$apply$10.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$anonfun$apply$10;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7() {
+  $c_sr_AbstractFunction1.call(this);
+  this.mongo$1$f = null;
+  this.portfolioDAO$1$2 = null;
+  this.profileDAO$1$f = null;
+  this.securitiesDAO$1$f = null;
+  this.userID$1$f = null
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype.init___Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__s_concurrent_Future__s_concurrent_Future__T = (function(mongo$1, portfolioDAO$1, profileDAO$1, securitiesDAO$1, userID$1) {
+  this.mongo$1$f = mongo$1;
+  this.portfolioDAO$1$2 = portfolioDAO$1;
+  this.profileDAO$1$f = profileDAO$1;
+  this.securitiesDAO$1$f = securitiesDAO$1;
+  this.userID$1$f = userID$1;
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo__s_concurrent_Future(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype.apply__Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo__s_concurrent_Future = (function(user) {
+  var this$14 = this.portfolioDAO$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(x$8$2) {
+      var this$2 = new $c_Lcom_shocktrade_server_dao_contest_PortfolioDAO$PortfolioDAOEnrichment().init___Lcom_shocktrade_server_dao_contest_PortfolioDAO(x$8$2);
+      var playerID = arg$outer.userID$1$f;
+      $m_sjs_concurrent_JSExecutionContext$Implicits$();
+      var cursor = this$2.dao$1.find($m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("playerID", playerID)));
+      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1 = (function(promise$1) {
+        return (function(err$2, result$2) {
+          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+          } else {
+            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+          }
+        })
+      })(promise);
+      cursor.toArray(arg1);
+      return promise
+    })
+  })(this));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var this$15 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$14, f, executor);
+  var f$1 = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2().init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7(this);
+  var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  var this$16 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$15, f$1, executor$1);
+  var f$2 = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5().init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7__Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo(this, user);
+  var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$16, f$2, executor$2)
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$$anonfun$7", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2() {
+  $c_sr_AbstractFunction1.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7 = (function($$outer) {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_Array__T6(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.apply__sjs_js_Array__T6 = (function(portfolios) {
+  var array = [];
+  var i = 0;
+  var len = $uI(portfolios.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = portfolios[index];
+    var value = arg1.cashAccount;
+    var xo = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
+    var this$7 = xo.toList__sci_List();
+    if ((this$7 !== null)) {
+      var xs = this$7;
+      _loop: while (true) {
+        var this$8 = xs;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$8)) {
+          var elem = xs.head__O();
+          array.push(elem);
+          xs = $as_sc_LinearSeq(xs.tail__O());
+          continue _loop
+        };
+        break
+      }
+    } else {
+      var these = this$7;
+      while ((!these.isEmpty__Z())) {
+        var arg1$1 = these.head__O();
+        array.push(arg1$1);
+        these = $as_sci_List(these.tail__O())
+      }
+    };
+    i = ((1 + i) | 0)
+  };
+  var array$1 = [];
+  var i$1 = 0;
+  var len$1 = $uI(array.length);
+  while ((i$1 < len$1)) {
+    var index$1 = i$1;
+    var arg1$2 = array[index$1];
+    var value$1 = arg1$2.funds;
+    var xo$1 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
+    var this$15 = xo$1.toList__sci_List();
+    if ((this$15 !== null)) {
+      var xs$1 = this$15;
+      _loop$1: while (true) {
+        var this$16 = xs$1;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$16)) {
+          var elem$1 = xs$1.head__O();
+          array$1.push(elem$1);
+          xs$1 = $as_sc_LinearSeq(xs$1.tail__O());
+          continue _loop$1
+        };
+        break
+      }
+    } else {
+      var these$1 = this$15;
+      while ((!these$1.isEmpty__Z())) {
+        var arg1$3 = these$1.head__O();
+        array$1.push(arg1$3);
+        these$1 = $as_sci_List(these$1.tail__O())
+      }
+    };
+    i$1 = ((1 + i$1) | 0)
+  };
+  var num = $m_s_math_Numeric$DoubleIsFractional$();
+  var start = 0;
+  var end = $uI(array$1.length);
+  var z = 0;
+  var jsx$1;
+  _foldl: while (true) {
+    if ((start !== end)) {
+      var temp$start = ((1 + start) | 0);
+      var arg1$4 = z;
+      var index$2 = start;
+      var arg2 = array$1[index$2];
+      var x = $uD(arg1$4);
+      var y = $uD(arg2);
+      var temp$z = $s_s_math_Numeric$DoubleIsConflicted$class__plus__s_math_Numeric$DoubleIsConflicted__D__D__D(num, x, y);
+      start = temp$start;
+      z = temp$z;
+      continue _foldl
+    };
+    var jsx$1 = z;
+    break
+  };
+  var cashFunds = $uD(jsx$1);
+  var array$2 = [];
+  var i$2 = 0;
+  var len$2 = $uI(portfolios.length);
+  while ((i$2 < len$2)) {
+    var index$3 = i$2;
+    var arg1$5 = portfolios[index$3];
+    var value$2 = arg1$5.marginAccount;
+    var xo$2 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
+    var this$24 = xo$2.toList__sci_List();
+    if ((this$24 !== null)) {
+      var xs$2 = this$24;
+      _loop$2: while (true) {
+        var this$25 = xs$2;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$25)) {
+          var elem$2 = xs$2.head__O();
+          array$2.push(elem$2);
+          xs$2 = $as_sc_LinearSeq(xs$2.tail__O());
+          continue _loop$2
+        };
+        break
+      }
+    } else {
+      var these$2 = this$24;
+      while ((!these$2.isEmpty__Z())) {
+        var arg1$6 = these$2.head__O();
+        array$2.push(arg1$6);
+        these$2 = $as_sci_List(these$2.tail__O())
+      }
+    };
+    i$2 = ((1 + i$2) | 0)
+  };
+  var array$3 = [];
+  var i$3 = 0;
+  var len$3 = $uI(array$2.length);
+  while ((i$3 < len$3)) {
+    var index$4 = i$3;
+    var arg1$7 = array$2[index$4];
+    var value$3 = arg1$7.funds;
+    var xo$3 = ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3));
+    var this$32 = xo$3.toList__sci_List();
+    if ((this$32 !== null)) {
+      var xs$3 = this$32;
+      _loop$3: while (true) {
+        var this$33 = xs$3;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$33)) {
+          var elem$3 = xs$3.head__O();
+          array$3.push(elem$3);
+          xs$3 = $as_sc_LinearSeq(xs$3.tail__O());
+          continue _loop$3
+        };
+        break
+      }
+    } else {
+      var these$3 = this$32;
+      while ((!these$3.isEmpty__Z())) {
+        var arg1$8 = these$3.head__O();
+        array$3.push(arg1$8);
+        these$3 = $as_sci_List(these$3.tail__O())
+      }
+    };
+    i$3 = ((1 + i$3) | 0)
+  };
+  var num$1 = $m_s_math_Numeric$DoubleIsFractional$();
+  var start$1 = 0;
+  var end$1 = $uI(array$3.length);
+  var z$1 = 0;
+  var jsx$2;
+  _foldl$1: while (true) {
+    if ((start$1 !== end$1)) {
+      var temp$start$1 = ((1 + start$1) | 0);
+      var arg1$9 = z$1;
+      var index$5 = start$1;
+      var arg2$1 = array$3[index$5];
+      var x$1 = $uD(arg1$9);
+      var y$1 = $uD(arg2$1);
+      var temp$z$1 = $s_s_math_Numeric$DoubleIsConflicted$class__plus__s_math_Numeric$DoubleIsConflicted__D__D__D(num$1, x$1, y$1);
+      start$1 = temp$start$1;
+      z$1 = temp$z$1;
+      continue _foldl$1
+    };
+    var jsx$2 = z$1;
+    break
+  };
+  var marginFunds = $uD(jsx$2);
+  var array$4 = [];
+  var i$4 = 0;
+  var len$4 = $uI(portfolios.length);
+  while ((i$4 < len$4)) {
+    var index$6 = i$4;
+    var arg1$10 = portfolios[index$6];
+    var value$4 = arg1$10.positions;
+    var xo$4 = ((value$4 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$4));
+    var this$41 = xo$4.toList__sci_List();
+    if ((this$41 !== null)) {
+      var xs$4 = this$41;
+      _loop$4: while (true) {
+        var this$42 = xs$4;
+        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$42)) {
+          var elem$4 = xs$4.head__O();
+          array$4.push(elem$4);
+          xs$4 = $as_sc_LinearSeq(xs$4.tail__O());
+          continue _loop$4
+        };
+        break
+      }
+    } else {
+      var these$4 = this$41;
+      while ((!these$4.isEmpty__Z())) {
+        var arg1$11 = these$4.head__O();
+        array$4.push(arg1$11);
+        these$4 = $as_sci_List(these$4.tail__O())
+      }
+    };
+    i$4 = ((1 + i$4) | 0)
+  };
+  $m_sjs_js_WrappedArray$();
+  var b = new $c_sjs_js_WrappedArray().init___();
+  var i$5 = 0;
+  var len$5 = $uI(array$4.length);
+  while ((i$5 < len$5)) {
+    var index$7 = i$5;
+    var arg1$12 = array$4[index$7];
+    var i$6 = 0;
+    var len$6 = $uI(arg1$12.length);
+    while ((i$6 < len$6)) {
+      var index$8 = i$6;
+      var arg1$13 = arg1$12[index$8];
+      b.array$6.push(arg1$13);
+      i$6 = ((1 + i$6) | 0)
+    };
+    i$5 = ((1 + i$5) | 0)
+  };
+  $m_sjs_js_WrappedArray$();
+  $m_sjs_js_WrappedArray$();
+  var b$1 = new $c_sjs_js_WrappedArray().init___();
+  var i$7 = 0;
+  var len$7 = $uI(b.array$6.length);
+  while ((i$7 < len$7)) {
+    var index$9 = i$7;
+    var arg1$14 = b.array$6[index$9];
+    var value$5 = arg1$14.symbol;
+    if ((value$5 === (void 0))) {
+      var value$8 = (void 0)
+    } else {
+      var symbol = $as_T(value$5);
+      var value$6 = arg1$14.quantity;
+      if ((value$6 === (void 0))) {
+        var value$8 = (void 0)
+      } else {
+        var qty = $uD(value$6);
+        var value$7 = new $c_Lcom_shocktrade_server_dao_securities_QtyQuote().init___T__D(symbol, qty);
+        var value$8 = value$7
+      }
+    };
+    var xo$5 = ((value$8 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$8));
+    var this$59 = xo$5.toList__sci_List();
+    $as_scm_Builder($s_scg_Growable$class__$$plus$plus$eq__scg_Growable__sc_TraversableOnce__scg_Growable(b$1, this$59));
+    i$7 = ((1 + i$7) | 0)
+  };
+  var this$60 = $m_sjs_js_WrappedArray$();
+  var bf$1 = this$60.ReusableCBFInstance$2;
+  var b$2 = $s_sc_TraversableLike$class__builder$1__p0__sc_TraversableLike__scg_CanBuildFrom__scm_Builder(b$1, bf$1);
+  var i$8 = 0;
+  var len$8 = $uI(b$1.array$6.length);
+  while ((i$8 < len$8)) {
+    var index$10 = i$8;
+    var arg1$15 = b$1.array$6[index$10];
+    var x$14 = $as_Lcom_shocktrade_server_dao_securities_QtyQuote(arg1$15);
+    b$2.$$plus$eq__O__scm_Builder(x$14.symbol$1);
+    i$8 = ((1 + i$8) | 0)
+  };
+  var symbols = $as_sjs_js_WrappedArray($as_sc_SeqLike(b$2.result__O()).distinct__O());
+  return new $c_T6().init___O__O__O__O__O__O(portfolios, cashFunds, marginFunds, b, b$1, symbols)
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$$anonfun$7$$anonfun$apply$2", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$2;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.user$1$f = null
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
+  return this.apply__T6__s_concurrent_Future($as_T6(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7__Lcom_shocktrade_webapp_routes_UserProfileRoutes$UserInfo = (function($$outer, user$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.user$1$f = user$1;
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.apply__T6__s_concurrent_Future = (function(x$19) {
+  if ((x$19 !== null)) {
+    var cashFunds = $uD(x$19.$$und2$1);
+    var marginFunds = $uD(x$19.$$und3$1);
+    var symbolQtys = $as_sjs_js_WrappedArray(x$19.$$und5$1);
+    var symbols = $as_sjs_js_WrappedArray(x$19.$$und6$1);
+    var this$18 = this.$$outer$2.securitiesDAO$1$f;
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(symbols$1) {
+      return (function(x$15$2) {
+        var fields = $m_Lcom_shocktrade_common_models_quote_PricingQuote$().Fields$1;
+        $m_sjs_concurrent_JSExecutionContext$Implicits$();
+        var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+        if ($is_sjs_js_ArrayOps(symbols$1)) {
+          var x2 = $as_sjs_js_ArrayOps(symbols$1);
+          var y = x2.scala$scalajs$js$ArrayOps$$array$f
+        } else if ((symbols$1 !== null)) {
+          var y = symbols$1.array$6
+        } else {
+          var result = [];
+          var i = 0;
+          var len = $uI(symbols$1.array$6.length);
+          while ((i < len)) {
+            var index = i;
+            var arg1 = symbols$1.array$6[index];
+            $uI(result.push(arg1));
+            i = ((1 + i) | 0)
+          };
+          var y = result
+        };
+        var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$in", y)]);
+        var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+        var cursor = x$15$2.find(jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("symbol", y$1)), $m_Lorg_scalajs_nodejs_mongodb_package$ProjectionEnrichment$().toProjection$extension__sc_Seq__sjs_js_Dictionary(fields));
+        var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+        var arg1$1 = (function(promise$1) {
+          return (function(err$2, result$2) {
+            if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+              return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+            } else {
+              var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+              return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+            }
+          })
+        })(promise);
+        cursor.toArray(arg1$1);
+        return promise
+      })
+    })(symbols));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var this$19 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$18, f, executor);
+    var f$1 = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7().init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5__D__D__sjs_js_WrappedArray(this, cashFunds, marginFunds, symbolQtys);
+    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var this$20 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$19, f$1, executor$1);
+    var f$2 = new $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9().init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5(this);
+    var executor$2 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$20, f$2, executor$2)
+  } else {
+    throw new $c_s_MatchError().init___O(x$19)
+  }
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$$anonfun$7$$anonfun$apply$5", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.cashFunds$1$2 = 0.0;
+  this.marginFunds$1$2 = 0.0;
+  this.symbolQtys$1$2 = null
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_Array__T4(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5__D__D__sjs_js_WrappedArray = (function($$outer, cashFunds$1, marginFunds$1, symbolQtys$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.cashFunds$1$2 = cashFunds$1;
+  this.marginFunds$1$2 = marginFunds$1;
+  this.symbolQtys$1$2 = symbolQtys$1;
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.apply__sjs_js_Array__T4 = (function(quotes) {
+  var array = [];
+  $uI(quotes.length);
+  var i = 0;
+  var len = $uI(quotes.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = quotes[index];
+    var self = $as_T(arg1.symbol);
+    var elem = new $c_T2().init___O__O(self, arg1);
+    array.push(elem);
+    i = ((1 + i) | 0)
+  };
+  var this$7 = new $c_scm_MapBuilder().init___sc_GenMap($m_sci_Map$EmptyMap$());
+  var i$1 = 0;
+  var len$1 = $uI(array.length);
+  while ((i$1 < len$1)) {
+    var index$1 = i$1;
+    var arg1$1 = array[index$1];
+    this$7.$$plus$eq__T2__scm_MapBuilder($as_T2(arg1$1));
+    i$1 = ((1 + i$1) | 0)
+  };
+  var quoteMap = $as_sci_Map(this$7.elems$1);
+  var this$9 = this.symbolQtys$1$2;
+  var this$8 = $m_sjs_js_WrappedArray$();
+  var bf = this$8.ReusableCBFInstance$2;
+  var b = $s_sc_TraversableLike$class__builder$1__p0__sc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$9, bf);
+  var i$2 = 0;
+  var len$2 = $uI(this$9.array$6.length);
+  while ((i$2 < len$2)) {
+    var index$2 = i$2;
+    var arg1$2 = this$9.array$6[index$2];
+    var x0$2 = $as_Lcom_shocktrade_server_dao_securities_QtyQuote(arg1$2);
+    if ((x0$2 === null)) {
+      throw new $c_s_MatchError().init___O(x0$2)
+    };
+    var symbol = x0$2.symbol$1;
+    var qty = x0$2.quantity$1;
+    var this$10 = quoteMap.get__O__s_Option(symbol);
+    if (this$10.isEmpty__Z()) {
+      var value$1 = $m_s_None$()
+    } else {
+      var arg1$3 = this$10.get__O();
+      var value = arg1$3.lastTrade;
+      var value$1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
+    };
+    b.$$plus$eq__O__scm_Builder(($uD((value$1.isEmpty__Z() ? 0.0 : value$1.get__O())) * qty));
+    i$2 = ((1 + i$2) | 0)
+  };
+  var investments = $uD($as_sc_TraversableOnce(b.result__O()).sum__s_math_Numeric__O($m_s_math_Numeric$DoubleIsFractional$()));
+  var netWorth = ((($uD(this.$$outer$2.user$1$f.wallet) + investments) + this.cashFunds$1$2) + this.marginFunds$1$2);
+  return new $c_T4().init___O__O__O__O(quotes, quoteMap, investments, netWorth)
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$7;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype = $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype;
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype.apply__O__O = (function(v1) {
+  return this.apply__T4__s_concurrent_Future($as_T4(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype.apply__T4__s_concurrent_Future = (function(x$18) {
+  if ((x$18 !== null)) {
+    var netWorth = $uD(x$18.$$und4$1);
+    var this$24 = this.$$outer$2.$$outer$2.profileDAO$1$f;
+    var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, netWorth$2) {
+      return (function(x$17$2) {
+        var jsx$5 = $m_sjs_js_Thenable$ThenableOps$();
+        var userID = arg$outer.$$outer$2.$$outer$2.userID$1$f;
+        $m_sjs_concurrent_JSExecutionContext$Implicits$();
+        var mongo = arg$outer.$$outer$2.$$outer$2.mongo$1$f;
+        var jsx$4 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+        var $class = mongo.ObjectID;
+        var args = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sjs_js_Any.getArrayOf(), [userID]));
+        if ($is_sjs_js_ArrayOps(args)) {
+          var x2 = $as_sjs_js_ArrayOps(args);
+          var jsx$3 = x2.scala$scalajs$js$ArrayOps$$array$f
+        } else if ($is_sjs_js_WrappedArray(args)) {
+          var x3 = $as_sjs_js_WrappedArray(args);
+          var jsx$3 = x3.array$6
+        } else {
+          var result = [];
+          var i = 0;
+          var len = args.length__I();
+          while ((i < len)) {
+            var arg1 = args.apply__I__O(i);
+            $uI(result.push(arg1));
+            i = ((1 + i) | 0)
+          };
+          var jsx$3 = result
+        };
+        var y = $newJSObjectWithVarargs($class, jsx$3);
+        var jsx$2 = jsx$4.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y));
+        var jsx$1 = $m_Lorg_scalajs_nodejs_mongodb_package$();
+        var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("netWorth", netWorth$2)]);
+        var y$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+        var p = x$17$2.updateOne(jsx$2, jsx$1.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("$set", y$1)));
+        return jsx$5.toFuture$extension__sjs_js_Thenable__s_concurrent_Future(p)
+      })
+    })(this, netWorth));
+    var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    var this$25 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$24, f, executor);
+    var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(netWorth$2$1) {
+      return (function(w$2) {
+        return netWorth$2$1
+      })
+    })(netWorth));
+    var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+    return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$25, f$1, executor$1)
+  } else {
+    throw new $c_s_MatchError().init___O(x$18)
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype.init___Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9: 0
+}, false, "com.shocktrade.webapp.routes.UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9", {
+  Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7$$anonfun$apply$5$$anonfun$apply$9;
 /** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_WebSocketHandler$WsClient() {
   $c_O.call(this);
@@ -40070,30 +40077,22 @@ var $d_sr_ScalaRunTime$$anon$1 = new $TypeData().initClass({
 });
 $c_sr_ScalaRunTime$$anon$1.prototype.$classData = $d_sr_ScalaRunTime$$anon$1;
 /** @constructor */
-function $c_Lcom_shocktrade_server_dao_users_ProfileData() {
-  var jsx$1 = (arguments.length | 0);
-  var jsx$2 = 0;
-  var arg$rest = [];
-  while ((jsx$2 < jsx$1)) {
-    arg$rest.push(arguments[jsx$2]);
-    jsx$2 = ((jsx$2 + 1) | 0)
-  };
-  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var facebookID = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var name = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var country = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var level = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var rep = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var netWorth = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var totalXP = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var favoriteSymbols = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var recentSymbols = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var filters = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var followers = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var friends = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var accomplishments = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var acquaintances = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
-  var lastLoginTime = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_server_dao_users_ProfileData$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
+function $c_Lcom_shocktrade_server_dao_users_UserProfileData(arg$1, arg$2, arg$3, arg$4, arg$5, arg$6, arg$7, arg$8, arg$9, arg$10, arg$11, arg$12, arg$13, arg$14, arg$15) {
+  var _id = arg$1;
+  var facebookID = arg$2;
+  var name = arg$3;
+  var country = arg$4;
+  var level = arg$5;
+  var rep = arg$6;
+  var netWorth = arg$7;
+  var wallet = arg$8;
+  var totalXP = arg$9;
+  var favoriteSymbols = arg$10;
+  var recentSymbols = arg$11;
+  var followers = arg$12;
+  var friends = arg$13;
+  var awards = arg$14;
+  var lastLoginTime = arg$15;
   $g.Object.call(this);
   $g.Object.defineProperties(this, {
     "_id": {
@@ -40152,6 +40151,14 @@ function $c_Lcom_shocktrade_server_dao_users_ProfileData() {
     }
   });
   $g.Object.defineProperties(this, {
+    "wallet": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
     "totalXP": {
       "configurable": true,
       "enumerable": true,
@@ -40176,14 +40183,6 @@ function $c_Lcom_shocktrade_server_dao_users_ProfileData() {
     }
   });
   $g.Object.defineProperties(this, {
-    "filters": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
     "followers": {
       "configurable": true,
       "enumerable": true,
@@ -40200,15 +40199,7 @@ function $c_Lcom_shocktrade_server_dao_users_ProfileData() {
     }
   });
   $g.Object.defineProperties(this, {
-    "accomplishments": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "acquaintances": {
+    "awards": {
       "configurable": true,
       "enumerable": true,
       "writable": true,
@@ -40230,23 +40221,22 @@ function $c_Lcom_shocktrade_server_dao_users_ProfileData() {
   this.level = level;
   this.rep = rep;
   this.netWorth = netWorth;
+  this.wallet = wallet;
   this.totalXP = totalXP;
   this.favoriteSymbols = favoriteSymbols;
   this.recentSymbols = recentSymbols;
-  this.filters = filters;
   this.followers = followers;
   this.friends = friends;
-  this.accomplishments = accomplishments;
-  this.acquaintances = acquaintances;
+  this.awards = awards;
   this.lastLoginTime = lastLoginTime
 }
 /** @constructor */
-function $h_Lcom_shocktrade_server_dao_users_ProfileData() {
+function $h_Lcom_shocktrade_server_dao_users_UserProfileData() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_server_dao_users_ProfileData.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_server_dao_users_ProfileData.prototype = new $h_Lcom_shocktrade_server_dao_users_ProfileData();
-$c_Lcom_shocktrade_server_dao_users_ProfileData.prototype.constructor = $c_Lcom_shocktrade_server_dao_users_ProfileData;
+$h_Lcom_shocktrade_server_dao_users_UserProfileData.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_server_dao_users_UserProfileData.prototype = new $h_Lcom_shocktrade_server_dao_users_UserProfileData();
+$c_Lcom_shocktrade_server_dao_users_UserProfileData.prototype.constructor = $c_Lcom_shocktrade_server_dao_users_UserProfileData;
 /** @constructor */
 function $c_Ljava_io_PrintStream() {
   $c_Ljava_io_FilterOutputStream.call(this);

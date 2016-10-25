@@ -4,8 +4,8 @@ import com.shocktrade.client._
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
-import com.shocktrade.client.models.Profile
-import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.cookies.Cookies
@@ -31,7 +31,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
                               @injected("MarketStatus") marketStatus: MarketStatusService,
                               @injected("MySessionService") mySession: MySessionService,
                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                              @injected("ProfileService") profileService: ProfileService,
+                              @injected("UserProfileService") profileService: UserProfileService,
                               @injected("QuoteService") quoteService: QuoteService)
   extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading with GlobalSelectedSymbol {
 
@@ -369,14 +369,14 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalS
   var onSelectedItem: js.Function3[js.UndefOr[AutoCompleteQuote], js.UndefOr[AutoCompleteQuote], js.UndefOr[String], Unit] = js.native
 
   // favorite quote functions
-  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[Profile]]] = js.native
+  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
   var isFavorite: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[Profile]]] = js.native
+  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
 
   // recently-viewed quote functions
-  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[Profile]]] = js.native
+  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
   var isRecentSymbol: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[Profile]]] = js.native
+  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
 
   // risk functions
   var getBetaClass: js.Function1[js.UndefOr[Double], js.UndefOr[Object]] = js.native

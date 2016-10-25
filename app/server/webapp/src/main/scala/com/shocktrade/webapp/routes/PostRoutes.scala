@@ -8,7 +8,7 @@ import com.shocktrade.server.dao.PostDAO._
 import com.shocktrade.server.dao.PostData._
 import com.shocktrade.server.dao._
 import com.shocktrade.server.dao.users.ProfileDAO._
-import com.shocktrade.server.dao.users.ProfileData
+import com.shocktrade.server.dao.users.UserProfileData
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
 import org.scalajs.nodejs
@@ -180,7 +180,7 @@ object PostRoutes {
       val ownerID = request.params("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
       val outcome = for {
-        submitters <- profileDAO.flatMap(_.findById[ProfileData](ownerID, js.Array("followers"))).map(_.flatMap(_.followers.toOption).getOrElse(js.Array()))
+        submitters <- profileDAO.flatMap(_.findById[UserProfileData](ownerID, js.Array("followers"))).map(_.flatMap(_.followers.toOption).getOrElse(js.Array()))
         _ = submitters.push(ownerID)
         posts <- postDAO.flatMap(_.find("submitterId" $in submitters).limit(maxResults).toArrayFuture[Post])
       } yield posts

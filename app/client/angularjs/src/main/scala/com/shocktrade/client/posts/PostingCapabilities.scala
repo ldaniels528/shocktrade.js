@@ -135,7 +135,7 @@ trait PostingCapabilities extends GlobalLoading {
   $scope.publishPost = (aPost: js.UndefOr[Post]) => {
     for {
       post <- aPost
-      user = mySession.userProfile.toUser
+      user = mySession.userProfile
     } {
       post.loading = true
       post.submitter = user
@@ -181,7 +181,7 @@ trait PostingCapabilities extends GlobalLoading {
 
   $scope.setupNewPost = () => {
     console.log(s"Setting up a new post...")
-    $scope.newPost = Post(mySession.userProfile.toUser)
+    $scope.newPost = Post(mySession.userProfile)
   }
 
   $scope.updatePost = (anUpdatedPost: js.UndefOr[Post]) => anUpdatedPost foreach { updatedPost =>
@@ -442,7 +442,7 @@ trait PostingCapabilities extends GlobalLoading {
 
     for {
       newPost <- $scope.newPost
-      user = mySession.userProfile.toUser
+      user = mySession.userProfile
       userId <- user._id.flat
     } {
       // if the post itself has not already been created ...

@@ -9,15 +9,19 @@ import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
+import com.shocktrade.server.dao.securities.QtyQuote
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
+import com.shocktrade.server.dao.users.ProfileDAO._
+import com.shocktrade.server.dao.users.UserDAO._
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
+import org.scalajs.nodejs.mongodb.{Db, MongoDB, ObjectID, UpdateWriteOpResultObject, UpdateWriteResult}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
+import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -30,7 +34,7 @@ import scala.util.{Failure, Success, Try}
   * Order Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
+class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
@@ -41,6 +45,8 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
   private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
+  private val userDAO = dbFuture.flatMap(_.getUserDAO)
+  private val userProfileDAO = dbFuture.flatMap(_.getProfileDAO)
 
   // internal fields
   private var lastRun: js.Date = new js.Date()
@@ -108,7 +114,14 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     Future.sequence {
       workOrders map { wo =>
         // attempt to fulfill the BUY/SELL order
-        val outcome = portfolioDAO.flatMap(if (wo.order.isBuyOrder) _.insertPosition(wo) else _.reducePosition(wo))
+        val outcome = for {
+          w1 <- portfolioDAO.flatMap(if (wo.order.isBuyOrder) _.insertPosition(wo) else _.reducePosition(wo))
+          /*w2 <- w1 match {
+            case w if w.isOk => updatePlayerNetWorth(wo.playerID)
+            case w => Future.successful(New[UpdateWriteOpResultObject])
+          }*/
+        } yield w1
+
         outcome foreach { result =>
           logger.info(s"Order # ${wo.order._id}: ${wo.order.symbol} x ${wo.order.quantity} - result => ", result.result)
         }
@@ -185,6 +198,29 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
       logger.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
     }
     logger.log("")
+  }
+
+  private def updatePlayerNetWorth(userID: String) = {
+    for {
+      user <- userDAO.flatMap(_.findUserWithFields[UserInfo](userID, fields = UserInfo.Fields)).map(_.orDie("User not found"))
+      portfolios <- portfolioDAO.flatMap(_.findByPlayer(userID))
+
+      // compute the cash balances
+      cashFunds = portfolios.flatMap(_.cashAccount.toOption).flatMap(_.funds.toOption).sum
+      marginFunds = portfolios.flatMap(_.marginAccount.toOption).flatMap(_.funds.toOption).sum
+
+      // compute the investment values of all positions
+      positions = portfolios.flatMap(_.positions.toOption).flatten
+      symbolQtys = positions.flatMap(p => (for {symbol <- p.symbol; qty <- p.quantity} yield QtyQuote(symbol, qty)).toOption)
+      symbols = symbolQtys.map(_.symbol).distinct
+      quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
+      quoteMap = Map(quotes.map(q => q.symbol -> q): _*)
+      investments = symbolQtys map { case QtyQuote(symbol, qty) => quoteMap.get(symbol).flatMap(_.lastTrade.toOption).orZero * qty } sum
+
+      // compute and update the network
+      netWorth = user.wallet + investments + cashFunds + marginFunds
+      w <- userProfileDAO.flatMap(_.updateNetWorth(userID, netWorth))
+    } yield w
   }
 
   private def updateContestsWithRankings() = {
@@ -276,6 +312,15 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object OrderQualificationEngine {
+
+  @ScalaJSDefined
+  trait UserInfo extends js.Object {
+    def wallet: Double
+  }
+
+  object UserInfo {
+    val Fields = js.Array("wallet")
+  }
 
   @ScalaJSDefined
   class WorkQuote(val symbol: js.UndefOr[String],

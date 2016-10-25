@@ -1,13 +1,12 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.forms.PlayerInfoForm
-import com.shocktrade.common.models._
-import com.shocktrade.common.models.contest.Participant
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.InvitePlayerDialog
-import com.shocktrade.client.models.Profile
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
+import com.shocktrade.common.forms.PlayerInfoForm
+import com.shocktrade.common.models.contest.Participant
 import com.shocktrade.common.models.user.User
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, angular, injected, _}
@@ -146,7 +145,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   //          Contest Management Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.containsPlayer = (aContest: js.UndefOr[Contest], aUserProfile: js.UndefOr[Profile]) => {
+  $scope.containsPlayer = (aContest: js.UndefOr[Contest], aUserProfile: js.UndefOr[UserProfile]) => {
     (for {
       contest <- aContest
       userProfile <- aUserProfile
@@ -197,7 +196,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       userId <- mySession.userProfile._id.toOption
     } {
       contest.joining = true
-      val form = new PlayerInfoForm(player = new User(_id = userId, name = mySession.userProfile.name, facebookID = facebookID))
+      val form = new PlayerInfoForm(player = User(_id = userId, facebookID = facebookID, name = mySession.userProfile.name))
       asyncLoading($scope)(contestService.joinContest(contestId, form)) onComplete {
         case Success(joinedContest) =>
           $scope.$apply { () =>
@@ -358,7 +357,7 @@ trait GameSearchScope extends GameScope {
   var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
 
   // contest functions
-  var containsPlayer: js.Function2[js.UndefOr[Contest], js.UndefOr[Profile], Boolean] = js.native
+  var containsPlayer: js.Function2[js.UndefOr[Contest], js.UndefOr[UserProfile], Boolean] = js.native
   var contestSearch: js.Function1[js.UndefOr[ContestSearchOptions], Unit] = js.native
   var deleteContest: js.Function1[js.UndefOr[Contest], Unit] = js.native
   var getSearchResults: js.Function1[js.UndefOr[String], js.Array[Contest]] = js.native

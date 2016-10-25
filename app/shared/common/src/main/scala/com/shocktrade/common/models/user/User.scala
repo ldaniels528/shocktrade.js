@@ -1,5 +1,6 @@
 package com.shocktrade.common.models.user
 
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.language.implicitConversions
@@ -11,9 +12,11 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class User(var _id: js.UndefOr[String],
-           var facebookID: js.UndefOr[String],
-           var name: js.UndefOr[String]) extends UserLike
+trait User extends UserLike {
+  var _id: js.UndefOr[String]
+  var facebookID: js.UndefOr[String]
+  var name: js.UndefOr[String]
+}
 
 /**
   * User Companion
@@ -21,11 +24,12 @@ class User(var _id: js.UndefOr[String],
   */
 object User {
 
-  implicit class Profile2User(val profile: ProfileLike) extends AnyVal {
-
-    @inline
-    def toUser: User = profile.asInstanceOf[User]
-
+  def apply(_id: js.UndefOr[String], facebookID: js.UndefOr[String], name: js.UndefOr[String]) = {
+    val user = New[User]
+    user._id = _id
+    user.facebookID = facebookID
+    user.name = name
+    user
   }
 
   /**

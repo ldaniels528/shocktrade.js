@@ -2,9 +2,9 @@ package com.shocktrade.client
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
-import com.shocktrade.client.models.Profile
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
-import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs._
@@ -33,7 +33,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
                             @injected("ChatService") chatService: ChatService,
                             @injected("ContestService") contestService: ContestService,
                             @injected("PortfolioService") portfolioService: PortfolioService,
-                            @injected("ProfileService") profileService: ProfileService,
+                            @injected("UserProfileService") profileService: UserProfileService,
                             @injected("QuoteCache") quoteCache: QuoteCache)
   extends Service {
 
@@ -45,13 +45,13 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   var contest_? : Option[Contest] = None
   var portfolio_? : Option[Portfolio] = None
   var participant_? : Option[Participant] = None
-  var userProfile: Profile = createSpectatorProfile()
+  var userProfile: UserProfile = createSpectatorProfile()
 
   /////////////////////////////////////////////////////////////////////
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def setUserProfile(profile: Profile, profileFB: FacebookProfileResponse) {
+  def setUserProfile(profile: UserProfile, profileFB: FacebookProfileResponse) {
     this.userProfile = profile
     this.fbProfile_? = profileFB
     this.facebookID = fbProfile_?.map(_.id)
@@ -104,7 +104,10 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     facebookID.foreach { fbId =>
       profileService.getProfileByFacebookID(fbId) onComplete {
         case Success(profile) =>
-          userProfile.netWorth = profile.netWorth
+          $rootScope.$apply { () =>
+            userProfile.netWorth = profile.netWorth
+            userProfile.wallet = profile.wallet
+          }
         case Failure(e) =>
           toaster.error("Error loading user profile");
       }
@@ -115,11 +118,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   //          NetWorth Functions
   /////////////////////////////////////////////////////////////////////
 
-  def deduct(amount: Double) = {
-    userProfile.netWorth = userProfile.netWorth.map(_ - amount)
-  }
-
-  def getNetWorth = userProfile.netWorth
+  def deduct(amount: Double) = userProfile.wallet = userProfile.wallet.map(_ - amount)
 
   /////////////////////////////////////////////////////////////////////
   //          Symbols - Favorites, Recent, etc.
@@ -347,7 +346,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     fbProfile_? = js.undefined
     resetContest()
 
-    new Profile(
+    new UserProfile(
       name = "Spectator",
       country = "us",
       lastSymbol = "AAPL"
@@ -368,8 +367,8 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       userId <- userProfile._id
       otherId <- profile._id
     } if (userId == otherId) {
-      userProfile.netWorth = profile.netWorth
-      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.netWorth}</li></ul>", 5.seconds, "trustedHtml")
+      userProfile.wallet = profile.wallet
+      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds, "trustedHtml")
     }
   }
 

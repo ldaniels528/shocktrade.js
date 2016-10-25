@@ -115,7 +115,7 @@ object WebServerJsApp extends js.JSApp {
     OnlineStatusRoutes.init(app, dbFuture)
     PortfolioRoutes.init(app, dbFuture)
     PostRoutes.init(app, dbFuture)
-    ProfileRoutes.init(app, dbFuture)
+    UserProfileRoutes.init(app, dbFuture)
     RemoteEventRoutes.init(app, dbFuture)
     QuoteRoutes.init(app, dbFuture)
     ResearchRoutes.init(app, dbFuture)

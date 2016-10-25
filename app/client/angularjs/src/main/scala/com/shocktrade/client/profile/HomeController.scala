@@ -19,7 +19,7 @@ import scala.scalajs.js.UndefOr
   */
 class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
-                     @injected("ProfileService") profileService: ProfileService)
+                     @injected("UserProfileService") profileService: UserProfileService)
   extends Controller {
 
   $scope.selectedFriend = null

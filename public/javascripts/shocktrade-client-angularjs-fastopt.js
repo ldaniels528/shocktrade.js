@@ -1197,11 +1197,9 @@ function $s_Lcom_shocktrade_client_posts_PostingCapabilities$class__$$init$__Lco
       var jsx$1 = $g.console;
       var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Setting up a new post..."])).s__sc_Seq__T($m_sci_Nil$());
       jsx$1.log(s);
-      var jsx$3 = arg$outer$2.$$scope$1;
-      var jsx$2 = $m_Lcom_shocktrade_common_models_post_Post$();
-      var profile = arg$outer$2.mySession$1.userProfile$1;
-      var value = jsx$2.apply__Lcom_shocktrade_common_models_user_User__Lcom_shocktrade_common_models_post_Post(profile);
-      jsx$3.newPost = value
+      var jsx$2 = arg$outer$2.$$scope$1;
+      var value = $m_Lcom_shocktrade_common_models_post_Post$().apply__Lcom_shocktrade_common_models_user_User__Lcom_shocktrade_common_models_post_Post(arg$outer$2.mySession$1.userProfile$1);
+      jsx$2.newPost = value
     })
   })($$this);
   $$this.$$scope$1.updatePost = (function(f$5) {
@@ -3963,89 +3961,83 @@ function $m_Lcom_shocktrade_client_discover_ResearchController$() {
   return $n_Lcom_shocktrade_client_discover_ResearchController$
 }
 /** @constructor */
-function $c_Lcom_shocktrade_client_models_Profile$() {
+function $c_Lcom_shocktrade_client_models_UserProfile$() {
   $c_O.call(this)
 }
-$c_Lcom_shocktrade_client_models_Profile$.prototype = new $h_O();
-$c_Lcom_shocktrade_client_models_Profile$.prototype.constructor = $c_Lcom_shocktrade_client_models_Profile$;
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype = new $h_O();
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.constructor = $c_Lcom_shocktrade_client_models_UserProfile$;
 /** @constructor */
-function $h_Lcom_shocktrade_client_models_Profile$() {
+function $h_Lcom_shocktrade_client_models_UserProfile$() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_models_Profile$.prototype = $c_Lcom_shocktrade_client_models_Profile$.prototype;
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
+$h_Lcom_shocktrade_client_models_UserProfile$.prototype = $c_Lcom_shocktrade_client_models_UserProfile$.prototype;
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.init___ = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.init___ = (function() {
   return this
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$19__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$16__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$13__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$14__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$17__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$17__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$18__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$15__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
   return (void 0)
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-var $d_Lcom_shocktrade_client_models_Profile$ = new $TypeData().initClass({
-  Lcom_shocktrade_client_models_Profile$: 0
-}, false, "com.shocktrade.client.models.Profile$", {
-  Lcom_shocktrade_client_models_Profile$: 1,
+var $d_Lcom_shocktrade_client_models_UserProfile$ = new $TypeData().initClass({
+  Lcom_shocktrade_client_models_UserProfile$: 0
+}, false, "com.shocktrade.client.models.UserProfile$", {
+  Lcom_shocktrade_client_models_UserProfile$: 1,
   O: 1
 });
-$c_Lcom_shocktrade_client_models_Profile$.prototype.$classData = $d_Lcom_shocktrade_client_models_Profile$;
-var $n_Lcom_shocktrade_client_models_Profile$ = (void 0);
-function $m_Lcom_shocktrade_client_models_Profile$() {
-  if ((!$n_Lcom_shocktrade_client_models_Profile$)) {
-    $n_Lcom_shocktrade_client_models_Profile$ = new $c_Lcom_shocktrade_client_models_Profile$().init___()
+$c_Lcom_shocktrade_client_models_UserProfile$.prototype.$classData = $d_Lcom_shocktrade_client_models_UserProfile$;
+var $n_Lcom_shocktrade_client_models_UserProfile$ = (void 0);
+function $m_Lcom_shocktrade_client_models_UserProfile$() {
+  if ((!$n_Lcom_shocktrade_client_models_UserProfile$)) {
+    $n_Lcom_shocktrade_client_models_UserProfile$ = new $c_Lcom_shocktrade_client_models_UserProfile$().init___()
   };
-  return $n_Lcom_shocktrade_client_models_Profile$
+  return $n_Lcom_shocktrade_client_models_UserProfile$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_client_models_contest_ContestSearchOptions$() {
@@ -5055,6 +5047,41 @@ function $m_Lcom_shocktrade_common_models_user_OnlineStatus$() {
     $n_Lcom_shocktrade_common_models_user_OnlineStatus$ = new $c_Lcom_shocktrade_common_models_user_OnlineStatus$().init___()
   };
   return $n_Lcom_shocktrade_common_models_user_OnlineStatus$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_user_User$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_user_User$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_user_User$.prototype.constructor = $c_Lcom_shocktrade_common_models_user_User$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_user_User$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_user_User$.prototype = $c_Lcom_shocktrade_common_models_user_User$.prototype;
+$c_Lcom_shocktrade_common_models_user_User$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_user_User$.prototype.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User = (function(_id, facebookID, name) {
+  var user = {};
+  user._id = _id;
+  user.facebookID = facebookID;
+  user.name = name;
+  return user
+});
+var $d_Lcom_shocktrade_common_models_user_User$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_user_User$: 0
+}, false, "com.shocktrade.common.models.user.User$", {
+  Lcom_shocktrade_common_models_user_User$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_user_User$.prototype.$classData = $d_Lcom_shocktrade_common_models_user_User$;
+var $n_Lcom_shocktrade_common_models_user_User$ = (void 0);
+function $m_Lcom_shocktrade_common_models_user_User$() {
+  if ((!$n_Lcom_shocktrade_common_models_user_User$)) {
+    $n_Lcom_shocktrade_common_models_user_User$ = new $c_Lcom_shocktrade_common_models_user_User$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_user_User$
 }
 /** @constructor */
 function $c_Lorg_scalajs_angularjs_AngularJsHelper$() {
@@ -9232,12 +9259,17 @@ $c_Lcom_shocktrade_client_NavigationController.prototype.init___Lcom_shocktrade_
     return (function() {
       return f.apply__O()
     })
-  })(new $c_Lcom_shocktrade_client_NavigationController$$anonfun$5().init___Lcom_shocktrade_client_NavigationController(this));
-  $$scope.getTotalInvestment = (function(f$1) {
+  })(new $c_Lcom_shocktrade_client_NavigationController$$anonfun$6().init___Lcom_shocktrade_client_NavigationController(this));
+  $$scope.getRankings = (function(f$1) {
     return (function() {
       return f$1.apply__O()
     })
-  })(new $c_Lcom_shocktrade_client_NavigationController$$anonfun$6().init___Lcom_shocktrade_client_NavigationController(this));
+  })(new $c_Lcom_shocktrade_client_NavigationController$$anonfun$7().init___Lcom_shocktrade_client_NavigationController(this));
+  $$scope.getWealthChange = (function(f$2) {
+    return (function() {
+      return f$2.apply__O()
+    })
+  })(new $c_Lcom_shocktrade_client_NavigationController$$anonfun$1().init___Lcom_shocktrade_client_NavigationController(this));
   $$scope.isAuthenticated = (function(arg$outer) {
     return (function() {
       return arg$outer.com$shocktrade$client$NavigationController$$mySession$f.isAuthenticated__Z()
@@ -9351,61 +9383,58 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureServices__p1__Lorg_
   module.service("ChatService", ["$http", (function(x$macro$65$2) {
     return new $c_Lcom_shocktrade_client_contest_ChatService().init___Lorg_scalajs_angularjs_http_Http(x$macro$65$2)
   })]);
-  module.service("ConnectService", ["$http", (function(x$macro$66$2) {
-    return new $c_Lcom_shocktrade_client_social_ConnectService().init___Lorg_scalajs_angularjs_http_Http(x$macro$66$2)
+  module.service("ContestService", ["$http", (function(x$macro$66$2) {
+    return new $c_Lcom_shocktrade_client_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$66$2)
   })]);
-  module.service("ContestService", ["$http", (function(x$macro$67$2) {
-    return new $c_Lcom_shocktrade_client_contest_ContestService().init___Lorg_scalajs_angularjs_http_Http(x$macro$67$2)
-  })]);
-  module.service("ExploreService", ["$http", (function(x$macro$68$2) {
-    return new $c_Lcom_shocktrade_client_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$68$2)
+  module.service("ExploreService", ["$http", (function(x$macro$67$2) {
+    return new $c_Lcom_shocktrade_client_explore_ExploreService().init___Lorg_scalajs_angularjs_http_Http(x$macro$67$2)
   })]);
   module.service("Facebook", [(function() {
     return new $c_Lorg_scalajs_angularjs_facebook_FacebookService().init___()
   })]);
-  module.service("MarketStatus", ["$http", (function(x$macro$69$2) {
-    return new $c_Lcom_shocktrade_client_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$69$2)
+  module.service("MarketStatus", ["$http", (function(x$macro$68$2) {
+    return new $c_Lcom_shocktrade_client_discover_MarketStatusService().init___Lorg_scalajs_angularjs_http_Http(x$macro$68$2)
   })]);
-  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "ProfileService", "QuoteCache", (function(x$macro$70$2, x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2, x$macro$77$2, x$macro$78$2) {
-    var x$macro$73 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$73$2);
-    var x$macro$74 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$74$2);
-    var x$macro$75 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$75$2);
-    var x$macro$76 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$76$2);
-    var x$macro$77 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$77$2);
-    var x$macro$78 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$78$2);
-    return new $c_Lcom_shocktrade_client_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_QuoteCache(x$macro$70$2, x$macro$71$2, x$macro$72$2, x$macro$73, x$macro$74, x$macro$75, x$macro$76, x$macro$77, x$macro$78)
+  module.service("MySessionService", ["$rootScope", "$timeout", "toaster", "Facebook", "ChatService", "ContestService", "PortfolioService", "UserProfileService", "QuoteCache", (function(x$macro$69$2, x$macro$70$2, x$macro$71$2, x$macro$72$2, x$macro$73$2, x$macro$74$2, x$macro$75$2, x$macro$76$2, x$macro$77$2) {
+    var x$macro$72 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$72$2);
+    var x$macro$73 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$73$2);
+    var x$macro$74 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$74$2);
+    var x$macro$75 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$75$2);
+    var x$macro$76 = $as_Lcom_shocktrade_client_profile_UserProfileService(x$macro$76$2);
+    var x$macro$77 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$77$2);
+    return new $c_Lcom_shocktrade_client_MySessionService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_QuoteCache(x$macro$69$2, x$macro$70$2, x$macro$71$2, x$macro$72, x$macro$73, x$macro$74, x$macro$75, x$macro$76, x$macro$77)
   })]);
-  module.service("NewsService", ["$http", (function(x$macro$79$2) {
-    return new $c_Lcom_shocktrade_client_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$79$2)
+  module.service("NewsService", ["$http", (function(x$macro$78$2) {
+    return new $c_Lcom_shocktrade_client_news_NewsService().init___Lorg_scalajs_angularjs_http_Http(x$macro$78$2)
   })]);
-  module.service("PortfolioService", ["$http", (function(x$macro$80$2) {
-    return new $c_Lcom_shocktrade_client_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$80$2)
+  module.service("PortfolioService", ["$http", (function(x$macro$79$2) {
+    return new $c_Lcom_shocktrade_client_contest_PortfolioService().init___Lorg_scalajs_angularjs_http_Http(x$macro$79$2)
   })]);
-  module.service("ProfileService", ["$http", (function(x$macro$81$2) {
-    return new $c_Lcom_shocktrade_client_profile_ProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$81$2)
+  module.service("UserProfileService", ["$http", (function(x$macro$80$2) {
+    return new $c_Lcom_shocktrade_client_profile_UserProfileService().init___Lorg_scalajs_angularjs_http_Http(x$macro$80$2)
   })]);
-  module.service("PostService", ["$http", (function(x$macro$82$2) {
-    return new $c_Lcom_shocktrade_client_posts_PostService().init___Lorg_scalajs_angularjs_http_Http(x$macro$82$2)
+  module.service("PostService", ["$http", (function(x$macro$81$2) {
+    return new $c_Lcom_shocktrade_client_posts_PostService().init___Lorg_scalajs_angularjs_http_Http(x$macro$81$2)
   })]);
-  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$83$2, x$macro$84$2) {
-    var x$macro$84 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$84$2);
-    return new $c_Lcom_shocktrade_client_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_client_discover_QuoteService(x$macro$83$2, x$macro$84)
+  module.service("QuoteCache", ["$timeout", "QuoteService", (function(x$macro$82$2, x$macro$83$2) {
+    var x$macro$83 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$83$2);
+    return new $c_Lcom_shocktrade_client_QuoteCache().init___Lorg_scalajs_angularjs_Timeout__Lcom_shocktrade_client_discover_QuoteService(x$macro$82$2, x$macro$83)
   })]);
-  module.service("QuoteService", ["$http", (function(x$macro$85$2) {
-    return new $c_Lcom_shocktrade_client_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
+  module.service("QuoteService", ["$http", (function(x$macro$84$2) {
+    return new $c_Lcom_shocktrade_client_discover_QuoteService().init___Lorg_scalajs_angularjs_http_Http(x$macro$84$2)
   })]);
-  module.service("ResearchService", ["$http", (function(x$macro$86$2) {
-    return new $c_Lcom_shocktrade_client_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$86$2)
+  module.service("ResearchService", ["$http", (function(x$macro$85$2) {
+    return new $c_Lcom_shocktrade_client_discover_ResearchService().init___Lorg_scalajs_angularjs_http_Http(x$macro$85$2)
   })]);
-  module.service("SocialServices", ["$http", (function(x$macro$87$2) {
-    return new $c_Lcom_shocktrade_client_social_SocialServices().init___Lorg_scalajs_angularjs_http_Http(x$macro$87$2)
+  module.service("SocialServices", ["$http", (function(x$macro$86$2) {
+    return new $c_Lcom_shocktrade_client_social_SocialServices().init___Lorg_scalajs_angularjs_http_Http(x$macro$86$2)
   })]);
-  module.service("UserService", ["$http", (function(x$macro$88$2) {
-    return new $c_Lcom_shocktrade_client_profile_UserService().init___Lorg_scalajs_angularjs_http_Http(x$macro$88$2)
+  module.service("UserService", ["$http", (function(x$macro$87$2) {
+    return new $c_Lcom_shocktrade_client_profile_UserService().init___Lorg_scalajs_angularjs_http_Http(x$macro$87$2)
   })]);
-  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2, x$macro$94$2) {
-    var x$macro$94 = $as_Lcom_shocktrade_client_MySessionService(x$macro$94$2);
-    return new $c_Lcom_shocktrade_client_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2, x$macro$94)
+  module.service("WebSocketService", ["$rootScope", "$http", "$location", "$timeout", "toaster", "MySessionService", (function(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93$2) {
+    var x$macro$93 = $as_Lcom_shocktrade_client_MySessionService(x$macro$93$2);
+    return new $c_Lcom_shocktrade_client_WebSocketService().init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$88$2, x$macro$89$2, x$macro$90$2, x$macro$91$2, x$macro$92$2, x$macro$93)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.main__V = (function() {
@@ -9562,122 +9591,116 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.$$js$exported$meth$main__O =
   this.main__V()
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureControllers__p1__Lorg_scalajs_angularjs_Module__V = (function(module) {
-  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$95$2, x$macro$96$2, x$macro$97$2) {
-    var x$macro$97 = $as_Lcom_shocktrade_client_MySessionService(x$macro$97$2);
-    return new $c_Lcom_shocktrade_client_profile_AwardsController().init___Lcom_shocktrade_client_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_client_MySessionService(x$macro$95$2, x$macro$96$2, x$macro$97)
+  module.controller("AwardsController", ["$scope", "$http", "MySessionService", (function(x$macro$94$2, x$macro$95$2, x$macro$96$2) {
+    var x$macro$96 = $as_Lcom_shocktrade_client_MySessionService(x$macro$96$2);
+    return new $c_Lcom_shocktrade_client_profile_AwardsController().init___Lcom_shocktrade_client_profile_AwardsControllerScope__Lorg_scalajs_angularjs_http_Http__Lcom_shocktrade_client_MySessionService(x$macro$94$2, x$macro$95$2, x$macro$96)
   })]);
-  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$98$2, x$macro$99$2, x$macro$100$2) {
-    var x$macro$100 = $as_Lcom_shocktrade_client_MySessionService(x$macro$100$2);
-    return new $c_Lcom_shocktrade_client_contest_CashAccountController().init___Lcom_shocktrade_client_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$98$2, x$macro$99$2, x$macro$100)
+  module.controller("CashAccountController", ["$scope", "toaster", "MySessionService", (function(x$macro$97$2, x$macro$98$2, x$macro$99$2) {
+    var x$macro$99 = $as_Lcom_shocktrade_client_MySessionService(x$macro$99$2);
+    return new $c_Lcom_shocktrade_client_contest_CashAccountController().init___Lcom_shocktrade_client_contest_CashAccountScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService(x$macro$97$2, x$macro$98$2, x$macro$99)
   })]);
-  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104$2, x$macro$105$2, x$macro$106$2, x$macro$107$2) {
-    var x$macro$105 = $as_Lcom_shocktrade_client_MySessionService(x$macro$105$2);
-    var x$macro$106 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$106$2);
-    var x$macro$107 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$107$2);
-    return new $c_Lcom_shocktrade_client_contest_ChatController().init___Lcom_shocktrade_client_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService(x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104$2, x$macro$105, x$macro$106, x$macro$107)
+  module.controller("ChatController", ["$scope", "$anchorScroll", "$location", "toaster", "MySessionService", "ChatService", "ContestService", (function(x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104$2, x$macro$105$2, x$macro$106$2) {
+    var x$macro$104 = $as_Lcom_shocktrade_client_MySessionService(x$macro$104$2);
+    var x$macro$105 = $as_Lcom_shocktrade_client_contest_ChatService(x$macro$105$2);
+    var x$macro$106 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$106$2);
+    return new $c_Lcom_shocktrade_client_contest_ChatController().init___Lcom_shocktrade_client_contest_ChatControllerScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService(x$macro$100$2, x$macro$101$2, x$macro$102$2, x$macro$103$2, x$macro$104, x$macro$105, x$macro$106)
   })]);
-  module.controller("ConnectController", ["$scope", "toaster", "ComposeMessageDialog", "ConnectService", "MySessionService", (function(x$macro$108$2, x$macro$109$2, x$macro$110$2, x$macro$111$2, x$macro$112$2) {
-    var x$macro$110 = $as_Lcom_shocktrade_client_dialogs_ComposeMessageDialog(x$macro$110$2);
-    var x$macro$111 = $as_Lcom_shocktrade_client_social_ConnectService(x$macro$111$2);
+  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110$2, x$macro$111$2, x$macro$112$2, x$macro$113$2, x$macro$114$2, x$macro$115$2) {
+    var x$macro$111 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$111$2);
     var x$macro$112 = $as_Lcom_shocktrade_client_MySessionService(x$macro$112$2);
-    return new $c_Lcom_shocktrade_client_social_ConnectController().init___Lcom_shocktrade_client_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_ComposeMessageDialog__Lcom_shocktrade_client_social_ConnectService__Lcom_shocktrade_client_MySessionService(x$macro$108$2, x$macro$109$2, x$macro$110, x$macro$111, x$macro$112)
+    var x$macro$113 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$113$2);
+    var x$macro$114 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$114$2);
+    var x$macro$115 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$115$2);
+    return new $c_Lcom_shocktrade_client_contest_DashboardController().init___Lcom_shocktrade_client_contest_DashboardScope__Lcom_shocktrade_client_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$107$2, x$macro$108$2, x$macro$109$2, x$macro$110$2, x$macro$111, x$macro$112, x$macro$113, x$macro$114, x$macro$115)
   })]);
-  module.controller("DashboardController", ["$scope", "$routeParams", "$timeout", "toaster", "ContestService", "MySessionService", "PerksDialog", "PortfolioService", "TransferFundsDialog", (function(x$macro$113$2, x$macro$114$2, x$macro$115$2, x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121$2) {
-    var x$macro$117 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$117$2);
-    var x$macro$118 = $as_Lcom_shocktrade_client_MySessionService(x$macro$118$2);
-    var x$macro$119 = $as_Lcom_shocktrade_client_dialogs_PerksDialog(x$macro$119$2);
-    var x$macro$120 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$120$2);
-    var x$macro$121 = $as_Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$121$2);
-    return new $c_Lcom_shocktrade_client_contest_DashboardController().init___Lcom_shocktrade_client_contest_DashboardScope__Lcom_shocktrade_client_contest_DashboardRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_PerksDialog__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_dialogs_TransferFundsDialog(x$macro$113$2, x$macro$114$2, x$macro$115$2, x$macro$116$2, x$macro$117, x$macro$118, x$macro$119, x$macro$120, x$macro$121)
+  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "UserProfileService", "QuoteService", (function(x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121$2, x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2) {
+    var x$macro$123 = $as_Lcom_shocktrade_client_discover_MarketStatusService(x$macro$123$2);
+    var x$macro$124 = $as_Lcom_shocktrade_client_MySessionService(x$macro$124$2);
+    var x$macro$125 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$125$2);
+    var x$macro$126 = $as_Lcom_shocktrade_client_profile_UserProfileService(x$macro$126$2);
+    var x$macro$127 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$127$2);
+    return new $c_Lcom_shocktrade_client_discover_DiscoverController().init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$116$2, x$macro$117$2, x$macro$118$2, x$macro$119$2, x$macro$120$2, x$macro$121$2, x$macro$122$2, x$macro$123, x$macro$124, x$macro$125, x$macro$126, x$macro$127)
   })]);
-  module.controller("DiscoverController", ["$scope", "$cookies", "$location", "$q", "$routeParams", "$timeout", "toaster", "MarketStatus", "MySessionService", "NewOrderDialog", "ProfileService", "QuoteService", (function(x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133$2) {
-    var x$macro$129 = $as_Lcom_shocktrade_client_discover_MarketStatusService(x$macro$129$2);
-    var x$macro$130 = $as_Lcom_shocktrade_client_MySessionService(x$macro$130$2);
-    var x$macro$131 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$131$2);
-    var x$macro$132 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$132$2);
-    var x$macro$133 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$133$2);
-    return new $c_Lcom_shocktrade_client_discover_DiscoverController().init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$122$2, x$macro$123$2, x$macro$124$2, x$macro$125$2, x$macro$126$2, x$macro$127$2, x$macro$128$2, x$macro$129, x$macro$130, x$macro$131, x$macro$132, x$macro$133)
+  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135$2) {
+    var x$macro$135 = $as_Lcom_shocktrade_client_explore_ExploreService(x$macro$135$2);
+    return new $c_Lcom_shocktrade_client_explore_ExploreController().init___Lcom_shocktrade_client_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_client_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_explore_ExploreService(x$macro$128$2, x$macro$129$2, x$macro$130$2, x$macro$131$2, x$macro$132$2, x$macro$133$2, x$macro$134$2, x$macro$135)
   })]);
-  module.controller("ExploreController", ["$scope", "$anchorScroll", "$cookies", "$location", "$routeParams", "$timeout", "toaster", "ExploreService", (function(x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141$2) {
-    var x$macro$141 = $as_Lcom_shocktrade_client_explore_ExploreService(x$macro$141$2);
-    return new $c_Lcom_shocktrade_client_explore_ExploreController().init___Lcom_shocktrade_client_explore_ExploreScope__Lorg_scalajs_angularjs_anchorscroll_AnchorScroll__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lcom_shocktrade_client_explore_ExploreController$ExploreRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_explore_ExploreService(x$macro$134$2, x$macro$135$2, x$macro$136$2, x$macro$137$2, x$macro$138$2, x$macro$139$2, x$macro$140$2, x$macro$141)
+  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$136$2, x$macro$137$2, x$macro$138$2) {
+    var x$macro$138 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$138$2);
+    return new $c_Lcom_shocktrade_client_contest_ExposureController().init___Lcom_shocktrade_client_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService(x$macro$136$2, x$macro$137$2, x$macro$138)
   })]);
-  module.controller("ExposureController", ["$scope", "toaster", "PortfolioService", (function(x$macro$142$2, x$macro$143$2, x$macro$144$2) {
-    var x$macro$144 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$144$2);
-    return new $c_Lcom_shocktrade_client_contest_ExposureController().init___Lcom_shocktrade_client_contest_ExposureControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_PortfolioService(x$macro$142$2, x$macro$143$2, x$macro$144)
+  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143$2, x$macro$144$2, x$macro$145$2, x$macro$146$2) {
+    var x$macro$143 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$143$2);
+    var x$macro$144 = $as_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(x$macro$144$2);
+    var x$macro$145 = $as_Lcom_shocktrade_client_MySessionService(x$macro$145$2);
+    var x$macro$146 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$146$2);
+    return new $c_Lcom_shocktrade_client_contest_GameSearchController().init___Lcom_shocktrade_client_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_InvitePlayerDialog__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$139$2, x$macro$140$2, x$macro$141$2, x$macro$142$2, x$macro$143, x$macro$144, x$macro$145, x$macro$146)
   })]);
-  module.controller("GameSearchController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "InvitePlayerDialog", "MySessionService", "PortfolioService", (function(x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2, x$macro$149$2, x$macro$150$2, x$macro$151$2, x$macro$152$2) {
-    var x$macro$149 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$149$2);
-    var x$macro$150 = $as_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(x$macro$150$2);
-    var x$macro$151 = $as_Lcom_shocktrade_client_MySessionService(x$macro$151$2);
-    var x$macro$152 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$152$2);
-    return new $c_Lcom_shocktrade_client_contest_GameSearchController().init___Lcom_shocktrade_client_contest_GameSearchScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_InvitePlayerDialog__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$145$2, x$macro$146$2, x$macro$147$2, x$macro$148$2, x$macro$149, x$macro$150, x$macro$151, x$macro$152)
+  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "UserProfileService", (function(x$macro$147$2, x$macro$148$2, x$macro$149$2, x$macro$150$2, x$macro$151$2) {
+    var x$macro$150 = $as_Lcom_shocktrade_client_MySessionService(x$macro$150$2);
+    var x$macro$151 = $as_Lcom_shocktrade_client_profile_UserProfileService(x$macro$151$2);
+    return new $c_Lcom_shocktrade_client_profile_HomeController().init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserProfileService(x$macro$147$2, x$macro$148$2, x$macro$149$2, x$macro$150, x$macro$151)
   })]);
-  module.controller("HomeController", ["$scope", "$timeout", "toaster", "MySessionService", "ProfileService", (function(x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2, x$macro$157$2) {
-    var x$macro$156 = $as_Lcom_shocktrade_client_MySessionService(x$macro$156$2);
-    var x$macro$157 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$157$2);
-    return new $c_Lcom_shocktrade_client_profile_HomeController().init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService(x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156, x$macro$157)
+  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "UserProfileService", "SignUpDialog", (function(x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2, x$macro$157$2, x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2) {
+    var x$macro$157 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$157$2);
+    var x$macro$158 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$158$2);
+    var x$macro$159 = $as_Lcom_shocktrade_client_MySessionService(x$macro$159$2);
+    var x$macro$160 = $as_Lcom_shocktrade_client_profile_UserProfileService(x$macro$160$2);
+    var x$macro$161 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$161$2);
+    return new $c_Lcom_shocktrade_client_MainController().init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$152$2, x$macro$153$2, x$macro$154$2, x$macro$155$2, x$macro$156$2, x$macro$157, x$macro$158, x$macro$159, x$macro$160, x$macro$161)
   })]);
-  module.controller("MainController", ["$scope", "$http", "$location", "$timeout", "toaster", "ContestService", "Facebook", "MySessionService", "ProfileService", "SignUpDialog", (function(x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2, x$macro$166$2, x$macro$167$2) {
-    var x$macro$163 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$163$2);
-    var x$macro$164 = $as_Lorg_scalajs_angularjs_facebook_FacebookService(x$macro$164$2);
-    var x$macro$165 = $as_Lcom_shocktrade_client_MySessionService(x$macro$165$2);
-    var x$macro$166 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$166$2);
-    var x$macro$167 = $as_Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$167$2);
-    return new $c_Lcom_shocktrade_client_MainController().init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog(x$macro$158$2, x$macro$159$2, x$macro$160$2, x$macro$161$2, x$macro$162$2, x$macro$163, x$macro$164, x$macro$165, x$macro$166, x$macro$167)
+  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165$2, x$macro$166$2, x$macro$167$2) {
+    var x$macro$165 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$165$2);
+    var x$macro$166 = $as_Lcom_shocktrade_client_MySessionService(x$macro$166$2);
+    var x$macro$167 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$167$2);
+    return new $c_Lcom_shocktrade_client_contest_MarginAccountController().init___Lcom_shocktrade_client_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$162$2, x$macro$163$2, x$macro$164$2, x$macro$165, x$macro$166, x$macro$167)
   })]);
-  module.controller("MarginAccountController", ["$scope", "$timeout", "toaster", "ContestService", "MySessionService", "PortfolioService", (function(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172$2, x$macro$173$2) {
-    var x$macro$171 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$171$2);
-    var x$macro$172 = $as_Lcom_shocktrade_client_MySessionService(x$macro$172$2);
-    var x$macro$173 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$173$2);
-    return new $c_Lcom_shocktrade_client_contest_MarginAccountController().init___Lcom_shocktrade_client_contest_MarginAccountScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171, x$macro$172, x$macro$173)
+  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172$2, x$macro$173$2, x$macro$174$2, x$macro$175$2) {
+    var x$macro$172 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$172$2);
+    var x$macro$173 = $as_Lcom_shocktrade_client_MySessionService(x$macro$173$2);
+    var x$macro$174 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$174$2);
+    var x$macro$175 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$175$2);
+    return new $c_Lcom_shocktrade_client_contest_MyGamesController().init___Lcom_shocktrade_client_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog__Lcom_shocktrade_client_contest_PortfolioService(x$macro$168$2, x$macro$169$2, x$macro$170$2, x$macro$171$2, x$macro$172, x$macro$173, x$macro$174, x$macro$175)
   })]);
-  module.controller("MyGamesController", ["$scope", "$location", "$timeout", "toaster", "ContestService", "MySessionService", "NewGameDialog", "PortfolioService", (function(x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2, x$macro$180$2, x$macro$181$2) {
-    var x$macro$178 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$178$2);
-    var x$macro$179 = $as_Lcom_shocktrade_client_MySessionService(x$macro$179$2);
-    var x$macro$180 = $as_Lcom_shocktrade_client_dialogs_NewGameDialog(x$macro$180$2);
+  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "UserProfileService", "QuoteService", (function(x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179$2, x$macro$180$2, x$macro$181$2, x$macro$182$2, x$macro$183$2) {
+    var x$macro$179 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$179$2);
+    var x$macro$180 = $as_Lcom_shocktrade_client_MySessionService(x$macro$180$2);
     var x$macro$181 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$181$2);
-    return new $c_Lcom_shocktrade_client_contest_MyGamesController().init___Lcom_shocktrade_client_contest_MyGamesScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewGameDialog__Lcom_shocktrade_client_contest_PortfolioService(x$macro$174$2, x$macro$175$2, x$macro$176$2, x$macro$177$2, x$macro$178, x$macro$179, x$macro$180, x$macro$181)
+    var x$macro$182 = $as_Lcom_shocktrade_client_profile_UserProfileService(x$macro$182$2);
+    var x$macro$183 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$183$2);
+    return new $c_Lcom_shocktrade_client_profile_MyQuotesController().init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$176$2, x$macro$177$2, x$macro$178$2, x$macro$179, x$macro$180, x$macro$181, x$macro$182, x$macro$183)
   })]);
-  module.controller("MyQuotesController", ["$scope", "$location", "toaster", "ContestService", "MySessionService", "PortfolioService", "ProfileService", "QuoteService", (function(x$macro$182$2, x$macro$183$2, x$macro$184$2, x$macro$185$2, x$macro$186$2, x$macro$187$2, x$macro$188$2, x$macro$189$2) {
-    var x$macro$185 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$185$2);
-    var x$macro$186 = $as_Lcom_shocktrade_client_MySessionService(x$macro$186$2);
-    var x$macro$187 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$187$2);
-    var x$macro$188 = $as_Lcom_shocktrade_client_profile_ProfileService(x$macro$188$2);
-    var x$macro$189 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$189$2);
-    return new $c_Lcom_shocktrade_client_profile_MyQuotesController().init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService(x$macro$182$2, x$macro$183$2, x$macro$184$2, x$macro$185, x$macro$186, x$macro$187, x$macro$188, x$macro$189)
+  module.controller("NavigationController", ["$scope", "MySessionService", "WebSocketService", (function(x$macro$184$2, x$macro$185$2, x$macro$186$2) {
+    var x$macro$185 = $as_Lcom_shocktrade_client_MySessionService(x$macro$185$2);
+    var x$macro$186 = $as_Lcom_shocktrade_client_WebSocketService(x$macro$186$2);
+    return new $c_Lcom_shocktrade_client_NavigationController().init___Lcom_shocktrade_client_NavigationControllerScope__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_WebSocketService(x$macro$184$2, x$macro$185, x$macro$186)
   })]);
-  module.controller("NavigationController", ["$scope", "MySessionService", "WebSocketService", (function(x$macro$190$2, x$macro$191$2, x$macro$192$2) {
-    var x$macro$191 = $as_Lcom_shocktrade_client_MySessionService(x$macro$191$2);
-    var x$macro$192 = $as_Lcom_shocktrade_client_WebSocketService(x$macro$192$2);
-    return new $c_Lcom_shocktrade_client_NavigationController().init___Lcom_shocktrade_client_NavigationControllerScope__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_WebSocketService(x$macro$190$2, x$macro$191, x$macro$192)
+  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$187$2, x$macro$188$2, x$macro$189$2, x$macro$190$2, x$macro$191$2) {
+    var x$macro$191 = $as_Lcom_shocktrade_client_news_NewsService(x$macro$191$2);
+    return new $c_Lcom_shocktrade_client_news_NewsController().init___Lcom_shocktrade_client_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_news_NewsService(x$macro$187$2, x$macro$188$2, x$macro$189$2, x$macro$190$2, x$macro$191)
   })]);
-  module.controller("NewsController", ["$scope", "$cookies", "$sce", "toaster", "NewsService", (function(x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2, x$macro$197$2) {
-    var x$macro$197 = $as_Lcom_shocktrade_client_news_NewsService(x$macro$197$2);
-    return new $c_Lcom_shocktrade_client_news_NewsController().init___Lcom_shocktrade_client_news_NewsScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_sanitize_Sce__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_news_NewsService(x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2, x$macro$197)
+  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196$2, x$macro$197$2, x$macro$198$2, x$macro$199$2, x$macro$200$2) {
+    var x$macro$196 = $as_Lcom_shocktrade_client_MySessionService(x$macro$196$2);
+    var x$macro$197 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$197$2);
+    var x$macro$198 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$198$2);
+    var x$macro$199 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$199$2);
+    var x$macro$200 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$200$2);
+    return new $c_Lcom_shocktrade_client_contest_PortfolioController().init___Lcom_shocktrade_client_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_QuoteCache__Lcom_shocktrade_client_contest_PortfolioService(x$macro$192$2, x$macro$193$2, x$macro$194$2, x$macro$195$2, x$macro$196, x$macro$197, x$macro$198, x$macro$199, x$macro$200)
   })]);
-  module.controller("PortfolioController", ["$scope", "$cookies", "$timeout", "toaster", "MySessionService", "ContestService", "NewOrderDialog", "QuoteCache", "PortfolioService", (function(x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206$2) {
-    var x$macro$202 = $as_Lcom_shocktrade_client_MySessionService(x$macro$202$2);
-    var x$macro$203 = $as_Lcom_shocktrade_client_contest_ContestService(x$macro$203$2);
-    var x$macro$204 = $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(x$macro$204$2);
-    var x$macro$205 = $as_Lcom_shocktrade_client_QuoteCache(x$macro$205$2);
-    var x$macro$206 = $as_Lcom_shocktrade_client_contest_PortfolioService(x$macro$206$2);
-    return new $c_Lcom_shocktrade_client_contest_PortfolioController().init___Lcom_shocktrade_client_contest_PortfolioScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_QuoteCache__Lcom_shocktrade_client_contest_PortfolioService(x$macro$198$2, x$macro$199$2, x$macro$200$2, x$macro$201$2, x$macro$202, x$macro$203, x$macro$204, x$macro$205, x$macro$206)
+  module.controller("PostController", ["$scope", "$compile", "$location", "$timeout", "toaster", "FileUploader", "PostService", "MySessionService", "UserFactory", "UserService", (function(x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206$2, x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2) {
+    var x$macro$207 = $as_Lcom_shocktrade_client_posts_PostService(x$macro$207$2);
+    var x$macro$208 = $as_Lcom_shocktrade_client_MySessionService(x$macro$208$2);
+    var x$macro$209 = $as_Lcom_shocktrade_client_profile_UserFactory(x$macro$209$2);
+    var x$macro$210 = $as_Lcom_shocktrade_client_profile_UserService(x$macro$210$2);
+    return new $c_Lcom_shocktrade_client_posts_PostController().init___Lcom_shocktrade_client_posts_PostControllerScope__sjs_js_Dynamic__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_fileupload_nervgh_FileUploader__Lcom_shocktrade_client_posts_PostService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserFactory__Lcom_shocktrade_client_profile_UserService(x$macro$201$2, x$macro$202$2, x$macro$203$2, x$macro$204$2, x$macro$205$2, x$macro$206$2, x$macro$207, x$macro$208, x$macro$209, x$macro$210)
   })]);
-  module.controller("PostController", ["$scope", "$compile", "$location", "$timeout", "toaster", "FileUploader", "PostService", "MySessionService", "UserFactory", "UserService", (function(x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2, x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2, x$macro$215$2, x$macro$216$2) {
-    var x$macro$213 = $as_Lcom_shocktrade_client_posts_PostService(x$macro$213$2);
-    var x$macro$214 = $as_Lcom_shocktrade_client_MySessionService(x$macro$214$2);
-    var x$macro$215 = $as_Lcom_shocktrade_client_profile_UserFactory(x$macro$215$2);
-    var x$macro$216 = $as_Lcom_shocktrade_client_profile_UserService(x$macro$216$2);
-    return new $c_Lcom_shocktrade_client_posts_PostController().init___Lcom_shocktrade_client_posts_PostControllerScope__sjs_js_Dynamic__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_fileupload_nervgh_FileUploader__Lcom_shocktrade_client_posts_PostService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserFactory__Lcom_shocktrade_client_profile_UserService(x$macro$207$2, x$macro$208$2, x$macro$209$2, x$macro$210$2, x$macro$211$2, x$macro$212$2, x$macro$213, x$macro$214, x$macro$215, x$macro$216)
+  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2, x$macro$215$2) {
+    var x$macro$215 = $as_Lcom_shocktrade_client_discover_ResearchService(x$macro$215$2);
+    return new $c_Lcom_shocktrade_client_discover_ResearchController().init___Lcom_shocktrade_client_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_ResearchService(x$macro$211$2, x$macro$212$2, x$macro$213$2, x$macro$214$2, x$macro$215)
   })]);
-  module.controller("ResearchController", ["$scope", "$cookies", "$timeout", "toaster", "ResearchService", (function(x$macro$217$2, x$macro$218$2, x$macro$219$2, x$macro$220$2, x$macro$221$2) {
-    var x$macro$221 = $as_Lcom_shocktrade_client_discover_ResearchService(x$macro$221$2);
-    return new $c_Lcom_shocktrade_client_discover_ResearchController().init___Lcom_shocktrade_client_discover_ResearchScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_ResearchService(x$macro$217$2, x$macro$218$2, x$macro$219$2, x$macro$220$2, x$macro$221)
-  })]);
-  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$222$2, x$macro$223$2, x$macro$224$2) {
-    var x$macro$224 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$224$2);
-    return new $c_Lcom_shocktrade_client_discover_TradingHistoryController().init___Lcom_shocktrade_client_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_QuoteService(x$macro$222$2, x$macro$223$2, x$macro$224)
+  module.controller("TradingHistoryController", ["$scope", "toaster", "QuoteService", (function(x$macro$216$2, x$macro$217$2, x$macro$218$2) {
+    var x$macro$218 = $as_Lcom_shocktrade_client_discover_QuoteService(x$macro$218$2);
+    return new $c_Lcom_shocktrade_client_discover_TradingHistoryController().init___Lcom_shocktrade_client_discover_TradingHistoryControllerScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_QuoteService(x$macro$216$2, x$macro$217$2, x$macro$218)
   })])
 });
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.com$shocktrade$client$WebClientJsApp$$configureSocialNetworkCallbacks__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_social_SocialServices__V = (function(mySession, socialServices) {
@@ -10850,8 +10873,7 @@ $c_Lcom_shocktrade_client_contest_ChatController.prototype.com$shocktrade$client
         var x = $as_T(messageText.trim());
         var this$16 = new $c_sci_StringOps().init___T(x);
         if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$16)) {
-          var x$9 = this.com$shocktrade$client$contest$ChatController$$mySession$f.getUserName__sjs_js_UndefOr();
-          var value$3 = new $c_Lcom_shocktrade_common_models_user_User(playerId$1, facebookID$1, x$9);
+          var value$3 = $m_Lcom_shocktrade_common_models_user_User$().apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User(playerId$1, facebookID$1, this.com$shocktrade$client$contest$ChatController$$mySession$f.getUserName__sjs_js_UndefOr());
           var message = new $c_Lcom_shocktrade_common_models_contest_ChatMessage((void 0), value$3, messageText);
           $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.com$shocktrade$client$contest$ChatController$$chatService$f.sendChatMessage__T__Lcom_shocktrade_common_models_contest_ChatMessage__Lorg_scalajs_angularjs_http_HttpResponse(contestId$1, message)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_contest_ChatController$$anonfun$com$shocktrade$client$contest$ChatController$$sendChatMessage$1().init___Lcom_shocktrade_client_contest_ChatController(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1);
           break matchEnd6
@@ -12022,12 +12044,6 @@ function $h_Lcom_shocktrade_client_dialogs_ComposeMessageDialog() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_dialogs_ComposeMessageDialog.prototype = $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialog.prototype;
-$c_Lcom_shocktrade_client_dialogs_ComposeMessageDialog.prototype.popup__s_concurrent_Future = (function() {
-  var jsx$1 = this.$$modal$1;
-  var value = $d_Lcom_shocktrade_client_dialogs_ComposeMessageDialogController.getClassOf().getSimpleName__T();
-  var $$modalInstance = jsx$1.open(new $c_Lorg_scalajs_angularjs_uibootstrap_ModalOptions((void 0), "compose_message.html", value));
-  return $m_Lorg_scalajs_nodejs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
-});
 $c_Lcom_shocktrade_client_dialogs_ComposeMessageDialog.prototype.init___Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_uibootstrap_Modal = (function($$http, $$modal) {
   this.$$modal$1 = $$modal;
   return this
@@ -13611,7 +13627,7 @@ function $h_Lcom_shocktrade_client_profile_HomeController() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_profile_HomeController.prototype = $c_Lcom_shocktrade_client_profile_HomeController.prototype;
-$c_Lcom_shocktrade_client_profile_HomeController.prototype.init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService = (function($$scope, $$timeout, toaster, mySession, profileService) {
+$c_Lcom_shocktrade_client_profile_HomeController.prototype.init___Lcom_shocktrade_client_profile_HomeControllerScope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserProfileService = (function($$scope, $$timeout, toaster, mySession, profileService) {
   this.com$shocktrade$client$profile$HomeController$$$scope$f = $$scope;
   this.com$shocktrade$client$profile$HomeController$$$timeout$f = $$timeout;
   this.com$shocktrade$client$profile$HomeController$$mySession$f = mySession;
@@ -13702,7 +13718,37 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$cl
 $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$reloadQuotes__V = (function() {
   $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console().log("Updating Favorite Symbols...")
 });
-$c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService = (function($$scope, $$location, toaster, contestService, mySession, portfolioService, profileService, quoteService) {
+$c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$expandList__T__V = (function(name) {
+  var dict = this.com$shocktrade$client$profile$MyQuotesController$$quoteSets$1;
+  var this$3 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, name)) ? new $c_s_Some().init___O(dict[name]) : $m_s_None$());
+  if ((!this$3.isEmpty__Z())) {
+    var v1 = this$3.get__O();
+    v1.expanded = (!$uZ(v1.expanded));
+    if ($uZ(v1.expanded)) {
+      var obj = v1.quotes;
+      var jsx$1 = (!((obj !== null) && (obj !== (void 0))))
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      v1.quotes = [];
+      if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Favorites$1 === name)) {
+        var value = this.com$shocktrade$client$profile$MyQuotesController$$mySession$f.getFavoriteSymbols__sjs_js_UndefOr();
+        this.com$shocktrade$client$profile$MyQuotesController$$loadQuotes__T__sjs_js_Array__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(name, ((value === (void 0)) ? [] : value), v1)
+      } else if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Held$1 === name)) {
+        this.com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(v1)
+      } else if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Recents$1 === name)) {
+        var value$1 = this.com$shocktrade$client$profile$MyQuotesController$$mySession$f.getRecentSymbols__sjs_js_UndefOr();
+        this.com$shocktrade$client$profile$MyQuotesController$$loadQuotes__T__sjs_js_Array__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(name, ((value$1 === (void 0)) ? [] : value$1), v1)
+      } else {
+        var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
+        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " is not a recognized list"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([name]));
+        jsx$2.error(s)
+      }
+    }
+  }
+});
+$c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.init___Lcom_shocktrade_client_profile_MyQuotesControllerScope__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_discover_QuoteService = (function($$scope, $$location, toaster, contestService, mySession, portfolioService, profileService, quoteService) {
   this.com$shocktrade$client$profile$MyQuotesController$$$scope$f = $$scope;
   this.com$shocktrade$client$profile$MyQuotesController$$toaster$f = toaster;
   this.com$shocktrade$client$profile$MyQuotesController$$mySession$f = mySession;
@@ -13779,36 +13825,6 @@ $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.init___Lcom_shock
   })(callback));
   return this
 });
-$c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$expandList__T__V = (function(name) {
-  var dict = this.com$shocktrade$client$profile$MyQuotesController$$quoteSets$1;
-  var this$3 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, name)) ? new $c_s_Some().init___O(dict[name]) : $m_s_None$());
-  if ((!this$3.isEmpty__Z())) {
-    var v1 = this$3.get__O();
-    v1.expanded = (!$uZ(v1.expanded));
-    if ($uZ(v1.expanded)) {
-      var obj = v1.quotes;
-      var jsx$1 = (!((obj !== null) && (obj !== (void 0))))
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      v1.quotes = [];
-      if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Favorites$1 === name)) {
-        var value = this.com$shocktrade$client$profile$MyQuotesController$$mySession$f.getFavoriteSymbols__sjs_js_UndefOr();
-        this.com$shocktrade$client$profile$MyQuotesController$$loadQuotes__T__sjs_js_Array__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(name, ((value === (void 0)) ? [] : value), v1)
-      } else if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Held$1 === name)) {
-        this.com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(v1)
-      } else if (($m_Lcom_shocktrade_client_profile_MyQuotesController$().com$shocktrade$client$profile$MyQuotesController$$Recents$1 === name)) {
-        var value$1 = this.com$shocktrade$client$profile$MyQuotesController$$mySession$f.getRecentSymbols__sjs_js_UndefOr();
-        this.com$shocktrade$client$profile$MyQuotesController$$loadQuotes__T__sjs_js_Array__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V(name, ((value$1 === (void 0)) ? [] : value$1), v1)
-      } else {
-        var jsx$2 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " is not a recognized list"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([name]));
-        jsx$2.error(s)
-      }
-    }
-  }
-});
 $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities__Lcom_shocktrade_client_profile_MyQuotesController$Expandable__V = (function(obj) {
   var value = this.com$shocktrade$client$profile$MyQuotesController$$mySession$f.userProfile$1._id;
   var f = new $c_Lcom_shocktrade_client_profile_MyQuotesController$$anonfun$com$shocktrade$client$profile$MyQuotesController$$loadHeldSecurities$1().init___Lcom_shocktrade_client_profile_MyQuotesController__Lcom_shocktrade_client_profile_MyQuotesController$Expandable(this, obj);
@@ -13831,66 +13847,6 @@ var $d_Lcom_shocktrade_client_profile_MyQuotesController = new $TypeData().initC
   Lorg_scalajs_angularjs_Controller: 1
 });
 $c_Lcom_shocktrade_client_profile_MyQuotesController.prototype.$classData = $d_Lcom_shocktrade_client_profile_MyQuotesController;
-/** @constructor */
-function $c_Lcom_shocktrade_client_profile_ProfileService() {
-  $c_O.call(this);
-  this.$$http$1 = null
-}
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype = new $h_O();
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.constructor = $c_Lcom_shocktrade_client_profile_ProfileService;
-/** @constructor */
-function $h_Lcom_shocktrade_client_profile_ProfileService() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_profile_ProfileService.prototype = $c_Lcom_shocktrade_client_profile_ProfileService.prototype;
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.getOnlineStatus__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/online/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
-  this.$$http$1 = $$http;
-  return this
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.setIsOnline__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID) {
-  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/online/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.getProfileByFacebookID__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(facebookID) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/facebook/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([facebookID])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.removeRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
-  return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/recent/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
-  return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/favorite/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.addFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
-  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/favorite/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.addRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
-  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/recent/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.getProfileViaFacebook__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__Lorg_scalajs_angularjs_http_HttpResponse = (function(fbProfile) {
-  return this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/facebook"])).s__sc_Seq__T($m_sci_Nil$()), fbProfile)
-});
-function $is_Lcom_shocktrade_client_profile_ProfileService(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_profile_ProfileService)))
-}
-function $as_Lcom_shocktrade_client_profile_ProfileService(obj) {
-  return (($is_Lcom_shocktrade_client_profile_ProfileService(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.client.profile.ProfileService"))
-}
-function $isArrayOf_Lcom_shocktrade_client_profile_ProfileService(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_client_profile_ProfileService)))
-}
-function $asArrayOf_Lcom_shocktrade_client_profile_ProfileService(obj, depth) {
-  return (($isArrayOf_Lcom_shocktrade_client_profile_ProfileService(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.client.profile.ProfileService;", depth))
-}
-var $d_Lcom_shocktrade_client_profile_ProfileService = new $TypeData().initClass({
-  Lcom_shocktrade_client_profile_ProfileService: 0
-}, false, "com.shocktrade.client.profile.ProfileService", {
-  Lcom_shocktrade_client_profile_ProfileService: 1,
-  O: 1,
-  Lorg_scalajs_angularjs_Service: 1
-});
-$c_Lcom_shocktrade_client_profile_ProfileService.prototype.$classData = $d_Lcom_shocktrade_client_profile_ProfileService;
 /** @constructor */
 function $c_Lcom_shocktrade_client_profile_UserFactory() {
   $c_O.call(this);
@@ -13974,6 +13930,69 @@ var $d_Lcom_shocktrade_client_profile_UserFactory = new $TypeData().initClass({
 });
 $c_Lcom_shocktrade_client_profile_UserFactory.prototype.$classData = $d_Lcom_shocktrade_client_profile_UserFactory;
 /** @constructor */
+function $c_Lcom_shocktrade_client_profile_UserProfileService() {
+  $c_O.call(this);
+  this.$$http$1 = null
+}
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype = new $h_O();
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.constructor = $c_Lcom_shocktrade_client_profile_UserProfileService;
+/** @constructor */
+function $h_Lcom_shocktrade_client_profile_UserProfileService() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_profile_UserProfileService.prototype = $c_Lcom_shocktrade_client_profile_UserProfileService.prototype;
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.getOnlineStatus__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID) {
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/online/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.getNetWorth__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID) {
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/netWorth"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
+  this.$$http$1 = $$http;
+  return this
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.setIsOnline__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID) {
+  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/online/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.getProfileByFacebookID__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(facebookID) {
+  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/facebook/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([facebookID])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.removeRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
+  return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/recent/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.removeFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
+  return this.$$http$1["delete"](new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/favorite/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.addFavoriteSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
+  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/favorite/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.addRecentSymbol__T__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(userID, symbol) {
+  return this.$$http$1.put(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/", "/recent/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID, symbol])))
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.getProfileViaFacebook__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__Lorg_scalajs_angularjs_http_HttpResponse = (function(fbProfile) {
+  return this.$$http$1.post(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/facebook"])).s__sc_Seq__T($m_sci_Nil$()), fbProfile)
+});
+function $is_Lcom_shocktrade_client_profile_UserProfileService(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_profile_UserProfileService)))
+}
+function $as_Lcom_shocktrade_client_profile_UserProfileService(obj) {
+  return (($is_Lcom_shocktrade_client_profile_UserProfileService(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.client.profile.UserProfileService"))
+}
+function $isArrayOf_Lcom_shocktrade_client_profile_UserProfileService(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_client_profile_UserProfileService)))
+}
+function $asArrayOf_Lcom_shocktrade_client_profile_UserProfileService(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_client_profile_UserProfileService(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.client.profile.UserProfileService;", depth))
+}
+var $d_Lcom_shocktrade_client_profile_UserProfileService = new $TypeData().initClass({
+  Lcom_shocktrade_client_profile_UserProfileService: 0
+}, false, "com.shocktrade.client.profile.UserProfileService", {
+  Lcom_shocktrade_client_profile_UserProfileService: 1,
+  O: 1,
+  Lorg_scalajs_angularjs_Service: 1
+});
+$c_Lcom_shocktrade_client_profile_UserProfileService.prototype.$classData = $d_Lcom_shocktrade_client_profile_UserProfileService;
+/** @constructor */
 function $c_Lcom_shocktrade_client_profile_UserService() {
   $c_O.call(this);
   this.$$http$1 = null
@@ -14015,95 +14034,6 @@ var $d_Lcom_shocktrade_client_profile_UserService = new $TypeData().initClass({
   Lorg_scalajs_angularjs_Service: 1
 });
 $c_Lcom_shocktrade_client_profile_UserService.prototype.$classData = $d_Lcom_shocktrade_client_profile_UserService;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectService() {
-  $c_O.call(this);
-  this.$$http$1 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectService.prototype = new $h_O();
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectService;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectService() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectService.prototype = $c_Lcom_shocktrade_client_social_ConnectService.prototype;
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.init___Lorg_scalajs_angularjs_http_Http = (function($$http) {
-  this.$$http$1 = $$http;
-  return this
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.$$js$exported$meth$getUserInfo__T__O = (function(facebookID) {
-  return this.getUserInfo__T__Lorg_scalajs_angularjs_http_HttpResponse(facebookID)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.$$js$exported$meth$deleteMessages__sjs_js_Array__O = (function(messageIDs) {
-  return this.deleteMessages__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(messageIDs)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.deleteMessages__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse = (function(messageIDs) {
-  return this.$$http$1["delete"]("/api/updates", messageIDs)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.getUserUpdates__T__I__Lorg_scalajs_angularjs_http_HttpResponse = (function(userName, limit) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/updates/", "/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userName, limit])))
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.identifyFacebookFriends__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse = (function(fbFriends) {
-  var jsx$1 = this.$$http$1;
-  var array = [];
-  $uI(fbFriends.length);
-  var i = 0;
-  var len = $uI(fbFriends.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = fbFriends[index];
-    var elem = $as_T(arg1.id);
-    array.push(elem);
-    i = ((1 + i) | 0)
-  };
-  return jsx$1.post("/api/profile/facebook/friends", array)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.getUserInfo__T__Lorg_scalajs_angularjs_http_HttpResponse = (function(facebookID) {
-  return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/profile/facebook/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([facebookID])))
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.$$js$exported$meth$identifyFacebookFriends__sjs_js_Array__O = (function(fbFriends) {
-  return this.identifyFacebookFriends__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(fbFriends)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.$$js$exported$meth$getUserUpdates__T__I__O = (function(userName, limit) {
-  return this.getUserUpdates__T__I__Lorg_scalajs_angularjs_http_HttpResponse(userName, limit)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.identifyFacebookFriends = (function(arg$1) {
-  var prep0 = arg$1;
-  return this.$$js$exported$meth$identifyFacebookFriends__sjs_js_Array__O(prep0)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.getUserUpdates = (function(arg$1, arg$2) {
-  var prep0 = $as_T(arg$1);
-  var prep1 = $uI(arg$2);
-  return this.$$js$exported$meth$getUserUpdates__T__I__O(prep0, prep1)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.getUserInfo = (function(arg$1) {
-  var prep0 = $as_T(arg$1);
-  return this.$$js$exported$meth$getUserInfo__T__O(prep0)
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.deleteMessages = (function(arg$1) {
-  var prep0 = arg$1;
-  return this.$$js$exported$meth$deleteMessages__sjs_js_Array__O(prep0)
-});
-function $is_Lcom_shocktrade_client_social_ConnectService(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_social_ConnectService)))
-}
-function $as_Lcom_shocktrade_client_social_ConnectService(obj) {
-  return (($is_Lcom_shocktrade_client_social_ConnectService(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.client.social.ConnectService"))
-}
-function $isArrayOf_Lcom_shocktrade_client_social_ConnectService(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_client_social_ConnectService)))
-}
-function $asArrayOf_Lcom_shocktrade_client_social_ConnectService(obj, depth) {
-  return (($isArrayOf_Lcom_shocktrade_client_social_ConnectService(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.client.social.ConnectService;", depth))
-}
-var $d_Lcom_shocktrade_client_social_ConnectService = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectService: 0
-}, false, "com.shocktrade.client.social.ConnectService", {
-  Lcom_shocktrade_client_social_ConnectService: 1,
-  O: 1,
-  Lorg_scalajs_angularjs_Service: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectService.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectService;
 /** @constructor */
 function $c_Lcom_shocktrade_client_social_SocialServices() {
   $c_O.call(this);
@@ -15578,7 +15508,7 @@ $c_Lcom_shocktrade_client_GameLevel.prototype.constructor = $c_Lcom_shocktrade_c
 function $c_Lcom_shocktrade_client_MainController() {
   $c_O.call(this);
   this.com$shocktrade$client$MainController$$$scope$f = null;
-  this.$$location$1 = null;
+  this.com$shocktrade$client$MainController$$$location$f = null;
   this.com$shocktrade$client$MainController$$$timeout$f = null;
   this.com$shocktrade$client$MainController$$toaster$f = null;
   this.com$shocktrade$client$MainController$$facebook$f = null;
@@ -15586,7 +15516,6 @@ function $c_Lcom_shocktrade_client_MainController() {
   this.com$shocktrade$client$MainController$$profileService$f = null;
   this.com$shocktrade$client$MainController$$signUpDialog$f = null;
   this.com$shocktrade$client$MainController$$loadingIndex$1 = 0;
-  this.com$shocktrade$client$MainController$$nonMember$1 = false;
   this.com$shocktrade$client$MainController$$onlinePlayers$1 = null
 }
 $c_Lcom_shocktrade_client_MainController.prototype = new $h_O();
@@ -15601,15 +15530,11 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
   var jsx$1 = $g.console;
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Changing location for ", " to ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.com$shocktrade$client$MainController$$mySession$f.getUserName__sjs_js_UndefOr(), $as_T(tab.url)]));
   jsx$1.log(s);
-  this.$$location$1.url($as_T(tab.url))
+  this.com$shocktrade$client$MainController$$$location$f.url($as_T(tab.url))
 });
-$c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$determineTableIndex__I = (function() {
-  var x1 = $as_T(this.$$location$1.path());
-  return (($uI(x1.indexOf("/about")) !== (-1)) ? 0 : (($uI(x1.indexOf("/home")) !== (-1)) ? 1 : (($uI(x1.indexOf("/search")) !== (-1)) ? 2 : (($uI(x1.indexOf("/dashboard")) !== (-1)) ? 3 : (($uI(x1.indexOf("/discover")) !== (-1)) ? 4 : (($uI(x1.indexOf("/explore")) !== (-1)) ? 5 : (($uI(x1.indexOf("/research")) !== (-1)) ? 6 : 0)))))))
-});
-$c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog = (function($$scope, $$http, $$location, $$timeout, toaster, contestService, facebook, mySession, profileService, signUpDialog) {
+$c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client_MainControllerScope__Lorg_scalajs_angularjs_http_Http__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_contest_ContestService__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_dialogs_SignUpDialog = (function($$scope, $$http, $$location, $$timeout, toaster, contestService, facebook, mySession, profileService, signUpDialog) {
   this.com$shocktrade$client$MainController$$$scope$f = $$scope;
-  this.$$location$1 = $$location;
+  this.com$shocktrade$client$MainController$$$location$f = $$location;
   this.com$shocktrade$client$MainController$$$timeout$f = $$timeout;
   this.com$shocktrade$client$MainController$$toaster$f = toaster;
   this.com$shocktrade$client$MainController$$facebook$f = facebook;
@@ -15617,7 +15542,6 @@ $c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client
   this.com$shocktrade$client$MainController$$profileService$f = profileService;
   this.com$shocktrade$client$MainController$$signUpDialog$f = signUpDialog;
   this.com$shocktrade$client$MainController$$loadingIndex$1 = 0;
-  this.com$shocktrade$client$MainController$$nonMember$1 = true;
   this.com$shocktrade$client$MainController$$onlinePlayers$1 = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary($m_sci_Nil$());
   $$scope.appTabs = [new $c_Lcom_shocktrade_client_MainController$MainTab("About", "fa-info-circle", "About ShockTrade", "/about/us"), new $c_Lcom_shocktrade_client_MainController$MainTab("NewsFeed", "fa-globe", "My Newsfeed", "/posts", (void 0), false), new $c_Lcom_shocktrade_client_MainController$MainTab("Home", "fa-home", "My Home page", "/home", (void 0), true), new $c_Lcom_shocktrade_client_MainController$MainTab("Search", "fa-search", "Search for games", "/search"), new $c_Lcom_shocktrade_client_MainController$MainTab("Dashboard", "fa-gamepad", "Main game dashboard", "/dashboard", true), new $c_Lcom_shocktrade_client_MainController$MainTab("Discover", "fa-newspaper-o", "Stock News and Quotes", "/discover"), new $c_Lcom_shocktrade_client_MainController$MainTab("Explore", "fa-trello", "Explore Sectors and Industries", "/explore"), new $c_Lcom_shocktrade_client_MainController$MainTab("Research", "fa-database", "Stock Research", "/research")];
   $$scope.levels = $m_Lcom_shocktrade_client_GameLevel$().Levels$1;
@@ -15652,69 +15576,69 @@ $c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client
   $$scope.getExchangeClass = (function(exchange$2) {
     return new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " bold"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$m_Lcom_shocktrade_client_MainController$().normalizeExchange__sjs_js_UndefOr__T(exchange$2)]))
   });
-  $$scope.getTabIndex = (function(arg$outer$2) {
+  $$scope.getTabIndex = (function(f$2) {
     return (function() {
-      return arg$outer$2.com$shocktrade$client$MainController$$determineTableIndex__I()
+      return f$2.apply__O()
     })
-  })(this);
-  $$scope.isVisible = (function(f$2) {
+  })(new $c_Lcom_shocktrade_client_MainController$$anonfun$4().init___Lcom_shocktrade_client_MainController(this));
+  $$scope.isVisible = (function(f$3) {
     return (function(arg1$2) {
-      return f$2.apply__O__O(arg1$2)
+      return f$3.apply__O__O(arg1$2)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$19().init___Lcom_shocktrade_client_MainController(this));
   $$scope.normalizeExchange = (function(market$2) {
     return $m_Lcom_shocktrade_client_MainController$().normalizeExchange__sjs_js_UndefOr__T(market$2)
   });
-  $$scope.postLoginUpdates = (function(f$3) {
+  $$scope.postLoginUpdates = (function(f$4) {
     return (function(arg1$3, arg2) {
-      return f$3.apply__O__O__O(arg1$3, arg2)
+      return f$4.apply__O__O__O(arg1$3, arg2)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$21().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.contestIsEmpty = (function(arg$outer$3) {
+  $$scope.contestIsEmpty = (function(arg$outer$2) {
     return (function() {
-      return arg$outer$3.com$shocktrade$client$MainController$$mySession$f.contest$und$qmark$1.isEmpty__Z()
+      return arg$outer$2.com$shocktrade$client$MainController$$mySession$f.contest$und$qmark$1.isEmpty__Z()
     })
   })(this);
-  $$scope.getContestID = (function(arg$outer$4) {
+  $$scope.getContestID = (function(arg$outer$3) {
     return (function() {
-      return arg$outer$4.com$shocktrade$client$MainController$$mySession$f.getContestID__sjs_js_UndefOr()
+      return arg$outer$3.com$shocktrade$client$MainController$$mySession$f.getContestID__sjs_js_UndefOr()
     })
   })(this);
-  $$scope.getContestName = (function(arg$outer$5) {
+  $$scope.getContestName = (function(arg$outer$4) {
     return (function() {
-      return arg$outer$5.com$shocktrade$client$MainController$$mySession$f.getContestName__T()
+      return arg$outer$4.com$shocktrade$client$MainController$$mySession$f.getContestName__T()
     })
   })(this);
-  $$scope.getContestStatus = (function(arg$outer$6) {
+  $$scope.getContestStatus = (function(arg$outer$5) {
     return (function() {
-      return arg$outer$6.com$shocktrade$client$MainController$$mySession$f.getContestStatus__T()
+      return arg$outer$5.com$shocktrade$client$MainController$$mySession$f.getContestStatus__T()
     })
   })(this);
-  $$scope.getFacebookID = (function(arg$outer$7) {
+  $$scope.getFacebookID = (function(arg$outer$6) {
     return (function() {
-      var this$2 = arg$outer$7.com$shocktrade$client$MainController$$mySession$f;
+      var this$2 = arg$outer$6.com$shocktrade$client$MainController$$mySession$f;
       return this$2.facebookID$1
     })
   })(this);
-  $$scope.getFacebookProfile = (function(arg$outer$8) {
+  $$scope.getFacebookProfile = (function(arg$outer$7) {
     return (function() {
-      var this$3 = arg$outer$8.com$shocktrade$client$MainController$$mySession$f;
+      var this$3 = arg$outer$7.com$shocktrade$client$MainController$$mySession$f;
       return this$3.fbProfile$und$qmark$1
     })
   })(this);
-  $$scope.getFacebookFriends = (function(arg$outer$9) {
+  $$scope.getFacebookFriends = (function(arg$outer$8) {
     return (function() {
-      return arg$outer$9.com$shocktrade$client$MainController$$mySession$f.fbFriends$und$qmark$1
+      return arg$outer$8.com$shocktrade$client$MainController$$mySession$f.fbFriends$und$qmark$1
     })
   })(this);
-  $$scope.getFundsAvailable = (function(arg$outer$10) {
+  $$scope.getFundsAvailable = (function(arg$outer$9) {
     return (function() {
-      return arg$outer$10.com$shocktrade$client$MainController$$mySession$f.getFundsAvailable__D()
+      return arg$outer$9.com$shocktrade$client$MainController$$mySession$f.getFundsAvailable__D()
     })
   })(this);
-  $$scope.getNetWorth = (function(arg$outer$11) {
+  $$scope.getNetWorth = (function(arg$outer$10) {
     return (function() {
-      var value = arg$outer$11.com$shocktrade$client$MainController$$mySession$f.getNetWorth__sjs_js_UndefOr();
+      var value = arg$outer$10.com$shocktrade$client$MainController$$mySession$f.userProfile$1.netWorth;
       if ((value === (void 0))) {
         var value$1 = (void 0)
       } else {
@@ -15729,71 +15653,71 @@ $c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client
       return $uD(((value$1 === (void 0)) ? 0.0 : value$1))
     })
   })(this);
-  $$scope.getUserID = (function(arg$outer$12) {
+  $$scope.getUserID = (function(arg$outer$11) {
     return (function() {
-      var value$2 = arg$outer$12.com$shocktrade$client$MainController$$mySession$f.userProfile$1._id;
+      var value$2 = arg$outer$11.com$shocktrade$client$MainController$$mySession$f.userProfile$1._id;
       return $as_T(((value$2 === (void 0)) ? null : value$2))
     })
   })(this);
-  $$scope.getUserName = (function(arg$outer$13) {
+  $$scope.getUserName = (function(arg$outer$12) {
     return (function() {
-      var value$3 = arg$outer$13.com$shocktrade$client$MainController$$mySession$f.getUserName__sjs_js_UndefOr();
+      var value$3 = arg$outer$12.com$shocktrade$client$MainController$$mySession$f.getUserName__sjs_js_UndefOr();
       return $as_T(((value$3 === (void 0)) ? null : value$3))
     })
   })(this);
-  $$scope.getUserProfile = (function(arg$outer$14) {
+  $$scope.getUserProfile = (function(arg$outer$13) {
     return (function() {
-      return arg$outer$14.com$shocktrade$client$MainController$$mySession$f.userProfile$1
+      return arg$outer$13.com$shocktrade$client$MainController$$mySession$f.userProfile$1
     })
   })(this);
-  $$scope.hasNotifications = (function(arg$outer$15) {
+  $$scope.hasNotifications = (function(arg$outer$14) {
     return (function() {
-      return arg$outer$15.com$shocktrade$client$MainController$$mySession$f.hasNotifications__Z()
+      return arg$outer$14.com$shocktrade$client$MainController$$mySession$f.hasNotifications__Z()
     })
   })(this);
-  $$scope.hasPerk = (function(f$4) {
+  $$scope.hasPerk = (function(f$5) {
     return (function(arg1$5) {
-      return f$4.apply__O__O(arg1$5)
+      return f$5.apply__O__O(arg1$5)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$31().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.isAdmin = (function(arg$outer$16) {
+  $$scope.isAdmin = (function(arg$outer$15) {
     return (function() {
-      return arg$outer$16.com$shocktrade$client$MainController$$mySession$f.isAdmin__Z()
+      return arg$outer$15.com$shocktrade$client$MainController$$mySession$f.isAdmin__Z()
     })
   })(this);
-  $$scope.isAuthenticated = (function(arg$outer$17) {
+  $$scope.isAuthenticated = (function(arg$outer$16) {
     return (function() {
-      return arg$outer$17.com$shocktrade$client$MainController$$mySession$f.isAuthenticated__Z()
+      return arg$outer$16.com$shocktrade$client$MainController$$mySession$f.isAuthenticated__Z()
     })
   })(this);
-  $$scope.isOnline = (function(f$5) {
+  $$scope.isOnline = (function(f$6) {
     return (function(arg1$6) {
-      return f$5.apply__O__O(arg1$6)
+      return f$6.apply__O__O(arg1$6)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$32().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.getPreferenceIcon = (function(f$6) {
+  $$scope.getPreferenceIcon = (function(f$7) {
     return (function(arg1$7) {
-      return f$6.apply__O__O(arg1$7)
+      return f$7.apply__O__O(arg1$7)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$33().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.login = (function(f$7) {
-    return (function() {
-      return f$7.apply__O()
-    })
-  })(new $c_Lcom_shocktrade_client_MainController$$anonfun$11().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.logout = (function(f$8) {
+  $$scope.login = (function(f$8) {
     return (function() {
       return f$8.apply__O()
     })
-  })(new $c_Lcom_shocktrade_client_MainController$$anonfun$12().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.signUp = (function(f$9) {
+  })(new $c_Lcom_shocktrade_client_MainController$$anonfun$11().init___Lcom_shocktrade_client_MainController(this));
+  $$scope.logout = (function(f$9) {
     return (function() {
       return f$9.apply__O()
     })
+  })(new $c_Lcom_shocktrade_client_MainController$$anonfun$12().init___Lcom_shocktrade_client_MainController(this));
+  $$scope.signUp = (function(f$10) {
+    return (function() {
+      return f$10.apply__O()
+    })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$13().init___Lcom_shocktrade_client_MainController(this));
-  $$scope.changeAppTab = (function(f$10) {
+  $$scope.changeAppTab = (function(f$11) {
     return (function(arg1$8) {
-      return f$10.apply__O__O(arg1$8)
+      return f$11.apply__O__O(arg1$8)
     })
   })(new $c_Lcom_shocktrade_client_MainController$$anonfun$35().init___Lcom_shocktrade_client_MainController(this));
   var this$26 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
@@ -15803,9 +15727,9 @@ $c_Lcom_shocktrade_client_MainController.prototype.init___Lcom_shocktrade_client
     var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["user_status_changed: newState = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.JSON.stringify(newState))]));
     jsx$2.log(s$1)
   }));
-  this$26.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserStatusChanged$1, (function(f$11) {
+  this$26.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserStatusChanged$1, (function(f$12) {
     return (function(arg1$9, arg2$1) {
-      return f$11.apply__O__O__O(arg1$9, arg2$1)
+      return f$12.apply__O__O__O(arg1$9, arg2$1)
     })
   })(callback));
   return this
@@ -17493,170 +17417,6 @@ function $h_Lcom_shocktrade_client_profile_MyQuotesController$Expandable() {
 $h_Lcom_shocktrade_client_profile_MyQuotesController$Expandable.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_client_profile_MyQuotesController$Expandable.prototype = new $h_Lcom_shocktrade_client_profile_MyQuotesController$Expandable();
 $c_Lcom_shocktrade_client_profile_MyQuotesController$Expandable.prototype.constructor = $c_Lcom_shocktrade_client_profile_MyQuotesController$Expandable;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController() {
-  $c_O.call(this);
-  this.com$shocktrade$client$social$ConnectController$$$scope$f = null;
-  this.com$shocktrade$client$social$ConnectController$$toaster$f = null;
-  this.com$shocktrade$client$social$ConnectController$$messageDialog$f = null;
-  this.com$shocktrade$client$social$ConnectController$$connectService$f = null;
-  this.com$shocktrade$client$social$ConnectController$$mySession$f = null;
-  this.com$shocktrade$client$social$ConnectController$$myUpdates$1 = null;
-  this.com$shocktrade$client$social$ConnectController$$myUpdate$1 = null;
-  this.com$shocktrade$client$social$ConnectController$$contact$1 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController.prototype = new $h_O();
-$c_Lcom_shocktrade_client_social_ConnectController.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController.prototype = $c_Lcom_shocktrade_client_social_ConnectController.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController.prototype.init___Lcom_shocktrade_client_social_ConnectScope__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_dialogs_ComposeMessageDialog__Lcom_shocktrade_client_social_ConnectService__Lcom_shocktrade_client_MySessionService = (function($$scope, toaster, messageDialog, connectService, mySession) {
-  this.com$shocktrade$client$social$ConnectController$$$scope$f = $$scope;
-  this.com$shocktrade$client$social$ConnectController$$toaster$f = toaster;
-  this.com$shocktrade$client$social$ConnectController$$messageDialog$f = messageDialog;
-  this.com$shocktrade$client$social$ConnectController$$connectService$f = connectService;
-  this.com$shocktrade$client$social$ConnectController$$mySession$f = mySession;
-  this.com$shocktrade$client$social$ConnectController$$myUpdates$1 = [];
-  this.com$shocktrade$client$social$ConnectController$$myUpdate$1 = (void 0);
-  this.com$shocktrade$client$social$ConnectController$$contact$1 = (void 0);
-  $$scope.chooseContact = (function(f) {
-    return (function(arg1) {
-      return f.apply__O__O(arg1)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.chooseFirstContact = (function(arg$outer) {
-    return (function() {
-      var jsx$2 = arg$outer.com$shocktrade$client$social$ConnectController$$$scope$f.chooseContact;
-      var array = arg$outer.com$shocktrade$client$social$ConnectController$$mySession$f.fbFriends$und$qmark$1;
-      var this$3 = new $c_sjs_js_ArrayOps().init___sjs_js_Array(array);
-      var opt = $s_sc_TraversableLike$class__headOption__sc_TraversableLike__s_Option(this$3);
-      if (opt.isEmpty__Z()) {
-        var jsx$1 = (void 0)
-      } else {
-        var arg1$1 = opt.get__O();
-        var jsx$1 = arg1$1
-      };
-      jsx$2(jsx$1)
-    })
-  })(this);
-  $$scope.composeMessage = (function(f$1) {
-    return (function() {
-      return f$1.apply__O()
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.getContact = (function(arg$outer$1) {
-    return (function() {
-      return arg$outer$1.com$shocktrade$client$social$ConnectController$$contact$1
-    })
-  })(this);
-  $$scope.getFriends = (function(arg$outer$2) {
-    return (function() {
-      return arg$outer$2.com$shocktrade$client$social$ConnectController$$mySession$f.fbFriends$und$qmark$1
-    })
-  })(this);
-  $$scope.deleteMessages = (function(f$2) {
-    return (function(arg1$2) {
-      return f$2.apply__O__O(arg1$2)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.getMyUpdates = (function(arg$outer$3) {
-    return (function() {
-      return arg$outer$3.com$shocktrade$client$social$ConnectController$$myUpdates$1
-    })
-  })(this);
-  $$scope.getSelectedUpdate = (function(arg$outer$4) {
-    return (function() {
-      return arg$outer$4.com$shocktrade$client$social$ConnectController$$myUpdate$1
-    })
-  })(this);
-  $$scope.selectUpdate = (function(arg$outer$5) {
-    return (function(entry$2) {
-      arg$outer$5.com$shocktrade$client$social$ConnectController$$myUpdate$1 = entry$2
-    })
-  })(this);
-  $$scope.getUserInfo = (function(f$3) {
-    return (function(arg1$3) {
-      return f$3.apply__O__O(arg1$3)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.identifyFacebookFriends = (function(f$4) {
-    return (function(arg1$4) {
-      return f$4.apply__O__O(arg1$4)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.getContactList = (function(arg$outer$6) {
-    return (function(aSearchTerm$2) {
-      return arg$outer$6.com$shocktrade$client$social$ConnectController$$mySession$f.fbFriends$und$qmark$1
-    })
-  })(this);
-  $$scope.loadMyUpdates = (function(f$5) {
-    return (function(arg1$5) {
-      return f$5.apply__O__O(arg1$5)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15().init___Lcom_shocktrade_client_social_ConnectController(this));
-  $$scope.selectAll = (function(f$6) {
-    return (function(arg1$6) {
-      return f$6.apply__O__O(arg1$6)
-    })
-  })(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16().init___Lcom_shocktrade_client_social_ConnectController(this));
-  var this$8 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$7) {
-    return (function(x$9$2, profile$2) {
-      (0, arg$outer$7.com$shocktrade$client$social$ConnectController$$$scope$f.loadMyUpdates)(arg$outer$7.com$shocktrade$client$social$ConnectController$$mySession$f.getUserName__sjs_js_UndefOr())
-    })
-  })(this));
-  this$8.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1, (function(f$7) {
-    return (function(arg1$7, arg2) {
-      return f$7.apply__O__O__O(arg1$7, arg2)
-    })
-  })(callback));
-  var this$10 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback$1 = new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function(arg$outer$8) {
-    return (function(x$10$2, profile$2$1) {
-      (0, arg$outer$8.com$shocktrade$client$social$ConnectController$$$scope$f.loadMyUpdates)(arg$outer$8.com$shocktrade$client$social$ConnectController$$mySession$f.getUserName__sjs_js_UndefOr())
-    })
-  })(this));
-  this$10.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$scope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileUpdated$1, (function(f$8) {
-    return (function(arg1$8, arg2$1) {
-      return f$8.apply__O__O__O(arg1$8, arg2$1)
-    })
-  })(callback$1));
-  return this
-});
-$c_Lcom_shocktrade_client_social_ConnectController.prototype.com$shocktrade$client$social$ConnectController$$setUserInfo__T__V = (function(fbUserId) {
-  var $$scope = this.com$shocktrade$client$social$ConnectController$$$scope$f;
-  var f = (function(arg$outer, fbUserId$1) {
-    return (function() {
-      return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(arg$outer.com$shocktrade$client$social$ConnectController$$connectService$f.getUserInfo__T__Lorg_scalajs_angularjs_http_HttpResponse(fbUserId$1))
-    })
-  })(this, fbUserId);
-  var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var promise = $$scope.startLoading();
-  $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(promise$2, $$scope$2) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
-      if ($is_s_util_Success(x0$1)) {
-        return $$scope$2.stopLoading(promise$2)
-      } else if ($is_s_util_Failure(x0$1)) {
-        return $$scope$2.stopLoading(promise$2)
-      } else {
-        throw new $c_s_MatchError().init___O(x0$1)
-      }
-    })
-  })(promise, $$scope)), ec);
-  $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2().init___Lcom_shocktrade_client_social_ConnectController(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-var $d_Lcom_shocktrade_client_social_ConnectController = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController: 0
-}, false, "com.shocktrade.client.social.ConnectController", {
-  Lcom_shocktrade_client_social_ConnectController: 1,
-  O: 1,
-  Lorg_scalajs_angularjs_Controller: 1,
-  Lcom_shocktrade_client_GlobalLoading: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController;
 /** @constructor */
 function $c_Lcom_shocktrade_common_forms_ContestCreateForm() {
   var jsx$1 = (arguments.length | 0);
@@ -22673,47 +22433,6 @@ $h_Lcom_shocktrade_common_models_post_Post.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_post_Post.prototype = new $h_Lcom_shocktrade_common_models_post_Post();
 $c_Lcom_shocktrade_common_models_post_Post.prototype.constructor = $c_Lcom_shocktrade_common_models_post_Post;
 /** @constructor */
-function $c_Lcom_shocktrade_common_models_user_User(arg$1, arg$2, arg$3) {
-  var _id = arg$1;
-  var facebookID = arg$2;
-  var name = arg$3;
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "_id": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "facebookID": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "name": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this._id = _id;
-  this.facebookID = facebookID;
-  this.name = name
-}
-/** @constructor */
-function $h_Lcom_shocktrade_common_models_user_User() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_common_models_user_User.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_common_models_user_User.prototype = new $h_Lcom_shocktrade_common_models_user_User();
-$c_Lcom_shocktrade_common_models_user_User.prototype.constructor = $c_Lcom_shocktrade_common_models_user_User;
-/** @constructor */
 function $c_Ljava_io_FilterOutputStream() {
   $c_Ljava_io_OutputStream.call(this);
   this.out$2 = null
@@ -25646,7 +25365,6 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$11$$anonfun$apply$mcV$sp$1.pro
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$11$$anonfun$apply$mcV$sp$1.prototype.apply__s_util_Try__O = (function(x0$6) {
   if ($is_s_util_Success(x0$6)) {
-    this.$$outer$2.$$outer$3.com$shocktrade$client$MainController$$nonMember$1 = true;
     var value = this.$$outer$2.$$outer$3.com$shocktrade$client$MainController$$facebook$f.facebookID__sjs_js_UndefOr();
     if ((value === (void 0))) {
       return (void 0)
@@ -25920,7 +25638,7 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$32.prototype.init___Lcom_shock
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$32.prototype.apply__sjs_js_UndefOr__Z = (function(aPlayer) {
   var p = new $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9().init___Lcom_shocktrade_client_MainController$$anonfun$32(this);
-  return ((aPlayer !== (void 0)) && p.apply__Lcom_shocktrade_client_models_Profile__Z(aPlayer))
+  return ((aPlayer !== (void 0)) && p.apply__Lcom_shocktrade_client_models_UserProfile__Z(aPlayer))
 });
 var $d_Lcom_shocktrade_client_MainController$$anonfun$32 = new $TypeData().initClass({
   Lcom_shocktrade_client_MainController$$anonfun$32: 0
@@ -25946,7 +25664,7 @@ function $h_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9()
 }
 $h_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype = $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype;
 $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_shocktrade_client_models_Profile__Z(v1)
+  return this.apply__Lcom_shocktrade_client_models_UserProfile__Z(v1)
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype.init___Lcom_shocktrade_client_MainController$$anonfun$32 = (function($$outer) {
   if (($$outer === null)) {
@@ -25956,7 +25674,7 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype.
   };
   return this
 });
-$c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype.apply__Lcom_shocktrade_client_models_Profile__Z = (function(player) {
+$c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9.prototype.apply__Lcom_shocktrade_client_models_UserProfile__Z = (function(player) {
   var value = player._id;
   var p = new $c_Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9$$anonfun$apply$10().init___Lcom_shocktrade_client_MainController$$anonfun$32$$anonfun$apply$9(this);
   return ((value !== (void 0)) && p.apply__T__Z($as_T(value)))
@@ -26159,13 +25877,9 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16.prototype
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Retrieving ShockTrade profile for FBID ", "..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.facebookID$1$f]));
   jsx$1.log(s);
   var this$2 = jsx$2.promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.com$shocktrade$client$MainController$$profileService$f.getProfileByFacebookID__T__Lorg_scalajs_angularjs_http_HttpResponse(this.$$outer$2.facebookID$1$f));
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, fbFriends$2) {
-    return (function(profile$2) {
-      return new $c_T3().init___O__O__O(arg$outer.fbProfile$2$f, fbFriends$2, profile$2)
-    })
-  })(this, fbFriends));
+  var f = new $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17().init___Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16__sjs_js_Array(this, fbFriends);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor)
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor)
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16.prototype.init___Lcom_shocktrade_client_MainController$$anonfun$34__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse = (function($$outer, fbProfile$2) {
   if (($$outer === null)) {
@@ -26187,6 +25901,55 @@ var $d_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16 = new
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16.prototype.$classData = $d_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16;
+/** @constructor */
+function $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.fbFriends$2$f = null
+}
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype.constructor = $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17;
+/** @constructor */
+function $h_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype = $c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype;
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_shocktrade_client_models_UserProfile__s_concurrent_Future(v1)
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype.apply__Lcom_shocktrade_client_models_UserProfile__s_concurrent_Future = (function(profile) {
+  var jsx$2 = $m_Lorg_scalajs_angularjs_http_HttpResponse$();
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$MainController$$profileService$f;
+  var value = profile._id;
+  var this$4 = jsx$2.promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(jsx$1.getNetWorth__T__Lorg_scalajs_angularjs_http_HttpResponse($as_T(((value === (void 0)) ? null : value))));
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, profile$2) {
+    return (function(netWorth$2) {
+      return new $c_T4().init___O__O__O__O(arg$outer.$$outer$2.fbProfile$2$f, arg$outer.fbFriends$2$f, profile$2, netWorth$2)
+    })
+  })(this, profile));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$4, f, executor)
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype.init___Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16__sjs_js_Array = (function($$outer, fbFriends$2) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.fbFriends$2$f = fbFriends$2;
+  return this
+});
+var $d_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17: 0
+}, false, "com.shocktrade.client.MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17", {
+  Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17.prototype.$classData = $d_Lcom_shocktrade_client_MainController$$anonfun$34$$anonfun$apply$16$$anonfun$apply$17;
 /** @constructor */
 function $c_Lcom_shocktrade_client_MainController$$anonfun$35() {
   $c_sr_AbstractFunction1.call(this);
@@ -26246,19 +26009,21 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$com$shocktrade$client$MainCont
 $c_Lcom_shocktrade_client_MainController$$anonfun$com$shocktrade$client$MainController$$doPostLoginUpdates$1.prototype.apply__s_util_Try__O = (function(x0$4) {
   if ($is_s_util_Success(x0$4)) {
     var x2 = $as_s_util_Success(x0$4);
-    var p3 = $as_T3(x2.value$2);
+    var p3 = $as_T4(x2.value$2);
     if ((p3 !== null)) {
       var fbProfile = p3.$$und1$1;
       var fbFriends = p3.$$und2$1;
       var profile = p3.$$und3$1;
+      var netWorth = p3.$$und4$1;
       $g.console.log("ShockTrade user profile, Facebook profile, and friends loaded...");
-      return this.$$outer$2.com$shocktrade$client$MainController$$$scope$f.$apply((function(arg$outer, fbProfile$1, fbFriends$1, profile$1) {
+      return this.$$outer$2.com$shocktrade$client$MainController$$$scope$f.$apply((function(arg$outer, fbProfile$1, fbFriends$1, profile$1, netWorth$1) {
         return (function() {
-          arg$outer.$$outer$2.com$shocktrade$client$MainController$$nonMember$1 = false;
-          arg$outer.$$outer$2.com$shocktrade$client$MainController$$mySession$f.setUserProfile__Lcom_shocktrade_client_models_Profile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile$1, fbProfile$1);
+          var value = $uD(netWorth$1.value);
+          profile$1.netWorth = value;
+          arg$outer.$$outer$2.com$shocktrade$client$MainController$$mySession$f.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile$1, fbProfile$1);
           arg$outer.$$outer$2.com$shocktrade$client$MainController$$mySession$f.fbFriends$und$qmark$1 = fbFriends$1
         })
-      })(this, fbProfile, fbFriends, profile))
+      })(this, fbProfile, fbFriends, profile, netWorth))
     }
   };
   if ($is_s_util_Failure(x0$4)) {
@@ -26316,7 +26081,7 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$4.prototype.init___Lcom_shoc
 });
 $c_Lcom_shocktrade_client_MySessionService$$anonfun$4.prototype.apply__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__s_concurrent_Future = (function(fbProfile) {
   var this$1 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.profileService$1.getProfileViaFacebook__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__Lorg_scalajs_angularjs_http_HttpResponse(fbProfile));
-  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20().init___Lcom_shocktrade_client_MySessionService$$anonfun$4__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse(this, fbProfile);
+  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21().init___Lcom_shocktrade_client_MySessionService$$anonfun$4__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse(this, fbProfile);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor)
 });
@@ -26332,22 +26097,22 @@ var $d_Lcom_shocktrade_client_MySessionService$$anonfun$4 = new $TypeData().init
 });
 $c_Lcom_shocktrade_client_MySessionService$$anonfun$4.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$4;
 /** @constructor */
-function $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20() {
+function $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.fbProfile$2$f = null
 }
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21;
 /** @constructor */
-function $h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20() {
+function $h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype;
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_shocktrade_client_models_Profile__s_concurrent_Future(v1)
+$h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_shocktrade_client_models_UserProfile__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$4__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse = (function($$outer, fbProfile$2) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$4__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse = (function($$outer, fbProfile$2) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -26356,69 +26121,69 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototyp
   this.fbProfile$2$f = fbProfile$2;
   return this
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype.apply__Lcom_shocktrade_client_models_Profile__s_concurrent_Future = (function(profile) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype.apply__Lcom_shocktrade_client_models_UserProfile__s_concurrent_Future = (function(profile) {
   var task = this.$$outer$2.$$outer$2.facebook$1.getTaggableFriends__s_concurrent_Promise();
-  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21().init___Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20__Lcom_shocktrade_client_models_Profile(this, profile);
+  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22().init___Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21__Lcom_shocktrade_client_models_UserProfile(this, profile);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, executor)
 });
-var $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20 = new $TypeData().initClass({
-  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20: 0
-}, false, "com.shocktrade.client.MySessionService$$anonfun$4$$anonfun$apply$20", {
-  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20: 1,
+var $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21: 0
+}, false, "com.shocktrade.client.MySessionService$$anonfun$4$$anonfun$apply$21", {
+  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21;
 /** @constructor */
-function $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21() {
+function $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.profile$2$f = null
+  this.profile$3$f = null
 }
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22;
 /** @constructor */
-function $h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21() {
+function $h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype;
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype.apply__O__O = (function(v1) {
   return this.apply__sjs_js_Array__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype.apply__sjs_js_Array__s_concurrent_Future = (function(taggableFriends) {
-  var task = this.$$outer$2.$$outer$2.$$outer$2.facebook$1.getFriendList__sjs_js_UndefOr__s_concurrent_Promise("close_friends");
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, taggableFriends$2) {
-    return (function(closeFriends$2) {
-      return new $c_T4().init___O__O__O__O(arg$outer.profile$2$f, arg$outer.$$outer$2.fbProfile$2$f, taggableFriends$2, closeFriends$2)
-    })
-  })(this, taggableFriends));
-  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, executor)
-});
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20__Lcom_shocktrade_client_models_Profile = (function($$outer, profile$2) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21__Lcom_shocktrade_client_models_UserProfile = (function($$outer, profile$3) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.profile$2$f = profile$2;
+  this.profile$3$f = profile$3;
   return this
 });
-var $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21 = new $TypeData().initClass({
-  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21: 0
-}, false, "com.shocktrade.client.MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21", {
-  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21: 1,
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype.apply__sjs_js_Array__s_concurrent_Future = (function(taggableFriends) {
+  var task = this.$$outer$2.$$outer$2.$$outer$2.facebook$1.getFriendList__sjs_js_UndefOr__s_concurrent_Promise("close_friends");
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, taggableFriends$2) {
+    return (function(closeFriends$2) {
+      return new $c_T4().init___O__O__O__O(arg$outer.profile$3$f, arg$outer.$$outer$2.fbProfile$2$f, taggableFriends$2, closeFriends$2)
+    })
+  })(this, taggableFriends));
+  var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, executor)
+});
+var $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22: 0
+}, false, "com.shocktrade.client.MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22", {
+  Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$20$$anonfun$apply$21;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$4$$anonfun$apply$21$$anonfun$apply$22;
 /** @constructor */
 function $c_Lcom_shocktrade_client_MySessionService$$anonfun$5() {
   $c_sr_AbstractFunction2.call(this);
@@ -26439,7 +26204,10 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.init___Lcom_shoc
   };
   return this
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_Profile__V = (function(x$35, profile) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__O__O__O = (function(v1, v2) {
+  this.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_UserProfile__V(v1, v2)
+});
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_UserProfile__V = (function(x$35, profile) {
   var jsx$1 = $g.console;
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["User Profile for ", " updated"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([profile.name]));
   jsx$1.log(s);
@@ -26450,9 +26218,9 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__Lorg_scal
     if ((value$1 !== (void 0))) {
       var otherId = $as_T(value$1);
       if ((userId === otherId)) {
-        this.$$outer$2.userProfile$1.netWorth = profile.netWorth;
+        this.$$outer$2.userProfile$1.wallet = profile.wallet;
         var toaster = this.$$outer$2.toaster$1;
-        var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ul><li>Your wallet now has $", "</li></ul>"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([profile.netWorth]));
+        var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ul><li>Your wallet now has $", "</li></ul>"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([profile.wallet]));
         var this$12 = new $c_s_concurrent_duration_package$DurationInt().init___I(5);
         var unit = $m_ju_concurrent_TimeUnit$().SECONDS$1;
         var delay = $m_s_concurrent_duration_package$DurationInt$().durationIn$extension__I__ju_concurrent_TimeUnit__s_concurrent_duration_FiniteDuration(this$12.scala$concurrent$duration$DurationInt$$n$1, unit);
@@ -26464,9 +26232,6 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__Lorg_scal
       }
     }
   }
-});
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$5.prototype.apply__O__O__O = (function(v1, v2) {
-  this.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_Profile__V(v1, v2)
 });
 var $d_Lcom_shocktrade_client_MySessionService$$anonfun$5 = new $TypeData().initClass({
   Lcom_shocktrade_client_MySessionService$$anonfun$5: 0
@@ -26510,11 +26275,11 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$initFacebook$1.prototype.app
       var profile = p3.$$und1$1;
       var fbProfile = p3.$$und2$1;
       var taggableFriends = p3.$$und3$1;
-      return this.$$outer$2.$$rootScope$1.$apply((function(arg$outer, profile$1, fbProfile$1, taggableFriends$1) {
+      return this.$$outer$2.$$rootScope$1.$apply((function(arg$outer, profile$2, fbProfile$1, taggableFriends$1) {
         return (function() {
           arg$outer.$$outer$2.fbProfile$und$qmark$1 = fbProfile$1;
           arg$outer.$$outer$2.fbFriends$und$qmark$1 = taggableFriends$1;
-          arg$outer.$$outer$2.setUserProfile__Lcom_shocktrade_client_models_Profile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile$1, fbProfile$1)
+          arg$outer.$$outer$2.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile$2, fbProfile$1)
         })
       })(this, profile, fbProfile, taggableFriends))
     }
@@ -26642,7 +26407,7 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1.prototype.
   var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Loading contest ", " (player: ", ")..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.contestId$1$f, playerId]));
   jsx$1.log(s);
   var this$2 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.contestService$1.getContestByID__T__Lorg_scalajs_angularjs_http_HttpResponse(this.contestId$1$f));
-  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4().init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1__T(this, playerId);
+  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5().init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1__T(this, playerId);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$2, f, executor)
 });
@@ -26658,22 +26423,22 @@ var $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1 = new 
 });
 $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4() {
+function $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.playerId$2$f = null
 }
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5;
 /** @constructor */
-function $h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4() {
+function $h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype;
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_client_models_contest_Contest__s_concurrent_Future(v1)
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1__T = (function($$outer, playerId$2) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1__T = (function($$outer, playerId$2) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -26682,9 +26447,9 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$a
   this.playerId$2$f = playerId$2;
   return this
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype.apply__Lcom_shocktrade_client_models_contest_Contest__s_concurrent_Future = (function(contest) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype.apply__Lcom_shocktrade_client_models_contest_Contest__s_concurrent_Future = (function(contest) {
   var this$1 = $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.portfolioService$1.getPortfolioByPlayer__T__T__Lorg_scalajs_angularjs_http_HttpResponse(this.$$outer$2.contestId$1$f, this.playerId$2$f));
-  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5().init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4__Lcom_shocktrade_client_models_contest_Contest(this, contest);
+  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6().init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5__Lcom_shocktrade_client_models_contest_Contest(this, contest);
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var this$5 = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f, executor);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer, contest$2) {
@@ -26711,34 +26476,43 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$a
   var executor$1 = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$5, f$1, executor$1)
 });
-var $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4 = new $TypeData().initClass({
-  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4: 0
-}, false, "com.shocktrade.client.MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4", {
-  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4: 1,
+var $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5: 0
+}, false, "com.shocktrade.client.MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5", {
+  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5;
 /** @constructor */
-function $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5() {
+function $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.contest$2$2 = null
 }
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6;
 /** @constructor */
-function $h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5() {
+function $h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype;
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5__Lcom_shocktrade_client_models_contest_Contest = (function($$outer, contest$2) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.contest$2$2 = contest$2;
+  return this
+});
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_shocktrade_client_models_contest_Portfolio__T2(v1)
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype.apply__Lcom_shocktrade_client_models_contest_Portfolio__T2 = (function(portfolio) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__Lcom_shocktrade_client_models_contest_Portfolio__T2 = (function(portfolio) {
   var value = this.contest$2$2.participants;
   var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
   if (this$4.isEmpty__Z()) {
@@ -26768,26 +26542,17 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$a
   };
   return new $c_T2().init___O__O(portfolio, participantOpt)
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4__Lcom_shocktrade_client_models_contest_Contest = (function($$outer, contest$2) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.contest$2$2 = contest$2;
-  return this
-});
-var $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5 = new $TypeData().initClass({
-  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5: 0
-}, false, "com.shocktrade.client.MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5", {
-  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5: 1,
+var $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6: 0
+}, false, "com.shocktrade.client.MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6", {
+  Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$4$$anonfun$apply$5;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$loadContestByID$1$$anonfun$apply$5$$anonfun$apply$6;
 /** @constructor */
 function $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -26806,7 +26571,7 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1.prototype.apply
 });
 $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1.prototype.apply__T__V = (function(contestId) {
   var value = this.$$outer$2.userProfile$1._id;
-  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10().init___Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1__T(this, contestId);
+  var f = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11().init___Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1__T(this, contestId);
   if ((value !== (void 0))) {
     f.apply__T__V($as_T(value))
   }
@@ -26832,22 +26597,22 @@ var $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1 = new $Type
 });
 $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10() {
+function $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.contestId$2$2 = null
 }
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype.constructor = $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11;
 /** @constructor */
-function $h_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10() {
+function $h_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11() {
   /*<skip>*/
 }
-$h_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype;
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype.apply__O__O = (function(v1) {
+$h_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype = $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype.apply__O__O = (function(v1) {
   this.apply__T__V($as_T(v1))
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1__T = (function($$outer, contestId$2) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype.init___Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1__T = (function($$outer, contestId$2) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -26856,7 +26621,7 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$
   this.contestId$2$2 = contestId$2;
   return this
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype.apply__T__V = (function(playerId) {
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype.apply__T__V = (function(playerId) {
   var jsx$3 = this.$$outer$2.$$outer$2;
   var value = this.$$outer$2.$$outer$2.userProfile$1._id;
   var this$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
@@ -26907,66 +26672,17 @@ $c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   $s_s_concurrent_Future$class__foreach__s_concurrent_Future__F1__s_concurrent_ExecutionContext__V(this$13, f, executor)
 });
-var $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10 = new $TypeData().initClass({
-  Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10: 0
-}, false, "com.shocktrade.client.MySessionService$$anonfun$setContest$1$$anonfun$apply$10", {
-  Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10: 1,
+var $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11: 0
+}, false, "com.shocktrade.client.MySessionService$$anonfun$setContest$1$$anonfun$apply$11", {
+  Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$10;
-/** @constructor */
-function $c_Lcom_shocktrade_client_NavigationController$$anonfun$5() {
-  $c_sr_AbstractFunction0.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype.constructor = $c_Lcom_shocktrade_client_NavigationController$$anonfun$5;
-/** @constructor */
-function $h_Lcom_shocktrade_client_NavigationController$$anonfun$5() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype = $c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype;
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype.init___Lcom_shocktrade_client_NavigationController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype.apply__sjs_js_UndefOr = (function() {
-  var opt = this.$$outer$2.com$shocktrade$client$NavigationController$$mySession$f.contest$und$qmark$1;
-  if (opt.isEmpty__Z()) {
-    var value = (void 0)
-  } else {
-    var arg1 = opt.get__O();
-    var value = arg1
-  };
-  if ((value === (void 0))) {
-    return (void 0)
-  } else {
-    var value$1 = this.$$outer$2.com$shocktrade$client$NavigationController$$mySession$f.updateRankings__Lcom_shocktrade_client_models_contest_Contest__Lcom_shocktrade_client_models_contest_Contest(value).player;
-    return ((value$1 === (void 0)) ? (void 0) : value$1)
-  }
-});
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype.apply__O = (function() {
-  return this.apply__sjs_js_UndefOr()
-});
-var $d_Lcom_shocktrade_client_NavigationController$$anonfun$5 = new $TypeData().initClass({
-  Lcom_shocktrade_client_NavigationController$$anonfun$5: 0
-}, false, "com.shocktrade.client.NavigationController$$anonfun$5", {
-  Lcom_shocktrade_client_NavigationController$$anonfun$5: 1,
-  sr_AbstractFunction0: 1,
-  O: 1,
-  F0: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_NavigationController$$anonfun$5.prototype.$classData = $d_Lcom_shocktrade_client_NavigationController$$anonfun$5;
+$c_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11.prototype.$classData = $d_Lcom_shocktrade_client_MySessionService$$anonfun$setContest$1$$anonfun$apply$11;
 /** @constructor */
 function $c_Lcom_shocktrade_client_NavigationController$$anonfun$6() {
   $c_sr_AbstractFunction0.call(this);
@@ -26998,8 +26714,8 @@ $c_Lcom_shocktrade_client_NavigationController$$anonfun$6.prototype.apply__sjs_j
   if ((value === (void 0))) {
     return (void 0)
   } else {
-    var value$1 = value.player;
-    return ((value$1 === (void 0)) ? (void 0) : value$1.totalEquity)
+    var value$1 = this.$$outer$2.com$shocktrade$client$NavigationController$$mySession$f.updateRankings__Lcom_shocktrade_client_models_contest_Contest__Lcom_shocktrade_client_models_contest_Contest(value).player;
+    return ((value$1 === (void 0)) ? (void 0) : value$1)
   }
 });
 $c_Lcom_shocktrade_client_NavigationController$$anonfun$6.prototype.apply__O = (function() {
@@ -27016,6 +26732,50 @@ var $d_Lcom_shocktrade_client_NavigationController$$anonfun$6 = new $TypeData().
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_NavigationController$$anonfun$6.prototype.$classData = $d_Lcom_shocktrade_client_NavigationController$$anonfun$6;
+/** @constructor */
+function $c_Lcom_shocktrade_client_NavigationController$$anonfun$7() {
+  $c_sr_AbstractFunction0.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype = new $h_sr_AbstractFunction0();
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype.constructor = $c_Lcom_shocktrade_client_NavigationController$$anonfun$7;
+/** @constructor */
+function $h_Lcom_shocktrade_client_NavigationController$$anonfun$7() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype = $c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype;
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype.init___Lcom_shocktrade_client_NavigationController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype.apply__sjs_js_UndefOr = (function() {
+  var opt = this.$$outer$2.com$shocktrade$client$NavigationController$$mySession$f.contest$und$qmark$1;
+  if (opt.isEmpty__Z()) {
+    var value = (void 0)
+  } else {
+    var arg1 = opt.get__O();
+    var value = arg1
+  };
+  return ((value === (void 0)) ? (void 0) : this.$$outer$2.com$shocktrade$client$NavigationController$$mySession$f.updateRankings__Lcom_shocktrade_client_models_contest_Contest__Lcom_shocktrade_client_models_contest_Contest(value).participants)
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype.apply__O = (function() {
+  return this.apply__sjs_js_UndefOr()
+});
+var $d_Lcom_shocktrade_client_NavigationController$$anonfun$7 = new $TypeData().initClass({
+  Lcom_shocktrade_client_NavigationController$$anonfun$7: 0
+}, false, "com.shocktrade.client.NavigationController$$anonfun$7", {
+  Lcom_shocktrade_client_NavigationController$$anonfun$7: 1,
+  sr_AbstractFunction0: 1,
+  O: 1,
+  F0: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$7.prototype.$classData = $d_Lcom_shocktrade_client_NavigationController$$anonfun$7;
 /** @constructor */
 function $c_Lcom_shocktrade_client_WebClientJsApp$$anonfun$com$shocktrade$client$WebClientJsApp$$initializeFacebookApp$1() {
   $c_sr_AbstractFunction0.call(this);
@@ -27898,13 +27658,6 @@ function $h_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype = $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype;
-$c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_Profile__V = (function(x$2, profile) {
-  var value = this.$$outer$2.com$shocktrade$client$contest$DashboardController$$$routeParams$f.contestId;
-  if ((value !== (void 0))) {
-    var contestId = $as_T(value);
-    this.$$outer$2.com$shocktrade$client$contest$DashboardController$$loadContest__T__V(contestId)
-  }
-});
 $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype.init___Lcom_shocktrade_client_contest_DashboardController = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
@@ -27914,7 +27667,14 @@ $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype.init
   return this
 });
 $c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype.apply__O__O__O = (function(v1, v2) {
-  this.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_Profile__V(v1, v2)
+  this.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_UserProfile__V(v1, v2)
+});
+$c_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12.prototype.apply__Lorg_scalajs_dom_raw_Event__Lcom_shocktrade_client_models_UserProfile__V = (function(x$2, profile) {
+  var value = this.$$outer$2.com$shocktrade$client$contest$DashboardController$$$routeParams$f.contestId;
+  if ((value !== (void 0))) {
+    var contestId = $as_T(value);
+    this.$$outer$2.com$shocktrade$client$contest$DashboardController$$loadContest__T__V(contestId)
+  }
 });
 var $d_Lcom_shocktrade_client_contest_DashboardController$$anonfun$12 = new $TypeData().initClass({
   Lcom_shocktrade_client_contest_DashboardController$$anonfun$12: 0
@@ -29648,9 +29408,9 @@ $c_Lcom_shocktrade_client_contest_GameSearchController$$anonfun$21$$anonfun$appl
 });
 $c_Lcom_shocktrade_client_contest_GameSearchController$$anonfun$21$$anonfun$apply$43$$anonfun$apply$44$$anonfun$apply$45$$anonfun$apply$46.prototype.apply__T__V = (function(userId) {
   this.$$outer$2.$$outer$2.contest$4$f.joining = true;
-  var x$23 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$contest$GameSearchController$$mySession$f.userProfile$1.name;
+  var jsx$1 = $m_Lcom_shocktrade_common_models_user_User$();
   var value = this.facebookID$1$2;
-  var form = new $c_Lcom_shocktrade_common_forms_PlayerInfoForm(new $c_Lcom_shocktrade_common_models_user_User(userId, value, x$23));
+  var form = new $c_Lcom_shocktrade_common_forms_PlayerInfoForm(jsx$1.apply__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_UndefOr__Lcom_shocktrade_common_models_user_User(userId, value, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$contest$GameSearchController$$mySession$f.userProfile$1.name));
   var $$scope = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$contest$GameSearchController$$$scope$f;
   var f = (function(arg$outer, form$1) {
     return (function() {
@@ -36780,214 +36540,6 @@ var $d_Lcom_shocktrade_client_explore_ExploreController$$anonfun$onSymbolSelecte
 });
 $c_Lcom_shocktrade_client_explore_ExploreController$$anonfun$onSymbolSelected$1.prototype.$classData = $d_Lcom_shocktrade_client_explore_ExploreController$$anonfun$onSymbolSelected$1;
 /** @constructor */
-function $c_Lcom_shocktrade_client_models_Profile() {
-  var jsx$1 = (arguments.length | 0);
-  var jsx$2 = 0;
-  var arg$rest = [];
-  while ((jsx$2 < jsx$1)) {
-    arg$rest.push(arguments[jsx$2]);
-    jsx$2 = ((jsx$2 + 1) | 0)
-  };
-  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-  var facebookID = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-  var name = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-  var country = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-  var level = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-  var rep = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-  var netWorth = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-  var totalXP = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-  var awards = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-  var favoriteSymbols = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-  var recentSymbols = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-  var filters = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-  var followers = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
-  var friends = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
-  var accomplishments = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
-  var acquaintances = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
-  var isAdmin = ((arg$rest[16] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$17__sjs_js_UndefOr() : arg$rest[16]);
-  var lastSymbol = ((arg$rest[17] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$18__sjs_js_UndefOr() : arg$rest[17]);
-  var lastLoginTime = ((arg$rest[18] === (void 0)) ? $m_Lcom_shocktrade_client_models_Profile$().$$lessinit$greater$default$19__sjs_js_UndefOr() : arg$rest[18]);
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "_id": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "facebookID": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "name": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "country": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "level": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "rep": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "netWorth": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "totalXP": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "awards": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "favoriteSymbols": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "recentSymbols": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "filters": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "followers": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "friends": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "accomplishments": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "acquaintances": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "isAdmin": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "lastSymbol": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "lastLoginTime": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  this._id = _id;
-  this.facebookID = facebookID;
-  this.name = name;
-  this.country = country;
-  this.level = level;
-  this.rep = rep;
-  this.netWorth = netWorth;
-  this.totalXP = totalXP;
-  this.awards = awards;
-  this.favoriteSymbols = favoriteSymbols;
-  this.recentSymbols = recentSymbols;
-  this.filters = filters;
-  this.followers = followers;
-  this.friends = friends;
-  this.accomplishments = accomplishments;
-  this.acquaintances = acquaintances;
-  this.isAdmin = isAdmin;
-  this.lastSymbol = lastSymbol;
-  this.lastLoginTime = lastLoginTime
-}
-/** @constructor */
-function $h_Lcom_shocktrade_client_models_Profile() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_models_Profile.prototype = $g.Object.prototype;
-$c_Lcom_shocktrade_client_models_Profile.prototype = new $h_Lcom_shocktrade_client_models_Profile();
-$c_Lcom_shocktrade_client_models_Profile.prototype.constructor = $c_Lcom_shocktrade_client_models_Profile;
-/** @constructor */
 function $c_Lcom_shocktrade_client_news_NewsController$$anonfun$1$$anonfun$apply$mcV$sp$2() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
@@ -38121,8 +37673,8 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$16.prototype.apply_
   if ((aPost === (void 0))) {
     var value$1 = (void 0)
   } else {
-    var profile = this.$$outer$2.mySession$1.userProfile$1;
-    var value = new $c_T2().init___O__O(aPost, profile);
+    var user = this.$$outer$2.mySession$1.userProfile$1;
+    var value = new $c_T2().init___O__O(aPost, user);
     var value$1 = value
   };
   var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$16$$anonfun$apply$24().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$16(this);
@@ -38941,7 +38493,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$4
     var postID = $as_T(x$12.$$und1__O());
     var user = x$12.$$und2__O();
     var value = this.$$outer$2.aComment$2$f;
-    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42__T__Lcom_shocktrade_client_models_Profile(this, postID, user);
+    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42__T__Lcom_shocktrade_client_models_UserProfile(this, postID, user);
     if ((value !== (void 0))) {
       f.apply__T__V($as_T(value))
     }
@@ -38982,7 +38534,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$4
   var comment = $m_Lcom_shocktrade_common_models_post_Comment$().apply__T__Lcom_shocktrade_common_models_user_UserLike__Lcom_shocktrade_common_models_post_Comment(text, submitter);
   $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.postService$1.createComment__T__Lcom_shocktrade_common_models_post_Comment__s_concurrent_ExecutionContext__Lorg_scalajs_angularjs_http_HttpResponse(this.postID$1$2, comment, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43$$anonfun$apply$44().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
-$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42__T__Lcom_shocktrade_client_models_Profile = (function($$outer, postID$1, user$3) {
+$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42$$anonfun$apply$43.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$25$$anonfun$apply$40$$anonfun$apply$42__T__Lcom_shocktrade_client_models_UserProfile = (function($$outer, postID$1, user$3) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -39456,7 +39008,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$5
     var commentID = $as_T(x$18.$$und1__O());
     var user = x$18.$$und2__O();
     var value = this.$$outer$2.$$outer$2.$$outer$2.aText$1$f;
-    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60__T__Lcom_shocktrade_client_models_Profile(this, commentID, user);
+    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60__T__Lcom_shocktrade_client_models_UserProfile(this, commentID, user);
     if ((value !== (void 0))) {
       f.apply__T__V($as_T(value))
     }
@@ -39506,7 +39058,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$5
   var reply = $m_Lcom_shocktrade_common_models_post_Reply$().apply__T__Lcom_shocktrade_common_models_user_UserLike__Lcom_shocktrade_common_models_post_Reply(text, submitter);
   $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.postService$1.createReply__T__T__Lcom_shocktrade_common_models_post_Reply__s_concurrent_ExecutionContext__Lorg_scalajs_angularjs_http_HttpResponse(this.$$outer$2.$$outer$2.postID$7$f, this.commentID$1$2, reply, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$62().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61__Lcom_shocktrade_common_models_post_Reply(this, reply), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
-$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60__T__Lcom_shocktrade_client_models_Profile = (function($$outer, commentID$1, user$4) {
+$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60$$anonfun$apply$61.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$32$$anonfun$apply$56$$anonfun$apply$57$$anonfun$apply$58$$anonfun$apply$60__T__Lcom_shocktrade_client_models_UserProfile = (function($$outer, commentID$1, user$4) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -39888,8 +39440,8 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37.prototype.apply_
   if ((value$1 === (void 0))) {
     var value$3 = (void 0)
   } else {
-    var profile = this.$$outer$2.mySession$1.userProfile$1;
-    var value$2 = new $c_T2().init___O__O(value$1, profile);
+    var user = this.$$outer$2.mySession$1.userProfile$1;
+    var value$2 = new $c_T2().init___O__O(value$1, user);
     var value$3 = value$2
   };
   var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37__sjs_js_Array(this, addedFileItems);
@@ -39948,7 +39500,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$7
         var value = arg1
       }
     };
-    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70$$anonfun$apply$71().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70__Lcom_shocktrade_common_models_post_Post__Lcom_shocktrade_common_models_user_User(this, newPost, user);
+    var f = new $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70$$anonfun$apply$71().init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70__Lcom_shocktrade_common_models_post_Post__Lcom_shocktrade_client_models_UserProfile(this, newPost, user);
     if ((value !== (void 0))) {
       f.apply__T__V($as_T(value))
     }
@@ -40038,7 +39590,7 @@ $c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$7
     }
   }
 });
-$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70$$anonfun$apply$71.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70__Lcom_shocktrade_common_models_post_Post__Lcom_shocktrade_common_models_user_User = (function($$outer, newPost$1, user$5) {
+$c_Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70$$anonfun$apply$71.prototype.init___Lcom_shocktrade_client_posts_PostingCapabilities$$anonfun$37$$anonfun$apply$70__Lcom_shocktrade_common_models_post_Post__Lcom_shocktrade_client_models_UserProfile = (function($$outer, newPost$1, user$5) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -42261,639 +41813,6 @@ var $d_Lcom_shocktrade_client_profile_UserFactory$$anonfun$getUsers$2 = new $Typ
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_profile_UserFactory$$anonfun$getUsers$2.prototype.$classData = $d_Lcom_shocktrade_client_profile_UserFactory$$anonfun$getUsers$2;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$12() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype.apply__sjs_js_UndefOr__V = (function(aFbUserId) {
-  if ((aFbUserId !== (void 0))) {
-    var fbUserId = $as_T(aFbUserId);
-    this.$$outer$2.com$shocktrade$client$social$ConnectController$$setUserInfo__T__V(fbUserId)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$12 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$12: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$12", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$12: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$12.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$12;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$13() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype.apply__sjs_js_UndefOr__V = (function(aFriends) {
-  var f = new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6().init___Lcom_shocktrade_client_social_ConnectController$$anonfun$13(this);
-  if ((aFriends !== (void 0))) {
-    f.apply__sjs_js_Array__V(aFriends)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$13 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$13: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$13", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$13: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$13;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_Array__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype.apply__sjs_js_Array__V = (function(fbFriends) {
-  var $$scope = this.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$$scope$f;
-  var f = (function(arg$outer, fbFriends$1) {
-    return (function() {
-      return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$connectService$f.identifyFacebookFriends__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(fbFriends$1))
-    })
-  })(this, fbFriends);
-  var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  var promise = $$scope.startLoading();
-  $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(promise$2, $$scope$2) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
-      if ($is_s_util_Success(x0$1)) {
-        return $$scope$2.stopLoading(promise$2)
-      } else if ($is_s_util_Failure(x0$1)) {
-        return $$scope$2.stopLoading(promise$2)
-      } else {
-        throw new $c_s_MatchError().init___O(x0$1)
-      }
-    })
-  })(promise, $$scope)), ec);
-  $as_s_concurrent_Future(f())
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype.init___Lcom_shocktrade_client_social_ConnectController$$anonfun$13 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$13$$anonfun$apply$6", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$13$$anonfun$apply$6;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype.apply__sjs_js_UndefOr__V = (function(aUserName) {
-  var f = new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8().init___Lcom_shocktrade_client_social_ConnectController$$anonfun$15(this);
-  if ((aUserName !== (void 0))) {
-    f.apply__T__V($as_T(aUserName))
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$15", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype.apply__O__O = (function(v1) {
-  this.apply__T__V($as_T(v1))
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype.apply__T__V = (function(userName) {
-  var this$2 = new $c_sci_StringOps().init___T(userName);
-  if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$2)) {
-    var $$scope = this.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$$scope$f;
-    var f = (function(arg$outer, userName$2) {
-      return (function() {
-        return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$connectService$f.getUserUpdates__T__I__Lorg_scalajs_angularjs_http_HttpResponse(userName$2, 50))
-      })
-    })(this, userName);
-    var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var promise = $$scope.startLoading();
-    $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(promise$2, $$scope$2) {
-      return (function(x0$1$2) {
-        var x0$1 = $as_s_util_Try(x0$1$2);
-        if ($is_s_util_Success(x0$1)) {
-          return $$scope$2.stopLoading(promise$2)
-        } else if ($is_s_util_Failure(x0$1)) {
-          return $$scope$2.stopLoading(promise$2)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$1)
-        }
-      })
-    })(promise, $$scope)), ec);
-    $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10().init___Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype.init___Lcom_shocktrade_client_social_ConnectController$$anonfun$15 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$15$$anonfun$apply$8", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype.apply__O__O = (function(v1) {
-  this.apply__s_util_Try__V($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype.init___Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype.apply__s_util_Try__V = (function(x0$4) {
-  if ($is_s_util_Success(x0$4)) {
-    var x2 = $as_s_util_Success(x0$4);
-    var data = x2.value$2;
-    this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$myUpdates$1 = data;
-    this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$myUpdate$1 = null;
-    var i = 0;
-    var len = $uI(data.length);
-    while ((i < len)) {
-      var index = i;
-      var arg1 = data[index];
-      arg1.selected = false;
-      i = ((1 + i) | 0)
-    }
-  } else if ($is_s_util_Failure(x0$4)) {
-    var x3 = $as_s_util_Failure(x0$4);
-    var e = x3.exception$2;
-    var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to load Connect: ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([e.getMessage__T()]));
-    jsx$1.error(s);
-    var toaster = this.$$outer$2.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$toaster$f;
-    var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-    toaster.pop(s$1, "Failed to load Connect", null)
-  } else {
-    throw new $c_s_MatchError().init___O(x0$4)
-  }
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$15$$anonfun$apply$8$$anonfun$apply$10;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$16() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype.apply__sjs_js_UndefOr__V = (function(checked) {
-  var array = this.$$outer$2.com$shocktrade$client$social$ConnectController$$myUpdates$1;
-  var i = 0;
-  var len = $uI(array.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = array[index];
-    arg1.selected = checked;
-    i = ((1 + i) | 0)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$16 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$16: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$16", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$16: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$16.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$16;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$3() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype.apply__sjs_js_UndefOr__V = (function(aFriend) {
-  this.$$outer$2.com$shocktrade$client$social$ConnectController$$contact$1 = aFriend;
-  var jsx$2 = this.$$outer$2.com$shocktrade$client$social$ConnectController$$$scope$f.getUserInfo;
-  if ((aFriend === (void 0))) {
-    var jsx$1 = (void 0)
-  } else {
-    var value = $as_T(aFriend.id);
-    var jsx$1 = value
-  };
-  jsx$2(jsx$1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$3 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$3: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$3", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$3: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$3.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$3;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$6() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype.apply__O__O = (function(v1) {
-  this.apply__sjs_js_UndefOr__V(v1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype.apply__sjs_js_UndefOr__V = (function(aUserName) {
-  var f = new $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2().init___Lcom_shocktrade_client_social_ConnectController$$anonfun$6(this);
-  if ((aUserName !== (void 0))) {
-    f.apply__T__V($as_T(aUserName))
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$6 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$6: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$6", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$6: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$6;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype.apply__O__O = (function(v1) {
-  this.apply__T__V($as_T(v1))
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype.apply__T__V = (function(userName) {
-  var array = this.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$myUpdates$1;
-  var array$1 = [];
-  var i = 0;
-  var len = $uI(array.length);
-  while ((i < len)) {
-    var index = i;
-    var arg1 = array[index];
-    var value = arg1.selected;
-    if ((value === (void 0))) {
-      var valueA = (void 0)
-    } else {
-      var opt = $m_s_Option$().apply__O__s_Option(value);
-      if (opt.isEmpty__Z()) {
-        var valueA = (void 0)
-      } else {
-        var arg1$1 = opt.get__O();
-        var valueA = arg1$1
-      }
-    };
-    if ((((valueA !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(valueA, true)) !== false)) {
-      array$1.push(arg1)
-    };
-    i = ((1 + i) | 0)
-  };
-  var array$2 = [];
-  var i$1 = 0;
-  var len$1 = $uI(array$1.length);
-  while ((i$1 < len$1)) {
-    var index$1 = i$1;
-    var arg1$2 = array$1[index$1];
-    var value$1 = arg1$2._id;
-    var xo = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
-    var this$23 = xo.toList__sci_List();
-    if ((this$23 !== null)) {
-      var xs = this$23;
-      _loop: while (true) {
-        var this$24 = xs;
-        if ($s_sc_TraversableOnce$class__nonEmpty__sc_TraversableOnce__Z(this$24)) {
-          var elem = xs.head__O();
-          array$2.push(elem);
-          xs = $as_sc_LinearSeq(xs.tail__O());
-          continue _loop
-        };
-        break
-      }
-    } else {
-      var these = this$23;
-      while ((!these.isEmpty__Z())) {
-        var arg1$3 = these.head__O();
-        array$2.push(arg1$3);
-        var this$25 = these;
-        these = this$25.tail__sci_List()
-      }
-    };
-    i$1 = ((1 + i$1) | 0)
-  };
-  var jsx$1 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["messageIDs = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.JSON.stringify(array$2))]));
-  jsx$1.log(s);
-  if (($uI(array$2.length) !== 0)) {
-    var $$scope = this.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$$scope$f;
-    var f = (function(arg$outer, messageIDs$1) {
-      return (function() {
-        return $m_Lorg_scalajs_angularjs_http_HttpResponse$().promise2future__Lorg_scalajs_angularjs_http_HttpResponse__s_concurrent_Future(arg$outer.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$connectService$f.deleteMessages__sjs_js_Array__Lorg_scalajs_angularjs_http_HttpResponse(messageIDs$1))
-      })
-    })(this, array$2);
-    var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-    var promise = $$scope.startLoading();
-    $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(promise$2, $$scope$2) {
-      return (function(x0$1$2) {
-        var x0$1 = $as_s_util_Try(x0$1$2);
-        if ($is_s_util_Success(x0$1)) {
-          return $$scope$2.stopLoading(promise$2)
-        } else if ($is_s_util_Failure(x0$1)) {
-          return $$scope$2.stopLoading(promise$2)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$1)
-        }
-      })
-    })(promise, $$scope)), ec);
-    $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer$1, userName$1) {
-      return (function(x0$2$2) {
-        var x0$2 = $as_s_util_Try(x0$2$2);
-        if ($is_s_util_Success(x0$2)) {
-          $asUnit((0, arg$outer$1.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$$scope$f.loadMyUpdates)(userName$1))
-        } else if ($is_s_util_Failure(x0$2)) {
-          var toaster = arg$outer$1.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$toaster$f;
-          var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-          toaster.pop(s$1, "Failed to delete message", null)
-        } else {
-          throw new $c_s_MatchError().init___O(x0$2)
-        }
-      })
-    })(this, userName)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-  } else {
-    var toaster$1 = this.$$outer$2.$$outer$2.com$shocktrade$client$social$ConnectController$$toaster$f;
-    var s$2 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-    toaster$1.pop(s$2, "No message(s) selected", null)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype.init___Lcom_shocktrade_client_social_ConnectController$$anonfun$6 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$6$$anonfun$apply$2", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$6$$anonfun$apply$2;
-/** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype.apply__O__O = (function(v1) {
-  this.apply__s_util_Try__V($as_s_util_Try(v1))
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype.apply__s_util_Try__V = (function(x0$3) {
-  if ($is_s_util_Success(x0$3)) {
-    var x2 = $as_s_util_Success(x0$3);
-    var profile = x2.value$2;
-    var value = this.$$outer$2.com$shocktrade$client$social$ConnectController$$contact$1;
-    if ((value !== (void 0))) {
-      value.profile = profile
-    }
-  } else if ($is_s_util_Failure(x0$3)) {
-    var jsx$3 = $m_Lorg_scalajs_dom_package$().console__Lorg_scalajs_dom_raw_Console();
-    var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to retrieve profile for contact ", ""]));
-    var value$1 = this.$$outer$2.com$shocktrade$client$social$ConnectController$$contact$1;
-    if ((value$1 === (void 0))) {
-      var jsx$1 = (void 0)
-    } else {
-      var value$2 = $as_T(value$1.name);
-      var jsx$1 = value$2
-    };
-    var s = jsx$2.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$1]));
-    jsx$3.log(s);
-    var toaster = this.$$outer$2.com$shocktrade$client$social$ConnectController$$toaster$f;
-    var jsx$5 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Failed to retrieve the user profile for contact ", ""]));
-    var value$3 = this.$$outer$2.com$shocktrade$client$social$ConnectController$$contact$1;
-    if ((value$3 === (void 0))) {
-      var jsx$4 = (void 0)
-    } else {
-      var value$4 = $as_T(value$3.name);
-      var jsx$4 = value$4
-    };
-    var s$1 = jsx$5.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([jsx$4]));
-    var s$2 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-    toaster.pop(s$2, s$1, null)
-  } else {
-    throw new $c_s_MatchError().init___O(x0$3)
-  }
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$com$shocktrade$client$social$ConnectController$$setUserInfo$2;
 /** @constructor */
 function $c_Lorg_scalajs_angularjs_facebook_FacebookService$$anonfun$getLoginStatus$1() {
   $c_sr_AbstractFunction1.call(this);
@@ -45208,9 +44127,6 @@ function $h_Lcom_shocktrade_client_MySessionService() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_MySessionService.prototype = $c_Lcom_shocktrade_client_MySessionService.prototype;
-$c_Lcom_shocktrade_client_MySessionService.prototype.getNetWorth__sjs_js_UndefOr = (function() {
-  return this.userProfile$1.netWorth
-});
 $c_Lcom_shocktrade_client_MySessionService.prototype.getMyAwards__sjs_js_Array = (function() {
   var value = this.userProfile$1.awards;
   return ((value === (void 0)) ? [] : value)
@@ -45278,6 +44194,33 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.cashAccount$und$qmark__s_Op
     var value = arg1.cashAccount;
     return ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value))
   }
+});
+$c_Lcom_shocktrade_client_MySessionService.prototype.init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_QuoteCache = (function($$rootScope, $$timeout, toaster, facebook, chatService, contestService, portfolioService, profileService, quoteCache) {
+  this.$$rootScope$1 = $$rootScope;
+  this.$$timeout$1 = $$timeout;
+  this.toaster$1 = toaster;
+  this.facebook$1 = facebook;
+  this.chatService$1 = chatService;
+  this.contestService$1 = contestService;
+  this.portfolioService$1 = portfolioService;
+  this.profileService$1 = profileService;
+  this.quoteCache$1 = quoteCache;
+  this.notifications$1 = [];
+  this.facebookID$1 = (void 0);
+  this.fbFriends$und$qmark$1 = [];
+  this.fbProfile$und$qmark$1 = (void 0);
+  this.contest$und$qmark$1 = $m_s_None$();
+  this.portfolio$und$qmark$1 = $m_s_None$();
+  this.participant$und$qmark$1 = $m_s_None$();
+  this.userProfile$1 = this.createSpectatorProfile__p1__Lcom_shocktrade_client_models_UserProfile();
+  var this$4 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
+  var callback = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$5().init___Lcom_shocktrade_client_MySessionService(this);
+  this$4.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$rootScope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileUpdated$1, (function(f) {
+    return (function(arg1, arg2) {
+      return f.apply__O__O__O(arg1, arg2)
+    })
+  })(callback));
+  return this
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.getFundsAvailable__D = (function() {
   var opt = this.cashAccount$und$qmark__s_Option();
@@ -45427,33 +44370,6 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.isRecentSymbol__T__Z = (fun
     return false
   }
 });
-$c_Lcom_shocktrade_client_MySessionService.prototype.init___Lorg_scalajs_angularjs_Scope__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lorg_scalajs_angularjs_facebook_FacebookService__Lcom_shocktrade_client_contest_ChatService__Lcom_shocktrade_client_contest_ContestService__Lcom_shocktrade_client_contest_PortfolioService__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_QuoteCache = (function($$rootScope, $$timeout, toaster, facebook, chatService, contestService, portfolioService, profileService, quoteCache) {
-  this.$$rootScope$1 = $$rootScope;
-  this.$$timeout$1 = $$timeout;
-  this.toaster$1 = toaster;
-  this.facebook$1 = facebook;
-  this.chatService$1 = chatService;
-  this.contestService$1 = contestService;
-  this.portfolioService$1 = portfolioService;
-  this.profileService$1 = profileService;
-  this.quoteCache$1 = quoteCache;
-  this.notifications$1 = [];
-  this.facebookID$1 = (void 0);
-  this.fbFriends$und$qmark$1 = [];
-  this.fbProfile$und$qmark$1 = (void 0);
-  this.contest$und$qmark$1 = $m_s_None$();
-  this.portfolio$und$qmark$1 = $m_s_None$();
-  this.participant$und$qmark$1 = $m_s_None$();
-  this.userProfile$1 = this.createSpectatorProfile__p1__Lcom_shocktrade_client_models_Profile();
-  var this$4 = $m_Lcom_shocktrade_client_ScopeEvents$ScopeEnrichment$();
-  var callback = new $c_Lcom_shocktrade_client_MySessionService$$anonfun$5().init___Lcom_shocktrade_client_MySessionService(this);
-  this$4.com$shocktrade$client$ScopeEvents$ScopeEnrichment$$reactTo$extension__Lorg_scalajs_angularjs_Scope__T__sjs_js_Function__sjs_js_Function($$rootScope, $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileUpdated$1, (function(f) {
-    return (function(arg1, arg2) {
-      return f.apply__O__O__O(arg1, arg2)
-    })
-  })(callback));
-  return this
-});
 $c_Lcom_shocktrade_client_MySessionService.prototype.getMessages__sjs_js_Array = (function() {
   var opt = this.contest$und$qmark$1;
   if (opt.isEmpty__Z()) {
@@ -45499,6 +44415,16 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.setMessages__sjs_js_Array__
     var arg1 = this$1.get__O();
     arg1.messages = messages
   }
+});
+$c_Lcom_shocktrade_client_MySessionService.prototype.createSpectatorProfile__p1__Lcom_shocktrade_client_models_UserProfile = (function() {
+  var array = this.notifications$1;
+  var count = $uI(array.length);
+  array.splice(0, count);
+  this.facebookID$1 = (void 0);
+  this.fbFriends$und$qmark$1 = [];
+  this.fbProfile$und$qmark$1 = (void 0);
+  this.resetContest__V();
+  return new $c_Lcom_shocktrade_client_models_UserProfile((void 0), (void 0), "Spectator", "us", (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), "AAPL")
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.loadContestByID__T__s_concurrent_ExecutionContext__s_concurrent_Future = (function(contestId, ec) {
   var jsx$3 = $m_s_concurrent_Future$();
@@ -45705,6 +44631,24 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.updateRankings__Lcom_shockt
   };
   return contest
 });
+$c_Lcom_shocktrade_client_MySessionService.prototype.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V = (function(profile, profileFB) {
+  this.userProfile$1 = profile;
+  this.fbProfile$und$qmark$1 = profileFB;
+  var value = this.fbProfile$und$qmark$1;
+  if ((value === (void 0))) {
+    var jsx$1 = (void 0)
+  } else {
+    var value$1 = $as_T(value.id);
+    var jsx$1 = value$1
+  };
+  this.facebookID$1 = jsx$1;
+  var $$scope = this.$$rootScope$1;
+  var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
+  var jsx$2 = $g.console;
+  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
+  jsx$2.info(s);
+  $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
+});
 $c_Lcom_shocktrade_client_MySessionService.prototype.hasNotifications__Z = (function() {
   var array = this.notifications$1;
   return ($uI(array.length) !== 0)
@@ -45718,7 +44662,7 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.logout__V = (function() {
   this.facebookID$1 = (void 0);
   this.fbFriends$und$qmark$1 = [];
   this.fbProfile$und$qmark$1 = (void 0);
-  this.userProfile$1 = this.createSpectatorProfile__p1__Lcom_shocktrade_client_models_Profile();
+  this.userProfile$1 = this.createSpectatorProfile__p1__Lcom_shocktrade_client_models_UserProfile();
   this.resetContest__V()
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.getRecentSymbols__sjs_js_UndefOr = (function() {
@@ -45752,24 +44696,6 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.initFacebook__T__Z__V = (fu
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var outcome = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(task, f, executor);
   outcome.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_Lcom_shocktrade_client_MySessionService$$anonfun$initFacebook$1().init___Lcom_shocktrade_client_MySessionService(this), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_client_MySessionService.prototype.setUserProfile__Lcom_shocktrade_client_models_Profile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V = (function(profile, profileFB) {
-  this.userProfile$1 = profile;
-  this.fbProfile$und$qmark$1 = profileFB;
-  var value = this.fbProfile$und$qmark$1;
-  if ((value === (void 0))) {
-    var jsx$1 = (void 0)
-  } else {
-    var value$1 = $as_T(value.id);
-    var jsx$1 = value$1
-  };
-  this.facebookID$1 = jsx$1;
-  var $$scope = this.$$rootScope$1;
-  var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
-  var jsx$2 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
-  jsx$2.info(s);
-  $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.hashCode__I = (function() {
   var this$2 = $m_s_util_hashing_MurmurHash3$();
@@ -45875,16 +44801,6 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.productIterator__sc_Iterato
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.getUserName__sjs_js_UndefOr = (function() {
   return this.userProfile$1.name
-});
-$c_Lcom_shocktrade_client_MySessionService.prototype.createSpectatorProfile__p1__Lcom_shocktrade_client_models_Profile = (function() {
-  var array = this.notifications$1;
-  var count = $uI(array.length);
-  array.splice(0, count);
-  this.facebookID$1 = (void 0);
-  this.fbFriends$und$qmark$1 = [];
-  this.fbProfile$und$qmark$1 = (void 0);
-  this.resetContest__V();
-  return new $c_Lcom_shocktrade_client_models_Profile((void 0), (void 0), "Spectator", "us", (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), "AAPL")
 });
 $c_Lcom_shocktrade_client_MySessionService.prototype.getPerformance__sjs_js_Array = (function() {
   var opt = this.portfolio$und$qmark$1;
@@ -46456,6 +45372,194 @@ var $d_Lcom_shocktrade_client_directives_StockQuoteDirective = new $TypeData().i
   Lorg_scalajs_angularjs_Directive$TemplateSupport: 1
 });
 $c_Lcom_shocktrade_client_directives_StockQuoteDirective.prototype.$classData = $d_Lcom_shocktrade_client_directives_StockQuoteDirective;
+/** @constructor */
+function $c_Lcom_shocktrade_client_models_UserProfile() {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 0;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var facebookID = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var name = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var country = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  var level = ((arg$rest[4] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
+  var rep = ((arg$rest[5] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
+  var netWorth = ((arg$rest[6] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
+  var wallet = ((arg$rest[7] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
+  var totalXP = ((arg$rest[8] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
+  var awards = ((arg$rest[9] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
+  var favoriteSymbols = ((arg$rest[10] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
+  var recentSymbols = ((arg$rest[11] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+  var followers = ((arg$rest[12] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+  var friends = ((arg$rest[13] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$14__sjs_js_UndefOr() : arg$rest[13]);
+  var isAdmin = ((arg$rest[14] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$15__sjs_js_UndefOr() : arg$rest[14]);
+  var lastSymbol = ((arg$rest[15] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$16__sjs_js_UndefOr() : arg$rest[15]);
+  var lastLoginTime = ((arg$rest[16] === (void 0)) ? $m_Lcom_shocktrade_client_models_UserProfile$().$$lessinit$greater$default$17__sjs_js_UndefOr() : arg$rest[16]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "_id": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "facebookID": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "name": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "country": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "level": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "rep": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "netWorth": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "wallet": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "totalXP": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "awards": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "favoriteSymbols": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "recentSymbols": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "followers": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "friends": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "isAdmin": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "lastSymbol": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "lastLoginTime": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this._id = _id;
+  this.facebookID = facebookID;
+  this.name = name;
+  this.country = country;
+  this.level = level;
+  this.rep = rep;
+  this.netWorth = netWorth;
+  this.wallet = wallet;
+  this.totalXP = totalXP;
+  this.awards = awards;
+  this.favoriteSymbols = favoriteSymbols;
+  this.recentSymbols = recentSymbols;
+  this.followers = followers;
+  this.friends = friends;
+  this.isAdmin = isAdmin;
+  this.lastSymbol = lastSymbol;
+  this.lastLoginTime = lastLoginTime
+}
+/** @constructor */
+function $h_Lcom_shocktrade_client_models_UserProfile() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_models_UserProfile.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_client_models_UserProfile.prototype = new $h_Lcom_shocktrade_client_models_UserProfile();
+$c_Lcom_shocktrade_client_models_UserProfile.prototype.constructor = $c_Lcom_shocktrade_client_models_UserProfile;
 /** @constructor */
 function $c_Lcom_shocktrade_client_profile_UserFactory$$anonfun$getUserByID$1$$anonfun$apply$1() {
   $c_sr_AbstractPartialFunction.call(this);
@@ -48011,7 +47115,6 @@ function $h_Lcom_shocktrade_client_MainController$$anonfun$12() {
 }
 $h_Lcom_shocktrade_client_MainController$$anonfun$12.prototype = $c_Lcom_shocktrade_client_MainController$$anonfun$12.prototype;
 $c_Lcom_shocktrade_client_MainController$$anonfun$12.prototype.apply$mcV$sp__V = (function() {
-  this.$$outer$3.com$shocktrade$client$MainController$$nonMember$1 = false;
   var task = this.$$outer$3.com$shocktrade$client$MainController$$facebook$f.logout__s_concurrent_Promise();
   task.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(x0$7$2) {
@@ -48079,7 +47182,7 @@ $c_Lcom_shocktrade_client_MainController$$anonfun$13.prototype.apply$mcV$sp__V =
           if ((p3 !== null)) {
             var profile = p3.$$und1__O();
             var fbProfile = p3.$$und2__O();
-            arg$outer.$$outer$3.com$shocktrade$client$MainController$$mySession$f.setUserProfile__Lcom_shocktrade_client_models_Profile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile, fbProfile);
+            arg$outer.$$outer$3.com$shocktrade$client$MainController$$mySession$f.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lorg_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile, fbProfile);
             break matchEnd6
           }
         };
@@ -48222,6 +47325,123 @@ var $d_Lcom_shocktrade_client_MainController$$anonfun$35$$anonfun$apply$4 = new 
   Ljava_io_Serializable: 1
 });
 $c_Lcom_shocktrade_client_MainController$$anonfun$35$$anonfun$apply$4.prototype.$classData = $d_Lcom_shocktrade_client_MainController$$anonfun$35$$anonfun$apply$4;
+/** @constructor */
+function $c_Lcom_shocktrade_client_MainController$$anonfun$4() {
+  $c_sr_AbstractFunction0$mcI$sp.call(this);
+  this.$$outer$3 = null
+}
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype = new $h_sr_AbstractFunction0$mcI$sp();
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype.constructor = $c_Lcom_shocktrade_client_MainController$$anonfun$4;
+/** @constructor */
+function $h_Lcom_shocktrade_client_MainController$$anonfun$4() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_MainController$$anonfun$4.prototype = $c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype;
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype.apply__O = (function() {
+  return this.apply$mcI$sp__I()
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype.init___Lcom_shocktrade_client_MainController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$3 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype.apply$mcI$sp__I = (function() {
+  var array = this.$$outer$3.com$shocktrade$client$MainController$$$scope$f.appTabs;
+  var len = $uI(array.length);
+  var i = 0;
+  while (true) {
+    if ((i < len)) {
+      var index = i;
+      var arg1 = array[index];
+      var thiz = $as_T(this.$$outer$3.com$shocktrade$client$MainController$$$location$f.path());
+      var s = $as_T(arg1.url);
+      var jsx$1 = (!($uI(thiz.indexOf(s)) !== (-1)))
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      i = ((1 + i) | 0)
+    } else {
+      break
+    }
+  };
+  var n = i;
+  return ((n >= $uI(array.length)) ? (-1) : n)
+});
+var $d_Lcom_shocktrade_client_MainController$$anonfun$4 = new $TypeData().initClass({
+  Lcom_shocktrade_client_MainController$$anonfun$4: 0
+}, false, "com.shocktrade.client.MainController$$anonfun$4", {
+  Lcom_shocktrade_client_MainController$$anonfun$4: 1,
+  sr_AbstractFunction0$mcI$sp: 1,
+  sr_AbstractFunction0: 1,
+  O: 1,
+  F0: 1,
+  s_Function0$mcI$sp: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_MainController$$anonfun$4.prototype.$classData = $d_Lcom_shocktrade_client_MainController$$anonfun$4;
+/** @constructor */
+function $c_Lcom_shocktrade_client_NavigationController$$anonfun$1() {
+  $c_sr_AbstractFunction0$mcD$sp.call(this);
+  this.$$outer$3 = null
+}
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype = new $h_sr_AbstractFunction0$mcD$sp();
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype.constructor = $c_Lcom_shocktrade_client_NavigationController$$anonfun$1;
+/** @constructor */
+function $h_Lcom_shocktrade_client_NavigationController$$anonfun$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype = $c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype;
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype.apply$mcD$sp__D = (function() {
+  var value = this.$$outer$3.com$shocktrade$client$NavigationController$$mySession$f.userProfile$1.netWorth;
+  if ((value === (void 0))) {
+    var value$2 = (void 0)
+  } else {
+    var nw = $uD(value);
+    var value$1 = ((100 * ((-250000.0) + nw)) / 250000.0);
+    var value$2 = value$1
+  };
+  if ((value$2 === (void 0))) {
+    var value$3 = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(value$2);
+    if (opt.isEmpty__Z()) {
+      var value$3 = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var value$3 = arg1
+    }
+  };
+  return $uD(((value$3 === (void 0)) ? 0.0 : value$3))
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype.init___Lcom_shocktrade_client_NavigationController = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$3 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype.apply__O = (function() {
+  return this.apply$mcD$sp__D()
+});
+var $d_Lcom_shocktrade_client_NavigationController$$anonfun$1 = new $TypeData().initClass({
+  Lcom_shocktrade_client_NavigationController$$anonfun$1: 0
+}, false, "com.shocktrade.client.NavigationController$$anonfun$1", {
+  Lcom_shocktrade_client_NavigationController$$anonfun$1: 1,
+  sr_AbstractFunction0$mcD$sp: 1,
+  sr_AbstractFunction0: 1,
+  O: 1,
+  F0: 1,
+  s_Function0$mcD$sp: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_client_NavigationController$$anonfun$1.prototype.$classData = $d_Lcom_shocktrade_client_NavigationController$$anonfun$1;
 /** @constructor */
 function $c_Lcom_shocktrade_client_contest_CashAccountController$$anonfun$1() {
   $c_sr_AbstractFunction0$mcD$sp.call(this);
@@ -50931,61 +50151,6 @@ var $d_Lcom_shocktrade_client_profile_HomeController$$anonfun$2 = new $TypeData(
 });
 $c_Lcom_shocktrade_client_profile_HomeController$$anonfun$2.prototype.$classData = $d_Lcom_shocktrade_client_profile_HomeController$$anonfun$2;
 /** @constructor */
-function $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2() {
-  $c_sr_AbstractFunction0$mcV$sp.call(this);
-  this.$$outer$3 = null
-}
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype = new $h_sr_AbstractFunction0$mcV$sp();
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype.constructor = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2;
-/** @constructor */
-function $h_Lcom_shocktrade_client_social_ConnectController$$anonfun$2() {
-  /*<skip>*/
-}
-$h_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype = $c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype;
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype.apply$mcV$sp__V = (function() {
-  this.$$outer$3.com$shocktrade$client$social$ConnectController$$messageDialog$f.popup__s_concurrent_Future().onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
-      if ($is_s_util_Success(x0$1)) {
-        $asUnit((0, arg$outer.$$outer$3.com$shocktrade$client$social$ConnectController$$$scope$f.loadMyUpdates)(arg$outer.$$outer$3.com$shocktrade$client$social$ConnectController$$mySession$f.getUserName__sjs_js_UndefOr()))
-      } else if ($is_s_util_Failure(x0$1)) {
-        var x3 = $as_s_util_Failure(x0$1);
-        var e = x3.exception$2;
-        var toaster = arg$outer.$$outer$3.com$shocktrade$client$social$ConnectController$$toaster$f;
-        var s = e.getMessage__T();
-        var s$1 = $m_Lorg_scalajs_angularjs_toaster_Toaster$().ERROR$1;
-        toaster.pop(s$1, s, null)
-      } else {
-        throw new $c_s_MatchError().init___O(x0$1)
-      }
-    })
-  })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype.init___Lcom_shocktrade_client_social_ConnectController = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$3 = $$outer
-  };
-  return this
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype.apply__O = (function() {
-  this.apply$mcV$sp__V()
-});
-var $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$2 = new $TypeData().initClass({
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$2: 0
-}, false, "com.shocktrade.client.social.ConnectController$$anonfun$2", {
-  Lcom_shocktrade_client_social_ConnectController$$anonfun$2: 1,
-  sr_AbstractFunction0$mcV$sp: 1,
-  sr_AbstractFunction0: 1,
-  O: 1,
-  F0: 1,
-  s_Function0$mcV$sp: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_shocktrade_client_social_ConnectController$$anonfun$2.prototype.$classData = $d_Lcom_shocktrade_client_social_ConnectController$$anonfun$2;
-/** @constructor */
 function $c_jl_JSConsoleBasedPrintStream() {
   $c_Ljava_io_PrintStream.call(this);
   this.isErr$4 = null;
@@ -53095,109 +52260,7 @@ $c_Lcom_shocktrade_client_discover_DiscoverController.prototype.productPrefix__T
 $c_Lcom_shocktrade_client_discover_DiscoverController.prototype.productArity__I = (function() {
   return 12
 });
-$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.equals__O__Z = (function(x$1) {
-  if ((this === x$1)) {
-    return true
-  } else if ($is_Lcom_shocktrade_client_discover_DiscoverController(x$1)) {
-    var DiscoverController$1 = $as_Lcom_shocktrade_client_discover_DiscoverController(x$1);
-    if ((((((($m_sr_BoxesRunTime$().equals__O__O__Z(this.$$scope$2, DiscoverController$1.$$scope$2) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$cookies$2, DiscoverController$1.$$cookies$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$location$2, DiscoverController$1.$$location$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$q$2, DiscoverController$1.$$q$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$routeParams$2, DiscoverController$1.$$routeParams$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$timeout$2, DiscoverController$1.$$timeout$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.toaster$2, DiscoverController$1.toaster$2))) {
-      var x = this.marketStatus$2;
-      var x$2 = DiscoverController$1.marketStatus$2;
-      var jsx$4 = (x === x$2)
-    } else {
-      var jsx$4 = false
-    };
-    if (jsx$4) {
-      var x$3 = this.mySession$2;
-      var x$4 = DiscoverController$1.mySession$2;
-      var jsx$3 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
-    } else {
-      var jsx$3 = false
-    };
-    if (jsx$3) {
-      var x$5 = this.newOrderDialog$2;
-      var x$6 = DiscoverController$1.newOrderDialog$2;
-      var jsx$2 = (x$5 === x$6)
-    } else {
-      var jsx$2 = false
-    };
-    if (jsx$2) {
-      var x$7 = this.profileService$2;
-      var x$8 = DiscoverController$1.profileService$2;
-      var jsx$1 = (x$7 === x$8)
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var x$9 = this.quoteService$2;
-      var x$10 = DiscoverController$1.quoteService$2;
-      return (x$9 === x$10)
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-});
-$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.productElement__I__O = (function(x$1) {
-  switch (x$1) {
-    case 0: {
-      return this.$$scope$2;
-      break
-    }
-    case 1: {
-      return this.$$cookies$2;
-      break
-    }
-    case 2: {
-      return this.$$location$2;
-      break
-    }
-    case 3: {
-      return this.$$q$2;
-      break
-    }
-    case 4: {
-      return this.$$routeParams$2;
-      break
-    }
-    case 5: {
-      return this.$$timeout$2;
-      break
-    }
-    case 6: {
-      return this.toaster$2;
-      break
-    }
-    case 7: {
-      return this.marketStatus$2;
-      break
-    }
-    case 8: {
-      return this.mySession$2;
-      break
-    }
-    case 9: {
-      return this.newOrderDialog$2;
-      break
-    }
-    case 10: {
-      return this.profileService$2;
-      break
-    }
-    case 11: {
-      return this.quoteService$2;
-      break
-    }
-    default: {
-      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
-    }
-  }
-});
-$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.toString__T = (function() {
-  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
-});
-$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_ProfileService__Lcom_shocktrade_client_discover_QuoteService = (function($$scope, $$cookies, $$location, $$q, $$routeParams, $$timeout, toaster, marketStatus, mySession, newOrderDialog, profileService, quoteService) {
+$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.init___Lcom_shocktrade_client_discover_DiscoverControllerScope__Lorg_scalajs_angularjs_cookies_Cookies__Lorg_scalajs_angularjs_Location__Lorg_scalajs_angularjs_Q__Lcom_shocktrade_client_discover_DiscoverController$DiscoverRouteParams__Lorg_scalajs_angularjs_Timeout__Lorg_scalajs_angularjs_toaster_Toaster__Lcom_shocktrade_client_discover_MarketStatusService__Lcom_shocktrade_client_MySessionService__Lcom_shocktrade_client_dialogs_NewOrderDialog__Lcom_shocktrade_client_profile_UserProfileService__Lcom_shocktrade_client_discover_QuoteService = (function($$scope, $$cookies, $$location, $$q, $$routeParams, $$timeout, toaster, marketStatus, mySession, newOrderDialog, profileService, quoteService) {
   this.$$scope$2 = $$scope;
   this.$$cookies$2 = $$cookies;
   this.$$location$2 = $$location;
@@ -53317,6 +52380,108 @@ $c_Lcom_shocktrade_client_discover_DiscoverController.prototype.init___Lcom_shoc
     })
   })(new $c_Lcom_shocktrade_client_discover_DiscoverController$$anonfun$18().init___Lcom_shocktrade_client_discover_DiscoverController(this)));
   return this
+});
+$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_Lcom_shocktrade_client_discover_DiscoverController(x$1)) {
+    var DiscoverController$1 = $as_Lcom_shocktrade_client_discover_DiscoverController(x$1);
+    if ((((((($m_sr_BoxesRunTime$().equals__O__O__Z(this.$$scope$2, DiscoverController$1.$$scope$2) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$cookies$2, DiscoverController$1.$$cookies$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$location$2, DiscoverController$1.$$location$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$q$2, DiscoverController$1.$$q$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$routeParams$2, DiscoverController$1.$$routeParams$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.$$timeout$2, DiscoverController$1.$$timeout$2)) && $m_sr_BoxesRunTime$().equals__O__O__Z(this.toaster$2, DiscoverController$1.toaster$2))) {
+      var x = this.marketStatus$2;
+      var x$2 = DiscoverController$1.marketStatus$2;
+      var jsx$4 = (x === x$2)
+    } else {
+      var jsx$4 = false
+    };
+    if (jsx$4) {
+      var x$3 = this.mySession$2;
+      var x$4 = DiscoverController$1.mySession$2;
+      var jsx$3 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
+    } else {
+      var jsx$3 = false
+    };
+    if (jsx$3) {
+      var x$5 = this.newOrderDialog$2;
+      var x$6 = DiscoverController$1.newOrderDialog$2;
+      var jsx$2 = (x$5 === x$6)
+    } else {
+      var jsx$2 = false
+    };
+    if (jsx$2) {
+      var x$7 = this.profileService$2;
+      var x$8 = DiscoverController$1.profileService$2;
+      var jsx$1 = (x$7 === x$8)
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      var x$9 = this.quoteService$2;
+      var x$10 = DiscoverController$1.quoteService$2;
+      return (x$9 === x$10)
+    } else {
+      return false
+    }
+  } else {
+    return false
+  }
+});
+$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.$$scope$2;
+      break
+    }
+    case 1: {
+      return this.$$cookies$2;
+      break
+    }
+    case 2: {
+      return this.$$location$2;
+      break
+    }
+    case 3: {
+      return this.$$q$2;
+      break
+    }
+    case 4: {
+      return this.$$routeParams$2;
+      break
+    }
+    case 5: {
+      return this.$$timeout$2;
+      break
+    }
+    case 6: {
+      return this.toaster$2;
+      break
+    }
+    case 7: {
+      return this.marketStatus$2;
+      break
+    }
+    case 8: {
+      return this.mySession$2;
+      break
+    }
+    case 9: {
+      return this.newOrderDialog$2;
+      break
+    }
+    case 10: {
+      return this.profileService$2;
+      break
+    }
+    case 11: {
+      return this.quoteService$2;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_Lcom_shocktrade_client_discover_DiscoverController.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
 $c_Lcom_shocktrade_client_discover_DiscoverController.prototype.$$scope__Lcom_shocktrade_client_GlobalSelectedSymbolScope = (function() {
   return this.$$scope$2

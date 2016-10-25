@@ -9,7 +9,11 @@
             <div class="emphasis" title="Total investment value">
                 <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
                    title="{{ hasNotifications() ? 'New events available' : 'No events available' }}"></i>
-                <i class="fa fa-line-chart"></i> <span class="pull-right">{{ getTotalInvestment() | number:2 }}</span>
+                <i class="fa fa-line-chart"></i>
+                <span class="pull-right">
+                    <changearrow value="{{ getWealthChange() }}"></changearrow>
+                    <span ng-class="getWealthChange() < 0 ? 'negative' : 'positive'">{{ getWealthChange() | number:1 }}%</span>
+                </span>
             </div>
         </div>
 
@@ -21,11 +25,16 @@
         </div>
         <br style="clear: both">
     </div>
-    <div class="col-md-8">
-        <span ng-hide="contestIsEmpty()" class="middle" style="font-size: 14pt">
-            Playing <span class="game_title">{{ getContestName() }}</span>
-        </span>
-
+    <div class="col-md-5">
+        <input class="form-control media-middle" ng-model="searchTerm" type="text"
+               placeholder="Search for People, Events or Groups"
+               typeahead="item as formatSearchResult(item) for item in autoCompleteSearch($viewValue)"
+               typeahead-template-url="reactive_search.html"
+               typeahead-loading="loading"
+               typeahead-on-select="onSelectedItem($item, $model, $label)"
+               popover-trigger="focus">
+    </div>
+    <div class="col-md-3">
         <span class="title_color pull-right" style="margin-right: 20px">
             <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-24"></avatar>
             <span ng-show="nonMember" class="clickable" ng-click="signUp()">
@@ -39,5 +48,26 @@
             <span ng-show="getFacebookProfile().name"
                   class="title_color">&#8212; {{ getUserName() }}</span>
         </span>
+    </div>
+
+    <!-- Contest Name -->
+    <div ng-hide="contestIsEmpty()" class="contest_colors">
+        <div class="col-md-9">
+            <span class="middle" style="text-align: center; font-size: 14pt">
+                Now Playing <span class="game_title">{{ getContestName() }}</span>
+            </span>
+        </div>
+        <div class="col-md-3">
+            <span class="pull-right">
+                <span ng-repeat="p in getRankings().slice(0,3) | orderBy:'rank'">
+                    <img ng-src="/images/status/{{ isOnline(p) ? 'greenlight' : 'offlight' }}.png">
+                    <avatar id="{{ p.facebookID }}" class="avatar-16"></avatar>
+                    <span ng-class="'rank_' + p.rank">{{ p.rank }}</span>
+                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '1st'" src="/images/contests/gold.png">
+                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '2nd'" src="/images/contests/silver.png">
+                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '3rd'" src="/images/contests/bronze.png">
+                </span>
+            </span>
+        </div>
     </div>
 </div>

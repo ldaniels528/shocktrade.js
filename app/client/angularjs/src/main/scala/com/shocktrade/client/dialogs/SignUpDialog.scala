@@ -9,7 +9,7 @@ import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
-import com.shocktrade.client.models.Profile
+import com.shocktrade.client.models.UserProfile
 import org.scalajs.dom.console
 import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
@@ -34,7 +34,7 @@ class SignUpDialog($http: Http, $modal: Modal) extends Service {
   }
 
   def createAccount(form: SignUpForm)(implicit ec: ExecutionContext) = {
-    $http.post[Profile]("/api/profile/create", form)
+    $http.post[UserProfile]("/api/profile/create", form)
   }
 
 }
@@ -139,7 +139,7 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
   */
 object SignUpDialogController {
 
-  type SignUpDialogResult = (Profile, FacebookProfileResponse)
+  type SignUpDialogResult = (UserProfile, FacebookProfileResponse)
 
 }
 

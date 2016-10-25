@@ -1,9 +1,9 @@
 package com.shocktrade.client
 
+import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.events.RemoteEvent._
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
-import com.shocktrade.client.models.Profile
-import com.shocktrade.client.models.contest.Contest
 import org.scalajs.angularjs.{Scope, angular}
 import org.scalajs.dom
 import org.scalajs.dom.browser.console
@@ -52,10 +52,10 @@ object ScopeEvents {
     def emitMessagesUpdated(message: ChatMessage) = broadcast(ChatMessagesUpdated, message)
 
     @inline
-    def emitUserProfileChanged(profile: Profile) = broadcast(UserProfileChanged, profile)
+    def emitUserProfileChanged(profile: UserProfile) = broadcast(UserProfileChanged, profile)
 
     @inline
-    def emitUserProfileUpdated(profile: Profile) = broadcast(UserProfileUpdated, profile)
+    def emitUserProfileUpdated(profile: UserProfile) = broadcast(UserProfileUpdated, profile)
 
     @inline
     def emitUserStatusChanged(status: String) = broadcast(UserStatusChanged, status)
@@ -86,10 +86,10 @@ object ScopeEvents {
     def onParticipantUpdated(callback: (dom.Event, Participant) => Any) = reactTo(ParticipantUpdated, callback)
 
     @inline
-    def onUserProfileChanged(callback: (dom.Event, Profile) => Any) = reactTo(UserProfileChanged, callback)
+    def onUserProfileChanged(callback: (dom.Event, UserProfile) => Any) = reactTo(UserProfileChanged, callback)
 
     @inline
-    def onUserProfileUpdated(callback: (dom.Event, Profile) => Any) = reactTo(UserProfileUpdated, callback)
+    def onUserProfileUpdated(callback: (dom.Event, UserProfile) => Any) = reactTo(UserProfileUpdated, callback)
 
     @inline
     def onUserStatusChanged(callback: (dom.Event, String) => Any) = reactTo(UserStatusChanged, callback)

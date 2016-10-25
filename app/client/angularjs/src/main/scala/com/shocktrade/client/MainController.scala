@@ -1,12 +1,12 @@
 package com.shocktrade.client
 
-import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.SignUpDialog
-import com.shocktrade.client.models.Profile
-import com.shocktrade.client.profile.ProfileService
+import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.profile.UserProfileService
+import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.http.Http
@@ -32,12 +32,11 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("ContestService") contestService: ContestService,
                      @injected("Facebook") facebook: FacebookService,
                      @injected("MySessionService") mySession: MySessionService,
-                     @injected("ProfileService") profileService: ProfileService,
+                     @injected("UserProfileService") profileService: UserProfileService,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog)
   extends Controller with GlobalLoading {
 
   private var loadingIndex = 0
-  private var nonMember = true
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
 
   $scope.appTabs = js.Array(
@@ -89,7 +88,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getExchangeClass = (exchange: js.UndefOr[String]) => s"${normalizeExchange(exchange)} bold"
 
-  $scope.getTabIndex = () => determineTableIndex
+  $scope.getTabIndex = () => $scope.appTabs.indexWhere(tab => $location.path.contains(tab.url))
 
   $scope.isVisible = (aTab: js.UndefOr[ContestTab]) => aTab.exists { tab =>
     (loadingIndex == 0) && ((!tab.contestRequired || mySession.contest_?.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
@@ -124,7 +123,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getFundsAvailable = () => mySession.getFundsAvailable
 
-  $scope.getNetWorth = () => mySession.getNetWorth.orZero
+  $scope.getNetWorth = () => mySession.userProfile.netWorth.orZero
 
   $scope.getUserID = () => mySession.userProfile._id.orNull
 
@@ -134,9 +133,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.hasNotifications = () => mySession.hasNotifications
 
-  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => {
-    aPerkCode.exists(mySession.hasPerk)
-  }
+  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => aPerkCode.exists(mySession.hasPerk)
 
   $scope.isAdmin = () => mySession.isAdmin
 
@@ -146,7 +143,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aPlayer: js.UndefOr[Profile]) => aPlayer.exists { player =>
+  $scope.isOnline = (aPlayer: js.UndefOr[UserProfile]) => aPlayer.exists { player =>
     player._id.exists { playerID =>
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = new OnlineStatus(connected = false)
@@ -177,9 +174,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.login = () => {
     facebook.login() onComplete {
       case Success(response) =>
-        nonMember = true
-
-        // load the profile
         facebook.facebookID map (doPostLoginUpdates(_, userInitiated = true))
       case Failure(e) =>
         console.error(s"main:login error")
@@ -188,7 +182,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   $scope.logout = () => {
-    nonMember = false
     facebook.logout() onComplete {
       case Success(_) => mySession.logout()
       case Failure(e) =>
@@ -221,13 +214,17 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
         console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
         profileService.getProfileByFacebookID(facebookID)
       }
-    } yield (fbProfile, fbFriends, profile)
+
+      // retrieve the updated network
+      netWorth <- profileService.getNetWorth(profile._id.orNull)
+
+    } yield (fbProfile, fbFriends, profile, netWorth)
 
     outcome onComplete {
-      case Success((fbProfile, fbFriends, profile)) =>
+      case Success((fbProfile, fbFriends, profile, netWorth)) =>
         console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
         $scope.$apply(() => {
-          nonMember = false
+          profile.netWorth = netWorth.value
           mySession.setUserProfile(profile, fbProfile)
           mySession.fbFriends_? = fbFriends
         })
@@ -271,17 +268,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     val tab = $scope.appTabs(tabIndex)
     console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
     $location.url(tab.url)
-  }
-
-  private def determineTableIndex: Int = $location.path() match {
-    case path if path.contains("/about") => 0
-    case path if path.contains("/home") => 1
-    case path if path.contains("/search") => 2
-    case path if path.contains("/dashboard") => 3
-    case path if path.contains("/discover") => 4
-    case path if path.contains("/explore") => 5
-    case path if path.contains("/research") => 6
-    case path => 0
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -395,14 +381,14 @@ trait MainControllerScope extends Scope {
   var getNetWorth: js.Function0[Double] = js.native
   var getUserID: js.Function0[String] = js.native
   var getUserName: js.Function0[String] = js.native
-  var getUserProfile: js.Function0[Profile] = js.native
+  var getUserProfile: js.Function0[UserProfile] = js.native
   var hasNotifications: js.Function0[Boolean] = js.native
   var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
   var isAdmin: js.Function0[Boolean] = js.native
   var isAuthenticated: js.Function0[Boolean] = js.native
 
   var changeAppTab: js.Function1[js.UndefOr[Int], Unit] = js.native
-  var isOnline: js.Function1[js.UndefOr[Profile], Boolean] = js.native
+  var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
   var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
   var login: js.Function0[Unit] = js.native
   var logout: js.Function0[Unit] = js.native

@@ -112,7 +112,6 @@ object WebClientJsApp extends js.JSApp {
 
   private def configureServices(module: Module) {
     module.serviceOf[ChatService]("ChatService")
-    module.serviceOf[ConnectService]("ConnectService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
     module.serviceOf[FacebookService]("Facebook")
@@ -120,7 +119,7 @@ object WebClientJsApp extends js.JSApp {
     module.serviceOf[MySessionService]("MySessionService")
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[PortfolioService]("PortfolioService")
-    module.serviceOf[ProfileService]("ProfileService")
+    module.serviceOf[UserProfileService]("UserProfileService")
     module.serviceOf[PostService]("PostService")
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")
@@ -134,7 +133,6 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[AwardsController]("AwardsController")
     module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
-    module.controllerOf[ConnectController]("ConnectController")
     module.controllerOf[DashboardController]("DashboardController")
     module.controllerOf[DiscoverController]("DiscoverController")
     module.controllerOf[ExploreController]("ExploreController")

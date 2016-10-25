@@ -24,7 +24,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySessionService") mySession: MySessionService,
                          @injected("PortfolioService") portfolioService: PortfolioService,
-                         @injected("ProfileService") profileService: ProfileService,
+                         @injected("UserProfileService") profileService: UserProfileService,
                          @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 

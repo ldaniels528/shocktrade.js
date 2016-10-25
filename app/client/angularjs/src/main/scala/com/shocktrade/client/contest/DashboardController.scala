@@ -121,16 +121,16 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 @js.native
 trait DashboardScope extends Scope {
   // functions
+  var getRankings: js.Function0[js.UndefOr[js.Array[Participant]]] = js.native
   var isCashAccount: js.Function0[Boolean] = js.native
   var isMarginAccount: js.Function0[Boolean] = js.native
-  var toggleAccountMode: js.Function0[Unit] = js.native
+  var isRankingsShown: js.Function0[Boolean] = js.native
   var getAccountMode: js.Function0[Boolean] = js.native
   var getAccountType: js.Function0[String] = js.native
   var popupPerksDialog: js.Function0[Unit] = js.native
   var popupTransferFundsDialog: js.Function0[Unit] = js.native
-  var isRankingsShown: js.Function0[Boolean] = js.native
+  var toggleAccountMode: js.Function0[Unit] = js.native
   var toggleRankingsShown: js.Function0[Unit] = js.native
-  var getRankings: js.Function0[js.UndefOr[js.Array[Participant]]] = js.native
 
 }
 

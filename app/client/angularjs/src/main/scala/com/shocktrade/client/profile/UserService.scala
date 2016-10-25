@@ -1,5 +1,6 @@
 package com.shocktrade.client.profile
 
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.models.user.User
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http

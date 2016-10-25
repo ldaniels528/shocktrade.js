@@ -27,26 +27,26 @@ object ProfileDAO {
 
     @inline
     def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.updateOne(filter = doc("_id" $eq userID.$oid, "netWorth" $gte amount), update = "netWorth" $inc -amount)
+      dao.updateOne(filter = doc("_id" $eq userID.$oid, "wallet" $gte amount), update = "wallet" $inc -amount)
     }
 
     @inline
     def depositFunds(userID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.updateOne(filter = "_id" $eq userID.$oid, update = "netWorth" $inc amount)
+      dao.updateOne(filter = "_id" $eq userID.$oid, update = "wallet" $inc amount)
     }
 
     @inline
     def findOneByID(userID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.findOneFuture[ProfileData]("_id" $eq userID.$oid)
+      dao.findOneFuture[UserProfileData]("_id" $eq userID.$oid)
     }
 
     @inline
     def findOneByFacebookID(fbId: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[ProfileData]("facebookID" $eq fbId)
+      dao.findOneFuture[UserProfileData]("facebookID" $eq fbId)
     }
 
     @inline
-    def findOneOrCreateByFacebook(fbProfile: ProfileData, fbId: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findOneOrCreateByFacebook(fbProfile: UserProfileData, fbId: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
       fbProfile._id = mongo.ObjectID()
       dao.findOneAndUpdate(filter = "facebookID" $eq fbId, update = doc(
         "$setOnInsert" -> fbProfile// ,
@@ -72,6 +72,11 @@ object ProfileDAO {
     @inline
     def removeRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
       dao.findOneAndUpdate(filter = "_id" $eq userID.$oid, update = "recentSymbols" $pull symbol)
+    }
+
+    @inline
+    def updateNetWorth(userID: String, netWorth: Double) (implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.updateOne(filter = "_id" $eq userID.$oid, update = "netWorth" $set netWorth)
     }
 
   }

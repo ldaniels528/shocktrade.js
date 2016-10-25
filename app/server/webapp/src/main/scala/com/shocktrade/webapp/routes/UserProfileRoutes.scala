@@ -1,16 +1,16 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.quote.PricingQuote
-import com.shocktrade.common.models.user.ProfileLike.QuoteFilter
+import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.securities.QtyQuote
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
-import com.shocktrade.server.dao.users.ProfileData
 import com.shocktrade.server.dao.users.UserDAO._
+import com.shocktrade.server.dao.users.UserProfileData
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.{NodeRequire, console}
 import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -21,10 +21,10 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
-  * Profile Routes
+  * User Profile Routes
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object ProfileRoutes {
+object UserProfileRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
@@ -46,7 +46,7 @@ object ProfileRoutes {
       val symbol = request.params("symbol")
       profileDAO.flatMap(_.addRecentSymbol(userID, symbol).toFuture) onComplete {
         case Success(result) if result.isOk =>
-          result.valueAs[ProfileData] match {
+          result.valueAs[UserProfileData] match {
             case Some(profile) => response.send(profile); next()
             case None => response.notFound(userID)
           }
@@ -68,8 +68,12 @@ object ProfileRoutes {
         symbols = symbolQtys.map(_.symbol).distinct
         quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
         quoteMap = Map(quotes.map(q => q.symbol -> q): _*)
-        investments = symbolQtys map { case QtyQuote(symbol, qty) => quoteMap.get(symbol).flatMap(_.lastTrade.toOption).orZero * qty } sum
-      } yield user.netWorth + investments + cashFunds + marginFunds
+        investments = (symbolQtys map { case QtyQuote(symbol, qty) => quoteMap.get(symbol).flatMap(_.lastTrade.toOption).orZero * qty }).sum
+        netWorth = user.wallet + investments + cashFunds + marginFunds
+
+        // update the user's networth
+        w <- profileDAO.flatMap(_.updateNetWorth(userID, netWorth).toFuture)
+      } yield netWorth
 
       outcome onComplete {
         case Success(total) => response.send(new NetWorth(total))
@@ -80,25 +84,25 @@ object ProfileRoutes {
 
     def profileByFacebook(request: Request, response: Response, next: NextFunction) = {
       val fbProfile = request.bodyAs[FBProfile]
-      console.log("fbProfile = %j", fbProfile)
       val form = for {
         fbId <- fbProfile.id
         name <- fbProfile.name
       } yield {
-        new ProfileData(
+        new UserProfileData(
+          _id = js.undefined,
           facebookID = fbId,
           name = name,
           country = "US",
           level = 1,
           rep = 1,
           netWorth = 250000.00,
+          wallet = 250000.00,
           totalXP = 0,
           favoriteSymbols = js.Array("AAPL", "MSFT"),
           recentSymbols = js.Array("AAPL", "MSFT"),
-          filters = js.Array[QuoteFilter](),
           friends = js.Array[String](),
-          accomplishments = js.Array[String](),
-          acquaintances = js.Array[String](),
+          awards = js.Array[String](),
+          followers = js.Array[String](),
           lastLoginTime = new js.Date())
       }
 
@@ -131,15 +135,12 @@ object ProfileRoutes {
   class FBProfile(val id: js.UndefOr[String], val name: js.UndefOr[String]) extends js.Object
 
   @ScalaJSDefined
-  class NetWorth(val value: Double) extends js.Object
-
-  @ScalaJSDefined
   trait UserInfo extends js.Object {
-    def netWorth: Double
+    def wallet: Double
   }
 
   object UserInfo {
-    val Fields = js.Array("netWorth")
+    val Fields = js.Array("wallet")
   }
 
 }
