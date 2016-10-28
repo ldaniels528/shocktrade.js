@@ -13,6 +13,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 class UserProfile(var _id: js.UndefOr[String] = js.undefined,
                   var facebookID: js.UndefOr[String] = js.undefined,
                   var name: js.UndefOr[String] = js.undefined,
+                  var description: js.UndefOr[String] = js.undefined,
                   var country: js.UndefOr[String] = js.undefined,
                   var level: js.UndefOr[Int] = js.undefined,
                   var rep: js.UndefOr[Int] = js.undefined,

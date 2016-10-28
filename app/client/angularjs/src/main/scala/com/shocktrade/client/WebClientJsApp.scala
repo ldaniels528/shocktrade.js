@@ -93,6 +93,7 @@ object WebClientJsApp extends js.JSApp {
     module.serviceOf[NewOrderDialog]("NewOrderDialog")
     module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
     module.serviceOf[PerksDialog]("PerksDialog")
+    module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
     module.serviceOf[SignUpDialog]("SignUpDialog")
     module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
 

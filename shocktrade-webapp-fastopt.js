@@ -1027,6 +1027,133 @@ var $asArrayOf_J = $makeAsArrayOfPrimitive($isArrayOf_J, "J");
 var $asArrayOf_F = $makeAsArrayOfPrimitive($isArrayOf_F, "F");
 var $asArrayOf_D = $makeAsArrayOfPrimitive($isArrayOf_D, "D");
 
+function $is_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent)))
+}
+function $as_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj) {
+  return (($is_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.webapp.routes.SearchRoutes$SearchAgent"))
+}
+function $isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent)))
+}
+function $asArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.webapp.routes.SearchRoutes$SearchAgent;", depth))
+}
+function $s_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$class__getSelection__p0__Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent__T__sjs_js_Dictionary($$this, searchTerm) {
+  var array = $$this.fields__sjs_js_Array();
+  var z = $m_sci_Nil$();
+  var start = 0;
+  var end = $uI(array.length);
+  var z$1 = z;
+  var jsx$1;
+  _foldl: while (true) {
+    if ((start !== end)) {
+      var temp$start = ((1 + start) | 0);
+      var v1 = z$1;
+      var index = start;
+      var v2 = array[index];
+      var list = $as_sci_List(v1);
+      var field = $as_T(v2);
+      var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["^", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([searchTerm]));
+      var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$regex", s), new $c_T2().init___O__O("$options", "i")]);
+      var y = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
+      var x$8 = new $c_T2().init___O__O(field, y);
+      var temp$z = new $c_sci_$colon$colon().init___O__sci_List(x$8, list);
+      start = temp$start;
+      z$1 = temp$z;
+      continue _foldl
+    };
+    var jsx$1 = z$1;
+    break
+  };
+  var x1 = $as_sci_List(jsx$1);
+  var x = $m_sci_Nil$();
+  if (x.equals__O__Z(x1)) {
+    var kvps$1 = $m_sci_Nil$();
+    return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$1)
+  };
+  if ($is_sci_$colon$colon(x1)) {
+    var x2 = $as_sci_$colon$colon(x1);
+    var one = $as_T2(x2.head$5);
+    var p3 = x2.tl$5;
+    var x$3 = $m_sci_Nil$();
+    if (x$3.equals__O__Z(p3)) {
+      var kvps$2 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([one]);
+      return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$2)
+    }
+  };
+  var this$19 = $m_sjsr_package$();
+  var f = (function(x$3$2) {
+    var x$3$1 = $as_T2(x$3$2);
+    var kvps$3 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([x$3$1]);
+    return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$3)
+  });
+  var this$18 = $m_sc_Seq$();
+  var bf = this$18.ReusableCBFInstance$2;
+  if ((bf === $m_sci_List$().ReusableCBFInstance$2)) {
+    if ((x1 === $m_sci_Nil$())) {
+      var jsx$2 = $m_sci_Nil$()
+    } else {
+      var arg1 = x1.head__O();
+      var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1), $m_sci_Nil$());
+      var t = h;
+      var rest = $as_sci_List(x1.tail__O());
+      while ((rest !== $m_sci_Nil$())) {
+        var arg1$1 = rest.head__O();
+        var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$1), $m_sci_Nil$());
+        t.tl$5 = nx;
+        t = nx;
+        rest = $as_sci_List(rest.tail__O())
+      };
+      var jsx$2 = h
+    }
+  } else {
+    var b = $s_sc_TraversableLike$class__builder$1__p0__sc_TraversableLike__scg_CanBuildFrom__scm_Builder(x1, bf);
+    var these = x1;
+    while ((!these.isEmpty__Z())) {
+      var arg1$2 = these.head__O();
+      b.$$plus$eq__O__scm_Builder(f(arg1$2));
+      these = $as_sci_List(these.tail__O())
+    };
+    var jsx$2 = b.result__O()
+  };
+  var col = $as_sc_Seq(jsx$2);
+  if ($is_sjs_js_ArrayOps(col)) {
+    var x2$1 = $as_sjs_js_ArrayOps(col);
+    var y$1 = x2$1.scala$scalajs$js$ArrayOps$$array$f
+  } else if ($is_sjs_js_WrappedArray(col)) {
+    var x3 = $as_sjs_js_WrappedArray(col);
+    var y$1 = x3.array$6
+  } else {
+    var result = [];
+    col.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
+      return (function(x$2) {
+        return $uI(result$1.push(x$2))
+      })
+    })(this$19, result)));
+    var y$1 = result
+  };
+  var kvps$4 = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$or", y$1)]);
+  return $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps$4)
+}
+function $s_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$class__search__Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent__T__I__s_concurrent_ExecutionContext__s_concurrent_Future($$this, searchTerm, maxResults, ec) {
+  var qual$1 = $$this.coll__Lorg_scalajs_nodejs_mongodb_Collection().find($s_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$class__getSelection__p0__Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent__T__sjs_js_Dictionary($$this, searchTerm));
+  var cursor = qual$1.limit(maxResults);
+  var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+  var arg1 = (function(promise$1) {
+    return (function(err$2, result$2) {
+      if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+        return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+      } else {
+        var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+        return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+      }
+    })
+  })(promise);
+  cursor.toArray(arg1);
+  var f = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1().init___Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent($$this);
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
+}
 function $is_Ljava_io_Closeable(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Ljava_io_Closeable)))
 }
@@ -3393,6 +3520,46 @@ function $m_Lcom_shocktrade_common_forms_MaxResultsForm$MaxResultsFormExtensions
     $n_Lcom_shocktrade_common_forms_MaxResultsForm$MaxResultsFormExtensions$ = new $c_Lcom_shocktrade_common_forms_MaxResultsForm$MaxResultsFormExtensions$().init___()
   };
   return $n_Lcom_shocktrade_common_forms_MaxResultsForm$MaxResultsFormExtensions$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_EntitySearchResult$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.constructor = $c_Lcom_shocktrade_common_models_EntitySearchResult$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_EntitySearchResult$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_EntitySearchResult$.prototype = $c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype;
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_common_models_EntitySearchResult$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_EntitySearchResult$: 0
+}, false, "com.shocktrade.common.models.EntitySearchResult$", {
+  Lcom_shocktrade_common_models_EntitySearchResult$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_EntitySearchResult$.prototype.$classData = $d_Lcom_shocktrade_common_models_EntitySearchResult$;
+var $n_Lcom_shocktrade_common_models_EntitySearchResult$ = (void 0);
+function $m_Lcom_shocktrade_common_models_EntitySearchResult$() {
+  if ((!$n_Lcom_shocktrade_common_models_EntitySearchResult$)) {
+    $n_Lcom_shocktrade_common_models_EntitySearchResult$ = new $c_Lcom_shocktrade_common_models_EntitySearchResult$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_EntitySearchResult$
 }
 /** @constructor */
 function $c_Lcom_shocktrade_common_models_OperationResult$() {
@@ -15975,6 +16142,216 @@ function $m_Lcom_shocktrade_webapp_routes_ResearchRoutes$() {
   return $n_Lcom_shocktrade_webapp_routes_ResearchRoutes$
 }
 /** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.com$shocktrade$webapp$routes$SearchRoutes$$getSearchResults$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, ec$1, securities$1, users$1) {
+  var searchAgents = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([securities$1, users$1])));
+  var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().queryAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Object(request);
+  var value = form.searchTerm;
+  var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
+  if (this$5.isEmpty__Z()) {
+    var x1 = $m_s_None$()
+  } else {
+    var arg1 = this$5.get__O();
+    var x$6 = $as_T(arg1);
+    var x1 = new $c_s_Some().init___O(new $c_T2().init___O__O(x$6, $m_Lcom_shocktrade_common_forms_MaxResultsForm$MaxResultsFormExtensions$().getMaxResults$extension__Lcom_shocktrade_common_forms_MaxResultsForm__I__I(form, 20)))
+  };
+  matchEnd6: {
+    if ($is_s_Some(x1)) {
+      var x2 = $as_s_Some(x1);
+      var p3 = $as_T2(x2.x$2);
+      if ((p3 !== null)) {
+        var searchTerm = $as_T(p3.$$und1__O());
+        var maxResults = p3.$$und2$mcI$sp__I();
+        this.search$1__p1__T__I__s_concurrent_ExecutionContext__sc_Seq__s_concurrent_Future(searchTerm, maxResults, ec$1, searchAgents).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1) {
+          return (function(x0$1$2) {
+            var x0$1 = $as_s_util_Try(x0$1$2);
+            if ($is_s_util_Success(x0$1)) {
+              var x2$1 = $as_s_util_Success(x0$1);
+              var searchResults = $as_sc_Seq(x2$1.value$2);
+              var this$7 = $m_sjsr_package$();
+              if ($is_sjs_js_ArrayOps(searchResults)) {
+                var x2$2 = $as_sjs_js_ArrayOps(searchResults);
+                var jsx$1 = x2$2.scala$scalajs$js$ArrayOps$$array$f
+              } else if ($is_sjs_js_WrappedArray(searchResults)) {
+                var x3 = $as_sjs_js_WrappedArray(searchResults);
+                var jsx$1 = x3.array$6
+              } else {
+                var result = [];
+                searchResults.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, result$1) {
+                  return (function(x$2) {
+                    return $uI(result$1.push(x$2))
+                  })
+                })(this$7, result)));
+                var jsx$1 = result
+              };
+              response$1.send(jsx$1);
+              $asUnit(next$1())
+            } else if ($is_s_util_Failure(x0$1)) {
+              var x3$1 = $as_s_util_Failure(x0$1);
+              var e = x3$1.exception$2;
+              var jsx$2 = response$1.status(500);
+              var s = e.getMessage__T();
+              jsx$2.send(s);
+              $asUnit(next$1())
+            } else {
+              throw new $c_s_MatchError().init___O(x0$1)
+            }
+          })
+        })(response, next)), ec$1);
+        break matchEnd6
+      }
+    };
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      response.status(400).send("Bad Request: searchTerm is required");
+      $asUnit(next());
+      break matchEnd6
+    };
+    throw new $c_s_MatchError().init___O(x1)
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V = (function(app, dbFuture, ec, mongo) {
+  var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1) {
+    return (function(x$1$2) {
+      var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1 = (function(promise$1) {
+        return (function(err$2, result$2) {
+          if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+          } else {
+            var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+          }
+        })
+      })(promise);
+      x$1$2.collection("Securities", null, arg1);
+      var ec$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+      var boxedClass = ($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_securities_SecuritiesDAO.getClassOf());
+      $m_s_Predef$().require__Z__V((boxedClass !== null));
+      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this, boxedClass$1) {
+        return (function(s$2) {
+          if (((boxedClass$1 === $d_sr_Nothing$.getClassOf()) || (((s$2 !== null) && (!boxedClass$1.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$1.isInstance__O__Z(s$2))))) {
+            throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2, " is not an instance of ")) + boxedClass$1.getName__T())))
+          };
+          return s$2
+        })
+      })(promise, boxedClass));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec$2)
+    })
+  })(ec));
+  var this$12 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$1, ec);
+  var f$2 = $m_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$();
+  var securities = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$12, f$2, ec);
+  var f$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(ec$1$1) {
+    return (function(x$2$2) {
+      var promise$2 = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+      var arg1$1 = (function(promise$1$1) {
+        return (function(err$2$1, result$2$1) {
+          if ((!((err$2$1 !== null) && (err$2$1 !== (void 0))))) {
+            return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1$1, result$2$1)
+          } else {
+            var cause$1 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2$1);
+            return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1$1, cause$1)
+          }
+        })
+      })(promise$2);
+      x$2$2.collection("Players", null, arg1$1);
+      var ec$3 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+      var boxedClass$2 = ($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf().isPrimitive__Z() ? $as_jl_Class($m_s_concurrent_Future$().toBoxed$1.apply__O__O($d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf())) : $d_Lcom_shocktrade_server_dao_users_UserDAO.getClassOf());
+      $m_s_Predef$().require__Z__V((boxedClass$2 !== null));
+      var f$3 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($$this$1, boxedClass$3) {
+        return (function(s$2$1) {
+          if (((boxedClass$3 === $d_sr_Nothing$.getClassOf()) || (((s$2$1 !== null) && (!boxedClass$3.java$lang$Class$$isRawJSType__Z())) && (!boxedClass$3.isInstance__O__Z(s$2$1))))) {
+            throw new $c_sjsr_UndefinedBehaviorError().init___jl_Throwable(new $c_jl_ClassCastException().init___T((("" + $m_s_Predef$any2stringadd$().$$plus$extension__O__T__T(s$2$1, " is not an instance of ")) + boxedClass$3.getName__T())))
+          };
+          return s$2$1
+        })
+      })(promise$2, boxedClass$2));
+      return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise$2, f$3, ec$3)
+    })
+  })(ec));
+  var this$24 = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$4, ec);
+  var f$5 = $m_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$();
+  var users = $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$24, f$5, ec);
+  app.get("/api/search", (function(ec$1$2, securities$1, users$1) {
+    return (function(request$2, response$2, next$2) {
+      $m_Lcom_shocktrade_webapp_routes_SearchRoutes$().com$shocktrade$webapp$routes$SearchRoutes$$getSearchResults$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future__V(request$2, response$2, next$2, ec$1$2, securities$1, users$1)
+    })
+  })(ec, securities, users))
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.search$1__p1__T__I__s_concurrent_ExecutionContext__sc_Seq__s_concurrent_Future = (function(searchTerm, maxResults, ec$1, searchAgents$1) {
+  var jsx$3 = $m_s_concurrent_Future$();
+  var jsx$2 = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1().init___s_concurrent_ExecutionContext__T__I(ec$1, searchTerm, maxResults);
+  var this$1 = $m_sc_Seq$();
+  var jsx$1 = $as_sc_TraversableOnce(searchAgents$1.map__F1__scg_CanBuildFrom__O(jsx$2, this$1.ReusableCBFInstance$2));
+  var this$2 = $m_sc_Seq$();
+  var this$3 = jsx$3.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future(jsx$1, this$2.ReusableCBFInstance$2, ec$1);
+  var f = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2().init___();
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$3, f, ec$1)
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$;
+var $n_Lcom_shocktrade_webapp_routes_SearchRoutes$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_SearchRoutes$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_SearchRoutes$)) {
+    $n_Lcom_shocktrade_webapp_routes_SearchRoutes$ = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_SearchRoutes$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype.limit$extension__T__I__T = (function($$this, maxLength) {
+  if (($uI($$this.length) > maxLength)) {
+    var this$3 = new $c_sci_StringOps().init___T($$this);
+    return ($m_sci_StringOps$().slice$extension__T__I__I__T(this$3.repr$1, 0, maxLength) + "...")
+  } else {
+    return $$this
+  }
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$StringExtensions$", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$;
+var $n_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$)) {
+    $n_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$ = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_SocialRoutes$() {
   $c_O.call(this)
 }
@@ -18665,6 +19042,18 @@ function $m_s_Predef$any2stringadd$() {
   };
   return $n_s_Predef$any2stringadd$
 }
+function $is_s_Product(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_Product)))
+}
+function $as_s_Product(obj) {
+  return (($is_s_Product(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.Product"))
+}
+function $isArrayOf_s_Product(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_Product)))
+}
+function $asArrayOf_s_Product(obj, depth) {
+  return (($isArrayOf_s_Product(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.Product;", depth))
+}
 /** @constructor */
 function $c_s_concurrent_BlockContext$() {
   $c_O.call(this);
@@ -18743,6 +19132,34 @@ $c_s_concurrent_Future$.prototype.init___ = (function() {
   };
   this.toBoxed$1 = $as_sci_Map(this$20.elems$1);
   return this
+});
+$c_s_concurrent_Future$.prototype.sequence__sc_TraversableOnce__scg_CanBuildFrom__s_concurrent_ExecutionContext__s_concurrent_Future = (function($in, cbf, executor) {
+  var this$1 = $as_s_concurrent_Future($in.foldLeft__O__F2__O(this.successful__O__s_concurrent_Future(cbf.apply__O__scm_Builder($in)), new $c_sjsr_AnonFunction2().init___sjs_js_Function2((function($this, executor$1) {
+    return (function(fr$2, fa$2) {
+      var fr = $as_s_concurrent_Future(fr$2);
+      var fa = $as_s_concurrent_Future(fa$2);
+      var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1, executor$1$1, fa$1) {
+        return (function(r$2) {
+          var r = $as_scm_Builder(r$2);
+          var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$2, r$1) {
+            return (function(a$2) {
+              return r$1.$$plus$eq__O__scm_Builder(a$2)
+            })
+          })($this$1, r));
+          return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(fa$1, f, executor$1$1)
+        })
+      })($this, executor$1, fa));
+      return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(fr, f$1, executor$1)
+    })
+  })(this, executor))));
+  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2) {
+    return (function(x$3$2) {
+      var x$3 = $as_scm_Builder(x$3$2);
+      return $as_sc_TraversableOnce(x$3.result__O())
+    })
+  })(this));
+  var executor$2 = $m_s_concurrent_Future$InternalCallbackExecutor$();
+  return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, f$2, executor$2)
 });
 $c_s_concurrent_Future$.prototype.successful__O__s_concurrent_Future = (function(result) {
   var this$1 = $m_s_concurrent_Promise$().successful__O__s_concurrent_Promise(result);
@@ -22144,6 +22561,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.configureApplication__Lorg_s
   $m_Lcom_shocktrade_webapp_routes_RemoteEventRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require);
   $m_Lcom_shocktrade_webapp_routes_QuoteRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__Lorg_scalajs_nodejs_NodeRequire__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, require, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_ResearchRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
+  $m_Lcom_shocktrade_webapp_routes_SearchRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_SocialRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__Lorg_scalajs_nodejs_NodeRequire__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, require, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo);
   $m_Lcom_shocktrade_webapp_routes_TradingClockRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_NodeRequire__Lorg_scalajs_nodejs_mongodb_MongoDB__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, require, mongo);
   $m_Lcom_shocktrade_webapp_routes_UserRoutes$().init__Lorg_scalajs_nodejs_express_Application__s_concurrent_Future__s_concurrent_ExecutionContext__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_NodeRequire__V(router, dbFuture, $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1, mongo, require);
@@ -23637,6 +24055,64 @@ function $h_Lcom_shocktrade_common_forms_PerksResponse() {
 $h_Lcom_shocktrade_common_forms_PerksResponse.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_forms_PerksResponse.prototype = new $h_Lcom_shocktrade_common_forms_PerksResponse();
 $c_Lcom_shocktrade_common_forms_PerksResponse.prototype.constructor = $c_Lcom_shocktrade_common_forms_PerksResponse;
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_EntitySearchResult() {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 0;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var _id = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_EntitySearchResult$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
+  var name = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_EntitySearchResult$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
+  var description = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_EntitySearchResult$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
+  var type = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_EntitySearchResult$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "_id": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "name": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "description": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "type": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this._id = _id;
+  this.name = name;
+  this.description = description;
+  this.type = type
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_EntitySearchResult() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_EntitySearchResult.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_models_EntitySearchResult.prototype = new $h_Lcom_shocktrade_common_models_EntitySearchResult();
+$c_Lcom_shocktrade_common_models_EntitySearchResult.prototype.constructor = $c_Lcom_shocktrade_common_models_EntitySearchResult;
 /** @constructor */
 function $c_Lcom_shocktrade_common_models_ExposureData(arg$1, arg$2) {
   var key = $as_T(arg$1);
@@ -37207,6 +37683,211 @@ var $d_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$an
 });
 $c_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$anonfun$apply$10.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_QuoteRoutes$$anonfun$6$$anonfun$apply$5$$anonfun$apply$10;
 /** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1() {
+  $c_sr_AbstractFunction1.call(this);
+  this.ec$1$f = null;
+  this.searchTerm$1$f = null;
+  this.maxResults$1$f = 0
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype.apply__s_concurrent_Future__s_concurrent_Future = (function(x$3) {
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(x$4$2) {
+      var x$4 = $as_s_Product(x$4$2);
+      var this$1 = $as_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent(x$4);
+      var searchTerm = arg$outer.searchTerm$1$f;
+      var maxResults = arg$outer.maxResults$1$f;
+      var ec = arg$outer.ec$1$f;
+      return $s_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$class__search__Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent__T__I__s_concurrent_ExecutionContext__s_concurrent_Future(this$1, searchTerm, maxResults, ec)
+    })
+  })(this));
+  var executor = this.ec$1$f;
+  return $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(x$3, f, executor)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype.apply__O__O = (function(v1) {
+  return this.apply__s_concurrent_Future__s_concurrent_Future($as_s_concurrent_Future(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype.init___s_concurrent_ExecutionContext__T__I = (function(ec$1, searchTerm$1, maxResults$1) {
+  this.ec$1$f = ec$1;
+  this.searchTerm$1$f = searchTerm$1;
+  this.maxResults$1$f = maxResults$1;
+  return this
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$$anonfun$search$1$1", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$1;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2() {
+  $c_sr_AbstractFunction1.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype.apply__O__O = (function(v1) {
+  return this.apply__sc_Seq__sc_Seq($as_sc_Seq(v1))
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype.apply__sc_Seq__sc_Seq = (function(x$5) {
+  return $as_sc_Seq(x$5.flatten__F1__sc_GenTraversable(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(array$2) {
+    return new $c_sjs_js_ArrayOps().init___sjs_js_Array(array$2)
+  }))))
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$$anonfun$search$1$2", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$$anonfun$search$1$2;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype.init___Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype.apply__O__O = (function(v1) {
+  return this.apply__sjs_js_Array__sjs_js_Array(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype.apply__sjs_js_Array__sjs_js_Array = (function(x$7) {
+  var array = [];
+  $uI(x$7.length);
+  var i = 0;
+  var len = $uI(x$7.length);
+  while ((i < len)) {
+    var index = i;
+    var arg1 = x$7[index];
+    var elem = this.$$outer$2.toSearchResult__sjs_js_Any__Lcom_shocktrade_common_models_EntitySearchResult(arg1);
+    array.push(elem);
+    i = ((1 + i) | 0)
+  };
+  return array
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1 = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$SearchAgent$$anonfun$search$1", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent$$anonfun$search$1;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$() {
+  $c_sr_AbstractFunction1.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype.apply__O__O = (function(v1) {
+  return new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent().init___Lcom_shocktrade_server_dao_securities_SecuritiesDAO(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype.toString__T = (function() {
+  return "SecuritiesSearchAgent"
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$SecuritiesSearchAgent$", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$;
+var $n_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$)) {
+    $n_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$ = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$() {
+  $c_sr_AbstractFunction1.call(this)
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype.apply__O__O = (function(v1) {
+  return new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent().init___Lcom_shocktrade_server_dao_users_UserDAO(v1)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype.toString__T = (function() {
+  return "UserSearchAgent"
+});
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$ = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$UserSearchAgent$", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$;
+var $n_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$ = (void 0);
+function $m_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$() {
+  if ((!$n_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$)) {
+    $n_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$ = new $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$().init___()
+  };
+  return $n_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_webapp_routes_UserProfileRoutes$$anonfun$7() {
   $c_sr_AbstractFunction1.call(this);
   this.mongo$1$f = null;
@@ -40237,6 +40918,209 @@ function $h_Lcom_shocktrade_server_dao_users_UserProfileData() {
 $h_Lcom_shocktrade_server_dao_users_UserProfileData.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_server_dao_users_UserProfileData.prototype = new $h_Lcom_shocktrade_server_dao_users_UserProfileData();
 $c_Lcom_shocktrade_server_dao_users_UserProfileData.prototype.constructor = $c_Lcom_shocktrade_server_dao_users_UserProfileData;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent() {
+  $c_O.call(this);
+  this.coll$1 = null;
+  this.fields$1 = null
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.fields__sjs_js_Array = (function() {
+  return this.fields$1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.productPrefix__T = (function() {
+  return "SecuritiesSearchAgent"
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.productArity__I = (function() {
+  return 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(x$1)) {
+    var SecuritiesSearchAgent$1 = $as_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(x$1);
+    return $m_sr_BoxesRunTime$().equals__O__O__Z(this.coll$1, SecuritiesSearchAgent$1.coll$1)
+  } else {
+    return false
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.coll$1;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.coll__Lorg_scalajs_nodejs_mongodb_Collection = (function() {
+  return this.coll$1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.init___Lcom_shocktrade_server_dao_securities_SecuritiesDAO = (function(coll) {
+  this.coll$1 = coll;
+  this.fields$1 = ["symbol", "name"];
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.toSearchResult__Lcom_shocktrade_common_models_quote_ResearchQuote__Lcom_shocktrade_common_models_EntitySearchResult = (function(quote) {
+  return new $c_Lcom_shocktrade_common_models_EntitySearchResult(quote.symbol, quote.symbol, quote.name, "STOCK")
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.toSearchResult__sjs_js_Any__Lcom_shocktrade_common_models_EntitySearchResult = (function(entity) {
+  return this.toSearchResult__Lcom_shocktrade_common_models_quote_ResearchQuote__Lcom_shocktrade_common_models_EntitySearchResult(entity)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent)))
+}
+function $as_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj) {
+  return (($is_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.webapp.routes.SearchRoutes$SecuritiesSearchAgent"))
+}
+function $isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent)))
+}
+function $asArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.webapp.routes.SearchRoutes$SecuritiesSearchAgent;", depth))
+}
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$SecuritiesSearchAgent", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent: 1,
+  O: 1,
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$SecuritiesSearchAgent;
+/** @constructor */
+function $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent() {
+  $c_O.call(this);
+  this.coll$1 = null;
+  this.fields$1 = null
+}
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype = new $h_O();
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.constructor = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent;
+/** @constructor */
+function $h_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype = $c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype;
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.fields__sjs_js_Array = (function() {
+  return this.fields$1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.productPrefix__T = (function() {
+  return "UserSearchAgent"
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.productArity__I = (function() {
+  return 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(x$1)) {
+    var UserSearchAgent$1 = $as_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(x$1);
+    return $m_sr_BoxesRunTime$().equals__O__O__Z(this.coll$1, UserSearchAgent$1.coll$1)
+  } else {
+    return false
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.coll$1;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.coll__Lorg_scalajs_nodejs_mongodb_Collection = (function() {
+  return this.coll$1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.init___Lcom_shocktrade_server_dao_users_UserDAO = (function(coll) {
+  this.coll$1 = coll;
+  this.fields$1 = ["name"];
+  return this
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.toSearchResult__Lcom_shocktrade_common_models_user_User__Lcom_shocktrade_common_models_EntitySearchResult = (function(user) {
+  var jsx$2 = user.facebookID;
+  var jsx$1 = user.name;
+  var valueA = user.description;
+  if ((valueA === (void 0))) {
+    var value = (void 0)
+  } else {
+    var opt = $m_s_Option$().apply__O__s_Option(valueA);
+    if (opt.isEmpty__Z()) {
+      var value = (void 0)
+    } else {
+      var arg1 = opt.get__O();
+      var value = arg1
+    }
+  };
+  if ((value === (void 0))) {
+    var valueA$1 = (void 0)
+  } else {
+    var x$9 = $as_T(value);
+    var value$1 = $m_Lcom_shocktrade_webapp_routes_SearchRoutes$StringExtensions$().limit$extension__T__I__T(x$9, 50);
+    var valueA$1 = value$1
+  };
+  return new $c_Lcom_shocktrade_common_models_EntitySearchResult(jsx$2, jsx$1, ((valueA$1 !== (void 0)) ? valueA$1 : "Day Trader"), "USER")
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.toSearchResult__sjs_js_Any__Lcom_shocktrade_common_models_EntitySearchResult = (function(entity) {
+  return this.toSearchResult__Lcom_shocktrade_common_models_user_User__Lcom_shocktrade_common_models_EntitySearchResult(entity)
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent)))
+}
+function $as_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj) {
+  return (($is_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "com.shocktrade.webapp.routes.SearchRoutes$UserSearchAgent"))
+}
+function $isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent)))
+}
+function $asArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj, depth) {
+  return (($isArrayOf_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lcom.shocktrade.webapp.routes.SearchRoutes$UserSearchAgent;", depth))
+}
+var $d_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent = new $TypeData().initClass({
+  Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent: 0
+}, false, "com.shocktrade.webapp.routes.SearchRoutes$UserSearchAgent", {
+  Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent: 1,
+  O: 1,
+  Lcom_shocktrade_webapp_routes_SearchRoutes$SearchAgent: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent.prototype.$classData = $d_Lcom_shocktrade_webapp_routes_SearchRoutes$UserSearchAgent;
 /** @constructor */
 function $c_Ljava_io_PrintStream() {
   $c_Ljava_io_FilterOutputStream.call(this);

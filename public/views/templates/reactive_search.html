@@ -1,0 +1,9 @@
+<script type="text/ng-template" id="reactive_search.html">
+    <div class="col-md-12 sk_result_item media-middle">
+        <avatar ng-if="match.model.type == 'USER'" id="{{ match.model._id }}" class="avatar-16"></avatar>
+        <i ng-if="match.model.type === 'STOCK'" class="fa fa-bar-chart stock_icon avatar-16"></i>
+
+        <span>{{ match.model.name }}</span> &nbsp;
+        <span class="pull-right sk_null entity_description">{{ match.model.description }}</span>
+    </div>
+</script>

@@ -16,6 +16,7 @@ trait User extends UserLike {
   var _id: js.UndefOr[String]
   var facebookID: js.UndefOr[String]
   var name: js.UndefOr[String]
+  var description: js.UndefOr[String]
 }
 
 /**
