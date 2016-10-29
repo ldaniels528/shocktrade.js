@@ -1,4 +1,4 @@
-<div class="row player_info_bar contest_colors" style="margin-bottom: 20px">
+<div class="col-md-12 player_info_bar st_title_bar" style="margin-bottom: 20px" ng-controller="InformationBarController" ng-init="init()">
     <div class="col-md-4 pi_bar_cash pad-left-10">
         <div class="pull-left" style="display: inline">
             <div class="positive" title="Liquid cash available">
@@ -19,15 +19,19 @@
 
         <div class="pull-right" style="display: inline">
             <span ng-controller="AwardsController" class="middle pull-right">
-                <img ng-repeat="award in getMyAwards().slice(0,8)" title="{{ award.name }}"
-                     style="padding: 2px 2px 2px 2px" ng-src="{{ award.icon }}">
+                <img ng-repeat="award in getMyAwards().slice(0,5)"
+                     ng-click="switchToHome()"
+                     class="clickable"
+                     style="padding: 2px 2px 2px 2px"
+                     title="{{ award.name }}"
+                     ng-src="{{ award.icon }}">
             </span>
         </div>
         <br style="clear: both">
     </div>
     <div class="col-md-5">
         <input class="form-control media-middle" ng-model="searchTerm" type="text"
-               placeholder="Search for People, Events or Groups"
+               placeholder="Search for Players, Securities or Groups"
                typeahead="item as formatSearchResult(item) for item in autoCompleteSearch($viewValue)"
                typeahead-template-url="reactive_search.html"
                typeahead-loading="loading"
@@ -37,37 +41,12 @@
     <div class="col-md-3">
         <span class="title_color pull-right" style="margin-right: 20px">
             <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-24"></avatar>
-            <span ng-show="nonMember" class="clickable" ng-click="signUp()">
-                <i class="fa fa-lg fa-facebook-square fb_icon"></i> Sign Up
-            </span>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="login()">
-                <span ng-show="nonMember"> / </span>
                 <i class="fa fa-lg fa-facebook-square fb_icon"></i> Login
             </span>
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
             <span ng-show="getFacebookProfile().name"
                   class="title_color">&#8212; {{ getUserName() }}</span>
         </span>
-    </div>
-
-    <!-- Contest Name -->
-    <div ng-hide="contestIsEmpty()" class="contest_colors">
-        <div class="col-md-9">
-            <span class="middle" style="text-align: center; font-size: 14pt">
-                Now Playing <span class="game_title">{{ getContestName() }}</span>
-            </span>
-        </div>
-        <div class="col-md-3">
-            <span class="pull-right">
-                <span ng-repeat="p in getRankings().slice(0,3) | orderBy:'rank'">
-                    <img ng-src="/images/status/{{ isOnline(p) ? 'greenlight' : 'offlight' }}.png">
-                    <avatar id="{{ p.facebookID }}" class="avatar-16"></avatar>
-                    <span ng-class="'rank_' + p.rank">{{ p.rank }}</span>
-                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '1st'" src="/images/contests/gold.png">
-                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '2nd'" src="/images/contests/silver.png">
-                    <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '3rd'" src="/images/contests/bronze.png">
-                </span>
-            </span>
-        </div>
     </div>
 </div>

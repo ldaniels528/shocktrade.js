@@ -4205,6 +4205,46 @@ function $m_Lcom_shocktrade_common_models_quote_SectorInfoQuote$() {
   return $n_Lcom_shocktrade_common_models_quote_SectorInfoQuote$
 }
 /** @constructor */
+function $c_Lcom_shocktrade_common_models_user_FriendStatus$() {
+  $c_O.call(this)
+}
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype = new $h_O();
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.constructor = $c_Lcom_shocktrade_common_models_user_FriendStatus$;
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_user_FriendStatus$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_user_FriendStatus$.prototype = $c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype;
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.init___ = (function() {
+  return this
+});
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.$$lessinit$greater$default$4__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.$$lessinit$greater$default$5__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lcom_shocktrade_common_models_user_FriendStatus$ = new $TypeData().initClass({
+  Lcom_shocktrade_common_models_user_FriendStatus$: 0
+}, false, "com.shocktrade.common.models.user.FriendStatus$", {
+  Lcom_shocktrade_common_models_user_FriendStatus$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_common_models_user_FriendStatus$.prototype.$classData = $d_Lcom_shocktrade_common_models_user_FriendStatus$;
+var $n_Lcom_shocktrade_common_models_user_FriendStatus$ = (void 0);
+function $m_Lcom_shocktrade_common_models_user_FriendStatus$() {
+  if ((!$n_Lcom_shocktrade_common_models_user_FriendStatus$)) {
+    $n_Lcom_shocktrade_common_models_user_FriendStatus$ = new $c_Lcom_shocktrade_common_models_user_FriendStatus$().init___()
+  };
+  return $n_Lcom_shocktrade_common_models_user_FriendStatus$
+}
+/** @constructor */
 function $c_Lcom_shocktrade_common_models_user_OnlineStatus$() {
   $c_O.call(this)
 }
@@ -5306,6 +5346,37 @@ function $m_Lcom_shocktrade_server_dao_securities_SecuritiesDAO$SecuritiesDAOEnr
     $n_Lcom_shocktrade_server_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$ = new $c_Lcom_shocktrade_server_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$().init___()
   };
   return $n_Lcom_shocktrade_server_dao_securities_SecuritiesDAO$SecuritiesDAOEnrichment$
+}
+/** @constructor */
+function $c_Lcom_shocktrade_server_dao_users_FriendStatusData$() {
+  $c_O.call(this);
+  this.Fields$1 = null
+}
+$c_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype = new $h_O();
+$c_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype.constructor = $c_Lcom_shocktrade_server_dao_users_FriendStatusData$;
+/** @constructor */
+function $h_Lcom_shocktrade_server_dao_users_FriendStatusData$() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype = $c_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype;
+$c_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype.init___ = (function() {
+  $n_Lcom_shocktrade_server_dao_users_FriendStatusData$ = this;
+  this.Fields$1 = ["facebookID", "name", "gamesCompleted", "gamesCreated", "gamesDeleted", "lastLoginTime"];
+  return this
+});
+var $d_Lcom_shocktrade_server_dao_users_FriendStatusData$ = new $TypeData().initClass({
+  Lcom_shocktrade_server_dao_users_FriendStatusData$: 0
+}, false, "com.shocktrade.server.dao.users.FriendStatusData$", {
+  Lcom_shocktrade_server_dao_users_FriendStatusData$: 1,
+  O: 1
+});
+$c_Lcom_shocktrade_server_dao_users_FriendStatusData$.prototype.$classData = $d_Lcom_shocktrade_server_dao_users_FriendStatusData$;
+var $n_Lcom_shocktrade_server_dao_users_FriendStatusData$ = (void 0);
+function $m_Lcom_shocktrade_server_dao_users_FriendStatusData$() {
+  if ((!$n_Lcom_shocktrade_server_dao_users_FriendStatusData$)) {
+    $n_Lcom_shocktrade_server_dao_users_FriendStatusData$ = new $c_Lcom_shocktrade_server_dao_users_FriendStatusData$().init___()
+  };
+  return $n_Lcom_shocktrade_server_dao_users_FriendStatusData$
 }
 var $d_Lcom_shocktrade_server_dao_users_ProfileDAO = new $TypeData().initClass({
   Lcom_shocktrade_server_dao_users_ProfileDAO: 0
@@ -16156,7 +16227,7 @@ $c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.init___ = (function() {
   return this
 });
 $c_Lcom_shocktrade_webapp_routes_SearchRoutes$.prototype.com$shocktrade$webapp$routes$SearchRoutes$$getSearchResults$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__s_concurrent_ExecutionContext__s_concurrent_Future__s_concurrent_Future__V = (function(request, response, next, ec$1, securities$1, users$1) {
-  var searchAgents = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([securities$1, users$1])));
+  var searchAgents = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([users$1, securities$1])));
   var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().queryAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Object(request);
   var value = form.searchTerm;
   var this$5 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
@@ -17159,10 +17230,124 @@ $h_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype = $c_Lcom_shocktrade_weba
 $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.init___ = (function() {
   return this
 });
+$c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$routes$UserRoutes$$friendStatus$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, userDAO$1) {
+  var form = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
+  var value = form.id;
+  if ((value === (void 0))) {
+    var value$3 = (void 0)
+  } else {
+    var id = $as_T(value);
+    var value$1 = form.name;
+    if ((value$1 === (void 0))) {
+      var value$3 = (void 0)
+    } else {
+      var name = $as_T(value$1);
+      var value$2 = new $c_T2().init___O__O(id, name);
+      var value$3 = value$2
+    }
+  };
+  var form$1 = ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3));
+  matchEnd6: {
+    if ($is_s_Some(form$1)) {
+      var x2 = $as_s_Some(form$1);
+      var p3 = $as_T2(x2.x$2);
+      if ((p3 !== null)) {
+        var fbId = $as_T(p3.$$und1__O());
+        var name$1 = $as_T(p3.$$und2__O());
+        var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, fbId$1) {
+          return (function(x$2$2) {
+            var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+            var selector = $m_Lorg_scalajs_nodejs_mongodb_package$().tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("facebookID", fbId$1));
+            var fields = $m_Lcom_shocktrade_server_dao_users_FriendStatusData$().Fields$1;
+            var jsx$1 = $m_sjs_js_Dictionary$();
+            var array = [];
+            $uI(fields.length);
+            var i = 0;
+            var len = $uI(fields.length);
+            while ((i < len)) {
+              var index = i;
+              var arg1 = fields[index];
+              var x$3 = $as_T(arg1);
+              var elem = new $c_T2().init___O__O(x$3, 1);
+              array.push(elem);
+              i = ((1 + i) | 0)
+            };
+            var qual$2 = x$2$2.find(selector, jsx$1.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)));
+            var eta$0$2 = qual$2.limit(1);
+            var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
+            var arg1$1 = (function(promise$1) {
+              return (function(err$2, result$2) {
+                if ((!((err$2 !== null) && (err$2 !== (void 0))))) {
+                  return $s_s_concurrent_Promise$class__success__s_concurrent_Promise__O__s_concurrent_Promise(promise$1, result$2)
+                } else {
+                  var cause = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(err$2);
+                  return $s_s_concurrent_Promise$class__failure__s_concurrent_Promise__jl_Throwable__s_concurrent_Promise(promise$1, cause)
+                }
+              })
+            })(promise);
+            eta$0$2.next(arg1$1);
+            var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$4$2) {
+              return $m_s_Option$().apply__O__s_Option(x$4$2)
+            }));
+            return $s_s_concurrent_Future$class__map__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(promise, f, ec)
+          })
+        })(mongo$1, fbId));
+        var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
+        $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1, fbId$1$1, name$1$1) {
+          return (function(x0$1$2) {
+            var x0$1 = $as_s_util_Try(x0$1$2);
+            var rc10 = false;
+            var x2$1 = null;
+            matchEnd11: {
+              if ($is_s_util_Success(x0$1)) {
+                rc10 = true;
+                x2$1 = $as_s_util_Success(x0$1);
+                var p3$1 = $as_s_Option(x2$1.value$2);
+                if ($is_s_Some(p3$1)) {
+                  var x4 = $as_s_Some(p3$1);
+                  var status = x4.x$2;
+                  response$1.send(status);
+                  $asUnit(next$1());
+                  break matchEnd11
+                }
+              };
+              if (rc10) {
+                var p6 = $as_s_Option(x2$1.value$2);
+                var x = $m_s_None$();
+                if ((x === p6)) {
+                  response$1.send(new $c_Lcom_shocktrade_common_models_user_FriendStatus(fbId$1$1, name$1$1, "Non-member"));
+                  $asUnit(next$1());
+                  break matchEnd11
+                }
+              };
+              if ($is_s_util_Failure(x0$1)) {
+                var x7 = $as_s_util_Failure(x0$1);
+                var e = x7.exception$2;
+                var jsx$2 = response$1.status(500);
+                var s = e.getMessage__T();
+                jsx$2.send(s);
+                $asUnit(next$1());
+                break matchEnd11
+              };
+              throw new $c_s_MatchError().init___O(x0$1)
+            }
+          })
+        })(response, next, fbId, name$1)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1);
+        break matchEnd6
+      }
+    };
+    var x$1 = $m_s_None$();
+    if ((x$1 === form$1)) {
+      response.status(400).send("One or more require fields (id, name) is missing");
+      break matchEnd6
+    };
+    throw new $c_s_MatchError().init___O(form$1)
+  }
+});
 $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$routes$UserRoutes$$usersByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V = (function(request, response, next, mongo$1, userDAO$1) {
   var ids = $m_Lorg_scalajs_nodejs_express_Request$HttpRequestExtensions$().bodyAs$extension__Lorg_scalajs_nodejs_express_Request__sjs_js_Any(request);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, ids$1) {
-    return (function(x$3$2) {
+    return (function(x$4$2) {
       $m_sjs_concurrent_JSExecutionContext$Implicits$();
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
       var array = [];
@@ -17198,7 +17383,7 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
       };
       var kvps = new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("$in", array)]);
       var y = $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(kvps);
-      var cursor = x$3$2.find(jsx$2.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y)), $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("facebookID", 1), new $c_T2().init___O__O("name", 1)])));
+      var cursor = x$4$2.find(jsx$2.tupleToJS__T2__sjs_js_Any(new $c_T2().init___O__O("_id", y)), $m_sjs_js_Dictionary$().apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_T2().init___O__O("facebookID", 1), new $c_T2().init___O__O("name", 1)])));
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1$2 = (function(promise$1) {
         return (function(err$2, result$2) {
@@ -17215,23 +17400,23 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
     })
   })(mongo$1, ids));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2) {
-    return (function(x0$2$2) {
-      var x0$2 = $as_s_util_Try(x0$2$2);
-      if ($is_s_util_Success(x0$2)) {
-        var x2$1 = $as_s_util_Success(x0$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$3, next$3) {
+    return (function(x0$3$2) {
+      var x0$3 = $as_s_util_Try(x0$3$2);
+      if ($is_s_util_Success(x0$3)) {
+        var x2$1 = $as_s_util_Success(x0$3);
         var users = x2$1.value$2;
-        response$2.send(users);
-        $asUnit(next$2())
-      } else if ($is_s_util_Failure(x0$2)) {
-        var x3$1 = $as_s_util_Failure(x0$2);
+        response$3.send(users);
+        $asUnit(next$3())
+      } else if ($is_s_util_Failure(x0$3)) {
+        var x3$1 = $as_s_util_Failure(x0$3);
         var e = x3$1.exception$2;
-        var jsx$3 = response$2.status(500);
+        var jsx$3 = response$3.status(500);
         var s = e.getMessage__T();
         jsx$3.send(s);
-        $asUnit(next$2())
+        $asUnit(next$3())
       } else {
-        throw new $c_s_MatchError().init___O(x0$2)
+        throw new $c_s_MatchError().init___O(x0$3)
       }
     })
   })(response, next)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -17243,7 +17428,7 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
   };
   var id = $as_T(dict.id);
   var f$1 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(mongo$1$1, id$1) {
-    return (function(x$2$2) {
+    return (function(x$3$2) {
       var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
       var fields = ["facebookID", "name"];
       var jsx$2 = $m_Lorg_scalajs_nodejs_mongodb_package$();
@@ -17281,7 +17466,7 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
         array.push(elem);
         i$1 = ((1 + i$1) | 0)
       };
-      var qual$2 = x$2$2.find(selector, jsx$3.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)));
+      var qual$2 = x$3$2.find(selector, jsx$3.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)));
       var eta$0$2 = qual$2.limit(1);
       var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
       var arg1$2 = (function(promise$1) {
@@ -17302,21 +17487,21 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
     })
   })(mongo$1, id));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
-  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$1, next$1, id$1$1) {
-    return (function(x0$1$2) {
-      var x0$1 = $as_s_util_Try(x0$1$2);
+  $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(userDAO$1, f$1, executor).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(response$2, next$2, id$1$1) {
+    return (function(x0$2$2) {
+      var x0$2 = $as_s_util_Try(x0$2$2);
       var rc10 = false;
       var x2$1 = null;
       matchEnd11: {
-        if ($is_s_util_Success(x0$1)) {
+        if ($is_s_util_Success(x0$2)) {
           rc10 = true;
-          x2$1 = $as_s_util_Success(x0$1);
+          x2$1 = $as_s_util_Success(x0$2);
           var p3 = $as_s_Option(x2$1.value$2);
           if ($is_s_Some(p3)) {
             var x4 = $as_s_Some(p3);
             var user = x4.x$2;
-            response$1.send(user);
-            $asUnit(next$1());
+            response$2.send(user);
+            $asUnit(next$2());
             break matchEnd11
           }
         };
@@ -17324,21 +17509,21 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.com$shocktrade$webapp$rou
           var p6 = $as_s_Option(x2$1.value$2);
           var x = $m_s_None$();
           if ((x === p6)) {
-            response$1.status(404).send(id$1$1);
-            $asUnit(next$1());
+            response$2.status(404).send(id$1$1);
+            $asUnit(next$2());
             break matchEnd11
           }
         };
-        if ($is_s_util_Failure(x0$1)) {
-          var x7 = $as_s_util_Failure(x0$1);
+        if ($is_s_util_Failure(x0$2)) {
+          var x7 = $as_s_util_Failure(x0$2);
           var e = x7.exception$2;
-          var jsx$4 = response$1.status(500);
+          var jsx$4 = response$2.status(500);
           var s = e.getMessage__T();
           jsx$4.send(s);
-          $asUnit(next$1());
+          $asUnit(next$2());
           break matchEnd11
         };
-        throw new $c_s_MatchError().init___O(x0$1)
+        throw new $c_s_MatchError().init___O(x0$2)
       }
     })
   })(response, next, id)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -17373,14 +17558,19 @@ $c_Lcom_shocktrade_webapp_routes_UserRoutes$.prototype.init__Lorg_scalajs_nodejs
   }));
   var executor = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
   var userDAO = $s_s_concurrent_Future$class__flatMap__s_concurrent_Future__F1__s_concurrent_ExecutionContext__s_concurrent_Future(dbFuture, f$1, executor);
-  app.get("/api/user/:id", (function(mongo$1, userDAO$1) {
+  app.post("/api/friend/status", (function(mongo$1, userDAO$1) {
     return (function(request$2, response$2, next$2) {
-      $m_Lcom_shocktrade_webapp_routes_UserRoutes$().com$shocktrade$webapp$routes$UserRoutes$$userByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2, response$2, next$2, mongo$1, userDAO$1)
+      $m_Lcom_shocktrade_webapp_routes_UserRoutes$().com$shocktrade$webapp$routes$UserRoutes$$friendStatus$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2, response$2, next$2, mongo$1, userDAO$1)
     })
   })(mongo, userDAO));
-  app.put("/api/users", (function(mongo$1$1, userDAO$1$1) {
+  app.get("/api/user/:id", (function(mongo$1$1, userDAO$1$1) {
     return (function(request$2$1, response$2$1, next$2$1) {
-      $m_Lcom_shocktrade_webapp_routes_UserRoutes$().com$shocktrade$webapp$routes$UserRoutes$$usersByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, mongo$1$1, userDAO$1$1)
+      $m_Lcom_shocktrade_webapp_routes_UserRoutes$().com$shocktrade$webapp$routes$UserRoutes$$userByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$1, response$2$1, next$2$1, mongo$1$1, userDAO$1$1)
+    })
+  })(mongo, userDAO));
+  app.put("/api/users", (function(mongo$1$2, userDAO$1$2) {
+    return (function(request$2$2, response$2$2, next$2$2) {
+      $m_Lcom_shocktrade_webapp_routes_UserRoutes$().com$shocktrade$webapp$routes$UserRoutes$$usersByID$1__Lorg_scalajs_nodejs_express_Request__Lorg_scalajs_nodejs_express_Response__sjs_js_Function0__Lorg_scalajs_nodejs_mongodb_MongoDB__s_concurrent_Future__V(request$2$2, response$2$2, next$2$2, mongo$1$2, userDAO$1$2)
     })
   })(mongo, userDAO))
 });
@@ -22738,7 +22928,7 @@ $c_Lcom_shocktrade_webapp_WebServerJsApp$.prototype.startServer__Lorg_scalajs_no
     var dict$3 = process$1.env;
     var this$78 = ($uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict$3, "PORT")) ? new $c_s_Some().init___O(dict$3.PORT) : $m_s_None$())
   };
-  var port = $as_T((this$78.isEmpty__Z() ? "1337" : this$78.get__O()));
+  var port = $as_T((this$78.isEmpty__Z() ? "9000" : this$78.get__O()));
   var app = this.configureApplication__Lorg_scalajs_nodejs_Bootstrap__Lorg_scalajs_nodejs_NodeRequire__s_concurrent_Future__Lorg_scalajs_nodejs_mongodb_MongoDB__Lorg_scalajs_nodejs_express_Application(bootstrap, require, promise, mongo);
   app.listen(port, (function(startTime$1, port$1) {
     return (function() {
@@ -24514,6 +24704,94 @@ function $h_Lcom_shocktrade_common_models_quote_Advisory() {
 $h_Lcom_shocktrade_common_models_quote_Advisory.prototype = $g.Object.prototype;
 $c_Lcom_shocktrade_common_models_quote_Advisory.prototype = new $h_Lcom_shocktrade_common_models_quote_Advisory();
 $c_Lcom_shocktrade_common_models_quote_Advisory.prototype.constructor = $c_Lcom_shocktrade_common_models_quote_Advisory;
+/** @constructor */
+function $c_Lcom_shocktrade_common_models_user_FriendStatus(arg$1, arg$2, arg$3) {
+  var jsx$1 = (arguments.length | 0);
+  var jsx$2 = 3;
+  var arg$rest = [];
+  while ((jsx$2 < jsx$1)) {
+    arg$rest.push(arguments[jsx$2]);
+    jsx$2 = ((jsx$2 + 1) | 0)
+  };
+  var facebookID = arg$1;
+  var name = arg$2;
+  var status = arg$3;
+  var gamesCompleted = ((arg$rest[0] === (void 0)) ? $m_Lcom_shocktrade_common_models_user_FriendStatus$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[0]);
+  var gamesCreated = ((arg$rest[1] === (void 0)) ? $m_Lcom_shocktrade_common_models_user_FriendStatus$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[1]);
+  var gamesDeleted = ((arg$rest[2] === (void 0)) ? $m_Lcom_shocktrade_common_models_user_FriendStatus$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[2]);
+  var lastLoginTime = ((arg$rest[3] === (void 0)) ? $m_Lcom_shocktrade_common_models_user_FriendStatus$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[3]);
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "facebookID": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "name": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "status": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "gamesCompleted": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "gamesCreated": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "gamesDeleted": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "lastLoginTime": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  this.facebookID = facebookID;
+  this.name = name;
+  this.status = status;
+  this.gamesCompleted = gamesCompleted;
+  this.gamesCreated = gamesCreated;
+  this.gamesDeleted = gamesDeleted;
+  this.lastLoginTime = lastLoginTime
+}
+/** @constructor */
+function $h_Lcom_shocktrade_common_models_user_FriendStatus() {
+  /*<skip>*/
+}
+$h_Lcom_shocktrade_common_models_user_FriendStatus.prototype = $g.Object.prototype;
+$c_Lcom_shocktrade_common_models_user_FriendStatus.prototype = new $h_Lcom_shocktrade_common_models_user_FriendStatus();
+$c_Lcom_shocktrade_common_models_user_FriendStatus.prototype.constructor = $c_Lcom_shocktrade_common_models_user_FriendStatus;
 /** @constructor */
 function $c_Lcom_shocktrade_common_models_user_NetWorth(arg$1) {
   var value = $uD(arg$1);

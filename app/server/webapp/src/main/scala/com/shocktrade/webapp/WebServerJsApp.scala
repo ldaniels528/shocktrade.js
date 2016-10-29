@@ -45,7 +45,7 @@ object WebServerJsApp extends js.JSApp {
     implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnect)
 
     // setup the application
-    val port = process.port getOrElse "1337"
+    val port = process.port getOrElse "9000"
     val app = configureApplication()
     app.listen(port, () => logger.info("Server now listening on port %s [%d msec]", port, js.Date.now() - startTime))
 

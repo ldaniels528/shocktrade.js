@@ -1,9 +1,10 @@
 package com.shocktrade.client.profile
 
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.common.models.user.User
+import com.shocktrade.common.forms.FacebookFriendForm
+import com.shocktrade.common.models.user.{FriendStatus, User}
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
+import org.scalajs.nodejs.social.facebook.TaggableFriend
 
 import scala.scalajs.js
 
@@ -27,6 +28,14 @@ class UserService($http: Http) extends Service {
     */
   def getUsers(userIDs: js.Array[String]) = {
     $http.put[js.Array[User]](s"/api/users", data = userIDs)
+  }
+
+  /**
+    * Retrieves the status for a user by the Facebook ID
+    * @param friend the given [[TaggableFriend Facebook friend]]
+    */
+  def getFacebookFriendStatus(friend: TaggableFriend) = {
+    $http.post[FriendStatus](s"/api/friend/status", data = new FacebookFriendForm(id = friend.id, name = friend.name))
   }
 
 }

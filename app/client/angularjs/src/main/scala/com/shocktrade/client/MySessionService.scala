@@ -268,41 +268,57 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
 
   def doFacebookLogin() = {
     // perform the login
-    facebook.getLoginStatus onComplete {
+    console.log(s"Performing Facebook login...")
+    facebook.login() onComplete {
       case Success(response) =>
         console.log("Facebook login successful.")
-        initFacebook(facebookID = response.authResponse.userID, userInitiated = false)
+        doPostLoginUpdates(facebookID = response.authResponse.userID, userInitiated = false)
       case Failure(e) =>
         console.error(s"Facebook: ${e.displayMessage}")
     }
   }
 
-  def initFacebook(facebookID: String, userInitiated: Boolean) = {
+  def doPostLoginUpdates(facebookID: String, userInitiated: Boolean) = {
     console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
 
     // capture the Facebook user ID
-    this.facebookID = facebookID
+    setFacebookID(facebookID)
 
-    console.log(s"Retrieving Facebook profile for FBID $facebookID...")
     val outcome = for {
-      fbProfile <- facebook.getUserProfile
-      profile <- profileService.getProfileViaFacebook(fbProfile)
-      taggableFriends <- facebook.getTaggableFriends
-      closeFriends <- facebook.getFriendList()
-    } yield (profile, fbProfile, taggableFriends, closeFriends)
+    // load the user"s Facebook profile
+      fbProfile <- {
+        console.log(s"Retrieving Facebook profile for FBID $facebookID...")
+        facebook.getUserProfile
+      }
+
+      // load the user"s Facebook friends
+      fbFriends <- {
+        console.log(s"Loading Facebook taggable friends for FBID $facebookID...")
+        facebook.getTaggableFriends
+      }
+
+      // load the user"s ShockTrade profile
+      profile <- {
+        console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
+        profileService.getProfileByFacebookID(facebookID)
+      }
+
+      // retrieve the updated network
+      netWorth <- profileService.getNetWorth(profile._id.orNull)
+
+    } yield (fbProfile, fbFriends, profile, netWorth)
 
     outcome onComplete {
-      case Success((profile, fbProfile, taggableFriends, closeFriends)) =>
+      case Success((fbProfile, fbFriends, profile, netWorth)) =>
+        console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
         $rootScope.$apply(() => {
-          this.fbProfile_? = fbProfile
-          this.fbFriends_? = taggableFriends
+          profile.netWorth = netWorth.value
           setUserProfile(profile, fbProfile)
+          this.fbFriends_? = fbFriends
         })
       case Failure(e) =>
-        toaster.error(s"Profile retrieval error - ${e.displayMessage}")
-        console.error(s"Profile retrieval error - ${e.displayMessage}")
+        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
     }
-    ()
   }
 
   def isFacebookConnected = facebookID.nonEmpty

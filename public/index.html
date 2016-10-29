@@ -32,41 +32,37 @@
     <link href="stylesheets/discover/trading_history.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/explore.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/icons.css" type="text/css" rel="stylesheet" media=screen>
-    <link href="stylesheets/inspect.css" type="text/css" rel="stylesheet" media=screen>
+    <link href="stylesheets/index.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/main.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/posts.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/profile.css" type="text/css" rel="stylesheet" media=screen>
     <link href="stylesheets/sessions.css" type="text/css" rel="stylesheet" media=screen>
 </head>
 
-<body ng-controller="MainController" ng-cloak ng-init="mainInit()">
-	<div id="ShockTradeMain">
-        <toaster-container toaster-options="{'position-class':'toast-container','time-out':3000, 'close-button':true}">
-        </toaster-container>
+<body ng-controller="MainController" ng-cloak ng-init="mainInit()" id="ShockTradeMain">
+    <toaster-container toaster-options="{'position-class':'toast-container','time-out':3000, 'close-button':true}">
+    </toaster-container>
 
-        <!-- main view -->
-        <div ng-controller="NavigationController" ng-init="initNav()">
-            <div ng-include src="'/views/app/information_bar.html'"></div>
-			<div class="row">
-				<div class="col-md-1" style="width: 60px">
-                    <div ng-include src="'/views/app/navigation_bar.html'"></div>
-                </div>
-				<div class="col-md-11 pull-left" ng-view ng-cloak></div>
-			</div>
-            <div style="display: none" id="fb-root"></div>
+    <!-- main view -->
+    <div class="row">
+        <div ng-include src="'/views/app/information_bar.html'"></div>
+        <div class="col-md-1" style="width: 60px">
+            <div ng-include src="'/views/app/navigation_bar.html'"></div>
         </div>
-	</div>
+        <div class="col-md-11 pull-left" ng-view ng-cloak></div>
+    </div>
+    <div style="display: none" id="fb-root"></div>
 
-    <div ng-include src="'/views/dialogs/compose_message.html'"></div>
-    <div ng-include src="'/views/dialogs/invite_player.html'"></div>
-    <div ng-include src="'/views/dialogs/new_game.html'"></div>
-    <div ng-include src="'/views/dialogs/new_order.html'"></div>
-    <div ng-include src="'/views/dialogs/news_quote.html'"></div>
-    <div ng-include src="'/views/dialogs/perks.html'"></div>
-    <div ng-include src="'/views/dialogs/sign_up.html'"></div>
-    <div ng-include src="'/views/dialogs/symbol_lookup.html'"></div>
-    <div ng-include src="'/views/dialogs/transfer_funds.html'"></div>
+    <div ng-include src="'/views/templates/compose_message.html'"></div>
+    <div ng-include src="'/views/templates/invite_player.html'"></div>
+    <div ng-include src="'/views/templates/new_game.html'"></div>
+    <div ng-include src="'/views/templates/new_order.html'"></div>
+    <div ng-include src="'/views/templates/news_quote.html'"></div>
+    <div ng-include src="'/views/templates/perks.html'"></div>
     <div ng-include src="'/views/templates/reactive_search.html'"></div>
+    <div ng-include src="'/views/templates/sign_up.html'"></div>
+    <div ng-include src="'/views/templates/symbol_lookup.html'"></div>
+    <div ng-include src="'/views/templates/transfer_funds.html'"></div>
 
     <!-- Bower JS libraries -->
     <script src="/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>

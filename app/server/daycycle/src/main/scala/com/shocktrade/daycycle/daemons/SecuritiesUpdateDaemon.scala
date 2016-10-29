@@ -1,24 +1,24 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.common.util.ExchangeHelper
 import com.shocktrade.daycycle.daemons.SecuritiesUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
+import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.common.util.ExchangeHelper
-import org.scalajs.nodejs.NodeRequire
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.OptionHelper._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
   * Securities Update Daemon
@@ -66,14 +66,8 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
           val mapping = js.Dictionary(securities.map(s => s.symbol -> s): _*)
           for {
             quotes <- getYahooCSVQuotes(symbols)
-            w1 <- createSnapshots(quotes, mapping).map(_.toBulkWrite) recover { case e =>
-              logger.error("Snapshot insert error: %s", e.getMessage)
-              BulkUpdateOutcome(nFailures = quotes.size)
-            }
-            w2 <- updateSecurities(quotes, mapping).map(_.toBulkWrite) recover { case e =>
-              logger.error("Security update error: %s", e.getMessage)
-              BulkUpdateOutcome(nFailures = quotes.size)
-            }
+            w1 <- createSnapshots(snapshots = quotes.map(_.toSnapshot(mapping)), mapping)
+            w2 <- updateSecurities(securities = quotes.map(_.toUpdateQuote(mapping)), mapping)
           } yield w1 + w2
         }
       })
@@ -104,20 +98,32 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
     }
   }
 
-  private def createSnapshots(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
-    Try(quotes.map(_.toSnapshot(mapping))) match {
-      case Success(snapshots) => snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture)
-      case Failure(e) =>
-        Future.failed(die(s"Failed to convert at least one object to a snapshot: ${e.getMessage}"))
+  private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]) = {
+    def insertSnapshot() = snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
+    def retrySnapshot(duration: FiniteDuration) = retry(() => insertSnapshot(), duration)
+
+    insertSnapshot() fallbackTo retrySnapshot(5.seconds) fallbackTo retrySnapshot(10.seconds) recover { case e =>
+      logger.error("Snapshot insert error: %s", e.getMessage)
+      BulkUpdateOutcome(nFailures = snapshots.size)
     }
   }
 
-  private def updateSecurities(quotes: Seq[YFCSVQuote], mapping: js.Dictionary[SecurityRef]) = {
-    Try(quotes.map(_.toUpdateQuote(mapping))) match {
-      case Success(securities) => securitiesDAO.flatMap(_.updateSecurities(securities).toFuture)
-      case Failure(e) =>
-        Future.failed(die(s"Failed to convert at least one object to a security: ${e.getMessage}"))
+  private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]) = {
+    def upsertSecurities() = securitiesDAO.flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
+    def retrySecurities(duration: FiniteDuration) = retry(() => upsertSecurities(), duration)
+
+    upsertSecurities() fallbackTo retrySecurities(5.seconds) fallbackTo retrySecurities(10.seconds) recover { case e =>
+      logger.error("Securities update error: %s", e.getMessage)
+      BulkUpdateOutcome(nFailures = securities.size)
     }
+  }
+
+  private def retry[T](f: () => Future[T], duration: FiniteDuration) = {
+    val promise = Promise[T]()
+    setTimeout(() => {
+      f() onComplete promise.complete
+    }, duration)
+    promise.future
   }
 
 }

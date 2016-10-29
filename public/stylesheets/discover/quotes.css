@@ -1,35 +1,35 @@
 .advisory {
-	border: 1px solid #ccccbb;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #e0e0e0;
-	color: #000088;
-	font-weight: bold;
-	padding: 2px 2px 2px 2px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+    border: 1px solid #ccccbb;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #e0e0e0;
+    color: #000088;
+    font-weight: bold;
+    padding: 2px 2px 2px 2px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .symbol_input_text_field {
-	background-color: #ffffcc;
+    background-color: #ffffcc;
 }
 
 div.chart_header_outer {
-	display: block;
-	width: 100%;
-	border: 1px solid #1f86a4
+    display: block;
+    width: 100%;
+    border: 1px solid #1f86a4
 }
 
 div.chart_header {
-	display: block;
-	text-align: center;
-	border: 1px solid #1f86a4;
-	background-color: #337ab7;
-	color: white
+    display: block;
+    text-align: center;
+    border: 1px solid #1f86a4;
+    background-color: #337ab7;
+    color: white
 }
 
 img.chart {
-	vertical-align: top;
-	max-width: 100%;
+    vertical-align: top;
+    max-width: 100%;
 }
 
 div.fund_summary {
@@ -41,96 +41,96 @@ div.fund_summary {
 }
 
 .quote_title {
-	padding: 2px 2px 2px 2px;
-	color: #000088;
-	font-weight: bold
+    padding: 2px 2px 2px 2px;
+    color: #000088;
+    font-weight: bold
 }
 
 .quote_sub_title {
-	padding: 10px;
+    padding: 10px;
 }
 
 .holdings_detail {
-	color: #000080;
-	font-weight: bold;
-	text-align: center;
-	padding: 5px
+    color: #000080;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px
 }
 
 div.favoritesContainer {
-	clear: both;
-	overflow: auto;
-	width: auto;
-	height: 550px;
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 550px;
 }
 
 div.filterContainer {
-	clear: both;
-	overflow: auto;	
-	width: auto;
-	height: 220px;
+    clear: both;
+    overflow: auto;
+    width: auto;
+    height: 220px;
 }
 
 .qm {
-	font-size: 10pt;
+    font-size: 10pt;
 }
- 
+
 .holdingsContainer {
-	clear: both;
-	width: auto;
-	height: 300px;
-	overflow: auto;	
+    clear: both;
+    width: auto;
+    height: 300px;
+    overflow: auto;
 }
 
 .volatile_green {
- 	color: #008000;
+    color: #008000;
 }
- 
+
 .volatile_yellow {
- 	color: #eeaa00;
+    color: #eeaa00;
 }
- 
+
 .volatile_red {
- 	color: red;
+    color: red;
 }
-  
+
 .risk_low {
-	color: #00a000;
-	cursor: pointer
+    color: #00a000;
+    cursor: pointer
 }
 
 .risk_medium {
-	color: #eeaa00;
-	cursor: pointer
+    color: #eeaa00;
+    cursor: pointer
 }
 
 .risk_high {
-	color: #ff0000;
-	cursor: pointer
+    color: #ff0000;
+    cursor: pointer
 }
 
 .risk_unknown {
-	color: #888888;
-	cursor: pointer
+    color: #888888;
+    cursor: pointer
 }
 
 .qm_header {
-	color: #000088;
-	font-weight: bold;
+    color: #000088;
+    font-weight: bold;
 }
 
 .qm_detail {
-	text-align: right
+    text-align: right
 }
 
 .qm_label {
-	font-weight: bold;
-	color: #000088
+    font-weight: bold;
+    color: #000088
 }
 
 span.small {
-	color: #2e6da4;
-	font-size: 8pt
+    color: #2e6da4;
+    font-size: 8pt
 }
 
 .qm_value {

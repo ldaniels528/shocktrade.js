@@ -21,7 +21,6 @@ import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSON
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -39,16 +38,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   private var loadingIndex = 0
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
 
-  $scope.appTabs = js.Array(
-    new MainTab(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),
-    new MainTab(name = "NewsFeed", icon_class = "fa-globe", tool_tip = "My Newsfeed", url = "/posts", authenticationRequired = false),
-    new MainTab(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
-    new MainTab(name = "Search", icon_class = "fa-search", tool_tip = "Search for games", url = "/search"),
-    new MainTab(name = "Dashboard", icon_class = "fa-gamepad", tool_tip = "Main game dashboard", url = "/dashboard", contestRequired = true),
-    new MainTab(name = "Discover", icon_class = "fa-newspaper-o", tool_tip = "Stock News and Quotes", url = "/discover"),
-    new MainTab(name = "Explore", icon_class = "fa-trello", tool_tip = "Explore Sectors and Industries", url = "/explore"),
-    new MainTab(name = "Research", icon_class = "fa-database", tool_tip = "Stock Research", url = "/research"))
-
+  $scope.appTabs = MainTab.Tabs
   $scope.levels = GameLevel.Levels
 
   ///////////////////////////////////////////////////////////////////////////
@@ -90,17 +80,15 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getTabIndex = () => $scope.appTabs.indexWhere(tab => $location.path.contains(tab.url))
 
-  $scope.isVisible = (aTab: js.UndefOr[ContestTab]) => aTab.exists { tab =>
-    (loadingIndex == 0) && ((!tab.contestRequired || mySession.contest_?.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
-  }
-
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
   $scope.postLoginUpdates = (aFacebookID: js.UndefOr[String], aUserInitiated: js.UndefOr[Boolean]) => {
     for {
       facebookID <- aFacebookID
       userInitiated <- aUserInitiated
-    } doPostLoginUpdates(facebookID, userInitiated)
+    } {
+      mySession.doPostLoginUpdates(facebookID, userInitiated)
+    }
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -123,7 +111,11 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getFundsAvailable = () => mySession.getFundsAvailable
 
+  $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
+
   $scope.getNetWorth = () => mySession.userProfile.netWorth.orZero
+
+  $scope.getWallet = () => mySession.userProfile.wallet.orZero
 
   $scope.getUserID = () => mySession.userProfile._id.orNull
 
@@ -174,7 +166,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.login = () => {
     facebook.login() onComplete {
       case Success(response) =>
-        facebook.facebookID map (doPostLoginUpdates(_, userInitiated = true))
+        facebook.facebookID map (mySession.doPostLoginUpdates(_, userInitiated = true))
       case Failure(e) =>
         console.error(s"main:login error")
         e.printStackTrace()
@@ -191,48 +183,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  private def doPostLoginUpdates(facebookID: String, userInitiated: Boolean) = {
-    console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
-
-    // capture the Facebook user ID
-    mySession.setFacebookID(facebookID)
-
-    val outcome = for {
-    // load the user"s Facebook profile
-      fbProfile <- {
-        console.log(s"Retrieving Facebook profile for FBID $facebookID...")
-        facebook.getUserProfile
-      }
-
-      fbFriends <- {
-        console.log(s"Loading Facebook friends for FBID $facebookID...")
-        facebook.getTaggableFriends
-      }
-
-      // load the user"s ShockTrade profile
-      profile <- {
-        console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
-        profileService.getProfileByFacebookID(facebookID)
-      }
-
-      // retrieve the updated network
-      netWorth <- profileService.getNetWorth(profile._id.orNull)
-
-    } yield (fbProfile, fbFriends, profile, netWorth)
-
-    outcome onComplete {
-      case Success((fbProfile, fbFriends, profile, netWorth)) =>
-        console.log("ShockTrade user profile, Facebook profile, and friends loaded...")
-        $scope.$apply(() => {
-          profile.netWorth = netWorth.value
-          mySession.setUserProfile(profile, fbProfile)
-          mySession.fbFriends_? = fbFriends
-        })
-      case Failure(e) =>
-        toaster.error(s"ShockTrade Profile retrieval error - ${e.getMessage}")
-    }
-  }
-
   $scope.signUp = () => {
     signUpDialog.popup() onComplete {
       case Success((profile, fbProfile)) =>
@@ -242,11 +192,23 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  //////////////////////////////////////////////////////////////////////
-  //              Tab Functions
-  //////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
+  //          Tab-related Functions
+  ///////////////////////////////////////////////////////////////////////////
 
-  $scope.changeAppTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
+  $scope.isVisibleTab = (aTab: js.UndefOr[MainTab]) => aTab.exists { tab =>
+    (loadingIndex == 0) && ((!tab.contestRequired || mySession.contest_?.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
+  }
+
+  $scope.switchToDiscover = () => $scope.switchToTab(MainTab.Discover)
+
+  $scope.switchToGameSearch = () => $scope.switchToTab(MainTab.Search)
+
+  $scope.switchToHome = () => $scope.switchToTab(MainTab.Home)
+
+  $scope.switchToNewsFeed = () => $scope.switchToTab(MainTab.NewsFeed)
+
+  $scope.switchToTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
     mySession.userProfile._id.toOption match {
       case Some(userID) =>
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
@@ -264,9 +226,9 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  private def performTabSwitch(tabIndex: Int): Unit = {
-    val tab = $scope.appTabs(tabIndex)
-    console.log(s"Changing location for ${mySession.getUserName} to ${tab.url}")
+  private def performTabSwitch(tabIndex: Int) {
+    val tab = MainTab.Tabs(tabIndex)
+    console.log(s"Changing location for ${mySession.getUserName.orNull} to ${tab.url}")
     $location.url(tab.url)
   }
 
@@ -322,28 +284,6 @@ object MainController {
     } getOrElse ""
   }
 
-  /**
-    * Represents a Contest Tab
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  @js.native
-  trait ContestTab extends js.Object {
-    var contestRequired: Boolean = js.native
-    var authenticationRequired: Boolean = js.native
-  }
-
-  /**
-    * Represents a Main Tab
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  @ScalaJSDefined
-  class MainTab(val name: String,
-                val icon_class: String,
-                val tool_tip: String,
-                val url: String,
-                val contestRequired: Boolean = false,
-                val authenticationRequired: Boolean = false) extends js.Object
-
 }
 
 /**
@@ -351,22 +291,22 @@ object MainController {
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @js.native
-trait MainControllerScope extends Scope {
+trait MainControllerScope extends Scope with GlobalNavigation {
   // variables
   var appTabs: js.Array[MainTab] = js.native
   var levels: js.Array[GameLevel] = js.native
 
-  // functions
+  // loading functions
   var isLoading: js.Function0[Boolean]
   var startLoading: js.Function1[js.UndefOr[Int], js.Promise[js.Any]] = js.native
   var stopLoading: js.Function1[js.UndefOr[js.Promise[js.Any]], Unit] = js.native
 
+  // miscellaneous functions
   var mainInit: js.Function0[Unit] = js.native
   var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
   var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
   var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
   var getTabIndex: js.Function0[Int] = js.native
-  var isVisible: js.Function1[js.UndefOr[ContestTab], Boolean] = js.native
   var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
   var postLoginUpdates: js.Function2[js.UndefOr[String], js.UndefOr[Boolean], Unit] = js.native
 
@@ -378,7 +318,9 @@ trait MainControllerScope extends Scope {
   var getFacebookProfile: js.Function0[js.UndefOr[FacebookProfileResponse]] = js.native
   var getFacebookFriends: js.Function0[js.Array[TaggableFriend]] = js.native
   var getFundsAvailable: js.Function0[Double] = js.native
+  var getTotalInvestment: js.Function0[Double] = js.native
   var getNetWorth: js.Function0[Double] = js.native
+  var getWallet: js.Function0[Double] = js.native
   var getUserID: js.Function0[String] = js.native
   var getUserName: js.Function0[String] = js.native
   var getUserProfile: js.Function0[UserProfile] = js.native
@@ -387,7 +329,6 @@ trait MainControllerScope extends Scope {
   var isAdmin: js.Function0[Boolean] = js.native
   var isAuthenticated: js.Function0[Boolean] = js.native
 
-  var changeAppTab: js.Function1[js.UndefOr[Int], Unit] = js.native
   var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
   var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
   var login: js.Function0[Unit] = js.native

@@ -12,8 +12,8 @@
 
 .news_provider {
 	display: block;
-	border: 1px solid #1f86a4;
-	background-color: #337ab7;
+	border: 1px solid #4ba0ce;
+	background: #5bc0ee;
 	border-radius: 5px 5px 5px 5px;
 	font-weight: bold;
 	font-size: 12pt;
@@ -84,5 +84,5 @@ div.news_quotes_container {
 
 a.news:link    { color: #000080; text-decoration: none; cursor: pointer }
 a.news:visited { color: #000080; text-decoration: none; cursor: pointer }
-a.news:hover   { color: #aa0000; text-decoration: none; cursor: pointer }
+a.news:hover   { color: #ff8000; text-decoration: none; cursor: pointer }
 a.news:active  { color: #000080; text-decoration: none; cursor: pointer }

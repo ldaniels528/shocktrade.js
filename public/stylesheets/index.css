@@ -1,0 +1,55 @@
+body {
+    width: 100%;
+}
+
+.align_right {
+    text-align: right;
+}
+
+/*********************************************************************************
+ * 							Title Bar Styles									 *
+ *********************************************************************************/
+
+.st_title_bar {
+    border: 1px solid #4ba0ce;
+    background: #5bc0ee;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.title_color {
+    color: #ffffff;
+}
+
+.title_color_focus {
+    color: #ffff00;
+}
+
+.st_title_2 {
+    font-family: Impact, fantasy;
+    color: #ff8000;
+}
+
+.st_title_3 {
+    font-family: Impact, fantasy;
+    color: #00aa88;
+}
+
+.st_title_1 {
+    font-family: Impact, fantasy;
+    color: #337ab7;
+}
+
+.spectator_message {
+    font-weight: bold;
+    color: #cc8822;
+}
+
+.spectator_bar {
+    color: #ff8000;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    width: auto;
+    height: auto;
+}

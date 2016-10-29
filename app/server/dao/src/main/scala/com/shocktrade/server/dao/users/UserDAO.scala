@@ -40,6 +40,11 @@ object UserDAO {
       dao.find("_id" $in ids.map(_.$oid), projection = js.Dictionary("facebookID" -> 1, "name" -> 1)).toArrayFuture[UserData]
     }
 
+    @inline
+    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+      dao.findOneFuture[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
+    }
+
   }
 
   /**

@@ -1,8 +1,8 @@
 package com.shocktrade.daycycle.routes
 
+import com.shocktrade.server.common.TradingClock
 import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.concurrent.Daemon.DaemonRef
-import com.shocktrade.server.common.TradingClock
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}
 import org.scalajs.nodejs.{NodeRequire, duration2Int}
@@ -20,8 +20,8 @@ object DaemonRoutes {
 
   def init[T](app: Application, daemons: Seq[DaemonRef[T]])(implicit ec: ExecutionContext, dbFuture: Future[Db], mongo: MongoDB, require: NodeRequire) = {
     val clock = new TradingClock()
-    val daemonDict = js.Dictionary(daemons.map(d => d.id -> new DaemonJs(d.id, d.name, d.delay, d.frequency)): _*)
-    val daemonMap = Map(daemons.map(d => d.id -> d): _*)
+    val daemonDict = js.Dictionary(daemons.map(d => d.name -> new DaemonJs(d.name, d.delay, d.frequency)): _*)
+    val daemonMap = Map(daemons.map(d => d.name -> d): _*)
 
     // individual objects
     app.get("/api/daemon/:id", (request: Request, response: Response, next: NextFunction) => daemonById(request, response, next))
@@ -102,12 +102,11 @@ object DaemonRoutes {
 
   /**
     * The JSON representation of a daemon reference
-    * @param id        the given daemon identifier
     * @param name      the name of the daemon
     * @param delay     the initial delay before the process runs
     * @param frequency the frequency/interval of the process
     */
   @ScalaJSDefined
-  class DaemonJs(val id: String, val name: String, val delay: Int, val frequency: Int) extends js.Object
+  class DaemonJs(val name: String, val delay: Int, val frequency: Int) extends js.Object
 
 }

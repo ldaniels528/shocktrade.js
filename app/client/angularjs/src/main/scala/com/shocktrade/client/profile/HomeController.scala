@@ -1,17 +1,18 @@
 package com.shocktrade.client.profile
 
-import com.shocktrade.client.MySessionService
+import com.shocktrade.client.profile.HomeController.FacebookFriend
+import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Timeout, _}
 import org.scalajs.dom.console
 import org.scalajs.nodejs.social.facebook.TaggableFriend
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
-import scala.concurrent.duration._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{literal => JS}
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
+import scala.util.{Failure, Success}
 
 /**
   * Home Controller
@@ -19,18 +20,16 @@ import scala.scalajs.js.UndefOr
   */
 class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
+                     @injected("UserService") userService: UserService,
                      @injected("UserProfileService") profileService: UserProfileService)
-  extends Controller {
-
-  $scope.selectedFriend = null
+  extends Controller with GlobalLoading {
 
   /////////////////////////////////////////////////////////////////////////////
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.initHome = () => {
-    $timeout(() => if ($scope.selectedFriend == null) $scope.selectedFriend = mySession.fbFriends_?.headOption.orNull, 5.seconds)
-    ()
+  $scope.init = () => {
+    if (!mySession.isAuthenticated) $scope.switchToDiscover()
   }
 
   $scope.getAwards = () => mySession.userProfile.awards getOrElse emptyArray
@@ -43,25 +42,39 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 
   $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
 
-  $scope.selectFriend = (friendOpt: js.UndefOr[TaggableFriend]) => friendOpt foreach { friend =>
+  $scope.selectFriend = (friendOpt: js.UndefOr[FacebookFriend]) => friendOpt foreach { friend =>
     console.log(s"selecting friend ${angular.toJson(friend)}")
     $scope.selectedFriend = friend
 
-    if (!isDefined(friend.dynamic.profile)) {
-      $timeout(() => {
-        friend.dynamic.profile = JS()
-        friend.dynamic.error = "Failure to load status information"
-      }, 3.seconds)
-      /*
-      profileService.getProfileByFacebookID(friend.userID.as[String]) onComplete {
-        case Success(profile) =>
-          friend.profile = profile
-        case Failure(e) =>
-          friend.profile = JS()
-          friend.error = e.getMessage
-          console.error(s"Error loading profile for ${friend.userID}: ${e.getMessage}")
-  }*/
+    asyncLoading($scope)(userService.getFacebookFriendStatus(friend)) onComplete {
+      case Success(response) =>
+        $scope.$apply { () =>
+          friend.status = response.status
+          friend.gamesCompleted = response.gamesCompleted
+          friend.gamesCreated = response.gamesCreated
+          friend.gamesDeleted = response.gamesDeleted
+          friend.lastLoginTime = response.lastLoginTime
+        }
+      case Failure(e) =>
+        console.error(s"Error loading profile for ${friend.name}: ${e.getMessage}")
     }
+  }
+
+}
+
+/**
+  * Home Controller Companion
+  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  */
+object HomeController {
+
+  @js.native
+  trait FacebookFriend extends TaggableFriend {
+    var gamesCompleted: js.UndefOr[Int] = js.native
+    var gamesCreated: js.UndefOr[Int] = js.native
+    var gamesDeleted: js.UndefOr[Int] = js.native
+    var lastLoginTime: js.UndefOr[js.Date] = js.native
+    var status: js.UndefOr[String] = js.native
   }
 
 }
@@ -70,16 +83,16 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
   * Home Controller Scope
   */
 @js.native
-trait HomeControllerScope extends Scope {
+trait HomeControllerScope extends Scope with GlobalNavigation {
   // variables
-  var selectedFriend: TaggableFriend = js.native
+  var selectedFriend: js.UndefOr[TaggableFriend] = js.native
 
   // functions
-  var initHome: js.Function0[Unit] = js.native
+  var init: js.Function0[Unit] = js.native
   var getAwards: js.Function0[js.Array[String]] = js.native
   var getFriends: js.Function0[js.Array[TaggableFriend]] = js.native
   var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native
   var getStars: js.Function0[js.Array[Int]] = js.native
   var getTotalXP: js.Function0[Int] = js.native
-  var selectFriend: js.Function1[UndefOr[TaggableFriend], Unit] = js.native
+  var selectFriend: js.Function1[UndefOr[FacebookFriend], Unit] = js.native
 }

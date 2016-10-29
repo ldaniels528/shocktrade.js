@@ -1,0 +1,24 @@
+<div class="col-md-12">
+    <div class="inline pull-left">
+        <avatar link="{{ selectedFriend }}" class="avatar-75 padding-3"></avatar>
+    </div>
+    <div class="inline pull-left">
+        <div>
+            <span>{{ selectedFriend.name }}</span>
+        </div>
+        <div>
+            <span>Status: </span>
+            <span ng-hide="isLoading()">{{ selectedFriend.status }}</span>
+            <span ng-show="isLoading()">
+                <img src="/images/status/loading16.gif"> Loading...
+            </span>
+        </div>
+        <div>
+            <span>Level {{ selectedFriend.level || 1 }} &#8212; {{ levels[ selectedFriend.level || 0 ].description }}</span>
+        </div>
+        <div>
+            <span>Rep <i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
+        </div>
+    </div>
+    <br style="clear: both">
+</div>

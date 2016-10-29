@@ -1,7 +1,7 @@
-package com.shocktrade.client.explore
+package com.shocktrade.client.discover
 
-import com.shocktrade.client.explore.ExploreController._
-import com.shocktrade.client.explore.ExploreService._
+import com.shocktrade.client.discover.ExploreController._
+import com.shocktrade.client.discover.ExploreService.AggregatedSectorData
 import com.shocktrade.client.{GlobalSelectedSymbol, GlobalSelectedSymbolScope}
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
 import org.scalajs.angularjs.AngularJsHelper._

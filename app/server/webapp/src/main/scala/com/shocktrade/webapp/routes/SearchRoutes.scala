@@ -33,7 +33,7 @@ object SearchRoutes {
       * @example GET /api/search?searchTerm=mic&maxResults=10
       */
     def getSearchResults(request: Request, response: Response, next: NextFunction) = {
-      val searchAgents = Seq(securities, users)
+      val searchAgents = Seq(users, securities)
       val form = request.queryAs[SearchForm]
 
       def search(searchTerm: String, maxResults: Int) = Future.sequence(searchAgents map (_.flatMap(_.search(searchTerm, maxResults)))) map (_.flatten)
@@ -130,6 +130,5 @@ object SearchRoutes {
       )
     }
   }
-
 
 }

@@ -1,0 +1,35 @@
+<div>
+    <i class="fa fa-globe st_text_color"></i>
+    <span class="sector_H">{{ sector.label }}</span>
+    <i class="fa fa-chevron-circle-right st_control"></i>
+    <span class="industry_H">{{ industry.label }}</span>
+</div>
+
+<table class="results">
+    <tr>
+        <th class="col-md-6">Name</th>
+        <th class="col-md-3">Symbol</th>
+        <th class="col-md-3 align_right">Last</th>
+    </tr>
+    <tr ng-repeat="quote in industry.quotes | orderBy:'symbol'"
+        ng-class="quote.symbol === selectedSymbol ? 'explore_selected' : ''">
+        <td class="col-md-6">
+            <span ng-show="quote.name">{{ quote.name }}</span>
+            <span ng-hide="quote.name" class="null center">&#8212;</span>
+        </td>
+        <td class="col-md-3">
+            <a class="links" ng-click="selectQuote(quote)">
+                <i ng-class="getPreferenceIcon(row)"></i>
+                <div id="{{ quote.symbol }}"
+                     ng-class="quote.exchange"
+                     popover="{{ quote.name }}"
+                     popover-placement="right"
+                     popover-trigger="mouseenter">{{ quote.symbol }}</div>
+            </a>
+        </td>
+        <td class="col-md-3 align_right">
+            <span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
+            <span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
+        </td>
+    </tr>
+</table>

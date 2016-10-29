@@ -81,7 +81,7 @@ object PortfolioDAO {
 
     @inline
     def findOneByID(portfolioID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      dao.findOneFuture[PortfolioData](doc("_id" $eq portfolioID.$oid))
+      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid)
     }
 
     @inline

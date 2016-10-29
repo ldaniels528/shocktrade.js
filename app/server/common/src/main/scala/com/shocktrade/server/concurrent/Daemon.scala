@@ -1,7 +1,5 @@
 package com.shocktrade.server.concurrent
 
-import java.util.UUID
-
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import org.scalajs.nodejs._
 
@@ -79,8 +77,6 @@ object Daemon {
     * @param delay     the initial delay before the daemon runs on it's regular interval
     * @param frequency the interval with which the daemon shall run
     */
-  case class DaemonRef[+T](name: String, daemon: Daemon[T], kafkaReqd: Boolean, delay: FiniteDuration, frequency: FiniteDuration) {
-    val id = UUID.randomUUID().toString
-  }
+  case class DaemonRef[+T](name: String, daemon: Daemon[T], kafkaReqd: Boolean, delay: FiniteDuration, frequency: FiniteDuration)
 
 }

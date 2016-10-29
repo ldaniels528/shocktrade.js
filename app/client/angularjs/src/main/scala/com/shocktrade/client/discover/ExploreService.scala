@@ -1,7 +1,7 @@
-package com.shocktrade.client.explore
+package com.shocktrade.client.discover
 
+import com.shocktrade.client.discover.ExploreService._
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
-import com.shocktrade.client.explore.ExploreService._
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
 import org.scalajs.dom.browser.encodeURI

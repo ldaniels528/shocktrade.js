@@ -15,7 +15,7 @@ import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, MongoDB, ObjectID, UpdateWriteOpResultObject, UpdateWriteResult}
+import org.scalajs.nodejs.mongodb.{Db, MongoDB, ObjectID, UpdateWriteOpResultObject}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.nodejs.{console, _}
@@ -65,36 +65,54 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     */
   override def run(clock: TradingClock) = {
     val isMarketCloseEvent = !clock.isTradingActive && clock.isTradingActive(lastRun)
-    val startTime = System.currentTimeMillis()
-    val outcome = for {
-      w <- updateContestsWithRankings()
-      portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
-      claims <- Future.sequence(portfolios.toSeq map (processOrders(_, isMarketCloseEvent))) map (_.flatten)
-    } yield claims
-
+    val outcome = qualifyAll(isMarketCloseEvent)
     outcome onComplete {
-      case Success(claims) =>
-        lastRun = new js.Date(startTime)
+      case Success((claims, startTime, processedTime)) =>
+        lastRun = startTime
         logger.log(separator)
         logger.log(s"${claims.size} claim(s) were created")
-        logger.log("Process completed in %d msec", System.currentTimeMillis() - startTime)
+        logger.log("Process completed in %d msec", processedTime)
       case Failure(e) =>
         logger.error(s"Failed to process portfolio: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome.map(_._1)
+  }
+
+  def qualifyAll(isMarketCloseEvent: Boolean) = {
+    val startTime = System.currentTimeMillis()
+    for {
+      w <- updateContestsWithRankings()
+      portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
+      claims <- Future.sequence(portfolios.toSeq map (processOrders(_, isMarketCloseEvent))) map (_.flatten)
+    } yield (claims, new js.Date(startTime), System.currentTimeMillis() - startTime)
+  }
+
+  def processOrderByPID(portfolioID: String, isMarketCloseEvent: Boolean) = {
+    for {
+      portfolio <- portfolioDAO.flatMap(_.findOneByID(portfolioID)).map(_.orDie(s"Portfolio #$portfolioID not found"))
+      results <- processOrders(portfolio, isMarketCloseEvent)
+    } yield results
+  }
+
+  def getQualifyingOrdersByPID(portfolioID: String, isMarketCloseEvent: Boolean) = {
+    for {
+      portfolio <- portfolioDAO.flatMap(_.findOneByID(portfolioID)).map(_.orDie(s"Portfolio #$portfolioID not found"))
+      orders = getQualifyingOrders(portfolio, isMarketCloseEvent)
+    } yield orders
+  }
+
+  def getQualifyingOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
+    val  asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
+    portfolio.findEligibleOrders(asOfTime)
   }
 
   private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
     logger.log(separator)
     logger.log(s"Processing portfolio ${portfolio.playerID} / ${portfolio.contestName}")
 
-    // determine the as-of date
-    val asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
-    logger.log(s"as-of date: $asOfTime\n")
-
     // attempt to find eligible orders
-    val orders = portfolio.findEligibleOrders(asOfTime)
+    val orders = getQualifyingOrders(portfolio, isMarketCloseEvent)
 
     // display the orders
     showOrders(portfolio, orders)
@@ -116,10 +134,10 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
         // attempt to fulfill the BUY/SELL order
         val outcome = for {
           w1 <- portfolioDAO.flatMap(if (wo.order.isBuyOrder) _.insertPosition(wo) else _.reducePosition(wo))
-          /*w2 <- w1 match {
-            case w if w.isOk => updatePlayerNetWorth(wo.playerID)
-            case w => Future.successful(New[UpdateWriteOpResultObject])
-          }*/
+        /*w2 <- w1 match {
+          case w if w.isOk => updatePlayerNetWorth(wo.playerID)
+          case w => Future.successful(New[UpdateWriteOpResultObject])
+        }*/
         } yield w1
 
         outcome foreach { result =>

@@ -92,24 +92,6 @@ db.Players.insert({
     "totalXP" : 902
 });
 db.Players.insert({
-    "_id": ObjectId("555c0e4e2a00003a000146a3"),
-    "name": "gman",
-    "facebookID": "824938767584736",
-    "gamesCompleted" : 2,
-    "gamesCreated" : 3,
-    "gamesDeleted" : 1,
-    "lastLoginTime" : ISODate("2014-03-01T03:32:41.513Z"),
-    "level" : 3,
-    "loginTime" : ISODate("2013-06-14T23:56:43.748Z"),
-    "modules" : [ "MKT_WATCH" ],
-    "netCashEarned" : 29000.57,
-    "netWorth" : 250000.00,
-    "perks" : [ "CREATOR" ],
-    "recentSymbols" : ['AAPL', 'AMZN', 'GOOG', 'MSFT'],
-    "rep" : 1,
-    "totalXP" : 902
-});
-db.Players.insert({
     "_id": ObjectId("557fc2895882c8421f3c5580"),
     "name": "Fugitive528",
     "facebookID": "1796471892",

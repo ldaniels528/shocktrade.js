@@ -4,7 +4,6 @@ import com.shocktrade.client.contest._
 import com.shocktrade.client.dialogs._
 import com.shocktrade.client.directives._
 import com.shocktrade.client.discover._
-import com.shocktrade.client.explore._
 import com.shocktrade.client.news._
 import com.shocktrade.client.posts.{PostController, PostService}
 import com.shocktrade.client.profile._
@@ -12,11 +11,12 @@ import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
-import org.scalajs.angularjs.{Module, Scope, angular}
+import org.scalajs.angularjs.{Module, Scope, Timeout, angular, _}
 import org.scalajs.dom.browser.console
 import org.scalajs.jquery._
 import org.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -77,9 +77,10 @@ object WebClientJsApp extends js.JSApp {
     })
 
     // initialize the application
-    module.run({ ($rootScope: Scope, MySessionService: MySessionService, SocialServices: SocialServices, WebSocketService: WebSocketService) =>
+    module.run({ ($rootScope: Scope, $timeout: Timeout,
+                  MySessionService: MySessionService, SocialServices: SocialServices, WebSocketService: WebSocketService) =>
       // configure the Social Network callbacks
-      configureSocialNetworkCallbacks(MySessionService, SocialServices)
+      configureSocialNetworkCallbacks($timeout, MySessionService, SocialServices)
 
       // initialize the web socket service
       WebSocketService.init()
@@ -140,6 +141,7 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[ExposureController]("ExposureController")
     module.controllerOf[GameSearchController]("GameSearchController")
     module.controllerOf[HomeController]("HomeController")
+    module.controllerOf[InformationBarController]("InformationBarController")
     module.controllerOf[MainController]("MainController")
     module.controllerOf[MarginAccountController]("MarginAccountController")
     module.controllerOf[MyGamesController]("MyGamesController")
@@ -152,28 +154,20 @@ object WebClientJsApp extends js.JSApp {
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
   }
 
-  private def configureSocialNetworkCallbacks(mySession: MySessionService, socialServices: SocialServices): Unit = {
+  private def configureSocialNetworkCallbacks($timeout: Timeout, mySession: MySessionService, socialServices: SocialServices): Unit = {
     socialServices.getFacebookAppInfo onComplete {
-      case Success(appInfo) => initializeFacebookApp(mySession, appInfo)
+      case Success(appInfo) => initializeFacebookApp($timeout, mySession, appInfo)
       case Failure(e) => console.error("Error initializing Facebook App")
     }
   }
 
-  private def initializeFacebookApp(mySession: MySessionService, appInfo: FacebookAppInfo) = {
+  private def initializeFacebookApp($timeout: Timeout, mySession: MySessionService, appInfo: FacebookAppInfo) = {
     // setup the initialization callback for Facebook
     js.Dynamic.global.fbAsyncInit = () => {
       console.log("fbAsyncInit: Setting up Facebook integration...")
       val config = FacebookAppConfig(appId = appInfo.appId, status = true, xfbml = true)
       FB.init(config)
       console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
-
-      // asynchronously initialize Facebook
-      val mainElem = angular.element(jQuery("#ShockTradeMain"))
-      val $scope = mainElem.scope()
-      $scope.$apply { () =>
-        console.info("Initializing Facebook API...")
-        mySession.doFacebookLogin()
-      }
     }
   }
 
