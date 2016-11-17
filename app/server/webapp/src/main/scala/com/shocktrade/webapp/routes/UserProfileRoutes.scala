@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.common.models.quote.PricingQuote
 import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.securities.QtyQuote
@@ -8,6 +7,7 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.dao.users.UserProfileData
+import com.shocktrade.server.facade.PricingQuote
 import org.scalajs.nodejs._
 import org.scalajs.nodejs.express.{Application, Request, Response}
 import org.scalajs.nodejs.mongodb.{Db, MongoDB}

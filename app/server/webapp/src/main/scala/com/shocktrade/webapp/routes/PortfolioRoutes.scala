@@ -2,7 +2,6 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.contest.{MarketValueResponse, Participant, PositionLike, TotalInvestment}
-import com.shocktrade.common.models.quote.PricingQuote
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.dao._
 import com.shocktrade.server.dao.contest.ContestDAO._
@@ -10,6 +9,7 @@ import com.shocktrade.server.dao.contest.PerksDAO._
 import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.contest.{ContestData, OrderData, PortfolioData, PositionData}
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.facade.PricingQuote
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import org.scalajs.nodejs.{console, _}

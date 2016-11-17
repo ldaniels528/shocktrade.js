@@ -1,7 +1,6 @@
 package com.shocktrade.qualification
 
 import com.shocktrade.common.models.contest._
-import com.shocktrade.common.models.quote.PricingQuote
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
@@ -14,11 +13,12 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
+import com.shocktrade.server.facade.PricingQuote
+import org.scalajs.nodejs._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.mongodb.{Db, MongoDB, ObjectID, UpdateWriteOpResultObject}
 import org.scalajs.nodejs.os.OS
 import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{console, _}
 import org.scalajs.sjs.DateHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 import org.scalajs.sjs.OptionHelper._
@@ -34,10 +34,11 @@ import scala.util.{Failure, Success, Try}
   * Order Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
+class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // load modules
   private implicit val os = OS()
   private implicit val moment = Moment()
+  private implicit val mongo = MongoDB()
 
   // get DAO and service references
   private val logger = LoggerFactory.getLogger(getClass)
@@ -103,7 +104,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   def getQualifyingOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
-    val  asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
+    val asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
     portfolio.findEligibleOrders(asOfTime)
   }
 
@@ -186,7 +187,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
           case Success(claim) => Option(claim)
           case Failure(e) => logger.warn(e.getMessage); None
         }
-      } yield new WorkOrder(portfolioID, orderWithPrice, claim)
+      } yield WorkOrder(portfolioID, orderWithPrice, claim)
     }
   }
 
@@ -242,7 +243,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   }
 
   private def updateContestsWithRankings() = {
-    console.log("Updating contests...")
+    logger.log("Updating contests...")
     val outcome = for {
       contests <- contestDAO.flatMap(_.findActiveContests())
       results <- Future.sequence(contests.map(updateContestRankings).toSeq)
@@ -250,9 +251,9 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
     outcome onComplete {
       case Success(results) =>
-        console.log(s"Contest Rankings: %d contests", results.length)
+        logger.log(s"Contest Rankings: %d contests", results.length)
       case Failure(e) =>
-        console.error("An unexpected error occurred: %s", e.getMessage)
+        logger.error("An unexpected error occurred: %s", e.getMessage)
         e.printStackTrace()
     }
     outcome

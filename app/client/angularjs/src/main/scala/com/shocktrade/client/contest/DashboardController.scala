@@ -1,8 +1,8 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.{PerksDialog, TransferFundsDialog}
+import com.shocktrade.client.{GlobalNavigation, MySessionService}
 import com.shocktrade.common.models.contest.Participant
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.toaster.Toaster
@@ -29,6 +29,14 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   extends Controller {
 
   private var accountMode = false
+
+  /////////////////////////////////////////////////////////////////////
+  //          Initialization Functions
+  /////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => {
+    if (!mySession.isAuthenticated || mySession.portfolio_?.isEmpty) $scope.switchToDiscover()
+  }
 
   /////////////////////////////////////////////////////////////////////
   //          Account Functions
@@ -119,8 +127,9 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @js.native
-trait DashboardScope extends Scope {
+trait DashboardScope extends Scope with GlobalNavigation {
   // functions
+  var init: js.Function0[Unit] = js.native
   var getRankings: js.Function0[js.UndefOr[js.Array[Participant]]] = js.native
   var isCashAccount: js.Function0[Boolean] = js.native
   var isMarginAccount: js.Function0[Boolean] = js.native

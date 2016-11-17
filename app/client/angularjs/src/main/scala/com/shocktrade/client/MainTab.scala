@@ -22,13 +22,12 @@ class MainTab(val name: String,
 object MainTab {
 
   val About = 0
-  val NewsFeed = 1
-  val Home = 2
-  val Search = 3
-  val Dashboard = 4
-  val Discover = 5
-  val Explore = 6
-  val Research = 7
+  val Discover = 1
+  val NewsFeed = 2
+  val Home = 3
+  val Search = 4
+  val Dashboard = 5
+  val Research = 6
 
   val Tabs = js.Array(
     new MainTab(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),

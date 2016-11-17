@@ -23,6 +23,7 @@
     "moment-timezone": "^0.5.5",
     "mongodb": "^2.1.18",
     "nib": "^1.1.2",
+    "node-sourcemap": "^0.1.2",
     "numeral": "^1.5.3",
     "request": "^2.72.0",
     "splitargs": "0.0.7",

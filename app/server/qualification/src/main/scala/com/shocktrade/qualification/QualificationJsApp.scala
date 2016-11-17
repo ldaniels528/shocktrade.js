@@ -76,7 +76,8 @@ object QualificationJsApp extends js.JSApp {
 
     // schedule the daemons to run
     schedule(tradingClock, Seq(
-      //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), delay = 0.seconds, frequency = 30.minutes),
+      DaemonRef("ContestCloseOut", new ContestCloseOutEngine(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 30.minutes),
+      //DaemonRef("IntraDayQuote", new IntraDayQuoteDaemon(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 30.minutes),
       DaemonRef("OrderQualification", qualificationEngine, kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes))
     )
   }

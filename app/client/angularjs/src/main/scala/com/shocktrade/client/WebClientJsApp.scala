@@ -11,12 +11,10 @@ import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
 import org.scalajs.angularjs.facebook.FacebookService
 import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
-import org.scalajs.angularjs.{Module, Scope, Timeout, angular, _}
+import org.scalajs.angularjs.{Module, Scope, Timeout, angular}
 import org.scalajs.dom.browser.console
-import org.scalajs.jquery._
 import org.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
 
-import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}

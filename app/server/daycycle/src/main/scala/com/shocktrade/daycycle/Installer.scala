@@ -1,17 +1,17 @@
 package com.shocktrade.daycycle
 
-import com.shocktrade.server.dao.NewsDAO._
-import com.shocktrade.server.dao.contest.AwardsDAO._
-import com.shocktrade.server.dao.contest.PerksDAO._
-import com.shocktrade.server.dao.contest.{AwardData, PerkData}
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
+import com.shocktrade.server.dao.NewsDAO._
 import com.shocktrade.server.dao.NewsSourceData
-import org.scalajs.nodejs.mongodb.{Db, WriteOptions}
+import com.shocktrade.server.dao.contest.AwardsDAO._
+import com.shocktrade.server.dao.contest.PerksDAO._
+import com.shocktrade.server.dao.contest.{AwardData, PerkData}
+import org.scalajs.nodejs.mongodb.{MongoDB, WriteOptions}
 import org.scalajs.nodejs.{NodeRequire, setImmediate}
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ExecutionContext, Promise}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -19,7 +19,8 @@ import scala.util.{Failure, Success}
   * Application Installer
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class Installer(dbFuture: Future[Db])(implicit require: NodeRequire, ec: ExecutionContext) {
+class Installer(dbConnectionString: String)(implicit require: NodeRequire, mongo: MongoDB, ec: ExecutionContext) {
+  implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
   private val awardsDAO = dbFuture.flatMap(_.getAwardsDAO)
   private val newsDAO = dbFuture.flatMap(_.getNewsDAO)
@@ -37,7 +38,7 @@ class Installer(dbFuture: Future[Db])(implicit require: NodeRequire, ec: Executi
       d1 <- start(new EodDataCompanyUpdateDaemon(dbFuture))
 
       // update securities
-      d2 <- start(new SecuritiesUpdateDaemon(dbFuture))
+      d2 <- start(new SecuritiesUpdateDaemon(dbConnectionString))
       d3 <- start(new KeyStatisticsUpdateDaemon(dbFuture))
 
       // update company profile

@@ -15,13 +15,30 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 @ScalaJSDefined
-class WorkOrder(val portfolioID: ObjectID, val order: OrderData, val claim: Claim) extends js.Object
+class WorkOrder(val portfolioID: ObjectID,
+                val order: OrderData,
+                val symbol: String,
+                val exchange: String,
+                val price: Double,
+                val quantity: Double,
+                val asOfTime: js.Date) extends js.Object
 
 /**
   * Work Order Companion
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object WorkOrder {
+
+  @inline
+  def apply(portfolioID: ObjectID, order: OrderData, claim: Claim) = new WorkOrder(
+    portfolioID,
+    order,
+    claim.symbol,
+    claim.exchange,
+    claim.price,
+    claim.quantity,
+    claim.asOfTime
+  )
 
   /**
     * Work Order Extensions
@@ -49,7 +66,7 @@ object WorkOrder {
 
     @inline
     def toClosedOrder(statusMessage: String) = wo.order.copy(
-      processedTime = wo.claim.asOfTime,
+      processedTime = wo.asOfTime,
       statusMessage = statusMessage
     )
 
@@ -58,9 +75,9 @@ object WorkOrder {
       _id = UUID.randomUUID().toString,
       accountType = wo.order.accountType,
       symbol = wo.order.symbol,
-      exchange = wo.claim.exchange,
-      pricePaid = wo.claim.price,
-      quantity = wo.claim.quantity,
+      exchange = wo.exchange,
+      pricePaid = wo.price,
+      quantity = wo.quantity,
       commission = Commissions(wo.order),
       netValue = for {totalCost <- wo.order.totalCost} yield totalCost - Commissions(wo.order),
       processedTime = new js.Date()
@@ -71,8 +88,8 @@ object WorkOrder {
       _id = UUID.randomUUID().toString,
       symbol = wo.order.symbol,
       pricePaid = positionSold.pricePaid,
-      priceSold = wo.claim.price,
-      quantity = wo.claim.quantity,
+      priceSold = wo.price,
+      quantity = wo.quantity,
       commissions = positionSold.commission.map(_ + Commissions(wo.order))
     )
 

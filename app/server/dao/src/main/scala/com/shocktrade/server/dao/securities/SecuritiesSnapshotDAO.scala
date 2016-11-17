@@ -27,26 +27,24 @@ object SecuritiesSnapshotDAO {
 
     @inline
     def findMatch(order: OrderLike)(implicit ec: ExecutionContext) = {
-      val query = doc(Seq(
+      dao.findOneFuture[SnapshotQuote](doc(Seq(
         Option("symbol" $eq order.symbol),
         Option("tradeDateTime" between(order.creationTime, new js.Date())),
         Option("volume" $gte order.quantity),
         // pricing
         if (order.isLimitOrder) Option(if (order.isBuyOrder) "lastTrade" $lte order.price else "lastTrade" $gte order.price)
         else None
-      ).flatten: _*)
-
-      dao.findOneFuture[SnapshotQuote](query)
+      ).flatten: _*))
     }
 
     @inline
-    def getSnapshots(symbol: String, startTime: js.Date, endTime: js.Date) = {
+    def findSnapshots(symbol: String, startTime: js.Date, endTime: js.Date) = {
       dao.find(doc("symbol" $eq symbol, "tradeDateTime" between(startTime, endTime))).toArrayFuture[SnapshotQuote]
     }
 
     @inline
-    def updateSnapshots(quotes: Seq[SnapshotQuote]) = {
-      dao.bulkWrite(js.Array(quotes map insertOne: _*))
+    def updateSnapshots(snapshots: Seq[SnapshotQuote]) = {
+      dao.bulkWrite(js.Array(snapshots map insertOne: _*))
     }
 
   }

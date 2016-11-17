@@ -3,6 +3,7 @@ package com.shocktrade.server.dao.contest
 import java.util.UUID
 
 import com.shocktrade.common.models.contest.PositionLike
+import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 
 import scala.scalajs.js
@@ -57,6 +58,35 @@ object PositionData {
         accountType = accountType ?? position.accountType,
         netValue = netValue ?? position.netValue)
     }
+
+    @inline
+    def fundingAsOfDate = {
+      position match {
+        case o if o.isCashAccount => "cashAccount.asOfDate"
+        case o if o.isMarginAccount => "marginAccount.asOfDate"
+        case o => die(s"Invalid account type (${position.accountType.orNull}) for order # ${position._id.orNull}")
+      }
+    }
+
+    @inline
+    def fundingSource = {
+      position match {
+        case o if o.isCashAccount => "cashAccount.funds"
+        case o if o.isMarginAccount => "marginAccount.funds"
+        case o => die(s"Invalid account type (${position.accountType.orNull}) for order # ${position._id.orNull}")
+      }
+    }
+
+    @inline
+    def toPerformance(priceSold: Double, commission: Double) = new PerformanceData(
+      _id = UUID.randomUUID().toString,
+      symbol = position.symbol,
+      pricePaid = position.pricePaid,
+      priceSold = priceSold,
+      quantity = position.quantity,
+      commissions = position.commission.map(_ + commission)
+    )
+
   }
 
 }

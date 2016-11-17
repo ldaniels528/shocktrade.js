@@ -6,13 +6,14 @@ import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
+import com.shocktrade.server.dao.DbPool
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import org.scalajs.nodejs._
-import org.scalajs.nodejs.mongodb.Db
+import org.scalajs.nodejs.mongodb.MongoDB
 import org.scalajs.sjs.OptionHelper._
 
 import scala.concurrent.duration._
@@ -24,20 +25,20 @@ import scala.util.{Failure, Success}
   * Securities Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
+class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
   // get service references
   private val csvQuoteSvc = new YahooFinanceCSVQuotesService()
-  private val cvsQuoteParams = csvQuoteSvc.getParams(
+  private val csvQuoteParams = csvQuoteSvc.getParams(
     "symbol", "exchange", "lastTrade", "open", "prevClose", "close", "high", "low", "change", "changePct",
     "high52Week", "low52Week", "tradeDate", "tradeTime", "volume", "marketCap", "target1Y", "errorMessage"
   )
 
   // get DAO references
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
-  private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
+  private val securitiesDAO = new DbPool(dbConnectionString)(_.getSecuritiesUpdateDAO)
+  private val snapshotDAO = new DbPool(dbConnectionString)(_.getSnapshotDAO)
 
   // internal variables
   private val processor = new ConcurrentProcessor()
@@ -86,33 +87,33 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
 
   private def getSecurities(cutOffTime: js.Date) = {
     for {
-      securities <- securitiesDAO.flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
+      securities <- securitiesDAO().flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches
   }
 
   private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2) = {
-    csvQuoteSvc.getQuotes(cvsQuoteParams, symbols: _*) recover { case e =>
+    csvQuoteSvc.getQuotes(csvQuoteParams, symbols: _*) recover { case e =>
       logger.error(s"Service call failure [${e.getMessage}] for symbols: %s", symbols.mkString("+"))
       Seq.empty
     }
   }
 
   private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]) = {
-    def insertSnapshot() = snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
+    def insertSnapshot() = snapshotDAO().flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
     def retrySnapshot(duration: FiniteDuration) = retry(() => insertSnapshot(), duration)
 
-    insertSnapshot() fallbackTo retrySnapshot(5.seconds) fallbackTo retrySnapshot(10.seconds) recover { case e =>
+    insertSnapshot() /*fallbackTo retrySnapshot(5.seconds)*/ recover { case e =>
       logger.error("Snapshot insert error: %s", e.getMessage)
       BulkUpdateOutcome(nFailures = snapshots.size)
     }
   }
 
   private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]) = {
-    def upsertSecurities() = securitiesDAO.flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
+    def upsertSecurities() = securitiesDAO().flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
     def retrySecurities(duration: FiniteDuration) = retry(() => upsertSecurities(), duration)
 
-    upsertSecurities() fallbackTo retrySecurities(5.seconds) fallbackTo retrySecurities(10.seconds) recover { case e =>
+    upsertSecurities() /*fallbackTo retrySecurities(5.seconds)*/ recover { case e =>
       logger.error("Securities update error: %s", e.getMessage)
       BulkUpdateOutcome(nFailures = securities.size)
     }

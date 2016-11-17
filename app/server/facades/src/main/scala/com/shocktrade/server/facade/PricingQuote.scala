@@ -1,4 +1,4 @@
-package com.shocktrade.common.models.quote
+package com.shocktrade.server.facade
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -17,6 +17,6 @@ class PricingQuote(val symbol: String,
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object PricingQuote {
-  val Fields = List("symbol", "lastTrade")
+  val Fields = List("symbol", "lastTrade", "tradeDateTime")
 
 }

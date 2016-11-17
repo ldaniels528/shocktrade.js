@@ -24,12 +24,14 @@ copyJS := {
   val qual_dir = out_dir / "app" / "server" / "qualification" / "target" / "scala-2.11"
   val robot_dir = out_dir / "app" / "server" / "robots" / "target" / "scala-2.11"
   val web_dir = out_dir / "app" / "server" / "webapp" / "target" / "scala-2.11"
+  val cli_dir = out_dir / "app" / "client" / "control_panel" / "target" / "scala-2.11"
 
   val files1 = Seq("", ".map") map ("shocktrade-daycycle-fastopt.js" + _) map (s => (day_dir / s, out_dir / s))
   val files2 = Seq("", ".map") map ("shocktrade-qualification-fastopt.js" + _) map (s => (qual_dir / s, out_dir / s))
   val files3 = Seq("", ".map") map ("shocktrade-robots-fastopt.js" + _) map (s => (robot_dir / s, out_dir / s))
   val files4 = Seq("", ".map") map ("shocktrade-webapp-fastopt.js" + _) map (s => (web_dir / s, out_dir / s))
-  IO.copy(files1 ++ files2 ++ files3 ++ files4, overwrite = true)
+  val files5 = Seq("", ".map") map ("shocktrade-controlpanel-fastopt.js" + _) map (s => (cli_dir / s, out_dir / s))
+  IO.copy(files1 ++ files2 ++ files3 ++ files4 ++ files5, overwrite = true)
 }
 
 lazy val appSettings = Seq(
@@ -42,13 +44,17 @@ lazy val appSettings = Seq(
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
+  testFrameworks += new TestFramework("minitest.runner.Framework"),
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
     "org.scala-lang" % "scala-reflect" % appScalaVersion,
     //
     // Testing dependencies
     //
-    "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
+    "io.monix" %%% "minitest-laws" % "0.26" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
   ))
 
 lazy val moduleSettings = Seq(
@@ -59,6 +65,7 @@ lazy val moduleSettings = Seq(
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
+  testFrameworks += new TestFramework("minitest.runner.Framework"),
   libraryDependencies ++= Seq(
     //  "be.doeraene" %%% "scalajs-jquery" % scalaJsJQueryVersion,
     "org.scala-js" %%% "scalajs-dom" % scalaJsDomVersion,
@@ -66,7 +73,10 @@ lazy val moduleSettings = Seq(
     //
     // Testing dependencies
     //
-    "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
+    "io.monix" %%% "minitest-laws" % "0.26" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
   ))
 
 lazy val common = (project in file("./app/shared/common"))
@@ -117,14 +127,15 @@ lazy val server_common = (project in file("./app/server/common"))
     libraryDependencies ++= Seq(
       "com.github.ldaniels528" %%% "scalajs-common" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-nodejs-global" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-crypto" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
       "com.github.ldaniels528" %%% "scalajs-npm-mongodb" % scalaJsNodeVersion
     ))
 
 lazy val webapp = (project in file("./app/server/webapp"))
-  .aggregate(common, server_common, dao, services)
-  .dependsOn(common, server_common, dao, services)
+  .aggregate(common, server_common, dao, services, facades)
+  .dependsOn(common, server_common, dao, services, facades)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -141,9 +152,26 @@ lazy val webapp = (project in file("./app/server/webapp"))
       "com.github.ldaniels528" %%% "scalajs-npm-splitargs" % scalaJsNodeVersion
     ))
 
+lazy val control_panel = (project in file("./app/client/control_panel"))
+  .aggregate(common, server_common, services, facades)
+  .dependsOn(common, server_common, services, facades)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-controlpanel",
+    organization := "com.shocktrade",
+    version := appVersion,
+    libraryDependencies ++= Seq(
+      "com.github.ldaniels528" %%% "scalajs-nodejs-core" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-fs" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-global" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-nodejs-repl" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion
+    ))
+
 lazy val daycycle = (project in file("./app/server/daycycle"))
-  .aggregate(common, server_common, dao, services)
-  .dependsOn(common, server_common, dao, services)
+  .aggregate(common, server_common, dao, services, facades)
+  .dependsOn(common, server_common, dao, services, facades)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -161,8 +189,8 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
-  .aggregate(common, server_common, dao, services)
-  .dependsOn(common, server_common, dao, services)
+  .aggregate(common, server_common, dao, services, facades)
+  .dependsOn(common, server_common, dao, services, facades)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -179,8 +207,8 @@ lazy val qualification = (project in file("./app/server/qualification"))
     ))
 
 lazy val robots = (project in file("./app/server/robots"))
-  .aggregate(common, server_common, dao)
-  .dependsOn(common, server_common, dao)
+  .aggregate(common, server_common, dao, facades)
+  .dependsOn(common, server_common, dao, facades)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -231,8 +259,27 @@ lazy val services = (project in file("./app/server/services"))
       "com.github.ldaniels528" %%% "scalajs-npm-xml2js" % scalaJsNodeVersion
     ))
 
+lazy val facades = (project in file("./app/server/facades"))
+  .aggregate(common, server_common, dao, services)
+  .dependsOn(common, server_common, dao, services)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(moduleSettings: _*)
+  .settings(
+    name := "shocktrade-facades",
+    organization := "com.shocktrade",
+    version := appVersion,
+    libraryDependencies ++= Seq(
+      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-csv-parse" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-request" % scalaJsNodeVersion,
+      "com.github.ldaniels528" %%% "scalajs-npm-xml2js" % scalaJsNodeVersion
+    ))
+
 lazy val shocktradejs = (project in file("."))
-  .aggregate(angularjs, webapp, daycycle, qualification, robots)
+  .aggregate(angularjs, webapp, daycycle, qualification, robots, control_panel)
   .dependsOn(angularjs, webapp)
   .enablePlugins(ScalaJSPlugin)
   .settings(

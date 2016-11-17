@@ -74,7 +74,7 @@ object PortfolioUpdateDAO {
           wo.fundingSource $gte wo.totalCost),
         update = doc(
           wo.fundingSource $inc -wo.totalCost,
-          wo.fundingAsOfDate $set wo.claim.asOfTime,
+          wo.fundingAsOfDate $set wo.asOfTime,
           "orders" $pull doc("_id" -> wo.order._id),
           $addToSet(
             "positions" -> wo.toNewPosition,
@@ -131,29 +131,43 @@ object PortfolioUpdateDAO {
     }
 
     @inline
+    def liquidatePosition(portfolioID: ObjectID, pos: PositionData, price: Double, commission: Double, asOfTime: js.Date)(implicit ec: ExecutionContext) = {
+      dao.updateOne(
+        filter = doc(
+          "_id" $eq portfolioID,
+          "positions" $elemMatch("symbol" $eq pos.symbol, "quantity" $gte pos.quantity)),
+        update = doc(
+          pos.fundingSource $inc (for (qty <- pos.quantity; price <- pos.pricePaid) yield -qty * price).orZero + commission,
+          pos.fundingAsOfDate $set asOfTime,
+          "performance" $addToSet pos.toPerformance(price, commission),
+          "positions" $pull doc("_id" -> pos._id)
+        )).toFuture
+    }
+
+    @inline
     def reducePosition(wo: WorkOrder)(implicit ec: ExecutionContext) = {
       for {
         portfolio_? <- dao.findOneFuture[PortfolioData]("_id" $eq wo.portfolioID, fields = js.Array("positions"))
         positions = portfolio_?.flatMap(_.positions.toOption).getOrElse(emptyArray)
-        positionToSell_? = positions.find(p => p.symbol.contains(wo.claim.symbol) && p.quantity.exists(_ >= wo.claim.quantity))
+        positionToSell_? = positions.find(p => p.symbol.contains(wo.symbol) && p.quantity.exists(_ >= wo.quantity))
 
         result <- positionToSell_? match {
           case Some(positionToSell) =>
             dao.updateOne(
               filter = doc(
                 "_id" $eq wo.portfolioID,
-                "positions" $elemMatch("symbol" $eq wo.claim.symbol, "quantity" $gte wo.claim.quantity)),
+                "positions" $elemMatch("symbol" $eq wo.symbol, "quantity" $gte wo.quantity)),
               update = doc(
                 $inc(
                   wo.fundingSource -> +wo.totalCost,
-                  "positions.$.quantity" -> -wo.claim.quantity,
-                  "positions.$.netValue" -> -wo.claim.quantity * wo.claim.price
+                  "positions.$.quantity" -> -wo.quantity,
+                  "positions.$.netValue" -> -wo.quantity * wo.price
                 ),
                 $addToSet(
                   "closedOrders" -> wo.toClosedOrder("Processed"),
                   "performance" -> wo.toPerformance(positionToSell)
                 ),
-                wo.fundingAsOfDate $set wo.claim.asOfTime,
+                wo.fundingAsOfDate $set wo.asOfTime,
                 "orders" $pull doc("_id" -> wo.order._id)
               )).toFuture
           case None =>

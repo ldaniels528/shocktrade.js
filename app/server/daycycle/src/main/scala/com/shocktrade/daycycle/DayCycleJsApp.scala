@@ -74,7 +74,7 @@ object DayCycleJsApp extends js.JSApp {
     app.disable("etag")
 
     // define the daemons
-    val daemons = createDaemons()
+    val daemons = createDaemons(dbConnectionString)
 
     // setup all other routes
     DaemonRoutes.init(app, daemons)
@@ -91,7 +91,7 @@ object DayCycleJsApp extends js.JSApp {
     // start the optional installation
     if (process.argv.contains("--install")) {
       logger.info("Running installer...")
-      new Installer(dbFuture).install() onComplete {
+      new Installer(dbConnectionString).install() onComplete {
         case Success(_) =>
           logger.info("Installation completed")
           launchDaemons(daemons)
@@ -106,7 +106,7 @@ object DayCycleJsApp extends js.JSApp {
     }
   }
 
-  def createDaemons()(implicit require: NodeRequire, dbFuture: Future[Db], kafkaProducer: Producer) = {
+  def createDaemons(dbConnectionString: String)(implicit require: NodeRequire, dbFuture: Future[Db], kafkaProducer: Producer, mongo: MongoDB) = {
     Seq(
       DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
       DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
@@ -114,9 +114,9 @@ object DayCycleJsApp extends js.JSApp {
       DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 1.hours, frequency = 12.hours),
       DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), kafkaReqd = false, delay = 2.hours, frequency = 12.hours),
       DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 3.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbConnectionString), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes),
 
-      // kafka
+      // kafka-dependent daemons
       DaemonRef("SecuritiesRefreshKafka", new SecuritiesRefreshKafkaDaemon(dbFuture), kafkaReqd = true, delay = 10.days, frequency = 3.days)
     )
   }

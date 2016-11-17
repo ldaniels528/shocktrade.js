@@ -1,6 +1,5 @@
-<div class="row">
-    <div ng-show="contestIsEmpty()" ng-include src="'/views/contest/no_contest_selected.html'"></div>
-    <div ng-if="!contestIsEmpty()" class="play_container">
+<div class="row" ng-controller="DashboardController" ng-init="init()">
+    <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
                 <div class="rank_cell" ng-repeat="p in getRankings() | orderBy:'rank'">

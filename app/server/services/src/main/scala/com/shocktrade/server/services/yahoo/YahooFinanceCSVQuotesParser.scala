@@ -1,9 +1,9 @@
 package com.shocktrade.server.services.yahoo
 
-import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesParser._
-import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
 import com.shocktrade.common.util.ParsingHelper._
 import com.shocktrade.common.util.StringHelper._
+import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesParser._
+import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
 import org.scalajs.nodejs.moment.Moment
 import org.scalajs.nodejs.moment.timezone._
 import org.scalajs.nodejs.{NodeRequire, console}
@@ -23,21 +23,21 @@ class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
 
   /**
     * Parses the given encoded stock quote string into a stock quote object
-    * @param paramdata the given encoded parameter string
-    * @param csvdata   the given stock quote data
+    * @param parameters the given encoded parameter string
+    * @param csvdata    the given stock quote data
     * @return the [[YFCSVQuote quote]]
     */
-  def parseQuote(symbol: String, paramdata: String, csvdata: String, startTime: Double): YFCSVQuote = {
+  def parseQuote(parameters: String, csvdata: String, startTime: Double) = {
     // capture the response time (in milliseconds)
     val responseTimeMsec = System.currentTimeMillis() - startTime
 
     // parse the fields and parameter data
-    val fields: Seq[String] = parseCSVData(csvdata.trim)
-    val params: Seq[String] = parseParams(paramdata.toLowerCase)
+    val fields = parseCSVData(csvdata.trim)
+    val params = parseParams(parameters.toLowerCase)
     val kvps = js.Dictionary(params zip fields: _*)
 
     // transform the mapping into a bean
-    toQuote(symbol, kvps, responseTimeMsec)
+    toQuote(kvps, responseTimeMsec)
   }
 
   private def parseCSVData(command: String): Seq[String] = {
@@ -71,190 +71,117 @@ class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
     "([a-z][0-9])|([a-z])".r.findAllIn(s) map (s => if (s.length == 1) s + "0" else s) toSeq
   }
 
-  private def toQuote(symbol: String, kvps: js.Dictionary[String], responseTimeMsec: Double): YFCSVQuote = {
+  private def toQuote(kvps: js.Dictionary[String], responseTimeMsec: Double) = {
     // convert the key-value pairs to method-value pairs
     val t = Map((kvps flatMap { case (k, v) => mapCodeToNamedValues(k, v) } flatten) toSeq: _*)
     val m = appendLastTradeDateTime(t)
-    new YFCSVQuote(
-      symbol,
-      /* a0 */ m.getDecimal("ask"),
-      /* a2 */ m.getDecimal("avgVol"),
-      /* a5 */ m.getInteger("askSize"),
-      /* b0 */ m.getDecimal("bid"),
-      /* b2 */ m.getDecimal("askRealTime"),
-      /* b3 */ m.getDecimal("bidRealTime"),
-      /* b4 */ m.getDecimal("bookValuePerShare"),
-      /* b6 */ m.getInteger("bidSize"),
-      /* c1 */ m.getDecimal("change"),
-      /* c3 */ m.getDecimal("commission"),
-      /* c4 */ m.getString("currencyCode"),
-      /* c6 */ m.getDecimal("changeRealTime"),
-      /* c8 */ m.getDecimal("changeAfterHours"),
-      /* d0 */ m.getDecimal("divShare"),
-      /* d1 */ m.uget("tradeDate"),
-      /* ++ */ m.uget("tradeDateTime") map (s => new js.Date(s)),
-      /* e0 */ m.getDecimal("eps"),
-      /* e1 */ m.getString("errorMessage"),
-      /* e7 */ m.getDecimal("epsEstCurrentYear"),
-      /* e8 */ m.getDecimal("epsEstNextYear"),
-      /* e9 */ m.getDecimal("epsEstNextQtr"),
-      /* f6 */ m.getDecimal("floatShares"),
-      /* g0 */ m.getDecimal("low"),
-      /* g1 */ m.getDecimal("holdingsGainPct"),
-      /* g3 */ m.getDecimal("annualizedGain"),
-      /* g4 */ m.getDecimal("holdingsGain"),
-      /* g5 */ m.getDecimal("holdingsGainPctRealTime"),
-      /* g6 */ m.getDecimal("holdingsGainRealTime"),
-      /* h0 */ m.getDecimal("high"),
-      /* i0 */ m.getString("moreInfo"),
-      /* i5 */ m.getDecimal("orderBookRealTime"),
-      /* j0 */ m.getDecimal("low52Week"),
-      /* j1 */ m.getDecimal("marketCap"),
-      /* j2 */ m.getDecimal("sharesOutstanding"),
-      /* j3 */ m.getDecimal("marketCapRealTime"),
-      /* j4 */ m.getDecimal("EBITDA"),
-      /* j5 */ m.getDecimal("change52WeekLow"),
-      /* j6 */ m.getDecimal("changePct52WeekLow"),
-      /* k0 */ m.getDecimal("high52Week"),
-      /* k2 */ m.getDecimal("changePctRealTime"),
-      /* k3 */ m.getInteger("lastTradeSize"),
-      /* k4 */ m.getDecimal("change52WeekHigh"),
-      /* k5 */ m.getDecimal("changePct52WeekHigh"),
-      /* l1 */ m.getDecimal("lastTrade"),
-      /* l2 */ m.getDecimal("highLimit"),
-      /* l3 */ m.getDecimal("lowLimit"),
-      /* m3 */ m.getDecimal("movingAverage50Day"),
-      /* m4 */ m.getDecimal("movingAverage200Day"),
-      /* m5 */ m.getDecimal("change200DayMovingAvg"),
-      /* m6 */ m.getDecimal("changePct200DayMovingAvg"),
-      /* m7 */ m.getDecimal("change50DayMovingAvg"),
-      /* m8 */ m.getDecimal("changePct50DayMovingAvg"),
-      /* n0 */ m.getString("name"),
-      /* n4 */ m.getString("notes"),
-      /* o0 */ m.getDecimal("open"),
-      /* p0 */ m.getDecimal("prevClose"),
-      /* p1 */ m.getDecimal("pricePaid"),
-      /* p2 */ m.getDecimal("changePct"),
-      /* p5 */ m.getDecimal("priceOverSales"),
-      /* p6 */ m.getDecimal("priceOverBook"),
-      /* q0 */ m.getDate("exDividendDate"),
-      /* q2 */ m.getDecimal("close"),
-      /* r0 */ m.getDecimal("peRatio"),
-      /* r1 */ m.getDate("dividendPayDate"),
-      /* r2 */ m.getDecimal("peRatioRealTime"),
-      /* r5 */ m.getDecimal("pegRatio"),
-      /* r6 */ m.getDecimal("priceOverEPSCurYr"),
-      /* r7 */ m.getDecimal("priceOverEPSNextYr"),
-      /* s0 */ m.getString("symbol"),
-      /* ?? */ getChangedSymbol(m.uget("errorMessage")),
-      /* s1 */ m.getString("sharesOwned"),
-      /* s6 */ m.getDecimal("revenue"),
-      /* s7 */ m.getDecimal("shortRatio"),
-      /* t1 */ m.getString("tradeTime"),
-      /* t8 */ m.getDecimal("target1Y"),
-      /* v0 */ m.getDecimal("volume"),
-      /* v1 */ m.getDecimal("holdingsValue"),
-      /* v7 */ m.getDecimal("holdingsValueRealTime"),
-      /* w1 */ m.getDecimal("daysChange"),
-      /* w4 */ m.getDecimal("daysChangeRealTime"),
-      /* x0 */ m.uget("exchange") map (_.toUpperCase),
-      /* y0 */ m.getDecimal("divYield"),
-      /* ++ */ responseTimeMsec)
+    m.get("symbol") map { symbol =>
+      new YFCSVQuote(
+        symbol = symbol,
+        /* a0 */ ask = m.getDecimal("ask"),
+        /* a2 */ avgVol = m.getDecimal("avgVol"),
+        /* a5 */ askSize = m.getInteger("askSize"),
+        /* b0 */ bid = m.getDecimal("bid"),
+        /* b2 */ askRealTime = m.getDecimal("askRealTime"),
+        /* b3 */ bidRealTime = m.getDecimal("bidRealTime"),
+        /* b4 */ bookValuePerShare = m.getDecimal("bookValuePerShare"),
+        /* b6 */ bidSize = m.getInteger("bidSize"),
+        /* c1 */ change = m.getDecimal("change"),
+        /* c3 */ commission = m.getDecimal("commission"),
+        /* c4 */ currencyCode = m.getString("currencyCode"),
+        /* c6 */ changeRealTime = m.getDecimal("changeRealTime"),
+        /* c8 */ changeAfterHours = m.getDecimal("changeAfterHours"),
+        /* d0 */ divShare = m.getDecimal("divShare"),
+        /* d1 */ tradeDate = m.uget("tradeDate"),
+        /* ++ */ tradeDateTime = m.uget("tradeDateTime") map (s => new js.Date(s)),
+        /* e0 */ eps = m.getDecimal("eps"),
+        /* e1 */ errorMessage = m.getString("errorMessage"),
+        /* e7 */ epsEstCurrentYear = m.getDecimal("epsEstCurrentYear"),
+        /* e8 */ epsEstNextYear = m.getDecimal("epsEstNextYear"),
+        /* e9 */ epsEstNextQtr = m.getDecimal("epsEstNextQtr"),
+        /* f6 */ floatShares = m.getDecimal("floatShares"),
+        /* g0 */ low = m.getDecimal("low"),
+        /* g1 */ holdingsGainPct = m.getDecimal("holdingsGainPct"),
+        /* g3 */ annualizedGain = m.getDecimal("annualizedGain"),
+        /* g4 */ holdingsGain = m.getDecimal("holdingsGain"),
+        /* g5 */ holdingsGainPctRealTime = m.getDecimal("holdingsGainPctRealTime"),
+        /* g6 */ holdingsGainRealTime = m.getDecimal("holdingsGainRealTime"),
+        /* h0 */ high = m.getDecimal("high"),
+        /* i0 */ moreInfo = m.getString("moreInfo"),
+        /* i5 */ orderBookRealTime = m.getDecimal("orderBookRealTime"),
+        /* j0 */ low52Week = m.getDecimal("low52Week"),
+        /* j1 */ marketCap = m.getDecimal("marketCap"),
+        /* j2 */ sharesOutstanding = m.getDecimal("sharesOutstanding"),
+        /* j3 */ marketCapRealTime = m.getDecimal("marketCapRealTime"),
+        /* j4 */ EBITDA = m.getDecimal("EBITDA"),
+        /* j5 */ change52WeekLow = m.getDecimal("change52WeekLow"),
+        /* j6 */ changePct52WeekLow = m.getDecimal("changePct52WeekLow"),
+        /* k0 */ high52Week = m.getDecimal("high52Week"),
+        /* k2 */ changePctRealTime = m.getDecimal("changePctRealTime"),
+        /* k3 */ lastTradeSize = m.getInteger("lastTradeSize"),
+        /* k4 */ change52WeekHigh = m.getDecimal("change52WeekHigh"),
+        /* k5 */ changePct52WeekHigh = m.getDecimal("changePct52WeekHigh"),
+        /* l1 */ lastTrade = m.getDecimal("lastTrade"),
+        /* l2 */ highLimit = m.getDecimal("highLimit"),
+        /* l3 */ lowLimit = m.getDecimal("lowLimit"),
+        /* m3 */ movingAverage50Day = m.getDecimal("movingAverage50Day"),
+        /* m4 */ movingAverage200Day = m.getDecimal("movingAverage200Day"),
+        /* m5 */ change200DayMovingAvg = m.getDecimal("change200DayMovingAvg"),
+        /* m6 */ changePct200DayMovingAvg = m.getDecimal("changePct200DayMovingAvg"),
+        /* m7 */ change50DayMovingAvg = m.getDecimal("change50DayMovingAvg"),
+        /* m8 */ changePct50DayMovingAvg = m.getDecimal("changePct50DayMovingAvg"),
+        /* n0 */ name = m.getString("name"),
+        /* n4 */ notes = m.getString("notes"),
+        /* o0 */ open = m.getDecimal("open"),
+        /* p0 */ prevClose = m.getDecimal("prevClose"),
+        /* p1 */ pricePaid = m.getDecimal("pricePaid"),
+        /* p2 */ changePct = m.getDecimal("changePct"),
+        /* p5 */ priceOverSales = m.getDecimal("priceOverSales"),
+        /* p6 */ priceOverBook = m.getDecimal("priceOverBook"),
+        /* q0 */ exDividendDate = m.getDate("exDividendDate"),
+        /* q2 */ close = m.getDecimal("close"),
+        /* r0 */ peRatio = m.getDecimal("peRatio"),
+        /* r1 */ dividendPayDate = m.getDate("dividendPayDate"),
+        /* r2 */ peRatioRealTime = m.getDecimal("peRatioRealTime"),
+        /* r5 */ pegRatio = m.getDecimal("pegRatio"),
+        /* r6 */ priceOverEPSCurYr = m.getDecimal("priceOverEPSCurYr"),
+        /* r7 */ priceOverEPSNextYr = m.getDecimal("priceOverEPSNextYr"),
+        /* s0 */ oldSymbol = m.uget("symbol"),
+        /* ?? */ newSymbol = getChangedSymbol(m.uget("errorMessage")),
+        /* s1 */ sharesOwned = m.getString("sharesOwned"),
+        /* s6 */ revenue = m.getDecimal("revenue"),
+        /* s7 */ shortRatio = m.getDecimal("shortRatio"),
+        /* t1 */ tradeTime = m.getString("tradeTime"),
+        /* t8 */ target1Yr = m.getDecimal("target1Y"),
+        /* v0 */ volume = m.getDecimal("volume"),
+        /* v1 */ holdingsValue = m.getDecimal("holdingsValue"),
+        /* v7 */ holdingsValueRealTime = m.getDecimal("holdingsValueRealTime"),
+        /* w1 */ daysChange = m.getDecimal("daysChange"),
+        /* w4 */ daysChangeRealTime = m.getDecimal("daysChangeRealTime"),
+        /* x0 */ exchange = m.uget("exchange") map (_.toUpperCase),
+        /* y0 */ divYield = m.getDecimal("divYield"),
+        /* ++ */ responseTimeMsec = responseTimeMsec)
+    }
   }
 
   private def mapCodeToNamedValues(code: String, data: String): Option[Seq[(String, String)]] = {
-    val value = stringValue(data).toOption
+    val aValue = stringValue(data).toOption
     code match {
-      case "a0" => value map (s => Seq("ask" -> s))
-      case "a2" => value map (s => Seq("avgVol" -> s))
-      case "a5" => value map (s => Seq("askSize" -> s))
-      case "b0" => value map (s => Seq("bid" -> s))
-      case "b2" => value map (s => Seq("askRealTime" -> s))
-      case "b3" => value map (s => Seq("bidRealTime" -> s))
-      case "b4" => value map (s => Seq("bookValuePerShare" -> s))
-      case "b6" => value map (s => Seq("bidSize" -> s))
+      case key if !CodeToFieldNames.contains(key) =>
+        console.error(s"Code '$code' was not recognized (value = '$aValue')")
+        None
       case "c0" => extractChangeAndPercent(data)
-      case "c1" => value map (s => Seq("change" -> s))
-      case "c3" => value map (s => Seq("commission" -> s))
-      case "c4" => value map (s => Seq("currencyCode" -> s))
-      case "c6" => value map (s => Seq("changeRealTime" -> s))
       case "c8" => extractChangeAterHours(data)
-      case "d0" => value map (s => Seq("divShare" -> s))
-      case "d1" => value map (s => Seq("tradeDate" -> s))
-      //case "d3" => value map (s => Seq("tradeDate" -> s))
-      case "e0" => value map (s => Seq("eps" -> s))
-      case "e1" => value map (s => Seq("errorMessage" -> s))
-      case "e7" => value map (s => Seq("epsEstCurrentYear" -> s))
-      case "e8" => value map (s => Seq("epsEstNextYear" -> s))
-      case "e9" => value map (s => Seq("epsEstNextQtr" -> s))
-      case "f6" => value map (s => Seq("floatShares" -> s))
-      case "g0" => value map (s => Seq("low" -> s))
-      case "g1" => value map (s => Seq("holdingsGainPct" -> s))
-      case "g3" => value map (s => Seq("annualizedGain" -> s))
-      case "g4" => value map (s => Seq("holdingsGain" -> s))
-      case "g5" => value map (s => Seq("holdingsGainPctRealTime" -> s))
-      case "g6" => value map (s => Seq("holdingsGainRealTime" -> s))
-      case "h0" => value map (s => Seq("high" -> s))
-      case "i0" => value map (s => Seq("moreInfo" -> s))
-      case "i5" => value map (s => Seq("orderBookRealTime" -> s))
-      case "j0" => value map (s => Seq("low52Week" -> s))
-      case "j1" => value map (s => Seq("marketCap" -> s))
-      case "j2" => value map (s => Seq("sharesOutstanding" -> s))
-      case "j3" => value map (s => Seq("marketCapRealTime" -> s))
-      case "j4" => value map (s => Seq("EBITDA" -> s))
-      case "j5" => value map (s => Seq("change52WeekLow" -> s))
-      case "j6" => value map (s => Seq("changePct52WeekLow" -> s))
-      case "k0" => value map (s => Seq("high52Week" -> s))
       case "k1" => extractLastTradeWithTime(data)
-      case "k2" => value map (s => Seq("changePctRealTime" -> s))
-      case "k3" => value map (s => Seq("lastTradeSize" -> s))
-      case "k4" => value map (s => Seq("change52WeekHigh" -> s))
-      case "k5" => value map (s => Seq("changePct52WeekHigh" -> s))
       case "l0" => extractLastTradeWithTime(data)
-      case "l1" => value map (s => Seq("lastTrade" -> s))
-      case "l2" => value map (s => Seq("highLimit" -> s))
-      case "l3" => value map (s => Seq("lowLimit" -> s))
       case "m0" => extract52WeekRange(data)
       case "m2" => extract52WeekRangeRealTime(data)
-      case "m3" => value map (s => Seq("movingAverage50Day" -> s))
-      case "m4" => value map (s => Seq("movingAverage200Day" -> s))
-      case "m5" => value map (s => Seq("change200DayMovingAvg" -> s))
-      case "m6" => value map (s => Seq("changePct200DayMovingAvg" -> s))
-      case "m7" => value map (s => Seq("change50DayMovingAvg" -> s))
-      case "m8" => value map (s => Seq("changePct50DayMovingAvg" -> s))
-      case "n0" => value map (s => Seq("name" -> s))
-      case "n4" => value map (s => Seq("notes" -> s))
-      case "o0" => value map (s => Seq("open" -> s))
-      case "p0" => value map (s => Seq("prevClose" -> s))
-      case "p1" => value map (s => Seq("pricePaid" -> s))
-      case "p2" => value map (s => Seq("changePct" -> s))
-      case "p5" => value map (s => Seq("priceOverSales" -> s))
-      case "p6" => value map (s => Seq("priceOverBook" -> s))
-      case "q0" => value map (s => Seq("exDividendDate" -> s))
-      case "q2" => value map (s => Seq("close" -> s))
-      case "r0" => value map (s => Seq("peRatio" -> s))
-      case "r1" => value map (s => Seq("dividendPayDate" -> s))
-      case "r2" => value map (s => Seq("peRatioRealTime" -> s))
-      case "r5" => value map (s => Seq("pegRatio" -> s))
-      case "r6" => value map (s => Seq("priceOverEPSCurYr" -> s))
-      case "r7" => value map (s => Seq("priceOverEPSNextYr" -> s))
-      case "s0" => value map (s => Seq("symbol" -> s))
-      case "s1" => value map (s => Seq("sharesOwned" -> s))
-      case "s6" => value map (s => Seq("revenue" -> s))
-      case "s7" => value map (s => Seq("shortRatio" -> s))
-      case "t1" => value map (s => Seq("tradeTime" -> s))
-      case "t8" => value map (s => Seq("target1Y" -> s))
-      case "v0" => value map (s => Seq("volume" -> s))
-      case "v1" => value map (s => Seq("holdingsValue" -> s))
-      case "v7" => value map (s => Seq("holdingsValueRealTime" -> s))
       case "w0" => extract52WeekRange(data)
-      case "w1" => value map (s => Seq("daysChange" -> s))
-      case "w4" => value map (s => Seq("daysChangeRealTime" -> s))
-      case "x0" => value map (s => Seq("exchange" -> s.toUpperCase))
-      case "y0" => value map (s => Seq("divYield" -> s))
-      case _ =>
-        console.error(s"Code '$code' was not recognized (value = '$value')")
-        None
+      case key =>
+        for {
+          name <- CodeToFieldNames.get(key)
+          value <- aValue
+        } yield Seq(name -> value)
     }
   }
 

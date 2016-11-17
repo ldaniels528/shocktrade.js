@@ -28,8 +28,7 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
     request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
-      val lines = data.split("[\n]")
-      (symbols zip lines) map { case (symbol, line) => parser.parseQuote(symbol, params, line, startTime) }
+      data.split("[\n]").toSeq flatMap(line => parser.parseQuote(params, line, startTime))
     }
   }
 
@@ -37,14 +36,14 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
     * Returns all supported parameter codes
     * @return all supported parameter codes
     */
-  def getAllParams: String = FIELD_CODE_TO_MAPPING.keys.mkString
+  def getAllParams: String = FieldNameToCodes.keys.mkString
 
   /**
     * Returns the parameter codes required to retrieve values for the given fields
     * @return the parameter codes required to retrieve values for the given fields
     */
   def getParams(fields: String*): String = {
-    (fields flatMap FIELD_CODE_TO_MAPPING.get).map(c => if (c.endsWith("0")) c.dropRight(1) else c).mkString
+    (fields flatMap FieldNameToCodes.get).map(c => if (c.endsWith("0")) c.dropRight(1) else c).mkString
   }
 
 }
@@ -162,7 +161,7 @@ object YahooFinanceCSVQuotesService {
                    val divYield: js.UndefOr[Double], // y0 - Dividend Yield (Trailing Annual)
                    val responseTimeMsec: Double) extends js.Object
 
-  val CODE_TO_FIELD_MAPPING = Map(
+  val CodeToFieldNames = Map(
     "a0" -> "ask",
     "a2" -> "avgVol",
     "a5" -> "askSize",
@@ -256,6 +255,6 @@ object YahooFinanceCSVQuotesService {
     "x0" -> "exchange",
     "y0" -> "divYield") // Dividend Yield (Trailing Annual)
 
-  val FIELD_CODE_TO_MAPPING = CODE_TO_FIELD_MAPPING map { case (k, v) => (v, k) }
+  val FieldNameToCodes = CodeToFieldNames map { case (k, v) => (v, k) }
 
 }
