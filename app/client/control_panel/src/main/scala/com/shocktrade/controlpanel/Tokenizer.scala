@@ -26,7 +26,13 @@ class Tokenizer() {
   */
 object Tokenizer {
 
-  class TokenIterator(input: String) extends Iterator[String] {
+  type Token = String
+
+  /**
+    * Token Iterator
+    * @param input the given [[String input text]]
+    */
+  class TokenIterator(input: String) extends Iterator[Token] {
     private val ca = input.toCharArray
     private var pos = 0
 
@@ -77,6 +83,8 @@ object Tokenizer {
 
     def quotesSingle() = sequence('\'', '\'')
 
+    def reset(newPosition: Int) = pos = newPosition
+
     def sequence(begin: Char, end: Char) = {
       if (hasNext && ca(pos) == begin) {
         val start = pos
@@ -91,6 +99,41 @@ object Tokenizer {
     private def notEOF = pos < ca.length
 
     private def extract(start: Int) = Some(input.substring(start, pos))
+
+  }
+
+  /**
+    * Token Enrichment
+    * @param token the givne [[Token token]]
+    */
+  implicit class TokenEnrichment(val token: Token) extends AnyVal {
+
+    @inline
+    def isConstant = isNull || isNumeric || isQuoted
+
+    @inline
+    def isNull = token == "null"
+
+    @inline
+    def isNumeric = token.matches("^[-+]?\\d+(\\.\\d+)?$")
+
+    @inline
+    def isOperator = token match {
+      case "+" | "-" | "*" | "/" | "%" => true
+      case _ => false
+    }
+
+    @inline
+    def isQuoted = isBackTickQuoted || isDoubleQuoted || isSingleQuoted
+
+    @inline
+    def isBackTickQuoted = token.startsWith("`") && token.endsWith("`")
+
+    @inline
+    def isDoubleQuoted = token.startsWith("\"") && token.endsWith("\"")
+
+    @inline
+    def isSingleQuoted = token.startsWith("'") && token.endsWith("'")
 
   }
 

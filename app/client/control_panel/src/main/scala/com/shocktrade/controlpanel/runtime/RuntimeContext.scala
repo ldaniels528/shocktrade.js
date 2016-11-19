@@ -1,18 +1,17 @@
 package com.shocktrade.controlpanel.runtime
 
+import org.scalajs.nodejs.NodeRequire
+
 /**
   * Runtime Context
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class RuntimeContext {
+class RuntimeContext(val require: NodeRequire)(shutdownHook: => Unit) {
   private var alive = true
-  private val variables = Map[String, Variable]()
 
-  def findVariable(name: String) = variables.get(name)
-
-  def halt(exitCode: Int = 0) = {
+  def halt() = {
     alive = false
-    Option(exitCode)
+    shutdownHook
   }
 
 }
