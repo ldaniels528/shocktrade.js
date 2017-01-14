@@ -2,12 +2,13 @@ package com.shocktrade.server.services
 
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.services.EodDataSecuritiesService._
-import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, errors}
+import io.scalajs.nodejs.Error
+import io.scalajs.npm.htmlparser2
+import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.{ExecutionContext, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -18,10 +19,8 @@ import scala.util.{Failure, Success, Try}
   * Eod Data Securities Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class EodDataSecuritiesService()(implicit require: NodeRequire) {
+class EodDataSecuritiesService() {
   private val logger = LoggerFactory.getLogger(getClass)
-  private val htmlParser = HtmlParser2()
-  private val request = Request()
 
   /**
     * Retrieves a list of securities with limited stock quotes
@@ -29,11 +28,11 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
     * @param firstLetter the given first letter (e.g. "A")
     * @return the promise of a collection of [[EodDataSecurity securities]]
     */
-  def apply(exchange: String, firstLetter: Char)(implicit ec: ExecutionContext) = {
+  def apply(exchange: String, firstLetter: Char)(implicit ec: ExecutionContext): Future[Seq[EodDataSecurity]] = {
     val promise = Promise[Seq[EodDataSecurity]]()
-    request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
+    Request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
       case Success((response, html)) =>
-        val parser = htmlParser.Parser(new ParserHandler {
+        val parser = new htmlparser2.Parser(new ParserHandler {
           val quotes = js.Array[EodDataSecurity]()
           val attributesStack = js.Array[js.Dictionary[String]]()
           val textStack = js.Dictionary[StringBuilder]()
@@ -44,13 +43,13 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
           val headers = js.Array[String]()
           var skip = 0
 
-          override def onopentag = (tag: String, attributes: js.Dictionary[String]) => {
+          override def onopentag(tag: String, attributes: js.Dictionary[String]) {
             currentTag = tag
             attributesStack.push(attributes)
             if (!inTable && tag == "table" && attributes.get("class").contains("quotes")) inTable = true
           }
 
-          override def onclosetag = (tag: String) => {
+          override def onclosetag(tag: String) {
             val attributes = attributesStack.pop()
             val text = textStack.remove(tag).map(_.toString()).getOrElse("")
             if (skip > 0) skip -= 1
@@ -72,13 +71,13 @@ class EodDataSecuritiesService()(implicit require: NodeRequire) {
             }
           }
 
-          override def ontext = (text: String) => {
+          override def ontext(text: String) {
             textStack.getOrElseUpdate(currentTag, new StringBuilder()).append(text.trim)
           }
 
-          override def onend = () => promise.success(quotes)
+          override def onend(): Unit = promise.success(quotes)
 
-          override def onerror = (err: errors.Error) => promise.failure(wrapJavaScriptException(err))
+          override def onerror(err: Error): Unit = promise.failure(wrapJavaScriptException(err))
 
         }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 

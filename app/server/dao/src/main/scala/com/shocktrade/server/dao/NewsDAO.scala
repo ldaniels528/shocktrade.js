@@ -1,8 +1,8 @@
 package com.shocktrade.server.dao
 
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -30,7 +30,7 @@ object NewsDAO {
       * @return the promise of an option of a news source
       */
     @inline
-    def findByID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[NewsSourceData]] = {
       dao.findOneFuture[NewsSourceData]("_id" $eq id.$oid)
     }
 
@@ -39,7 +39,7 @@ object NewsDAO {
       * @return the promise of a collection of a news sources
       */
     @inline
-    def findSources(implicit ec: ExecutionContext) = {
+    def findSources(implicit ec: ExecutionContext): Future[js.Array[NewsSourceData]] = {
       dao.find().toArrayFuture[NewsSourceData]
     }
   }
@@ -51,7 +51,7 @@ object NewsDAO {
   implicit class NewsDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getNewsDAO(implicit ec: ExecutionContext) = {
+    def getNewsDAO(implicit ec: ExecutionContext): Future[NewsDAO] = {
       db.collectionFuture("RssFeeds").mapTo[NewsDAO]
     }
   }

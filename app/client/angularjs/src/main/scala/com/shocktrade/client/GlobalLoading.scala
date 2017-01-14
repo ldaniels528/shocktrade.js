@@ -1,7 +1,7 @@
 package com.shocktrade.client
 
-import org.scalajs.angularjs.Scope
-import org.scalajs.angularjs.Timeout
+import io.scalajs.npm.angularjs.Scope
+import io.scalajs.npm.angularjs.Timeout
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

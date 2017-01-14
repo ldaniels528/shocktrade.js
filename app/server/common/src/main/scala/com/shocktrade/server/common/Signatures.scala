@@ -1,8 +1,7 @@
 package com.shocktrade.server.common
 
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.buffer.Buffer
-import org.scalajs.nodejs.crypto.Crypto
+import io.scalajs.nodejs.buffer.Buffer
+import io.scalajs.nodejs.crypto.Crypto
 
 import scala.language.postfixOps
 
@@ -10,11 +9,10 @@ import scala.language.postfixOps
   * Service Signatures
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class Signatures(passPhrase: String)(implicit require: NodeRequire) {
-  private val crypto = Crypto()
+class Signatures(passPhrase: String) {
 
   def encodeSignature(uri: String, ts: Double): String = {
-    val md5 = crypto.createHash("md5")
+    val md5 = Crypto.createHash("md5")
     md5.update(Buffer.from(passPhrase))
     md5.update(Buffer.from(uri))
     md5.update(Buffer.from(ts.toString))

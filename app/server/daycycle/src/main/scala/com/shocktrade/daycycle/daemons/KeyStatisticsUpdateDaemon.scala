@@ -9,10 +9,10 @@ import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
   * Key Statistics Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
+class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances

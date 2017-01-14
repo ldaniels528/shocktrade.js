@@ -1,4 +1,4 @@
-package org.scalajs.npm
+package io.scalajs.npm
 
 import scala.scalajs.js
 

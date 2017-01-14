@@ -1,6 +1,6 @@
 package com.shocktrade.server.dao.processes
 
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

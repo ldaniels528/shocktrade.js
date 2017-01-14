@@ -8,10 +8,10 @@ import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.contest.{ContestData, _}
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
 import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{console, _}
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.nodejs.{console, _}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
   */
 object ContestRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     val contestDAO = dbFuture.flatMap(_.getContestDAO)
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
     val profileDAO = dbFuture.flatMap(_.getProfileDAO)

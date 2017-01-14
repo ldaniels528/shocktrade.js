@@ -4,9 +4,9 @@ import java.util.UUID
 
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.express.Request
-import org.scalajs.nodejs.expressws.WebSocket
+import io.scalajs.nodejs._
+import io.scalajs.npm.express.Request
+import io.scalajs.npm.expressws.WebSocket
 
 import scala.concurrent.duration._
 import scala.scalajs.js

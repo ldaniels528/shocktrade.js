@@ -1,6 +1,6 @@
 package com.shocktrade.webapp
 
-import org.scalajs.nodejs.express.{Request, Response}
+import io.scalajs.npm.express.{Request, Response}
 
 import scala.scalajs.js
 

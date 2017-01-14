@@ -8,10 +8,10 @@ import com.shocktrade.server.dao.NewsSourceData
 import com.shocktrade.server.dao.contest.AwardsDAO._
 import com.shocktrade.server.dao.contest.PerksDAO._
 import com.shocktrade.server.dao.contest.{AwardData, PerkData}
-import org.scalajs.nodejs.mongodb.{MongoDB, WriteOptions}
-import org.scalajs.nodejs.{NodeRequire, setImmediate}
+import io.scalajs.nodejs.setImmediate
+import io.scalajs.npm.mongodb.{Db, MongoClient, WriteOptions}
 
-import scala.concurrent.{ExecutionContext, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -19,8 +19,8 @@ import scala.util.{Failure, Success}
   * Application Installer
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class Installer(dbConnectionString: String)(implicit require: NodeRequire, mongo: MongoDB, ec: ExecutionContext) {
-  implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnectionString)
+class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
+  implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
   private val awardsDAO = dbFuture.flatMap(_.getAwardsDAO)
   private val newsDAO = dbFuture.flatMap(_.getNewsDAO)

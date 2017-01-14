@@ -2,7 +2,7 @@ package com.shocktrade.client
 
 import com.shocktrade.common.models.quote.AutoCompleteQuote
 import com.shocktrade.client.discover.QuoteService
-import org.scalajs.angularjs.{Controller, Q, Scope}
+import io.scalajs.npm.angularjs.{Controller, Q, Scope}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

@@ -1,12 +1,12 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.BarChartProfileService._
-import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, errors}
+import io.scalajs.nodejs.Error
+import io.scalajs.npm.htmlparser2.{Parser, ParserHandler, ParserOptions}
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.{ExecutionContext, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -16,19 +16,17 @@ import scala.scalajs.runtime._
   * Bar Chart Company Profile Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BarChartProfileService()(implicit require: NodeRequire) {
-  private val htmlParser = HtmlParser2()
-  private val request = Request()
+class BarChartProfileService() {
 
   /**
     * Returns the promise of an option of a Bar Chart company profile for the given symbol
     * @param symbol the given symbol (e.g. "AAPL")
     * @return the promise of an option of a [[BarChartProfile Bar Chart profile]]
     */
-  def apply(symbol: String)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BarChartProfile]] = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- request.getFuture(toURL(symbol))
+      (response, html) <- Request.getFuture(toURL(symbol))
       profileOpt <- parseHtml(symbol, html, startTime)
     } yield profileOpt
   }
@@ -42,14 +40,13 @@ class BarChartProfileService()(implicit require: NodeRequire) {
     */
   private def parseHtml(symbol: String, html: String, startTime: Double)(implicit ec: ExecutionContext) = {
     val promise = Promise[Option[BarChartProfile]]()
-    val parser = htmlParser.Parser(new ParserHandler {
-      val tagStack = js.Array[Tag]()
-      val mappings = js.Dictionary[String]()
-      var key: String = _
+    val tagStack = js.Array[Tag]()
+    val mappings = js.Dictionary[String]()
+    var key: String = null
+    val parser = new Parser(new ParserHandler {
+      override def onopentag(name: String, attributes: js.Dictionary[String]) = tagStack.push(Tag(name, attributes))
 
-      override def onopentag = (name: String, attributes: js.Dictionary[String]) => tagStack.push(Tag(name, attributes))
-
-      override def onclosetag = (name: String) => {
+      override def onclosetag(name: String) {
         val tag = tagStack.pop()
         tagPath match {
           case "html.body.td.div.table.tr.td" if name == "strong" => key = tag.text.toString().trim
@@ -59,9 +56,9 @@ class BarChartProfileService()(implicit require: NodeRequire) {
         }
       }
 
-      override def ontext = (text: String) => tagStack.lastOption foreach (_.text.append(text))
+      override def ontext(text: String): Unit = tagStack.lastOption foreach (_.text.append(text))
 
-      override def onend = () => {
+      override def onend() {
         //console.log("mappings => %s", JSON.dynamic.stringify(mappings, null, 4).asInstanceOf[String])
         val quote = for {
           exchange <- mappings.get("Exchange:")
@@ -82,7 +79,7 @@ class BarChartProfileService()(implicit require: NodeRequire) {
         promise.success(quote)
       }
 
-      override def onerror = (err: errors.Error) => promise.failure(wrapJavaScriptException(err))
+      override def onerror(err: Error): Unit = promise.failure(wrapJavaScriptException(err))
 
       private def tagPath = tagStack.map(_.name).mkString(".")
 
@@ -120,7 +117,7 @@ object BarChartProfileService {
     */
   case class Tag(name: String, attributes: js.Dictionary[String], text: StringBuilder = new StringBuilder()) {
 
-    def isClass(className: String) = attributes.get("class").contains(className)
+    def isClass(className: String): Boolean = attributes.get("class").contains(className)
 
   }
 

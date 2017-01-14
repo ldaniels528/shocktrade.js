@@ -6,12 +6,12 @@ import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.common.models.user.User
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.anchorscroll.AnchorScroll
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Location, Scope, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Location, Scope, injected}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

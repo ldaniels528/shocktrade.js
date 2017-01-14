@@ -3,13 +3,13 @@ package com.shocktrade.client.dialogs
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.client.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.client.discover.QuoteService
-import org.scalajs.angularjs.AngularJsHelper.ExceptionExtensions
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper.ExceptionExtensions
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.language.postfixOps

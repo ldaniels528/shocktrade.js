@@ -1,7 +1,7 @@
 package com.shocktrade.webapp
 
-import org.scalajs.nodejs.console
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs.console
+import io.scalajs.util.OptionHelper._
 
 import scala.language.implicitConversions
 import scala.scalajs.js

@@ -2,10 +2,10 @@ package com.shocktrade.server.dao.contest
 
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
-import org.scalajs.nodejs.mongodb._
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.mongodb._
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -28,7 +28,7 @@ object ContestDAO {
   implicit class ContestDAOExtensions(val dao: ContestDAO) {
 
     @inline
-    def addChatMessage(contestID: String, message: ChatMessage)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def addChatMessage(contestID: String, message: ChatMessage)(implicit ec: ExecutionContext): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = "_id" $eq contestID.$oid,
         update = "messages" $addToSet message,
@@ -36,42 +36,42 @@ object ContestDAO {
     }
 
     @inline
-    def create(contest: ContestData) = dao.insert(contest)
+    def create(contest: ContestData): js.Promise[InsertWriteOpResult] = dao.insert(contest)
 
     @inline
-    def findActiveContests()(implicit ec: ExecutionContext) = {
+    def findActiveContests()(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
       dao.find("status" $eq "ACTIVE").toArrayFuture[ContestData]
     }
 
     @inline
-    def findChatMessages(contestID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[Option[js.Array[ChatMessage]]] = {
       dao.findOneFuture[ContestData](
         selector = "_id" $eq contestID.$oid,
         fields = js.Array("messages")) map (_ map (_.messages getOrElse emptyArray))
     }
 
     @inline
-    def findOneByID(contestID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]] = {
       dao.findOneFuture[ContestData]("_id" $eq contestID.$oid)
     }
 
     @inline
-    def findByPlayer(playerID: String)(implicit ec: ExecutionContext) = {
+    def findByPlayer(playerID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
       dao.find("participants._id" $eq playerID).toArrayFuture[ContestData]
     }
 
     @inline
-    def findUnoccupied(playerID: String)(implicit ec: ExecutionContext) = {
+    def findUnoccupied(playerID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
       dao.find("participants" $not $elemMatch("_id" $eq playerID)).toArrayFuture[ContestData]
     }
 
     @inline
-    def join(contestID: String, participant: Participant)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def join(contestID: String, participant: Participant)(implicit ec: ExecutionContext): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(filter = "_id" $eq contestID.$oid, update = "participants" $addToSet participant)
     }
 
     @inline
-    def search(form: ContestSearchForm) = {
+    def search(form: ContestSearchForm): Future[js.Array[ContestData]] = {
       val query = doc(Seq(
         form.activeOnly.toOption.flatMap(checked => if (checked) Some("status" $eq "ACTIVE") else None),
         form.friendsOnly.toOption.flatMap(checked => if (checked) Some("friendsOnly" $eq true) else None),
@@ -88,12 +88,12 @@ object ContestDAO {
     }
 
     @inline
-    def updateContest(contest: ContestData) = {
+    def updateContest(contest: ContestData): js.Promise[UpdateWriteOpResultObject] = {
       dao.updateOne(filter = "_id" $eq contest._id, update = contest, new UpdateOptions(upsert = false))
     }
 
     @inline
-    def updateContests(contests: Seq[ContestData]) = {
+    def updateContests(contests: Seq[ContestData]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(
         js.Array(contests map (contest =>
           updateOne(filter = "_id" $eq contest._id, update = contest, upsert = false)
@@ -110,7 +110,7 @@ object ContestDAO {
   implicit class ContestDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getContestDAO(implicit ec: ExecutionContext) = {
+    def getContestDAO(implicit ec: ExecutionContext): Future[ContestDAO] = {
       db.collectionFuture("Contests").mapTo[ContestDAO]
     }
   }

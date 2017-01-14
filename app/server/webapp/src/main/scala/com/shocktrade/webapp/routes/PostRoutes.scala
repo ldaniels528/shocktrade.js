@@ -8,17 +8,15 @@ import com.shocktrade.server.dao.PostDAO._
 import com.shocktrade.server.dao.PostData._
 import com.shocktrade.server.dao._
 import com.shocktrade.server.dao.users.ProfileDAO._
-import com.shocktrade.server.dao.users.UserProfileData
 import com.shocktrade.server.dao.users.UserDAO._
+import com.shocktrade.server.dao.users.UserProfileData
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
-import org.scalajs.nodejs
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.express.fileupload.{ExpressFileUpload, UploadedFiles}
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb._
-import org.scalajs.nodejs.mongodb.gridfs.UploadStreamOptions
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.express.fileupload.UploadedFiles
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb._
+import io.scalajs.npm.mongodb.gridfs.UploadStreamOptions
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -30,13 +28,12 @@ import scala.util.{Failure, Success}
   */
 object PostRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire, mongo: MongoDB, fileUpload: ExpressFileUpload) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
     implicit val postDAO = dbFuture.flatMap(_.getPostDAO)
     implicit val profileDAO = dbFuture.flatMap(_.getProfileDAO)
     implicit val userDAO = dbFuture.flatMap(_.getUserDAO)
     implicit val attachmentDAO = dbFuture.map(_.getPostAttachmentDAO)
     implicit val seoMetaParser = new SharedContentParser()
-    implicit val stream = nodejs.stream.Stream()
 
     // Post CRUD
     app.post("/api/post", (request: Request, response: Response, next: NextFunction) => createPost(request, response, next))

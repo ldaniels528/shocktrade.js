@@ -1,6 +1,6 @@
 package com.shocktrade.server.concurrent.bulk
 
-import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, UpdateWriteOpResultObject}
+import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, UpdateWriteOpResultObject}
 
 /**
   * Bulk Update Outcome
@@ -21,7 +21,7 @@ object BulkUpdateOutcome {
   implicit class BulkUpdateOutcomeExtensions(val outcome: BulkUpdateOutcome) extends AnyVal {
 
     @inline
-    def +(other: BulkUpdateOutcome) = {
+    def +(other: BulkUpdateOutcome): BulkUpdateOutcome = {
       BulkUpdateOutcome(
         nInserted = outcome.nInserted + other.nInserted,
         nMatched = outcome.nMatched + other.nMatched,
@@ -42,7 +42,7 @@ object BulkUpdateOutcome {
       * @return a [[BulkUpdateOutcome bulk update outcome]]
       */
     @inline
-    def toBulkWrite = {
+    def toBulkWrite: BulkUpdateOutcome = {
       BulkUpdateOutcome(
         nInserted = result.nInserted,
         nMatched = result.nMatched,
@@ -63,7 +63,7 @@ object BulkUpdateOutcome {
       * @return a [[BulkUpdateOutcome bulk update outcome]]
       */
     @inline
-    def toBulkWrite = {
+    def toBulkWrite: BulkUpdateOutcome = {
       BulkUpdateOutcome(
         nInserted = 0,
         nMatched = 0,

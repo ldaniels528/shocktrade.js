@@ -1,10 +1,10 @@
 package com.shocktrade.client.discover
 
 import com.shocktrade.common.models.quote.HistoricalQuote
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope, injected}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

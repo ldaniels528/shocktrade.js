@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao
 package users
 
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -26,22 +26,22 @@ object UserDAO {
   implicit class UserDAOEnrichment(val dao: UserDAO) extends AnyVal {
 
     @inline
-    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext) = {
       dao.findOneFuture[T](selector = "_id" $eq id.$oid, fields = fields)
     }
 
     @inline
-    def findUserByID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findUserByID(id: String)(implicit ec: ExecutionContext) = {
       dao.findById[UserData](id, fields = js.Array("facebookID", "name"))
     }
 
     @inline
-    def findUsersByID(ids: js.Array[String])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findUsersByID(ids: js.Array[String])(implicit ec: ExecutionContext) = {
       dao.find("_id" $in ids.map(_.$oid), projection = js.Dictionary("facebookID" -> 1, "name" -> 1)).toArrayFuture[UserData]
     }
 
     @inline
-    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext) = {
       dao.findOneFuture[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
     }
 

@@ -3,9 +3,9 @@ package com.shocktrade.webapp.routes
 import com.shocktrade.common.forms.FacebookFriendForm
 import com.shocktrade.common.models.user.FriendStatus
 import com.shocktrade.server.dao.users.UserDAO._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
   */
 object UserRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     implicit val userDAO = dbFuture.flatMap(_.getUserDAO)
 
     app.post("/api/friend/status", (request: Request, response: Response, next: NextFunction) => friendStatus(request, response, next))

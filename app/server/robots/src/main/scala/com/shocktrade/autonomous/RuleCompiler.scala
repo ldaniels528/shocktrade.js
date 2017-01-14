@@ -4,11 +4,10 @@ import com.shocktrade.autonomous.RuleCompiler._
 import com.shocktrade.autonomous.RuleProcessor._
 import com.shocktrade.autonomous.dao.{BuyingFlow, SellingFlow}
 import com.shocktrade.common.models.quote.ResearchQuote
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.util.Util
-import org.scalajs.nodejs.{NodeRequire, console}
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.nodejs.console
+import io.scalajs.nodejs.util.Util
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -16,9 +15,7 @@ import scala.scalajs.js
   * Rule Compiler
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class RuleCompiler()(implicit require: NodeRequire) {
-  private implicit val moment = Moment()
-  private implicit val util = Util()
+class RuleCompiler() {
 
   /**
     * Compiles the given strategy into executable op-codes
@@ -26,7 +23,7 @@ class RuleCompiler()(implicit require: NodeRequire) {
     * @param env        the given [[RobotEnvironment robot environment]]
     * @return the resulting [[OpCode op-codes]]
     */
-  def apply(buyingFlow: BuyingFlow)(implicit env: RobotEnvironment) = {
+  def apply(buyingFlow: BuyingFlow)(implicit env: RobotEnvironment): js.Array[OpCode] = {
     for {
       rule <- buyingFlow.rules getOrElse emptyArray
       name <- rule.name.toList
@@ -41,7 +38,7 @@ class RuleCompiler()(implicit require: NodeRequire) {
     * @param env         the given [[RobotEnvironment robot environment]]
     * @return the resulting [[OpCode op-codes]]
     */
-  def apply(sellingFlow: SellingFlow)(implicit env: RobotEnvironment) = emptyArray[OpCode]
+  def apply(sellingFlow: SellingFlow)(implicit env: RobotEnvironment): js.Array[OpCode] = emptyArray[OpCode]
 
   @inline
   private def decode(name: String, field: String, value: js.Any)(implicit env: RobotEnvironment) = {
@@ -71,10 +68,10 @@ class RuleCompiler()(implicit require: NodeRequire) {
   private def withSymbol(name: String, value: js.Any)(implicit env: RobotEnvironment) = {
     new OpCode(name, (r: ResearchQuote) => value match {
       // symbol LIKE 'APP'
-      case v if util.isString(v) => (for (symbol <- r.symbol; s <- v.asString) yield symbol.startsWith(s)).isTrue
+      case v if Util.isString(v) => (for (symbol <- r.symbol; s <- v.asString) yield symbol.startsWith(s)).isTrue
 
       // symbol IN [positions, orders]
-      case v if util.isObject(v) => decodeIN(r, v).isTrue
+      case v if Util.isObject(v) => decodeIN(r, v).isTrue
 
       // unknown
       case v => console.error(s"symbol: Invalid value - %j", v); false
@@ -96,7 +93,7 @@ class RuleCompiler()(implicit require: NodeRequire) {
       array <- inOp.in
     } yield {
       array exists {
-        case x if util.isString(x) =>
+        case x if Util.isString(x) =>
           x.asString exists {
             case "positions" => env.positions.exists(_.symbol == r.symbol)
             case "orders" => env.orders.exists(_.symbol == r.symbol)
@@ -123,9 +120,9 @@ object RuleCompiler {
 
     def as[T]: js.UndefOr[T] = jsValue.asInstanceOf[js.UndefOr[T]]
 
-    def asString(implicit util: Util): js.UndefOr[String] = if (util.isString(jsValue)) jsValue.asInstanceOf[String] else js.undefined
+    def asString: js.UndefOr[String] = if (Util.isString(jsValue)) jsValue.asInstanceOf[String] else js.undefined
 
-    def is[T](value: T) = jsValue.asInstanceOf[js.UndefOr[T]].exists(_ == value)
+    def is[T](value: T): Boolean = jsValue.asInstanceOf[js.UndefOr[T]].exists(_ == value)
 
   }
 

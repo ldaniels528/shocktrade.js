@@ -1,6 +1,6 @@
 package com.shocktrade.client
 
-import org.scalajs.angularjs.{Controller, Scope, injected}
+import io.scalajs.npm.angularjs.{Controller, Scope, injected}
 
 import scala.scalajs.js
 

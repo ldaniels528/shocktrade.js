@@ -2,11 +2,11 @@ package com.shocktrade.client
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.common.events.RemoteEvent
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Location, Service, Timeout, injected, _}
-import org.scalajs.dom.browser._
-import org.scalajs.dom.ws._
+import io.scalajs.dom.html.browser.{console, window}
+import io.scalajs.dom.ws._
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Location, Service, Timeout, injected, _}
 
 import scala.concurrent.duration._
 import scala.scalajs.js

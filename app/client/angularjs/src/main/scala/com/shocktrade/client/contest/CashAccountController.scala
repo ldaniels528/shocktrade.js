@@ -1,9 +1,9 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, injected}
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope, injected}
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js

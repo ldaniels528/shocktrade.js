@@ -4,9 +4,9 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.events.RemoteEvent._
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
-import org.scalajs.angularjs.{Scope, angular}
-import org.scalajs.dom
-import org.scalajs.dom.browser.console
+import io.scalajs.dom.Event
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.{Scope, angular}
 
 import scala.scalajs.js
 
@@ -28,7 +28,7 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    def emit(action: String, data: js.Any) = {
+    def emit(action: String, data: js.Any) {
       console.log(s"Broadcasting action '$action' => ${angular.toJson(data)}...")
       action match {
         case ChatMessagesUpdated =>
@@ -40,59 +40,59 @@ object ScopeEvents {
     }
 
     @inline
-    def emitContestCreated(contest: Contest) = broadcast(ContestCreated, contest)
+    def emitContestCreated(contest: Contest): Unit = broadcast(ContestCreated, contest)
 
     @inline
-    def emitContestDeleted(contest: Contest) = broadcast(ContestDeleted, contest)
+    def emitContestDeleted(contest: Contest): Unit = broadcast(ContestDeleted, contest)
 
     @inline
-    def emitContestSelected(contest: Contest) = broadcast(ContestSelected, contest)
+    def emitContestSelected(contest: Contest): Unit = broadcast(ContestSelected, contest)
 
     @inline
-    def emitMessagesUpdated(message: ChatMessage) = broadcast(ChatMessagesUpdated, message)
+    def emitMessagesUpdated(message: ChatMessage): Unit = broadcast(ChatMessagesUpdated, message)
 
     @inline
-    def emitUserProfileChanged(profile: UserProfile) = broadcast(UserProfileChanged, profile)
+    def emitUserProfileChanged(profile: UserProfile): Unit = broadcast(UserProfileChanged, profile)
 
     @inline
-    def emitUserProfileUpdated(profile: UserProfile) = broadcast(UserProfileUpdated, profile)
+    def emitUserProfileUpdated(profile: UserProfile): Unit = broadcast(UserProfileUpdated, profile)
 
     @inline
-    def emitUserStatusChanged(status: String) = broadcast(UserStatusChanged, status)
+    def emitUserStatusChanged(status: String): Unit = broadcast(UserStatusChanged, status)
 
     /////////////////////////////////////////////////////////////////////
     //          Reactors
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    def onContestCreated(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestCreated, callback)
+    def onContestCreated(callback: (Event, Contest) => Any): Unit = reactTo(ContestCreated, callback)
 
     @inline
-    def onContestDeleted(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestDeleted, callback)
+    def onContestDeleted(callback: (Event, Contest) => Any): Unit = reactTo(ContestDeleted, callback)
 
     @inline
-    def onContestSelected(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestSelected, callback)
+    def onContestSelected(callback: (Event, Contest) => Any): Unit = reactTo(ContestSelected, callback)
 
     @inline
-    def onContestUpdated(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestUpdated, callback)
+    def onContestUpdated(callback: (Event, Contest) => Any): Unit = reactTo(ContestUpdated, callback)
 
     @inline
-    def onMessagesUpdated(callback: (dom.event.Event, String) => Any) = reactTo(ChatMessagesUpdated, callback)
+    def onMessagesUpdated(callback: (Event, String) => Any): Unit = reactTo(ChatMessagesUpdated, callback)
 
     @inline
-    def onOrderUpdated(callback: (dom.event.Event, String) => Any) = reactTo(OrderUpdated, callback)
+    def onOrderUpdated(callback: (Event, String) => Any): Unit = reactTo(OrderUpdated, callback)
 
     @inline
-    def onParticipantUpdated(callback: (dom.event.Event, Participant) => Any) = reactTo(ParticipantUpdated, callback)
+    def onParticipantUpdated(callback: (Event, Participant) => Any): Unit = reactTo(ParticipantUpdated, callback)
 
     @inline
-    def onUserProfileChanged(callback: (dom.event.Event, UserProfile) => Any) = reactTo(UserProfileChanged, callback)
+    def onUserProfileChanged(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileChanged, callback)
 
     @inline
-    def onUserProfileUpdated(callback: (dom.event.Event, UserProfile) => Any) = reactTo(UserProfileUpdated, callback)
+    def onUserProfileUpdated(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileUpdated, callback)
 
     @inline
-    def onUserStatusChanged(callback: (dom.event.Event, String) => Any) = reactTo(UserStatusChanged, callback)
+    def onUserStatusChanged(callback: (Event, String) => Any): Unit = reactTo(UserStatusChanged, callback)
 
     /////////////////////////////////////////////////////////////////////
     //          Private Methods
@@ -102,11 +102,13 @@ object ScopeEvents {
     private def broadcast(action: String, entity: js.Any) = {
       console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
       $scope.$broadcast(ContestCreated, entity)
+      ()
     }
 
     private def reactTo(action: String, callback: js.Function) = {
       console.info(s"Listening for '$action'...")
       $scope.$on(action, callback)
+      ()
     }
 
   }

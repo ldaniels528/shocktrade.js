@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.quote
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

@@ -5,10 +5,10 @@ import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.TransferFundsDialogController._
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.common.forms.FundsTransferRequest
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.angularjs.{Controller, Scope, Service, injected}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.npm.angularjs.{Controller, Scope, Service, injected}
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.language.implicitConversions

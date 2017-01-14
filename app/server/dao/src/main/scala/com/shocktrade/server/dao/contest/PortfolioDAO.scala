@@ -1,9 +1,9 @@
 package com.shocktrade.server.dao.contest
 
-import org.scalajs.nodejs.mongodb._
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.npm.mongodb._
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -31,7 +31,7 @@ object PortfolioDAO {
     def create(portfolio: PortfolioData) = dao.insert(portfolio)
 
     @inline
-    def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext) = {
       for {
         portfolio <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
         order = portfolio.orders.toOption.flatMap(_.find(_._id.contains(orderID))) orDie s"Order # $orderID not found"
@@ -43,7 +43,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext) = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid),
         update = "orders" $addToSet order,
@@ -51,7 +51,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def createOrders(portfolioID: String, orders: Seq[OrderData])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def createOrders(portfolioID: String, orders: Seq[OrderData])(implicit ec: ExecutionContext) = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid),
         update = "orders" $addToSet $each(js.Array(orders: _*)),
@@ -80,7 +80,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def findOneByID(portfolioID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findOneByID(portfolioID: String)(implicit ec: ExecutionContext) = {
       dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid)
     }
 
@@ -90,17 +90,17 @@ object PortfolioDAO {
     }
 
     @inline
-    def findPerks(portfolioID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findPerks(portfolioID: String)(implicit ec: ExecutionContext) = {
       dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("cashAccount", "perks"))
     }
 
     @inline
-    def findPositions(portfolioID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findPositions(portfolioID: String)(implicit ec: ExecutionContext) = {
       dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("positions")) map (_ map (_.positions getOrElse emptyArray))
     }
 
     @inline
-    def purchasePerks(portfolioID: String, perkCodes: js.Array[String], perksCost: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def purchasePerks(portfolioID: String, perkCodes: js.Array[String], perksCost: Double)(implicit ec: ExecutionContext) = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte perksCost, "perks" $nin perkCodes),
         update = doc("cashAccount.funds" $inc -perksCost, "perks" $addToSet $each(perkCodes)),
@@ -108,7 +108,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def totalInvestment(playerID: String)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def totalInvestment(playerID: String)(implicit ec: ExecutionContext) = {
       for {
         portfolios <- findByPlayer(playerID)
         results = for {
@@ -120,7 +120,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def transferCashFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def transferCashFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext) = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte amount),
         update = $inc("cashAccount.funds" -> -amount, "marginAccount.funds" -> amount),
@@ -128,7 +128,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def transferMarginFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def transferMarginFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext) = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "marginAccount.funds" $gte amount),
         update = $inc("cashAccount.funds" -> amount, "marginAccount.funds" -> -amount),

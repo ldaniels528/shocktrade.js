@@ -5,7 +5,7 @@ import java.util.UUID
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, ConcurrentTaskHandler}
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.LoggerFactory.Logger
-import org.scalajs.nodejs.console
+import io.scalajs.nodejs.console
 import utest._
 
 import scala.concurrent.Future

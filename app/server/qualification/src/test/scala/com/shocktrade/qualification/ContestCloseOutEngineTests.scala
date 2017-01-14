@@ -5,12 +5,12 @@ import com.shocktrade.common.models.user.User
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.{ContestDAO, ContestData}
-import org.scalajs.nodejs.console
-import org.scalajs.nodejs.globals.process
-import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs.console
+import io.scalajs.nodejs.globals.process
+import io.scalajs.npm.mongodb.MongoDB
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.OptionHelper._
 import org.scalatest.time._
 import org.scalatest._
 

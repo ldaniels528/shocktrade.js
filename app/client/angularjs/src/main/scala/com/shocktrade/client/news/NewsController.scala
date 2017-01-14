@@ -2,16 +2,17 @@ package com.shocktrade.client.news
 
 import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.news.NewsController._
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.sanitize.Sce
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, angular, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.sanitize.Sce
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -28,7 +29,7 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
 
   // define the scope variables
   // view: get the previously selected view from the cookie
-  $scope.selection = NewsFeedSelection(feed = "")
+  $scope.selection = new NewsFeedSelection(feed = "")
   $scope.view = $cookies.getOrElse(ViewTypeCookie, "list")
 
   /////////////////////////////////////////////////////////////////////////////
@@ -180,24 +181,8 @@ trait NewsScope extends Scope {
   * News Feed Selection
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
-trait NewsFeedSelection extends js.Object {
-  var feed: js.UndefOr[String] = js.native
-}
-
-/**
-  * News Feed Selection Companion Object
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object NewsFeedSelection {
-
-  def apply(feed: String) = {
-    val selection = New[NewsFeedSelection]
-    selection.feed = feed
-    selection
-  }
-
-}
+@ScalaJSDefined
+class NewsFeedSelection(var feed: js.UndefOr[String]) extends js.Object
 
 /**
   * News Source

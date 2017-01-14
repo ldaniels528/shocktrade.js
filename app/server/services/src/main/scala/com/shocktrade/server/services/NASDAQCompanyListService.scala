@@ -1,10 +1,9 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.NASDAQCompanyListService._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.csvparse._
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.csvparse._
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -15,32 +14,29 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * NASDAQ Company List Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NASDAQCompanyListService()(implicit require: NodeRequire) {
-  // load the modules
-  private val request = Request()
-  private val csvParse = CsvParse()
+class NASDAQCompanyListService() {
 
-  def amex()(implicit ec: ExecutionContext) = {
+  def amex()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
     download(exchange = "AMEX", url = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=AMEX&render=download")
   }
 
-  def nasdaq()(implicit ec: ExecutionContext) = {
+  def nasdaq()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
     download(exchange = "NASDAQ", url = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download")
   }
 
-  def nyse()(implicit ec: ExecutionContext) = {
+  def nyse()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
     download(exchange = "NYSE", url = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download")
   }
 
   private def download(exchange: String, url: String)(implicit ec: ExecutionContext) = {
-    request.getFuture(url) flatMap { case (response, data) =>
+    Request.getFuture(url) flatMap { case (response, data) =>
       val lines = data.split("[\n]").tail.toSeq
-      Future.sequence(lines map(toCompanyInfo(exchange, _))) map (_.flatten)
+      Future.sequence(lines map (toCompanyInfo(exchange, _))) map (_.flatten)
     }
   }
 
   private def toCompanyInfo(exchange: String, line: String)(implicit ec: ExecutionContext) = {
-    csvParse.parseFuture[js.Array[js.Array[String]]](line, new CsvParseOptions()) map { rows =>
+    CsvParse.parseFuture(line, new ParserOptions()) map { rows =>
       rows.map(values => js.Dictionary(headers zip values.toSeq: _*)).toSeq map { mapping =>
         new NASDAQCompanyInfo(
           symbol = mapping.get("Symbol").flatMap(nullify).orUndefined,

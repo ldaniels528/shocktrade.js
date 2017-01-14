@@ -3,9 +3,9 @@ package com.shocktrade.client.profile
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.forms.ExchangesForm
 import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
-import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.scalajs.js
 

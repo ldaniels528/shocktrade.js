@@ -4,14 +4,14 @@ import com.shocktrade.client.discover.ExploreController._
 import com.shocktrade.client.discover.ExploreService.AggregatedSectorData
 import com.shocktrade.client.{GlobalSelectedSymbol, GlobalSelectedSymbolScope}
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.anchorscroll.AnchorScroll
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Location, Timeout, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

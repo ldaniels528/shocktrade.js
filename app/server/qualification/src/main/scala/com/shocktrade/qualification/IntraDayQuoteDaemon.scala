@@ -1,18 +1,17 @@
 package com.shocktrade.qualification
 
+import com.shocktrade.common.models.contest.OrderLike
+import com.shocktrade.qualification.IntraDayQuoteDaemon._
+import com.shocktrade.server.common.TradingClock
+import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.securities.IntraDayQuoteData
 import com.shocktrade.server.dao.securities.IntraDayQuotesDAO._
-import com.shocktrade.common.models.contest.OrderLike
-import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.qualification.IntraDayQuoteDaemon._
-import com.shocktrade.server.common.TradingClock
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{BulkWriteOpResultObject, Db}
-import org.scalajs.nodejs.os.OS
-import org.scalajs.nodejs.{NodeRequire, console}
+import io.scalajs.nodejs.console
+import io.scalajs.npm.moment.Moment
+import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -24,11 +23,7 @@ import scala.util.{Failure, Success}
   * Intra-Day Quote Daemon (NASDAQ Datafeed)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[BulkWriteOpResultObject]] {
-  // load modules
-  private implicit val os = OS()
-  private implicit val moment = Moment()
-
+class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[BulkWriteOpResultObject]] {
   // get DAO and service references
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
   private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
@@ -43,13 +38,13 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, r
     * @param tradingClock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(tradingClock: TradingClock) = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
+  override def isReady(tradingClock: TradingClock): Boolean = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
 
   /**
     * Persists intra-day quotes for all active orders to disk
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock) = {
+  override def run(tradingClock: TradingClock): Future[Seq[BulkWriteOpResultObject]] = {
     val startTime = js.Date.now()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.findActiveOrders())
@@ -126,8 +121,8 @@ object IntraDayQuoteDaemon {
   implicit class NASDAQIntraDayResponseExtensions(val response: NASDAQIntraDayResponse) extends AnyVal {
 
     @inline
-    def toQuotes(implicit moment: Moment) = {
-      val yyyy_mm_dd = moment(new js.Date()).format("YYYY-MM-DD")
+    def toQuotes = {
+      val yyyy_mm_dd = Moment(new js.Date()).format("YYYY-MM-DD")
       val rawQuotes = for {
         page <- response.pages
         data <- page.quotes.groupBy(q => (q.time.orNull, q.price ?> 0)) map { case ((time, price), items) =>
@@ -145,7 +140,7 @@ object IntraDayQuoteDaemon {
           symbol = q.symbol,
           price = q.price,
           time = q.time,
-          tradeDateTime = moment(yyyy_mm_dd + " " + q.time).toDate(),
+          tradeDateTime = Moment(yyyy_mm_dd + " " + q.time).toDate(),
           volume = q.volume,
           aggregateVolume = aggregateVolume
         )

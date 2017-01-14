@@ -1,6 +1,6 @@
 package com.shocktrade.autonomous.dao
 
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -29,7 +29,7 @@ object RobotDAO {
       * @return an array of [[RobotData robots]]
       */
     @inline
-    def findRobots()(implicit ec: ExecutionContext, mongo: MongoDB) = {
+    def findRobots()(implicit ec: ExecutionContext) = {
       dao.find("active" $eq true).sort(js.Array("lastActivated", 1)).toArrayFuture[RobotData]
     }
 

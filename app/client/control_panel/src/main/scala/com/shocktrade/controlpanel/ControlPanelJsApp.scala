@@ -3,10 +3,8 @@ package com.shocktrade.controlpanel
 import com.shocktrade.controlpanel.runtime._
 import com.shocktrade.controlpanel.runtime.functions.builtin.BuiltinFunctions
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs.globals.process
-import org.scalajs.nodejs.readline.{Readline, ReadlineOptions}
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.{Bootstrap, console}
+import io.scalajs.nodejs.readline.{Readline, ReadlineOptions}
+import io.scalajs.nodejs.{console, process}
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -23,22 +21,15 @@ object ControlPanelJsApp extends js.JSApp {
   private val logger = LoggerFactory.getLogger(getClass)
   private val compiler = Compiler()
 
-  override def main() {}
-
-  def startServer(implicit bootstrap: Bootstrap) {
-    implicit val require = bootstrap.require
-
+  override def main() {
     logger.info("Starting the ShockTrade Control Panel...")
-
-    implicit val request = Request()
 
     val host = process.env.getOrElse("host", "localhost:1337")
     val globalScope = new RootScope()
     BuiltinFunctions.enrich(globalScope)
 
-    val readline = Readline()
-    val rl = readline.createInterface(new ReadlineOptions(input = process.stdin, output = process.stdout))
-    val rc = new RuntimeContext(require)(rl.close())
+    val rl = Readline.createInterface(new ReadlineOptions(input = process.stdin, output = process.stdout))
+    val rc = new RuntimeContext(rl.close())
 
     rl.setPrompt(s"$host#> ")
     rl.prompt()

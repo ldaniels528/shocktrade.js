@@ -1,8 +1,8 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.common.models.contest.ChatMessage
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.Http
 
 import scala.scalajs.js
 

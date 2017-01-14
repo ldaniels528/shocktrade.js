@@ -1,6 +1,6 @@
 package com.shocktrade.server.dao.securities
 
-import org.scalajs.nodejs.mongodb.ObjectID
+import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

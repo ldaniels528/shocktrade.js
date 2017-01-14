@@ -2,10 +2,9 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.FacebookAppInfo
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.os.OS
+import io.scalajs.nodejs.os.OS
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,12 +14,11 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 object SocialRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit require: NodeRequire, ec: ExecutionContext, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
     val logger = LoggerFactory.getLogger(getClass)
 
     // load the modules
-    val os = OS()
-    val hostname = os.hostname()
+    val hostname = OS.hostname()
 
     // API URI
     app.get("/api/social/facebook", (request: Request, response: Response, next: NextFunction) => facebookAppID(request, response, next))

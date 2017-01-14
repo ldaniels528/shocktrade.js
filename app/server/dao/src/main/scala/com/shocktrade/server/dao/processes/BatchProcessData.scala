@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao.processes
 
-import org.scalajs.nodejs.mongodb.ObjectID
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.mongodb.ObjectID
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

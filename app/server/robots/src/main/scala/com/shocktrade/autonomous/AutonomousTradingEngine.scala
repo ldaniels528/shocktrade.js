@@ -3,27 +3,22 @@ package com.shocktrade.autonomous
 import com.shocktrade.autonomous.AutonomousTradingEngine._
 import com.shocktrade.autonomous.dao.RobotDAO._
 import com.shocktrade.autonomous.dao.{BuyingFlow, RobotData, SellingFlow}
-import com.shocktrade.server.dao.contest.ContestDAO._
-import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.server.dao.contest._
-import com.shocktrade.server.dao.securities.SecuritiesDAO
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.{CashAccount, Participant, PerformanceLike, PositionLike}
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.dao.contest.ContestDAO._
+import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
+import com.shocktrade.server.dao.contest._
+import com.shocktrade.server.dao.securities.SecuritiesDAO
+import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.services.RemoteEventService
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.npm.numeral.Numeral
-import org.scalajs.nodejs.npm.numeral.Numeral.Implicits._
-import org.scalajs.nodejs.os.OS
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.util.Util
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.npm.numeral._
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,13 +31,7 @@ import scala.util.{Failure, Success}
   * Autonomous Trading Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) {
-  // load the required modules
-  private implicit val moment = Moment()
-  private implicit val numeral = Numeral()
-  private implicit val os = OS()
-  private implicit val util = Util()
-
+class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
   // create DAO instances
   private implicit val contestDAO = dbFuture.flatMap(_.getContestDAO)
   private implicit val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
@@ -83,7 +72,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     * @param robot the given [[RobotData robot]]
     * @return a promise of the outcomes
     */
-  def operate(robot: RobotData) = {
+  def operate(robot: RobotData): Future[List[UpdateResult]] = {
     robot.playerID.toOption match {
       case Some(playerID) =>
         robot.info("Retrieving portfolios...")
@@ -101,7 +90,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
 
   /**
     * Auto-joins contests where robots are allowed
-    * @param robot the given [[RobotData robot]]
+    * @param robot    the given [[RobotData robot]]
     * @param playerID the given player ID
     * @return the results of the join operations
     */
@@ -306,7 +295,7 @@ object AutonomousTradingEngine {
                 orderType: String,
                 priceType: String,
                 price: Double,
-                quantity: Double)(implicit tradingClock: TradingClock) = {
+                quantity: Double)(implicit tradingClock: TradingClock): OrderData = {
       val now = new js.Date()
       new OrderData(
         symbol = quote.symbol,
@@ -329,22 +318,22 @@ object AutonomousTradingEngine {
   implicit class RobotsExtensions(val robot: RobotData) extends AnyVal {
 
     @inline
-    def log(format: String, args: Any*) = {
+    def log(format: String, args: Any*) {
       logger.log(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def info(format: String, args: Any*) = {
+    def info(format: String, args: Any*) {
       logger.info(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def error(format: String, args: Any*) = {
+    def error(format: String, args: Any*) {
       logger.error(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
     @inline
-    def warn(format: String, args: Any*) = {
+    def warn(format: String, args: Any*) {
       logger.warn(s"[${robot.name.orNull}] " + format, args: _*)
     }
 
@@ -380,7 +369,7 @@ object AutonomousTradingEngine {
   implicit class SellingFlowExtensions(val flow: SellingFlow) extends AnyVal {
 
     @inline
-    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, portfolioDAO: Future[PortfolioUpdateDAO]) = {
+    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, portfolioDAO: Future[PortfolioUpdateDAO]): Future[Seq[PositionData]] = {
       // remove any positions there are already orders for
       val sellOrderSymbols = env.orders.filter(_.isSellOrder).flatMap(_.symbol.toOption).toSet
       val eligiblePositions = env.positions.filterNot(_.symbol.exists(sellOrderSymbols.contains))
@@ -395,7 +384,7 @@ object AutonomousTradingEngine {
   implicit class PositionExtensions(val position: PositionLike) extends AnyVal {
 
     @inline
-    def computePercentGain(implicit ec: ExecutionContext, securitiesDAO: Future[SecuritiesDAO]) = {
+    def computePercentGain(implicit ec: ExecutionContext, securitiesDAO: Future[SecuritiesDAO]): Future[Option[(Double, Double)]] = {
       val params = for {
         symbol <- position.symbol
         cost <- position.totalCost
@@ -413,7 +402,7 @@ object AutonomousTradingEngine {
     }
 
     @inline
-    def gainLoss(price: Double, quantity: Double, cost: Double) = {
+    def gainLoss(price: Double, quantity: Double, cost: Double): Double = {
       if (cost > 0) 100 * (price * quantity - cost) / cost else 0.0
     }
 

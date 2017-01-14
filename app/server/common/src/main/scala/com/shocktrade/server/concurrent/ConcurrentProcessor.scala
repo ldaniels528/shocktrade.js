@@ -1,7 +1,7 @@
 package com.shocktrade.server.concurrent
 
 import com.shocktrade.server.common.LoggerFactory.Logger
-import org.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
+import io.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Promise}

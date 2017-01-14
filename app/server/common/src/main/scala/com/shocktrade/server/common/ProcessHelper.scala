@@ -1,6 +1,6 @@
 package com.shocktrade.server.common
 
-import org.scalajs.nodejs.globals.Process
+import io.scalajs.nodejs.Process
 
 /**
   * ShockTrade Process Helper
@@ -19,21 +19,21 @@ object ProcessHelper {
       * @return the option of the web application listen port
       */
     @inline
-    def port = process.env.find(_._1.equalsIgnoreCase("port")).map(_._2)
+    def port: Option[String] = process.env.find(_._1.equalsIgnoreCase("port")).map(_._2)
 
     /**
       * Attempts to returns the database connection URL
       * @return the option of the database connection URL
       */
     @inline
-    def dbConnect = process.env.find(_._1.equalsIgnoreCase("db_connection")).map(_._2)
+    def dbConnect: Option[String] = process.env.find(_._1.equalsIgnoreCase("db_connection")).map(_._2)
 
     /**
       * Attempts to returns the Zookeeper connection URL
       * @return the option of the Zookeeper connection URL
       */
     @inline
-    def zookeeperConnect = process.env.find(_._1.equalsIgnoreCase("zk_connection")).map(_._2)
+    def zookeeperConnect: Option[String] = process.env.find(_._1.equalsIgnoreCase("zk_connection")).map(_._2)
 
   }
 

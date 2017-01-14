@@ -8,11 +8,11 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, OrderQuote, ResearchQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb._
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb._
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,7 +27,7 @@ import scala.util.{Failure, Success}
   */
 object QuoteRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit require: NodeRequire, ec: ExecutionContext, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit  ec: ExecutionContext) = {
     implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
     implicit val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
     implicit val naicsDAO = dbFuture.flatMap(_.getNAICSDAO)

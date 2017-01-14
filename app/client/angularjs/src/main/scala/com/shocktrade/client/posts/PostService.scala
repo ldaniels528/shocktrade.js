@@ -2,8 +2,8 @@ package com.shocktrade.client.posts
 
 import com.shocktrade.common.models.OperationResult
 import com.shocktrade.common.models.post.{Comment, Post, Reply, SharedContent}
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.Http
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

@@ -1,10 +1,9 @@
 package com.shocktrade.server.common
 
 import com.shocktrade.server.common.TradingClock._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.moment._
-import org.scalajs.nodejs.moment.timezone._
-import org.scalajs.sjs.DateHelper._
+import io.scalajs.npm.moment._
+import io.scalajs.npm.moment.timezone._
+import io.scalajs.util.DateHelper._
 
 import scala.scalajs.js
 
@@ -12,10 +11,10 @@ import scala.scalajs.js
   * Trading Clock
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class TradingClock()(implicit require: NodeRequire) {
-  // load modules
-  private val moment = Moment()
-  MomentTimezone()
+class TradingClock() {
+  // make sure the modules are loaded
+  Moment
+  MomentTimezone
 
   /**
     * The time in milliseconds until the next trading day
@@ -29,7 +28,7 @@ class TradingClock()(implicit require: NodeRequire) {
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getLastTradeStartTime = getLastTradeDay.hour(9).minute(30).toDate()
+  def getLastTradeStartTime: js.Date = getLastTradeDay.hour(9).minute(30).toDate()
 
   /**
     * Returns the last trading start time. If Monday through Friday, it will return the current date at 4:00pm ET;
@@ -37,7 +36,7 @@ class TradingClock()(implicit require: NodeRequire) {
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getLastTradeStopTime = getLastTradeDay.hour(16).minute(0).toDate()
+  def getLastTradeStopTime: js.Date = getLastTradeDay.hour(16).minute(0).toDate()
 
   /**
     * Returns the last trading day. If Monday through Friday, it will return the current date;
@@ -45,7 +44,7 @@ class TradingClock()(implicit require: NodeRequire) {
     * @return the stock market opening [[js.Date time]]
     */
   private def getLastTradeDay = {
-    val theMoment = moment().tz(NEW_YORK_TZ)
+    val theMoment = Moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
       case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
       case SATURDAY => 1
@@ -60,17 +59,17 @@ class TradingClock()(implicit require: NodeRequire) {
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getNextTradeStartTime = getNextTradingDay.hour(9).minute(30).toDate()
+  def getNextTradeStartTime: js.Date = getNextTradingDay.hour(9).minute(30).toDate()
 
   /**
     * The next trading end time for the U.S. Stock Markets (4:00pm Eastern Time)
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getNextTradeStopTime = getNextTradingDay.hour(16).minute(0).toDate()
+  def getNextTradeStopTime: js.Date = getNextTradingDay.hour(16).minute(0).toDate()
 
   private def getNextTradingDay = {
-    val theMoment = moment().tz(NEW_YORK_TZ)
+    val theMoment = Moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
       case SUNDAY | MONDAY | TUESDAY | WEDNESDAY | THURSDAY => 1
       case FRIDAY => 3
@@ -85,23 +84,23 @@ class TradingClock()(implicit require: NodeRequire) {
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getTradeStartTime = getTradingDay.hour(9).minute(30).toDate()
+  def getTradeStartTime : js.Date= getTradingDay.hour(9).minute(30).toDate()
 
   /**
     * The U.S. Stock Markets open at 4:00pm Eastern Time
     * @return the stock market opening [[js.Date time]]
     */
   @inline
-  def getTradeStopTime = getTradingDay.hour(16).minute(0).toDate()
+  def getTradeStopTime : js.Date= getTradingDay.hour(16).minute(0).toDate()
 
   private def getTradingDay = {
-    val delta = moment().tz(NEW_YORK_TZ).day() match {
+    val delta = Moment().tz(NEW_YORK_TZ).day() match {
       case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
       case SATURDAY => 2
       case SUNDAY => 1
       case day => throw new IllegalArgumentException(s"Illegal day of week value ($day)")
     }
-    moment().tz(NEW_YORK_TZ).add(delta, "day")
+    Moment().tz(NEW_YORK_TZ).add(delta, "day")
   }
 
   @inline
@@ -110,8 +109,9 @@ class TradingClock()(implicit require: NodeRequire) {
   @inline
   def isTradingActive(timeInMillis: Double): Boolean = isTradingActive(new js.Date(timeInMillis))
 
+  @inline
   def isTradingActive(date: js.Date): Boolean = {
-    val theMoment = moment(date).tz(NEW_YORK_TZ)
+    val theMoment = Moment(date).tz(NEW_YORK_TZ)
     val time = theMoment.format("HHmm").toInt
     val dayOfWeek = theMoment.day()
     dayOfWeek >= MONDAY && dayOfWeek <= FRIDAY && time >= 930 && time <= 1601
@@ -120,8 +120,9 @@ class TradingClock()(implicit require: NodeRequire) {
   @inline
   def isWeekDay: Boolean = isWeekDay(new js.Date())
 
+  @inline
   def isWeekDay(date: js.Date): Boolean = {
-    val theMoment = moment(date).tz(NEW_YORK_TZ)
+    val theMoment = Moment(date).tz(NEW_YORK_TZ)
     val dayOfWeek = theMoment.day()
     dayOfWeek >= MONDAY && dayOfWeek <= FRIDAY
   }

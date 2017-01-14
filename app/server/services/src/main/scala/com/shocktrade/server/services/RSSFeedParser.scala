@@ -1,12 +1,12 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.RSSFeedParser._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.xml2js.XML2JS
 
-import scala.concurrent.ExecutionContext
+import io.scalajs.npm.request.Request
+import io.scalajs.npm.xml2js.Xml2js
+import io.scalajs.util.ScalaJsHelper._
+
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -15,9 +15,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * RSS Feed Parser
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class RSSFeedParser()(implicit require: NodeRequire) {
-  private val request = Request()
-  private val xml2js = XML2JS()
+class RSSFeedParser() {
 
   /**
     * Parses the RSS feed represented by the given URL
@@ -25,19 +23,19 @@ class RSSFeedParser()(implicit require: NodeRequire) {
     * @param ec  the implicit [[ExecutionContext execution context]]
     * @return a promise of a collection of RSS channels
     */
-  def parse(url: String)(implicit ec: ExecutionContext) = {
+  def parse(url: String)(implicit ec: ExecutionContext): Future[js.Array[RSSChannel]] = {
     for {
-      (response, body) <- request.getFuture(url)
+      (response, body) <- Request.getFuture(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
-      feedsXML <- xml2js.parseStringFuture[XMLRSSRoot](body)
+      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
     } yield feedsXML.toJson
   }
 
-  def parseRaw(url: String)(implicit ec: ExecutionContext) = {
+  def parseRaw(url: String)(implicit ec: ExecutionContext): Future[XMLRSSRoot] = {
     for {
-      (response, body) <- request.getFuture(url)
+      (response, body) <- Request.getFuture(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
-      feedsXML <- xml2js.parseStringFuture[XMLRSSRoot](body)
+      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
     } yield feedsXML
   }
 
@@ -149,7 +147,7 @@ object RSSFeedParser {
   final implicit class RSSRootConversions(val root: XMLRSSRoot) extends AnyVal {
 
     @inline
-    def toJson = root.rss.channel.map(_.toJson)
+    def toJson: js.Array[RSSChannel] = root.rss.channel.map(_.toJson)
   }
 
   /**
@@ -217,7 +215,7 @@ object RSSFeedParser {
       * }}}
       */
     @inline
-    def getThumbNail = {
+    def getThumbNail: js.UndefOr[RSSMediaThumbNail] = {
       val outerDict = item.asInstanceOf[js.Dictionary[js.Array[js.Dictionary[XMLRSSMediaThumbNail]]]]
       (for {
         innerDict <- outerDict.get("media:thumbnail").flatMap(_.headOption)

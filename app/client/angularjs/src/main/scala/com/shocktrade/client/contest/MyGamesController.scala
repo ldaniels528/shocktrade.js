@@ -5,10 +5,10 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.models.contest.Participant
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Location, Timeout, injected}
-import org.scalajs.dom.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Location, Timeout, injected}
+import io.scalajs.dom.html.browser.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

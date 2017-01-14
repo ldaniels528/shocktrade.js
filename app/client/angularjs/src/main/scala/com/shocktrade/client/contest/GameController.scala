@@ -2,8 +2,8 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.models.contest.Contest
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Location, Scope}
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Location, Scope}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

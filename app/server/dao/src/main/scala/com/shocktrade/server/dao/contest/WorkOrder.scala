@@ -3,9 +3,9 @@ package com.shocktrade.server.dao.contest
 import java.util.UUID
 
 import com.shocktrade.common.Commissions
-import org.scalajs.nodejs.mongodb.ObjectID
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.mongodb.ObjectID
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

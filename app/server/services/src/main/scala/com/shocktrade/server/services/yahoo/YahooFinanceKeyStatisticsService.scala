@@ -2,29 +2,27 @@ package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.ScriptParser
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
   * Yahoo Finance! Key Statistics Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceKeyStatisticsService()(implicit require: NodeRequire) {
+class YahooFinanceKeyStatisticsService() {
   private val scriptParser = new ScriptParser[YFKeyStatistics]()
-  private val request = Request()
 
   /**
     * Attempts to retrieve the statistics for the given symbol
     * @param symbol the given symbol
     * @return the promise of the option of a [[YFKeyStatistics key statistics]] object
     */
-  def apply(symbol: String)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFKeyStatistics]] = {
     for {
-      (response, html) <- request.getFuture(s"https://finance.yahoo.com/quote/$symbol/key-statistics")
+      (response, html) <- Request.getFuture(s"https://finance.yahoo.com/quote/$symbol/key-statistics")
       keyStats_? <- scriptParser.parse(html, anchor = "\"QuoteSummaryStore\":")
     } yield keyStats_?
   }

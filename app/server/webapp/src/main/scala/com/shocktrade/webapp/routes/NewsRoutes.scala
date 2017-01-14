@@ -2,9 +2,9 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.server.dao.NewsDAO._
 import com.shocktrade.server.services.RSSFeedParser
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
   */
 object NewsRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     implicit val newsDAO = dbFuture.flatMap(_.getNewsDAO)
     implicit val rss = new RSSFeedParser()
 

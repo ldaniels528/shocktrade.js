@@ -1,8 +1,8 @@
 package com.shocktrade.common.models.contest
 
 import com.shocktrade.common.Commissions
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

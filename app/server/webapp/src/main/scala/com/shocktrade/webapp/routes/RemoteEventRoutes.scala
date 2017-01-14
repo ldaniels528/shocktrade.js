@@ -2,9 +2,9 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.Db
+
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,7 +15,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object RemoteEventRoutes {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
 
     // define the API
     app.post("/api/events/relay", (request: Request, response: Response, next: NextFunction) => relayEvent(request, response, next))

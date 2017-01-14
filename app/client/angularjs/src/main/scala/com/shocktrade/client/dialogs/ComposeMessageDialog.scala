@@ -1,9 +1,9 @@
 package com.shocktrade.client.dialogs
 
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.uibootstrap._
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.angularjs.{Controller, Scope, Service, injected}
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.uibootstrap._
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.{Controller, Scope, Service, injected}
 import com.shocktrade.client.dialogs.ComposeMessageDialogController.ComposeMessageResult
 
 import scala.concurrent.Future

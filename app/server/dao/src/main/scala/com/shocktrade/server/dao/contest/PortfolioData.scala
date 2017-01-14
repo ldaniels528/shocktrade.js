@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao.contest
 
 import com.shocktrade.common.models.contest._
-import org.scalajs.nodejs.mongodb.ObjectID
+import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

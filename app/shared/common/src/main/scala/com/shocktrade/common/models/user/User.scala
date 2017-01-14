@@ -1,7 +1,7 @@
 package com.shocktrade.common.models.user
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.language.implicitConversions
 import scala.scalajs.js
@@ -25,11 +25,15 @@ trait User extends UserLike {
   */
 object User {
 
-  def apply(_id: js.UndefOr[String], facebookID: js.UndefOr[String], name: js.UndefOr[String]) = {
+  def apply(_id: js.UndefOr[String],
+            facebookID: js.UndefOr[String],
+            name: js.UndefOr[String],
+            description: js.UndefOr[String] = js.undefined): User = {
     val user = New[User]
     user._id = _id
     user.facebookID = facebookID
     user.name = name
+    user.description = description
     user
   }
 
@@ -40,7 +44,7 @@ object User {
   implicit class UserEnrichment(val user: User) extends AnyVal {
 
     @inline
-    def is(userId: js.UndefOr[String]) = user._id ?== userId
+    def is(userId: js.UndefOr[String]): Boolean = user._id ?== userId
 
   }
 

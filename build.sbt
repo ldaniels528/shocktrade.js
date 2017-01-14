@@ -6,7 +6,7 @@ import sbt._
 
 val appVersion = "0.1.1"
 val appScalaVersion = "2.12.1"
-val transcendentVersion = "0.2.3.4"
+val scalaJsIoVersion = "0.3.0.0-RC4"
 
 scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
 
@@ -29,17 +29,30 @@ copyJS := {
   IO.copy(files1 ++ files2 ++ files3 ++ files4 ++ files5, overwrite = true)
 }
 
-lazy val appSettings = Seq(
+lazy val uiSettings = Seq(
   scalacOptions ++= Seq("-feature", "-deprecation"),
   scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
   scalaVersion := appScalaVersion,
   persistLauncher := true,
   persistLauncher in Test := false,
+  autoCompilerPlugins := true,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   resolvers += Resolver.sonatypeRepo("releases"),
-  testFrameworks += new TestFramework("utest.runner.Framework"),
-  testFrameworks += new TestFramework("minitest.runner.Framework"),
+  libraryDependencies ++= Seq(
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
+  ))
+
+lazy val appSettings = Seq(
+  scalacOptions ++= Seq("-feature", "-deprecation"),
+  scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
+  scalaVersion := appScalaVersion,
+  scalaJSModuleKind := ModuleKind.CommonJSModule,
+  autoCompilerPlugins := true,
+  relativeSourceMaps := true,
+  homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
+  resolvers += Resolver.sonatypeRepo("releases"),
   libraryDependencies ++= Seq(
     "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
     "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
@@ -49,11 +62,11 @@ lazy val moduleSettings = Seq(
   scalacOptions ++= Seq("-feature", "-deprecation"),
   scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
   scalaVersion := appScalaVersion,
+  scalaJSModuleKind := ModuleKind.CommonJSModule,
+  autoCompilerPlugins := true,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   resolvers += Resolver.sonatypeRepo("releases"),
-  testFrameworks += new TestFramework("utest.runner.Framework"),
-  testFrameworks += new TestFramework("minitest.runner.Framework"),
   libraryDependencies ++= Seq(
     "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
     "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
@@ -67,34 +80,33 @@ lazy val common = (project in file("./app/shared/common"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-common" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion
     ))
 
 lazy val angularjs = (project in file("./app/client/angularjs"))
   .aggregate(common)
   .dependsOn(common)
   .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
+  .settings(uiSettings: _*)
   .settings(
     name := "shocktrade-client-angularjs",
     organization := "com.shocktrade",
     version := appVersion,
-    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      // MEANS.js
-      "com.github.ldaniels528" %%% "scalajs-browser-core" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-core" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-anchor-scroll" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-animate" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-cookies" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-facebook" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-nervgh-fileupload" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-nvd3" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-sanitize" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-toaster" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-bootstrap" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-angularjs-ui-router" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-social-facebook" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "dom" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-core" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-anchor-scroll" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-animate" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-cookies" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-facebook" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-nervgh-fileupload" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-nvd3" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-sanitize" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-toaster" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-ui-bootstrap" % scalaJsIoVersion,
+      "io.scalajs" %%% "angularjs-ui-router" % scalaJsIoVersion,
+      "io.scalajs" %%% "social-facebook" % scalaJsIoVersion
     ))
 
 lazy val server_common = (project in file("./app/server/common"))
@@ -105,12 +117,11 @@ lazy val server_common = (project in file("./app/server/common"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-common" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-global" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-crypto" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-mongodb" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIoVersion
     ))
 
 lazy val webapp = (project in file("./app/server/webapp"))
@@ -122,14 +133,17 @@ lazy val webapp = (project in file("./app/server/webapp"))
     name := "shocktrade-webapp",
     organization := "com.shocktrade",
     version := appVersion,
-    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-express-csv" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-feedparser-promised" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-md5" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-splitargs" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "express-csv" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "express-fileupload" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "express-ws" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "md5" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "splitargs" % scalaJsIoVersion
     ))
 
 lazy val control_panel = (project in file("./app/client/control_panel"))
@@ -142,11 +156,9 @@ lazy val control_panel = (project in file("./app/client/control_panel"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-nodejs-core" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-fs" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-global" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-nodejs-repl" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
     ))
 
 lazy val daycycle = (project in file("./app/server/daycycle"))
@@ -158,14 +170,15 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     name := "shocktrade-daycycle",
     organization := "com.shocktrade",
     version := appVersion,
-    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-kafkanode" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "kafka-node" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
@@ -177,13 +190,14 @@ lazy val qualification = (project in file("./app/server/qualification"))
     name := "shocktrade-qualification",
     organization := "com.shocktrade",
     version := appVersion,
-    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
     ))
 
 lazy val robots = (project in file("./app/server/robots"))
@@ -195,14 +209,15 @@ lazy val robots = (project in file("./app/server/robots"))
     name := "shocktrade-robots",
     organization := "com.shocktrade",
     version := appVersion,
-    pipelineStages := Seq(gzip),
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-numeral" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "numeral" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
     ))
 
 lazy val dao = (project in file("./app/server/dao"))
@@ -215,9 +230,11 @@ lazy val dao = (project in file("./app/server/dao"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion
     ))
 
 lazy val services = (project in file("./app/server/services"))
@@ -230,13 +247,15 @@ lazy val services = (project in file("./app/server/services"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-csv-parse" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-xml2js" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "csv-parse" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIoVersion
     ))
 
 lazy val facades = (project in file("./app/server/facades"))
@@ -249,19 +268,22 @@ lazy val facades = (project in file("./app/server/facades"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "com.github.ldaniels528" %%% "scalajs-npm-mean-bundle-minimal" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-csv-parse" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-htmlparser2" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-moment-timezone" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-request" % transcendentVersion,
-      "com.github.ldaniels528" %%% "scalajs-npm-xml2js" % transcendentVersion
+      "io.scalajs" %%% "core" % scalaJsIoVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "csv-parse" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "mean-stack-bundle" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIoVersion
     ))
 
 lazy val shocktradejs = (project in file("."))
   .aggregate(angularjs, webapp, daycycle, qualification, robots, control_panel)
   .dependsOn(angularjs, webapp)
   .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
   .settings(
     name := "shocktrade.js",
     organization := "com.shocktrade",

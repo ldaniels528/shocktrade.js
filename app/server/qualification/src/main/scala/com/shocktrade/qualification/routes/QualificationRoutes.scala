@@ -2,9 +2,9 @@ package com.shocktrade.qualification.routes
 
 import com.shocktrade.qualification.OrderQualificationEngine
 import com.shocktrade.server.common.TradingClock
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
   */
 object QualificationRoutes {
 
-  def init[T](app: Application, qualificationEngine: OrderQualificationEngine)(implicit ec: ExecutionContext, dbFuture: Future[Db], mongo: MongoDB, require: NodeRequire, clock: TradingClock) = {
+  def init[T](app: Application, qualificationEngine: OrderQualificationEngine)(implicit ec: ExecutionContext, dbFuture: Future[Db],  clock: TradingClock) = {
     app.get("/api/qualify", (request: Request, response: Response, next: NextFunction) => qualify(request, response, next))
     app.get("/api/qualify/:pid", (request: Request, response: Response, next: NextFunction) => processOrders(request, response, next))
     app.get("/api/qualify/:pid/orders", (request: Request, response: Response, next: NextFunction) => qualifyingOrders(request, response, next))

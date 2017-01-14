@@ -3,9 +3,9 @@ package com.shocktrade.server.dao.contest
 import com.shocktrade.common.forms.ContestCreateForm
 import com.shocktrade.common.models.contest.{ChatMessage, ContestLike, Participant}
 import com.shocktrade.common.models.user.User
-import org.scalajs.nodejs.mongodb.ObjectID
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.mongodb.ObjectID
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js

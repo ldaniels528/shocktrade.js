@@ -3,8 +3,6 @@ package com.shocktrade.autonomous
 import com.shocktrade.autonomous.RuleProcessor._
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.moment.Moment
 
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -13,8 +11,7 @@ import scala.scalajs.js
   * Rule Processor
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class RuleProcessor()(implicit require: NodeRequire) {
-  private implicit val moment = Moment()
+class RuleProcessor() {
 
   /**
     * Executes the compiled strategy

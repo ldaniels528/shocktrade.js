@@ -7,9 +7,9 @@ import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor,
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.services.EodDataSecuritiesService
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
+
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
   * Full Market Update Daemon (supports AMEX, NASDAQ, NYSE and OTCBB)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
+class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances

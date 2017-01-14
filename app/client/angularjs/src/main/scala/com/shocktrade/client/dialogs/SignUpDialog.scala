@@ -2,16 +2,16 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.common.util.StringHelper._
-import org.scalajs.angularjs.{Timeout, _}
-import org.scalajs.angularjs.facebook.FacebookService
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.{Timeout, _}
+import io.scalajs.npm.angularjs.facebook.FacebookService
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.util.ScalaJsHelper._
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
+import io.scalajs.dom.html.browser.console
+import io.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._

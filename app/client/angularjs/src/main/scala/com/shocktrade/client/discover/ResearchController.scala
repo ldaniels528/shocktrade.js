@@ -4,12 +4,12 @@ import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.client.discover.ResearchController._
 import com.shocktrade.client.{GlobalLoading, MainController}
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, Timeout, angular, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, angular, injected}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

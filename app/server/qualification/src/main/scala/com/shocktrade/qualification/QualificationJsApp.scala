@@ -4,11 +4,10 @@ import com.shocktrade.qualification.routes.QualificationRoutes
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon._
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
-import org.scalajs.nodejs.express.Express
-import org.scalajs.nodejs.globals.process
-import org.scalajs.nodejs.mongodb.MongoDB
+import io.scalajs.nodejs._
+import io.scalajs.npm.bodyparser.{BodyParser, UrlEncodedBodyOptions}
+import io.scalajs.npm.express.Express
+import io.scalajs.npm.mongodb.MongoClient
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
@@ -23,11 +22,7 @@ import scala.scalajs.js.annotation.JSExportAll
 object QualificationJsApp extends js.JSApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {}
-
-  def startServer(implicit bootstrap: Bootstrap) = {
-    implicit val require = bootstrap.require
-
+  override def main() {
     logger.log("Starting the Qualification Server...")
 
     // determine the port to listen on
@@ -41,20 +36,17 @@ object QualificationJsApp extends js.JSApp {
     implicit val tradingClock = new TradingClock()
 
     logger.info("Loading Express modules...")
-    implicit val express = Express()
-    implicit val app = express()
+    implicit val app = Express()
 
     // setup the body parsers
     logger.log("Setting up body parsers...")
-    val bodyParser = BodyParser()
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
+    app.use(BodyParser.json())
+    app.use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
     // setup mongodb connection
     logger.log("Loading MongoDB module...")
-    implicit val mongo = MongoDB()
     logger.log("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnectionString)
+    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
 
     // disable caching
     app.disable("etag")

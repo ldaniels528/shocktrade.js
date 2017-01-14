@@ -2,8 +2,8 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
 import com.shocktrade.common.forms.{ContestCreateForm, PlayerInfoForm}
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.Http
 
 import scala.concurrent.Future
 import scala.scalajs.js

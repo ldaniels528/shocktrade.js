@@ -5,12 +5,12 @@ import com.shocktrade.daycycle.routes.DaemonRoutes
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon._
-import org.scalajs.nodejs.bodyparser.{BodyParser, UrlEncodedBodyOptions}
-import org.scalajs.nodejs.express.Express
-import org.scalajs.nodejs.globals.process
-import org.scalajs.npm.kafkanode.{KafkaNode, Producer}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.{Bootstrap, NodeRequire}
+import io.scalajs.nodejs.process
+import io.scalajs.npm.bodyparser.{BodyParser, UrlEncodedBodyOptions}
+import io.scalajs.npm.express.Express
+import io.scalajs.npm.kafkanode
+import io.scalajs.npm.kafkanode.Producer
+import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -27,11 +27,7 @@ import scala.util.{Failure, Success}
 object DayCycleJsApp extends js.JSApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {}
-
-  def startServer(implicit bootstrap: Bootstrap) = {
-    implicit val require = bootstrap.require
-
+  override def main() {
     logger.info("Starting the Day-Cycle Server...")
 
     // determine the port to listen on
@@ -45,30 +41,22 @@ object DayCycleJsApp extends js.JSApp {
     // create the trading clock instance
     implicit val tradingClock = new TradingClock()
 
-    logger.info("Loading the MongoDB module...")
-    implicit val mongo = MongoDB()
-
-    logger.info("Loading the Kafka module...")
-    implicit val kafka = KafkaNode()
-
     // setup mongodb connection
     logger.info("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnectionString)
+    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
 
     // setup kafka connection
     logger.info("Connecting to '%s'...", zkConnectionString)
-    implicit val kafkaClient = kafka.Client(zkConnectionString)
-    implicit val kafkaProducer = kafka.Producer(kafkaClient)
+    implicit val kafkaClient = new kafkanode.Client(zkConnectionString)
+    implicit val kafkaProducer = new kafkanode.Producer(kafkaClient)
 
     logger.info("Loading Express modules...")
-    implicit val express = Express()
-    implicit val app = express()
+    implicit val app = Express()
 
     // setup the body parsers
     logger.log("Setting up body parsers...")
-    val bodyParser = BodyParser()
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
+    app.use(BodyParser.json())
+    app.use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
     // disable caching
     app.disable("etag")
@@ -106,7 +94,7 @@ object DayCycleJsApp extends js.JSApp {
     }
   }
 
-  def createDaemons(dbConnectionString: String)(implicit require: NodeRequire, dbFuture: Future[Db], kafkaProducer: Producer, mongo: MongoDB) = {
+  def createDaemons(dbConnectionString: String)(implicit dbFuture: Future[Db], kafkaProducer: Producer) = {
     Seq(
       DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
       DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
@@ -121,7 +109,7 @@ object DayCycleJsApp extends js.JSApp {
     )
   }
 
-  def launchDaemons[T](daemons: Seq[DaemonRef[T]])(implicit require: NodeRequire, tradingClock: TradingClock, kafkaProducer: Producer) = {
+  def launchDaemons[T](daemons: Seq[DaemonRef[T]])(implicit tradingClock: TradingClock, kafkaProducer: Producer) = {
     // separate the daemons by Kafka dependency
     val (daemonsKafka, daemonsNonKafka) = daemons.partition(_.kafkaReqd)
 

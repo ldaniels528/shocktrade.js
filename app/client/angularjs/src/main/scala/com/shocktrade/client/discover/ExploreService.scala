@@ -2,9 +2,9 @@ package com.shocktrade.client.discover
 
 import com.shocktrade.client.discover.ExploreService._
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
-import org.scalajs.dom.browser.encodeURI
+import io.scalajs.dom.html.browser.encodeURI
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
 import scala.scalajs.js
 
@@ -14,25 +14,31 @@ import scala.scalajs.js
   */
 class ExploreService($http: Http) extends Service {
 
-  def loadSectorInfo(symbol: String) = $http.get[SectorInfoQuote](s"/api/explore/symbol/$symbol")
+  def loadSectorInfo(symbol: String): HttpResponse[SectorInfoQuote] = {
+    $http.get[SectorInfoQuote](s"/api/explore/symbol/$symbol")
+  }
 
-  def loadSectors() = $http.get[js.Array[AggregatedSectorData]]("/api/explore/sectors")
+  def loadSectors(): HttpResponse[js.Array[AggregatedSectorData]] = {
+    $http.get[js.Array[AggregatedSectorData]]("/api/explore/sectors")
+  }
 
-  def loadNAICSSectors() = $http.get[js.Array[AggregatedSectorData]]("/api/explore/naics/sectors")
+  def loadNAICSSectors(): HttpResponse[js.Array[AggregatedSectorData]] = {
+    $http.get[js.Array[AggregatedSectorData]]("/api/explore/naics/sectors")
+  }
 
-  def loadIndustries(sector: String) = {
+  def loadIndustries(sector: String): HttpResponse[js.Array[AggregatedSectorData]] = {
     $http.get[js.Array[AggregatedSectorData]](s"/api/explore/industries?sector=${sector.encode}")
   }
 
-  def loadIndustryQuotes(sector: String, industry: String) = {
+  def loadIndustryQuotes(sector: String, industry: String): HttpResponse[js.Array[ResearchQuote]] = {
     $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}")
   }
 
-  def loadSubIndustries(sector: String, industry: String) = {
+  def loadSubIndustries(sector: String, industry: String): HttpResponse[js.Array[AggregatedSectorData]] = {
     $http.get[js.Array[AggregatedSectorData]](s"/api/explore/subIndustries?sector=${sector.encode}&industry=${industry.encode}")
   }
 
-  def loadSubIndustryQuotes(sector: String, industry: String, subIndustry: String) = {
+  def loadSubIndustryQuotes(sector: String, industry: String, subIndustry: String): HttpResponse[js.Array[ResearchQuote]] = {
     $http.get[js.Array[ResearchQuote]](s"/api/explore/quotes?sector=${sector.encode}&industry=${industry.encode}&subIndustry=${subIndustry.encode}")
   }
 
@@ -51,7 +57,7 @@ object ExploreService {
   implicit class URLStringFix(val s: String) extends AnyVal {
 
     @inline
-    def encode = encodeURI(s).replaceAllLiterally("&", "%26")
+    def encode: String = encodeURI(s).replaceAllLiterally("&", "%26")
 
   }
 

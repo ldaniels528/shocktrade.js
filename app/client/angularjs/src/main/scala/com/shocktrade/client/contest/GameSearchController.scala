@@ -8,11 +8,11 @@ import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.forms.PlayerInfoForm
 import com.shocktrade.common.models.contest.Participant
 import com.shocktrade.common.models.user.User
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Location, Timeout, angular, injected, _}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Location, Timeout, angular, injected, _}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

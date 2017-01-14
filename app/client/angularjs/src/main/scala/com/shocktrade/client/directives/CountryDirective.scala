@@ -1,7 +1,7 @@
 package com.shocktrade.client.directives
 
-import org.scalajs.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
-import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope}
+import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
+import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

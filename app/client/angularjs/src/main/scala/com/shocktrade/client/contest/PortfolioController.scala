@@ -1,18 +1,18 @@
 package com.shocktrade.client.contest
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioController.PortfolioTab
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.models.contest.{Order, Performance, Position}
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Timeout, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -102,8 +102,10 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
       symbol = aSymbol,
       accountType = anAccountType
     ))
-    promise.onSuccess { case portfolio =>
-      mySession.updatePortfolio(portfolio)
+    promise onComplete {
+      case Success(portfolio) => mySession.updatePortfolio(portfolio)
+      case Failure(e) =>
+        toaster.error("New Order", e.displayMessage)
     }
     promise
   }

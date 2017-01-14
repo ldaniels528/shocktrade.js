@@ -6,7 +6,7 @@ import com.shocktrade.server.services.BloombergQuoteService.BloombergQuote
 import com.shocktrade.server.services.CikLookupService.CikLookupResponse
 import com.shocktrade.server.services.EodDataSecuritiesService.EodDataSecurity
 import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

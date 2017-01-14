@@ -1,12 +1,12 @@
 package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import io.scalajs.npm.moment.Moment
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
+
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -17,13 +17,11 @@ import scala.util.Try
   * Yahoo Finance! CSV History Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceCSVHistoryService()(implicit require: NodeRequire) {
-  private val request = Request()
-  private val moment = Moment()
+class YahooFinanceCSVHistoryService() {
 
-  def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext): Future[YFHistoricalQuotes] = {
     val startTime = js.Date.now()
-    request.getFuture(toURL(symbol, from, to)) map { case (response, data) =>
+    Request.getFuture(toURL(symbol, from, to)) map { case (response, data) =>
       new YFHistoricalQuotes(symbol = symbol, quotes = parseHistory(data), responseTime = js.Date.now() - startTime)
     }
   }
@@ -33,7 +31,7 @@ class YahooFinanceCSVHistoryService()(implicit require: NodeRequire) {
       line.split("[,]") match {
         case Array(date, open, high, low, close, volume, adjClose) if date != "Date" =>
           Option(new YFHistoricalQuote(
-            tradeDate = moment(date).toDate(),
+            tradeDate = Moment(date).toDate(),
             open = Try(open.toDouble).toOption.orUndefined,
             high = Try(high.toDouble).toOption.orUndefined,
             low = Try(low.toDouble).toOption.orUndefined,

@@ -1,8 +1,9 @@
 package com.shocktrade.common.models.quote
 
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
+import scala.scalajs.js.UndefOr
 import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
@@ -41,9 +42,9 @@ object ResearchQuote {
     "change", "changePct", "spread", "volume", "avgVolume10Day", "beta", "active"
   )
 
-  def apply() = New[ResearchQuote]
+  def apply(): ResearchQuote = New[ResearchQuote]
 
-  def apply(symbol: String) = {
+  def apply(symbol: String): ResearchQuote = {
     val quote = New[ResearchQuote]
     quote.symbol = symbol
     quote.active = true
@@ -61,10 +62,10 @@ object ResearchQuote {
       * @return the OTC advisory for the given symbol
       */
     @inline
-    def getAdvisory = quote.symbol.flatMap(Advisory(_, quote.exchange))
+    def getAdvisory: UndefOr[Advisory] = quote.symbol.flatMap(Advisory(_, quote.exchange))
 
     @inline
-    def getRiskLevel = {
+    def getRiskLevel: String = {
       quote.beta map {
         case b if b >= 0 && b <= 1.25 => "Low"
         case b if b > 1.25 && b <= 1.9 => "Medium"

@@ -9,11 +9,11 @@ import com.shocktrade.client.posts.{PostController, PostService}
 import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
-import org.scalajs.angularjs.facebook.FacebookService
-import org.scalajs.angularjs.uirouter.{RouteProvider, RouteTo}
-import org.scalajs.angularjs.{Module, Scope, Timeout, angular}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
+import io.scalajs.npm.angularjs.facebook.FacebookService
+import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
+import io.scalajs.npm.angularjs.{Module, Scope, Timeout, angular}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -58,19 +58,19 @@ object WebClientJsApp extends js.JSApp {
     module.config({ ($routeProvider: RouteProvider) =>
       // configure the routes
       $routeProvider
-        .when("/about/investors", RouteTo(templateUrl = "/views/about/investors.html"))
-        .when("/about/me", RouteTo(templateUrl = "/views/about/me.html"))
-        .when("/about/us", RouteTo(templateUrl = "/views/about/us.html"))
-        .when("/dashboard", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
-        .when("/dashboard/:contestId", RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
-        .when("/discover", RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
-        .when("/explore", RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
-        .when("/home", RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
-        .when("/news", RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
-        .when("/posts", RouteTo(templateUrl = "/views/posts/index.html", controller = classOf[PostController].getSimpleName))
-        .when("/research", RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
-        .when("/search", RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
-        .otherwise(RouteTo(redirectTo = "/about/us"))
+        .when("/about/investors", new RouteTo(templateUrl = "/views/about/investors.html"))
+        .when("/about/me", new RouteTo(templateUrl = "/views/about/me.html"))
+        .when("/about/us", new RouteTo(templateUrl = "/views/about/us.html"))
+        .when("/dashboard", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
+        .when("/dashboard/:contestId", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
+        .when("/discover", new RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
+        .when("/explore", new RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
+        .when("/home", new RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
+        .when("/news", new RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
+        .when("/posts", new RouteTo(templateUrl = "/views/posts/index.html", controller = classOf[PostController].getSimpleName))
+        .when("/research", new RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
+        .when("/search", new RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
+        .otherwise(new RouteTo(redirectTo = "/about/us"))
       ()
     })
 

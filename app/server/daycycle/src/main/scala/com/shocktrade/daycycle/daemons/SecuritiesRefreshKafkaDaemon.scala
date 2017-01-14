@@ -1,19 +1,18 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.common.util.ExchangeHelper
 import com.shocktrade.daycycle.daemons.SecuritiesRefreshKafkaDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import com.shocktrade.common.util.ExchangeHelper
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.npm.kafkanode.{Payload, Producer}
-import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.npm.kafkanode.{Payload, Producer}
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.OptionHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -24,7 +23,7 @@ import scala.util.{Failure, Success}
   * Securities Update Kafka Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire, kafkaProducer: Producer) extends Daemon[BulkUpdateStatistics] {
+class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, kafkaProducer: Producer) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
   private val topic = "com.shocktrade.yahoo.quotes.csv"
   private val batchSize = 40
@@ -98,7 +97,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
 
   private def persistSecurities(quotes: Seq[YFCSVQuote]) = {
     val payloads = js.Array(quotes.zipWithIndex map { case (q, n) =>
-      Payload(topic, messages = JSON.stringify(q), partition = n % 10)
+      new Payload(topic, messages = JSON.stringify(q), partition = n % 10)
     }: _*)
     kafkaProducer.sendFuture(payloads) map (_ => quotes.length)
   }

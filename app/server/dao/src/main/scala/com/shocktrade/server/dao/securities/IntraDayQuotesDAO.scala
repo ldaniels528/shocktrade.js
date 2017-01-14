@@ -2,7 +2,7 @@ package com.shocktrade.server.dao
 package securities
 
 import com.shocktrade.common.models.contest.OrderLike
-import org.scalajs.nodejs.mongodb._
+import io.scalajs.npm.mongodb._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

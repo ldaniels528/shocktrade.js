@@ -4,12 +4,13 @@ import com.shocktrade.common.util.ParsingHelper._
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesParser._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.moment.timezone._
-import org.scalajs.nodejs.{NodeRequire, console}
+import io.scalajs.nodejs.console
+import io.scalajs.npm.moment.Moment
+import io.scalajs.npm.moment.timezone._
 
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.Date
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success, Try}
 
@@ -17,9 +18,8 @@ import scala.util.{Failure, Success, Try}
   * Yahoo Finance! CSV Quotes Parser
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
-  private val moment = Moment()
-  MomentTimezone()
+class YahooFinanceCSVQuotesParser() {
+  MomentTimezone
 
   /**
     * Parses the given encoded stock quote string into a stock quote object
@@ -27,7 +27,7 @@ class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
     * @param csvdata    the given stock quote data
     * @return the [[YFCSVQuote quote]]
     */
-  def parseQuote(parameters: String, csvdata: String, startTime: Double) = {
+  def parseQuote(parameters: String, csvdata: String, startTime: Double): Option[YFCSVQuote] = {
     // capture the response time (in milliseconds)
     val responseTimeMsec = System.currentTimeMillis() - startTime
 
@@ -49,10 +49,12 @@ class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
       sb.clear()
       if (tok != "") Seq(tok) else Seq.empty
     }
+
     def toggleDQuotes = {
       inDQ = !inDQ
       Seq.empty
     }
+
     def append(c: Char) = {
       sb += c
       Seq.empty
@@ -265,7 +267,7 @@ class YahooFinanceCSVQuotesParser()(implicit require: NodeRequire) {
           val dateString = s"$tradeDate $tradeTime"
 
           // format as an ISO date string
-          moment(dateString, "M/DD/YYYY h:mma").tz("America/New_York").toISOString()
+          Moment(dateString, "M/DD/YYYY h:mma").tz("America/New_York").toISOString()
         } match {
           case Success(ts) => kvps + ("tradeDateTime" -> ts)
           case Failure(e) =>
@@ -413,19 +415,19 @@ object YahooFinanceCSVQuotesParser {
   implicit class MapExtensions(val m: Map[String, String]) extends AnyVal {
 
     @inline
-    def uget(key: String) = m.get(key).orUndefined
+    def uget(key: String): js.UndefOr[String] = m.get(key).orUndefined
 
     @inline
-    def getDate(key: String) = uget(key) flatMap (dateValue(key, _))
+    def getDate(key: String): js.UndefOr[Date] = uget(key) flatMap (dateValue(key, _))
 
     @inline
-    def getDecimal(key: String) = uget(key) flatMap (decimalValue(key, _))
+    def getDecimal(key: String): js.UndefOr[Double] = uget(key) flatMap (decimalValue(key, _))
 
     @inline
-    def getInteger(key: String) = uget(key) flatMap (intValue(key, _))
+    def getInteger(key: String): js.UndefOr[Int] = uget(key) flatMap (intValue(key, _))
 
     @inline
-    def getString(key: String) = uget(key) flatMap (stringValue(key, _))
+    def getString(key: String): js.UndefOr[String] = uget(key) flatMap (stringValue(key, _))
 
   }
 

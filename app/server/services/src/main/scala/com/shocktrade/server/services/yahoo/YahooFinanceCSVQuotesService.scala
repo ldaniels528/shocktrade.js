@@ -1,11 +1,11 @@
 package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.request._
-import org.scalajs.nodejs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import io.scalajs.npm.request._
+import io.scalajs.util.ScalaJsHelper._
+
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -14,9 +14,8 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * Yahoo Finance! CSV Quotes Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
+class YahooFinanceCSVQuotesService() {
   private val parser = new YahooFinanceCSVQuotesParser()
-  private val request = Request()
 
   /**
     * Performs the service call and returns a single object read from the service.
@@ -24,10 +23,10 @@ class YahooFinanceCSVQuotesService()(implicit require: NodeRequire) {
     * @param params  the given stock fields (e.g., "soxq2")
     * @return the [[YFCSVQuote quote]]
     */
-  def getQuotes(params: String, symbols: String*)(implicit ec: ExecutionContext) = {
+  def getQuotes(params: String, symbols: String*)(implicit ec: ExecutionContext): Future[Seq[YFCSVQuote]] = {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
-    request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
+    Request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
       data.split("[\n]").toSeq flatMap(line => parser.parseQuote(params, line, startTime))
     }
   }
@@ -255,6 +254,6 @@ object YahooFinanceCSVQuotesService {
     "x0" -> "exchange",
     "y0" -> "divYield") // Dividend Yield (Trailing Annual)
 
-  val FieldNameToCodes = CodeToFieldNames map { case (k, v) => (v, k) }
+  val FieldNameToCodes: Map[String, String] = CodeToFieldNames map { case (k, v) => (v, k) }
 
 }

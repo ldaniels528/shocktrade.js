@@ -8,14 +8,14 @@ import com.shocktrade.client.{AutoCompletionController, AutoCompletionController
 import com.shocktrade.common.Commissions
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.angularjs.{Q, Service, Timeout, angular, injected, _}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.npm.angularjs.{Q, Service, Timeout, angular, injected, _}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

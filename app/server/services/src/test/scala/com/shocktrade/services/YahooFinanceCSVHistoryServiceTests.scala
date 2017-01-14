@@ -1,9 +1,9 @@
 package com.shocktrade.services
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService
-import org.scalajs.nodejs.NodeRequire.require
-import org.scalajs.nodejs.console
-import org.scalajs.sjs.DateHelper._
+.require
+import io.scalajs.nodejs.console
+import io.scalajs.util.DateHelper._
 import utest._
 
 import scala.concurrent.duration._

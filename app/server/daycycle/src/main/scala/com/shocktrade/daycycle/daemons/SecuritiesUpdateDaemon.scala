@@ -12,9 +12,9 @@ import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.mongodb.MongoDB
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs._
+import io.scalajs.npm.mongodb.MongoDB
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -25,7 +25,7 @@ import scala.util.{Failure, Success}
   * Securities Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
+class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 

@@ -3,11 +3,11 @@ package com.shocktrade.client.dialogs
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.common.models.contest.Participant
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.http.Http
-import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.nodejs.social.facebook.TaggableFriend
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.nodejs.social.facebook.TaggableFriend
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.js

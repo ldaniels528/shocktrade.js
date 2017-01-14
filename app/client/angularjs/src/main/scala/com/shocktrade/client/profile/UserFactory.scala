@@ -1,15 +1,14 @@
 package com.shocktrade.client.profile
 
-import com.shocktrade.common.models.post.Post
 import com.shocktrade.common.models.user.User
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.{Factory, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.{Factory, injected}
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
+import scala.util.{Failure, Success}
 
 /**
   * User Factory
@@ -28,13 +27,15 @@ class UserFactory(@injected("UserService") userService: UserService) extends Fac
     * @param ec     the given [[ExecutionContext execution context]]
     * @return a promise of the user instance
     */
-  def getUserByID(userId: String)(implicit ec: ExecutionContext) = {
+  def getUserByID(userId: String)(implicit ec: ExecutionContext): Future[User] = {
     cache.getOrElseUpdate(userId, {
       console.log(s"Loading user information for # $userId...")
       val promise = userService.getUserByID(userId)
-      promise onFailure { case e =>
-        console.log(s"Unexpected failure: ${e.displayMessage}")
-        cache.delete(userId)
+      promise onComplete {
+        case Success(_) =>
+        case Failure(e) =>
+          console.log(s"Unexpected failure: ${e.displayMessage}")
+          cache.delete(userId)
       }
       promise
     })

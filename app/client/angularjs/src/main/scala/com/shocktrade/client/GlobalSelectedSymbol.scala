@@ -1,9 +1,9 @@
 package com.shocktrade.client
 
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.{Controller, Scope}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.{Controller, Scope}
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 

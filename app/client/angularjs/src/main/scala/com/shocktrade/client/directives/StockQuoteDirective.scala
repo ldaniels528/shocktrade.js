@@ -1,10 +1,10 @@
 package com.shocktrade.client.directives
 
 import com.shocktrade.client.QuoteCache
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
-import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope, injected}
-import org.scalajs.dom.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
+import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope, injected}
+import io.scalajs.dom.html.browser.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

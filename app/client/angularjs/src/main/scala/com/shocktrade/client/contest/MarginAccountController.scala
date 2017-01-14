@@ -1,10 +1,10 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.sjs.JsUnderOrHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

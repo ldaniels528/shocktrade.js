@@ -1,29 +1,27 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.BloombergQuoteService._
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
   * Bloomberg Quote Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BloombergQuoteService()(implicit require: NodeRequire) {
+class BloombergQuoteService() {
   private val scriptParser = new ScriptParser[BloombergQuote]()
-  private val request = Request()
 
   /**
     * Attempts to retrieve the quote for the given symbol
     * @param symbol the given symbol
     * @return the promise of the option of a [[BloombergQuote quote]] object
     */
-  def apply(symbol: String)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BloombergQuote]] = {
     for {
-      (response, html) <- request.getFuture(s"http://www.bloomberg.com/quote/$symbol:US")
+      (response, html) <- Request.getFuture(s"http://www.bloomberg.com/quote/$symbol:US")
       quote_? <- scriptParser.parse(html, anchor = s""""/markets/api/quote-page/$symbol%3AUS?locale=en":""")
     } yield quote_?
   }

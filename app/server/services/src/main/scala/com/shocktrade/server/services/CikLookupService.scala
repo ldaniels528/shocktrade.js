@@ -1,13 +1,14 @@
 package com.shocktrade.server.services
 
-import com.shocktrade.server.services.CikLookupService._
 import com.shocktrade.common.util.StringHelper._
-import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, errors}
+import com.shocktrade.server.services.CikLookupService._
+import io.scalajs.nodejs.Error
+import io.scalajs.npm.htmlparser2
+import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
+import io.scalajs.npm.request.Request
+import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.{ExecutionContext, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
@@ -18,14 +19,12 @@ import scala.util.{Failure, Success}
   * Cik Lookup Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class CikLookupService()(implicit require: NodeRequire) {
-  private val htmlParser = HtmlParser2()
-  private val request = Request()
+class CikLookupService() {
 
-  def apply(symbol: String)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[CikLookupResponse]] = {
     val promise = Promise[Option[CikLookupResponse]]()
     val startTime = js.Date.now()
-    request.getFuture(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
+    Request.getFuture(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
       case Success((response, html)) => parseHtml(symbol, html, startTime, promise)
       case Failure(e) => promise.failure(e)
     }
@@ -33,19 +32,19 @@ class CikLookupService()(implicit require: NodeRequire) {
   }
 
   private def parseHtml(symbol: String, html: String, startTime: Double, promise: Promise[Option[CikLookupResponse]]) = {
-    val parser = htmlParser.Parser(new ParserHandler {
-      val quotes = js.Array[CikLookupResponse]()
-      var values = js.Dictionary[js.Array[String]]()
-      val attributesStack = js.Array[js.Dictionary[String]]()
-      val textStack = js.Dictionary[StringBuilder]()
-      var currentTag = ""
+    val quotes = js.Array[CikLookupResponse]()
+    var values = js.Dictionary[js.Array[String]]()
+    val attributesStack = js.Array[js.Dictionary[String]]()
+    val textStack = js.Dictionary[StringBuilder]()
+    var currentTag = ""
 
-      override def onopentag = (tag: String, attributes: js.Dictionary[String]) => {
+    val parser = new htmlparser2.Parser(new ParserHandler {
+      override def onopentag(tag: String, attributes: js.Dictionary[String]) {
         currentTag = tag
         attributesStack.push(attributes)
       }
 
-      override def onclosetag = (tag: String) => {
+      override def onclosetag(tag: String) {
         val attributes = attributesStack.pop()
         val text = textStack.remove(tag).map(_.toString()).getOrElse("")
         tag match {
@@ -69,11 +68,11 @@ class CikLookupService()(implicit require: NodeRequire) {
         }
       }
 
-      override def ontext = (text: String) => {
+      override def ontext(text: String) {
         textStack.getOrElseUpdate(currentTag, new StringBuilder()).append(text.trim)
       }
 
-      override def onend = () => {
+      override def onend() {
         promise.success(values.get("CIK") map { cikNumber =>
           new CikLookupResponse(
             symbol = symbol,
@@ -85,7 +84,7 @@ class CikLookupService()(implicit require: NodeRequire) {
         })
       }
 
-      override def onerror = (err: errors.Error) => promise.failure(wrapJavaScriptException(err))
+      override def onerror(err: Error): Unit = promise.failure(wrapJavaScriptException(err))
 
     }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 

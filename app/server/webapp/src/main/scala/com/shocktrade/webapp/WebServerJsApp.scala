@@ -4,15 +4,12 @@ import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.webapp.routes._
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.bodyparser._
-import org.scalajs.nodejs.express.fileupload.ExpressFileUpload
-import org.scalajs.nodejs.express.{Express, Request, Response}
-import org.scalajs.nodejs.expressws.{ExpressWS, WebSocket, WsRouterExtensions}
-import org.scalajs.nodejs.globals.process
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.npm.nib.Nib
-import org.scalajs.npm.stylus.{MiddlewareOptions, Stylus}
+import io.scalajs.nodejs._
+import io.scalajs.npm.bodyparser._
+import io.scalajs.npm.express.fileupload.ExpressFileUpload
+import io.scalajs.npm.express.{Application, Express, Request, Response}
+import io.scalajs.npm.expressws.{ExpressWS, WebSocket, WsRouterExtensions, WsRouting}
+import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -27,11 +24,7 @@ import scala.scalajs.js.annotation.JSExportAll
 object WebServerJsApp extends js.JSApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {}
-
-  def startServer(implicit bootstrap: Bootstrap) {
-    implicit val require = bootstrap.require
-
+  override def main() {
     logger.info("Starting the ShockTrade Web Server...")
 
     // determine the port to listen on
@@ -39,10 +32,9 @@ object WebServerJsApp extends js.JSApp {
 
     // setup mongodb connection
     logger.info("Loading MongoDB module...")
-    implicit val mongo = MongoDB()
     val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
     logger.info("Connecting to database '%s'...", dbConnect)
-    implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnect)
+    implicit val dbFuture = MongoClient.connectFuture(dbConnect)
 
     // setup the application
     val port = process.port getOrElse "9000"
@@ -56,34 +48,30 @@ object WebServerJsApp extends js.JSApp {
     }
   }
 
-  def configureApplication()(implicit bootstrap: Bootstrap, require: NodeRequire, dbFuture: Future[Db], mongo: MongoDB) = {
+  def configureApplication()(implicit dbFuture: Future[Db]): Application with WsRouting = {
     logger.info("Loading Express modules...")
-    implicit val express = Express()
-    implicit val app = express().withWsRouting
+    implicit val app = Express().withWsRouting
     implicit val wss = ExpressWS(app)
-    implicit val fileUpload = ExpressFileUpload()
 
     // setup the routes for serving static files
     logger.info("Setting up the routes for serving static files...")
-    app.use(fileUpload())
-    app.use(express.static("public"))
-    app.use("/bower_components", express.static("bower_components"))
+    app.use(ExpressFileUpload())
+    app.use(Express.static("public"))
+    app.use("/bower_components", Express.static("bower_components"))
 
     // setup the body parsers
     logger.info("Loading Body Parser...")
-    implicit val bodyParser = BodyParser()
-    app.use(bodyParser.json())
-      .use(bodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
+    app.use(BodyParser.json())
+      .use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
     // setup stylus & nib for CSS3
+    /*
     logger.info("Loading Stylus and Nib modules...")
-    implicit val stylus = Stylus()
-    implicit val nib = Nib()
-    app.use(stylus.middleware(new MiddlewareOptions(src = "public", compile = (str: String, file: String) => {
-      stylus(str)
+    app.use(Stylus.middleware(new MiddlewareOptions(src = "public", compile = (str: String, file: String) => {
+      Stylus(str)
         .set("filename", file)
-        .use(nib())
-    })))
+        .use(Nib())
+    })))*/
 
     // disable caching
     app.disable("etag")

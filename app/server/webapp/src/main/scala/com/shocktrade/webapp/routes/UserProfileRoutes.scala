@@ -8,10 +8,10 @@ import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.dao.users.UserProfileData
 import com.shocktrade.server.facade.PricingQuote
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs._
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
   */
 object UserProfileRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
     val profileDAO = dbFuture.flatMap(_.getProfileDAO)
     val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)

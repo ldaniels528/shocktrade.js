@@ -1,6 +1,6 @@
 package com.shocktrade.server.common
 
-import org.scalajs.nodejs.console
+import io.scalajs.nodejs.console
 
 import scala.scalajs.js
 

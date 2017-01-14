@@ -12,12 +12,12 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.facade.PricingQuote
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import org.scalajs.nodejs.{console, _}
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs.{console, _}
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,7 @@ object PortfolioRoutes {
   /**
     * Initializes the routes
     */
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     val contestDAO = dbFuture.flatMap(_.getContestDAO)
     val perkDAO = dbFuture.flatMap(_.getPerksDAO)
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)

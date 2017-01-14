@@ -1,7 +1,7 @@
 package com.shocktrade.controlpanel
 
 import com.shocktrade.controlpanel.Tokenizer.TokenIterator
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.util.OptionHelper._
 
 /**
   * Tokenizer

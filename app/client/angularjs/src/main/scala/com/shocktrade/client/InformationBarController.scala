@@ -1,9 +1,9 @@
 package com.shocktrade.client
 
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.{Controller, Q, Scope, injected}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.{Controller, Q, Scope, injected}
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

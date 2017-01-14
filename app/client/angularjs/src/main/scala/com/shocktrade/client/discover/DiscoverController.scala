@@ -7,14 +7,14 @@ import com.shocktrade.client.discover.DiscoverController._
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.cookies.Cookies
-import org.scalajs.angularjs.http.HttpResponse
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{angular, injected, _}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{angular, injected, _}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

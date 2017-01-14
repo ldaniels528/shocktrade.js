@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao.users
 
 import com.shocktrade.common.models.user.UserLike
-import org.scalajs.nodejs.mongodb.ObjectID
+import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

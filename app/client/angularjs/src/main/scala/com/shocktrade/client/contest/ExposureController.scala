@@ -3,12 +3,12 @@ package com.shocktrade.client.contest
 import scala.scalajs.js.JSConverters._
 import com.shocktrade.client.contest.ExposureController.ExposureSelection
 import com.shocktrade.common.models.ExposureData
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.nvd3._
-import org.scalajs.angularjs.nvd3.chart._
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Scope, angular, injected}
-import org.scalajs.dom.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.nvd3._
+import io.scalajs.npm.angularjs.nvd3.chart._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
+import io.scalajs.dom.html.browser.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

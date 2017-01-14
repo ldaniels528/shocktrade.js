@@ -4,18 +4,16 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.facade.PricingFacade._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
   * Pricing Facade
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) {
-  // load the modules
-  private implicit val mongo = MongoDB()
+class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext) {
 
   // get DAO references
   private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
@@ -31,7 +29,7 @@ class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext, require
     * @param symbols the given symbols
     * @return the collection of [[PricingQuote pricing quotes]]
     */
-  def findQuotes(symbols: Seq[String]) = {
+  def findQuotes(symbols: Seq[String]): Future[js.Array[PricingQuote]] = {
     for {
       foundQuotes <- fromDatabase(symbols)
       foundSymbols = foundQuotes.map(_.symbol).toSet
@@ -45,7 +43,7 @@ class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext, require
     * @param symbols the given symbols
     * @return the collection of [[PricingQuote pricing quotes]]
     */
-  def fromDatabase(symbols: Seq[String]) = {
+  def fromDatabase(symbols: Seq[String]): Future[js.Array[PricingQuote]] = {
     securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
   }
 
@@ -54,7 +52,7 @@ class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext, require
     * @param symbols the given symbols
     * @return the collection of [[PricingQuote pricing quotes]]
     */
-  def fromServices(symbols: Seq[String]) = {
+  def fromServices(symbols: Seq[String]): Future[Seq[PricingQuote]] = {
     csvQuoteSvc.getQuotes(pricingQuoteParams, symbols: _*) map (_ map (_.toPricingQuote))
   }
 

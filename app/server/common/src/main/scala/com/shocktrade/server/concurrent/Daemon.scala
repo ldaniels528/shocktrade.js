@@ -1,7 +1,7 @@
 package com.shocktrade.server.concurrent
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import org.scalajs.nodejs._
+import io.scalajs.nodejs._
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration

@@ -1,8 +1,8 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.user.OnlineStatus
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -13,7 +13,7 @@ import scala.scalajs.js
   */
 object OnlineStatusRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     val statuses = js.Dictionary[OnlineStatus]()
 
     app.get("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => statusByUserID(request, response, next))

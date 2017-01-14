@@ -14,14 +14,13 @@ import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.facade.PricingQuote
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.mongodb.{Db, MongoDB, ObjectID, UpdateWriteOpResultObject}
-import org.scalajs.nodejs.os.OS
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.DateHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.nodejs._
+import io.scalajs.npm.moment.Moment
+import io.scalajs.npm.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
+import io.scalajs.util.DateHelper._
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.OptionHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -34,12 +33,7 @@ import scala.util.{Failure, Success, Try}
   * Order Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
-  // load modules
-  private implicit val os = OS()
-  private implicit val moment = Moment()
-  private implicit val mongo = MongoDB()
-
+class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // get DAO and service references
   private val logger = LoggerFactory.getLogger(getClass)
   private val contestDAO = dbFuture.flatMap(_.getContestDAO)
@@ -64,7 +58,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[Seq[UpdateWriteOpResultObject]] = {
     val isMarketCloseEvent = !clock.isTradingActive && clock.isTradingActive(lastRun)
     val outcome = qualifyAll(isMarketCloseEvent)
     outcome onComplete {
@@ -214,7 +208,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private def showQuotes(portfolio: PortfolioData, quotes: Seq[WorkQuote]) = {
     logger.log(s"Portfolio '${portfolio._id}' - ${quotes.size} quote(s):")
     quotes.zipWithIndex foreach { case (q, n) =>
-      logger.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
+      logger.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => Moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
     }
     logger.log("")
   }

@@ -1,16 +1,17 @@
 package com.shocktrade.client
 
-import com.shocktrade.common.models.quote.CompleteQuote
 import com.shocktrade.client.discover.QuoteService
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs._
-import org.scalajs.dom.browser.console
+import com.shocktrade.common.models.quote.CompleteQuote
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.util.{Failure, Success}
 
 /**
   * Quote Cache Service
@@ -24,7 +25,7 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     * @param symbol the given symbol
     * @return the quote or <tt>undefined</tt> if it is not immediately available
     */
-  def apply(symbol: String)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String)(implicit ec: ExecutionContext): js.UndefOr[CompleteQuote] = {
     val value = quotes.get(symbol) flatMap {
       case f if f.isCompleted => f.value.flatMap(_.toOption)
       case f => None
@@ -39,7 +40,7 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     * @param symbol the given symbol
     * @return the promise of a quote
     */
-  def get(symbol: String)(implicit ec: ExecutionContext) = {
+  def get(symbol: String)(implicit ec: ExecutionContext): Future[CompleteQuote] = {
     quotes.getOrElseUpdate(symbol, loadQuote(symbol))
   }
 
@@ -48,7 +49,7 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     * @param symbols the given array of symbols
     * @return the promise of a collection of quotes
     */
-  def get(symbols: js.Array[String])(implicit ec: ExecutionContext) = {
+  def get(symbols: js.Array[String])(implicit ec: ExecutionContext): Future[Seq[CompleteQuote]] = {
     Future.sequence(symbols.toSeq map { symbol =>
       quotes.getOrElseUpdate(symbol, loadQuote(symbol))
     })
@@ -62,9 +63,11 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext) = {
     val response = quoteService.getCompleteQuote(symbol)
-    response onFailure { case e =>
-      console.log(s"Failed to load quote for symbol: $symbol - ${e.displayMessage}")
-      $timeout(() => quotes.remove(symbol), 5.seconds)
+    response onComplete {
+      case Success(_) =>
+      case Failure(e) =>
+        console.log(s"Failed to load quote for symbol: $symbol - ${e.displayMessage}")
+        $timeout(() => quotes.remove(symbol), 5.seconds)
     }
     response.toFuture
   }

@@ -6,9 +6,9 @@ import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.ContestData
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.models.contest.ChatMessage
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
-import org.scalajs.nodejs.{NodeRequire, console}
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.nodejs.console
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
   */
 object ChatRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB, require: NodeRequire) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     implicit val contestDAO = dbFuture.flatMap(_.getContestDAO)
 
     app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => chatMessages(request, response, next))

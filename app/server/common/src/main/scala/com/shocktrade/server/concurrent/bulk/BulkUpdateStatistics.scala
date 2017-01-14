@@ -2,7 +2,7 @@ package com.shocktrade.server.concurrent.bulk
 
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.LoggerFactory.Logger
-import org.scalajs.nodejs.duration2Int
+import io.scalajs.nodejs.duration2Int
 
 import scala.concurrent.duration._
 import scala.scalajs.js

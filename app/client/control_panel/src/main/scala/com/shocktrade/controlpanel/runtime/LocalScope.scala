@@ -1,6 +1,6 @@
 package com.shocktrade.controlpanel.runtime
 
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.util.OptionHelper._
 
 /**
   * Represents a local scope

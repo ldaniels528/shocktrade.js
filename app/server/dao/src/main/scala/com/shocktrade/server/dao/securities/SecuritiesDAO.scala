@@ -4,8 +4,8 @@ package securities
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.nodejs.mongodb._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.mongodb._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

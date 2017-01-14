@@ -3,17 +3,17 @@ package com.shocktrade.client
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.{Contest, Portfolio}
+import com.shocktrade.client.models.contest._
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.facebook.FacebookService
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.facebook.FacebookService
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.dom.html.browser.console
+import io.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +39,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
 
   private val notifications = emptyArray[String]
   var facebookID: js.UndefOr[String] = js.undefined
-  var fbFriends_? = emptyArray[TaggableFriend]
+  var fbFriends_? : js.Array[TaggableFriend] = emptyArray[TaggableFriend]
   var fbProfile_? : js.UndefOr[FacebookProfileResponse] = js.undefined
 
   var contest_? : Option[Contest] = None
@@ -65,34 +65,34 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     * Returns the user ID for the current user's name
     * @return {*}
     */
-  def getUserName = userProfile.name
+  def getUserName: js.UndefOr[String] = userProfile.name
 
   /**
     * Indicates whether the given user is an administrator
     * @return {boolean}
     */
-  def isAdmin = userProfile.isAdmin.isTrue
+  def isAdmin: Boolean = userProfile.isAdmin.isTrue
 
   /**
     * Indicates whether the user is logged in
     * @return {boolean}
     */
-  def isAuthenticated = userProfile._id.isAssigned
+  def isAuthenticated: Boolean = userProfile._id.isAssigned
 
-  def getFacebookID = facebookID
+  def getFacebookID: js.UndefOr[String] = facebookID
 
-  def setFacebookID(fbId: String) = facebookID = fbId
+  def setFacebookID(fbId: String): Unit = facebookID = fbId
 
-  def getFacebookProfile = fbProfile_?
+  def getFacebookProfile: js.UndefOr[FacebookProfileResponse] = fbProfile_?
 
-  def setFacebookProfile(profile: FacebookProfileResponse) = fbProfile_? = profile
+  def setFacebookProfile(profile: FacebookProfileResponse): Unit = fbProfile_? = profile
 
-  def isFbAuthenticated = fbProfile_?.isDefined
+  def isFbAuthenticated: Boolean = fbProfile_?.isDefined
 
   /**
     * Logout function
     */
-  def logout() = {
+  def logout(): Unit = {
     facebookID = js.undefined
     fbFriends_? = js.Array[TaggableFriend]()
     fbProfile_? = js.undefined
@@ -100,7 +100,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     resetContest()
   }
 
-  def refresh() = {
+  def refresh(): Unit = {
     facebookID.foreach { fbId =>
       profileService.getProfileByFacebookID(fbId) onComplete {
         case Success(profile) =>
@@ -118,43 +118,43 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   //          NetWorth Functions
   /////////////////////////////////////////////////////////////////////
 
-  def deduct(amount: Double) = userProfile.wallet = userProfile.wallet.map(_ - amount)
+  def deduct(amount: Double): Unit = userProfile.wallet = userProfile.wallet.map(_ - amount)
 
   /////////////////////////////////////////////////////////////////////
   //          Symbols - Favorites, Recent, etc.
   /////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(symbol: String) = userProfile._id foreach (id => profileService.addFavoriteSymbol(id, symbol))
+  def addFavoriteSymbol(symbol: String): Unit = userProfile._id foreach (id => profileService.addFavoriteSymbol(id, symbol))
 
-  def getFavoriteSymbols = userProfile.favoriteSymbols
+  def getFavoriteSymbols: js.UndefOr[js.Array[String]] = userProfile.favoriteSymbols
 
-  def isFavoriteSymbol(symbol: String) = getFavoriteSymbols.exists(_.contains(symbol))
+  def isFavoriteSymbol(symbol: String): Boolean = getFavoriteSymbols.exists(_.contains(symbol))
 
-  def removeFavoriteSymbol(symbol: String) = userProfile._id foreach (id => profileService.removeFavoriteSymbol(id, symbol))
+  def removeFavoriteSymbol(symbol: String): Unit = userProfile._id foreach (id => profileService.removeFavoriteSymbol(id, symbol))
 
-  def addRecentSymbol(symbol: String) = userProfile._id foreach (id => profileService.addRecentSymbol(id, symbol))
+  def addRecentSymbol(symbol: String): Unit = userProfile._id foreach (id => profileService.addRecentSymbol(id, symbol))
 
-  def getRecentSymbols = userProfile.recentSymbols
+  def getRecentSymbols: js.UndefOr[js.Array[String]] = userProfile.recentSymbols
 
-  def isRecentSymbol(symbol: String) = getRecentSymbols.exists(_.contains(symbol))
+  def isRecentSymbol(symbol: String): Boolean = getRecentSymbols.exists(_.contains(symbol))
 
-  def removeRecentSymbol(symbol: String) = userProfile._id foreach (id => profileService.removeRecentSymbol(id, symbol))
+  def removeRecentSymbol(symbol: String): Unit = userProfile._id foreach (id => profileService.removeRecentSymbol(id, symbol))
 
-  def getMostRecentSymbol = getRecentSymbols.toOption.flatMap(_.lastOption) getOrElse "AAPL"
+  def getMostRecentSymbol: String = getRecentSymbols.toOption.flatMap(_.lastOption) getOrElse "AAPL"
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
 
-  def getContest = contest_? getOrElse JS()
+  def getContest: js.Object = contest_? getOrElse JS()
 
-  def getContestID = contest_?.orUndefined.flatMap(_._id)
+  def getContestID: js.UndefOr[String] = contest_?.orUndefined.flatMap(_._id)
 
-  def getContestName = contest_?.flatMap(_.name.toOption).orNull
+  def getContestName: String = contest_?.flatMap(_.name.toOption).orNull
 
-  def getContestStatus = contest_?.flatMap(_.status.toOption).orNull
+  def getContestStatus: String = contest_?.flatMap(_.status.toOption).orNull
 
-  def loadContestByID(contestId: String)(implicit ec: ExecutionContext) = {
+  def loadContestByID(contestId: String)(implicit ec: ExecutionContext): Future[Option[(Contest, Portfolio, String, Option[Participant])]] = {
     Future.sequence {
       userProfile._id map { playerId =>
         console.log(s"Loading contest $contestId (player: $playerId)...")
@@ -178,7 +178,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     } map (_.headOption)
   }
 
-  def updateRankings(contest: Contest) = {
+  def updateRankings(contest: Contest): Contest = {
     if (contest.leader.nonAssigned || contest.player.nonAssigned) {
       contest.leader = contest.participants.flatMap(_.find(_.rank.contains("1st")).orUndefined)
       contest.player = contest.participants.flatMap(_.find(_._id ?== userProfile._id).orUndefined)
@@ -186,12 +186,12 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     contest
   }
 
-  def updatePortfolio(portfolio: Portfolio) = {
+  def updatePortfolio(portfolio: Portfolio): Unit = {
     console.log(s"portfolio = ${angular.toJson(portfolio)}")
     portfolio_? = Option(portfolio)
   }
 
-  def setContest(contest: Contest) = {
+  def setContest(contest: Contest): Unit = {
     contest_? = Option(contest)
 
     // if the player is defined ...
@@ -218,7 +218,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   /**
     * Returns the combined total funds for both the cash and margin accounts
     */
-  def getCompleteFundsAvailable = {
+  def getCompleteFundsAvailable: Option[Double] = {
     for {
       cashAccount <- cashAccount_?
       cashFunds = cashAccount.funds getOrElse 0.00d
@@ -227,9 +227,9 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     } yield cashFunds + marginFunds
   }
 
-  def getFundsAvailable = cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0.00d
+  def getFundsAvailable: Double = cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0.00d
 
-  def deductFundsAvailable(amount: Double) = {
+  def deductFundsAvailable(amount: Double): Unit = {
     portfolio_? foreach { portfolio =>
       console.log(s"Deducting funds: $amount from ${portfolio.cashAccount.flatMap(_.funds)}")
       portfolio.cashAccount.foreach(acct => acct.funds = acct.funds.map(_ - amount))
@@ -238,25 +238,27 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     ()
   }
 
-  def getMessages = contest_?.orUndefined.flatMap(_.messages.flat) getOrElse emptyArray[ChatMessage]
+  def getMessages: js.Array[ChatMessage] = {
+    contest_?.orUndefined.flatMap(_.messages.flat) getOrElse emptyArray[ChatMessage]
+  }
 
-  def setMessages(messages: js.Array[ChatMessage]) = contest_?.foreach(_.messages = messages)
+  def setMessages(messages: js.Array[ChatMessage]): Unit = contest_?.foreach(_.messages = messages)
 
-  def getMyAwards = userProfile.awards getOrElse emptyArray
+  def getMyAwards: js.Array[String] = userProfile.awards getOrElse emptyArray
 
-  def getOrders = portfolio_?.orUndefined.flatMap(_.orders) getOrElse emptyArray
+  def getOrders: js.Array[Order] = portfolio_?.orUndefined.flatMap(_.orders) getOrElse emptyArray
 
-  def getClosedOrders = portfolio_?.orUndefined.flatMap(_.closedOrders) getOrElse emptyArray
+  def getClosedOrders: js.Array[Order] = portfolio_?.orUndefined.flatMap(_.closedOrders) getOrElse emptyArray
 
-  def getPerformance = portfolio_?.orUndefined.flatMap(_.performance) getOrElse emptyArray
+  def getPerformance: js.Array[Performance] = portfolio_?.orUndefined.flatMap(_.performance) getOrElse emptyArray
 
-  def getPerks = portfolio_?.orUndefined.flatMap(_.perks) getOrElse emptyArray
+  def getPerks: js.Array[String] = portfolio_?.orUndefined.flatMap(_.perks) getOrElse emptyArray
 
-  def hasPerk(perkCode: String) = getPerks.contains(perkCode)
+  def hasPerk(perkCode: String): Boolean = getPerks.contains(perkCode)
 
-  def getPositions = portfolio_?.orUndefined.flatMap(_.positions) getOrElse emptyArray
+  def getPositions: js.Array[Position] = portfolio_?.orUndefined.flatMap(_.positions) getOrElse emptyArray
 
-  def resetContest() = {
+  def resetContest(): Unit = {
     contest_? = None
     participant_? = None
     portfolio_? = None
@@ -266,7 +268,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   //          Social Network Methods
   ////////////////////////////////////////////////////////////
 
-  def doFacebookLogin() = {
+  def doFacebookLogin(): Unit = {
     // perform the login
     console.log(s"Performing Facebook login...")
     facebook.login() onComplete {
@@ -278,7 +280,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     }
   }
 
-  def doPostLoginUpdates(facebookID: String, userInitiated: Boolean) = {
+  def doPostLoginUpdates(facebookID: String, userInitiated: Boolean): Unit = {
     console.log(s"facebookID = $facebookID, userInitiated = $userInitiated")
 
     // capture the Facebook user ID
@@ -321,26 +323,26 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     }
   }
 
-  def isFacebookConnected = facebookID.nonEmpty
+  def isFacebookConnected: Boolean = facebookID.nonEmpty
 
   ////////////////////////////////////////////////////////////
   //          Notification Methods
   ////////////////////////////////////////////////////////////
 
-  def addNotification(message: String) = {
+  def addNotification(message: String): js.Array[String] = {
     while (notifications.push(message) > 20) notifications.shift()
     notifications
   }
 
-  def getNotifications = notifications
+  def getNotifications: js.Array[String] = notifications
 
-  def hasNotifications = notifications.nonEmpty
+  def hasNotifications: Boolean = notifications.nonEmpty
 
   ////////////////////////////////////////////////////////////
   //          Participant Methods
   ////////////////////////////////////////////////////////////
 
-  def findPlayerByID(contest: Contest, playerId: String) = {
+  def findPlayerByID(contest: Contest, playerId: String): Option[Participant] = {
     if (isDefined(contest) && isDefined(contest.participants))
       contest.participants.toOption.flatMap(_.find(_._id.contains(playerId)))
     else

@@ -1,8 +1,9 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.common.util.StringHelper._
-import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import org.scalajs.nodejs.{NodeRequire, console, errors}
+import io.scalajs.npm.htmlparser2
+import io.scalajs.npm.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
+import io.scalajs.nodejs.{console, Error}
 
 import scala.concurrent.Promise
 import scala.scalajs.js
@@ -14,25 +15,24 @@ import scala.util.{Failure, Success, Try}
   * HTML Script Parser
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ScriptParser[T]()(implicit require: NodeRequire) {
-  private val htmlParser = HtmlParser2()
+class ScriptParser[T]() {
 
   def parse(html: String, anchor: String) = {
     val promise = Promise[Option[T]]()
-    val parser = htmlParser.Parser(new ParserHandler {
+    val parser = new htmlparser2.Parser(new ParserHandler {
       val sb = new StringBuilder()
       val quotes = js.Array[T]()
 
-      override def onclosetag = (tag: String) => {
+      override def onclosetag(tag: String) = {
         if (tag == "script") parseJsonQuote(sb.toString(), anchor) foreach (quotes.push(_))
         sb.clear()
       }
 
-      override def ontext = (text: String) => sb.append(text)
+      override def ontext(text: String) = sb.append(text)
 
-      override def onend = () => promise.success(quotes.headOption)
+      override def onend() = promise.success(quotes.headOption)
 
-      override def onerror = (err: errors.Error) => promise.failure(wrapJavaScriptException(err))
+      override def onerror(err: Error): Unit = promise.failure(wrapJavaScriptException(err))
 
     }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 

@@ -1,8 +1,8 @@
 package com.shocktrade.server.dao.contest
 
-import org.scalajs.nodejs.mongodb.{Collection, Db}
+import io.scalajs.npm.mongodb.{Collection, Db}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -25,12 +25,12 @@ object PerksDAO {
   implicit class PerksDAOExtensions(val dao: PerksDAO) {
 
     @inline
-    def findAvailablePerks(implicit ec: ExecutionContext) = {
+    def findAvailablePerks(implicit ec: ExecutionContext): Future[js.Array[PerkData]] = {
       dao.find().toArrayFuture[PerkData]
     }
 
   }
-  
+
   /**
     * Perks DAO Constructors
     * @param db the given [[Db database]]
@@ -38,7 +38,7 @@ object PerksDAO {
   implicit class PerksDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getPerksDAO(implicit ec: ExecutionContext) = {
+    def getPerksDAO(implicit ec: ExecutionContext): Future[PerksDAO] = {
       db.collectionFuture("Perks").mapTo[PerksDAO]
     }
   }

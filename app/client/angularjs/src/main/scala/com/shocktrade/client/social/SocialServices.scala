@@ -1,8 +1,8 @@
 package com.shocktrade.client.social
 
 import com.shocktrade.common.models.FacebookAppInfo
-import org.scalajs.angularjs.Service
-import org.scalajs.angularjs.http.Http
+import io.scalajs.npm.angularjs.Service
+import io.scalajs.npm.angularjs.http.Http
 
 import scala.scalajs.js.annotation.JSExportAll
 

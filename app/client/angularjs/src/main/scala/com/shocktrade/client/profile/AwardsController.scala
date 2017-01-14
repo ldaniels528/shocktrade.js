@@ -2,8 +2,8 @@ package com.shocktrade.client.profile
 
 import com.shocktrade.client.profile.AwardsController._
 import com.shocktrade.client.{Award, MySessionService}
-import org.scalajs.angularjs._
-import org.scalajs.angularjs.http.Http
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.http.Http
 
 import scala.language.postfixOps
 import scala.scalajs.js

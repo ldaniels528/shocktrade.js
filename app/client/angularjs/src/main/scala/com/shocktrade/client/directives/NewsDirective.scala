@@ -1,10 +1,10 @@
 package com.shocktrade.client.directives
 
-import org.scalajs.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
-import org.scalajs.angularjs.sanitize.Sce
-import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
+import io.scalajs.npm.angularjs.sanitize.Sce
+import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

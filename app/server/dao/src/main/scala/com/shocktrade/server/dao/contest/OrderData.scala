@@ -3,7 +3,7 @@ package com.shocktrade.server.dao.contest
 import java.util.UUID
 
 import com.shocktrade.common.models.contest.OrderLike
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

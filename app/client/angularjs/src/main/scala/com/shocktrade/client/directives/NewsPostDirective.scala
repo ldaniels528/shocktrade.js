@@ -1,11 +1,11 @@
 package com.shocktrade.client.directives
 
 import com.shocktrade.client.EmoticonSupport
-import org.scalajs.angularjs.Directive._
-import org.scalajs.angularjs.sanitize.Sce
-import org.scalajs.angularjs.{Attributes, Directive, JQLite, Scope}
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.angularjs.Directive._
+import io.scalajs.npm.angularjs.sanitize.Sce
+import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 

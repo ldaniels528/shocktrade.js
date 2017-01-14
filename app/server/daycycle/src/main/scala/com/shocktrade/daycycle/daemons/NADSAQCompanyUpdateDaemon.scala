@@ -7,9 +7,9 @@ import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.services.NASDAQCompanyListService
 import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
+
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
   * Company List Update Daemon (supports AMEX, NASDAQ and NYSE)
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateOutcome] {
+class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateOutcome] {
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO and service references

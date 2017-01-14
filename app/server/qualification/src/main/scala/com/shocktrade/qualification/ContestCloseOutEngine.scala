@@ -7,9 +7,9 @@ import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.facade.{PricingFacade, PricingQuote}
-import org.scalajs.nodejs._
-import org.scalajs.nodejs.mongodb.{Db, MongoDB, UpdateWriteOpResultObject}
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.nodejs._
+import io.scalajs.npm.mongodb.{Db, UpdateWriteOpResultObject}
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -21,12 +21,9 @@ import scala.util.{Failure, Success}
   * Contest Close-Out Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[Seq[UpdateWriteOpResultObject]] {
+class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   private var lastRun: Option[js.Date] = None
   private val logger = LoggerFactory.getLogger(getClass)
-
-  // load the modules
-  private implicit val mongo = MongoDB()
 
   // get DAO references
   private val contestDAO = dbFuture.flatMap(_.getContestDAO)
@@ -40,7 +37,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext,
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock) = {
+  override def isReady(clock: TradingClock): Boolean = {
     val ready = lastRun.exists(clock.isTradingActive(_) && !clock.isTradingActive)
     lastRun = Option(new js.Date())
     ready
@@ -49,7 +46,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext,
   /**
     * Executes the process
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[Seq[UpdateWriteOpResultObject]] = {
     val startTime = js.Date.now()
     val outcome = closeExpireContests()
     outcome onComplete {
@@ -64,12 +61,12 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext,
     outcome
   }
 
-  def closeExpireContests() = for {
+  def closeExpireContests(): Future[Seq[UpdateWriteOpResultObject]] = for {
     contests <- contestDAO.flatMap(_.findActiveContests()).map(_.toSeq)
     w <- Future.sequence(contests map closeOut).map(_.flatten)
   } yield w
 
-  def closeOut(contest: ContestData) = {
+  def closeOut(contest: ContestData): Future[Seq[UpdateWriteOpResultObject]] = {
     contest._id.map(_.toHexString()).toOption match {
       case Some(contestId) =>
         for {
@@ -84,7 +81,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext,
     }
   }
 
-  def liquidatePositions(portfolio: PortfolioData, quotes: Map[String, PricingQuote]) = Future.sequence {
+  def liquidatePositions(portfolio: PortfolioData, quotes: Map[String, PricingQuote]): Future[List[UpdateWriteOpResultObject]] = Future.sequence {
     for {
       positions <- portfolio.positions.toList
       portfolioId <- portfolio._id.toList
@@ -101,7 +98,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext,
     }
   }
 
-  def determinePrice(position: PositionData, quotes: Map[String, PricingQuote]) = {
+  def determinePrice(position: PositionData, quotes: Map[String, PricingQuote]): js.UndefOr[Double] = {
     for {
       symbol <- position.symbol
       quote <- quotes.get(symbol).orUndefined

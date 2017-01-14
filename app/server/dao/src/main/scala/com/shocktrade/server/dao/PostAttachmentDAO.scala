@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao
 
-import org.scalajs.nodejs.mongodb.gridfs.{GridFSBucket, GridFSOptions}
-import org.scalajs.nodejs.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.npm.mongodb.gridfs.{GridFSBucket, GridFSOptions}
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -26,8 +26,8 @@ object PostAttachmentDAO {
   implicit class PostAttachmentDAOExtensions(val db: Db) extends AnyVal {
 
     @inline
-    def getPostAttachmentDAO(implicit ec: ExecutionContext, mongo: MongoDB) = {
-      mongo.GridFSBucket(db, new GridFSOptions(bucketName = "PostAttachments")).asInstanceOf[PostAttachmentDAO]
+    def getPostAttachmentDAO(implicit ec: ExecutionContext): PostAttachmentDAO = {
+      new GridFSBucket(db, new GridFSOptions(bucketName = "PostAttachments")).asInstanceOf[PostAttachmentDAO]
     }
 
   }

@@ -7,9 +7,9 @@ import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.services.BloombergQuoteService
-import org.scalajs.nodejs.NodeRequire
-import org.scalajs.nodejs.mongodb.Db
-import org.scalajs.nodejs.util.ScalaJsHelper._
+
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -19,7 +19,7 @@ import scala.util.{Failure, Success}
   * Bloomberg Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext, require: NodeRequire) extends Daemon[BulkUpdateStatistics] {
+class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO & services

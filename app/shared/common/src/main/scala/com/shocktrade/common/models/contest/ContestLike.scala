@@ -1,7 +1,7 @@
 package com.shocktrade.common.models.contest
 
 import com.shocktrade.common.models.user.User
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

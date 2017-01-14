@@ -1,7 +1,7 @@
 package com.shocktrade.common.models.post
 
 import com.shocktrade.common.models.user.UserLike
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined

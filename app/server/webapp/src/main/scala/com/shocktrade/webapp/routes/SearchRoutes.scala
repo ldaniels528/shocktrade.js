@@ -8,9 +8,9 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.UserDAO
 import com.shocktrade.server.dao.users.UserDAO._
-import org.scalajs.nodejs.express.{Application, Request, Response}
-import org.scalajs.nodejs.mongodb.{Collection, Db, MongoDB, _}
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.{Collection, Db, MongoDB, _}
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
   */
 object SearchRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext, mongo: MongoDB) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
     implicit val securities = dbFuture.flatMap(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
     implicit val users = dbFuture.flatMap(_.getUserDAO).map(UserSearchAgent)
 

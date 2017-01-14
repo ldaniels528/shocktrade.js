@@ -4,13 +4,13 @@ import scala.scalajs.js.JSConverters._
 import com.shocktrade.client.profile.{UserFactory, UserService}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.models.post._
-import org.scalajs.angularjs.AngularJsHelper._
-import org.scalajs.angularjs.fileupload.nervgh.FileUploader
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Controller, Location, Timeout, injected, _}
-import org.scalajs.dom.browser.console
-import org.scalajs.sjs.JsUnderOrHelper._
-import org.scalajs.sjs.OptionHelper._
+import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.fileupload.nervgh.FileUploader
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected, _}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

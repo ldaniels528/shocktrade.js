@@ -1,13 +1,14 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
-import org.scalajs.nodejs.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import org.scalajs.nodejs.moment.Moment
-import org.scalajs.nodejs.moment.timezone._
-import org.scalajs.nodejs.request.Request
-import org.scalajs.nodejs.util.ScalaJsHelper._
-import org.scalajs.nodejs.{NodeRequire, console, errors}
-import org.scalajs.sjs.JsUnderOrHelper._
+import io.scalajs.nodejs.{Error, console}
+import io.scalajs.npm.htmlparser2
+import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
+import io.scalajs.npm.moment.Moment
+import io.scalajs.npm.moment.timezone._
+import io.scalajs.npm.request.Request
+import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps
@@ -21,7 +22,7 @@ import scala.util.{Failure, Success, Try}
   * NASDAQ Intra-day Quotes Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
+class NASDAQIntraDayQuotesService() {
   private val timeSlotStrings = Seq(
     "ET_0930_TO_0959", "ET_1000_TO_1029", "ET_1030_TO_1059", "ET_1100_TO_1129",
     "ET_1130_TO_1159", "ET_1200_TO_1229", "ET_1230_TO_1259", "ET_1300_TO_1329",
@@ -30,10 +31,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
   )
 
   // load the modules
-  private val htmlParser = HtmlParser2()
-  private val moment = Moment()
-  private val request = Request()
-  MomentTimezone()
+  MomentTimezone
 
   /**
     * Returns a response containing quotes for the given symbol starting from the given time slot and page number
@@ -43,7 +41,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
     * @param ec             the implicit execution context
     * @return a response containing quotes for the given symbol
     */
-  def apply(symbol: String, timeSlot: TimeSlot, startingPageNo: Int = 1)(implicit ec: ExecutionContext) = {
+  def apply(symbol: String, timeSlot: TimeSlot, startingPageNo: Int = 1)(implicit ec: ExecutionContext): Future[NASDAQIntraDayResponse] = {
     collectPages(getPage(toURL(symbol, timeSlot, startingPageNo))) map (pages => new NASDAQIntraDayResponse(symbol, js.Array(pages: _*)))
   }
 
@@ -56,8 +54,8 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
   private def getPage(url: String)(implicit ec: ExecutionContext) = {
     val startTime = js.Date.now()
     val promise = Promise[NASDAQIntraDayPage]()
-    request.getFuture(url) foreach { case (response, html) =>
-      val parser = htmlParser.Parser(new ParserHandler {
+    Request.getFuture(url) foreach { case (response, html) =>
+      val parser = new htmlparser2.Parser(new ParserHandler {
         val sb = new StringBuilder()
         val headers = js.Array[String]()
         val rows = js.Array[js.Dictionary[String]]()
@@ -66,7 +64,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
         var inTable: Boolean = false
         var nextPageUrl_? : Option[String] = None
 
-        override def onopentag = (tag: String, attributes: js.Dictionary[String]) => {
+        override def onopentag(tag: String, attributes: js.Dictionary[String]) {
           tag match {
             case "a" if attributes.get("id").contains(s"quotes_content_left_lb_NextPage") => nextPageUrl_? = attributes.get("href")
             case "div" if !inDiv && attributes.get("id").contains("quotes_content_left__panelTradeData") => inDiv = true
@@ -75,7 +73,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
           }
         }
 
-        override def onclosetag = (tag: String) => {
+        override def onclosetag(tag: String) {
           tag match {
             case "table" if inDiv && inTable =>
               inTable = false
@@ -92,11 +90,11 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
           sb.clear()
         }
 
-        override def ontext = (text: String) => sb.append(text)
+        override def ontext(text: String): Unit = sb.append(text)
 
-        override def onend = () => promise.success(toPage(headers, rows, url, nextPageUrl_?, responseTime = js.Date.now() - startTime))
+        override def onend(): Unit = promise.success(toPage(headers, rows, url, nextPageUrl_?, responseTime = js.Date.now() - startTime))
 
-        override def onerror = (err: errors.Error) => promise.failure(wrapJavaScriptException(err))
+        override def onerror(err: Error): Unit = promise.failure(wrapJavaScriptException(err))
 
       }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 
@@ -113,7 +111,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
     */
   @inline
   def getTimeSlot(time: js.Date): TimeSlot = {
-    moment(time).tz("America/New_York").format("HHmm").toInt match {
+    Moment(time).tz("America/New_York").format("HHmm").toInt match {
       case t if t < 1000 => ET_0930_TO_0959
       case t if t >= 1000 && t <= 1029 => ET_1000_TO_1029
       case t if t >= 1030 && t <= 1059 => ET_1030_TO_1059
@@ -136,7 +134,7 @@ class NASDAQIntraDayQuotesService()(implicit require: NodeRequire) {
     * @return the text-based identifier (e.g. "ET_0930_TO_0959")
     */
   @inline
-  def getTimeSlotText(timeSlot: TimeSlot) = timeSlotStrings(timeSlot - 1)
+  def getTimeSlotText(timeSlot: TimeSlot): String = timeSlotStrings(timeSlot - 1)
 
   /**
     * Recursively retrieves the next page of results for each response and returns a composite response reflecting the results

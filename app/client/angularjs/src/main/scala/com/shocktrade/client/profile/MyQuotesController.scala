@@ -6,10 +6,10 @@ import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.profile.MyQuotesController._
 import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
-import org.scalajs.angularjs.toaster.Toaster
-import org.scalajs.angularjs.{Location, _}
-import org.scalajs.dom.browser.console
-import org.scalajs.nodejs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Location, _}
+import io.scalajs.dom.html.browser.console
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
