@@ -9,7 +9,7 @@ import org.scalajs.angularjs.anchorscroll.AnchorScroll
 import org.scalajs.angularjs.cookies.Cookies
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Location, Timeout, injected}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 

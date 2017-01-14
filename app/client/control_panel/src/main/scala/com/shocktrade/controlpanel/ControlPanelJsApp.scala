@@ -3,11 +3,10 @@ package com.shocktrade.controlpanel
 import com.shocktrade.controlpanel.runtime._
 import com.shocktrade.controlpanel.runtime.functions.builtin.BuiltinFunctions
 import com.shocktrade.server.common.LoggerFactory
-import org.scalajs.dom._
-import org.scalajs.nodejs.Bootstrap
 import org.scalajs.nodejs.globals.process
 import org.scalajs.nodejs.readline.{Readline, ReadlineOptions}
 import org.scalajs.nodejs.request.Request
+import org.scalajs.nodejs.{Bootstrap, console}
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

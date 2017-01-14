@@ -9,7 +9,7 @@ import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.angularjs.{Service, Timeout, _}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.Future

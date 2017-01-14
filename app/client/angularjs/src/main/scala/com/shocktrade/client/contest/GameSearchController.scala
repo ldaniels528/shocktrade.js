@@ -10,7 +10,7 @@ import com.shocktrade.common.models.contest.Participant
 import com.shocktrade.common.models.user.User
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, angular, injected, _}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import org.scalajs.sjs.JsUnderOrHelper._
 

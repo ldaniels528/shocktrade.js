@@ -1,11 +1,10 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest.{Order, Portfolio}
+import com.shocktrade.client.models.contest.{Order, Portfolio, Position}
 import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm}
 import com.shocktrade.common.models.contest._
 import org.scalajs.angularjs.Service
 import org.scalajs.angularjs.http.Http
-import org.scalajs.dom._
 
 import scala.scalajs.js
 

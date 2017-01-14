@@ -65,34 +65,34 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    def onContestCreated(callback: (dom.Event, Contest) => Any) = reactTo(ContestCreated, callback)
+    def onContestCreated(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestCreated, callback)
 
     @inline
-    def onContestDeleted(callback: (dom.Event, Contest) => Any) = reactTo(ContestDeleted, callback)
+    def onContestDeleted(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestDeleted, callback)
 
     @inline
-    def onContestSelected(callback: (dom.Event, Contest) => Any) = reactTo(ContestSelected, callback)
+    def onContestSelected(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestSelected, callback)
 
     @inline
-    def onContestUpdated(callback: (dom.Event, Contest) => Any) = reactTo(ContestUpdated, callback)
+    def onContestUpdated(callback: (dom.event.Event, Contest) => Any) = reactTo(ContestUpdated, callback)
 
     @inline
-    def onMessagesUpdated(callback: (dom.Event, String) => Any) = reactTo(ChatMessagesUpdated, callback)
+    def onMessagesUpdated(callback: (dom.event.Event, String) => Any) = reactTo(ChatMessagesUpdated, callback)
 
     @inline
-    def onOrderUpdated(callback: (dom.Event, String) => Any) = reactTo(OrderUpdated, callback)
+    def onOrderUpdated(callback: (dom.event.Event, String) => Any) = reactTo(OrderUpdated, callback)
 
     @inline
-    def onParticipantUpdated(callback: (dom.Event, Participant) => Any) = reactTo(ParticipantUpdated, callback)
+    def onParticipantUpdated(callback: (dom.event.Event, Participant) => Any) = reactTo(ParticipantUpdated, callback)
 
     @inline
-    def onUserProfileChanged(callback: (dom.Event, UserProfile) => Any) = reactTo(UserProfileChanged, callback)
+    def onUserProfileChanged(callback: (dom.event.Event, UserProfile) => Any) = reactTo(UserProfileChanged, callback)
 
     @inline
-    def onUserProfileUpdated(callback: (dom.Event, UserProfile) => Any) = reactTo(UserProfileUpdated, callback)
+    def onUserProfileUpdated(callback: (dom.event.Event, UserProfile) => Any) = reactTo(UserProfileUpdated, callback)
 
     @inline
-    def onUserStatusChanged(callback: (dom.Event, String) => Any) = reactTo(UserStatusChanged, callback)
+    def onUserStatusChanged(callback: (dom.event.Event, String) => Any) = reactTo(UserStatusChanged, callback)
 
     /////////////////////////////////////////////////////////////////////
     //          Private Methods

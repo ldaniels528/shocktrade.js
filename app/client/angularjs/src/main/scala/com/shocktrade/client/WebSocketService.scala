@@ -1,18 +1,16 @@
 package com.shocktrade.client
 
-import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.WebSocketService.window
+import com.shocktrade.common.events.RemoteEvent
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Service, Timeout, injected, _}
-import org.scalajs.dom.raw.{CloseEvent, ErrorEvent, MessageEvent}
-import org.scalajs.dom.{Event, WebSocket, console}
+import org.scalajs.dom.browser._
+import org.scalajs.dom.ws._
 
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.JSON
-import scala.scalajs.js.annotation.JSName
 
 /**
   * Web Socket Service
@@ -46,13 +44,13 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   /**
     * Indicates whether a connection is established
     */
-  def isConnected = Option(socket).nonEmpty && connected
+  def isConnected: Boolean = Option(socket).nonEmpty && connected
 
   /**
     * Transmits the message to the server via web-socket
     * @param message the given message
     */
-  def send(message: String) = {
+  def send(message: String): Boolean = {
     window.WebSocket.toOption match {
       case Some(_) if socket.readyState == WebSocket.OPEN =>
         socket.send(message)
@@ -76,7 +74,7 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
     // open the connection and setup the handlers
     socket = new WebSocket(endpoint)
 
-    socket.onopen = (event: Event) => {
+    socket.onopen = (event: OpenEvent) => {
       connected = true
       sendState(connected)
       console.log("WebSocket connection established")
@@ -141,33 +139,6 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
           attemptsLeft -= 1
         }
     }
-  }
-
-}
-
-/**
-  * Web Socket Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object WebSocketService {
-
-  type XWebSocket = js.Object
-
-  @js.native
-  @JSName("window")
-  object window extends WindowSkeleton
-
-  /**
-    * Window-skeleton Implementation
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  @js.native
-  trait WindowSkeleton extends js.Object {
-
-    def MozWebSocket: js.UndefOr[XWebSocket] = js.native
-
-    var WebSocket: js.UndefOr[XWebSocket] = js.native
-
   }
 
 }

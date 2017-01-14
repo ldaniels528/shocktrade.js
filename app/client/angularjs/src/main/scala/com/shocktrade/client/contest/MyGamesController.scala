@@ -8,7 +8,7 @@ import com.shocktrade.common.models.contest.Participant
 import org.scalajs.angularjs.AngularJsHelper._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Location, Timeout, injected}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

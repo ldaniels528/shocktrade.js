@@ -10,7 +10,7 @@ import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import org.scalajs.nodejs.util.ScalaJsHelper._
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.concurrent.ExecutionContext

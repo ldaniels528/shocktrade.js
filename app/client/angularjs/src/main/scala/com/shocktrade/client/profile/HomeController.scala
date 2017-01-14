@@ -4,7 +4,7 @@ import com.shocktrade.client.profile.HomeController.FacebookFriend
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Timeout, _}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.social.facebook.TaggableFriend
 import org.scalajs.nodejs.util.ScalaJsHelper._
 

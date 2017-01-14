@@ -8,7 +8,7 @@ import org.scalajs.angularjs.nvd3._
 import org.scalajs.angularjs.nvd3.chart._
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.{Controller, Scope, angular, injected}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

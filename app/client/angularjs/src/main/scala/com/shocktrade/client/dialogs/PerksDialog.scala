@@ -9,7 +9,7 @@ import org.scalajs.angularjs._
 import org.scalajs.angularjs.http.Http
 import org.scalajs.angularjs.toaster.Toaster
 import org.scalajs.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import org.scalajs.dom.console
+import org.scalajs.dom.browser.console
 import org.scalajs.nodejs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
