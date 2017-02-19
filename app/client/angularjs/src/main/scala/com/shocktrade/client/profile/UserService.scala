@@ -4,7 +4,7 @@ import com.shocktrade.common.forms.FacebookFriendForm
 import com.shocktrade.common.models.user.{FriendStatus, User}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.Http
-import io.scalajs.nodejs.social.facebook.TaggableFriend
+import io.scalajs.social.facebook.TaggableFriend
 
 import scala.scalajs.js
 

@@ -4,9 +4,10 @@ import java.util.UUID
 
 import io.scalajs.nodejs.console
 import io.scalajs.npm.mongodb._
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._

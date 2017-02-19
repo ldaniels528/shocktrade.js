@@ -5,6 +5,7 @@ import com.shocktrade.common.models.quote.CompleteQuote
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}

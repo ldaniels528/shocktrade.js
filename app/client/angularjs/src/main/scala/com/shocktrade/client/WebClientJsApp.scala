@@ -10,7 +10,7 @@ import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
 import io.scalajs.dom.html.browser.console
-import io.scalajs.nodejs.social.facebook.{FB, FacebookAppConfig}
+import io.scalajs.social.facebook.{FB, FacebookAppConfig}
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
 import io.scalajs.npm.angularjs.{Module, Scope, Timeout, angular}

@@ -14,6 +14,7 @@ import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.language.existentials
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll

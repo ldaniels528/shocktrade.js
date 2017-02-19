@@ -8,6 +8,7 @@ import com.shocktrade.common.forms.FundsTransferRequest
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Controller, Scope, Service, injected}
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future

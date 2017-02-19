@@ -6,6 +6,7 @@ import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2
 import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
 import io.scalajs.npm.request.Request
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}

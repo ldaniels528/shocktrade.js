@@ -5,7 +5,7 @@ import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.dom.html.browser.console
-import io.scalajs.nodejs.social.facebook.TaggableFriend
+import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

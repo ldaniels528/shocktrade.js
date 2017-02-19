@@ -18,6 +18,7 @@ import io.scalajs.npm.mongodb.Db
 import io.scalajs.npm.numeral._
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._

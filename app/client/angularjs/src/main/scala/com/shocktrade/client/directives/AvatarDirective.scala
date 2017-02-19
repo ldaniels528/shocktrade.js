@@ -2,7 +2,7 @@ package com.shocktrade.client.directives
 
 import io.scalajs.npm.angularjs.Directive._
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope, angular}
-import io.scalajs.nodejs.social.facebook.TaggableFriend
+import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js

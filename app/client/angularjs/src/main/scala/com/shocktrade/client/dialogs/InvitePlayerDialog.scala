@@ -6,7 +6,8 @@ import com.shocktrade.common.models.contest.Participant
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import io.scalajs.nodejs.social.facebook.TaggableFriend
+import io.scalajs.social.facebook.TaggableFriend
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future

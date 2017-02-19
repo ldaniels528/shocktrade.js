@@ -4,7 +4,7 @@ package builtin
 import com.shocktrade.controlpanel.runtime.{RuntimeContext, Scope, TextValue}
 import io.scalajs.JSON
 import io.scalajs.npm.request.Request
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 

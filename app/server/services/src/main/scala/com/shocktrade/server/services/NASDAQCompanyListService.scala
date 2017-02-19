@@ -3,7 +3,7 @@ package com.shocktrade.server.services
 import com.shocktrade.server.services.NASDAQCompanyListService._
 import io.scalajs.npm.csvparse._
 import io.scalajs.npm.request.Request
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

@@ -6,12 +6,13 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest._
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.dom.html.browser.console
-import io.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
 

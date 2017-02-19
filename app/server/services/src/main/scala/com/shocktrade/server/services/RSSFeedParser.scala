@@ -1,9 +1,9 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.RSSFeedParser._
-
 import io.scalajs.npm.request.Request
 import io.scalajs.npm.xml2js.Xml2js
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}

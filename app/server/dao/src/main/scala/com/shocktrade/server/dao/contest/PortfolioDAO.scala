@@ -1,9 +1,10 @@
 package com.shocktrade.server.dao.contest
 
 import io.scalajs.npm.mongodb._
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js

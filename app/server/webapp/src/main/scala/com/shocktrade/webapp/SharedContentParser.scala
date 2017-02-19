@@ -5,7 +5,7 @@ import io.scalajs.nodejs.console
 import io.scalajs.npm.request.Request
 import io.scalajs.npm.splitargs.SplitArgs
 import io.scalajs.util.OptionHelper._
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 

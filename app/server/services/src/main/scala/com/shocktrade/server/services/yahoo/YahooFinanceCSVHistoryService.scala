@@ -1,10 +1,9 @@
 package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService._
-
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.request.Request
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps

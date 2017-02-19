@@ -1,9 +1,8 @@
 package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
-
 import io.scalajs.npm.request._
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -27,7 +26,7 @@ class YahooFinanceCSVQuotesService() {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
     Request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
-      data.split("[\n]").toSeq flatMap(line => parser.parseQuote(params, line, startTime))
+      data.split("[\n]").toSeq flatMap (line => parser.parseQuote(params, line, startTime))
     }
   }
 

@@ -16,7 +16,7 @@ import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
 import io.scalajs.npm.mongodb.gridfs.UploadStreamOptions
 import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

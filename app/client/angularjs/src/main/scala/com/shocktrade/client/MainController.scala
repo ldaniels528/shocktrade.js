@@ -8,14 +8,15 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
 import io.scalajs.npm.angularjs.{Controller, Location, Scope, Timeout, injected, _}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.nodejs.social.facebook.{FacebookProfileResponse, TaggableFriend}
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

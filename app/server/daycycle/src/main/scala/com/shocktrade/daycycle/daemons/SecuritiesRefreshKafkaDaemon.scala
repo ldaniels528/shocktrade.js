@@ -12,7 +12,7 @@ import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQu
 import io.scalajs.npm.kafkanode.{Payload, Producer}
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

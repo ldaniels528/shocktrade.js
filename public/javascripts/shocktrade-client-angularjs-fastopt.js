@@ -6125,42 +6125,6 @@ function $m_Lcom_shocktrade_common_models_user_User$() {
   return $n_Lcom_shocktrade_common_models_user_User$
 }
 /** @constructor */
-function $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$() {
-  $c_O.call(this)
-}
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype = new $h_O();
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype.constructor = $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$;
-/** @constructor */
-function $h_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$() {
-  /*<skip>*/
-}
-$h_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype = $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype;
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype.init___ = (function() {
-  return this
-});
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype.apply__T__Z__Z__T__Lio_scalajs_nodejs_social_facebook_FacebookAppConfig = (function(appId, status, xfbml, version) {
-  var config = new $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig();
-  config.appId = appId;
-  config.status = status;
-  config.xfbml = xfbml;
-  config.version = version;
-  return config
-});
-var $d_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$ = new $TypeData().initClass({
-  Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$: 0
-}, false, "io.scalajs.nodejs.social.facebook.FacebookAppConfig$", {
-  Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$: 1,
-  O: 1
-});
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$.prototype.$classData = $d_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$;
-var $n_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$ = (void 0);
-function $m_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$() {
-  if ((!$n_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$)) {
-    $n_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$ = new $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$().init___()
-  };
-  return $n_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$
-}
-/** @constructor */
 function $c_Lio_scalajs_npm_angularjs_AngularJsHelper$() {
   $c_O.call(this);
   this.io$scalajs$npm$angularjs$AngularJsHelper$$HttpError$1 = null
@@ -6625,35 +6589,71 @@ function $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$() {
   return $n_Lio_scalajs_npm_angularjs_uirouter_RouteTo$
 }
 /** @constructor */
-function $c_Lio_scalajs_util_ScalaJsHelper$() {
+function $c_Lio_scalajs_social_facebook_FacebookAppConfig$() {
   $c_O.call(this)
 }
-$c_Lio_scalajs_util_ScalaJsHelper$.prototype = new $h_O();
-$c_Lio_scalajs_util_ScalaJsHelper$.prototype.constructor = $c_Lio_scalajs_util_ScalaJsHelper$;
+$c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype = new $h_O();
+$c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype.constructor = $c_Lio_scalajs_social_facebook_FacebookAppConfig$;
 /** @constructor */
-function $h_Lio_scalajs_util_ScalaJsHelper$() {
+function $h_Lio_scalajs_social_facebook_FacebookAppConfig$() {
   /*<skip>*/
 }
-$h_Lio_scalajs_util_ScalaJsHelper$.prototype = $c_Lio_scalajs_util_ScalaJsHelper$.prototype;
-$c_Lio_scalajs_util_ScalaJsHelper$.prototype.init___ = (function() {
+$h_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype = $c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype;
+$c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype.init___ = (function() {
   return this
 });
-$c_Lio_scalajs_util_ScalaJsHelper$.prototype.promise2Future__sjs_js_Promise__s_concurrent_Future = (function(task) {
-  return $m_sjs_js_Thenable$ThenableOps$().toFuture$extension__sjs_js_Thenable__s_concurrent_Future(task)
+$c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype.apply__T__Z__Z__T__Lio_scalajs_social_facebook_FacebookAppConfig = (function(appId, status, xfbml, version) {
+  var config = new $c_Lio_scalajs_social_facebook_FacebookAppConfig();
+  config.appId = appId;
+  config.status = status;
+  config.xfbml = xfbml;
+  config.version = version;
+  return config
 });
-var $d_Lio_scalajs_util_ScalaJsHelper$ = new $TypeData().initClass({
-  Lio_scalajs_util_ScalaJsHelper$: 0
-}, false, "io.scalajs.util.ScalaJsHelper$", {
-  Lio_scalajs_util_ScalaJsHelper$: 1,
+var $d_Lio_scalajs_social_facebook_FacebookAppConfig$ = new $TypeData().initClass({
+  Lio_scalajs_social_facebook_FacebookAppConfig$: 0
+}, false, "io.scalajs.social.facebook.FacebookAppConfig$", {
+  Lio_scalajs_social_facebook_FacebookAppConfig$: 1,
   O: 1
 });
-$c_Lio_scalajs_util_ScalaJsHelper$.prototype.$classData = $d_Lio_scalajs_util_ScalaJsHelper$;
-var $n_Lio_scalajs_util_ScalaJsHelper$ = (void 0);
-function $m_Lio_scalajs_util_ScalaJsHelper$() {
-  if ((!$n_Lio_scalajs_util_ScalaJsHelper$)) {
-    $n_Lio_scalajs_util_ScalaJsHelper$ = new $c_Lio_scalajs_util_ScalaJsHelper$().init___()
+$c_Lio_scalajs_social_facebook_FacebookAppConfig$.prototype.$classData = $d_Lio_scalajs_social_facebook_FacebookAppConfig$;
+var $n_Lio_scalajs_social_facebook_FacebookAppConfig$ = (void 0);
+function $m_Lio_scalajs_social_facebook_FacebookAppConfig$() {
+  if ((!$n_Lio_scalajs_social_facebook_FacebookAppConfig$)) {
+    $n_Lio_scalajs_social_facebook_FacebookAppConfig$ = new $c_Lio_scalajs_social_facebook_FacebookAppConfig$().init___()
   };
-  return $n_Lio_scalajs_util_ScalaJsHelper$
+  return $n_Lio_scalajs_social_facebook_FacebookAppConfig$
+}
+/** @constructor */
+function $c_Lio_scalajs_util_PromiseHelper$Implicits$() {
+  $c_O.call(this)
+}
+$c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype = new $h_O();
+$c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype.constructor = $c_Lio_scalajs_util_PromiseHelper$Implicits$;
+/** @constructor */
+function $h_Lio_scalajs_util_PromiseHelper$Implicits$() {
+  /*<skip>*/
+}
+$h_Lio_scalajs_util_PromiseHelper$Implicits$.prototype = $c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype;
+$c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype.init___ = (function() {
+  return this
+});
+$c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype.promise2Future__sjs_js_Promise__s_concurrent_Future = (function(task) {
+  return $m_sjs_js_Thenable$ThenableOps$().toFuture$extension__sjs_js_Thenable__s_concurrent_Future(task)
+});
+var $d_Lio_scalajs_util_PromiseHelper$Implicits$ = new $TypeData().initClass({
+  Lio_scalajs_util_PromiseHelper$Implicits$: 0
+}, false, "io.scalajs.util.PromiseHelper$Implicits$", {
+  Lio_scalajs_util_PromiseHelper$Implicits$: 1,
+  O: 1
+});
+$c_Lio_scalajs_util_PromiseHelper$Implicits$.prototype.$classData = $d_Lio_scalajs_util_PromiseHelper$Implicits$;
+var $n_Lio_scalajs_util_PromiseHelper$Implicits$ = (void 0);
+function $m_Lio_scalajs_util_PromiseHelper$Implicits$() {
+  if ((!$n_Lio_scalajs_util_PromiseHelper$Implicits$)) {
+    $n_Lio_scalajs_util_PromiseHelper$Implicits$ = new $c_Lio_scalajs_util_PromiseHelper$Implicits$().init___()
+  };
+  return $n_Lio_scalajs_util_PromiseHelper$Implicits$
 }
 /** @constructor */
 function $c_jl_Class() {
@@ -10876,7 +10876,7 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.initializeFacebookApp__p1__L
   $g.fbAsyncInit = (function($this, appInfo$1) {
     return (function() {
       $g.console.log("fbAsyncInit: Setting up Facebook integration...");
-      var config = $m_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig$().apply__T__Z__Z__T__Lio_scalajs_nodejs_social_facebook_FacebookAppConfig($as_T(appInfo$1.appId), true, true, "v2.5");
+      var config = $m_Lio_scalajs_social_facebook_FacebookAppConfig$().apply__T__Z__Z__T__Lio_scalajs_social_facebook_FacebookAppConfig($as_T(appInfo$1.appId), true, true, "v2.5");
       $g.FB.init(config);
       var jsx$1 = $g.console;
       var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Initialized Facebook SDK (App ID # ", ") and version (", ") on the Angular Facebook service..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(config.appId), $as_T(config.version)]));
@@ -13421,7 +13421,7 @@ $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialog.prototype.popup__Lcom_shock
   var value = $d_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController.getClassOf().getSimpleName__T();
   var a = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions((void 0), "invite_player_dialog.html", value);
   var modalInstance = jsx$1.open(a);
-  return $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
+  return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
 });
 function $is_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_dialogs_InvitePlayerDialog)))
@@ -13585,7 +13585,7 @@ $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.popup__s_concurrent_Fu
   var value = $d_Lcom_shocktrade_client_dialogs_NewGameDialogController.getClassOf().getSimpleName__T();
   var a = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions((void 0), "new_game_dialog.html", value);
   var $$modalInstance = jsx$1.open(a);
-  return $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
+  return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
 });
 $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.init___Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$modal) {
   this.$$modal$1 = $$modal;
@@ -14009,7 +14009,7 @@ $c_Lcom_shocktrade_client_dialogs_PerksDialog.prototype.popup__s_concurrent_Futu
   var value = $d_Lcom_shocktrade_client_dialogs_PerksDialogController.getClassOf().getSimpleName__T();
   var a = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions((void 0), "perks_dialog.html", value);
   var $$modalInstance = jsx$1.open(a);
-  return $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
+  return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future($$modalInstance.result)
 });
 $c_Lcom_shocktrade_client_dialogs_PerksDialog.prototype.init___Lio_scalajs_npm_angularjs_http_Http__Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$http, $$modal) {
   this.$$http$1 = $$http;
@@ -14773,7 +14773,7 @@ $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.popup__s_concurr
   var value = $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.getClassOf().getSimpleName__T();
   var a = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions((void 0), "transfer_funds_dialog.html", value);
   var modalInstance = jsx$1.open(a);
-  return $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
+  return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
 });
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.init___Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$modal) {
   this.$$modal$1 = $$modal;
@@ -16310,14 +16310,6 @@ function $h_Lcom_shocktrade_client_profile_UserService() {
   /*<skip>*/
 }
 $h_Lcom_shocktrade_client_profile_UserService.prototype = $c_Lcom_shocktrade_client_profile_UserService.prototype;
-$c_Lcom_shocktrade_client_profile_UserService.prototype.getFacebookFriendStatus__Lio_scalajs_nodejs_social_facebook_TaggableFriend__Lio_scalajs_npm_angularjs_http_HttpResponse = (function(friend) {
-  var jsx$3 = this.$$http$1;
-  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/friend/status"])).s__sc_Seq__T($m_sci_Nil$());
-  var value = $as_T(friend.id);
-  var value$1 = $as_T(friend.name);
-  var jsx$1 = new $c_Lcom_shocktrade_common_forms_FacebookFriendForm(value, value$1);
-  return jsx$3.post(jsx$2, jsx$1)
-});
 $c_Lcom_shocktrade_client_profile_UserService.prototype.init___Lio_scalajs_npm_angularjs_http_Http = (function($$http) {
   this.$$http$1 = $$http;
   return this
@@ -16327,6 +16319,14 @@ $c_Lcom_shocktrade_client_profile_UserService.prototype.getUsers__sjs_js_Array__
 });
 $c_Lcom_shocktrade_client_profile_UserService.prototype.getUserByID__T__Lio_scalajs_npm_angularjs_http_HttpResponse = (function(userID) {
   return this.$$http$1.get(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/user/", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([userID])))
+});
+$c_Lcom_shocktrade_client_profile_UserService.prototype.getFacebookFriendStatus__Lio_scalajs_social_facebook_TaggableFriend__Lio_scalajs_npm_angularjs_http_HttpResponse = (function(friend) {
+  var jsx$3 = this.$$http$1;
+  var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/api/friend/status"])).s__sc_Seq__T($m_sci_Nil$());
+  var value = $as_T(friend.id);
+  var value$1 = $as_T(friend.name);
+  var jsx$1 = new $c_Lcom_shocktrade_common_forms_FacebookFriendForm(value, value$1);
+  return jsx$3.post(jsx$2, jsx$1)
 });
 function $is_Lcom_shocktrade_client_profile_UserService(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lcom_shocktrade_client_profile_UserService)))
@@ -16462,7 +16462,7 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$a
   };
   throw new $c_s_MatchError().init___O(x1)
 });
-$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handlePaginatedResults__p1__Lio_scalajs_nodejs_social_facebook_FacebookPagination__sjs_js_Function1__V = (function(response, callback) {
+$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handlePaginatedResults__p1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Function1__V = (function(response, callback) {
   callback(response);
   var value = response.paging;
   if ((value !== (void 0))) {
@@ -16471,7 +16471,7 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handlePaginatedR
       var url = $as_T(value$1);
       $g.FB.api(url, (function($this, callback$2) {
         return (function(response$2) {
-          $this.handlePaginatedResults__p1__Lio_scalajs_nodejs_social_facebook_FacebookPagination__sjs_js_Function1__V(response$2, callback$2)
+          $this.handlePaginatedResults__p1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Function1__V(response$2, callback$2)
         })
       })(this, callback))
     }
@@ -16486,17 +16486,26 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.login__s_concurr
   })(this, promise));
   return promise
 });
+$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Array__V = (function(response, friends$2) {
+  var results = response.data;
+  if (($uI(results.length) !== 0)) {
+    friends$2.push.apply(friends$2, results);
+    var jsx$1 = $g.console;
+    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " friend(s) loaded"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$uI(friends$2.length)]));
+    jsx$1.log(s)
+  }
+});
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.getTaggableFriends__s_concurrent_Promise = (function() {
   var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
   var friends = [];
   var callback = (function(arg$outer, friends$2) {
     return (function(arg1$2) {
-      arg$outer.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_nodejs_social_facebook_FacebookPagination__sjs_js_Array__V(arg1$2, friends$2)
+      arg$outer.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Array__V(arg1$2, friends$2)
     })
   })(this, friends);
   $g.FB.api(this.fbURL__p1__T__sjs_js_UndefOr__T__T("/taggable_friends", (void 0), "me"), (function($this, promise$1, friends$1, callback$1) {
     return (function(response$2) {
-      $this.handlePaginatedResults__p1__Lio_scalajs_nodejs_social_facebook_FacebookPagination__sjs_js_Function1__V(response$2, callback$1);
+      $this.handlePaginatedResults__p1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Function1__V(response$2, callback$1);
       return $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise$1, friends$1)
     })
   })(this, promise, friends, callback));
@@ -16519,15 +16528,6 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.logout__s_concur
     })
   })(this, promise));
   return promise
-});
-$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_nodejs_social_facebook_FacebookPagination__sjs_js_Array__V = (function(response, friends$2) {
-  var results = response.data;
-  if (($uI(results.length) !== 0)) {
-    friends$2.push.apply(friends$2, results);
-    var jsx$1 = $g.console;
-    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " friend(s) loaded"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$uI(friends$2.length)]));
-    jsx$1.log(s)
-  }
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__s_concurrent_Promise = (function(promise, response) {
   var rc6 = false;
@@ -18083,7 +18083,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
   })(this, _timeout), _timeout)
 });
 $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$$anonfun$new$49__V = (function() {
-  $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(this.signUpDialog$1.popup__s_concurrent_ExecutionContext__sjs_js_Promise($m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
+  $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(this.signUpDialog$1.popup__s_concurrent_ExecutionContext__sjs_js_Promise($m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
     return (function(x0$7$2) {
       var x0$7 = $as_s_util_Try(x0$7$2);
       matchEnd6: {
@@ -18093,7 +18093,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
           if ((p3 !== null)) {
             var profile = p3.$$und1$f;
             var fbProfile = p3.$$und2$f;
-            $this.mySession$1.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile, fbProfile);
+            $this.mySession$1.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_social_facebook_FacebookProfileResponse__V(profile, fbProfile);
             break matchEnd6
           }
         };
@@ -20952,7 +20952,7 @@ $c_Lcom_shocktrade_client_profile_HomeController.prototype.com$shocktrade$client
     var $$scope = this.$$scope$1;
     var f = (function($this, friend) {
       return (function() {
-        return $m_Lio_scalajs_npm_angularjs_http_HttpResponse$().promise2future__Lio_scalajs_npm_angularjs_http_HttpResponse__s_concurrent_Future($this.userService$1.getFacebookFriendStatus__Lio_scalajs_nodejs_social_facebook_TaggableFriend__Lio_scalajs_npm_angularjs_http_HttpResponse(friend))
+        return $m_Lio_scalajs_npm_angularjs_http_HttpResponse$().promise2future__Lio_scalajs_npm_angularjs_http_HttpResponse__s_concurrent_Future($this.userService$1.getFacebookFriendStatus__Lio_scalajs_social_facebook_TaggableFriend__Lio_scalajs_npm_angularjs_http_HttpResponse(friend))
       })
     })(this, friendOpt);
     var ec = $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1;
@@ -21980,49 +21980,6 @@ $h_Lcom_shocktrade_common_models_user_OnlineStatus.prototype = $g.Object.prototy
 $c_Lcom_shocktrade_common_models_user_OnlineStatus.prototype = new $h_Lcom_shocktrade_common_models_user_OnlineStatus();
 $c_Lcom_shocktrade_common_models_user_OnlineStatus.prototype.constructor = $c_Lcom_shocktrade_common_models_user_OnlineStatus;
 /** @constructor */
-function $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig() {
-  $g.Object.call(this);
-  $g.Object.defineProperties(this, {
-    "appId": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "status": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": false
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "xfbml": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": false
-    }
-  });
-  $g.Object.defineProperties(this, {
-    "version": {
-      "configurable": true,
-      "enumerable": true,
-      "writable": true,
-      "value": null
-    }
-  })
-}
-/** @constructor */
-function $h_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig() {
-  /*<skip>*/
-}
-$h_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig.prototype = $g.Object.prototype;
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig.prototype = new $h_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig();
-$c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig.prototype.constructor = $c_Lio_scalajs_nodejs_social_facebook_FacebookAppConfig;
-/** @constructor */
 function $c_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig(arg$1) {
   var jsx$1 = (arguments.length | 0);
   var jsx$2 = 1;
@@ -22367,6 +22324,49 @@ function $h_Lio_scalajs_npm_angularjs_uirouter_RouteTo() {
 $h_Lio_scalajs_npm_angularjs_uirouter_RouteTo.prototype = $g.Object.prototype;
 $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo.prototype = new $h_Lio_scalajs_npm_angularjs_uirouter_RouteTo();
 $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo.prototype.constructor = $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo;
+/** @constructor */
+function $c_Lio_scalajs_social_facebook_FacebookAppConfig() {
+  $g.Object.call(this);
+  $g.Object.defineProperties(this, {
+    "appId": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "status": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": false
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "xfbml": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": false
+    }
+  });
+  $g.Object.defineProperties(this, {
+    "version": {
+      "configurable": true,
+      "enumerable": true,
+      "writable": true,
+      "value": null
+    }
+  })
+}
+/** @constructor */
+function $h_Lio_scalajs_social_facebook_FacebookAppConfig() {
+  /*<skip>*/
+}
+$h_Lio_scalajs_social_facebook_FacebookAppConfig.prototype = $g.Object.prototype;
+$c_Lio_scalajs_social_facebook_FacebookAppConfig.prototype = new $h_Lio_scalajs_social_facebook_FacebookAppConfig();
+$c_Lio_scalajs_social_facebook_FacebookAppConfig.prototype.constructor = $c_Lio_scalajs_social_facebook_FacebookAppConfig;
 /** @constructor */
 function $c_Ljava_io_OutputStream() {
   $c_O.call(this)
@@ -30660,24 +30660,6 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.productElement__I__O = (fun
     }
   }
 });
-$c_Lcom_shocktrade_client_MySessionService.prototype.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_nodejs_social_facebook_FacebookProfileResponse__V = (function(profile, profileFB) {
-  this.userProfile$1 = profile;
-  this.fbProfile$und$qmark$1 = profileFB;
-  var value = this.fbProfile$und$qmark$1;
-  if ((value === (void 0))) {
-    var jsx$1 = (void 0)
-  } else {
-    var value$1 = $as_T(value.id);
-    var jsx$1 = value$1
-  };
-  this.facebookID$1 = jsx$1;
-  var $$scope = this.$$rootScope$1;
-  var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
-  var jsx$2 = $g.console;
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
-  jsx$2.info(s);
-  $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
-});
 $c_Lcom_shocktrade_client_MySessionService.prototype.isRecentSymbol__T__Z = (function(symbol) {
   var value = this.getRecentSymbols__sjs_js_UndefOr();
   if ((value !== (void 0))) {
@@ -31070,6 +31052,24 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.updateRankings__Lcom_shockt
   };
   return contest
 });
+$c_Lcom_shocktrade_client_MySessionService.prototype.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_social_facebook_FacebookProfileResponse__V = (function(profile, profileFB) {
+  this.userProfile$1 = profile;
+  this.fbProfile$und$qmark$1 = profileFB;
+  var value = this.fbProfile$und$qmark$1;
+  if ((value === (void 0))) {
+    var jsx$1 = (void 0)
+  } else {
+    var value$1 = $as_T(value.id);
+    var jsx$1 = value$1
+  };
+  this.facebookID$1 = jsx$1;
+  var $$scope = this.$$rootScope$1;
+  var action = $m_Lcom_shocktrade_common_events_RemoteEvent$().UserProfileChanged$1;
+  var jsx$2 = $g.console;
+  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Broadcasting ", ": payload => ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([action, $as_T($g.angular.toJson(profile))]));
+  jsx$2.info(s);
+  $$scope.$broadcast($m_Lcom_shocktrade_common_events_RemoteEvent$().ContestCreated$1, profile)
+});
 $c_Lcom_shocktrade_client_MySessionService.prototype.hasNotifications__Z = (function() {
   var array = this.notifications$1;
   return ($uI(array.length) !== 0)
@@ -31132,7 +31132,7 @@ $c_Lcom_shocktrade_client_MySessionService.prototype.doPostLoginUpdates__T__Z__V
             return (function() {
               var value$1 = $uD(netWorth$1.value);
               profile$3.netWorth = value$1;
-              $this$4.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_nodejs_social_facebook_FacebookProfileResponse__V(profile$3, fbProfile$3);
+              $this$4.setUserProfile__Lcom_shocktrade_client_models_UserProfile__Lio_scalajs_social_facebook_FacebookProfileResponse__V(profile$3, fbProfile$3);
               $this$4.fbFriends$und$qmark$1 = fbFriends$3
             })
           })(this$2$1, fbProfile$1, fbFriends$1, profile$1, netWorth))
@@ -36358,7 +36358,7 @@ $c_Lcom_shocktrade_client_contest_PortfolioController.prototype.$$cookies__Lio_s
 });
 $c_Lcom_shocktrade_client_contest_PortfolioController.prototype.com$shocktrade$client$contest$PortfolioController$$$anonfun$new$20__sjs_js_UndefOr__sjs_js_UndefOr__sjs_js_Promise = (function(aSymbol, anAccountType) {
   var promise = this.newOrderDialog$1.popup__Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams__sjs_js_Promise(new $c_Lcom_shocktrade_client_dialogs_NewOrderDialogController$NewOrderParams(aSymbol, anAccountType));
-  $m_Lio_scalajs_util_ScalaJsHelper$().promise2Future__sjs_js_Promise__s_concurrent_Future(promise).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
+  $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(promise).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
     return (function(x0$2$2) {
       var x0$2 = $as_s_util_Try(x0$2$2);
       if ($is_s_util_Success(x0$2)) {

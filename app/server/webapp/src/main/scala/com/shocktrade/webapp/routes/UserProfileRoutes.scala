@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
   */
 object UserProfileRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
     val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
     val profileDAO = dbFuture.flatMap(_.getProfileDAO)
     val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
@@ -135,9 +135,7 @@ object UserProfileRoutes {
   class FBProfile(val id: js.UndefOr[String], val name: js.UndefOr[String]) extends js.Object
 
   @ScalaJSDefined
-  trait UserInfo extends js.Object {
-    def wallet: Double
-  }
+  class UserInfo(val wallet: Double) extends js.Object
 
   object UserInfo {
     val Fields = js.Array("wallet")

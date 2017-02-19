@@ -5,7 +5,7 @@ import com.shocktrade.common.forms.ExchangesForm
 import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.Http
-import io.scalajs.nodejs.social.facebook.FacebookProfileResponse
+import io.scalajs.social.facebook.FacebookProfileResponse
 
 import scala.scalajs.js
 

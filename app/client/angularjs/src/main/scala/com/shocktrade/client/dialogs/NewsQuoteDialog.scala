@@ -1,15 +1,15 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.client.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.client.discover.QuoteService
+import com.shocktrade.common.models.quote.ResearchQuote
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper.ExceptionExtensions
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
 import scala.language.postfixOps

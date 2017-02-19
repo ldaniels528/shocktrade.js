@@ -12,13 +12,13 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.facade.PricingQuote
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import io.scalajs.nodejs.{console, _}
+import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.OptionHelper._
-
+import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -252,7 +252,9 @@ object PortfolioRoutes {
       val contestID = request.params("contestID")
       val outcome = for {
         contest <- contestDAO.flatMap(_.findById[ContestData](contestID))
+        _ = console.log(s"contest = %j", contest)
         portfolios <- portfolioDAO.flatMap(_.findByContest(contestID)).map(_.toList)
+        _ = console.log(s"portfolios = %j", portfolios)
         symbols = portfolios.flatMap(_.positions.toList.flatMap(_.toList)).flatMap(_.symbol.toOption).distinct
         quotes <- yfCsvQuoteSvc.getQuotes(cvsParams, symbols: _*)
         mapping = Map(quotes.map(q => q.symbol -> q): _*)
@@ -261,6 +263,7 @@ object PortfolioRoutes {
           val player = contest.flatMap(_.participants.toOption).flatMap(_.find(_._id == portfolio.playerID)).orUndefined
           val positions = portfolio.positions.toList.flatMap(_.toList)
           val totalInvestment = computeInvestment(positions, mapping)
+          console.log(s"portfolio = %j", portfolio)
 
           val startingBalance = contest.flatMap(_.startingBalance.toOption).orUndefined
           val funds = portfolio.cashAccount.flatMap(_.funds)
@@ -289,7 +292,10 @@ object PortfolioRoutes {
 
       outcome onComplete {
         case Success(rankings) => response.send(rankings); next()
-        case Failure(e) => response.internalServerError(e); next()
+        case Failure(e) =>
+          e.printStackTrace()
+          response.internalServerError(e);
+          next()
       }
     }
 

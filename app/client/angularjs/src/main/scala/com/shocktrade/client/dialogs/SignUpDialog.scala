@@ -1,17 +1,17 @@
 package com.shocktrade.client.dialogs
 
+import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.util.StringHelper._
-import com.shocktrade.common.util.StringHelper._
-import io.scalajs.npm.angularjs.{Timeout, _}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.npm.angularjs.{Timeout, _}
+import io.scalajs.social.facebook.FacebookProfileResponse
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
-import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
-import com.shocktrade.client.models.UserProfile
-import io.scalajs.dom.html.browser.console
-import io.scalajs.nodejs.social.facebook.FacebookProfileResponse
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -68,7 +68,7 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
           stopLoading()
           if (!isDefined(profile.dynamic.error)) $modalInstance.close((profile, form.fbProfile))
           else {
-            profile.dynamic.error.asOpt[String] foreach(messages.push(_))
+            profile.dynamic.error.asOpt[String] foreach (messages.push(_))
           }
 
         case Failure(e) =>

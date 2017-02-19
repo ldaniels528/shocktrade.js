@@ -8,6 +8,7 @@ import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.moment.timezone._
 import io.scalajs.npm.request.Request
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}

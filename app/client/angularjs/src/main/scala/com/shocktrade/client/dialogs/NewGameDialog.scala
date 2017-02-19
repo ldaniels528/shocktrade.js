@@ -6,10 +6,11 @@ import com.shocktrade.client.dialogs.NewGameDialogController._
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.forms.ContestCreateForm
 import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Service, Timeout, _}
-import io.scalajs.dom.html.browser.console
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future

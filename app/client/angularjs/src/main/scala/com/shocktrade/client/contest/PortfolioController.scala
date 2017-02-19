@@ -12,7 +12,7 @@ import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
 import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

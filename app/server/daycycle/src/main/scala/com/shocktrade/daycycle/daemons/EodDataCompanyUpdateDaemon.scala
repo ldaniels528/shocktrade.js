@@ -1,15 +1,14 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
+import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
+import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.services.EodDataSecuritiesService
-
 import io.scalajs.npm.mongodb.Db
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions

@@ -1,15 +1,16 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.common.forms.PerksResponse
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.dialogs.PerksDialogController._
 import com.shocktrade.client.models.contest.{Contest, Perk, Portfolio}
+import com.shocktrade.common.forms.PerksResponse
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import io.scalajs.dom.html.browser.console
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future

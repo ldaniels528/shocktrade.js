@@ -14,12 +14,12 @@ import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.facade.PricingQuote
-import io.scalajs.nodejs._
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
