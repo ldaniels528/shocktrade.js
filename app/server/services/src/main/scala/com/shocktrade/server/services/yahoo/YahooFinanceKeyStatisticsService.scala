@@ -22,7 +22,7 @@ class YahooFinanceKeyStatisticsService() {
     */
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFKeyStatistics]] = {
     for {
-      (response, html) <- Request.getFuture(s"https://finance.yahoo.com/quote/$symbol/key-statistics")
+      (response, html) <- Request.getAsync(s"https://finance.yahoo.com/quote/$symbol/key-statistics")
       keyStats_? <- scriptParser.parse(html, anchor = "\"QuoteSummaryStore\":")
     } yield keyStats_?
   }

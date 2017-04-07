@@ -22,8 +22,8 @@ import scala.util.{Failure, Success}
 object ChartRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
-    implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+    implicit val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
+    implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
 
     app.get("/api/charts/exposure/exchange/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureByExchange(request, response, next))
     app.get("/api/charts/exposure/industry/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureByIndustry(request, response, next))
@@ -36,8 +36,8 @@ object ChartRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     def exposureByExchange(request: Request, response: Response, next: NextFunction) = {
-      val contestId = request.params("id")
-      val playerId = request.params("userID")
+      val contestId = request.params.apply("id")
+      val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.exchange) onComplete {
         case Success(data) => response.send(data); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -45,8 +45,8 @@ object ChartRoutes {
     }
 
     def exposureByIndustry(request: Request, response: Response, next: NextFunction) = {
-      val contestId = request.params("id")
-      val playerId = request.params("userID")
+      val contestId = request.params.apply("id")
+      val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.industry) onComplete {
         case Success(data) => response.send(data); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -54,8 +54,8 @@ object ChartRoutes {
     }
 
     def exposureByMarket(request: Request, response: Response, next: NextFunction) = {
-      val contestId = request.params("id")
-      val playerId = request.params("userID")
+      val contestId = request.params.apply("id")
+      val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.market) onComplete {
         case Success(data) => response.send(data); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -63,8 +63,8 @@ object ChartRoutes {
     }
 
     def exposureBySector(request: Request, response: Response, next: NextFunction) = {
-      val contestId = request.params("id")
-      val playerId = request.params("userID")
+      val contestId = request.params.apply("id")
+      val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.sector) onComplete {
         case Success(data) => response.send(data); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -72,8 +72,8 @@ object ChartRoutes {
     }
 
     def exposureBySecurities(request: Request, response: Response, next: NextFunction) = {
-      val contestId = request.params("id")
-      val playerId = request.params("userID")
+      val contestId = request.params.apply("id")
+      val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.symbol) onComplete {
         case Success(data) => response.send(data); next()
         case Failure(e) => response.internalServerError(e); next()

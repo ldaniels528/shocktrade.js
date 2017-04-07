@@ -31,7 +31,7 @@ class EodDataSecuritiesService() {
     */
   def apply(exchange: String, firstLetter: Char)(implicit ec: ExecutionContext): Future[Seq[EodDataSecurity]] = {
     val promise = Promise[Seq[EodDataSecurity]]()
-    Request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
+    Request.getAsync(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
       case Success((response, html)) =>
         val parser = new htmlparser2.Parser(new ParserHandler {
           val quotes = js.Array[EodDataSecurity]()

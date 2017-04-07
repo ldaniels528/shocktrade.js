@@ -17,7 +17,7 @@ class RemoteEventService(webAppEndPoint: String) {
 
   def send(event: RemoteEvent): Promise[(IncomingMessage, String)] = {
     logger.log("Transmitting %j to '%s'...", Moment().format("MM/DD HH:mm:ss"), event, webAppEndPoint)
-    Request.postFuture(new RequestOptions(url = s"http://$webAppEndPoint/api/events/relay", form = event))
+    Request.postAsync(new RequestOptions(url = s"http://$webAppEndPoint/api/events/relay", form = event))
   }
 
 }

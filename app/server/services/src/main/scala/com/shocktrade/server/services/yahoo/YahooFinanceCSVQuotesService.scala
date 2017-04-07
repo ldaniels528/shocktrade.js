@@ -25,7 +25,7 @@ class YahooFinanceCSVQuotesService() {
   def getQuotes(params: String, symbols: String*)(implicit ec: ExecutionContext): Future[Seq[YFCSVQuote]] = {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
-    Request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
+    Request.getAsync(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
       data.split("[\n]").toSeq flatMap (line => parser.parseQuote(params, line, startTime))
     }
   }

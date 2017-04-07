@@ -75,7 +75,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
       orderId <- anOrderId
     } {
       asyncLoading($scope)(portfolioService.cancelOrder(portfolioId, orderId)) onComplete {
-        case Success(portfolio) => $scope.$apply(() => mySession.updatePortfolio(portfolio))
+        case Success(response) => $scope.$apply(() => mySession.updatePortfolio(response.data))
         case Failure(err) =>
           toaster.error("Failed to cancel order")
           console.error(s"Failed to cancel order: ${err.displayMessage}")

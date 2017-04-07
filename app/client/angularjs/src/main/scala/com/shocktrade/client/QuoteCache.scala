@@ -5,6 +5,7 @@ import com.shocktrade.common.models.quote.CompleteQuote
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
@@ -63,14 +64,14 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
     * @return the promise of a quote
     */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext) = {
-    val response = quoteService.getCompleteQuote(symbol)
+    val response = quoteService.getCompleteQuote(symbol).map(_.data)
     response onComplete {
       case Success(_) =>
       case Failure(e) =>
         console.log(s"Failed to load quote for symbol: $symbol - ${e.displayMessage}")
         $timeout(() => quotes.remove(symbol), 5.seconds)
     }
-    response.toFuture
+    response
   }
 
 }

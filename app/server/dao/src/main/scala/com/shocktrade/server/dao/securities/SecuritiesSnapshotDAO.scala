@@ -3,7 +3,7 @@ package com.shocktrade.server.dao.securities
 import com.shocktrade.common.models.contest.OrderLike
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -26,8 +26,8 @@ object SecuritiesSnapshotDAO {
   implicit class SecuritiesSnapshotDAOEnrichment(val dao: SecuritiesSnapshotDAO) extends AnyVal {
 
     @inline
-    def findMatch(order: OrderLike)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[SnapshotQuote](doc(Seq(
+    def findMatch(order: OrderLike)(implicit ec: ExecutionContext): Future[Option[SnapshotQuote]] = {
+      dao.findOneAsync[SnapshotQuote](doc(Seq(
         Option("symbol" $eq order.symbol),
         Option("tradeDateTime" between(order.creationTime, new js.Date())),
         Option("volume" $gte order.quantity),
@@ -38,12 +38,12 @@ object SecuritiesSnapshotDAO {
     }
 
     @inline
-    def findSnapshots(symbol: String, startTime: js.Date, endTime: js.Date) = {
-      dao.find(doc("symbol" $eq symbol, "tradeDateTime" between(startTime, endTime))).toArrayFuture[SnapshotQuote]
+    def findSnapshots(symbol: String, startTime: js.Date, endTime: js.Date): js.Promise[js.Array[SnapshotQuote]] = {
+      dao.find[SnapshotQuote](doc("symbol" $eq symbol, "tradeDateTime" between(startTime, endTime))).toArray()
     }
 
     @inline
-    def updateSnapshots(snapshots: Seq[SnapshotQuote]) = {
+    def updateSnapshots(snapshots: Seq[SnapshotQuote]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(js.Array(snapshots map insertOne: _*))
     }
 
@@ -56,8 +56,8 @@ object SecuritiesSnapshotDAO {
   implicit class SecuritiesSnapshotDAOConstructor(val db: Db) extends AnyVal {
 
     @inline
-    def getSnapshotDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Snapshots").mapTo[SecuritiesSnapshotDAO]
+    def getSnapshotDAO: SecuritiesSnapshotDAO = {
+      db.collection("Snapshots").asInstanceOf[SecuritiesSnapshotDAO]
     }
 
   }

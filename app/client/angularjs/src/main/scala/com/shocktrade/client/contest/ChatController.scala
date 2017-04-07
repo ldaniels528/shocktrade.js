@@ -12,6 +12,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Location, Scope, injected}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -113,7 +114,8 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
 
           // transmit the message
           chatService.sendChatMessage(contestId, message) onComplete {
-            case Success(messages) =>
+            case Success(response) =>
+              val messages = response.data
               $scope.$apply { () =>
                 $scope.chatMessage = ""
                 mySession.setMessages(messages)
@@ -137,7 +139,8 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
     console.log(s"Updating chat messages for $contestId <${mySession.contest_?.flatMap(_._id.toOption).orNull}>")
     if (mySession.contest_?.exists(_._id.contains(contestId))) {
       chatService.getMessages(contestId) onComplete {
-        case Success(messages) =>
+        case Success(response) =>
+          val messages = response.data
           $scope.$apply { () =>
             mySession.contest_?.foreach(_.messages = messages)
             //$location.hash("end_of_message")

@@ -25,8 +25,8 @@ object PostDAO {
   implicit class PostDAOExtensions(val db: Db) extends AnyVal {
 
     @inline
-    def getPostDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Posts").mapTo[PostDAO]
+    def getPostDAO: PostDAO = {
+      db.collection("Posts").asInstanceOf[PostDAO]
     }
 
   }

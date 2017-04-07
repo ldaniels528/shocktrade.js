@@ -7,7 +7,7 @@ import com.shocktrade.server.common.LoggerFactory
 import io.scalajs.npm.mongodb._
 import io.scalajs.util.JsUnderOrHelper._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -30,63 +30,63 @@ object SecuritiesDAO {
   implicit class SecuritiesDAOEnrichment(val dao: SecuritiesDAO) extends AnyVal {
 
     @inline
-    def exploreIndustries(sector: String)(implicit ec: ExecutionContext) = {
-      dao.aggregate(js.Array(
+    def exploreIndustries(sector: String): js.Promise[js.Array[ExploreQuote]] = {
+      dao.aggregate[ExploreQuote](js.Array(
         $match("active" $eq true, "sector" $eq sector, "industry" $ne null),
         $group("_id" -> "$industry", "total" $sum 1)
-      )).toArrayFuture[ExploreQuote]
+      )).toArray()
     }
 
     @inline
-    def exploreSectors(implicit ec: ExecutionContext) = {
-      dao.aggregate(js.Array(
+    def exploreSectors(implicit ec: ExecutionContext): js.Promise[js.Array[ExploreQuote]] = {
+      dao.aggregate[ExploreQuote](js.Array(
         $match("active" $eq true, "sector" $ne null),
         $group("_id" -> "$sector", "total" $sum 1)
-      )).toArrayFuture[ExploreQuote]
+      )).toArray()
     }
 
     @inline
-    def exploreSubIndustries(sector: String, industry: String)(implicit ec: ExecutionContext) = {
-      dao.aggregate(js.Array(
+    def exploreSubIndustries(sector: String, industry: String): js.Promise[js.Array[ExploreQuote]] = {
+      dao.aggregate[ExploreQuote](js.Array(
         $match("active" $eq true, "sector" $eq sector, "industry" $eq industry, "subIndustry" $ne null),
         $group("_id" -> "$subIndustry", "total" $sum 1)
-      )).toArrayFuture[ExploreQuote]
+      )).toArray()
     }
 
     @inline
-    def findCompleteQuote(symbol: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[CompleteQuote]("symbol" $eq symbol)
+    def findCompleteQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[CompleteQuote]] = {
+      dao.findOneAsync[CompleteQuote]("symbol" $eq symbol)
     }
 
     @inline
-    def findQuotesByIndustry(sector: String, industry: String)(implicit ec: ExecutionContext) = {
+    def findQuotesByIndustry(sector: String, industry: String): js.Promise[js.Array[ResearchQuote]] = {
       val query = doc("active" $eq true, "sector" $eq sector, "industry" $eq industry, $or("subIndustry" $eq null, "subIndustry" $eq "", "subIndustry" $exists false))
-      dao.find(query, projection = ResearchQuote.Fields.toProjection).toArrayFuture[ResearchQuote]
+      dao.find[ResearchQuote](query, projection = ResearchQuote.Fields.toProjection).toArray()
     }
 
     @inline
-    def findQuotesBySubIndustry(sector: String, industry: String, subIndustry: String)(implicit ec: ExecutionContext) = {
+    def findQuotesBySubIndustry(sector: String, industry: String, subIndustry: String): js.Promise[js.Array[ResearchQuote]] = {
       val query = doc("active" $eq true, "sector" $eq sector, "industry" $eq industry, "subIndustry" $eq subIndustry)
-      dao.find(query, projection = ResearchQuote.Fields.toProjection).toArrayFuture[ResearchQuote]
+      dao.find[ResearchQuote](query, projection = ResearchQuote.Fields.toProjection).toArray()
     }
 
     @inline
-    def findQuote[T <: js.Any](symbol: String, fields: Seq[String])(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[T]("symbol" $eq symbol, fields = js.Array(fields: _*))
+    def findQuote[T <: js.Any](symbol: String, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
+      dao.findOneAsync[T]("symbol" $eq symbol, fields = js.Array(fields: _*))
     }
 
     @inline
-    def findQuotes[T <: js.Any](selector: js.Any, fields: Seq[String])(implicit ec: ExecutionContext) = {
-      dao.find(selector, projection = fields.toProjection).toArrayFuture[T]
+    def findQuotes[T <: js.Any](selector: js.Any, fields: Seq[String]): js.Promise[js.Array[T]] = {
+      dao.find[T](selector, projection = fields.toProjection).toArray()
     }
 
     @inline
-    def findQuotesBySymbols[T <: js.Any](symbols: Seq[String], fields: Seq[String])(implicit ec: ExecutionContext) = {
-      dao.find("symbol" $in js.Array(symbols: _*), projection = fields.toProjection).toArrayFuture[T]
+    def findQuotesBySymbols[T <: js.Any](symbols: Seq[String], fields: Seq[String]): js.Promise[js.Array[T]] = {
+      dao.find[T]("symbol" $in js.Array(symbols: _*), projection = fields.toProjection).toArray()
     }
 
     @inline
-    def research(options: ResearchOptions)(implicit ec: ExecutionContext) = {
+    def research(options: ResearchOptions): js.Promise[js.Array[ResearchQuote]] = {
       // build the query
       val selector = doc("active" $eq true, "symbol" $ne null)
       toRange("beta", options.betaMin, options.betaMax) foreach (selector ++= _)
@@ -110,15 +110,15 @@ object SecuritiesDAO {
       val maxResults = options.maxResults.flat.getOrElse(25)
 
       // perform the query
-      dao.find(selector, projection = ResearchQuote.Fields.toProjection)
+      dao.find[ResearchQuote](selector, projection = ResearchQuote.Fields.toProjection)
         .limit(maxResults)
         .sort(sortFields)
-        .toArrayFuture[ResearchQuote]
+        .toArray()
     }
 
     @inline
-    def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext) = {
-      dao.find(
+    def search(searchTerm: String, maxResults: Int): js.Promise[js.Array[AutoCompleteQuote]] = {
+      dao.find[AutoCompleteQuote](
         // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ^?0, $options:'i' }} ] }
         selector = doc(
           "active" $eq true, "symbol" $ne null,
@@ -127,7 +127,7 @@ object SecuritiesDAO {
         projection = AutoCompleteQuote.Fields.toProjection)
         .sort(js.Array("name", 1))
         .limit(maxResults)
-        .toArrayFuture[AutoCompleteQuote]
+        .toArray()
     }
 
     @inline
@@ -153,8 +153,8 @@ object SecuritiesDAO {
       * @return the [[SecuritiesDAO Securities DAO]] instance
       */
     @inline
-    def getSecuritiesDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Securities").mapTo[SecuritiesDAO]
+    def getSecuritiesDAO: SecuritiesDAO = {
+      db.collection("Securities").asInstanceOf[SecuritiesDAO]
     }
 
   }

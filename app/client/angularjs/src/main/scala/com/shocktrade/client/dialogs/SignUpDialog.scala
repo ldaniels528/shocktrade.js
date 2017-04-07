@@ -5,11 +5,12 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.facebook.FacebookService
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.social.facebook.FacebookProfileResponse
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -25,7 +26,7 @@ import scala.util.{Failure, Success}
   */
 class SignUpDialog($http: Http, $modal: Modal) extends Service {
 
-  def popup()(implicit ec: ExecutionContext) = {
+  def popup()(implicit ec: ExecutionContext): js.Promise[(UserProfile, FacebookProfileResponse)] = {
     val modalInstance = $modal.open[SignUpDialogResult](new ModalOptions(
       templateUrl = "sign_up_dialog.html",
       controller = classOf[SignUpDialogController].getSimpleName
@@ -33,7 +34,7 @@ class SignUpDialog($http: Http, $modal: Modal) extends Service {
     modalInstance.result
   }
 
-  def createAccount(form: SignUpForm)(implicit ec: ExecutionContext) = {
+  def createAccount(form: SignUpForm)(implicit ec: ExecutionContext): js.Promise[HttpResponse[UserProfile]] = {
     $http.post[UserProfile]("/api/profile/create", form)
   }
 
@@ -64,7 +65,8 @@ class SignUpDialogController($scope: SignUpDialogScope, $modalInstance: ModalIns
     if (isValid(form)) {
       startLoading()
       dialog.createAccount(form) onComplete {
-        case Success(profile) =>
+        case Success(response) =>
+          val profile = response.data
           stopLoading()
           if (!isDefined(profile.dynamic.error)) $modalInstance.close((profile, form.fbProfile))
           else {

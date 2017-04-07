@@ -46,7 +46,7 @@ object QualificationJsApp extends js.JSApp {
     // setup mongodb connection
     logger.log("Loading MongoDB module...")
     logger.log("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
+    implicit val dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
 
     // disable caching
     app.disable("etag")

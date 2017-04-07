@@ -10,6 +10,7 @@ import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, angular, injected}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -92,7 +93,8 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
 
     // execute the search
     asyncLoading($scope)(researchService.search(searchOptions)) onComplete {
-      case Success(results) =>
+      case Success(response) =>
+        val results = response.data
         console.log(s"${results.length} quotes found")
         val exchanges = js.Dictionary[Int]()
         results.foreach { q =>

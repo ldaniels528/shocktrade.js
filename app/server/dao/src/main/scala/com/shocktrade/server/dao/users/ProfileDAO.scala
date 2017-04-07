@@ -37,12 +37,12 @@ object ProfileDAO {
 
     @inline
     def findOneByID(userID: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-      dao.findOneFuture[UserProfileData]("_id" $eq userID.$oid)
+      dao.findOneAsync[UserProfileData]("_id" $eq userID.$oid)
     }
 
     @inline
     def findOneByFacebookID(fbId: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-      dao.findOneFuture[UserProfileData]("facebookID" $eq fbId)
+      dao.findOneAsync[UserProfileData]("facebookID" $eq fbId)
     }
 
     @inline
@@ -88,8 +88,8 @@ object ProfileDAO {
   implicit class ProfileDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getProfileDAO(implicit ec: ExecutionContext): Future[ProfileDAO] = {
-      db.collectionFuture("Players").mapTo[ProfileDAO]
+    def getProfileDAO(implicit ec: ExecutionContext): ProfileDAO = {
+      db.collection("Players").asInstanceOf[ProfileDAO]
     }
   }
 

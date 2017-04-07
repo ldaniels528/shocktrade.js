@@ -25,14 +25,14 @@ object OnlineStatusRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     def statusByUserID(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
+      val userID = request.params.apply("userID")
       val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
       response.send(status)
       next()
     }
 
     def onlineByUserID(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
+      val userID = request.params.apply("userID")
       val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
       status.connected = true
       response.send(status)
@@ -40,7 +40,7 @@ object OnlineStatusRoutes {
     }
 
     def offlineByUserID(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
+      val userID = request.params.apply("userID")
       val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
       status.connected = false
       response.send(status)

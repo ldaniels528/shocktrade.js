@@ -40,7 +40,7 @@ object DaemonRoutes {
       * Returns a daemon by its unique identifier
       */
     def daemonById(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       daemonDict.get(id) match {
         case Some(daemon) => response.send(daemon)
         case None => response.notFound(id)
@@ -60,7 +60,7 @@ object DaemonRoutes {
       * Pauses the daemon process, if running.
       */
     def pauseDaemon(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           //Daemon.run(clock, daemon)
@@ -74,7 +74,7 @@ object DaemonRoutes {
       * Resume the daemon process, if paused.
       */
     def resumeDaemon(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           //Daemon.run(clock, daemon)
@@ -88,7 +88,7 @@ object DaemonRoutes {
       * Starts the daemon process
       */
     def startDaemon(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       daemonMap.get(id) match {
         case Some(daemon) =>
           Daemon.start(clock, daemon)

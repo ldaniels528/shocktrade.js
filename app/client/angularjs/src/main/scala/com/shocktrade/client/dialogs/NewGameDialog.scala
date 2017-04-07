@@ -10,7 +10,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Service, Timeout, _}
-import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
@@ -29,7 +29,7 @@ class NewGameDialog($modal: Modal) extends Service {
   /**
     * Sign-up Modal Dialog
     */
-  def popup(): Future[NewGameDialogResult] = {
+  def popup(): js.Promise[NewGameDialogResult] = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewGameDialogResult](new ModalOptions(
       templateUrl = "new_game_dialog.html",

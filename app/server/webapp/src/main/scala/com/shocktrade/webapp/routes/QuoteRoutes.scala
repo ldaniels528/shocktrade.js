@@ -13,6 +13,7 @@ import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,11 +28,11 @@ import scala.util.{Failure, Success}
   */
 object QuoteRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit  ec: ExecutionContext) = {
-    implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
-    implicit val keyStatisticsDAO = dbFuture.flatMap(_.getKeyStatisticsDAO)
-    implicit val naicsDAO = dbFuture.flatMap(_.getNAICSDAO)
-    implicit val sicDAO = dbFuture.flatMap(_.getSICDAO)
+  def init(app: Application, dbFuture: Future[Db])(implicit  ec: ExecutionContext): Unit = {
+    implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+    implicit val keyStatisticsDAO = dbFuture.map(_.getKeyStatisticsDAO)
+    implicit val naicsDAO = dbFuture.map(_.getNAICSDAO)
+    implicit val sicDAO = dbFuture.map(_.getSICDAO)
     val historySvc = new YahooFinanceCSVHistoryService()
 
     // collections of quotes

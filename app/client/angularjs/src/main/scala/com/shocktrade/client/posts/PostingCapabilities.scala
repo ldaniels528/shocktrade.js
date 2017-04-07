@@ -9,14 +9,15 @@ import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.fileupload.nervgh.{FileItem, FileUploader, FileUploaderConfig}
 import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -63,7 +64,8 @@ trait PostingCapabilities extends GlobalLoading {
       if ($scope.isDeletable(aPost) ?== true) {
         post.deleteLoading = true
         postService.deletePost(postID) onComplete {
-          case Success(result) =>
+          case Success(response) =>
+            val result = response.data
             $scope.$apply(() => post.deleteLoading = false)
             if (result.success && removePostFromList(post)) {
               toaster.success("Post deleted")
@@ -118,7 +120,8 @@ trait PostingCapabilities extends GlobalLoading {
         post.likeLoading = true
         val promise = if (like) postService.likePost(postID, userID) else postService.unlikePost(postID, userID)
         promise onComplete {
-          case Success(updatedPost) =>
+          case Success(response) =>
+            val updatedPost = response.data
             console.log(s"updatedPost = ${angular.toJson(updatedPost, pretty = true)}")
             $timeout(() => post.likeLoading = false, 1.second)
             $scope.updatePost(updatedPost)
@@ -173,7 +176,9 @@ trait PostingCapabilities extends GlobalLoading {
     }
 
     postService.getPostByID(postID) onComplete {
-      case Success(updatedPost) => $scope.$apply(() => $scope.updatePost(updatedPost))
+      case Success(response) =>
+        val updatedPost = response.data
+        $scope.$apply(() => $scope.updatePost(updatedPost))
       case Failure(e) =>
         console.error(s"Failed to reload post $postID")
     }
@@ -233,7 +238,8 @@ trait PostingCapabilities extends GlobalLoading {
         comment.likeLoading = true
         val promise = if (like) postService.likeComment(postID, commentID, userID) else postService.unlikeComment(postID, commentID, userID)
         promise onComplete {
-          case Success(updatedPost) =>
+          case Success(response) =>
+            val updatedPost = response.data
             $timeout(() => comment.likeLoading = false, 1.second)
             val index = $scope.posts.indexWhere(_._id ?== updatedPost._id)
             if (index != -1) {
@@ -261,7 +267,7 @@ trait PostingCapabilities extends GlobalLoading {
       val comment = Comment(text, submitter)
 
       postService.createComment(postID, comment) onComplete {
-        case Success(updatedPost) => $scope.$apply(() => $scope.updatePost(updatedPost))
+        case Success(response) => $scope.$apply(() => $scope.updatePost(response.data))
         case Failure(e) =>
           console.error(s"Failed while adding a new comment the post ($aPost) or userID (${user._id}): ${e.displayMessage}")
           toaster.error("Error adding comment", e.displayMessage)
@@ -307,7 +313,8 @@ trait PostingCapabilities extends GlobalLoading {
         reply.likeLoading = true
         val promise = if (like) postService.likeReply(postID, commentID, replyID, userID) else postService.unlikeReply(postID, commentID, replyID, userID)
         promise onComplete {
-          case Success(updatedPost) =>
+          case Success(response) =>
+            val updatedPost = response.data
             $timeout(() => reply.likeLoading = false, 1.second)
             val index = $scope.posts.indexWhere(_._id ?== updatedPost._id)
             if (index != -1) {
@@ -400,7 +407,8 @@ trait PostingCapabilities extends GlobalLoading {
 
   private def loadPostsByTags(tags: js.Array[String]) = {
     asyncLoading($scope)(postService.getPostsByTag(tags)) onComplete {
-      case Success(posts) =>
+      case Success(response) =>
+        val posts = response.data
         $timeout(() => $scope.postsLoading = false, 1.second)
         $scope.$apply(() => $scope.posts = posts)
       case Failure(e) =>
@@ -415,7 +423,7 @@ trait PostingCapabilities extends GlobalLoading {
     console.log(s"${if (alreadySaved) s"Updating (${post._id}) " else "Saving"} post...")
 
     // perform the update
-    (if (alreadySaved) postService.updatePost(post) else postService.createPost(post)) map { post =>
+    (if (alreadySaved) postService.updatePost(post) else postService.createPost(post)).map(_.data) map { post =>
       if (post.submitter.isEmpty) post.submitter = user
       post
     }
@@ -449,7 +457,8 @@ trait PostingCapabilities extends GlobalLoading {
       if (newPost._id.nonAssigned) {
         newPost.submitter = user
         postService.createPost(newPost) onComplete {
-          case Success(post) =>
+          case Success(response) =>
+            val post = response.data
             $scope.$apply { () =>
               newPost._id = post._id
               for {

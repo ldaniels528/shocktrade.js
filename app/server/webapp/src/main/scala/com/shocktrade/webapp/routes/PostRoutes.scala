@@ -29,9 +29,9 @@ import scala.util.{Failure, Success}
 object PostRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
-    implicit val postDAO = dbFuture.flatMap(_.getPostDAO)
-    implicit val profileDAO = dbFuture.flatMap(_.getProfileDAO)
-    implicit val userDAO = dbFuture.flatMap(_.getUserDAO)
+    implicit val postDAO = dbFuture.map(_.getPostDAO)
+    implicit val profileDAO = dbFuture.map(_.getProfileDAO)
+    implicit val userDAO = dbFuture.map(_.getUserDAO)
     implicit val attachmentDAO = dbFuture.map(_.getPostAttachmentDAO)
     implicit val seoMetaParser = new SharedContentParser()
 
@@ -78,7 +78,7 @@ object PostRoutes {
       * @example DELETE /api/post/56fd562b9a421db70c9172c1
       */
     def deletePost(request: Request, response: Response, next: NextFunction) = {
-      val postID = request.params("postID")
+      val postID = request.params.apply("postID")
       postDAO.flatMap(_.deleteOne("_id" $eq postID.$oid)) onComplete {
         case Success(outcome) => response.send(new OperationResult(success = outcome.result.isOk)); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -90,7 +90,7 @@ object PostRoutes {
       * @example GET /api/posts/attachments/56fd562b9a421db70c9172c1
       */
     def downloadAttachment(request: Request, response: Response, next: NextFunction) = {
-      val attachmentID = request.params("attachmentID")
+      val attachmentID = request.params.apply("attachmentID")
       attachmentDAO map (_.openDownloadStream(attachmentID.$oid).pipe(response)) onComplete {
         case Success(downloadStream) => downloadStream.onEnd(() => next())
         case Failure(e) => response.internalServerError(e); next()
@@ -102,8 +102,8 @@ object PostRoutes {
       * @example GET /api/posts/attachments/user/5633c756d9d5baa77a714803
       */
     def getAttachementIDs(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
-      attachmentDAO.flatMap(_.find("metadata.userID" $eq userID.$oid).toArrayFuture[Attachment]) onComplete {
+      val userID = request.params.apply("userID")
+      attachmentDAO.flatMap(_.find("metadata.userID" $eq userID.$oid).toArray()[Attachment]) onComplete {
         case Success(attachments) => response.send(attachments); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -114,7 +114,7 @@ object PostRoutes {
       * @example POST /api/post/563cff811b591f4c7870aaa1/attachment/5633c756d9d5baa77a714803
       */
     def uploadAttachment(request: Request with UploadedFiles, response: Response, next: NextFunction) = {
-      val (postID, userID) = (request.params("postID"), request.params("userID"))
+      val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       request.files.values foreach { file =>
         val outcome = for {
           (attachmentId, success) <- attachmentDAO map { fs =>
@@ -136,7 +136,7 @@ object PostRoutes {
       * @example GET /api/post/5633c756d9d5baa77a714803
       */
     def getPost(request: Request, response: Response, next: NextFunction) = {
-      val postID = request.params("postID")
+      val postID = request.params.apply("postID")
       postDAO.flatMap(_.findById[Post](postID)) onComplete {
         case Success(Some(post)) => response.send(post); next()
         case Success(None) => response.notFound(); next()
@@ -150,7 +150,7 @@ object PostRoutes {
       */
     def getPosts(request: Request, response: Response, next: NextFunction) = {
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
-      postDAO.flatMap(_.find().limit(maxResults).toArrayFuture[Post]) onComplete {
+      postDAO.flatMap(_.find().limit(maxResults).toArray()[Post]) onComplete {
         case Success(posts) => response.send(posts); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -161,9 +161,9 @@ object PostRoutes {
       * @example /api/posts/user/56340a6f3c21a4b485d47c55
       */
     def getPostsByOwner(request: Request, response: Response, next: NextFunction) = {
-      val ownerID = request.params("ownerID")
+      val ownerID = request.params.apply("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
-      postDAO.flatMap(_.find("submitterId" $eq ownerID).limit(maxResults).toArrayFuture[Post]) onComplete {
+      postDAO.flatMap(_.find("submitterId" $eq ownerID).limit(maxResults).toArray()[Post]) onComplete {
         case Success(posts) => response.send(posts); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -174,12 +174,12 @@ object PostRoutes {
       * @example GET /api/posts/user/5633c756d9d5baa77a714803/newsfeed
       */
     def getNewsFeed(request: Request, response: Response, next: NextFunction) = {
-      val ownerID = request.params("ownerID")
+      val ownerID = request.params.apply("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
       val outcome = for {
         submitters <- profileDAO.flatMap(_.findById[UserProfileData](ownerID, js.Array("followers"))).map(_.flatMap(_.followers.toOption).getOrElse(js.Array()))
         _ = submitters.push(ownerID)
-        posts <- postDAO.flatMap(_.find("submitterId" $in submitters).limit(maxResults).toArrayFuture[Post])
+        posts <- postDAO.flatMap(_.find("submitterId" $in submitters).limit(maxResults).toArray()[Post])
       } yield posts
 
       outcome onComplete {
@@ -214,7 +214,7 @@ object PostRoutes {
       * @example PUT /api/post/564e4b60e7aabce5a152b10b/like/5633c756d9d5baa77a714803
       */
     def likePost(request: Request, response: Response, next: NextFunction) = {
-      val (postID, userID) = (request.params("postID"), request.params("userID"))
+      val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       postDAO.flatMap(_.like(postID, userID)) onComplete {
         case Success(outcome) =>
           outcome.ok match {
@@ -231,7 +231,7 @@ object PostRoutes {
       * @example DELETE /api/post/564e4b60e7aabce5a152b10b/like/5633c756d9d5baa77a714803
       */
     def unlike(request: Request, response: Response, next: NextFunction) = {
-      val (postID, userID) = (request.params("postID"), request.params("userID"))
+      val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       postDAO.flatMap(_.unlike(postID, userID)) onComplete {
         case Success(outcome) =>
           outcome.ok match {

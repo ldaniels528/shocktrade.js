@@ -2,7 +2,7 @@ package com.shocktrade.server.dao.securities
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -29,7 +29,9 @@ object NAICSDAO {
       * @param naicsCode the given NAICS code
       */
     @inline
-    def findByCode(naicsCode: Int)(implicit ec: ExecutionContext) = naicsDAO.findOneFuture[NAICS]("naicsNumber" $eq naicsCode)
+    def findByCode(naicsCode: Int)(implicit ec: ExecutionContext): Future[Option[NAICS]] = {
+      naicsDAO.findOneAsync[NAICS]("naicsNumber" $eq naicsCode)
+    }
 
   }
 
@@ -40,8 +42,8 @@ object NAICSDAO {
   implicit class NAICSDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getNAICSDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("NAICS").mapTo[NAICSDAO]
+    def getNAICSDAO: NAICSDAO = {
+      db.collection("NAICS").asInstanceOf[NAICSDAO]
     }
 
   }

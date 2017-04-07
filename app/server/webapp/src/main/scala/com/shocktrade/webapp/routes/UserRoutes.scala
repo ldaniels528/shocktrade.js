@@ -3,9 +3,9 @@ package com.shocktrade.webapp.routes
 import com.shocktrade.common.forms.FacebookFriendForm
 import com.shocktrade.common.models.user.FriendStatus
 import com.shocktrade.server.dao.users.UserDAO._
-
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -18,8 +18,8 @@ import scala.util.{Failure, Success}
   */
 object UserRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val userDAO = dbFuture.flatMap(_.getUserDAO)
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
+    implicit val userDAO = dbFuture.map(_.getUserDAO)
 
     app.post("/api/friend/status", (request: Request, response: Response, next: NextFunction) => friendStatus(request, response, next))
     app.get("/api/user/:id", (request: Request, response: Response, next: NextFunction) => userByID(request, response, next))
@@ -50,7 +50,7 @@ object UserRoutes {
       * Retrieves a user by ID
       */
     def userByID(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       userDAO.flatMap(_.findUserByID(id)) onComplete {
         case Success(Some(user)) => response.send(user); next()
         case Success(None) => response.notFound(id); next()

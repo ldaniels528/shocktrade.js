@@ -5,6 +5,7 @@ import com.shocktrade.server.facade.PricingFacade._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.npm.mongodb.Db
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -16,7 +17,7 @@ import scala.scalajs.js
 class PricingFacade(dbFuture: Future[Db])(implicit ec: ExecutionContext) {
 
   // get DAO references
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
 
   // get service references
   private val csvQuoteSvc = new YahooFinanceCSVQuotesService()

@@ -37,7 +37,7 @@ object AutonomousTradingJsApp extends js.JSApp {
 
     // setup mongodb connection
     logger.log("Connecting to '%s'...", connectionString)
-    implicit val dbFuture = MongoClient.connectFuture(connectionString)
+    implicit val dbFuture = MongoClient.connectAsync(connectionString).toFuture
 
     // run the autonomous trading engine once every 5 minutes
     val tradingEngine = new AutonomousTradingEngine(s"localhost:$port", dbFuture)

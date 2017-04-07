@@ -26,7 +26,7 @@ class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   private val quoteService = new BloombergQuoteService()
 
   // internal variables
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
   private val processor = new ConcurrentProcessor()
 
   /**

@@ -8,11 +8,13 @@ import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.forms.PlayerInfoForm
 import com.shocktrade.common.models.contest.Participant
 import com.shocktrade.common.models.user.User
-import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, Timeout, angular, injected, _}
 import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Location, Timeout, angular, injected}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -78,7 +80,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchOptions]) => aSearchOptions foreach { searchOptions =>
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
-        $scope.$apply(() => searchResults = contests)
+        $scope.$apply(() => searchResults = contests.data)
       case Failure(e) =>
         toaster.error("Failed to execute Contest Search")
         console.error(s"Failed: searchOptions = ${angular.toJson(searchOptions)}")
@@ -198,7 +200,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
       contest.joining = true
       val form = new PlayerInfoForm(player = User(_id = userId, facebookID = facebookID, name = mySession.userProfile.name))
       asyncLoading($scope)(contestService.joinContest(contestId, form)) onComplete {
-        case Success(joinedContest) =>
+        case Success(response) =>
+          val joinedContest = response.data
           $scope.$apply { () =>
             $scope.contest = joinedContest
             mySession.setContest(joinedContest)
@@ -223,7 +226,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     } {
       contest.quitting = true
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
-        case Success(updatedContest) =>
+        case Success(response) =>
+          val updatedContest = response.data
           $scope.$apply { () =>
             $scope.contest = updatedContest
             mySession.setContest(updatedContest)
@@ -244,7 +248,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     } {
       contest.starting = true
       asyncLoading($scope)(contestService.startContest(contestId)) onComplete {
-        case Success(theContest) =>
+        case Success(response) =>
+          val theContest = response.data
           theContest.error foreach { error =>
             toaster.error(error)
             console.error(error)
@@ -280,7 +285,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     if (index != -1) {
       asyncLoading($scope)(contestService.getContestByID(contestId)) onComplete {
         case Success(loadedContest) =>
-          $scope.$apply(() => searchResults(index) = loadedContest)
+          $scope.$apply(() => searchResults(index) = loadedContest.data)
         case Failure(e) =>
           console.error(s"Error selecting feed: ${e.getMessage}")
           toaster.error("Error loading game")

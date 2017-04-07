@@ -55,7 +55,7 @@ class NASDAQIntraDayQuotesService() {
   private def getPage(url: String)(implicit ec: ExecutionContext) = {
     val startTime = js.Date.now()
     val promise = Promise[NASDAQIntraDayPage]()
-    Request.getFuture(url) foreach { case (response, html) =>
+    Request.getAsync(url) foreach { case (response, html) =>
       val parser = new htmlparser2.Parser(new ParserHandler {
         val sb = new StringBuilder()
         val headers = js.Array[String]()

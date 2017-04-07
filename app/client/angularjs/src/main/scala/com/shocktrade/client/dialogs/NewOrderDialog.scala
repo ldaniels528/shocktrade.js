@@ -8,14 +8,16 @@ import com.shocktrade.client.{AutoCompletionController, AutoCompletionController
 import com.shocktrade.common.Commissions
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
-import io.scalajs.npm.angularjs.{Q, Service, Timeout, angular, injected, _}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -33,7 +35,7 @@ class NewOrderDialog($http: Http, $modal: Modal) extends Service {
   /**
     * Opens a new Order Entry Pop-up Dialog
     */
-  def popup(params: NewOrderParams) = {
+  def popup(params: NewOrderParams): js.Promise[NewOrderDialogResult] = {
     // create an instance of the dialog
     val $modalInstance = $modal.open[NewOrderDialogResult](new ModalOptions(
       templateUrl = "new_order_dialog.html",
@@ -98,7 +100,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
         processing = true
         val outcome = for {
           messages <- validate(form)
-          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(portfolioId, $scope.form).map(Option(_)) else Future.successful(None)
+          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(portfolioId, $scope.form).map(_.data).map(Option(_)) else Future.successful(None)
         } yield (messages, portfolio_?)
 
         outcome onComplete {
@@ -159,7 +161,8 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
 
   private def lookupSymbolQuote(symbol: String) = {
     quoteService.getOrderQuote(symbol) onComplete {
-      case Success(quote) =>
+      case Success(response) =>
+        val quote = response.data
         $scope.quote = quote
         $scope.form.symbol = quote.symbol
         $scope.form.limitPrice = quote.lastTrade
@@ -174,7 +177,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
     if (form.isMarginAccount && mySession.marginAccount_?.isEmpty) messages.push("You do not have a Margin Account (must buy the Perk)")
     if (messages.isEmpty) {
       form.symbol.toOption match {
-        case Some(symbol) => quoteService.getOrderQuote(symbol) map { quote =>
+        case Some(symbol) => quoteService.getOrderQuote(symbol).map(_.data) map { quote =>
           if (quote.lastTrade.nonAssigned) messages.push(s"Current pricing could not be determined for $symbol")
           messages
         }
@@ -191,7 +194,7 @@ class NewOrderDialogController($scope: NewOrderScope, $modalInstance: ModalInsta
   mySession.portfolio_?.flatMap(_._id.toOption) foreach { portfolioId =>
     // load the player"s perks
     perksDialog.getMyPerkCodes(portfolioId) onComplete {
-      case Success(contest) => $scope.form.perks = contest.perkCodes
+      case Success(contest) => $scope.form.perks = contest.data.perkCodes
       case Failure(e) =>
         toaster.error("Error retrieving perks")
     }

@@ -77,7 +77,7 @@ class TransferFundsDialogController($scope: TransferFundsScope, $modalInstance: 
         portfolioId <- mySession.portfolio_?.flatMap(_._id.toOption)
       } yield {
         portfolioService.transferFunds(portfolioId, form) onComplete {
-          case Success(response) => $modalInstance.close(response)
+          case Success(response) => $modalInstance.close(response.data)
           case Failure(e) => messages.push("Failed to deposit funds")
         }
       }) getOrElse toaster.error("No game selected")

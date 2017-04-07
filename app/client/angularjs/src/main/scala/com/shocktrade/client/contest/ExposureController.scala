@@ -1,17 +1,18 @@
 package com.shocktrade.client.contest
 
-import scala.scalajs.js.JSConverters._
 import com.shocktrade.client.contest.ExposureController.ExposureSelection
 import com.shocktrade.common.models.ExposureData
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.nvd3._
 import io.scalajs.npm.angularjs.nvd3.chart._
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
-import io.scalajs.dom.html.browser.console
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
@@ -63,7 +64,7 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
       exposure <- anExposure
     } {
       portfolioService.getExposureChartData(contestID, userID, exposure.value) onComplete {
-        case Success(data) => $scope.$apply(() => $scope.data = data)
+        case Success(response) => $scope.$apply(() => $scope.data = response.data)
         case Failure(e) =>
           toaster.error(s"Error loading ${exposure.label}")
           console.error(s"Failed to load exposure data for ${exposure.label}: ${e.displayMessage}")

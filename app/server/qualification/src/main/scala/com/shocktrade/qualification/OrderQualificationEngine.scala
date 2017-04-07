@@ -1,5 +1,6 @@
 package com.shocktrade.qualification
 
+import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.common.models.contest._
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.qualification.OrderQualificationEngine._
@@ -36,12 +37,12 @@ import scala.util.{Failure, Success, Try}
 class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // get DAO and service references
   private val logger = LoggerFactory.getLogger(getClass)
-  private val contestDAO = dbFuture.flatMap(_.getContestDAO)
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
-  private val snapshotDAO = dbFuture.flatMap(_.getSnapshotDAO)
-  private val userDAO = dbFuture.flatMap(_.getUserDAO)
-  private val userProfileDAO = dbFuture.flatMap(_.getProfileDAO)
+  private val contestDAO = dbFuture.map(_.getContestDAO)
+  private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+  private val snapshotDAO = dbFuture.map(_.getSnapshotDAO)
+  private val userDAO = dbFuture.map(_.getUserDAO)
+  private val userProfileDAO = dbFuture.map(_.getProfileDAO)
 
   // internal fields
   private var lastRun: js.Date = new js.Date()
@@ -78,7 +79,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     val startTime = System.currentTimeMillis()
     for {
       w <- updateContestsWithRankings()
-      portfolios <- portfolioDAO.flatMap(_.find().toArrayFuture[PortfolioData])
+      portfolios <- portfolioDAO.flatMap(_.find[PortfolioData]().toArray())
       claims <- Future.sequence(portfolios.toSeq map (processOrders(_, isMarketCloseEvent))) map (_.flatten)
     } yield (claims, new js.Date(startTime), System.currentTimeMillis() - startTime)
   }

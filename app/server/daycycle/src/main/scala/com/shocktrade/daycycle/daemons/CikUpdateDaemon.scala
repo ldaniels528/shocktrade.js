@@ -23,7 +23,7 @@ class CikUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) exten
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // get the DAO and service
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
   private val cikLookupService = new CikLookupService()
 
   // internal variables

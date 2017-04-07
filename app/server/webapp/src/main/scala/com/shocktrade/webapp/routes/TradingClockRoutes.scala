@@ -36,7 +36,7 @@ object TradingClockRoutes {
       * Returns a trading clock state object
       */
     def status(request: Request, response: Response, next: NextFunction) {
-      val lastUpdateTimeMillis = request.params("lastUpdate").toDouble
+      val lastUpdateTimeMillis = request.params.apply("lastUpdate").toDouble
       val active = tradingClock.isTradingActive(js.Date.now())
       val delay = tradingClock.getDelayUntilTradingStartInMillis
       val start = tradingClock.getTradeStartTime

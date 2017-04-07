@@ -1,5 +1,6 @@
 package com.shocktrade.client.profile
 
+import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.client.profile.HomeController.FacebookFriend
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -49,11 +50,11 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
     asyncLoading($scope)(userService.getFacebookFriendStatus(friend)) onComplete {
       case Success(response) =>
         $scope.$apply { () =>
-          friend.status = response.status
-          friend.gamesCompleted = response.gamesCompleted
-          friend.gamesCreated = response.gamesCreated
-          friend.gamesDeleted = response.gamesDeleted
-          friend.lastLoginTime = response.lastLoginTime
+          friend.status = response.data.status
+          friend.gamesCompleted = response.data.gamesCompleted
+          friend.gamesCreated = response.data.gamesCreated
+          friend.gamesDeleted = response.data.gamesDeleted
+          friend.lastLoginTime = response.data.lastLoginTime
         }
       case Failure(e) =>
         console.error(s"Error loading profile for ${friend.name}: ${e.getMessage}")

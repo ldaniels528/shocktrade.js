@@ -36,10 +36,10 @@ object PortfolioRoutes {
     * Initializes the routes
     */
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    val contestDAO = dbFuture.flatMap(_.getContestDAO)
-    val perkDAO = dbFuture.flatMap(_.getPerksDAO)
-    val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
-    val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+    val contestDAO = dbFuture.map(_.getContestDAO)
+    val perkDAO = dbFuture.map(_.getPerksDAO)
+    val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
+    val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
     val yfCsvQuoteSvc = new YahooFinanceCSVQuotesService()
     val cvsParams = yfCsvQuoteSvc.getParams("symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume")
 
@@ -68,8 +68,8 @@ object PortfolioRoutes {
       * Cancels an order by portfolio and order IDs
       */
     def cancelOrder(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
-      val orderID = request.params("orderID")
+      val portfolioID = request.params.apply("portfolioID")
+      val orderID = request.params.apply("orderID")
       portfolioDAO.flatMap(_.cancelOrder(portfolioID, orderID)) onComplete {
         case Success(results) if results.isOk && results.value != null => response.send(results.value); next()
         case Success(results) =>
@@ -84,7 +84,7 @@ object PortfolioRoutes {
       * Computes the market value of an account by account type and portfolio ID
       */
     def computeMarketValue(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       val accountFilter: PositionData => Boolean = request.query.get("accountType") match {
         case Some("cash") => _.isCashAccount
         case Some("margin") => _.isMarginAccount
@@ -118,7 +118,7 @@ object PortfolioRoutes {
       * Creates a new order within a portfolio by portfolio ID
       */
     def createOrder(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       val form = request.bodyAs[NewOrderForm]
       form.validate match {
         case messages if messages.nonEmpty => response.badRequest(messages); next()
@@ -139,7 +139,7 @@ object PortfolioRoutes {
       * Returns the symbols for securities currently held in all active portfolios for a given player by player ID
       */
     def heldSecurities(request: Request, response: Response, next: NextFunction) = {
-      val playerID = request.params("playerID")
+      val playerID = request.params.apply("playerID")
       portfolioDAO.flatMap(_.findHeldSecurities(playerID)) onComplete {
         case Success(symbols) => response.send(symbols); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -150,7 +150,7 @@ object PortfolioRoutes {
       * Retrieves the purchased perks by portfolio ID
       */
     def perksByID(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       val outcome = for {
         portfolio <- portfolioDAO.flatMap(_.findPerks(portfolioID))
         perksResponse = portfolio.map { p =>
@@ -171,7 +171,7 @@ object PortfolioRoutes {
       * Purchases perks via an array of perk codes and a portfolio ID
       */
     def purchasePerks(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       val purchasePerkCodes = request.bodyAs[js.Array[String]]
       val outcome = for {
         perks <- perkDAO.flatMap(_.findAvailablePerks)
@@ -202,7 +202,7 @@ object PortfolioRoutes {
       * Retrieves all positions (cash or margin accounts) by portfolio ID
       */
     def positionsByID(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       portfolioDAO.flatMap(_.findPositions(portfolioID)) onComplete {
         case Success(Some(positions)) => response.send(positions); next()
         case Success(None) => response.notFound(s"Portfolio: $portfolioID"); next()
@@ -214,8 +214,8 @@ object PortfolioRoutes {
       * Retrieves a portfolio by a contest ID and player ID
       */
     def portfolioByPlayer(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("contestID")
-      val playerID = request.params("playerID")
+      val contestID = request.params.apply("contestID")
+      val playerID = request.params.apply("playerID")
       portfolioDAO.flatMap(_.findOneByPlayer(contestID, playerID)) onComplete {
         case Success(Some(portfolio)) => response.send(portfolio); next()
         case Success(None) => response.notFound(s"Contest: $contestID, Player: $playerID"); next()
@@ -227,7 +227,7 @@ object PortfolioRoutes {
       * Retrieves a collection of portfolios by a contest ID
       */
     def portfoliosByContest(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("contestID")
+      val contestID = request.params.apply("contestID")
       portfolioDAO.flatMap(_.findByContest(contestID)) onComplete {
         case Success(portfolios) => response.send(portfolios); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -238,7 +238,7 @@ object PortfolioRoutes {
       * Retrieves a collection of portfolios by a player ID
       */
     def portfoliosByPlayer(request: Request, response: Response, next: NextFunction) = {
-      val playerID = request.params("playerID")
+      val playerID = request.params.apply("playerID")
       portfolioDAO.flatMap(_.findByPlayer(playerID)) onComplete {
         case Success(portfolios) => response.send(portfolios); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -249,7 +249,7 @@ object PortfolioRoutes {
       * Retrieves a collection of rankings by contest
       */
     def rankingsByContest(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("contestID")
+      val contestID = request.params.apply("contestID")
       val outcome = for {
         contest <- contestDAO.flatMap(_.findById[ContestData](contestID))
         _ = console.log(s"contest = %j", contest)
@@ -303,7 +303,7 @@ object PortfolioRoutes {
       * Retrieves the total investment amount for a specific player
       */
     def totalInvestment(request: Request, response: Response, next: NextFunction) = {
-      val playerID = request.params("playerID")
+      val playerID = request.params.apply("playerID")
       portfolioDAO.flatMap(_.totalInvestment(playerID)) onComplete {
         case Success(investment) => response.send(new TotalInvestment(investment)); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -314,7 +314,7 @@ object PortfolioRoutes {
       * Transfers funds between accounts; from cash to margin or from margin to cash
       */
     def transferFunds(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("portfolioID")
+      val portfolioID = request.params.apply("portfolioID")
       val form = request.bodyAs[FundsTransferRequest]
       val outcome = form.extract match {
         case Some(("cash", amount)) => portfolioDAO.flatMap(_.transferCashFunds(portfolioID, amount = amount))

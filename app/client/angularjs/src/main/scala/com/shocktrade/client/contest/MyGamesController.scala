@@ -9,6 +9,7 @@ import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Location, Timeout, injected}
 import io.scalajs.dom.html.browser.console
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -44,7 +45,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
   $scope.popupNewGameDialog = () => {
     newGameDialog.popup() onComplete {
       case Success(contest) =>
-        if (contest.error.nonEmpty) toaster.error(contest.error)
+        if (contest.error.nonEmpty) toaster.error(contest.error.getOrElse("General Fault"))
         else {
           // TODO add to Contests
           $scope.$apply(() => reload())
@@ -65,7 +66,8 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
   private def loadMyContests(userID: String) {
     console.log(s"Loading 'My Contests' for user '$userID'...")
     contestService.getContestsByPlayerID(userID) onComplete {
-      case Success(contests) =>
+      case Success(response) =>
+        val contests = response.data
         console.log(s"Loaded ${contests.length} contest(s)")
         $scope.$apply(() => myContests = contests)
       case Failure(e) =>

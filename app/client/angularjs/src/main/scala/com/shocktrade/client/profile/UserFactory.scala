@@ -1,5 +1,6 @@
 package com.shocktrade.client.profile
 
+import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -30,7 +31,7 @@ class UserFactory(@injected("UserService") userService: UserService) extends Fac
   def getUserByID(userId: String)(implicit ec: ExecutionContext): Future[User] = {
     cache.getOrElseUpdate(userId, {
       console.log(s"Loading user information for # $userId...")
-      val promise = userService.getUserByID(userId)
+      val promise = userService.getUserByID(userId).map(_.data)
       promise onComplete {
         case Success(_) =>
         case Failure(e) =>
@@ -50,7 +51,7 @@ class UserFactory(@injected("UserService") userService: UserService) extends Fac
   def getUsers(userIds: js.Array[String])(implicit ec: ExecutionContext): Future[js.Array[User]] = {
     val missingUserIds = userIds.filterNot(cache.contains)
     for {
-      missingUsers <- if (missingUserIds.nonEmpty) userService.getUsers(missingUserIds).toFuture else Future.successful(emptyArray[User])
+      missingUsers <- if (missingUserIds.nonEmpty) userService.getUsers(missingUserIds).map(_.data) else Future.successful(emptyArray[User])
       _ = missingUsers.foreach(u => cache.put(u._id.orNull, Future.successful(u)))
       users <- Future.sequence(userIds.toSeq map getUserByID) map (seq => js.Array(seq: _*))
     } yield users

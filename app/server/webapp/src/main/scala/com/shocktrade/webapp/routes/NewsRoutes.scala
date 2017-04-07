@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
 object NewsRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val newsDAO = dbFuture.flatMap(_.getNewsDAO)
+    implicit val newsDAO = dbFuture.map(_.getNewsDAO)
     implicit val rss = new RSSFeedParser()
 
     app.get("/api/news/feed/:id", (request: Request, response: Response, next: NextFunction) => feedsByID(request, response, next))
@@ -29,7 +29,7 @@ object NewsRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     def feedsByID(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       val outcome = for {
         sourceOpt <- newsDAO.flatMap(_.findByID(id))
         url = sourceOpt.flatMap(_.url.toOption) getOrElse "http://rss.cnn.com/rss/money_markets.rss"
@@ -43,7 +43,7 @@ object NewsRoutes {
     }
 
     def sourceByID(request: Request, response: Response, next: NextFunction) = {
-      val id = request.params("id")
+      val id = request.params.apply("id")
       newsDAO.flatMap(_.findByID(id)) onComplete {
         case Success(Some(source)) => response.send(source); next()
         case Success(None) => response.notFound(id); next()

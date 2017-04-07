@@ -4,7 +4,7 @@ package securities
 import com.shocktrade.common.models.contest.OrderLike
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -27,7 +27,7 @@ object IntraDayQuotesDAO {
   implicit class IntraDayQuotesDAOExtensions(val dao: IntraDayQuotesDAO) {
 
     @inline
-    def findMatch(order: OrderLike)(implicit ec: ExecutionContext) = {
+    def findMatch(order: OrderLike)(implicit ec: ExecutionContext): Future[Option[IntraDayQuoteData]] = {
       val query = doc(Seq(
         Option("symbol" $eq order.symbol),
         Option("tradeDateTime" between(order.creationTime, new js.Date())),
@@ -37,16 +37,16 @@ object IntraDayQuotesDAO {
         else None
       ).flatten: _*)
 
-      dao.findOneFuture[IntraDayQuoteData](query)
+      dao.findOneAsync[IntraDayQuoteData](query)
     }
 
     @inline
-    def findQuotes(symbol: String, startTime: js.Date, endTime: js.Date)(implicit ec: ExecutionContext) = {
-      dao.find(doc("symbol" $eq symbol, "tradeDateTime" between(startTime, endTime))).toArrayFuture[IntraDayQuoteData]
+    def findQuotes(symbol: String, startTime: js.Date, endTime: js.Date): js.Promise[js.Array[IntraDayQuoteData]] = {
+      dao.find[IntraDayQuoteData](doc("symbol" $eq symbol, "tradeDateTime" between(startTime, endTime))).toArray()
     }
 
     @inline
-    def saveQuotes(quotes: Seq[IntraDayQuoteData])(implicit ec: ExecutionContext) = {
+    def saveQuotes(quotes: Seq[IntraDayQuoteData]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(
         js.Array(quotes map { q =>
           insertOne(
@@ -71,8 +71,8 @@ object IntraDayQuotesDAO {
   implicit class IntraDayQuotesDAOConstructor(val db: Db) extends AnyVal {
 
     @inline
-    def getIntraDayQuotesDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("IntraDayQuotes").mapTo[IntraDayQuotesDAO]
+    def getIntraDayQuotesDAO: IntraDayQuotesDAO = {
+      db.collection("IntraDayQuotes").asInstanceOf[IntraDayQuotesDAO]
     }
   }
 

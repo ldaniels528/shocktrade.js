@@ -23,7 +23,7 @@ class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCon
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
   private val eodDataService = new EodDataSecuritiesService()
 
   // internal variables

@@ -1,20 +1,21 @@
 package com.shocktrade.client
 
+import io.scalajs.util.DurationHelper._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest._
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.contest.{ChatMessage, Participant}
-import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.dom.html.browser.console
 import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -104,10 +105,10 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   def refresh(): Unit = {
     facebookID.foreach { fbId =>
       profileService.getProfileByFacebookID(fbId) onComplete {
-        case Success(profile) =>
+        case Success(response) =>
           $rootScope.$apply { () =>
-            userProfile.netWorth = profile.netWorth
-            userProfile.wallet = profile.wallet
+            userProfile.netWorth = response.data.netWorth
+            userProfile.wallet = response.data.wallet
           }
         case Failure(e) =>
           toaster.error("Error loading user profile");
@@ -160,8 +161,8 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       userProfile._id map { playerId =>
         console.log(s"Loading contest $contestId (player: $playerId)...")
         for {
-          contest <- contestService.getContestByID(contestId)
-          portfolio <- portfolioService.getPortfolioByPlayer(contestId, playerId)
+          contest <- contestService.getContestByID(contestId).map(_.data)
+          portfolio <- portfolioService.getPortfolioByPlayer(contestId, playerId).map(_.data)
           participantOpt = contest.participants.toOption.flatMap(_.find(_.is(playerId)))
         } yield {
           // set the variables
@@ -207,7 +208,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       } yield participant
 
       // lookup the portfolio
-      portfolioService.getPortfolioByPlayer(contestId, playerId) foreach { portfolio =>
+      portfolioService.getPortfolioByPlayer(contestId, playerId).map(_.data) foreach { portfolio =>
         portfolio_? = Option(portfolio)
       }
     }
@@ -303,11 +304,11 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       // load the user"s ShockTrade profile
       profile <- {
         console.log(s"Retrieving ShockTrade profile for FBID $facebookID...")
-        profileService.getProfileByFacebookID(facebookID)
+        profileService.getProfileByFacebookID(facebookID).map(_.data)
       }
 
       // retrieve the updated network
-      netWorth <- profileService.getNetWorth(profile._id.orNull)
+      netWorth <- profileService.getNetWorth(profile._id.orNull).map(_.data)
 
     } yield (fbProfile, fbFriends, profile, netWorth)
 
@@ -387,7 +388,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       otherId <- profile._id
     } if (userId == otherId) {
       userProfile.wallet = profile.wallet
-      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds, "trustedHtml")
+      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds/*, "trustedHtml"*/)
     }
   }
 

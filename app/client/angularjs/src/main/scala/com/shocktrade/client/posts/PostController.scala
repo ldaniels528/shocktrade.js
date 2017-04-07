@@ -1,21 +1,23 @@
 package com.shocktrade.client.posts
 
-import scala.scalajs.js.JSConverters._
 import com.shocktrade.client.profile.{UserFactory, UserService}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.models.post._
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.fileupload.nervgh.FileUploader
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected, _}
-import io.scalajs.dom.html.browser.console
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -78,7 +80,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
     post.refreshLoading = true
     val outcome = for {
       summary <- loadWebPageSummary(post)
-      updatedPost <- postService.updatePost(post)
+      updatedPost <- postService.updatePost(post).map(_.data)
     } yield updatedPost
 
     outcome onComplete {
@@ -107,7 +109,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
         console.log(s"webpage url => $url")
 
         // load the page summary information
-        postService.getSharedContent(url) map { summary =>
+        postService.getSharedContent(url).map(_.data) map { summary =>
           post.summary = summary
           post.tags = summary.tags
         }
@@ -137,7 +139,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
   private def loadFollowersAndPostings() = {
     val outcome = asyncLoading($scope) {
       for {
-        posts <- postService.getPosts
+        posts <- postService.getPosts.map(_.data)
         enrichedPosts <- enrichPosts(posts)
       } yield enrichedPosts
     }

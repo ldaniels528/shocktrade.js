@@ -12,6 +12,7 @@ import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.{Db, MongoDB}
 import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.nodejs.{console, _}
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -25,10 +26,10 @@ import scala.util.{Failure, Success}
 object ContestRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    val contestDAO = dbFuture.flatMap(_.getContestDAO)
-    val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
-    val profileDAO = dbFuture.flatMap(_.getProfileDAO)
-    val perksDAO = dbFuture.flatMap(_.getPerksDAO)
+    val contestDAO = dbFuture.map(_.getContestDAO)
+    val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
+    val profileDAO = dbFuture.map(_.getProfileDAO)
+    val perksDAO = dbFuture.map(_.getPerksDAO)
 
     // individual contests
     app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
@@ -54,7 +55,7 @@ object ContestRoutes {
       * Retrieves contests by player
       */
     def contestByID(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("id")
+      val contestID = request.params.apply("id")
       contestDAO.flatMap(_.findOneByID(contestID)) onComplete {
         case Success(Some(contest)) => response.send(contest); next()
         case Success(None) => response.notFound(contestID); next()
@@ -137,7 +138,7 @@ object ContestRoutes {
       * Retrieves contests by player
       */
     def contestsByPlayer(request: Request, response: Response, next: NextFunction) = {
-      val playerID = request.params("playerID")
+      val playerID = request.params.apply("playerID")
       contestDAO.flatMap(_.findByPlayer(playerID)) onComplete {
         case Success(contests) => response.send(contests); next()
         case Failure(e) => response.internalServerError(e); next()

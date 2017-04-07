@@ -12,6 +12,7 @@ import io.scalajs.nodejs._
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.{Db, MongoDB}
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -27,10 +28,10 @@ import scala.util.{Failure, Success}
 object UserProfileRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
-    val portfolioDAO = dbFuture.flatMap(_.getPortfolioDAO)
-    val profileDAO = dbFuture.flatMap(_.getProfileDAO)
-    val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
-    val userDAO = dbFuture.flatMap(_.getUserDAO)
+    val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
+    val profileDAO = dbFuture.map(_.getProfileDAO)
+    val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+    val userDAO = dbFuture.map(_.getUserDAO)
 
     app.get("/api/profile/facebook/:fbID", (request: Request, response: Response, next: NextFunction) => profileByFBID(request, response, next))
     app.post("/api/profile/facebook", (request: Request, response: Response, next: NextFunction) => profileByFacebook(request, response, next))
@@ -42,8 +43,8 @@ object UserProfileRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     def addRecentSymbol(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
-      val symbol = request.params("symbol")
+      val userID = request.params.apply("userID")
+      val symbol = request.params.apply("symbol")
       profileDAO.flatMap(_.addRecentSymbol(userID, symbol).toFuture) onComplete {
         case Success(result) if result.isOk =>
           result.valueAs[UserProfileData] match {
@@ -56,7 +57,7 @@ object UserProfileRoutes {
     }
 
     def netWorth(request: Request, response: Response, next: NextFunction) = {
-      val userID = request.params("userID")
+      val userID = request.params.apply("userID")
       val outcome = for {
         user <- userDAO.flatMap(_.findUserWithFields[UserInfo](userID, fields = UserInfo.Fields)).map(_.orDie("User not found"))
         portfolios <- portfolioDAO.flatMap(_.findByPlayer(userID))
@@ -121,7 +122,7 @@ object UserProfileRoutes {
     }
 
     def profileByFBID(request: Request, response: Response, next: NextFunction) = {
-      val fbId = request.params("fbID")
+      val fbId = request.params.apply("fbID")
       profileDAO.flatMap(_.findOneByFacebookID(fbId)) onComplete {
         case Success(Some(profile)) => response.send(profile); next()
         case Success(None) => response.notFound(fbId); next()

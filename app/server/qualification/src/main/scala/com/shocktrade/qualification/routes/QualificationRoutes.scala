@@ -41,7 +41,7 @@ object QualificationRoutes {
     }
 
     def processOrders(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("pid")
+      val portfolioID = request.params.apply("pid")
       val marketClosed = request.query.get("marketClosed").contains("true")
       qualificationEngine.processOrderByPID(portfolioID, marketClosed) onComplete {
         case Success(results) => response.send(results.toJSArray); next()
@@ -53,7 +53,7 @@ object QualificationRoutes {
     }
 
     def qualifyingOrders(request: Request, response: Response, next: NextFunction) = {
-      val portfolioID = request.params("pid")
+      val portfolioID = request.params.apply("pid")
       val marketClosed = request.query.get("marketClosed").contains("true")
       qualificationEngine.getQualifyingOrdersByPID(portfolioID, marketClosed) onComplete {
         case Success(orders) => response.send(orders.toJSArray); next()

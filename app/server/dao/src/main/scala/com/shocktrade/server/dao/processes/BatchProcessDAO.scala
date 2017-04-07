@@ -2,7 +2,7 @@ package com.shocktrade.server.dao.processes
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -25,8 +25,8 @@ object BatchProcessDAO {
   implicit class BatchProcessDAOEnrichment(val dao: BatchProcessDAO) extends AnyVal {
 
     @inline
-    def findProcess(name: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[BatchProcessData]("name" $eq name)
+    def findProcess(name: String)(implicit ec: ExecutionContext): Future[Option[BatchProcessData]] = {
+      dao.findOneAsync[BatchProcessData]("name" $eq name)
     }
 
   }
@@ -38,8 +38,8 @@ object BatchProcessDAO {
   implicit class BatchProcessDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getBatchProcessDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("BatchProcesses").mapTo[BatchProcessDAO]
+    def getBatchProcessDAO: BatchProcessDAO = {
+      db.collection("BatchProcesses").asInstanceOf[BatchProcessDAO]
     }
   }
 

@@ -23,8 +23,8 @@ import scala.util.{Failure, Success}
 object SearchRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val securities = dbFuture.flatMap(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
-    implicit val users = dbFuture.flatMap(_.getUserDAO).map(UserSearchAgent)
+    implicit val securities = dbFuture.map(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
+    implicit val users = dbFuture.map(_.getUserDAO).map(UserSearchAgent)
 
     app.get("/api/search", (request: Request, response: Response, next: NextFunction) => getSearchResults(request, response, next))
 
@@ -81,7 +81,7 @@ object SearchRoutes {
     def fields: js.Array[String]
 
     def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext) = {
-      coll.find(selector = getSelection(searchTerm)).limit(maxResults).toArrayFuture[T] map (_ map toSearchResult)
+      coll.find(selector = getSelection(searchTerm)).limit(maxResults).toArray()[T] map (_ map toSearchResult)
     }
 
     def toSearchResult(entity: T): EntitySearchResult

@@ -7,14 +7,15 @@ import com.shocktrade.client.discover.DiscoverController._
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{angular, injected, _}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -109,7 +110,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
     val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
 
     // load the quote
-    asyncLoading($scope)(quoteService.getCompleteQuote(symbol)) onComplete {
+    asyncLoading($scope)(quoteService.getCompleteQuote(symbol).map(_.data)) onComplete {
       case Success(quote) if quote.symbol.isAssigned =>
         $scope.$apply { () =>
           // capture the quote
@@ -234,7 +235,9 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
           usMarketStatus = Right(true)
           console.log("Retrieving market status...")
           marketStatus.getMarketStatus onComplete {
-            case Success(status) =>
+            case Success(response) =>
+              val status = response.data
+
               // capture the current status
               $scope.$apply(() => usMarketStatus = Left(status))
 
@@ -369,14 +372,14 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalS
   var onSelectedItem: js.Function3[js.UndefOr[AutoCompleteQuote], js.UndefOr[AutoCompleteQuote], js.UndefOr[String], Unit] = js.native
 
   // favorite quote functions
-  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
+  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
   var isFavorite: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
+  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
 
   // recently-viewed quote functions
-  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
+  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
   var isRecentSymbol: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[HttpResponse[UserProfile]]] = js.native
+  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
 
   // risk functions
   var getBetaClass: js.Function1[js.UndefOr[Double], js.UndefOr[Object]] = js.native

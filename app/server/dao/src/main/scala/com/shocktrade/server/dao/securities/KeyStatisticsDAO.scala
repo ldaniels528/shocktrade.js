@@ -2,7 +2,7 @@ package com.shocktrade.server.dao.securities
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -30,8 +30,8 @@ object KeyStatisticsDAO {
       * @return the promise of an option of [[KeyStatisticsData key statistics]] data object
       */
     @inline
-    def findBySymbol(symbol: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[KeyStatisticsData]("symbol" $eq symbol)
+    def findBySymbol(symbol: String)(implicit ec: ExecutionContext): Future[Option[KeyStatisticsData]] = {
+      dao.findOneAsync[KeyStatisticsData]("symbol" $eq symbol)
     }
 
     /**
@@ -40,7 +40,7 @@ object KeyStatisticsDAO {
       * @return the promise of an [[BulkWriteOpResultObject bulk update result]]
       */
     @inline
-    def saveKeyStatistics(keyStats: KeyStatisticsData*)(implicit ec: ExecutionContext) = {
+    def saveKeyStatistics(keyStats: KeyStatisticsData*): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(
         js.Array(keyStats map (ks => updateOne(
           filter = "symbol" $eq ks.symbol,
@@ -62,8 +62,8 @@ object KeyStatisticsDAO {
       * @return the [[KeyStatisticsDAO Key Statistics DAO]] instance
       */
     @inline
-    def getKeyStatisticsDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("KeyStatistics").mapTo[KeyStatisticsDAO]
+    def getKeyStatisticsDAO: KeyStatisticsDAO = {
+      db.collection("KeyStatistics").asInstanceOf[KeyStatisticsDAO]
     }
 
   }

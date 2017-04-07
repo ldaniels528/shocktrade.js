@@ -34,10 +34,10 @@ import scala.util.{Failure, Success}
   */
 class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
   // create DAO instances
-  private implicit val contestDAO = dbFuture.flatMap(_.getContestDAO)
-  private implicit val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
-  private implicit val robotDAO = dbFuture.flatMap(_.getRobotDAO)
-  private implicit val securitiesDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+  private implicit val contestDAO = dbFuture.map(_.getContestDAO)
+  private implicit val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
+  private implicit val robotDAO = dbFuture.map(_.getRobotDAO)
+  private implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
 
   // create the service instances
   private implicit val tradingClock = new TradingClock()

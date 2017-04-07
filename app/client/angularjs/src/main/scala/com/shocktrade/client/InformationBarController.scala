@@ -4,6 +4,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.{Controller, Q, Scope, injected}
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -29,7 +30,7 @@ class InformationBarController($scope: InformationBarScope, $q: Q,
   $scope.autoCompleteSearch = (searchTerm: String) => {
     val deferred = $q.defer[js.Array[EntitySearchResult]]()
     reactiveSearchSvc.search(searchTerm, maxResults = 20) onComplete {
-      case Success(response) => deferred.resolve(response)
+      case Success(response) => deferred.resolve(response.data)
       case Failure(e) => deferred.reject(e.displayMessage)
     }
     deferred.promise

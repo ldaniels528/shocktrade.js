@@ -5,6 +5,8 @@ import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.DurationHelper._
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -41,7 +43,7 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
       // load the margin accounts market value
       portfolioService.getMarginAccountMarketValue(portfolioID) onComplete {
         case Success(response) =>
-          investmentMarketValue = response.marketValue
+          investmentMarketValue = response.data.marketValue
         case Failure(e) =>
           toaster.error("Failed to retrieve the Margin Account's market value")
           attemptsLeft -= 1

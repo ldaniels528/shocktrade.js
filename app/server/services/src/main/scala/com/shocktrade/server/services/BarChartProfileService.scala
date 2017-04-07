@@ -3,7 +3,7 @@ package com.shocktrade.server.services
 import com.shocktrade.server.services.BarChartProfileService._
 import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2.{Parser, ParserHandler, ParserOptions}
-import io.scalajs.npm.request.Request
+import io.scalajs.npm.request.{Request, RequestBody}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -26,7 +26,7 @@ class BarChartProfileService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BarChartProfile]] = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- Request.getFuture(toURL(symbol))
+      (response, html) <- Request.getAsync(toURL(symbol))
       profileOpt <- parseHtml(symbol, html, startTime)
     } yield profileOpt
   }
@@ -38,7 +38,7 @@ class BarChartProfileService() {
     * @param startTime the given service execution start time
     * @return the option of a [[BarChartProfile Bar Chart profile]]
     */
-  private def parseHtml(symbol: String, html: String, startTime: Double)(implicit ec: ExecutionContext) = {
+  private def parseHtml(symbol: String, html: RequestBody, startTime: Double)(implicit ec: ExecutionContext) = {
     val promise = Promise[Option[BarChartProfile]]()
     val tagStack = js.Array[Tag]()
     val mappings = js.Dictionary[String]()

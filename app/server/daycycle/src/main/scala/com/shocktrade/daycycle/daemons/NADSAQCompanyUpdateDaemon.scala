@@ -23,7 +23,7 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO and service references
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
   private val companyListService = new NASDAQCompanyListService()
 
   /**

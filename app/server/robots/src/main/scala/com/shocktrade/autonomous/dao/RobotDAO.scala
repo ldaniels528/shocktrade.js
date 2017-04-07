@@ -29,8 +29,8 @@ object RobotDAO {
       * @return an array of [[RobotData robots]]
       */
     @inline
-    def findRobots()(implicit ec: ExecutionContext) = {
-      dao.find("active" $eq true).sort(js.Array("lastActivated", 1)).toArrayFuture[RobotData]
+    def findRobots()(implicit ec: ExecutionContext): js.Promise[js.Array[RobotData]] = {
+      dao.find[RobotData]("active" $eq true).sort(js.Array("lastActivated", 1)).toArray()
     }
 
   }
@@ -42,8 +42,8 @@ object RobotDAO {
   implicit class RobotDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getRobotDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Robots").mapTo[RobotDAO]
+    def getRobotDAO: RobotDAO = {
+      db.collection("Robots").asInstanceOf[RobotDAO]
     }
   }
 

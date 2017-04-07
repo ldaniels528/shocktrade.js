@@ -1,6 +1,6 @@
 package com.shocktrade.server.dao
 
-import io.scalajs.npm.mongodb.{Collection, Db, MongoClient, MongoDB}
+import io.scalajs.npm.mongodb.{Collection, Db, MongoClient}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,7 +19,7 @@ class DbPool[T <: Collection](dbConnectionString: String, ttl: FiniteDuration = 
   def apply()(implicit ec: ExecutionContext): Future[T] = {
     if (dbFuture == null || js.Date.now() - lastUpdatedTime >= ttl.toMillis) {
       Try(Option(dbFuture).foreach(_.foreach(_.close())))
-      dbFuture = MongoClient.connectFuture(dbConnectionString)
+      dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
       dao = dbFuture flatMap create
       lastUpdatedTime = js.Date.now()
     }

@@ -7,6 +7,7 @@ import io.scalajs.dom.ws._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Location, Service, Timeout, injected, _}
+import io.scalajs.util.DurationHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js
@@ -135,7 +136,7 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
       case None =>
         console.log(s"User unknown, waiting 5 seconds ($attemptsLeft attempts remaining)...")
         if (attemptsLeft > 0) {
-          $timeout(() => sendState(connected), 5000)
+          $timeout(() => sendState(connected), 5.seconds)
           attemptsLeft -= 1
         }
     }

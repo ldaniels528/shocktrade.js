@@ -3,7 +3,7 @@ package users
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -26,23 +26,23 @@ object UserDAO {
   implicit class UserDAOEnrichment(val dao: UserDAO) extends AnyVal {
 
     @inline
-    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[T](selector = "_id" $eq id.$oid, fields = fields)
+    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
+      dao.findOneAsync[T](selector = "_id" $eq id.$oid, fields = fields)
     }
 
     @inline
-    def findUserByID(id: String)(implicit ec: ExecutionContext) = {
+    def findUserByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserData]] = {
       dao.findById[UserData](id, fields = js.Array("facebookID", "name"))
     }
 
     @inline
-    def findUsersByID(ids: js.Array[String])(implicit ec: ExecutionContext) = {
-      dao.find("_id" $in ids.map(_.$oid), projection = js.Dictionary("facebookID" -> 1, "name" -> 1)).toArrayFuture[UserData]
+    def findUsersByID(ids: js.Array[String])(implicit ec: ExecutionContext): js.Promise[js.Array[UserData]] = {
+      dao.find[UserData]("_id" $in ids.map(_.$oid), projection = js.Dictionary("facebookID" -> 1, "name" -> 1)).toArray()
     }
 
     @inline
-    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
+    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext): Future[Option[FriendStatusData]] = {
+      dao.findOneAsync[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
     }
 
   }
@@ -54,8 +54,8 @@ object UserDAO {
   implicit class UserDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getUserDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Players").mapTo[UserDAO]
+    def getUserDAO(implicit ec: ExecutionContext): UserDAO = {
+      db.collection("Players").asInstanceOf[UserDAO]
     }
   }
 

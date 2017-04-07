@@ -2,7 +2,7 @@ package com.shocktrade.server.dao.securities
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -29,7 +29,9 @@ object SICDAO {
       * @param sicCode the given SIC code
       */
     @inline
-    def findByCode(sicCode: Int)(implicit ec: ExecutionContext) = dao.findOneFuture[SIC]("sicNumber" $eq sicCode)
+    def findByCode(sicCode: Int)(implicit ec: ExecutionContext): Future[Option[SIC]] = {
+      dao.findOneAsync[SIC]("sicNumber" $eq sicCode)
+    }
 
   }
 
@@ -40,7 +42,9 @@ object SICDAO {
   implicit class SICDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getSICDAO(implicit ec: ExecutionContext) = db.collectionFuture("SIC").mapTo[SICDAO]
+    def getSICDAO: SICDAO = {
+      db.collection("SIC").asInstanceOf[SICDAO]
+    }
 
   }
 

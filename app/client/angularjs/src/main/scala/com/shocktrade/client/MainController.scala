@@ -14,6 +14,7 @@ import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
 import io.scalajs.npm.angularjs.{Controller, Location, Scope, Timeout, injected, _}
 import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
@@ -141,7 +142,8 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
       if (!onlinePlayers.contains(playerID)) {
         onlinePlayers(playerID) = new OnlineStatus(connected = false)
         profileService.getOnlineStatus(playerID) onComplete {
-          case Success(newState) =>
+          case Success(response) =>
+            val newState = response.data
             onlinePlayers(playerID) = newState
           case Failure(e) =>
             console.error(s"Error retrieving online state for user $playerID")
@@ -213,10 +215,11 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     mySession.userProfile._id.toOption match {
       case Some(userID) =>
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
-          case Success(outcome) =>
+          case Success(response) =>
+            val outcome = response.data
             if (isDefined(outcome.error)) {
               console.log(s"outcome = ${angular.toJson(outcome)}")
-              toaster.error(outcome.error)
+              toaster.error(outcome.error.toString)
             }
             performTabSwitch(tabIndex)
           case Failure(e) =>
@@ -266,7 +269,7 @@ object MainController {
     } getOrElse "fa fa-globe st_blue"
   }
 
-  protected[client] def normalizeExchange(aMarket: js.UndefOr[String]) = {
+  protected[client] def normalizeExchange(aMarket: js.UndefOr[String]): String = {
     aMarket.flat map (_.toUpperCase) map {
       //case s if s.contains("ASE") => s
       //case s if s.contains("CCY") => s

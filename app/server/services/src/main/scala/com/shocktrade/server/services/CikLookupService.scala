@@ -24,7 +24,7 @@ class CikLookupService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[CikLookupResponse]] = {
     val promise = Promise[Option[CikLookupResponse]]()
     val startTime = js.Date.now()
-    Request.getFuture(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
+    Request.getAsync(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
       case Success((response, html)) => parseHtml(symbol, html, startTime, promise)
       case Failure(e) => promise.failure(e)
     }

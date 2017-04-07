@@ -34,7 +34,7 @@ object WebServerJsApp extends js.JSApp {
     logger.info("Loading MongoDB module...")
     val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
     logger.info("Connecting to database '%s'...", dbConnect)
-    implicit val dbFuture = MongoClient.connectFuture(dbConnect)
+    implicit val dbFuture = MongoClient.connectAsync(dbConnect).toFuture
 
     // setup the application
     val port = process.port getOrElse "9000"

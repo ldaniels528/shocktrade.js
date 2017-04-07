@@ -19,12 +19,12 @@ package object dao {
 
     @inline
     def findById[T <: js.Any](id: String)(implicit ec: ExecutionContext): Future[Option[T]] = {
-      coll.findOneFuture[T]("_id" $eq id.$oid)
+      coll.findOneAsync[T]("_id" $eq id.$oid)
     }
 
     @inline
     def findById[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
-      coll.findOneFuture[T]("_id" $eq id.$oid, fields)
+      coll.findOneAsync[T]("_id" $eq id.$oid, fields)
     }
 
     @inline

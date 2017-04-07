@@ -7,8 +7,8 @@ import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.facade.{PricingFacade, PricingQuote}
-import io.scalajs.nodejs._
 import io.scalajs.npm.mongodb.{Db, UpdateWriteOpResultObject}
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -26,8 +26,8 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO references
-  private val contestDAO = dbFuture.flatMap(_.getContestDAO)
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
+  private val contestDAO = dbFuture.map(_.getContestDAO)
+  private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
 
   // get the facade references
   private val pricingFacade = new PricingFacade(dbFuture)

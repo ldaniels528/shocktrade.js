@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 object ChatRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val contestDAO = dbFuture.flatMap(_.getContestDAO)
+    implicit val contestDAO = dbFuture.map(_.getContestDAO)
 
     app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => chatMessages(request, response, next))
     app.post("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
@@ -31,7 +31,7 @@ object ChatRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     def addChatMessage(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("id")
+      val contestID = request.params.apply("id")
       val rawMessage = request.bodyAs[ChatMessage]
       val message = rawMessage.copy(_id = UUID.randomUUID().toString, sentTime = new js.Date())
       contestDAO.flatMap(_.addChatMessage(contestID, message).toFuture) onComplete {
@@ -52,7 +52,7 @@ object ChatRoutes {
     }
 
     def chatMessages(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params("id")
+      val contestID = request.params.apply("id")
       contestDAO.flatMap(_.findChatMessages(contestID)) onComplete {
         case Success(Some(messages)) => response.send(messages); next()
         case Success(None) => response.notFound("Unexpected error"); next()

@@ -8,6 +8,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -43,7 +44,8 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
   $scope.getNewsSources = () => {
     console.log("Loading news sources...")
     asyncLoading($scope)(newsService.getNewsSources) onComplete {
-      case Success(sources) =>
+      case Success(response) =>
+        val sources = response.data
         $scope.$apply { () =>
           this.newsSources = sources
 
@@ -78,7 +80,8 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
   private def findNewsFeed(feedId: String) = {
     console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
-      case Success(feedChannels) =>
+      case Success(response) =>
+        val feedChannels = response.data
         $scope.$apply { () =>
           //populateQuotes(feedChannels) TODO
           this.newsChannels = feedChannels; //getEnrichedChannels(feedChannels)

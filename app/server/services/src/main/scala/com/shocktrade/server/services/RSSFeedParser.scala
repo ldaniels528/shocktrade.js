@@ -25,7 +25,7 @@ class RSSFeedParser() {
     */
   def parse(url: String)(implicit ec: ExecutionContext): Future[js.Array[RSSChannel]] = {
     for {
-      (response, body) <- Request.getFuture(url)
+      (response, body) <- Request.getAsync(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
       feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
     } yield feedsXML.toJson
@@ -33,7 +33,7 @@ class RSSFeedParser() {
 
   def parseRaw(url: String)(implicit ec: ExecutionContext): Future[XMLRSSRoot] = {
     for {
-      (response, body) <- Request.getFuture(url)
+      (response, body) <- Request.getAsync(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
       feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
     } yield feedsXML

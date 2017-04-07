@@ -3,9 +3,10 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
 import com.shocktrade.common.forms.{ContestCreateForm, PlayerInfoForm}
 import io.scalajs.npm.angularjs.Service
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
+import io.scalajs.util.PromiseHelper.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -22,23 +23,23 @@ class ContestService($http: Http) extends Service {
     * Creates a new game
     * @return the promise of the result of creating a new game
     */
-  def createNewGame(form: ContestCreateForm): Future[Contest] = {
-    $http.post[Contest]("/api/contest", form)
+  def createNewGame(form: ContestCreateForm)(implicit ec: ExecutionContext): Future[Contest] = {
+    $http.post[Contest]("/api/contest", form).map(_.data)
   }
 
-  def deleteContest(contestId: String) = {
+  def deleteContest(contestId: String): js.Promise[HttpResponse[js.Dynamic]] = {
     $http.delete[js.Dynamic](s"/api/contest/$contestId")
   }
 
-  def joinContest(contestId: String, playerInfo: PlayerInfoForm) = {
+  def joinContest(contestId: String, playerInfo: PlayerInfoForm): js.Promise[HttpResponse[Contest]] = {
     $http.put[Contest](s"/api/contest/$contestId/player", playerInfo)
   }
 
-  def quitContest(contestId: String, playerId: String) = {
+  def quitContest(contestId: String, playerId: String): js.Promise[HttpResponse[Contest]] = {
     $http.delete[Contest](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def startContest(contestId: String) = {
+  def startContest(contestId: String): js.Promise[HttpResponse[Contest]] = {
     $http.get[Contest](s"/api/contest/$contestId/start")
   }
 
@@ -46,19 +47,19 @@ class ContestService($http: Http) extends Service {
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def findContests(searchOptions: ContestSearchOptions) = {
+  def findContests(searchOptions: ContestSearchOptions): js.Promise[HttpResponse[js.Array[Contest]]] = {
     $http.post[js.Array[Contest]]("/api/contests/search", searchOptions)
   }
 
-  def getContestByID(contestId: String) = {
+  def getContestByID(contestId: String): js.Promise[HttpResponse[Contest]] = {
     $http.get[Contest](s"/api/contest/$contestId")
   }
 
-  def getParticipantByID(contestId: String, playerId: String) = {
+  def getParticipantByID(contestId: String, playerId: String): js.Promise[HttpResponse[Contest]] = {
     $http.get[Contest](s"/api/contest/$contestId/player/$playerId")
   }
 
-  def getContestsByPlayerID(playerId: String) = {
+  def getContestsByPlayerID(playerId: String): js.Promise[HttpResponse[js.Array[Contest]]] = {
     $http.get[js.Array[Contest]](s"/api/contests/player/$playerId")
   }
 

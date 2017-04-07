@@ -22,7 +22,7 @@ class YahooFinanceProfileService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFProfile]] = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- Request.getFuture(s"https://finance.yahoo.com/quote/$symbol/profile")
+      (response, html) <- Request.getAsync(s"https://finance.yahoo.com/quote/$symbol/profile")
       profile_? <- parseHtml(symbol, html, startTime)
     } yield profile_?
   }

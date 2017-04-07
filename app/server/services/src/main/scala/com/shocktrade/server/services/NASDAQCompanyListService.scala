@@ -29,7 +29,7 @@ class NASDAQCompanyListService() {
   }
 
   private def download(exchange: String, url: String)(implicit ec: ExecutionContext) = {
-    Request.getFuture(url) flatMap { case (response, data) =>
+    Request.getAsync(url) flatMap { case (response, data) =>
       val lines = data.split("[\n]").tail.toSeq
       Future.sequence(lines map (toCompanyInfo(exchange, _))) map (_.flatten)
     }

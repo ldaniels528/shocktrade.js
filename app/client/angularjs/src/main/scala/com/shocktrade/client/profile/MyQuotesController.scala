@@ -10,6 +10,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Location, _}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -86,7 +87,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
   private def loadQuotes(name: String, symbols: js.Array[String], obj: Expandable) {
     if (symbols.nonEmpty) {
       quoteService.getBasicQuotes(symbols) onComplete {
-        case Success(updatedQuotes) => $scope.$apply(() => obj.quotes = updatedQuotes)
+        case Success(updatedQuotes) => $scope.$apply(() => obj.quotes = updatedQuotes.data)
         case Failure(e) =>
           toaster.error(s"Failed to load $name")
           console.error(s"Failed to load $name: ${e.getMessage}")
@@ -99,8 +100,8 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
       playerId <- mySession.userProfile._id
     } {
       val outcome = for {
-        symbols <- portfolioService.getHeldSecurities(playerId)
-        quotes <- quoteService.getBasicQuotes(symbols)
+        symbols <- portfolioService.getHeldSecurities(playerId).map(_.data)
+        quotes <- quoteService.getBasicQuotes(symbols).map(_.data)
       } yield quotes
 
       outcome onComplete {

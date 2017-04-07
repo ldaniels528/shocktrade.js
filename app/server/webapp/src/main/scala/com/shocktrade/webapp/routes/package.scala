@@ -18,9 +18,9 @@ package object routes {
     */
   implicit class RequestExtensions(val request: Request) extends AnyVal {
 
-    def getMaxResults(default: Int = 20) = request.query.get("maxResults") map (_.toInt) getOrElse default
+    def getMaxResults(default: Int = 20): Int = request.query.get("maxResults") map (_.toInt) getOrElse default
 
-    def getSymbol = request.params("symbol").toUpperCase()
+    def getSymbol: String = request.params.apply("symbol").toUpperCase()
 
   }
 
@@ -31,7 +31,7 @@ package object routes {
   implicit class ParameterExtensions(val params: js.Dictionary[String]) extends AnyVal {
 
     @inline
-    def extractParams(names: String*) = {
+    def extractParams(names: String*): Option[Seq[String]] = {
       val values = names.map(params.get)
       if (values.forall(_.isDefined)) Some(values.flatten) else None
     }
@@ -44,7 +44,7 @@ package object routes {
   implicit class ResponseExtensions(val response: Response) extends AnyVal {
 
     @inline
-    def missingParams(params: String*) = {
+    def missingParams(params: String*): Unit = {
       val message = s"Bad Request: ${params.mkString(" and ")} ${if (params.length == 1) "is" else "are"} required"
       response.status(400).send(message)
     }

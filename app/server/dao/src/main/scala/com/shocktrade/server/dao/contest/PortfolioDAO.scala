@@ -6,7 +6,7 @@ import io.scalajs.util.OptionHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
@@ -29,12 +29,12 @@ object PortfolioDAO {
   implicit class PortfolioDAOEnrichment(val dao: PortfolioDAO) {
 
     @inline
-    def create(portfolio: PortfolioData) = dao.insert(portfolio)
+    def create(portfolio: PortfolioData): js.Promise[InsertWriteOpResult] = dao.insertOne(portfolio)
 
     @inline
-    def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext) = {
+    def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext): Future[FindAndModifyWriteOpResult] = {
       for {
-        portfolio <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
+        portfolio <- dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
         order = portfolio.orders.toOption.flatMap(_.find(_._id.contains(orderID))) orDie s"Order # $orderID not found"
         result <- dao.findOneAndUpdate(
           filter = doc("_id" $eq portfolioID.$oid),
@@ -44,7 +44,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext) = {
+    def createOrder(portfolioID: String, order: OrderData): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid),
         update = "orders" $addToSet order,
@@ -52,7 +52,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def createOrders(portfolioID: String, orders: Seq[OrderData])(implicit ec: ExecutionContext) = {
+    def createOrders(portfolioID: String, orders: Seq[OrderData]): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid),
         update = "orders" $addToSet $each(js.Array(orders: _*)),
@@ -60,18 +60,18 @@ object PortfolioDAO {
     }
 
     @inline
-    def findByContest(contestID: String)(implicit ec: ExecutionContext) = {
-      dao.find("contestID" $eq contestID).toArrayFuture[PortfolioData]
+    def findByContest(contestID: String)(implicit ec: ExecutionContext): js.Promise[js.Array[PortfolioData]] = {
+      dao.find[PortfolioData]("contestID" $eq contestID).toArray()
     }
 
     @inline
-    def findByPlayer(playerID: String)(implicit ec: ExecutionContext) = {
-      dao.find("playerID" $eq playerID).toArrayFuture[PortfolioData]
+    def findByPlayer(playerID: String)(implicit ec: ExecutionContext): js.Promise[js.Array[PortfolioData]] = {
+      dao.find[PortfolioData]("playerID" $eq playerID).toArray()
     }
 
     @inline
-    def findHeldSecurities(playerID: String)(implicit ec: ExecutionContext) = {
-      dao.find(doc("playerID" $eq playerID, "active" $eq true), projection = Seq("positions").toProjection).toArrayFuture[PortfolioData] map { portfolios =>
+    def findHeldSecurities(playerID: String)(implicit ec: ExecutionContext): Future[js.Array[String]] = {
+      dao.find[PortfolioData](doc("playerID" $eq playerID, "active" $eq true), projection = Seq("positions").toProjection).toArray() map { portfolios =>
         for {
           portfolio <- portfolios.toList
           position <- portfolio.positions.toList.flatMap(_.toList)
@@ -81,27 +81,27 @@ object PortfolioDAO {
     }
 
     @inline
-    def findOneByID(portfolioID: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid)
+    def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid)
     }
 
     @inline
-    def findOneByPlayer(contestID: String, playerID: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[PortfolioData](doc("contestID" $eq contestID, "playerID" $eq playerID))
+    def findOneByPlayer(contestID: String, playerID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+      dao.findOneAsync[PortfolioData](doc("contestID" $eq contestID, "playerID" $eq playerID))
     }
 
     @inline
-    def findPerks(portfolioID: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("cashAccount", "perks"))
+    def findPerks(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("cashAccount", "perks"))
     }
 
     @inline
-    def findPositions(portfolioID: String)(implicit ec: ExecutionContext) = {
-      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("positions")) map (_ map (_.positions getOrElse emptyArray))
+    def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[js.Array[PositionData]]] = {
+      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("positions")) map (_ map (_.positions getOrElse emptyArray))
     }
 
     @inline
-    def purchasePerks(portfolioID: String, perkCodes: js.Array[String], perksCost: Double)(implicit ec: ExecutionContext) = {
+    def purchasePerks(portfolioID: String, perkCodes: js.Array[String], perksCost: Double): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte perksCost, "perks" $nin perkCodes),
         update = doc("cashAccount.funds" $inc -perksCost, "perks" $addToSet $each(perkCodes)),
@@ -109,7 +109,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def totalInvestment(playerID: String)(implicit ec: ExecutionContext) = {
+    def totalInvestment(playerID: String)(implicit ec: ExecutionContext): Future[Double] = {
       for {
         portfolios <- findByPlayer(playerID)
         results = for {
@@ -121,7 +121,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def transferCashFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext) = {
+    def transferCashFunds(portfolioID: String, amount: Double): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "cashAccount.funds" $gte amount),
         update = $inc("cashAccount.funds" -> -amount, "marginAccount.funds" -> amount),
@@ -129,7 +129,7 @@ object PortfolioDAO {
     }
 
     @inline
-    def transferMarginFunds(portfolioID: String, amount: Double)(implicit ec: ExecutionContext) = {
+    def transferMarginFunds(portfolioID: String, amount: Double): js.Promise[FindAndModifyWriteOpResult] = {
       dao.findOneAndUpdate(
         filter = doc("_id" $eq portfolioID.$oid, "marginAccount.funds" $gte amount),
         update = $inc("cashAccount.funds" -> amount, "marginAccount.funds" -> -amount),
@@ -145,8 +145,8 @@ object PortfolioDAO {
   implicit class PortfolioDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getPortfolioDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Portfolios").mapTo[PortfolioDAO]
+    def getPortfolioDAO: PortfolioDAO = {
+      db.collection("Portfolios").asInstanceOf[PortfolioDAO]
     }
   }
 

@@ -20,7 +20,7 @@ class YahooFinanceCSVHistoryService() {
 
   def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext): Future[YFHistoricalQuotes] = {
     val startTime = js.Date.now()
-    Request.getFuture(toURL(symbol, from, to)) map { case (response, data) =>
+    Request.getAsync(toURL(symbol, from, to)) map { case (response, data) =>
       new YFHistoricalQuotes(symbol = symbol, quotes = parseHistory(data), responseTime = js.Date.now() - startTime)
     }
   }

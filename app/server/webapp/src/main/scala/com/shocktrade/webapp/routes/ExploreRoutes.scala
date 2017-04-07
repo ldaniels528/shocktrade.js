@@ -4,6 +4,7 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.SectorInfoQuote
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -15,8 +16,8 @@ import scala.util.{Failure, Success}
   */
 object ExploreRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
-    implicit val quoteDAO = dbFuture.flatMap(_.getSecuritiesDAO)
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
+    implicit val quoteDAO = dbFuture.map(_.getSecuritiesDAO)
 
     app.get("/api/explore/industries", (request: Request, response: Response, next: NextFunction) => industries(request, response, next))
     app.get("/api/explore/quotes", (request: Request, response: Response, next: NextFunction) => industryQuotes(request, response, next))
@@ -64,7 +65,7 @@ object ExploreRoutes {
     }
 
     def sectorInfo(request: Request, response: Response, next: NextFunction) = {
-      val symbol = request.params("symbol")
+      val symbol = request.params.apply("symbol")
       quoteDAO.flatMap(_.findQuote[SectorInfoQuote](symbol, fields = SectorInfoQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
         case Success(None) => response.notFound(symbol); next()

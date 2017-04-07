@@ -28,7 +28,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   private implicit val logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
   private val yfKeyStatsSvc = new YahooFinanceKeyStatisticsService()
 
   // internal variables

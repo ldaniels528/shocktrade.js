@@ -10,10 +10,11 @@ import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
 import com.shocktrade.common.models.FacebookAppInfo
 import io.scalajs.dom.html.browser.console
-import io.scalajs.social.facebook.{FB, FacebookAppConfig}
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
 import io.scalajs.npm.angularjs.{Module, Scope, Timeout, angular}
+import io.scalajs.social.facebook.{FB, FacebookAppConfig}
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -154,7 +155,7 @@ object WebClientJsApp extends js.JSApp {
 
   private def configureSocialNetworkCallbacks($timeout: Timeout, mySession: MySessionService, socialServices: SocialServices): Unit = {
     socialServices.getFacebookAppInfo onComplete {
-      case Success(appInfo) => initializeFacebookApp($timeout, mySession, appInfo)
+      case Success(response) => initializeFacebookApp($timeout, mySession, response.data)
       case Failure(e) => console.error("Error initializing Facebook App")
     }
   }

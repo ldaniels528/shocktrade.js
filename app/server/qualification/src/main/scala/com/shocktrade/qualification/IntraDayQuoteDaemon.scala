@@ -12,7 +12,9 @@ import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
 import io.scalajs.nodejs.console
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
+import io.scalajs.util.PromiseHelper.Implicits._
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
@@ -26,8 +28,8 @@ import scala.util.{Failure, Success}
 class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[BulkWriteOpResultObject]] {
   // get DAO and service references
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
-  private val portfolioDAO = dbFuture.flatMap(_.getPortfolioUpdateDAO)
-  private val intraDayDAO = dbFuture.flatMap(_.getIntraDayQuotesDAO)
+  private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
+  private val intraDayDAO = dbFuture.map(_.getIntraDayQuotesDAO)
 
   // internal fields
   private val loaded = js.Dictionary[(TimeSlot, TimeSlot)]()

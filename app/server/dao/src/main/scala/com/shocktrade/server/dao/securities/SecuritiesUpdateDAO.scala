@@ -8,7 +8,6 @@ import com.shocktrade.server.services.EodDataSecuritiesService.EodDataSecurity
 import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 
 /**
@@ -31,34 +30,34 @@ object SecuritiesUpdateDAO {
   implicit class SecuritiesUpdateDAOEnrichment(val dao: SecuritiesUpdateDAO) extends AnyVal {
 
     @inline
-    def findSymbolsIfEmpty(field: String) = {
-      dao.find(
+    def findSymbolsIfEmpty(field: String): js.Promise[js.Array[SecurityRef]] = {
+      dao.find[SecurityRef](
         selector = doc("active" $eq true, "symbol" $ne null, $or(field $exists false, field $eq null)),
         projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
-        .toArrayFuture[SecurityRef]
+        .toArray()
     }
 
     @inline
-    def findSymbolsForFinanceUpdate(cutOffTime: js.Date) = {
-      dao.find(
+    def findSymbolsForFinanceUpdate(cutOffTime: js.Date): js.Promise[js.Array[SecurityRef]] = {
+      dao.find[SecurityRef](
         selector = doc("active" $eq true, "symbol" $ne null /*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
         projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
-        .toArrayFuture[SecurityRef]
+        .toArray()
     }
 
     @inline
-    def findSymbolsForKeyStatisticsUpdate(cutOffTime: js.Date) = {
-      dao.find(
+    def findSymbolsForKeyStatisticsUpdate(cutOffTime: js.Date): js.Promise[js.Array[SecurityRef]] = {
+      dao.find[SecurityRef](
         selector = doc("active" $eq true, "symbol" $ne null /*, "exchange" $in (js.Array("NASDAQ", "NYQ", "NYSE"))*//*, $or("yfCsvLastUpdated" $exists false, "yfCsvLastUpdated" $lt cutOffTime)*/),
         projection = SecurityRef.Fields.toProjection)
         .sort(js.Array("symbol", 1))
-        .toArrayFuture[SecurityRef]
+        .toArray()
     }
 
     @inline
-    def updateBloomberg(symbol: String, data: BloombergQuote) = {
+    def updateBloomberg(symbol: String, data: BloombergQuote): js.Promise[UpdateWriteOpResultObject] = {
       dao.updateOne(
         filter = "symbol" $eq symbol,
         update = $set(
@@ -69,12 +68,12 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def updateCik(cik: CikLookupResponse) = {
+    def updateCik(cik: CikLookupResponse): js.Promise[UpdateWriteOpResultObject] = {
       dao.updateOne(filter = "symbol" $eq cik.symbol, update = $set("cikNumber" -> cik.CIK))
     }
 
     @inline
-    def updateCompanyInfo(companies: Seq[NASDAQCompanyInfo]) = {
+    def updateCompanyInfo(companies: Seq[NASDAQCompanyInfo]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(js.Array(companies map { company =>
         updateOne(
           filter = "symbol" $eq company.symbol,
@@ -91,7 +90,7 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def updateEodQuotes(quotes: Seq[EodDataSecurity]) = {
+    def updateEodQuotes(quotes: Seq[EodDataSecurity]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(js.Array(quotes map { eod =>
         updateOne(
           filter = "symbol" $eq eod.symbol,
@@ -117,12 +116,12 @@ object SecuritiesUpdateDAO {
       * @return the promise of an [[BulkWriteOpResultObject bulk update result]]
       */
     @inline
-    def updateKeyStatistics(keyStats: KeyStatisticsData)(implicit ec: ExecutionContext) = {
+    def updateKeyStatistics(keyStats: KeyStatisticsData): js.Promise[UpdateWriteOpResultObject] = {
       dao.updateOne(filter = "symbol" $eq keyStats.symbol, update = $set(keyStats))
     }
 
     @inline
-    def updateProfile(profile: BarChartProfile) = {
+    def updateProfile(profile: BarChartProfile): js.Promise[UpdateWriteOpResultObject] = {
       dao.updateOne(
         filter = "symbol" $eq profile.symbol,
         update = $set(
@@ -132,7 +131,7 @@ object SecuritiesUpdateDAO {
     }
 
     @inline
-    def updateSecurities(quotes: Seq[SecurityUpdateQuote]) = {
+    def updateSecurities(quotes: Seq[SecurityUpdateQuote]): js.Promise[BulkWriteOpResultObject] = {
       dao.bulkWrite(js.Array(quotes map { quote =>
         updateOne(
           filter = "symbol" $eq quote.symbol,
@@ -150,8 +149,8 @@ object SecuritiesUpdateDAO {
   implicit class SecuritiesUpdateDAOConstructor(val db: Db) extends AnyVal {
 
     @inline
-    def getSecuritiesUpdateDAO(implicit ec: ExecutionContext) = {
-      db.collectionFuture("Securities").mapTo[SecuritiesUpdateDAO]
+    def getSecuritiesUpdateDAO: SecuritiesUpdateDAO = {
+      db.collection("Securities").asInstanceOf[SecuritiesUpdateDAO]
     }
 
   }

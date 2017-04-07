@@ -7,13 +7,12 @@ import com.shocktrade.common.forms.PerksResponse
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -28,7 +27,7 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
   /**
     * Perks Modal Dialog
     */
-  def popup(): Future[PerksDialogResult] = {
+  def popup(): js.Promise[PerksDialogResult] = {
     val $modalInstance = $modal.open[PerksDialogResult](new ModalOptions(
       templateUrl = "perks_dialog.html",
       controller = classOf[PerksDialogController].getSimpleName
@@ -41,7 +40,7 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
     * @param portfolioID the given portfolio ID
     * @return the promise of a sequence of [[Perk perks]]
     */
-  def getPerks(portfolioID: String) = {
+  def getPerks(portfolioID: String): js.Promise[HttpResponse[js.Array[Perk]]] = {
     $http.get[js.Array[Perk]]("/api/contests/perks")
   }
 
@@ -50,7 +49,7 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
     * @param portfolioID the given portfolio ID
     * @return the promise of an option of a [[PerksResponse perks response]]
     */
-  def getMyPerkCodes(portfolioID: String) = {
+  def getMyPerkCodes(portfolioID: String): js.Promise[HttpResponse[PerksResponse]] = {
     $http.get[PerksResponse](s"/api/portfolio/$portfolioID/perks")
   }
 
@@ -60,7 +59,7 @@ class PerksDialog($http: Http, $modal: Modal) extends Service {
     * @param perkCodes   the given perk codes to purchase
     * @return the promise of a [[Contest contest]]
     */
-  def purchasePerks(portfolioID: String, perkCodes: js.Array[String]) = {
+  def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): js.Promise[HttpResponse[PerksDialogResult]] = {
     $http.post[Portfolio](s"/api/portfolio/$portfolioID/perks", perkCodes)
   }
 
@@ -115,8 +114,8 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
     mySession.portfolio_?.flatMap(_._id.toOption) match {
       case Some(portfolioId) =>
         val outcome = for {
-          thePerks <- perksSvc.getPerks(portfolioId)
-          perksResponse <- perksSvc.getMyPerkCodes(portfolioId)
+          thePerks <- perksSvc.getPerks(portfolioId).map(_.data)
+          perksResponse <- perksSvc.getMyPerkCodes(portfolioId).map(_.data)
         } yield (thePerks, perksResponse)
 
         outcome onComplete {
@@ -148,7 +147,7 @@ class PerksDialogController($scope: PerksDialogScope, $modalInstance: ModalInsta
 
         // send the purchase order
         perksSvc.purchasePerks(portfolioId, perkCodes) onComplete {
-          case Success(response) => $modalInstance.close(response)
+          case Success(response) => $modalInstance.close(response.data)
           case Failure(e) =>
             $scope.$apply(() => $scope.errors.push(s"Failed to purchase ${perkCodes.length} Perk(s)"))
             console.error(s"Error: Purchase Perks - ${e.getMessage}")

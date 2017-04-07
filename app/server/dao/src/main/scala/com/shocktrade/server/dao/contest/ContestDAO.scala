@@ -36,33 +36,33 @@ object ContestDAO {
     }
 
     @inline
-    def create(contest: ContestData): js.Promise[InsertWriteOpResult] = dao.insert(contest)
+    def create(contest: ContestData): js.Promise[InsertWriteOpResult] = dao.insertOne(contest)
 
     @inline
-    def findActiveContests()(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
-      dao.find("status" $eq "ACTIVE").toArrayFuture[ContestData]
+    def findActiveContests()(implicit ec: ExecutionContext): js.Promise[js.Array[ContestData]] = {
+      dao.find[ContestData]("status" $eq "ACTIVE").toArray()
     }
 
     @inline
     def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[Option[js.Array[ChatMessage]]] = {
-      dao.findOneFuture[ContestData](
+      dao.findOneAsync[ContestData](
         selector = "_id" $eq contestID.$oid,
         fields = js.Array("messages")) map (_ map (_.messages getOrElse emptyArray))
     }
 
     @inline
     def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]] = {
-      dao.findOneFuture[ContestData]("_id" $eq contestID.$oid)
+      dao.findOneAsync[ContestData]("_id" $eq contestID.$oid)
     }
 
     @inline
-    def findByPlayer(playerID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
-      dao.find("participants._id" $eq playerID).toArrayFuture[ContestData]
+    def findByPlayer(playerID: String)(implicit ec: ExecutionContext): js.Promise[js.Array[ContestData]] = {
+      dao.find[ContestData]("participants._id" $eq playerID).toArray()
     }
 
     @inline
-    def findUnoccupied(playerID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
-      dao.find("participants" $not $elemMatch("_id" $eq playerID)).toArrayFuture[ContestData]
+    def findUnoccupied(playerID: String)(implicit ec: ExecutionContext): js.Promise[js.Array[ContestData]] = {
+      dao.find[ContestData]("participants" $not $elemMatch("_id" $eq playerID)).toArray()
     }
 
     @inline
@@ -71,7 +71,7 @@ object ContestDAO {
     }
 
     @inline
-    def search(form: ContestSearchForm): Future[js.Array[ContestData]] = {
+    def search(form: ContestSearchForm): js.Promise[js.Array[ContestData]] = {
       val query = doc(Seq(
         form.activeOnly.toOption.flatMap(checked => if (checked) Some("status" $eq "ACTIVE") else None),
         form.friendsOnly.toOption.flatMap(checked => if (checked) Some("friendsOnly" $eq true) else None),
@@ -84,7 +84,7 @@ object ContestDAO {
         form.robotsAllowed.toOption.flatMap(checked => if (checked) Some("robotsAllowed" $eq true) else None)
       ).flatten: _*)
 
-      dao.find(query).toArrayFuture[ContestData]
+      dao.find[ContestData](query).toArray()
     }
 
     @inline
@@ -110,8 +110,8 @@ object ContestDAO {
   implicit class ContestDAOConstructors(val db: Db) extends AnyVal {
 
     @inline
-    def getContestDAO(implicit ec: ExecutionContext): Future[ContestDAO] = {
-      db.collectionFuture("Contests").mapTo[ContestDAO]
+    def getContestDAO: ContestDAO = {
+      db.collection("Contests").asInstanceOf[ContestDAO]
     }
   }
 

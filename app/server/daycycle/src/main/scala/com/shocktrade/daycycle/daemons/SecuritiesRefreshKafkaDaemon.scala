@@ -36,7 +36,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
   )
 
   // get DAO references
-  private val securitiesDAO = dbFuture.flatMap(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
 
   // internal variables
   private val processor = new ConcurrentProcessor()

@@ -5,6 +5,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, injected}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -42,7 +43,7 @@ class TradingHistoryController($scope: TradingHistoryControllerScope, toaster: T
   $scope.loadTradingHistory = (aSymbol: js.UndefOr[String]) => aSymbol.toOption match {
     case Some(symbol) =>
       quoteService.getTradingHistory(symbol) onComplete {
-        case Success(results) => $scope.$apply(() => tradingHistory = results)
+        case Success(results) => $scope.$apply(() => tradingHistory = results.data)
         case Failure(e) =>
           toaster.error(s"Error loading trading history for symbol '$symbol'")
           console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")

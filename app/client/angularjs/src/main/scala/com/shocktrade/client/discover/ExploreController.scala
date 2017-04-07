@@ -1,5 +1,6 @@
 package com.shocktrade.client.discover
 
+import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.client.discover.ExploreController._
 import com.shocktrade.client.discover.ExploreService.AggregatedSectorData
 import com.shocktrade.client.{GlobalSelectedSymbol, GlobalSelectedSymbolScope}
@@ -42,8 +43,8 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     if (!sector.expanded.isTrue) {
       sector.loading = true
       exploreService.loadIndustries(sector.label) onComplete {
-        case Success(data) =>
-          $scope.$apply(() => updateSector(sector, data))
+        case Success(response) =>
+          $scope.$apply(() => updateSector(sector, response.data))
         case Failure(e) =>
           $scope.$apply(() => sector.loading = false)
           toaster.error(s"Error expanding ${sector.label}")
@@ -61,8 +62,8 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
       if (!industry.expanded.isTrue) {
         industry.loading = true
         val outcome = for {
-          subIndustries <- exploreService.loadSubIndustries(sector.label, industry.label)
-          quotes <- exploreService.loadIndustryQuotes(sector.label, industry.label)
+          subIndustries <- exploreService.loadSubIndustries(sector.label, industry.label).map(_.data)
+          quotes <- exploreService.loadIndustryQuotes(sector.label, industry.label).map(_.data)
         } yield (subIndustries, quotes)
 
         outcome onComplete {
@@ -87,8 +88,8 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
       if (!subIndustry.expanded.isTrue) {
         subIndustry.loading = true
         exploreService.loadSubIndustryQuotes(sector.label, industry.label, subIndustry.label) onComplete {
-          case Success(quotes) =>
-            $scope.$apply(() => updateSubIndustry(subIndustry, quotes))
+          case Success(response) =>
+            $scope.$apply(() => updateSubIndustry(subIndustry, response.data))
           case Failure(e) =>
             $scope.$apply(() => subIndustry.loading = false)
             toaster.error(s"Error expanding ${subIndustry.label}")
@@ -101,7 +102,8 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
 
   $scope.refreshTree = () => {
     exploreService.loadSectors() onComplete {
-      case Success(data) =>
+      case Success(response) =>
+        val data = response.data
         console.log(s"Loaded ${data.length} sectors")
         $scope.$apply(() => $scope.sectors = data.map(v => new Sector(label = v._id, total = v.total)))
         $scope.selectedSymbol foreach { symbol => $timeout(() => expandAllForSymbol(symbol), 500) }
@@ -123,7 +125,7 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     console.log(s"Attempting to expand sectors for symbol $symbol...")
     val startTime = System.currentTimeMillis()
     val results = for {
-      info <- exploreService.loadSectorInfo(symbol)
+      info <- exploreService.loadSectorInfo(symbol).map(_.data)
       sectorOpt <- expandSector(info)
       industryOpt <- sectorOpt.map(expandIndustry(info, _)) getOrElse Future.successful(None)
       subIndustryOpt <- (sectorOpt, industryOpt) match {
@@ -155,7 +157,7 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
       case Some((sector, expanded)) if !expanded =>
         console.info(s"Loading industries for ${info.symbol} => ${sector.label}")
         sector.loading = true
-        exploreService.loadIndustries(sector.label) map (updateSector(sector, _))
+        exploreService.loadIndustries(sector.label).map(_.data) map (updateSector(sector, _))
       case _ => Future.successful(None)
     }
   }
@@ -170,8 +172,8 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
       case Some((industry, expanded)) if !expanded =>
         industry.loading = true
         val outcome = for {
-          subIndustries <- exploreService.loadSubIndustries(sector.label, industry.label)
-          quotes <- exploreService.loadIndustryQuotes(sector.label, industry.label)
+          subIndustries <- exploreService.loadSubIndustries(sector.label, industry.label).map(_.data)
+          quotes <- exploreService.loadIndustryQuotes(sector.label, industry.label).map(_.data)
         } yield (subIndustries, quotes)
 
         outcome map { case (subIndustries, quotes) => updateIndustry(industry, subIndustries, quotes) }
@@ -188,7 +190,7 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     result match {
       case Some((subIndustry, expanded)) if !expanded =>
         subIndustry.loading = true
-        exploreService.loadSubIndustryQuotes(sector.label, industry.label, subIndustry.label) map (updateSubIndustry(subIndustry, _))
+        exploreService.loadSubIndustryQuotes(sector.label, industry.label, subIndustry.label).map(_.data) map (updateSubIndustry(subIndustry, _))
       case _ => Future.successful(None)
     }
   }
@@ -221,7 +223,7 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
 
   override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) {
     if (!oldSymbol.contains(newSymbol)) {
-      exploreService.loadSectorInfo(newSymbol) onComplete {
+      exploreService.loadSectorInfo(newSymbol).map(_.data) onComplete {
         case Success(info) =>
           $location.search("symbol", newSymbol)
           $scope.$apply(() => $scope.q = info)

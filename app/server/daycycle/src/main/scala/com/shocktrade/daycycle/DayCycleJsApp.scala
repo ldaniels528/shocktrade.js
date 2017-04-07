@@ -11,11 +11,12 @@ import io.scalajs.npm.express.Express
 import io.scalajs.npm.kafkanode
 import io.scalajs.npm.kafkanode.Producer
 import io.scalajs.npm.mongodb.{Db, MongoClient}
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.existentials
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportAll
 import scala.util.{Failure, Success}
@@ -44,7 +45,7 @@ object DayCycleJsApp extends js.JSApp {
 
     // setup mongodb connection
     logger.info("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
+    implicit val dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
 
     // setup kafka connection
     logger.info("Connecting to '%s'...", zkConnectionString)

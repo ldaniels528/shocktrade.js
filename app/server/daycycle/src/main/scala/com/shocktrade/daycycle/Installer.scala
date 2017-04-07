@@ -1,5 +1,6 @@
 package com.shocktrade.daycycle
 
+import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
@@ -20,11 +21,11 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
-  implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnectionString)
+  implicit val dbFuture: Future[Db] = MongoClient.connectAsync(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
-  private val awardsDAO = dbFuture.flatMap(_.getAwardsDAO)
-  private val newsDAO = dbFuture.flatMap(_.getNewsDAO)
-  private val perksDAO = dbFuture.flatMap(_.getPerksDAO)
+  private val awardsDAO = dbFuture.map(_.getAwardsDAO)
+  private val newsDAO = dbFuture.map(_.getNewsDAO)
+  private val perksDAO = dbFuture.map(_.getPerksDAO)
 
   def install()(implicit tradingClock: TradingClock) = {
     for {
