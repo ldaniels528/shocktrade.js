@@ -3,13 +3,11 @@ package com.shocktrade.client.models.contest
 import com.shocktrade.common.models.contest.OrderLike
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents an Order model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Order(var _id: js.UndefOr[String],
             var symbol: js.UndefOr[String],
             var exchange: js.UndefOr[String],

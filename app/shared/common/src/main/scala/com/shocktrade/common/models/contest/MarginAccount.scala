@@ -1,7 +1,6 @@
 package com.shocktrade.common.models.contest
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a margin account
@@ -11,7 +10,6 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @param asOfDate           the account's effective date
   * @param interestPaidToDate the interest paid up-to date
   */
-@ScalaJSDefined
 class MarginAccount(var funds: js.UndefOr[Double],
                     var initialMargin: js.UndefOr[Double],
                     var interestPaid: js.UndefOr[Double],

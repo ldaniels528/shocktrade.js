@@ -1,17 +1,15 @@
 package com.shocktrade.common.models.post
 
 import com.shocktrade.common.models.user.User
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Post model object
   * @author lawrence.daniels@gmail.com
   */
-@ScalaJSDefined
 class Post(var _id: js.UndefOr[String] = js.undefined,
            var text: js.UndefOr[String] = js.undefined,
            var submitter: js.UndefOr[User] = js.undefined,
@@ -86,33 +84,31 @@ object Post {
              newComment: js.UndefOr[Boolean] = js.undefined,
              refreshLoading: js.UndefOr[Boolean] = js.undefined,
              summaryLoaded: js.UndefOr[Boolean] = js.undefined,
-             summaryLoadQueued: js.UndefOr[Boolean] = js.undefined) = {
-      new Post(
-        _id = _id ?? post._id,
-        text = text ?? post.text,
-        submitter = submitter ?? post.submitter,
-        submitterId = submitterId ?? post.submitterId,
-        summary = summary ?? post.summary,
-        likes = likes ?? post.likes,
-        likedBy = likedBy ?? post.likedBy,
-        creationTime = creationTime.getOrElse(new js.Date()),
-        lastUpdateTime = lastUpdateTime.getOrElse(new js.Date()),
+             summaryLoadQueued: js.UndefOr[Boolean] = js.undefined) = new Post(
+      _id = _id ?? post._id,
+      text = text ?? post.text,
+      submitter = submitter ?? post.submitter,
+      submitterId = submitterId ?? post.submitterId,
+      summary = summary ?? post.summary,
+      likes = likes ?? post.likes,
+      likedBy = likedBy ?? post.likedBy,
+      creationTime = creationTime.getOrElse(new js.Date()),
+      lastUpdateTime = lastUpdateTime.getOrElse(new js.Date()),
 
-        // collections
-        attachments = attachments ?? post.attachments,
-        comments = comments ?? post.comments,
-        replyLikes = replyLikes ?? post.replyLikes,
-        tags = tags ?? post.tags,
+      // collections
+      attachments = attachments ?? post.attachments,
+      comments = comments ?? post.comments,
+      replyLikes = replyLikes ?? post.replyLikes,
+      tags = tags ?? post.tags,
 
-        // Angular-specific properties
-        loading = loading ?? post.loading,
-        likeLoading = likeLoading ?? post.likeLoading,
-        newComment = newComment ?? post.newComment,
-        refreshLoading = refreshLoading ?? post.refreshLoading,
-        summaryLoaded = summaryLoaded ?? post.summaryLoaded,
-        summaryLoadQueued = summaryLoadQueued ?? post.summaryLoadQueued
-      )
-    }
+      // Angular-specific properties
+      loading = loading ?? post.loading,
+      likeLoading = likeLoading ?? post.likeLoading,
+      newComment = newComment ?? post.newComment,
+      refreshLoading = refreshLoading ?? post.refreshLoading,
+      summaryLoaded = summaryLoaded ?? post.summaryLoaded,
+      summaryLoadQueued = summaryLoadQueued ?? post.summaryLoadQueued
+    )
 
   }
 

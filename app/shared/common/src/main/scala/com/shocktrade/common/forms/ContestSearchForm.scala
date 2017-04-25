@@ -1,16 +1,14 @@
 package com.shocktrade.common.forms
 
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Contest Search Form
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ContestSearchForm(var activeOnly: js.UndefOr[Boolean],
                         var available: js.UndefOr[Boolean],
                         var friendsOnly: js.UndefOr[Boolean],

@@ -4,14 +4,12 @@ import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents OTC advisory information
   * @param description the given advisory description
   * @param type        the given advisory type
   */
-@ScalaJSDefined
 class Advisory(val description: String, val `type`: js.UndefOr[String]) extends js.Object
 
 /**

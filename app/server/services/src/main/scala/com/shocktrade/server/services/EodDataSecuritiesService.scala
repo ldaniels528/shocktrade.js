@@ -6,13 +6,11 @@ import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2
 import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
 import io.scalajs.npm.request.Request
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
@@ -31,7 +29,7 @@ class EodDataSecuritiesService() {
     */
   def apply(exchange: String, firstLetter: Char)(implicit ec: ExecutionContext): Future[Seq[EodDataSecurity]] = {
     val promise = Promise[Seq[EodDataSecurity]]()
-    Request.getAsync(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
+    Request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
       case Success((response, html)) =>
         val parser = new htmlparser2.Parser(new ParserHandler {
           val quotes = js.Array[EodDataSecurity]()
@@ -82,7 +80,7 @@ class EodDataSecuritiesService() {
 
         }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 
-        parser.write(html)
+        parser.write(html.toString)
         parser.end()
       case Failure(e) => promise.failure(e)
     }
@@ -126,7 +124,6 @@ class EodDataSecuritiesService() {
   */
 object EodDataSecuritiesService {
 
-  @ScalaJSDefined
   class EodDataSecurity(val symbol: js.UndefOr[String],
                         val exchange: js.UndefOr[String],
                         val name: js.UndefOr[String],

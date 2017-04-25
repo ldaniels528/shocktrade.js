@@ -1,15 +1,13 @@
 package com.shocktrade.common.models.contest
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Performance-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait PerformanceLike extends js.Object {
-  
+
   def _id: js.UndefOr[String]
 
   def symbol: js.UndefOr[String]
@@ -21,7 +19,7 @@ trait PerformanceLike extends js.Object {
   def quantity: js.UndefOr[Double]
 
   def commissions: js.UndefOr[Double]
-  
+
 }
 
 /**

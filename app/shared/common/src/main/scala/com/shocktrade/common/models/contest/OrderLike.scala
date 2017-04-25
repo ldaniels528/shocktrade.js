@@ -5,13 +5,11 @@ import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents an Order-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait OrderLike extends js.Object {
 
   def _id: js.UndefOr[String]

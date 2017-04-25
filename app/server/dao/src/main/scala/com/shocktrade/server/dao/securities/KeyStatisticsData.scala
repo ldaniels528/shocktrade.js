@@ -4,13 +4,11 @@ import com.shocktrade.common.models.quote.KeyStatistics
 import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Key Statistics Data object
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class KeyStatisticsData(var _id: js.UndefOr[ObjectID],
                         var symbol: js.UndefOr[String],
                         var exchange: js.UndefOr[String],

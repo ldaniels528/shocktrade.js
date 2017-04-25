@@ -3,13 +3,11 @@ package com.shocktrade.common.forms
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * New Order Form
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
                    var exchange: js.UndefOr[String] = js.undefined,
                    var accountType: js.UndefOr[String] = js.undefined,
@@ -34,28 +32,28 @@ object NewOrderForm {
   implicit class NewOrderFormEnrichment(val form: NewOrderForm) extends AnyVal {
 
     @inline
-    def isCashAccount = form.accountType.contains("CASH")
+    def isCashAccount: Boolean = form.accountType.contains("CASH")
 
     @inline
-    def isMarginAccount = form.accountType.contains("MARGIN")
+    def isMarginAccount: Boolean = form.accountType.contains("MARGIN")
 
     @inline
-    def isBuyOrder = form.orderType.contains("BUY")
+    def isBuyOrder: Boolean = form.orderType.contains("BUY")
 
     @inline
-    def isSellOrder = form.orderType.contains("SELL")
+    def isSellOrder: Boolean = form.orderType.contains("SELL")
 
     @inline
-    def isLimitOrder = form.priceType.contains("LIMIT")
+    def isLimitOrder: Boolean = form.priceType.contains("LIMIT")
 
     @inline
-    def isMarketOrder = form.priceType.contains("MARKET")
+    def isMarketOrder: Boolean = form.priceType.contains("MARKET")
 
     @inline
-    def isMarketAtCloseOrder = form.priceType.contains("MARKET_AT_CLOSE")
+    def isMarketAtCloseOrder: Boolean = form.priceType.contains("MARKET_AT_CLOSE")
 
     @inline
-    def validate = {
+    def validate: js.Array[String] = {
       val messages = js.Array[String]()
       if (form.symbol.nonAssigned) messages.append("Symbol is required")
       if (form.accountType.nonAssigned) messages.push("Please selected the account to use (Cash or Margin)")

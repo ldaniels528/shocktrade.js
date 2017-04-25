@@ -1,15 +1,14 @@
 package com.shocktrade.client.directives
 
 import com.shocktrade.client.QuoteCache
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
-import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope, injected}
-import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -48,7 +47,6 @@ class StockQuoteDirective(@injected("QuoteCache") cache: QuoteCache) extends Dir
   * Stock Quote Directive Input Parameters
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class StockQuoteDirectiveInputs(val symbol: String, val field: String) extends js.Object
 
 /**

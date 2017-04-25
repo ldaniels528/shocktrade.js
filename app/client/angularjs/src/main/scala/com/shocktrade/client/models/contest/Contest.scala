@@ -4,13 +4,11 @@ import com.shocktrade.common.models.contest.{ChatMessage, ContestLike, Participa
 import com.shocktrade.common.models.user.User
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Contest model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Contest(var _id: js.UndefOr[String] = js.undefined,
               var name: js.UndefOr[String] = js.undefined,
               var creator: js.UndefOr[User] = js.undefined,

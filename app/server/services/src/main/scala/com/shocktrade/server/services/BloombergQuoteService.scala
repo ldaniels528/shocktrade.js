@@ -21,8 +21,8 @@ class BloombergQuoteService() {
     */
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BloombergQuote]] = {
     for {
-      (response, html) <- Request.getAsync(s"http://www.bloomberg.com/quote/$symbol:US")
-      quote_? <- scriptParser.parse(html, anchor = s""""/markets/api/quote-page/$symbol%3AUS?locale=en":""")
+      (response, html) <- Request.getFuture(s"http://www.bloomberg.com/quote/$symbol:US")
+      quote_? <- scriptParser.parse(html.toString, anchor = s""""/markets/api/quote-page/$symbol%3AUS?locale=en":""")
     } yield quote_?
   }
 

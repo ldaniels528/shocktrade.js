@@ -16,7 +16,6 @@ import scala.language.implicitConversions
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -156,7 +155,6 @@ object TransferFundsDialogController {
     * Transfer Funds Form
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class TransferFundsForm(var action: js.UndefOr[TransferFundsAction] = js.undefined,
                           var amount: js.UndefOr[Double] = js.undefined,
                           var funds: js.UndefOr[Double] = js.undefined,
@@ -166,7 +164,6 @@ object TransferFundsDialogController {
     * Transfer Funds Action
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class TransferFundsAction(val label: String, val source: String) extends js.Object
 
 }

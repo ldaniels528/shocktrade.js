@@ -37,7 +37,7 @@ object IntraDayQuotesDAO {
         else None
       ).flatten: _*)
 
-      dao.findOneAsync[IntraDayQuoteData](query)
+      dao.findOneFuture[IntraDayQuoteData](query)
     }
 
     @inline

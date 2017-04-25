@@ -1,15 +1,12 @@
 package com.shocktrade.webapp.routes
 
 import com.shocktrade.server.common.TradingClock
-
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.moment._
 import io.scalajs.npm.moment.timezone._
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Trading Clock Routes
@@ -17,7 +14,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   */
 object TradingClockRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
     // load modules
     MomentTimezone
 
@@ -74,10 +71,8 @@ object TradingClockRoutes {
 
   }
 
-  @ScalaJSDefined
   class TradingStart(val delayInMillis: Double) extends js.Object
 
-  @ScalaJSDefined
   class TradingStatus(val active: Boolean, val sysTime: Double, val delay: Double, val start: Double, val end: Double, val stateChanged: Boolean) extends js.Object
 
 }

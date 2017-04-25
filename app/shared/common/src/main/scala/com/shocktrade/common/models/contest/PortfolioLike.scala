@@ -1,13 +1,11 @@
 package com.shocktrade.common.models.contest
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Portfolio-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait PortfolioLike extends js.Object {
 
   def playerID: js.UndefOr[String]

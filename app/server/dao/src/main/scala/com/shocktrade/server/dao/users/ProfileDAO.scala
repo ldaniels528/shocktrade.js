@@ -37,12 +37,12 @@ object ProfileDAO {
 
     @inline
     def findOneByID(userID: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-      dao.findOneAsync[UserProfileData]("_id" $eq userID.$oid)
+      dao.findOneFuture[UserProfileData]("_id" $eq userID.$oid)
     }
 
     @inline
     def findOneByFacebookID(fbId: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-      dao.findOneAsync[UserProfileData]("facebookID" $eq fbId)
+      dao.findOneFuture[UserProfileData]("facebookID" $eq fbId)
     }
 
     @inline

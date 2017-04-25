@@ -17,10 +17,10 @@ class SharedContentParser() {
 
   def parse(url: String)(implicit ec: ExecutionContext): Future[Map[String, String]] = {
     for {
-      (response, body) <- Request.getAsync(url) //if response.statusCode == 200
+      (response, body) <- Request.getFuture(url) //if response.statusCode == 200
 
-      dataSet = body.findIndices("<head", "</head>") map {
-        case (start, end) => body.substring(start, end - start)
+      dataSet = body.toString.findIndices("<head", "</head>") map {
+        case (start, end) => body.toString.substring(start, end - start)
       } match {
         case Some(text) => text.extractAll("<meta", ">")
         case None => Nil

@@ -4,13 +4,11 @@ import com.shocktrade.common.models.contest._
 import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Portfolio Data model for the Qualification Engine
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class PortfolioData(var _id: js.UndefOr[ObjectID] = js.undefined,
                     var contestID: js.UndefOr[String] = js.undefined,
                     var contestName: js.UndefOr[String] = js.undefined,

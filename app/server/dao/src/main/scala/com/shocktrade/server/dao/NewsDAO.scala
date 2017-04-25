@@ -32,7 +32,7 @@ object NewsDAO {
       */
     @inline
     def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[NewsSourceData]] = {
-      dao.findOneAsync[NewsSourceData]("_id" $eq id.$oid)
+      dao.findOneFuture[NewsSourceData]("_id" $eq id.$oid)
     }
 
     /**

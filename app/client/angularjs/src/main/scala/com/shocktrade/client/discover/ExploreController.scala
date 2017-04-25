@@ -1,23 +1,22 @@
 package com.shocktrade.client.discover
 
-import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.client.discover.ExploreController._
 import com.shocktrade.client.discover.ExploreService.AggregatedSectorData
 import com.shocktrade.client.{GlobalSelectedSymbol, GlobalSelectedSymbolScope}
 import com.shocktrade.common.models.quote.{ResearchQuote, SectorInfoQuote}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -253,7 +252,6 @@ object ExploreController {
   /**
     * Sector Definition
     */
-  @ScalaJSDefined
   class Sector(val label: String, val total: Int) extends js.Object {
     var industries: js.UndefOr[js.Array[Industry]] = js.undefined
     var expanded: js.UndefOr[Boolean] = js.undefined
@@ -263,7 +261,6 @@ object ExploreController {
   /**
     * Industry-Like Definition
     */
-  @ScalaJSDefined
   trait IndustryLike extends js.Object {
     val label: String
     val total: Int
@@ -275,7 +272,6 @@ object ExploreController {
   /**
     * Industry Definition
     */
-  @ScalaJSDefined
   class Industry(val label: String, val total: Int) extends IndustryLike {
     var subIndustries: js.UndefOr[js.Array[SubIndustry]] = js.undefined
     override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
@@ -286,7 +282,6 @@ object ExploreController {
   /**
     * Sub-industry Definition
     */
-  @ScalaJSDefined
   class SubIndustry(val label: String, val total: Int) extends IndustryLike {
     override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
     override var expanded: js.UndefOr[Boolean] = js.undefined

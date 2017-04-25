@@ -1,13 +1,11 @@
 package com.shocktrade.autonomous.dao
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Trading Strategy's Selling Flow
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class SellingFlow(val profitTarget: js.UndefOr[Double]) extends js.Object
 
 /**
@@ -23,7 +21,7 @@ object SellingFlow {
   implicit class SellingFlowEnrichment(val flow: SellingFlow) extends AnyVal {
 
     @inline
-    def isValid = flow.profitTarget.nonEmpty
+    def isValid: Boolean = flow.profitTarget.nonEmpty
 
   }
 

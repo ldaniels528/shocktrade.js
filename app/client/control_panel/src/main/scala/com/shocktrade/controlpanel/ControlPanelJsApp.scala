@@ -8,20 +8,19 @@ import io.scalajs.nodejs.{console, process}
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.{JSExport, JSExportAll}
 import scala.util.{Failure, Success, Try}
 
 /**
   * Control Panel JavaScript Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@JSExportAll
-object ControlPanelJsApp extends js.JSApp {
+object ControlPanelJsApp {
   private val logger = LoggerFactory.getLogger(getClass)
   private val compiler = Compiler()
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]): Unit = {
     logger.info("Starting the ShockTrade Control Panel...")
 
     val host = process.env.getOrElse("host", "localhost:1337")

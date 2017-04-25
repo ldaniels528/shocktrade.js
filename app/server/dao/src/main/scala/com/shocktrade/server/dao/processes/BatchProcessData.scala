@@ -4,13 +4,11 @@ import io.scalajs.npm.mongodb.ObjectID
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Batch Process Data
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class BatchProcessData(var _id: js.UndefOr[ObjectID] = js.undefined,
                        var name: js.UndefOr[String] = js.undefined,
                        var enabled: js.UndefOr[Boolean]) extends js.Object

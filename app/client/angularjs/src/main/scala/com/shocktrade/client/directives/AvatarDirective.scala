@@ -1,12 +1,11 @@
 package com.shocktrade.client.directives
 
 import io.scalajs.npm.angularjs.Directive._
-import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope, angular}
+import io.scalajs.npm.angularjs._
 import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Avatar Directive
@@ -37,7 +36,6 @@ class AvatarDirective extends Directive with ElementRestriction with LinkSupport
   * Avatar Directive Input Parameters
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class AvatarDirectiveInputs(val id: js.UndefOr[String], val link: js.UndefOr[String], val `class`: String, val style: String) extends js.Object
 
 /**

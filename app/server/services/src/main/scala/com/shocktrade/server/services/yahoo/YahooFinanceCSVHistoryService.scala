@@ -3,13 +3,11 @@ package com.shocktrade.server.services.yahoo
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService._
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.request.Request
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.Try
 
 /**
@@ -20,8 +18,8 @@ class YahooFinanceCSVHistoryService() {
 
   def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext): Future[YFHistoricalQuotes] = {
     val startTime = js.Date.now()
-    Request.getAsync(toURL(symbol, from, to)) map { case (response, data) =>
-      new YFHistoricalQuotes(symbol = symbol, quotes = parseHistory(data), responseTime = js.Date.now() - startTime)
+    Request.getFuture(toURL(symbol, from, to)) map { case (response, data) =>
+      new YFHistoricalQuotes(symbol = symbol, quotes = parseHistory(data.toString), responseTime = js.Date.now() - startTime)
     }
   }
 
@@ -57,12 +55,10 @@ class YahooFinanceCSVHistoryService() {
   */
 object YahooFinanceCSVHistoryService {
 
-  @ScalaJSDefined
   class YFHistoricalQuotes(val symbol: String,
                            val quotes: js.Array[YFHistoricalQuote],
                            val responseTime: Double) extends js.Object
 
-  @ScalaJSDefined
   class YFHistoricalQuote(val tradeDate: js.UndefOr[js.Date],
                           val open: js.UndefOr[Double],
                           val high: js.UndefOr[Double],

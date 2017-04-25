@@ -1,13 +1,11 @@
 package com.shocktrade.client
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents an Award
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Award(val name: String,
             val code: String,
             val icon: String,

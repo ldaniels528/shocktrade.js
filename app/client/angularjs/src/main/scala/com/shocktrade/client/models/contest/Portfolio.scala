@@ -3,13 +3,11 @@ package com.shocktrade.client.models.contest
 import com.shocktrade.common.models.contest._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Portfolio model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Portfolio(var _id: js.UndefOr[String] = js.undefined,
                 var contestID: js.UndefOr[String] = js.undefined,
                 var playerID: js.UndefOr[String] = js.undefined,

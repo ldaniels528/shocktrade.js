@@ -10,7 +10,6 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * @author lawrence.daniels@gmail.com
   * @see [[ReplyLikes]]
   */
-@ScalaJSDefined
 class Reply extends js.Object {
   var _id: js.UndefOr[String] = js.undefined
   var text: js.UndefOr[String] = js.undefined
@@ -28,7 +27,7 @@ class Reply extends js.Object {
   */
 object Reply {
 
-  def apply(text: String, submitter: UserLike) = {
+  def apply(text: String, submitter: UserLike): Reply = {
     val reply = new Reply()
     reply.text = text
     reply.submitter = submitter

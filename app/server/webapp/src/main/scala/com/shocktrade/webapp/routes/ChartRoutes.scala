@@ -1,13 +1,13 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.server.dao.contest.PortfolioDAO._
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.ExposureData
 import com.shocktrade.common.models.quote.ExposureQuote
-
+import com.shocktrade.server.dao.contest.PortfolioDAO._
+import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
   */
 object ChartRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
     implicit val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
     implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
 

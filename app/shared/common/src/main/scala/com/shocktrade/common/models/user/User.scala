@@ -5,13 +5,11 @@ import io.scalajs.util.ScalaJsHelper._
 
 import scala.language.implicitConversions
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents an application user
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait User extends UserLike {
   var _id: js.UndefOr[String]
   var facebookID: js.UndefOr[String]

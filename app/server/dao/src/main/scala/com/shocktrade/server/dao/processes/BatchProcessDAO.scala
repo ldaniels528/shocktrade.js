@@ -26,7 +26,7 @@ object BatchProcessDAO {
 
     @inline
     def findProcess(name: String)(implicit ec: ExecutionContext): Future[Option[BatchProcessData]] = {
-      dao.findOneAsync[BatchProcessData]("name" $eq name)
+      dao.findOneFuture[BatchProcessData]("name" $eq name)
     }
 
   }

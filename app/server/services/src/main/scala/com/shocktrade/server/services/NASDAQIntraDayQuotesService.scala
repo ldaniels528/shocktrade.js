@@ -8,14 +8,12 @@ import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.moment.timezone._
 import io.scalajs.npm.request.Request
 import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
@@ -55,7 +53,7 @@ class NASDAQIntraDayQuotesService() {
   private def getPage(url: String)(implicit ec: ExecutionContext) = {
     val startTime = js.Date.now()
     val promise = Promise[NASDAQIntraDayPage]()
-    Request.getAsync(url) foreach { case (response, html) =>
+    Request.getFuture(url) foreach { case (response, html) =>
       val parser = new htmlparser2.Parser(new ParserHandler {
         val sb = new StringBuilder()
         val headers = js.Array[String]()
@@ -99,7 +97,7 @@ class NASDAQIntraDayQuotesService() {
 
       }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 
-      parser.write(html)
+      parser.write(html.toString)
       parser.end()
     }
     promise.future
@@ -220,7 +218,6 @@ object NASDAQIntraDayQuotesService {
     * @param symbol the given stock ticker
     * @param pages  the collection of pages
     */
-  @ScalaJSDefined
   class NASDAQIntraDayResponse(val symbol: String,
                                val pages: js.Array[NASDAQIntraDayPage]) extends js.Object
 
@@ -231,7 +228,6 @@ object NASDAQIntraDayQuotesService {
     * @param quotes       the collection of quotes
     * @param responseTime the given mapping of URL to response time in milliseconds
     */
-  @ScalaJSDefined
   class NASDAQIntraDayPage(val pageUrl: String,
                            val nextPageUrl: js.UndefOr[String],
                            val quotes: js.Array[NASDAQIntraDayQuote],
@@ -243,7 +239,6 @@ object NASDAQIntraDayQuotesService {
     * @param time   the given trading time
     * @param volume the given trading volume
     */
-  @ScalaJSDefined
   class NASDAQIntraDayQuote(val price: js.UndefOr[Double],
                             val time: js.UndefOr[String],
                             val volume: js.UndefOr[Double]) extends js.Object

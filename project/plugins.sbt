@@ -2,7 +2,7 @@
 logLevel := Level.Info
 
 // Plugins
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.15")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.20")
 
 // Resolvers
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"

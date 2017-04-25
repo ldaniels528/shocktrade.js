@@ -14,17 +14,17 @@ import io.scalajs.npm.mongodb.{Db, MongoClient}
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.JSExport
 
 /**
   * ShockTrade Server JavaScript Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@JSExportAll
-object WebServerJsApp extends js.JSApp {
+object WebServerJsApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]): Unit = {
     logger.info("Starting the ShockTrade Web Server...")
 
     // determine the port to listen on
@@ -34,7 +34,7 @@ object WebServerJsApp extends js.JSApp {
     logger.info("Loading MongoDB module...")
     val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
     logger.info("Connecting to database '%s'...", dbConnect)
-    implicit val dbFuture = MongoClient.connectAsync(dbConnect).toFuture
+    implicit val dbFuture = MongoClient.connectFuture(dbConnect)
 
     // setup the application
     val port = process.port getOrElse "9000"

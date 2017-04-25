@@ -4,12 +4,10 @@ import com.shocktrade.server.services.BarChartProfileService._
 import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2.{Parser, ParserHandler, ParserOptions}
 import io.scalajs.npm.request.{Request, RequestBody}
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 
 /**
@@ -26,8 +24,8 @@ class BarChartProfileService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BarChartProfile]] = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- Request.getAsync(toURL(symbol))
-      profileOpt <- parseHtml(symbol, html, startTime)
+      (response, html) <- Request.getFuture(toURL(symbol))
+      profileOpt <- parseHtml(symbol, html.toString, startTime)
     } yield profileOpt
   }
 
@@ -93,7 +91,7 @@ class BarChartProfileService() {
 
     }, new ParserOptions(decodeEntities = true, lowerCaseTags = true))
 
-    parser.write(html)
+    parser.write(html.toString)
     parser.end()
     promise.future
   }
@@ -124,7 +122,6 @@ object BarChartProfileService {
   /**
     * Represents a Bar Chart company profile
     */
-  @ScalaJSDefined
   class BarChartProfile(val symbol: String,
                         val exchange: js.UndefOr[String],
                         val contactInfo: js.UndefOr[js.Array[String]],

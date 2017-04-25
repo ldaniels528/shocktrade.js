@@ -3,13 +3,11 @@ package com.shocktrade.common.models.contest
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Participant Model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Participant(var _id: js.UndefOr[String],
                   var name: js.UndefOr[String],
                   var facebookID: js.UndefOr[String],
@@ -30,7 +28,8 @@ object Participant {
     */
   implicit class ParticipantEnrichment(val participant: Participant) extends AnyVal {
 
-    def is(id: js.UndefOr[String]) = participant._id ?== id
+    @inline
+    def is(id: js.UndefOr[String]): Boolean = participant._id ?== id
 
   }
 

@@ -12,7 +12,6 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * Contest Creation Form
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ContestCreateForm(var name: js.UndefOr[String] = js.undefined,
                         var playerId: js.UndefOr[String] = js.undefined,
                         var playerName: js.UndefOr[String] = js.undefined,
@@ -33,14 +32,16 @@ class ContestCreateForm(var name: js.UndefOr[String] = js.undefined,
   */
 object ContestCreateForm {
 
-  @ScalaJSDefined
+  /**
+    * Game Balance
+    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+    */
   class GameBalance(val label: String, val value: Double) extends js.Object
 
   /**
     * Game Duration
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class GameDuration(var label: String, var value: Int) extends js.Object
 
   /**

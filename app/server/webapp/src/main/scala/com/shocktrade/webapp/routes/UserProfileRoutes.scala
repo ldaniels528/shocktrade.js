@@ -8,9 +8,8 @@ import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.dao.users.UserProfileData
 import com.shocktrade.server.facade.PricingQuote
-import io.scalajs.nodejs._
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -18,7 +17,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -132,10 +130,8 @@ object UserProfileRoutes {
 
   }
 
-  @ScalaJSDefined
   class FBProfile(val id: js.UndefOr[String], val name: js.UndefOr[String]) extends js.Object
 
-  @ScalaJSDefined
   class UserInfo(val wallet: Double) extends js.Object
 
   object UserInfo {

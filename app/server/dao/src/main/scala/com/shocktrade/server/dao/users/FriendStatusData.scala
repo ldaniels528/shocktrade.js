@@ -1,13 +1,11 @@
 package com.shocktrade.server.dao.users
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents Friend Status Data
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait FriendStatusData extends js.Object {
   var facebookID: js.UndefOr[String]
   var name: js.UndefOr[String]

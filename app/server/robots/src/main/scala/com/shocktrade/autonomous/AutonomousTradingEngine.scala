@@ -25,7 +25,6 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -414,7 +413,6 @@ object AutonomousTradingEngine {
     * @param success indicates a successful update
     * @param updates the number of records updated/modified
     */
-  @ScalaJSDefined
   class UpdateResult(val success: Boolean = false, val updates: Int = 0) extends js.Object
 
   /**
@@ -422,7 +420,6 @@ object AutonomousTradingEngine {
     * @param symbol    the given symbol (e.g. "AAPL")
     * @param lastTrade the given last trade
     */
-  @ScalaJSDefined
   class PricingQuote(val symbol: String, val lastTrade: js.UndefOr[Double]) extends js.Object
 
   /**

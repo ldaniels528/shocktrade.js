@@ -19,7 +19,7 @@ class DbPool[T <: Collection](dbConnectionString: String, ttl: FiniteDuration = 
   def apply()(implicit ec: ExecutionContext): Future[T] = {
     if (dbFuture == null || js.Date.now() - lastUpdatedTime >= ttl.toMillis) {
       Try(Option(dbFuture).foreach(_.foreach(_.close())))
-      dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
+      dbFuture = MongoClient.connectFuture(dbConnectionString)
       dao = dbFuture flatMap create
       lastUpdatedTime = js.Date.now()
     }

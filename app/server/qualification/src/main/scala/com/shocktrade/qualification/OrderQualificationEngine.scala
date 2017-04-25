@@ -1,6 +1,5 @@
 package com.shocktrade.qualification
 
-import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.common.models.contest._
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.qualification.OrderQualificationEngine._
@@ -27,7 +26,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -327,7 +325,6 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   */
 object OrderQualificationEngine {
 
-  @ScalaJSDefined
   trait UserInfo extends js.Object {
     def wallet: Double
   }
@@ -336,7 +333,6 @@ object OrderQualificationEngine {
     val Fields = js.Array("wallet")
   }
 
-  @ScalaJSDefined
   class WorkQuote(val symbol: js.UndefOr[String],
                   val exchange: js.UndefOr[String],
                   val lastTrade: js.UndefOr[Double],

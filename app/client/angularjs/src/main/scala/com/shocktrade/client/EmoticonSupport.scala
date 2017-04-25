@@ -3,7 +3,6 @@ package com.shocktrade.client
 import com.shocktrade.client.EmoticonSupport.Emoticon
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Emoticon Support
@@ -48,7 +47,6 @@ object EmoticonSupport {
     * Represents an Emoticon
     * @author lawrence.daniels@gmail.com
     */
-  @ScalaJSDefined
   class Emoticon(var symbol: String, var uri: String, var tooltip: String) extends js.Object
 
 }

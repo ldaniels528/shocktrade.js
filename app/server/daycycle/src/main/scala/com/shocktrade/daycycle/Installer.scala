@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
-  implicit val dbFuture: Future[Db] = MongoClient.connectAsync(dbConnectionString)
+  implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
   private val awardsDAO = dbFuture.map(_.getAwardsDAO)
   private val newsDAO = dbFuture.map(_.getNewsDAO)

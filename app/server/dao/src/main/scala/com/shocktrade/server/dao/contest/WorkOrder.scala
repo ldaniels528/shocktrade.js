@@ -4,17 +4,15 @@ import java.util.UUID
 
 import com.shocktrade.common.Commissions
 import io.scalajs.npm.mongodb.ObjectID
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Work Order
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class WorkOrder(val portfolioID: ObjectID,
                 val order: OrderData,
                 val symbol: String,

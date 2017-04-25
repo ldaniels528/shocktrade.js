@@ -1,14 +1,12 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.server.services.NASDAQCompanyListService._
-import io.scalajs.npm.csvparse._
+import io.scalajs.npm.csvparse.{CsvParse, _}
 import io.scalajs.npm.request.Request
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * NASDAQ Company List Service
@@ -28,9 +26,9 @@ class NASDAQCompanyListService() {
     download(exchange = "NYSE", url = "http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download")
   }
 
-  private def download(exchange: String, url: String)(implicit ec: ExecutionContext) = {
-    Request.getAsync(url) flatMap { case (response, data) =>
-      val lines = data.split("[\n]").tail.toSeq
+  private def download(exchange: String, url: String)(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
+    Request.getFuture(url) flatMap { case (response, data) =>
+      val lines = data.toString.split("[\n]").tail.toSeq
       Future.sequence(lines map (toCompanyInfo(exchange, _))) map (_.flatten)
     }
   }
@@ -68,7 +66,6 @@ class NASDAQCompanyListService() {
 object NASDAQCompanyListService {
   private val headers = Seq("Symbol", "Name", "LastSale", "MarketCap", "ADRTSO", "IPOyear", "Sector", "Industry", "Summary", "Quote")
 
-  @ScalaJSDefined
   class NASDAQCompanyInfo(val symbol: js.UndefOr[String],
                           val exchange: js.UndefOr[String],
                           val name: js.UndefOr[String],

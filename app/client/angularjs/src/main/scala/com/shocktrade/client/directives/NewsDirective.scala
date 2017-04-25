@@ -1,13 +1,12 @@
 package com.shocktrade.client.directives
 
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, TemplateSupport}
 import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
-import io.scalajs.dom.html.browser.console
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * News Directive
@@ -62,7 +61,6 @@ class NewsDirective($sce: Sce) extends Directive with ElementRestriction with Li
   * News Directive Input Parameters
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class NewsDirectiveInputs(val `class`: String, val content: String) extends js.Object
 
 /**

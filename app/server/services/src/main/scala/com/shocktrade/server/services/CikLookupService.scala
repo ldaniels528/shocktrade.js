@@ -6,12 +6,10 @@ import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2
 import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
 import io.scalajs.npm.request.Request
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 import scala.util.{Failure, Success}
 
@@ -24,8 +22,8 @@ class CikLookupService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[CikLookupResponse]] = {
     val promise = Promise[Option[CikLookupResponse]]()
     val startTime = js.Date.now()
-    Request.getAsync(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
-      case Success((response, html)) => parseHtml(symbol, html, startTime, promise)
+    Request.getFuture(s"https://www.sec.gov/cgi-bin/browse-edgar?CIK=$symbol&action=getcompany") onComplete {
+      case Success((response, html)) => parseHtml(symbol, html.toString, startTime, promise)
       case Failure(e) => promise.failure(e)
     }
     promise.future
@@ -100,7 +98,6 @@ class CikLookupService() {
   */
 object CikLookupService {
 
-  @ScalaJSDefined
   class CikLookupResponse(val symbol: String,
                           val CIK: String,
                           val companyName: js.UndefOr[String],

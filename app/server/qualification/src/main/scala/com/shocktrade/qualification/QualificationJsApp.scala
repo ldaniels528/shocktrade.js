@@ -11,18 +11,17 @@ import io.scalajs.npm.mongodb.MongoClient
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.JSExport
 
 /**
   * Qualification Server Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@JSExportAll
-object QualificationJsApp extends js.JSApp {
+object QualificationJsApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]) {
     logger.log("Starting the Qualification Server...")
 
     // determine the port to listen on
@@ -46,7 +45,7 @@ object QualificationJsApp extends js.JSApp {
     // setup mongodb connection
     logger.log("Loading MongoDB module...")
     logger.log("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
+    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
 
     // disable caching
     app.disable("etag")

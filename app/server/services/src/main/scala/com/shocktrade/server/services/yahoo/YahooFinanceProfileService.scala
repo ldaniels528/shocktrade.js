@@ -5,12 +5,10 @@ import io.scalajs.nodejs.Error
 import io.scalajs.npm.htmlparser2
 import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
 import io.scalajs.npm.request.Request
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.runtime._
 
 /**
@@ -22,8 +20,8 @@ class YahooFinanceProfileService() {
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFProfile]] = {
     val startTime = js.Date.now()
     for {
-      (response, html) <- Request.getAsync(s"https://finance.yahoo.com/quote/$symbol/profile")
-      profile_? <- parseHtml(symbol, html, startTime)
+      (response, html) <- Request.getFuture(s"https://finance.yahoo.com/quote/$symbol/profile")
+      profile_? <- parseHtml(symbol, html.toString, startTime)
     } yield profile_?
   }
 
@@ -114,8 +112,6 @@ object YahooFinanceProfileService {
     * Represents a Yahoo! Finance profile
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
-  class YFProfile(val symbol: String,
-                  val responseTime: Double) extends js.Object
+  class YFProfile(val symbol: String, val responseTime: Double) extends js.Object
 
 }

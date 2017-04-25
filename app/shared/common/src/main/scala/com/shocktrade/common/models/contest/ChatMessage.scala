@@ -6,13 +6,11 @@ import com.shocktrade.common.models.user.User
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a chat message
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ChatMessage(val _id: js.UndefOr[String] = UUID.randomUUID().toString,
                   val sender: js.UndefOr[User],
                   val text: js.UndefOr[String],
@@ -34,14 +32,12 @@ object ChatMessage {
     def copy(_id: js.UndefOr[String] = js.undefined,
              sender: js.UndefOr[User] = js.undefined,
              text: js.UndefOr[String] = js.undefined,
-             sentTime: js.UndefOr[js.Date] = js.undefined) = {
-      new ChatMessage(
-        _id = _id ?? message._id,
-        sender = sender ?? message.sender,
-        text = text ?? message.text,
-        sentTime = sentTime ?? message.sentTime
-      )
-    }
+             sentTime: js.UndefOr[js.Date] = js.undefined) = new ChatMessage(
+      _id = _id ?? message._id,
+      sender = sender ?? message.sender,
+      text = text ?? message.text,
+      sentTime = sentTime ?? message.sentTime
+    )
 
   }
 

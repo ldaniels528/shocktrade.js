@@ -9,7 +9,7 @@ import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
-import io.scalajs.npm.kafkanode.{Payload, Producer}
+import io.scalajs.npm.kafkanode._
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -47,20 +47,20 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock) = clock.isTradingActive || clock.isTradingActive(lastRun)
+  override def isReady(clock: TradingClock): Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- getSecurities(clock.getTradeStopTime)
       results <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputBatch](securities.size) {
         logger.info(s"Scheduling ${securities.size} pages of securities for updates and snapshots...")
 
-        override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
+        override def onNext(ctx: ConcurrentContext, securities: InputBatch): Future[BulkUpdateOutcome] = {
           val symbols = securities.map(_.symbol)
           for {
             quotes <- getYahooCSVQuotes(symbols)
@@ -97,7 +97,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
 
   private def persistSecurities(quotes: Seq[YFCSVQuote]) = {
     val payloads = js.Array(quotes.zipWithIndex map { case (q, n) =>
-      new Payload(topic, messages = JSON.stringify(q), partition = n % 10)
+      new ProduceRequest(topic, messages = JSON.stringify(q), partition = n % 10)
     }: _*)
     kafkaProducer.sendFuture(payloads) map (_ => quotes.length)
   }
@@ -167,7 +167,7 @@ object SecuritiesRefreshKafkaDaemon {
     )
 
     @inline
-    def normalizedExchange(mapping: js.Dictionary[SecurityRef]) = {
+    def normalizedExchange(mapping: js.Dictionary[SecurityRef]): String = {
       val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
       originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
         case Some(exchange) => exchange

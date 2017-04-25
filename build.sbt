@@ -5,12 +5,8 @@ import sbt.Project.projectToRef
 import sbt._
 
 val appVersion = "0.1.2"
-val appScalaVersion = "2.12.1"
-val scalaJsIoVersion = "0.4.0-pre3"
-
-scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint")
-
-javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars")
+val appScalaVersion = "2.12.3"
+val scalaJsIOVersion = "0.4.1"
 
 lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directory")
 copyJS := {
@@ -29,11 +25,12 @@ copyJS := {
   IO.copy(files1 ++ files2 ++ files3 ++ files4 ++ files5, overwrite = true)
 }
 
-lazy val uiSettings = Seq(
-  scalacOptions ++= Seq("-feature", "-deprecation"),
+lazy val jsCommonSettings = Seq(
+  javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
+  scalacOptions ++= Seq("-encoding", "UTF-8", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
+  scalacOptions ++= Seq("-feature", "-deprecation", "-P:scalajs:sjsDefinedByDefault"),
   scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
   scalaVersion := appScalaVersion,
-  scalaJSUseMainModuleInitializer := true,
   autoCompilerPlugins := true,
   relativeSourceMaps := true,
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
@@ -43,33 +40,19 @@ lazy val uiSettings = Seq(
     "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
   ))
 
-lazy val appSettings = Seq(
-  scalacOptions ++= Seq("-feature", "-deprecation"),
-  scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
-  scalaVersion := appScalaVersion,
-  scalaJSModuleKind := ModuleKind.CommonJSModule,
-  autoCompilerPlugins := true,
-  relativeSourceMaps := true,
-  homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
-  resolvers += Resolver.sonatypeRepo("releases"),
-  libraryDependencies ++= Seq(
-    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
-  ))
+lazy val uiSettings = jsCommonSettings ++ Seq(
+  scalaJSUseMainModuleInitializer := true
+)
 
-lazy val moduleSettings = Seq(
-  scalacOptions ++= Seq("-feature", "-deprecation"),
-  scalacOptions in(Compile, doc) ++= Seq("-no-link-warnings"),
-  scalaVersion := appScalaVersion,
+lazy val appSettings = jsCommonSettings ++ Seq(
   scalaJSModuleKind := ModuleKind.CommonJSModule,
-  autoCompilerPlugins := true,
-  relativeSourceMaps := true,
-  homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
-  resolvers += Resolver.sonatypeRepo("releases"),
-  libraryDependencies ++= Seq(
-    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
-  ))
+  scalaJSUseMainModuleInitializer := true
+)
+
+lazy val moduleSettings = jsCommonSettings ++ Seq(
+  scalaJSModuleKind := ModuleKind.CommonJSModule,
+  scalaJSUseMainModuleInitializer := false
+)
 
 lazy val common = (project in file("./app/shared/common"))
   .enablePlugins(ScalaJSPlugin)
@@ -79,7 +62,7 @@ lazy val common = (project in file("./app/shared/common"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion
     ))
 
 lazy val angularjs = (project in file("./app/client/angularjs"))
@@ -91,10 +74,11 @@ lazy val angularjs = (project in file("./app/client/angularjs"))
     name := "shocktrade-client-angularjs",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.client.WebClientJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "dom-html" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "angular-bundle" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "dom-html" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "angular-bundle" % scalaJsIOVersion
     ))
 
 lazy val server_common = (project in file("./app/server/common"))
@@ -105,11 +89,11 @@ lazy val server_common = (project in file("./app/server/common"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion
     ))
 
 lazy val webapp = (project in file("./app/server/webapp"))
@@ -121,17 +105,18 @@ lazy val webapp = (project in file("./app/server/webapp"))
     name := "shocktrade-webapp",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.webapp.WebServerJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "express-csv" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "express-fileupload" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "express-ws" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "md5" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "splitargs" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-csv" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-fileupload" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "express-ws" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion
     ))
 
 lazy val control_panel = (project in file("./app/client/control_panel"))
@@ -143,10 +128,11 @@ lazy val control_panel = (project in file("./app/client/control_panel"))
     name := "shocktrade-controlpanel",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.controlpanel.ControlPanelJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
 lazy val daycycle = (project in file("./app/server/daycycle"))
@@ -158,15 +144,16 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
     name := "shocktrade-daycycle",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.daycycle.DayCycleJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "kafka-node" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "kafka-node" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
@@ -178,14 +165,15 @@ lazy val qualification = (project in file("./app/server/qualification"))
     name := "shocktrade-qualification",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.qualification.QualificationJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
 lazy val robots = (project in file("./app/server/robots"))
@@ -197,15 +185,16 @@ lazy val robots = (project in file("./app/server/robots"))
     name := "shocktrade-robots",
     organization := "com.shocktrade",
     version := appVersion,
+    mainClass := Some("com.shocktrade.autonomous.AutonomousTradingJsApp"),
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "numeral" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "numeral" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
 lazy val dao = (project in file("./app/server/dao"))
@@ -218,11 +207,11 @@ lazy val dao = (project in file("./app/server/dao"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion
     ))
 
 lazy val services = (project in file("./app/server/services"))
@@ -235,15 +224,15 @@ lazy val services = (project in file("./app/server/services"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "csv-parse" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "xml2js" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "csv-parse" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
     ))
 
 lazy val facades = (project in file("./app/server/facades"))
@@ -256,28 +245,28 @@ lazy val facades = (project in file("./app/server/facades"))
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIoVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "csv-parse" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIoVersion,
-      "io.scalajs.npm" %%% "xml2js" % scalaJsIoVersion
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "csv-parse" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
     ))
 
 lazy val shocktradejs = (project in file("."))
   .aggregate(angularjs, webapp, daycycle, qualification, robots, control_panel)
   .dependsOn(angularjs, webapp)
   .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
+  .settings(moduleSettings: _*)
   .settings(
     name := "shocktrade.js",
     organization := "com.shocktrade",
     version := appVersion,
     scalaVersion := appScalaVersion,
-    relativeSourceMaps := true,
+    //mainClass := Some("com.shocktrade.webapp.WebServerJsApp"),
     compile in Compile <<=
       (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),
     ivyScala := ivyScala.value map (_.copy(overrideScalaVersion = true)),

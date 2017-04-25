@@ -1,22 +1,21 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.client.Filters.toDuration
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.models.user.User
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Location, Scope, injected}
-import io.scalajs.dom.html.browser.console
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -183,7 +182,6 @@ object ChatController {
     new Emoticon(symbol = "(?)", uri = "icon_question.gif", tooltip = "Question"),
     new Emoticon(symbol = "=>", uri = "icon_arrow.gif", tooltip = "Arrow"))
 
-  @ScalaJSDefined
   class Emoticon(val symbol: String, val uri: String, val tooltip: String) extends js.Object
 
 }

@@ -20,7 +20,7 @@ class DaemonsFx() extends Function {
 
   override def eval(rc: RuntimeContext, scope: Scope)(implicit ec: ExecutionContext): Future[TextValue] = {
     val remote = scope.findVariable("remote").map(_.value.toString) getOrElse "localhost:1337"
-    val promise = Request.getAsync(s"http://$remote/api/daemons") map { case (response, data) => pretty(data) }
+    val promise = Request.getFuture(s"http://$remote/api/daemons") map { case (response, data) => pretty(data.toString) }
     promise.map(TextValue.apply)
   }
 

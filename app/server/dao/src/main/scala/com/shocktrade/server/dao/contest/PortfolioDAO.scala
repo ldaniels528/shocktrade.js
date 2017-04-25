@@ -34,7 +34,7 @@ object PortfolioDAO {
     @inline
     def cancelOrder(portfolioID: String, orderID: String)(implicit ec: ExecutionContext): Future[FindAndModifyWriteOpResult] = {
       for {
-        portfolio <- dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
+        portfolio <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("orders")) map (_.orDie(s"Portfolio # $portfolioID not found"))
         order = portfolio.orders.toOption.flatMap(_.find(_._id.contains(orderID))) orDie s"Order # $orderID not found"
         result <- dao.findOneAndUpdate(
           filter = doc("_id" $eq portfolioID.$oid),
@@ -82,22 +82,22 @@ object PortfolioDAO {
 
     @inline
     def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
-      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid)
+      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid)
     }
 
     @inline
     def findOneByPlayer(contestID: String, playerID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
-      dao.findOneAsync[PortfolioData](doc("contestID" $eq contestID, "playerID" $eq playerID))
+      dao.findOneFuture[PortfolioData](doc("contestID" $eq contestID, "playerID" $eq playerID))
     }
 
     @inline
     def findPerks(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
-      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("cashAccount", "perks"))
+      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("cashAccount", "perks"))
     }
 
     @inline
     def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[js.Array[PositionData]]] = {
-      dao.findOneAsync[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("positions")) map (_ map (_.positions getOrElse emptyArray))
+      dao.findOneFuture[PortfolioData]("_id" $eq portfolioID.$oid, fields = js.Array("positions")) map (_ map (_.positions getOrElse emptyArray))
     }
 
     @inline

@@ -1,12 +1,10 @@
 package com.shocktrade.server.dao.securities
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a securities update quote
   */
-@ScalaJSDefined
 class SecurityUpdateQuote(val symbol: js.UndefOr[String],
                           val exchange: js.UndefOr[String],
                           val subExchange: js.UndefOr[String],

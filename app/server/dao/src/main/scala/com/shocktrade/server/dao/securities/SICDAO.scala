@@ -30,7 +30,7 @@ object SICDAO {
       */
     @inline
     def findByCode(sicCode: Int)(implicit ec: ExecutionContext): Future[Option[SIC]] = {
-      dao.findOneAsync[SIC]("sicNumber" $eq sicCode)
+      dao.findOneFuture[SIC]("sicNumber" $eq sicCode)
     }
 
   }

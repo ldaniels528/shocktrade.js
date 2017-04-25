@@ -1,13 +1,11 @@
 package com.shocktrade.client
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Game Level
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class GameLevel(val number: Int, val nextLevelXP: Int, val description: String) extends js.Object
 
 /**

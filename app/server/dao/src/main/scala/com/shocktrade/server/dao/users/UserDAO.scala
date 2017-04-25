@@ -27,7 +27,7 @@ object UserDAO {
 
     @inline
     def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
-      dao.findOneAsync[T](selector = "_id" $eq id.$oid, fields = fields)
+      dao.findOneFuture[T](selector = "_id" $eq id.$oid, fields = fields)
     }
 
     @inline
@@ -42,7 +42,7 @@ object UserDAO {
 
     @inline
     def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext): Future[Option[FriendStatusData]] = {
-      dao.findOneAsync[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
+      dao.findOneFuture[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
     }
 
   }

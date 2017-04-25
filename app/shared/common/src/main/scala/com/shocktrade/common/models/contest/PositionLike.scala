@@ -3,13 +3,11 @@ package com.shocktrade.common.models.contest
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Position-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait PositionLike extends js.Object {
 
   def _id: js.UndefOr[String]

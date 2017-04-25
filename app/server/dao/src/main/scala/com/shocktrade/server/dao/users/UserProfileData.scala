@@ -4,13 +4,11 @@ import com.shocktrade.common.models.user.UserProfileLike
 import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a User Profile data model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class UserProfileData(var _id: js.UndefOr[ObjectID],
                       var facebookID: js.UndefOr[String],
                       var name: js.UndefOr[String],

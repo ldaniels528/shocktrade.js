@@ -1,13 +1,11 @@
 package com.shocktrade.client
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Main Tab
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class MainTab(val name: String,
               val icon_class: String,
               val tool_tip: String,

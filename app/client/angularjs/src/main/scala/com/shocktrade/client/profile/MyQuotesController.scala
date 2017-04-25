@@ -6,15 +6,14 @@ import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.profile.MyQuotesController._
 import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Location, _}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -39,7 +38,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.isSelected = (aQuote: js.UndefOr[ResearchQuote]) => aQuote.exists($scope.selectedQuote == _)
+  $scope.isSelected = (aQuote: js.UndefOr[ResearchQuote]) => aQuote.exists($scope.selectedQuote.contains)
 
   $scope.selectQuote = (aQuote: js.UndefOr[ResearchQuote]) => $scope.selectedQuote = aQuote
 
@@ -158,7 +157,6 @@ object MyQuotesController {
     Recents -> "fa-history"
   )
 
-  @ScalaJSDefined
   class Expandable(val icon: String = null,
                    var quotes: js.Array[OrderQuote] = null,
                    var expanded: Boolean = false,

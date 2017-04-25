@@ -31,7 +31,7 @@ object KeyStatisticsDAO {
       */
     @inline
     def findBySymbol(symbol: String)(implicit ec: ExecutionContext): Future[Option[KeyStatisticsData]] = {
-      dao.findOneAsync[KeyStatisticsData]("symbol" $eq symbol)
+      dao.findOneFuture[KeyStatisticsData]("symbol" $eq symbol)
     }
 
     /**

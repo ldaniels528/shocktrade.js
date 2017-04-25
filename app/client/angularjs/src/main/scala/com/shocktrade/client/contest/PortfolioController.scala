@@ -16,7 +16,6 @@ import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -86,7 +85,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
   $scope.getActiveOrders = () => {
-    val orders = mySession.getOrders filter (_.accountType == $scope.getAccountType())
+    val orders = mySession.getOrders filter (_.accountType.contains($scope.getAccountType()))
     enrichOrders(orders)
     orders
   }
@@ -139,7 +138,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   /////////////////////////////////////////////////////////////////////
 
   $scope.getPositions = () => {
-    val positions = mySession.getPositions filter (_.accountType == $scope.getAccountType())
+    val positions = mySession.getPositions filter (_.accountType.contains($scope.getAccountType()))
     enrichPositions(positions)
     positions
   }
@@ -236,7 +235,6 @@ object PortfolioController {
     * Portfolio Tab
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class PortfolioTab(val name: String, val icon: String, val path: String, var active: Boolean = false) extends js.Object
 
 }

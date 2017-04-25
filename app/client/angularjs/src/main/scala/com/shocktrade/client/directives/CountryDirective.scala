@@ -4,7 +4,6 @@ import io.scalajs.npm.angularjs.Directive.{ElementRestriction, LinkSupport, Temp
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Country Directive
@@ -28,7 +27,6 @@ class CountryDirective extends Directive with ElementRestriction with LinkSuppor
   * Country Directive Input Parameters
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class CountryDirectiveInputs(val profile: String) extends js.Object
 
 /**

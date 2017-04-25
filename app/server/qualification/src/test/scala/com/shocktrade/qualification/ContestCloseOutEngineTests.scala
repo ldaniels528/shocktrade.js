@@ -30,7 +30,7 @@ class ContestCloseOutEngineTests extends FreeSpec with Matchers {
 
     val dbConnectionString = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade_test"
     implicit val mongo = MongoDB()
-    implicit val dbFuture = mongo.MongoClient.connectAsync(dbConnectionString)
+    implicit val dbFuture = mongo.MongoClient.connectFuture(dbConnectionString)
     implicit val contestDAO = dbFuture.map(_.getContestDAO)
     implicit val contestCloseOutEngine = new ContestCloseOutEngine(dbFuture)
 

@@ -4,7 +4,7 @@ import com.shocktrade.server.common.LoggerFactory.Logger
 import io.scalajs.nodejs.{duration2Int, setImmediate, setTimeout}
 
 import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -24,7 +24,7 @@ class ConcurrentProcessor {
     */
   def start[IN, OUT, SUMMARY](queue: js.Array[IN],
                               ctx: ConcurrentContext = ConcurrentContext(concurrency = 1),
-                              handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger) = {
+                              handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger): Future[SUMMARY] = {
     val promise = Promise[SUMMARY]()
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event

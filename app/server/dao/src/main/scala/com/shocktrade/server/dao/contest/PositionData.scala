@@ -3,17 +3,15 @@ package com.shocktrade.server.dao.contest
 import java.util.UUID
 
 import com.shocktrade.common.models.contest.PositionLike
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Position Data
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class PositionData(var _id: js.UndefOr[String] = UUID.randomUUID().toString,
                    var symbol: js.UndefOr[String],
                    var exchange: js.UndefOr[String],

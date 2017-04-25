@@ -30,7 +30,7 @@ object NAICSDAO {
       */
     @inline
     def findByCode(naicsCode: Int)(implicit ec: ExecutionContext): Future[Option[NAICS]] = {
-      naicsDAO.findOneAsync[NAICS]("naicsNumber" $eq naicsCode)
+      naicsDAO.findOneFuture[NAICS]("naicsNumber" $eq naicsCode)
     }
 
   }

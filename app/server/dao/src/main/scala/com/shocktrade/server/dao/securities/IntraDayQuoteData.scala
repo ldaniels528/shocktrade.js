@@ -3,13 +3,11 @@ package com.shocktrade.server.dao.securities
 import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Intra-Day Quote Data
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class IntraDayQuoteData(val _id: js.UndefOr[ObjectID] = js.undefined,
                         val symbol: js.UndefOr[String],
                         val price: js.UndefOr[Double],

@@ -8,17 +8,16 @@ import io.scalajs.util.OptionHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.JSExport
 
 /**
   * Autonomous Trading Server Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@JSExportAll
-object AutonomousTradingJsApp extends js.JSApp {
+object AutonomousTradingJsApp {
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]): Unit = {
     val logger = LoggerFactory.getLogger(getClass)
 
     logger.log("Starting the Shocktrade Autonomous Trading Engine...")
@@ -37,7 +36,7 @@ object AutonomousTradingJsApp extends js.JSApp {
 
     // setup mongodb connection
     logger.log("Connecting to '%s'...", connectionString)
-    implicit val dbFuture = MongoClient.connectAsync(connectionString).toFuture
+    implicit val dbFuture = MongoClient.connectFuture(connectionString)
 
     // run the autonomous trading engine once every 5 minutes
     val tradingEngine = new AutonomousTradingEngine(s"localhost:$port", dbFuture)

@@ -1,13 +1,11 @@
 package com.shocktrade.client.models.contest
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Perk
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class Perk(val name: String,
            val code: String,
            val description: String,

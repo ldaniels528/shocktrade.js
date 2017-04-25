@@ -5,13 +5,11 @@ import io.scalajs.npm.mongodb.ObjectID
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Post data object
   * @author lawrence.daniels@gmail.com
   */
-@ScalaJSDefined
 class PostData(var _id: js.UndefOr[ObjectID] = js.undefined,
                var text: js.UndefOr[String] = js.undefined,
                var submitterId: js.UndefOr[String] = js.undefined,

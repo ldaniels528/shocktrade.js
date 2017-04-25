@@ -3,13 +3,11 @@ package com.shocktrade.client.models
 import com.shocktrade.common.models.user.{User, UserProfileLike}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a User Profile model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class UserProfile(var _id: js.UndefOr[String] = js.undefined,
                   var facebookID: js.UndefOr[String] = js.undefined,
                   var name: js.UndefOr[String] = js.undefined,

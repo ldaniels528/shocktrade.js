@@ -17,7 +17,7 @@ trait ConcurrentContext {
   /**
     * @return true, if processing is currently paused
     */
-  def isPaused = paused
+  def isPaused: Boolean = paused
 
   /**
     * Pauses the process

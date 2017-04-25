@@ -1,22 +1,21 @@
 package com.shocktrade.webapp.routes
 
+import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
+import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
 import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.ContestData._
 import com.shocktrade.server.dao.contest.PerksDAO._
 import com.shocktrade.server.dao.contest.PortfolioDAO._
-import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.contest.{ContestData, _}
-import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
-import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
+import com.shocktrade.server.dao.users.ProfileDAO._
+import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.ScalaJsHelper._
-import io.scalajs.nodejs.{console, _}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -25,7 +24,7 @@ import scala.util.{Failure, Success}
   */
 object ContestRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
     val contestDAO = dbFuture.map(_.getContestDAO)
     val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
     val profileDAO = dbFuture.map(_.getProfileDAO)
@@ -139,7 +138,7 @@ object ContestRoutes {
       */
     def contestsByPlayer(request: Request, response: Response, next: NextFunction) = {
       val playerID = request.params.apply("playerID")
-      contestDAO.flatMap(_.findByPlayer(playerID)) onComplete {
+      contestDAO.flatMap(_.findByPlayer(playerID).toFuture) onComplete {
         case Success(contests) => response.send(contests); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -152,7 +151,7 @@ object ContestRoutes {
       val form = request.bodyAs[ContestSearchForm]
       form.validate match {
         case messages if messages.isEmpty =>
-          contestDAO.flatMap(_.search(form)) onComplete {
+          contestDAO.flatMap(_.search(form).toFuture) onComplete {
             case Success(contests) => response.send(contests); next()
             case Failure(e) => response.internalServerError(e); next()
           }
@@ -163,10 +162,8 @@ object ContestRoutes {
 
   }
 
-  @ScalaJSDefined
   class ContestAndPortfolio(val contest: ContestData, val portfolio: PortfolioData) extends js.Object
 
-  @ScalaJSDefined
   class ValidationErrors(val messages: js.Array[String]) extends js.Object
 
   /**
@@ -176,7 +173,7 @@ object ContestRoutes {
   final implicit class ContestConversion(val contest: ContestData) extends AnyVal {
 
     @inline
-    def toOwnersPortfolio = {
+    def toOwnersPortfolio: PortfolioData = {
       new PortfolioData(
         contestID = contest._id.map(_.toHexString()),
         contestName = contest.name,

@@ -45,14 +45,14 @@ object ContestDAO {
 
     @inline
     def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[Option[js.Array[ChatMessage]]] = {
-      dao.findOneAsync[ContestData](
+      dao.findOneFuture[ContestData](
         selector = "_id" $eq contestID.$oid,
         fields = js.Array("messages")) map (_ map (_.messages getOrElse emptyArray))
     }
 
     @inline
     def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]] = {
-      dao.findOneAsync[ContestData]("_id" $eq contestID.$oid)
+      dao.findOneFuture[ContestData]("_id" $eq contestID.$oid)
     }
 
     @inline

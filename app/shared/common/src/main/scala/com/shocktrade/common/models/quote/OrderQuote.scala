@@ -3,13 +3,11 @@ package com.shocktrade.common.models.quote
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Order Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait OrderQuote extends js.Object {
   var symbol: js.UndefOr[String]
   var name: js.UndefOr[String]
@@ -42,9 +40,9 @@ object OrderQuote {
     "change", "changePct", "spread", "volume", "high52Week", "low52Week", "active"
   )
 
-  def apply() = New[OrderQuote]
+  def apply(): OrderQuote = New[OrderQuote]
 
-  def apply(symbol: String) = {
+  def apply(symbol: String): OrderQuote = {
     val quote = New[OrderQuote]
     quote.symbol = symbol
     quote.active = true

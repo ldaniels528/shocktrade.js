@@ -3,14 +3,13 @@ package com.shocktrade.daycycle.routes
 import com.shocktrade.server.common.TradingClock
 import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.concurrent.Daemon.DaemonRef
-import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
 import io.scalajs.nodejs._
+import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Daemon Routes
@@ -106,7 +105,6 @@ object DaemonRoutes {
     * @param delay     the initial delay before the process runs
     * @param frequency the frequency/interval of the process
     */
-  @ScalaJSDefined
   class DaemonJs(val name: String, val delay: Int, val frequency: Int) extends js.Object
 
 }

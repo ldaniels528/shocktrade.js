@@ -2,18 +2,17 @@ package com.shocktrade.client.news
 
 import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.news.NewsController._
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
-import io.scalajs.dom.html.browser.console
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -184,7 +183,6 @@ trait NewsScope extends Scope {
   * News Feed Selection
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class NewsFeedSelection(var feed: js.UndefOr[String]) extends js.Object
 
 /**

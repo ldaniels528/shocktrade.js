@@ -1,13 +1,11 @@
 package com.shocktrade.server.facade
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Pricing Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class PricingQuote(val symbol: String,
                    val lastTrade: js.UndefOr[Double],
                    val tradeDateTime: js.UndefOr[js.Date]) extends js.Object

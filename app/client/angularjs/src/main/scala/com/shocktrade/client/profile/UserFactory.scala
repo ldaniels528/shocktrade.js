@@ -36,7 +36,7 @@ class UserFactory(@injected("UserService") userService: UserService) extends Fac
         case Success(_) =>
         case Failure(e) =>
           console.log(s"Unexpected failure: ${e.displayMessage}")
-          cache.delete(userId)
+          cache -= userId
       }
       promise
     })

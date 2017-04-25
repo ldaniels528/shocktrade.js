@@ -9,13 +9,11 @@ import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Contest Data Model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ContestData(var _id: js.UndefOr[ObjectID],
                   var name: js.UndefOr[String],
                   var creator: js.UndefOr[User],

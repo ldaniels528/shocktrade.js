@@ -1,13 +1,11 @@
 package com.shocktrade.common.models.user
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a User Profile-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait UserProfileLike extends UserLike {
 
   def facebookID: js.UndefOr[String]

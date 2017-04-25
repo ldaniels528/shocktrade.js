@@ -1,13 +1,11 @@
 package com.shocktrade.common.models.quote
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Discover Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait DiscoverQuote extends CompleteQuote {
   // standard codes
   var advisory: js.UndefOr[String]
@@ -33,7 +31,7 @@ object DiscoverQuote {
   implicit class DiscoverQuoteConstructors(val quote: CompleteQuote) extends AnyVal {
 
     @inline
-    def toDiscover = {
+    def toDiscover: DiscoverQuote = {
       val q = quote.asInstanceOf[DiscoverQuote]
       q.getAdvisory foreach { advisory =>
         q.advisory = advisory.description

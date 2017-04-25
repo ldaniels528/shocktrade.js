@@ -2,12 +2,10 @@ package com.shocktrade.server.services.yahoo
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
 import io.scalajs.npm.request._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Yahoo Finance! CSV Quotes Service
@@ -25,8 +23,8 @@ class YahooFinanceCSVQuotesService() {
   def getQuotes(params: String, symbols: String*)(implicit ec: ExecutionContext): Future[Seq[YFCSVQuote]] = {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
-    Request.getAsync(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
-      data.split("[\n]").toSeq flatMap (line => parser.parseQuote(params, line, startTime))
+    Request.getFuture(s"http://finance.yahoo.com/d/quotes.csv?s=$symbolList&f=$params") map { case (response, data) =>
+      data.toString.split("[\n]").toSeq flatMap (line => parser.parseQuote(params, line, startTime))
     }
   }
 
@@ -61,7 +59,6 @@ object YahooFinanceCSVQuotesService {
     * @see http://code.google.com/p/yahoo-finance-managed/wiki/CSVAPI
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class YFCSVQuote(val symbol: String,
                    val ask: js.UndefOr[Double], // a0 - Ask
                    val avgVol: js.UndefOr[Double], // a2 - Average Daily Volume

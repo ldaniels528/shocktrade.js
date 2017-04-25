@@ -13,7 +13,6 @@ import io.scalajs.util.PromiseHelper.Implicits._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success}
 
 /**
@@ -84,7 +83,6 @@ object ExposureController {
     * Exposure Selection Model
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class ExposureSelection(val label: String, val value: String) extends js.Object
 
 }

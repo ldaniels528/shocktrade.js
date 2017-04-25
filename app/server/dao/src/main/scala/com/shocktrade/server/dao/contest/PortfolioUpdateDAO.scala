@@ -88,7 +88,7 @@ object PortfolioUpdateDAO {
     @inline
     def mergePositions(portfolioID: ObjectID, positionIDs: Seq[String])(implicit ec: ExecutionContext) = {
       for {
-        portfolioOpt <- dao.findOneAsync[PortfolioData]("_id" $eq portfolioID, fields = js.Array("positions"))
+        portfolioOpt <- dao.findOneFuture[PortfolioData]("_id" $eq portfolioID, fields = js.Array("positions"))
         results = for {
           portfolio <- portfolioOpt
           positions <- portfolio.positions.toOption.map(_.filter(_._id.exists(positionIDs.contains)))
@@ -149,7 +149,7 @@ object PortfolioUpdateDAO {
     @inline
     def reducePosition(wo: WorkOrder)(implicit ec: ExecutionContext) = {
       for {
-        portfolio_? <- dao.findOneAsync[PortfolioData]("_id" $eq wo.portfolioID, fields = js.Array("positions"))
+        portfolio_? <- dao.findOneFuture[PortfolioData]("_id" $eq wo.portfolioID, fields = js.Array("positions"))
         positions = portfolio_?.flatMap(_.positions.toOption).getOrElse(emptyArray)
         positionToSell_? = positions.find(p => p.symbol.contains(wo.symbol) && p.quantity.exists(_ >= wo.quantity))
 

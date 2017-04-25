@@ -66,7 +66,7 @@ object PostRoutes {
       val post = request.bodyAs[Post].toData
       post.creationTime = new js.Date()
       post.lastUpdateTime = new js.Date()
-      postDAO.flatMap(_.insert(post)) onComplete {
+      postDAO.flatMap(_.insertOne(post)) onComplete {
         case Success(result) if result.insertedCount == 1 => response.send(result.ops.headOption.orNull); next()
         case Success(result) => response.badRequest("Post could not be created"); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -103,7 +103,7 @@ object PostRoutes {
       */
     def getAttachementIDs(request: Request, response: Response, next: NextFunction) = {
       val userID = request.params.apply("userID")
-      attachmentDAO.flatMap(_.find("metadata.userID" $eq userID.$oid).toArray()[Attachment]) onComplete {
+      attachmentDAO.flatMap(_.find[Attachment]("metadata.userID" $eq userID.$oid).toArray()) onComplete {
         case Success(attachments) => response.send(attachments); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -119,7 +119,8 @@ object PostRoutes {
         val outcome = for {
           (attachmentId, success) <- attachmentDAO map { fs =>
             val ustream = fs.openUploadStream(file.name, new UploadStreamOptions(metadata = doc("userID" -> userID.$oid, "postID" -> postID.$oid)))
-            (ustream.id, ustream.end(file.data))
+            val id = new ObjectID()
+            (id, ustream.end(file.data))
           }
           result <- postDAO.flatMap(_.findOneAndUpdate("_id" $eq postID.$oid, "attachments" $addToSet attachmentId.toHexString()))
         } yield result
@@ -150,7 +151,7 @@ object PostRoutes {
       */
     def getPosts(request: Request, response: Response, next: NextFunction) = {
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
-      postDAO.flatMap(_.find().limit(maxResults).toArray()[Post]) onComplete {
+      postDAO.flatMap(_.find[Post]().limit(maxResults).toArray()) onComplete {
         case Success(posts) => response.send(posts); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -163,7 +164,7 @@ object PostRoutes {
     def getPostsByOwner(request: Request, response: Response, next: NextFunction) = {
       val ownerID = request.params.apply("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
-      postDAO.flatMap(_.find("submitterId" $eq ownerID).limit(maxResults).toArray()[Post]) onComplete {
+      postDAO.flatMap(_.find[Post]("submitterId" $eq ownerID).limit(maxResults).toArray()) onComplete {
         case Success(posts) => response.send(posts); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -179,7 +180,7 @@ object PostRoutes {
       val outcome = for {
         submitters <- profileDAO.flatMap(_.findById[UserProfileData](ownerID, js.Array("followers"))).map(_.flatMap(_.followers.toOption).getOrElse(js.Array()))
         _ = submitters.push(ownerID)
-        posts <- postDAO.flatMap(_.find("submitterId" $in submitters).limit(maxResults).toArray()[Post])
+        posts <- postDAO.flatMap(_.find[Post]("submitterId" $in submitters).limit(maxResults).toArray())
       } yield posts
 
       outcome onComplete {

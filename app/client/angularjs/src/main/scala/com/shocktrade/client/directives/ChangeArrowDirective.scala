@@ -6,7 +6,6 @@ import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.Try
 
 /**
@@ -41,7 +40,6 @@ class ChangeArrowDirective extends Directive with ElementRestriction with LinkSu
   * Change Arrow Directive Input Parameters
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ChangeArrowDirectiveInputs(val value: String) extends js.Object
 
 /**

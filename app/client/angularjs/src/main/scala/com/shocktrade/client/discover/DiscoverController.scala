@@ -20,7 +20,6 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -339,7 +338,6 @@ object DiscoverController {
     * Module Expander
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class ModuleExpander(val title: String,
                        val url: String,
                        val icon: String,
@@ -392,5 +390,4 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalS
   * Discover Options
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class DiscoverOptions(var range: String) extends js.Object

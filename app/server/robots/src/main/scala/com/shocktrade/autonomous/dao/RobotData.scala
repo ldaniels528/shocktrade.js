@@ -3,13 +3,11 @@ package com.shocktrade.autonomous.dao
 import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Robot Data
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class RobotData(val _id: js.UndefOr[ObjectID] = js.undefined,
                 val playerID: js.UndefOr[String],
                 val facebookID: js.UndefOr[String],

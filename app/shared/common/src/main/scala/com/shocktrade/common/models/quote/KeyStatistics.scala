@@ -1,13 +1,11 @@
 package com.shocktrade.common.models.quote
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Key Statistics
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait KeyStatistics extends js.Object {
   var symbol: js.UndefOr[String]
   var exchange: js.UndefOr[String]

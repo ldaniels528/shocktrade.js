@@ -55,7 +55,7 @@ object SecuritiesDAO {
 
     @inline
     def findCompleteQuote(symbol: String)(implicit ec: ExecutionContext): Future[Option[CompleteQuote]] = {
-      dao.findOneAsync[CompleteQuote]("symbol" $eq symbol)
+      dao.findOneFuture[CompleteQuote]("symbol" $eq symbol)
     }
 
     @inline
@@ -72,7 +72,7 @@ object SecuritiesDAO {
 
     @inline
     def findQuote[T <: js.Any](symbol: String, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
-      dao.findOneAsync[T]("symbol" $eq symbol, fields = js.Array(fields: _*))
+      dao.findOneFuture[T]("symbol" $eq symbol, fields = js.Array(fields: _*))
     }
 
     @inline

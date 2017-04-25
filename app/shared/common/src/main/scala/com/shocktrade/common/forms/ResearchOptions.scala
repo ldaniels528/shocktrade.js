@@ -3,13 +3,11 @@ package com.shocktrade.common.forms
 import com.shocktrade.common.forms.ResearchOptions.SortField
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Securities Research Options
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ResearchOptions(var betaMax: js.UndefOr[Double] = js.undefined,
                       var betaMin: js.UndefOr[Double] = js.undefined,
                       var changeMax: js.UndefOr[Double] = js.undefined,
@@ -33,7 +31,6 @@ class ResearchOptions(var betaMax: js.UndefOr[Double] = js.undefined,
   */
 object ResearchOptions {
 
-  @ScalaJSDefined
   class SortField(val field: String, val direction: Int) extends js.Object
 
 }

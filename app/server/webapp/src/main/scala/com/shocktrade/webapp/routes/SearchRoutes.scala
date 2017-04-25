@@ -9,8 +9,9 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.UserDAO
 import com.shocktrade.server.dao.users.UserDAO._
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Collection, Db, MongoDB, _}
+import io.scalajs.npm.mongodb.{Collection, Db, _}
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -22,7 +23,7 @@ import scala.util.{Failure, Success}
   */
 object SearchRoutes {
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
     implicit val securities = dbFuture.map(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
     implicit val users = dbFuture.map(_.getUserDAO).map(UserSearchAgent)
 
@@ -81,7 +82,7 @@ object SearchRoutes {
     def fields: js.Array[String]
 
     def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext) = {
-      coll.find(selector = getSelection(searchTerm)).limit(maxResults).toArray()[T] map (_ map toSearchResult)
+      coll.find[T](selector = getSelection(searchTerm)).limit(maxResults).toArray() map (_ map toSearchResult)
     }
 
     def toSearchResult(entity: T): EntitySearchResult

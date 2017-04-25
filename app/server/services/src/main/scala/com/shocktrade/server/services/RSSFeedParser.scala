@@ -3,13 +3,11 @@ package com.shocktrade.server.services
 import com.shocktrade.server.services.RSSFeedParser._
 import io.scalajs.npm.request.Request
 import io.scalajs.npm.xml2js.Xml2js
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * RSS Feed Parser
@@ -25,17 +23,17 @@ class RSSFeedParser() {
     */
   def parse(url: String)(implicit ec: ExecutionContext): Future[js.Array[RSSChannel]] = {
     for {
-      (response, body) <- Request.getAsync(url)
+      (response, body) <- Request.getFuture(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
-      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
+      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body.toString)
     } yield feedsXML.toJson
   }
 
   def parseRaw(url: String)(implicit ec: ExecutionContext): Future[XMLRSSRoot] = {
     for {
-      (response, body) <- Request.getAsync(url)
+      (response, body) <- Request.getFuture(url)
       _ = if (response.statusCode != 200) die(s"HTTP/${response.statusCode}: ${response.statusMessage}")
-      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body)
+      feedsXML <- Xml2js.parseStringFuture[XMLRSSRoot](body.toString)
     } yield feedsXML
   }
 
@@ -51,7 +49,6 @@ object RSSFeedParser {
   //    JSON RSS Model
   ////////////////////////////////////////////////////////////
 
-  @ScalaJSDefined
   class RSSChannel(val title: js.UndefOr[String],
                    val description: js.UndefOr[String],
                    val link: js.UndefOr[String],
@@ -62,7 +59,6 @@ object RSSFeedParser {
                    val images: js.Array[RSSImage],
                    val items: js.Array[RSSItem]) extends js.Object
 
-  @ScalaJSDefined
   class RSSImage(val title: js.UndefOr[String],
                  val description: js.UndefOr[String],
                  val link: js.UndefOr[String],
@@ -70,7 +66,6 @@ object RSSFeedParser {
                  val width: js.UndefOr[Double],
                  val height: js.UndefOr[Double]) extends js.Object
 
-  @ScalaJSDefined
   class RSSItem(val title: js.UndefOr[String],
                 val description: js.UndefOr[String],
                 val link: js.UndefOr[String],
@@ -78,7 +73,6 @@ object RSSFeedParser {
                 val guid: js.UndefOr[String],
                 val thumbNail: js.UndefOr[RSSMediaThumbNail]) extends js.Object
 
-  @ScalaJSDefined
   class RSSMediaThumbNail(val url: js.UndefOr[String],
                           val width: js.UndefOr[Double],
                           val height: js.UndefOr[Double]) extends js.Object

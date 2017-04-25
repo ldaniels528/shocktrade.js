@@ -9,12 +9,12 @@ import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor,
 import com.shocktrade.server.dao.DbPool
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.server.dao.securities._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.nodejs._
-import io.scalajs.npm.mongodb.MongoDB
 import io.scalajs.util.OptionHelper._
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -37,8 +37,8 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
   )
 
   // get DAO references
-  private val securitiesDAO = new DbPool(dbConnectionString)(_.getSecuritiesUpdateDAO)
-  private val snapshotDAO = new DbPool(dbConnectionString)(_.getSnapshotDAO)
+  private val securitiesDAO = new DbPool[SecuritiesUpdateDAO](dbConnectionString)(d => Future.successful(d.getSecuritiesUpdateDAO))
+  private val snapshotDAO = new DbPool[SecuritiesSnapshotDAO](dbConnectionString)(d => Future.successful(d.getSnapshotDAO))
 
   // internal variables
   private val processor = new ConcurrentProcessor()
@@ -49,20 +49,20 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock) = clock.isTradingActive || clock.isTradingActive(lastRun)
+  override def isReady(clock: TradingClock): Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- getSecurities(clock.getTradeStopTime)
       results <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputBatch](securities.size) {
         logger.info(s"Scheduling ${securities.size} pages of securities for updates and snapshots...")
 
-        override def onNext(ctx: ConcurrentContext, securities: InputBatch) = {
+        override def onNext(ctx: ConcurrentContext, securities: InputBatch): Future[BulkUpdateOutcome] = {
           val symbols = securities.map(_.symbol)
           val mapping = js.Dictionary(securities.map(s => s.symbol -> s): _*)
           for {
@@ -101,6 +101,7 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
 
   private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]) = {
     def insertSnapshot() = snapshotDAO().flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
+
     def retrySnapshot(duration: FiniteDuration) = retry(() => insertSnapshot(), duration)
 
     insertSnapshot() /*fallbackTo retrySnapshot(5.seconds)*/ recover { case e =>
@@ -111,6 +112,7 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
 
   private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]) = {
     def upsertSecurities() = securitiesDAO().flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
+
     def retrySecurities(duration: FiniteDuration) = retry(() => upsertSecurities(), duration)
 
     upsertSecurities() /*fallbackTo retrySecurities(5.seconds)*/ recover { case e =>
@@ -192,7 +194,7 @@ object SecuritiesUpdateDaemon {
     )
 
     @inline
-    def normalizedExchange(mapping: js.Dictionary[SecurityRef]) = {
+    def normalizedExchange(mapping: js.Dictionary[SecurityRef]): String = {
       val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
       originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
         case Some(exchange) => exchange

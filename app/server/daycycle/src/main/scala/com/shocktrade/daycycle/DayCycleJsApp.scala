@@ -11,25 +11,23 @@ import io.scalajs.npm.express.Express
 import io.scalajs.npm.kafkanode
 import io.scalajs.npm.kafkanode.Producer
 import io.scalajs.npm.mongodb.{Db, MongoClient}
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.existentials
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.JSExport
 import scala.util.{Failure, Success}
 
 /**
   * Day-Cycle Server Application
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@JSExportAll
-object DayCycleJsApp extends js.JSApp {
+object DayCycleJsApp {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]): Unit = {
     logger.info("Starting the Day-Cycle Server...")
 
     // determine the port to listen on
@@ -45,7 +43,7 @@ object DayCycleJsApp extends js.JSApp {
 
     // setup mongodb connection
     logger.info("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = MongoClient.connectAsync(dbConnectionString).toFuture
+    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
 
     // setup kafka connection
     logger.info("Connecting to '%s'...", zkConnectionString)
@@ -96,7 +94,7 @@ object DayCycleJsApp extends js.JSApp {
     }
   }
 
-  def createDaemons(dbConnectionString: String)(implicit dbFuture: Future[Db], kafkaProducer: Producer) = {
+  private def createDaemons(dbConnectionString: String)(implicit dbFuture: Future[Db], kafkaProducer: Producer) = {
     Seq(
       DaemonRef("BarChartProfileUpdate", new BarChartProfileUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
       DaemonRef("BloombergUpdate", new BloombergUpdateDaemon(dbFuture), kafkaReqd = false, delay = 5.hours, frequency = 12.hours),
@@ -111,7 +109,7 @@ object DayCycleJsApp extends js.JSApp {
     )
   }
 
-  def launchDaemons[T](daemons: Seq[DaemonRef[T]])(implicit tradingClock: TradingClock, kafkaProducer: Producer) = {
+  private def launchDaemons[T](daemons: Seq[DaemonRef[T]])(implicit tradingClock: TradingClock, kafkaProducer: Producer) {
     // separate the daemons by Kafka dependency
     val (daemonsKafka, daemonsNonKafka) = daemons.partition(_.kafkaReqd)
 

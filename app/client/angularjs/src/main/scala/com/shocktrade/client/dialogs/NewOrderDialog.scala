@@ -23,7 +23,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -214,7 +213,6 @@ object NewOrderDialogController {
     * New Order Dialog Parameters
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  @ScalaJSDefined
   class NewOrderParams(val symbol: js.UndefOr[String] = js.undefined,
                        val accountType: js.UndefOr[String] = js.undefined,
                        val quantity: js.UndefOr[Double] = js.undefined) extends js.Object

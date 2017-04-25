@@ -1,13 +1,11 @@
 package com.shocktrade.common.forms
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Funds Transfer Request form
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class FundsTransferRequest(val accountType: js.UndefOr[String],
                            val amount: js.UndefOr[Double]) extends js.Object
 
@@ -24,7 +22,7 @@ object FundsTransferRequest {
   implicit class FundsTransferRequestEnrichment(val form: FundsTransferRequest) extends AnyVal {
 
     @inline
-    def extract = for {
+    def extract: Option[(String, Double)] = for {
       accountType <- form.accountType.toOption
       amount <- form.amount.toOption
     } yield (accountType, amount)

@@ -1,13 +1,11 @@
 package com.shocktrade.client.models.contest
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Contest Search Options
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class ContestSearchOptions(var activeOnly: Boolean = false,
                            var available: Boolean = false,
                            var friendsOnly: Boolean = false,

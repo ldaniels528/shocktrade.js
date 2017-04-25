@@ -4,13 +4,11 @@ import com.shocktrade.common.models.user.User
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Contest-like model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait ContestLike extends js.Object {
 
   def name: js.UndefOr[String]

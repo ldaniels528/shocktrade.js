@@ -18,15 +18,17 @@ import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSExport
 import scala.util.{Failure, Success}
 
 /**
   * ShockTrade Web Application Client
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-object WebClientJsApp extends js.JSApp {
+object WebClientJsApp {
 
-  override def main() {
+  @JSExport
+  def main(args: Array[String]): Unit = {
     // create the application
     val module = angular.createModule("shocktrade",
       js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3", "angularFileUpload", "toaster", "ui.bootstrap"))

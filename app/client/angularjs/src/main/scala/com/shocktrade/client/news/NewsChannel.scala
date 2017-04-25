@@ -3,13 +3,11 @@ package com.shocktrade.client.news
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * News Channel
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class NewsChannel(var items: js.Array[NewsItem] = emptyArray) extends js.Object
 
 /**

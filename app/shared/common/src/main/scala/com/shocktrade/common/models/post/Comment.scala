@@ -4,13 +4,11 @@ import com.shocktrade.common.models.user.UserLike
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a comment
   * @author lawrence.daniels@gmail.com
   */
-@ScalaJSDefined
 class Comment extends js.Object {
   var _id: js.UndefOr[String] = js.undefined
   var text: js.UndefOr[String] = js.undefined
@@ -32,7 +30,7 @@ class Comment extends js.Object {
   */
 object Comment {
 
-  def apply(text: String, submitter: UserLike) = {
+  def apply(text: String, submitter: UserLike): Comment = {
     val comment = new Comment()
     comment.text = text
     comment.submitter = submitter

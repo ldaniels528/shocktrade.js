@@ -9,7 +9,6 @@ import scala.scalajs.js.annotation.ScalaJSDefined
   * Represents a Complete Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait CompleteQuote extends ResearchQuote with KeyStatistics {
   var naicsNumber: js.UndefOr[Int]
   var sicNumber: js.UndefOr[Int]
@@ -21,6 +20,6 @@ trait CompleteQuote extends ResearchQuote with KeyStatistics {
   */
 object CompleteQuote {
 
-  def apply() = New[CompleteQuote]
+  def apply(): CompleteQuote = New[CompleteQuote]
 
 }

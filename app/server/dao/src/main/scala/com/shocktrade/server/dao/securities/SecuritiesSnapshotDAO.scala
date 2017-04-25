@@ -27,7 +27,7 @@ object SecuritiesSnapshotDAO {
 
     @inline
     def findMatch(order: OrderLike)(implicit ec: ExecutionContext): Future[Option[SnapshotQuote]] = {
-      dao.findOneAsync[SnapshotQuote](doc(Seq(
+      dao.findOneFuture[SnapshotQuote](doc(Seq(
         Option("symbol" $eq order.symbol),
         Option("tradeDateTime" between(order.creationTime, new js.Date())),
         Option("volume" $gte order.quantity),

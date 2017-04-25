@@ -4,13 +4,11 @@ import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Research Quote
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 trait ResearchQuote extends js.Object {
   var symbol: js.UndefOr[String]
   var name: js.UndefOr[String]

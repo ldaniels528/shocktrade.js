@@ -6,13 +6,11 @@ import com.shocktrade.common.models.contest.OrderLike
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents an Order data model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@ScalaJSDefined
 class OrderData(var _id: js.UndefOr[String] = UUID.randomUUID().toString,
                 var symbol: js.UndefOr[String],
                 var exchange: js.UndefOr[String],
