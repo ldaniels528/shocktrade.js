@@ -40,12 +40,12 @@ ShockTrade provides the capability of:
 <a name="build-requirements"></a>
 ### Build Requirements
 
-* [SBT 0.13+] (http://www.scala-sbt.org/download.html)
+* [SBT 0.13.16] (http://www.scala-sbt.org/download.html)
 
 <a name="project-dependencies"></a>
 ### Project Dependencies
 
-* [Transcendent.js 0.2.3.2] (https://github.com/ldaniels528/transcendent.js)
+* [Scalajs.io 0.4.1] (https://github.com/scalajs-io/nodejs)
 
 <a name="building-the-code"></a>
 ### Building the application
