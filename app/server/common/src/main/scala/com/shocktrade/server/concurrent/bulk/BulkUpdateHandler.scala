@@ -4,7 +4,6 @@ import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentTaskHandle
 import com.shocktrade.server.common.LoggerFactory.Logger
 
 import scala.concurrent.duration._
-import scala.language.implicitConversions
 
 /**
   * Bulk Update Handler

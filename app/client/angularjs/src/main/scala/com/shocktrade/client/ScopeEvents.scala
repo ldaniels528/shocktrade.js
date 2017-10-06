@@ -99,13 +99,13 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    private def broadcast(action: String, entity: js.Any) = {
+    private def broadcast(action: String, entity: js.Any): Unit = {
       console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
       $scope.$broadcast(ContestCreated, entity)
       ()
     }
 
-    private def reactTo(action: String, callback: js.Function) = {
+    private def reactTo(action: String, callback: js.Function): Unit = {
       console.info(s"Listening for '$action'...")
       $scope.$on(action, callback)
       ()

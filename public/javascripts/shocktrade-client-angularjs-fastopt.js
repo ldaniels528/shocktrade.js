@@ -2707,8 +2707,8 @@ $c_Lcom_shocktrade_client_MainController$.prototype.getAssetCode__sjs_js_UndefOr
   if ((value === (void 0))) {
     var value$2 = (void 0)
   } else {
-    var x0$1 = $as_T(value);
-    var value$1 = ((x0$1 === "Crypto-Currency") ? "&#xf15a" : ((x0$1 === "Currency") ? "&#xf155" : ((x0$1 === "ETF") ? "&#xf18d" : "&#xf0ac")));
+    var x0$6 = $as_T(value);
+    var value$1 = ((x0$6 === "Crypto-Currency") ? "&#xf15a" : ((x0$6 === "Currency") ? "&#xf155" : ((x0$6 === "ETF") ? "&#xf18d" : "&#xf0ac")));
     var value$2 = value$1
   };
   return $as_T(((value$2 === (void 0)) ? "" : value$2))
@@ -2746,8 +2746,8 @@ $c_Lcom_shocktrade_client_MainController$.prototype.getAssetIcon__sjs_js_UndefOr
   if ((value === (void 0))) {
     var value$2 = (void 0)
   } else {
-    var x0$2 = $as_T(value);
-    var value$1 = ((x0$2 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$2 === "Currency") ? "fa fa-dollar st_blue" : ((x0$2 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
+    var x0$7 = $as_T(value);
+    var value$1 = ((x0$7 === "Crypto-Currency") ? "fa fa-bitcoin st_blue" : ((x0$7 === "Currency") ? "fa fa-dollar st_blue" : ((x0$7 === "ETF") ? "fa fa-stack-exchange st_blue" : "fa fa-globe st_blue")));
     var value$2 = value$1
   };
   return $as_T(((value$2 === (void 0)) ? "fa fa-globe st_blue" : value$2))
@@ -3150,6 +3150,11 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.configureSocialNetworkCallba
     })
   })(this, $$timeout, mySession)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
+$c_Lcom_shocktrade_client_WebClientJsApp$.prototype.com$shocktrade$client$WebClientJsApp$$$anonfun$initializeFacebookApp$2__sjs_js_UndefOr__O = (function(response) {
+  var jsx$1 = $g.console;
+  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["initializeFacebookApp: 'getLoginStatus' response = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(((response === (void 0)) ? (void 0) : response)))]));
+  jsx$1.log(s)
+});
 $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.main__AT__V = (function(args) {
   var self = $g.angular;
   var array = ["ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3", "angularFileUpload", "toaster", "ui.bootstrap"];
@@ -3306,7 +3311,10 @@ $c_Lcom_shocktrade_client_WebClientJsApp$.prototype.initializeFacebookApp__p1__L
       $g.FB.init(config);
       var jsx$1 = $g.console;
       var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Initialized Facebook SDK (App ID # ", ") and version (", ") on the Angular Facebook service..."])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T(config.appId), $as_T(config.version)]));
-      jsx$1.log(s)
+      jsx$1.log(s);
+      $g.FB.getLoginStatus((function(arg1$2) {
+        return $m_Lcom_shocktrade_client_WebClientJsApp$().com$shocktrade$client$WebClientJsApp$$$anonfun$initializeFacebookApp$2__sjs_js_UndefOr__O(arg1$2)
+      }))
     })
   })(this, appInfo)
 });
@@ -18493,12 +18501,12 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
 $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$$anonfun$new$47__V = (function() {
   var task = this.facebook$1.logout__s_concurrent_Promise();
   task.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
-    return (function(x0$5$2) {
-      var x0$5 = $as_s_util_Try(x0$5$2);
-      if ($is_s_util_Success(x0$5)) {
+    return (function(x0$3$2) {
+      var x0$3 = $as_s_util_Try(x0$3$2);
+      if ($is_s_util_Success(x0$3)) {
         $this.mySession$1.logout__V()
-      } else if ($is_s_util_Failure(x0$5)) {
-        var x4 = $as_s_util_Failure(x0$5);
+      } else if ($is_s_util_Failure(x0$3)) {
+        var x4 = $as_s_util_Failure(x0$3);
         var e = x4.exception$2;
         var toaster = $this.toaster$1;
         var value = $m_Lio_scalajs_npm_angularjs_toaster_package$().DANGER$1;
@@ -18507,7 +18515,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
         $this.mySession$1.logout__V();
         e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1)
       } else {
-        throw new $c_s_MatchError().init___O(x0$5)
+        throw new $c_s_MatchError().init___O(x0$3)
       }
     })
   })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -18526,10 +18534,10 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
 });
 $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$$anonfun$new$49__V = (function() {
   $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(this.signUpDialog$1.popup__s_concurrent_ExecutionContext__sjs_js_Promise($m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
-    return (function(x0$6$2) {
-      var x0$6 = $as_s_util_Try(x0$6$2);
-      if ($is_s_util_Success(x0$6)) {
-        var x2 = $as_s_util_Success(x0$6);
+    return (function(x0$4$2) {
+      var x0$4 = $as_s_util_Try(x0$4$2);
+      if ($is_s_util_Success(x0$4)) {
+        var x2 = $as_s_util_Success(x0$4);
         var p3 = $as_T2(x2.value$2);
         if ((p3 !== null)) {
           var profile = p3.$$und1$f;
@@ -18538,8 +18546,8 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
           return (void 0)
         }
       };
-      if ($is_s_util_Failure(x0$6)) {
-        var x4 = $as_s_util_Failure(x0$6);
+      if ($is_s_util_Failure(x0$4)) {
+        var x4 = $as_s_util_Failure(x0$4);
         var e = x4.exception$2;
         var toaster = $this.toaster$1;
         var title = e.getMessage__T();
@@ -18547,7 +18555,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
         var jsx$1 = new ($a_Lio_scalajs_npm_angularjs_toaster_ToasterOptions())(value, title);
         return toaster.pop(jsx$1)
       };
-      throw new $c_s_MatchError().init___O(x0$6)
+      throw new $c_s_MatchError().init___O(x0$4)
     })
   })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
 });
@@ -18580,10 +18588,10 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
         })
       })(this, $$scope, promise)), ec);
       $as_s_concurrent_Future(f()).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2$1, tabIndex$1) {
-        return (function(x0$7$2) {
-          var x0$7 = $as_s_util_Try(x0$7$2);
-          if ($is_s_util_Success(x0$7)) {
-            var x2$1 = $as_s_util_Success(x0$7);
+        return (function(x0$5$2) {
+          var x0$5 = $as_s_util_Try(x0$5$2);
+          if ($is_s_util_Success(x0$5)) {
+            var x2$1 = $as_s_util_Success(x0$5);
             var response = x2$1.value$2;
             var outcome = response.data;
             var obj = outcome.error;
@@ -18599,8 +18607,8 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
             };
             this$2$1.performTabSwitch__p1__I__V(tabIndex$1);
             return (void 0)
-          } else if ($is_s_util_Failure(x0$7)) {
-            var x3 = $as_s_util_Failure(x0$7);
+          } else if ($is_s_util_Failure(x0$5)) {
+            var x3 = $as_s_util_Failure(x0$5);
             var e = x3.exception$2;
             var toaster$1 = this$2$1.toaster$1;
             var title$1 = e.getMessage__T();
@@ -18608,7 +18616,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
             var jsx$3 = new ($a_Lio_scalajs_npm_angularjs_toaster_ToasterOptions())(value$2, title$1);
             return toaster$1.pop(jsx$3)
           } else {
-            throw new $c_s_MatchError().init___O(x0$7)
+            throw new $c_s_MatchError().init___O(x0$5)
           }
         })
       })(this, tabIndex)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -18979,9 +18987,14 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
 $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$$anonfun$new$44__V = (function() {
   var task = this.facebook$1.login__s_concurrent_Promise();
   task.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
-    return (function(x0$4$2) {
-      var x0$4 = $as_s_util_Try(x0$4$2);
-      if ($is_s_util_Success(x0$4)) {
+    return (function(x0$2$2) {
+      var x0$2 = $as_s_util_Try(x0$2$2);
+      if ($is_s_util_Success(x0$2)) {
+        var x2 = $as_s_util_Success(x0$2);
+        var response = x2.value$2;
+        var jsx$1 = $g.console;
+        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["response = ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$as_T($g.angular.toJson(response))]));
+        jsx$1.log(s);
         var value = $this.facebook$1.facebookID__sjs_js_UndefOr();
         if ((value === (void 0))) {
           return (void 0)
@@ -18991,16 +19004,16 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
           var value$1 = (void 0);
           return value$1
         }
-      } else if ($is_s_util_Failure(x0$4)) {
-        var x3 = $as_s_util_Failure(x0$4);
+      } else if ($is_s_util_Failure(x0$2)) {
+        var x3 = $as_s_util_Failure(x0$2);
         var e = x3.exception$2;
-        var jsx$1 = $g.console;
-        var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["main:login error"])).s__sc_Seq__T($m_sci_Nil$());
-        jsx$1.error(s);
+        var jsx$2 = $g.console;
+        var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["main:login error"])).s__sc_Seq__T($m_sci_Nil$());
+        jsx$2.error(s$1);
         e.printStackTrace__Ljava_io_PrintStream__V($m_jl_System$().err$1);
         return (void 0)
       } else {
-        throw new $c_s_MatchError().init___O(x0$4)
+        throw new $c_s_MatchError().init___O(x0$2)
       }
     })
   })(this)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)
@@ -19027,19 +19040,19 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
       if ((!$uZ($m_sjs_js_WrappedDictionary$Cache$().safeHasOwnProperty$1.call(dict, playerID)))) {
         this.onlinePlayers$1[playerID] = new ($a_Lcom_shocktrade_common_models_user_OnlineStatus())(false);
         $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(this.profileService$1.getOnlineStatus__T__sjs_js_Promise(playerID)).onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, playerID$1) {
-          return (function(x0$3$2) {
-            var x0$3 = $as_s_util_Try(x0$3$2);
-            if ($is_s_util_Success(x0$3)) {
-              var x2 = $as_s_util_Success(x0$3);
+          return (function(x0$1$2) {
+            var x0$1 = $as_s_util_Try(x0$1$2);
+            if ($is_s_util_Success(x0$1)) {
+              var x2 = $as_s_util_Success(x0$1);
               var response = x2.value$2;
               var newState = response.data;
               $this.onlinePlayers$1[playerID$1] = newState
-            } else if ($is_s_util_Failure(x0$3)) {
+            } else if ($is_s_util_Failure(x0$1)) {
               var jsx$1 = $g.console;
               var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Error retrieving online state for user ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([playerID$1]));
               jsx$1.error(s)
             } else {
-              throw new $c_s_MatchError().init___O(x0$3)
+              throw new $c_s_MatchError().init___O(x0$1)
             }
           })
         })(this, playerID)), $m_sjs_concurrent_JSExecutionContext$Implicits$().queue$1)

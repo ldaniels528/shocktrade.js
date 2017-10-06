@@ -2,7 +2,6 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.server.common.TradingClock
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.moment.timezone._
 import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,9 +14,6 @@ import scala.scalajs.js
 object TradingClockRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    // load modules
-    MomentTimezone
-
     // create the trading clock instance
     val tradingClock = new TradingClock()
 

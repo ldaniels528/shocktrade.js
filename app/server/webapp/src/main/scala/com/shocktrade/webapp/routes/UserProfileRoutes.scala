@@ -40,7 +40,7 @@ object UserProfileRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def addRecentSymbol(request: Request, response: Response, next: NextFunction) = {
+    def addRecentSymbol(request: Request, response: Response, next: NextFunction): Unit = {
       val userID = request.params.apply("userID")
       val symbol = request.params.apply("symbol")
       profileDAO.flatMap(_.addRecentSymbol(userID, symbol).toFuture) onComplete {
@@ -54,7 +54,7 @@ object UserProfileRoutes {
       }
     }
 
-    def netWorth(request: Request, response: Response, next: NextFunction) = {
+    def netWorth(request: Request, response: Response, next: NextFunction): Unit = {
       val userID = request.params.apply("userID")
       val outcome = for {
         user <- userDAO.flatMap(_.findUserWithFields[UserInfo](userID, fields = UserInfo.Fields)).map(_.orDie("User not found"))
@@ -81,7 +81,7 @@ object UserProfileRoutes {
       }
     }
 
-    def profileByFacebook(request: Request, response: Response, next: NextFunction) = {
+    def profileByFacebook(request: Request, response: Response, next: NextFunction): Unit = {
       val fbProfile = request.bodyAs[FBProfile]
       val form = for {
         fbId <- fbProfile.id
@@ -119,7 +119,7 @@ object UserProfileRoutes {
       }
     }
 
-    def profileByFBID(request: Request, response: Response, next: NextFunction) = {
+    def profileByFBID(request: Request, response: Response, next: NextFunction): Unit = {
       val fbId = request.params.apply("fbID")
       profileDAO.flatMap(_.findOneByFacebookID(fbId)) onComplete {
         case Success(Some(profile)) => response.send(profile); next()

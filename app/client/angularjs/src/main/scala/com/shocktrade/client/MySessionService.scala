@@ -392,6 +392,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     }
   }
 
-  private def info(contest: Contest, message: String) = console.log(s"${contest.name}: $message")
+  private def info(contest: Contest, message: String): Unit = console.log(s"${contest.name}: $message")
 
 }

@@ -8,7 +8,7 @@ import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
 import io.scalajs.npm.express.fileupload.ExpressFileUpload
 import io.scalajs.npm.express.{Application, Express, Request, Response}
-import io.scalajs.npm.expressws.{ExpressWS, WebSocket, WsRouterExtensions, WsRouting}
+import io.scalajs.npm.expressws.{ExpressWS, WebSocket, WsInstance, WsRouterExtensions, WsRouting}
 import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.Future
@@ -34,7 +34,7 @@ object WebServerJsApp {
     logger.info("Loading MongoDB module...")
     val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
     logger.info("Connecting to database '%s'...", dbConnect)
-    implicit val dbFuture = MongoClient.connectFuture(dbConnect)
+    implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnect)
 
     // setup the application
     val port = process.port getOrElse "9000"
@@ -50,8 +50,8 @@ object WebServerJsApp {
 
   def configureApplication()(implicit dbFuture: Future[Db]): Application with WsRouting = {
     logger.info("Loading Express modules...")
-    implicit val app = Express().withWsRouting
-    implicit val wss = ExpressWS(app)
+    implicit val app: Application with WsRouting = Express().withWsRouting
+    implicit val wss: WsInstance = ExpressWS(app)
 
     // setup the routes for serving static files
     logger.info("Setting up the routes for serving static files...")
@@ -63,15 +63,6 @@ object WebServerJsApp {
     logger.info("Loading Body Parser...")
     app.use(BodyParser.json())
       .use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
-
-    // setup stylus & nib for CSS3
-    /*
-    logger.info("Loading Stylus and Nib modules...")
-    app.use(Stylus.middleware(new MiddlewareOptions(src = "public", compile = (str: String, file: String) => {
-      Stylus(str)
-        .set("filename", file)
-        .use(Nib())
-    })))*/
 
     // disable caching
     app.disable("etag")

@@ -1,7 +1,5 @@
 package io.scalajs.npm.nib
 
-import io.scalajs.npm.stylus.Stylus
-
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 

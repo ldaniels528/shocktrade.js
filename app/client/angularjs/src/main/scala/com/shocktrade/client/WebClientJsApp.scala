@@ -162,13 +162,17 @@ object WebClientJsApp {
     }
   }
 
-  private def initializeFacebookApp($timeout: Timeout, mySession: MySessionService, appInfo: FacebookAppInfo) = {
+  private def initializeFacebookApp($timeout: Timeout, mySession: MySessionService, appInfo: FacebookAppInfo): Unit = {
     // setup the initialization callback for Facebook
     js.Dynamic.global.fbAsyncInit = () => {
       console.log("fbAsyncInit: Setting up Facebook integration...")
       val config = FacebookAppConfig(appId = appInfo.appId, status = true, xfbml = true)
       FB.init(config)
       console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
+
+      FB.getLoginStatus { response =>
+        console.log(s"initializeFacebookApp: 'getLoginStatus' response = ${angular.toJson(response)}")
+      }
     }
   }
 

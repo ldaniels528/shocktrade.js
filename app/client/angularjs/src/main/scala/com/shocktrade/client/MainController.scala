@@ -169,6 +169,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.login = () => {
     facebook.login() onComplete {
       case Success(response) =>
+        console.log(s"response = ${angular.toJson(response)}")
         facebook.facebookID map (mySession.doPostLoginUpdates(_, userInitiated = true))
       case Failure(e) =>
         console.error(s"main:login error")
@@ -251,7 +252,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
 
-  protected[client] def getAssetCode(q: js.UndefOr[ClassifiedQuote]) = {
+  protected[client] def getAssetCode(q: js.UndefOr[ClassifiedQuote]): String = {
     q.flatMap(_.assetType) map {
       case "Crypto-Currency" => "&#xf15a" // fa-bitcoin
       case "Currency" => "&#xf155" // fa-dollar
@@ -260,7 +261,7 @@ object MainController {
     } getOrElse ""
   }
 
-  protected[client] def getAssetIcon(q: js.UndefOr[ClassifiedQuote]) = {
+  protected[client] def getAssetIcon(q: js.UndefOr[ClassifiedQuote]): String = {
     q.flatMap(_.assetType) map {
       case "Crypto-Currency" => "fa fa-bitcoin st_blue"
       case "Currency" => "fa fa-dollar st_blue"

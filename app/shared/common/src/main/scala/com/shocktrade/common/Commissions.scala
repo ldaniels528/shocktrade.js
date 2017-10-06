@@ -3,8 +3,6 @@ package com.shocktrade.common
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.OrderLike
 
-import scala.language.reflectiveCalls
-
 /**
   * Commissions Service
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>

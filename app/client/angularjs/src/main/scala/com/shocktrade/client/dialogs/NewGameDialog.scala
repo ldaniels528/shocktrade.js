@@ -13,7 +13,6 @@ import io.scalajs.npm.angularjs.{Service, Timeout, _}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js

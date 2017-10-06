@@ -20,7 +20,7 @@ class NewsPostDirective($sce: Sce) extends Directive
   override val scope = NewsPostDirectiveScope(text = "=", callback = "&")
   override val template = """<span ng-bind-html="html"></span>"""
 
-  override def link(scope: NewsPostDirectiveScope, element: JQLite, attrs: Attributes) = {
+  override def link(scope: NewsPostDirectiveScope, element: JQLite, attrs: Attributes): Unit = {
     scope.$watch("text", (newText: js.UndefOr[String], oldText: js.UndefOr[String]) => {
       scope.html = newText.flat map enrichHashTags map enrichWithEmoticons
     })
@@ -72,7 +72,7 @@ trait NewsPostDirectiveScope extends Scope {
   */
 object NewsPostDirectiveScope {
 
-  def apply(text: String, callback: String) = {
+  def apply(text: String, callback: String): NewsPostDirectiveScope = {
     val scope = New[NewsPostDirectiveScope]
     scope.text = text
     scope.callback = callback

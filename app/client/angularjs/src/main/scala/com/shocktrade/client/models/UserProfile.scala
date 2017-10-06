@@ -37,7 +37,7 @@ object UserProfile {
     * User Profile Enrichment
     * @param profile the given [[UserProfile user profile]]
     */
-  implicit class UserProfileEnrichment(val profile: UserProfile) extends AnyVal {
+  final implicit class UserProfileEnrichment(val profile: UserProfile) extends AnyVal {
 
     @inline
     def nextLevelXP: js.UndefOr[Int] = profile.totalXP.map(_ + 1000)
