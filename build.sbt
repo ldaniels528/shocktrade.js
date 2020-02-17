@@ -1,11 +1,10 @@
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt.Keys._
-import sbt.Project.projectToRef
 import sbt._
 
 val appVersion = "0.2.0"
-val appScalaVersion = "2.12.3"
+val appScalaVersion = "2.12.10"
 val scalaJsIOVersion = "0.4.2"
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +19,9 @@ copyJS := {
     my_dir = out_dir / "app" / base / pname / "target" / s"scala-${appScalaVersion.take(4)}"
     filePair <- Seq("", ".map").map(s"shocktrade-$pname-fastopt.js" + _).map(s => (my_dir / s, out_dir / s))
   } yield filePair
-  IO.copy(files, overwrite = true)
+  files foreach { case (src, dest) =>
+    IO.copyFile(src, dest, preserveLastModified = false)
+  }
 }
 
 lazy val jsCommonSettings = Seq(
@@ -95,6 +96,7 @@ lazy val dao = (project in file("./app/server/dao"))
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mysql" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion
     ))
@@ -331,9 +333,8 @@ lazy val shocktradejs = (project in file("."))
     organization := "com.shocktrade",
     version := appVersion,
     scalaVersion := appScalaVersion,
-    compile in Compile <<=
-      (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),
-    ivyScala := ivyScala.value map (_.copy(overrideScalaVersion = true)),
+    //compile in Compile <<= (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),
+    //ivyScala := ivyScala.value map (_.copy(overrideScalaVersion = true)),
     Seq(scalaJSUseMainModuleInitializer, fastOptJS, fullOptJS) map { packageJSKey =>
       crossTarget in(angularjs, Compile, packageJSKey) := baseDirectory.value / "public" / "javascripts"
     })

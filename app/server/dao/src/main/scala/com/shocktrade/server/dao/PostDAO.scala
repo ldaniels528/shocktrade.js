@@ -2,7 +2,6 @@ package com.shocktrade.server.dao
 
 import io.scalajs.npm.mongodb._
 
-import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 
 /**

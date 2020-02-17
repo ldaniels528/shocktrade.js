@@ -1,7 +1,5 @@
 package com.shocktrade.eventsource
 
-import java.util.UUID
-
 import com.shocktrade.eventsource.EventSource.EventSubscription
 import io.scalajs.nodejs.setImmediate
 
@@ -71,11 +69,5 @@ object EventSource {
     * @return the [[FileEventSource file-event source]]
     */
   def fromFile(outputPath: String): EventSource = new FileEventSource(outputPath)
-
-  /**
-    * Generates a unique ID
-    * @return a unique ID
-    */
-  def generateUID: String = UUID.randomUUID().toString
 
 }

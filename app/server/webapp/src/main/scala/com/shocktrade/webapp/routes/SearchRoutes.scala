@@ -7,7 +7,6 @@ import com.shocktrade.common.models.user.User
 import com.shocktrade.server.dao.securities.SecuritiesDAO
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.UserDAO
-import com.shocktrade.server.dao.users.UserDAO._
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.{Collection, Db, _}
 import io.scalajs.util.JsUnderOrHelper._
@@ -24,8 +23,8 @@ import scala.util.{Failure, Success}
 object SearchRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    implicit val securities = dbFuture.map(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
-    implicit val users = dbFuture.map(_.getUserDAO).map(UserSearchAgent)
+    implicit val securities: Future[SecuritiesSearchAgent] = dbFuture.map(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
+    implicit val users: Future[UserSearchAgent] = Future.successful(UserSearchAgent(UserDAO()))
 
     app.get("/api/search", (request: Request, response: Response, next: NextFunction) => getSearchResults(request, response, next))
 
@@ -33,7 +32,7 @@ object SearchRoutes {
       * Searches for people, groups, organizations and events
       * @example GET /api/search?searchTerm=mic&maxResults=10
       */
-    def getSearchResults(request: Request, response: Response, next: NextFunction) = {
+    def getSearchResults(request: Request, response: Response, next: NextFunction): Unit = {
       val searchAgents = Seq(users, securities)
       val form = request.queryAs[SearchForm]
 
@@ -58,7 +57,7 @@ object SearchRoutes {
     */
   implicit class StringExtensions(val text: String) extends AnyVal {
 
-    def limit(maxLength: Int) = if (text.length > maxLength) text.take(maxLength) + "..." else text
+    def limit(maxLength: Int): String = if (text.length > maxLength) text.take(maxLength) + "..." else text
 
   }
 
@@ -81,13 +80,13 @@ object SearchRoutes {
 
     def fields: js.Array[String]
 
-    def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext) = {
+    def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext): Future[js.Array[EntitySearchResult]] = {
       coll.find[T](selector = getSelection(searchTerm)).limit(maxResults).toArray() map (_ map toSearchResult)
     }
 
     def toSearchResult(entity: T): EntitySearchResult
 
-    private def getSelection(searchTerm: String) = {
+    private def getSelection(searchTerm: String): js.Dictionary[js.Any] = {
       fields.foldLeft[List[(String, js.Any)]](Nil) { (list, field) =>
         (field $regex(s"^$searchTerm", ignoreCase = true)) :: list
       } match {
@@ -119,10 +118,12 @@ object SearchRoutes {
     * User Search Agent
     * @author lawrence.daniels@gmail.com
     */
-  case class UserSearchAgent(coll: UserDAO) extends SearchAgent[User] {
-    val fields = js.Array("name")
+  case class UserSearchAgent(userDAO: UserDAO) extends SearchAgent[User] {
+    val fields: js.Array[String] = js.Array("name")
 
-    override def toSearchResult(user: User) = {
+    def coll: Collection = ???
+
+    override def toSearchResult(user: User): EntitySearchResult = {
       new EntitySearchResult(
         _id = user.facebookID,
         name = user.name,

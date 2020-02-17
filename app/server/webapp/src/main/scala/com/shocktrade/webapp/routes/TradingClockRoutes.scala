@@ -28,8 +28,8 @@ object TradingClockRoutes {
     /**
       * Returns a trading clock state object
       */
-    def status(request: Request, response: Response, next: NextFunction) {
-      val lastUpdateTimeMillis = request.params.apply("lastUpdate").toDouble
+    def status(request: Request, response: Response, next: NextFunction): Unit = {
+      val lastUpdateTimeMillis = request.params("lastUpdate").toDouble
       val active = tradingClock.isTradingActive(js.Date.now())
       val delay = tradingClock.getDelayUntilTradingStartInMillis
       val start = tradingClock.getTradeStartTime
@@ -60,7 +60,7 @@ object TradingClockRoutes {
     /**
       * Returns the delay (in milliseconds) until trading starts
       */
-    def delayUntilTradingStart(request: Request, response: Response, next: NextFunction) {
+    def delayUntilTradingStart(request: Request, response: Response, next: NextFunction): Unit = {
       response.send(new TradingStart(delayInMillis = tradingClock.getDelayUntilTradingStartInMillis))
       next()
     }
@@ -69,6 +69,11 @@ object TradingClockRoutes {
 
   class TradingStart(val delayInMillis: Double) extends js.Object
 
-  class TradingStatus(val active: Boolean, val sysTime: Double, val delay: Double, val start: Double, val end: Double, val stateChanged: Boolean) extends js.Object
+  class TradingStatus(val active: Boolean,
+                      val sysTime: Double,
+                      val delay: Double,
+                      val start: Double,
+                      val end: Double,
+                      val stateChanged: Boolean) extends js.Object
 
 }

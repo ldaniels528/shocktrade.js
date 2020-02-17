@@ -8,8 +8,7 @@ import com.shocktrade.server.dao.PostDAO._
 import com.shocktrade.server.dao.PostData._
 import com.shocktrade.server.dao._
 import com.shocktrade.server.dao.users.ProfileDAO._
-import com.shocktrade.server.dao.users.UserDAO._
-import com.shocktrade.server.dao.users.UserProfileData
+import com.shocktrade.server.dao.users.{ProfileDAO, UserDAO, UserProfileData}
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
 import io.scalajs.npm.express.fileupload.UploadedFiles
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -29,11 +28,11 @@ import scala.util.{Failure, Success}
 object PostRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
-    implicit val postDAO = dbFuture.map(_.getPostDAO)
-    implicit val profileDAO = dbFuture.map(_.getProfileDAO)
-    implicit val userDAO = dbFuture.map(_.getUserDAO)
-    implicit val attachmentDAO = dbFuture.map(_.getPostAttachmentDAO)
-    implicit val seoMetaParser = new SharedContentParser()
+    implicit val postDAO: Future[PostDAO] = dbFuture.map(_.getPostDAO)
+    implicit val profileDAO: Future[ProfileDAO] = dbFuture.map(_.getProfileDAO)
+    implicit val userDAO: UserDAO = UserDAO()
+    implicit val attachmentDAO: Future[PostAttachmentDAO] = dbFuture.map(_.getPostAttachmentDAO)
+    implicit val seoMetaParser: SharedContentParser = new SharedContentParser()
 
     // Post CRUD
     app.post("/api/post", (request: Request, response: Response, next: NextFunction) => createPost(request, response, next))

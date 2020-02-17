@@ -1,7 +1,9 @@
-package com.shocktrade.server.dao
-package users
+package com.shocktrade.server.dao.users
 
-import io.scalajs.npm.mongodb._
+import com.shocktrade.server.dao.DataAccessObjectHelper
+import com.shocktrade.server.dao.events._
+import com.shocktrade.server.dao.users.events.UserEvent
+import io.scalajs.npm.mysql.ConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -10,53 +12,49 @@ import scala.scalajs.js
   * User DAO
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
-trait UserDAO extends Collection
+trait UserDAO extends EventConsumer[UserEvent] {
+
+  /**
+    * Attempts to consume the given event
+    * @param event the given [[SourcedEvent event]]
+    * @return the option of a future representing the consumption of the event
+    */
+  override def consume(event: UserEvent): Option[Future[Boolean]] = None
+
+  /**
+    * Attempts to retrieve a user by ID
+    * @param id the given user ID
+    * @return a promise of an option of a user
+    */
+  def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserData]]
+
+  /**
+    * Attempts to retrieve a user by ID
+    * @param ids the given collection of user IDs
+    * @return a promise of an option of a user
+    */
+  def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserData]]
+
+  /**
+    * Attempts to retrieve a user by username
+    * @param name the given username
+    * @return a promise of a collection of users
+    */
+  def findByUsername(name: String)(implicit ec: ExecutionContext): Future[js.Array[UserData]]
+
+}
 
 /**
   * User DAO Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+  * @author lawrence.daniels@gmail.com
   */
 object UserDAO {
 
   /**
-    * User DAO Enrichment
-    * @param dao the given [[UserDAO user DAO]]
+    * Creates a new User DAO instance
+    * @param options the given [[ConnectionOptions]]
+    * @return a new [[UserDAO User DAO]]
     */
-  implicit class UserDAOEnrichment(val dao: UserDAO) extends AnyVal {
-
-    @inline
-    def findUserWithFields[T <: js.Any](id: String, fields: js.Array[String])(implicit ec: ExecutionContext): Future[Option[T]] = {
-      dao.findOneFuture[T](selector = "_id" $eq id.$oid, fields = fields)
-    }
-
-    @inline
-    def findUserByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserData]] = {
-      dao.findById[UserData](id, fields = js.Array("facebookID", "name"))
-    }
-
-    @inline
-    def findUsersByID(ids: js.Array[String])(implicit ec: ExecutionContext): js.Promise[js.Array[UserData]] = {
-      dao.find[UserData]("_id" $in ids.map(_.$oid), projection = js.Dictionary("facebookID" -> 1, "name" -> 1)).toArray()
-    }
-
-    @inline
-    def findFriendByFacebookID(id: String)(implicit ec: ExecutionContext): Future[Option[FriendStatusData]] = {
-      dao.findOneFuture[FriendStatusData]("facebookID" $eq id, fields = FriendStatusData.Fields)
-    }
-
-  }
-
-  /**
-    * User DAO Constructors
-    * @param db the given [[Db database]]
-    */
-  implicit class UserDAOConstructors(val db: Db) extends AnyVal {
-
-    @inline
-    def getUserDAO(implicit ec: ExecutionContext): UserDAO = {
-      db.collection("Players").asInstanceOf[UserDAO]
-    }
-  }
+  def apply(options: ConnectionOptions = DataAccessObjectHelper.getConnectionOptions): UserDAO = new UserDAOMySQL(options)
 
 }

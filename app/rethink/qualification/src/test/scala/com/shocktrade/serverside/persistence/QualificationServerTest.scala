@@ -1,6 +1,7 @@
 package com.shocktrade.serverside.persistence
 
-import com.shocktrade.eventsource.EventSource.generateUID
+import java.util.UUID
+
 import com.shocktrade.eventsource.FileEventSource
 import com.shocktrade.serverside.persistence.dao.{OrderDAO, PositionDAO, UserDAO}
 import com.shocktrade.serverside.persistence.eventsource._
@@ -20,9 +21,9 @@ class QualificationServerTest extends FunSpec {
   val eventSource = new FileEventSource("./events.json")
 
   // create the DAOs
-  val orderDAO = OrderDAO()
-  val positionDAO = PositionDAO()
-  val userDAO = UserDAO()
+  val orderDAO: OrderDAO = OrderDAO()
+  val positionDAO: PositionDAO = PositionDAO()
+  val userDAO: UserDAO = UserDAO()
 
   describe("QualificationServer") {
 
@@ -37,7 +38,7 @@ class QualificationServerTest extends FunSpec {
       userDAO.findByName("ldaniels") foreach (_ foreach { user =>
         info(s"Using user: ${JSON.stringify(user)}")
 
-        val orderID = generateUID
+        val orderID = UUID.randomUUID().toString
         val userID = user.userID
 
         info("Creating events...")

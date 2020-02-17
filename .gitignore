@@ -16,8 +16,10 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
-bower_components
 
+# app specific
+bower_components
+node_modules
+public/javascripts
 *fastopt.js
 *fastopt.js.map
-node_modules

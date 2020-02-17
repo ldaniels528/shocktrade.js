@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
-  private implicit val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
   // get service references
@@ -85,21 +85,21 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
     outcome
   }
 
-  private def getSecurities(cutOffTime: js.Date) = {
+  private def getSecurities(cutOffTime: js.Date): Future[js.Array[Seq[SecurityRef]]] = {
     for {
       securities <- securitiesDAO().flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches
   }
 
-  private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2) = {
+  private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2): Future[Seq[YFCSVQuote]] = {
     csvQuoteSvc.getQuotes(csvQuoteParams, symbols: _*) recover { case e =>
       logger.error(s"Service call failure [${e.getMessage}] for symbols: %s", symbols.mkString("+"))
       Seq.empty
     }
   }
 
-  private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]) = {
+  private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
     def insertSnapshot() = snapshotDAO().flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
 
     def retrySnapshot(duration: FiniteDuration) = retry(() => insertSnapshot(), duration)

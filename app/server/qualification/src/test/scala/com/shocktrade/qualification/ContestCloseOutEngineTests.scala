@@ -6,7 +6,6 @@ import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.{ContestDAO, ContestData}
 import io.scalajs.nodejs.console
-import io.scalajs.nodejs.globals.process
 import io.scalajs.npm.mongodb.MongoDB
 import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.DateHelper._
@@ -25,7 +24,7 @@ import scala.scalajs.js.JSConverters._
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class ContestCloseOutEngineTests extends FreeSpec with Matchers {
-
+/*
   "Close-out a contest" - {
 
     val dbConnectionString = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade_test"
@@ -55,7 +54,7 @@ class ContestCloseOutEngineTests extends FreeSpec with Matchers {
     }
 
   }
-
+*/
   private def createContest()(implicit contestDAO: Future[ContestDAO]) = {
     val contest = new ContestData(
       _id = js.undefined,

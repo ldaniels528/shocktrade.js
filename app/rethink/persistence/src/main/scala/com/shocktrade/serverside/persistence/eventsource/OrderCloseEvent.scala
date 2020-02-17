@@ -1,6 +1,6 @@
 package com.shocktrade.serverside.persistence.eventsource
 
-import com.shocktrade.eventsource.EventSource.generateUID
+import java.util.UUID
 
 import scala.scalajs.js
 
@@ -10,7 +10,7 @@ import scala.scalajs.js
   * @author lawrence.daniels@gmail.com
   */
 class OrderCloseEvent(val name: js.UndefOr[String] = classOf[OrderCloseEvent].getSimpleName,
-                      val uuid: js.UndefOr[String] = generateUID,
+                      val uuid: js.UndefOr[String] = UUID.randomUUID().toString,
                       val userID: js.UndefOr[String],
                       val orderID: js.UndefOr[String],
                       val userInitiated: Boolean,

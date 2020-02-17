@@ -81,7 +81,7 @@ class BarChartProfileService() {
 
       private def tagPath = tagStack.map(_.name).mkString(".")
 
-      private def setValue(key: String, tag: Tag) = {
+      private def setValue(key: String, tag: Tag): Unit = {
         //console.log(s"$key [value] $tagPath:${tag.name} - ${tag.text.toString()}")
         mappings.get(key) match {
           case Some(value) => mappings(key) = value + ", " + tag.text.toString().trim

@@ -6,7 +6,7 @@ import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor,
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.LoggerFactory.Logger
 import io.scalajs.nodejs.console
-import utest._
+//import utest._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -16,10 +16,10 @@ import scala.scalajs.js
   * Concurrent Processor Tests
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ConcurrentProcessorTests extends TestSuite {
+class ConcurrentProcessorTests /*extends TestSuite*/ {
   private implicit val logger = LoggerFactory.getLogger(getClass)
   private val processor = new ConcurrentProcessor()
-
+/*
   override val tests = this {
     "concurrent processes data" - {
       val dataSet = js.Array((1 to 100).map(_ => UUID.randomUUID()): _*)
@@ -50,6 +50,6 @@ class ConcurrentProcessorTests extends TestSuite {
   tests.runAsync() map { results =>
     console.log(s"results: $results")
     results
-  }
+  }*/
 
 }

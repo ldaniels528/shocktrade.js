@@ -1,9 +1,8 @@
 package com.shocktrade.services
 
-import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
-._
+import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService._
 import io.scalajs.nodejs.console
-import utest._
+//import utest._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
@@ -11,7 +10,7 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
   * Yahoo Finance! Statistics Service Test
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class YahooFinanceStatisticsServiceTests extends TestSuite {
+class YahooFinanceStatisticsServiceTests /*extends TestSuite {
   private val service = new YahooFinanceKeyStatisticsService()(require)
 
   override val tests = this {
@@ -27,5 +26,4 @@ class YahooFinanceStatisticsServiceTests extends TestSuite {
     console.log(s"results: $results")
     results
   }
-
-}
+}*/

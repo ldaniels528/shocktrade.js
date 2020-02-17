@@ -12,6 +12,7 @@ import com.shocktrade.server.dao.securities.QtyQuote
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
+import com.shocktrade.server.dao.users.UserDAO
 import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.facade.PricingQuote
 import io.scalajs.npm.moment.Moment
@@ -39,7 +40,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
   private val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
   private val snapshotDAO = dbFuture.map(_.getSnapshotDAO)
-  private val userDAO = dbFuture.map(_.getUserDAO)
+  private val userDAO = UserDAO()
   private val userProfileDAO = dbFuture.map(_.getProfileDAO)
 
   // internal fields
@@ -214,7 +215,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
 
   private def updatePlayerNetWorth(userID: String) = {
     for {
-      user <- userDAO.flatMap(_.findUserWithFields[UserInfo](userID, fields = UserInfo.Fields)).map(_.orDie("User not found"))
+      user <- userDAO.findByID(userID).map(_.orDie("User not found"))
       portfolios <- portfolioDAO.flatMap(_.findByPlayer(userID))
 
       // compute the cash balances
@@ -230,7 +231,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
       investments = symbolQtys map { case QtyQuote(symbol, qty) => quoteMap.get(symbol).flatMap(_.lastTrade.toOption).orZero * qty } sum
 
       // compute and update the network
-      netWorth = user.wallet + investments + cashFunds + marginFunds
+      netWorth = user.wallet.orZero + investments + cashFunds + marginFunds
       w <- userProfileDAO.flatMap(_.updateNetWorth(userID, netWorth))
     } yield w
   }
@@ -327,10 +328,6 @@ object OrderQualificationEngine {
 
   trait UserInfo extends js.Object {
     def wallet: Double
-  }
-
-  object UserInfo {
-    val Fields = js.Array("wallet")
   }
 
   class WorkQuote(val symbol: js.UndefOr[String],

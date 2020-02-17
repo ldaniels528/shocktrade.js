@@ -9,5 +9,6 @@ import scala.scalajs.js
 trait UserLike extends js.Object {
   var facebookID: js.UndefOr[String]
   var name: js.UndefOr[String]
+  var wallet: js.UndefOr[Double]
 
 }

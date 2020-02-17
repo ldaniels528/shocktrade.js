@@ -1,6 +1,7 @@
 package com.shocktrade.serverside.persistence.eventsource
 
-import com.shocktrade.eventsource.EventSource.generateUID
+import java.util.UUID
+
 import com.shocktrade.serverside.persistence.eventsource.PriceTypes.PriceType
 
 import scala.concurrent.duration._
@@ -11,7 +12,7 @@ import scala.scalajs.js
   * @author lawrence.daniels@gmail.com
   */
 class OrderUpdateEvent(val name: js.UndefOr[String] = classOf[OrderUpdateEvent].getSimpleName,
-                       val uuid: js.UndefOr[String] = generateUID,
+                       val uuid: js.UndefOr[String] = UUID.randomUUID().toString,
                        val userID: js.UndefOr[String],
                        val orderID: js.UndefOr[String],
                        val price: js.UndefOr[Double] = js.undefined,

@@ -1,6 +1,7 @@
 package com.shocktrade.serverside.persistence.eventsource
 
-import com.shocktrade.eventsource.EventSource.generateUID
+import java.util.UUID
+
 import com.shocktrade.serverside.persistence.eventsource.OrderTypes.OrderType
 import com.shocktrade.serverside.persistence.eventsource.PriceTypes.PriceType
 
@@ -12,7 +13,7 @@ import scala.scalajs.js
   * @author lawrence.daniels@gmail.com
   */
 class OrderCreationEvent(val name: js.UndefOr[String] = classOf[OrderCreationEvent].getSimpleName,
-                         val uuid: js.UndefOr[String] = generateUID,
+                         val uuid: js.UndefOr[String] = UUID.randomUUID().toString,
                          val userID: js.UndefOr[String],
                          val orderID: js.UndefOr[String],
                          val symbol: js.UndefOr[String],

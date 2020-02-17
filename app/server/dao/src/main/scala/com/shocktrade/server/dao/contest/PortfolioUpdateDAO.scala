@@ -12,7 +12,6 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.scalajs.js.Promise
 
 /**
   * Portfolio Update DAO

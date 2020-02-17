@@ -1,16 +1,25 @@
 package com.shocktrade.server.dao.contest
 
-import io.scalajs.npm.mongodb.{Collection, Db}
+import com.shocktrade.server.dao.DataAccessObjectHelper
+import io.scalajs.npm.mysql.ConnectionOptions
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
   * Awards DAO
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-@js.native
-trait AwardsDAO extends Collection
+trait AwardsDAO {
+
+  /**
+    * Retrieves the collection of available awards
+    * @param ec  the implicit [[ExecutionContext]]
+    * @return the collection of available [[AwardData]]
+    */
+  def findAvailableAwards(implicit ec: ExecutionContext): Future[js.Array[AwardData]]
+
+}
 
 /**
   * Awards DAO Companion
@@ -19,28 +28,10 @@ trait AwardsDAO extends Collection
 object AwardsDAO {
 
   /**
-    * Awards DAO Extensions
-    * @param dao the given [[AwardsDAO Awards DAO]]
+    * Creates a new User DAO instance
+    * @param options the given [[ConnectionOptions]]
+    * @return a new [[AwardsDAO User DAO]]
     */
-  implicit class AwardsDAOExtensions(val dao: AwardsDAO) {
-
-    @inline
-    def findAvailableAwards(implicit ec: ExecutionContext): js.Promise[js.Array[AwardData]] = {
-      dao.find[AwardData]().toArray()
-    }
-
-  }
-
-  /**
-    * Awards DAO Constructors
-    * @param db the given [[Db database]]
-    */
-  implicit class AwardsDAOConstructors(val db: Db) extends AnyVal {
-
-    @inline
-    def getAwardsDAO: AwardsDAO = {
-      db.collection("Awards").asInstanceOf[AwardsDAO]
-    }
-  }
+  def apply(options: ConnectionOptions = DataAccessObjectHelper.getConnectionOptions): AwardsDAO = new AwardsDAOMySQL(options)
 
 }

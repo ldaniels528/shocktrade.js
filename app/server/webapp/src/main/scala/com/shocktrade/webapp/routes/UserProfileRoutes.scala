@@ -5,8 +5,7 @@ import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.securities.QtyQuote
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
-import com.shocktrade.server.dao.users.UserDAO._
-import com.shocktrade.server.dao.users.UserProfileData
+import com.shocktrade.server.dao.users.{UserDAO, UserProfileData}
 import com.shocktrade.server.facade.PricingQuote
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.Db
@@ -29,7 +28,7 @@ object UserProfileRoutes {
     val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
     val profileDAO = dbFuture.map(_.getProfileDAO)
     val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
-    val userDAO = dbFuture.map(_.getUserDAO)
+    val userDAO = UserDAO()
 
     app.get("/api/profile/facebook/:fbID", (request: Request, response: Response, next: NextFunction) => profileByFBID(request, response, next))
     app.post("/api/profile/facebook", (request: Request, response: Response, next: NextFunction) => profileByFacebook(request, response, next))
@@ -57,8 +56,10 @@ object UserProfileRoutes {
     def netWorth(request: Request, response: Response, next: NextFunction): Unit = {
       val userID = request.params.apply("userID")
       val outcome = for {
-        user <- userDAO.flatMap(_.findUserWithFields[UserInfo](userID, fields = UserInfo.Fields)).map(_.orDie("User not found"))
+        user <- userDAO.findByID(userID).map(_.orDie("User not found"))
         portfolios <- portfolioDAO.flatMap(_.findByPlayer(userID))
+
+        wallet = user.wallet getOrElse 0d
         cashFunds = portfolios.flatMap(_.cashAccount.toOption).flatMap(_.funds.toOption).sum
         marginFunds = portfolios.flatMap(_.marginAccount.toOption).flatMap(_.funds.toOption).sum
 
@@ -68,7 +69,7 @@ object UserProfileRoutes {
         quotes <- securitiesDAO.flatMap(_.findQuotesBySymbols[PricingQuote](symbols, fields = PricingQuote.Fields))
         quoteMap = Map(quotes.map(q => q.symbol -> q): _*)
         investments = (symbolQtys map { case QtyQuote(symbol, qty) => quoteMap.get(symbol).flatMap(_.lastTrade.toOption).orZero * qty }).sum
-        netWorth = user.wallet + investments + cashFunds + marginFunds
+        netWorth = wallet + investments + cashFunds + marginFunds
 
         // update the user's networth
         w <- profileDAO.flatMap(_.updateNetWorth(userID, netWorth).toFuture)
@@ -109,7 +110,7 @@ object UserProfileRoutes {
         case Some(newProfile) =>
           profileDAO.flatMap(_.findOneOrCreateByFacebook(newProfile, newProfile.facebookID.orNull).toFuture) onComplete {
             case Success(result) if result.isOk => response.send(result.value); next()
-            case Success(result) => response.badRequest("User could not be created"); next()
+            case Success(_) => response.badRequest("User could not be created"); next()
             case Failure(e) =>
               e.printStackTrace()
               response.internalServerError(e)
@@ -133,9 +134,5 @@ object UserProfileRoutes {
   class FBProfile(val id: js.UndefOr[String], val name: js.UndefOr[String]) extends js.Object
 
   class UserInfo(val wallet: Double) extends js.Object
-
-  object UserInfo {
-    val Fields = js.Array("wallet")
-  }
 
 }

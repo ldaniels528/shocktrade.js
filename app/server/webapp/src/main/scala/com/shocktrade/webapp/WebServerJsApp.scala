@@ -32,7 +32,7 @@ object WebServerJsApp {
 
     // setup mongodb connection
     logger.info("Loading MongoDB module...")
-    val dbConnect = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
+    val dbConnect = "mongodb://dev001:27017/shocktrade"
     logger.info("Connecting to database '%s'...", dbConnect)
     implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnect)
 
@@ -45,6 +45,7 @@ object WebServerJsApp {
     process.onUncaughtException { err =>
       logger.error("An uncaught exception was fired:")
       logger.error(err.stack)
+      ()
     }
   }
 
@@ -80,9 +81,7 @@ object WebServerJsApp {
 
     // setup web socket routes
     logger.info("Setting up web socket...")
-    app.ws("/websocket", callback = (ws: WebSocket, request: Request) => {
-      ws.onMessage(WebSocketHandler.messageHandler(ws, request, _))
-    })
+    app.ws("/websocket", (ws: WebSocket, request: Request) => ws.onMessage(WebSocketHandler.messageHandler(ws, request, _)))
 
     // setup all other routes
     logger.info("Setting up all other routes...")

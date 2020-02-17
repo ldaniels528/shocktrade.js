@@ -1,10 +1,9 @@
 package com.shocktrade.services
 
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService
-.require
 import io.scalajs.nodejs.console
 import io.scalajs.util.DateHelper._
-import utest._
+import org.scalatest.TestSuite
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -15,6 +14,7 @@ import scala.scalajs.js
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class YahooFinanceCSVHistoryServiceTests extends TestSuite {
+  /*
   private val service = new YahooFinanceCSVHistoryService()(require)
 
   override val tests = this {
@@ -29,6 +29,6 @@ class YahooFinanceCSVHistoryServiceTests extends TestSuite {
   tests.runAsync() map { results =>
     console.log(s"results: $results")
     results
-  }
+  }*/
 
 }
