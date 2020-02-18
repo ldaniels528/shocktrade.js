@@ -23,7 +23,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
   private val newsDAO = NewsSourceDAO()
   private val perksDAO = PerksDAO()
 
-  def install()(implicit tradingClock: TradingClock) = {
+  def install()(implicit tradingClock: TradingClock): Future[_] = {
     for {
     // setup contest reference data
       //r0 <- insertAwards()
@@ -35,7 +35,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       d1 <- start(new EodDataCompanyUpdateDaemon(dbFuture))
 
       // update securities
-      d2 <- start(new SecuritiesUpdateDaemon(dbConnectionString))
+      d2 <- start(new SecuritiesUpdateDaemon(dbFuture))
       d3 <- start(new KeyStatisticsUpdateDaemon(dbFuture))
 
       // update company profile
@@ -46,7 +46,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
     } yield (/*r0, r1, r2,*/ d0, d1, d2, d3, d4, d5, d6)
   }
 
-  private def start[T](daemon: Daemon[T])(implicit tradingClock: TradingClock) = {
+  private def start[T](daemon: Daemon[T])(implicit tradingClock: TradingClock): Future[T] = {
     val promise = Promise[T]()
     setImmediate(() => {
       logger.info(s"Starting ${daemon.getClass.getSimpleName}...")
@@ -58,7 +58,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
     promise.future
   }
 
-  private def insertAwards() = {
+  private def insertAwards(): Unit = {
     val awards = js.Array(
       new AwardData(name = "Told your friends!", code = "FACEBOOK", icon = "images/accomplishments/facebook.jpg", description = "Posted to FaceBook from ShockTrade"),
       new AwardData(name = "Right back at cha!", code = "FBLIKEUS", icon = "images/accomplishments/facebook.jpg", description = "<i>Told your friends</i> and <span class='facebook'><img src='images/contests/icon_facebook.jpg'>Liked</span> ShockTrade on FaceBook (<i>Pays 1 Perk</i>)"),

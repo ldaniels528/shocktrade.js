@@ -14,9 +14,9 @@ import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
 import io.scalajs.util.PromiseHelper.Implicits._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}

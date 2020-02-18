@@ -7005,73 +7005,6 @@ function $m_Lio_scalajs_npm_angularjs_toaster_package$() {
   return $n_Lio_scalajs_npm_angularjs_toaster_package$
 }
 /** @constructor */
-function $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
-  $c_O.call(this)
-}
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype = new $h_O();
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.constructor = $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$;
-/** @constructor */
-function $h_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
-  /*<skip>*/
-}
-$h_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype = $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype;
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.init___ = (function() {
-  return this
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$13__sjs_js_Any = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$5__sjs_js_Any = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$4__sjs_js_Any = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
-  return "lg"
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
-  return (void 0)
-});
-var $d_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = new $TypeData().initClass({
-  Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$: 0
-}, false, "io.scalajs.npm.angularjs.uibootstrap.ModalOptions$", {
-  Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$: 1,
-  O: 1
-});
-$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$classData = $d_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$;
-var $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = (void 0);
-function $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
-  if ((!$n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$)) {
-    $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().init___()
-  };
-  return $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$
-}
-/** @constructor */
 function $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo$() {
   $c_O.call(this)
 }
@@ -9374,10 +9307,6 @@ $c_sjsr_RuntimeString$.prototype.toCharArray__T__AC = (function(thiz) {
     i = ((1 + i) | 0)
   };
   return result
-});
-$c_sjsr_RuntimeString$.prototype.indexOf__T__I__I = (function(thiz, ch) {
-  var str = this.fromCodePoint__p1__I__T(ch);
-  return $uI(thiz.indexOf(str))
 });
 $c_sjsr_RuntimeString$.prototype.fromCodePoint__p1__I__T = (function(codePoint) {
   if ((((-65536) & codePoint) === 0)) {
@@ -13231,8 +13160,7 @@ $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialog.prototype.init___Lio_scalaj
 $c_Lcom_shocktrade_client_dialogs_InvitePlayerDialog.prototype.popup__Lcom_shocktrade_common_models_contest_Participant__s_concurrent_Future = (function(participant) {
   var jsx$1 = this.$$modal$1;
   var value = $d_Lcom_shocktrade_client_dialogs_InvitePlayerDialogController.getClassOf().getSimpleName__T();
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "invite_player_dialog.html", value);
-  var modalInstance = jsx$1.open(a);
+  var modalInstance = jsx$1.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "invite_player_dialog.html", value));
   return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
 });
 function $as_Lcom_shocktrade_client_dialogs_InvitePlayerDialog(obj) {
@@ -13392,8 +13320,7 @@ $h_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype = $c_Lcom_shocktrade_c
 $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.popup__sjs_js_Promise = (function() {
   var jsx$1 = this.$$modal$1;
   var value = $d_Lcom_shocktrade_client_dialogs_NewGameDialogController.getClassOf().getSimpleName__T();
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "new_game_dialog.html", value);
-  var $$modalInstance = jsx$1.open(a);
+  var $$modalInstance = jsx$1.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "new_game_dialog.html", value));
   return $$modalInstance.result
 });
 $c_Lcom_shocktrade_client_dialogs_NewGameDialog.prototype.init___Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$modal) {
@@ -13629,8 +13556,7 @@ $c_Lcom_shocktrade_client_dialogs_NewOrderDialog.prototype.popup__Lcom_shocktrad
   })(this, params));
   var array = [new $c_T2().init___O__O("params", y)];
   var x$3 = jsx$1.apply__sc_Seq__sjs_js_Dictionary(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array));
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "new_order_dialog.html", value, (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), x$3);
-  var $$modalInstance = jsx$2.open(a);
+  var $$modalInstance = jsx$2.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "new_order_dialog.html", value, (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), x$3));
   return $$modalInstance.result
 });
 function $as_Lcom_shocktrade_client_dialogs_NewOrderDialog(obj) {
@@ -13817,8 +13743,7 @@ $h_Lcom_shocktrade_client_dialogs_PerksDialog.prototype = $c_Lcom_shocktrade_cli
 $c_Lcom_shocktrade_client_dialogs_PerksDialog.prototype.popup__sjs_js_Promise = (function() {
   var jsx$1 = this.$$modal$1;
   var value = $d_Lcom_shocktrade_client_dialogs_PerksDialogController.getClassOf().getSimpleName__T();
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "perks_dialog.html", value);
-  var $$modalInstance = jsx$1.open(a);
+  var $$modalInstance = jsx$1.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "perks_dialog.html", value));
   return $$modalInstance.result
 });
 $c_Lcom_shocktrade_client_dialogs_PerksDialog.prototype.init___Lio_scalajs_npm_angularjs_http_Http__Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$http, $$modal) {
@@ -14320,8 +14245,7 @@ $c_Lcom_shocktrade_client_dialogs_SignUpDialog.prototype.init___Lio_scalajs_npm_
 $c_Lcom_shocktrade_client_dialogs_SignUpDialog.prototype.popup__s_concurrent_ExecutionContext__sjs_js_Promise = (function(ec) {
   var jsx$1 = this.$$modal$1;
   var value = $d_Lcom_shocktrade_client_dialogs_SignUpDialogController.getClassOf().getSimpleName__T();
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "sign_up_dialog.html", value);
-  var modalInstance = jsx$1.open(a);
+  var modalInstance = jsx$1.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "sign_up_dialog.html", value));
   return modalInstance.result
 });
 $c_Lcom_shocktrade_client_dialogs_SignUpDialog.prototype.createAccount__Lcom_shocktrade_client_dialogs_SignUpForm__s_concurrent_ExecutionContext__sjs_js_Promise = (function(form, ec) {
@@ -14599,8 +14523,7 @@ $h_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype = $c_Lcom_shockt
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.popup__s_concurrent_Future = (function() {
   var jsx$1 = this.$$modal$1;
   var value = $d_Lcom_shocktrade_client_dialogs_TransferFundsDialogController.getClassOf().getSimpleName__T();
-  var a = new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "transfer_funds_dialog.html", value);
-  var modalInstance = jsx$1.open(a);
+  var modalInstance = jsx$1.open(new ($a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions())((void 0), "transfer_funds_dialog.html", value));
   return $m_Lio_scalajs_util_PromiseHelper$Implicits$().promise2Future__sjs_js_Promise__s_concurrent_Future(modalInstance.result)
 });
 $c_Lcom_shocktrade_client_dialogs_TransferFundsDialog.prototype.init___Lio_scalajs_npm_angularjs_uibootstrap_Modal = (function($$modal) {
@@ -16227,21 +16150,21 @@ function $h_Lio_scalajs_npm_angularjs_facebook_FacebookService() {
 }
 $h_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype = $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype;
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.fbURL__p1__T__sjs_js_UndefOr__T__T = (function(path, args, fbUserID) {
-  var jsx$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["/", "", "?access_token=", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([fbUserID, path, this.accessToken__sjs_js_UndefOr()]));
+  var jsx$1 = this.accessToken__sjs_js_UndefOr();
   if ((args === (void 0))) {
     var value$1 = (void 0)
   } else {
     var myArgs = $as_T(args);
-    var value = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["&", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([myArgs]));
+    var value = ("&" + myArgs);
     var value$1 = value
   };
-  return (("" + jsx$1) + ((value$1 === (void 0)) ? "" : value$1))
+  return ((((("/" + fbUserID) + path) + "?access_token=") + jsx$1) + ((value$1 === (void 0)) ? "" : value$1))
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.getUserProfile__s_concurrent_Future = (function() {
   var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
   $g.FB.api(this.fbURL__p1__T__sjs_js_UndefOr__T__T("", (void 0), "me"), (function($this, promise$1) {
     return (function(response$2) {
-      return $this.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__s_concurrent_Promise(promise$1, response$2)
+      $this.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__V(promise$1, response$2)
     })
   })(this, promise));
   return promise
@@ -16263,37 +16186,42 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$a
   var rc6 = false;
   var x2 = null;
   var x1 = ((response === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(response));
-  if ((x1 instanceof $c_s_Some)) {
-    rc6 = true;
-    x2 = $as_s_Some(x1);
-    var resp = x2.value$2;
-    var value = resp.error;
-    if ((value === (void 0))) {
-      var value$1 = resp.authResponse;
-      this.auth$1 = value$1;
-      var x1$2 = new $c_s_util_Success().init___O(resp);
-      var value$2 = x1$2.value$2;
-      return $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise$3, value$2)
-    }
-  };
-  if (rc6) {
-    var resp$2 = x2.value$2;
-    var value$3 = resp$2.error;
-    var cause = new $c_jl_Exception().init___T($as_T(((value$3 === (void 0)) ? "Cause unknown" : value$3)));
-    return $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise$3, cause)
-  };
-  var x = $m_s_None$();
-  if ((x === x1)) {
-    var cause$1 = new $c_jl_Exception().init___T("No response from Facebook");
-    return $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise$3, cause$1)
-  };
-  throw new $c_s_MatchError().init___O(x1)
+  matchEnd7: {
+    if ((x1 instanceof $c_s_Some)) {
+      rc6 = true;
+      x2 = $as_s_Some(x1);
+      var resp = x2.value$2;
+      var value = resp.error;
+      if ((value === (void 0))) {
+        var value$1 = resp.authResponse;
+        this.auth$1 = value$1;
+        var x1$2 = new $c_s_util_Success().init___O(resp);
+        var value$2 = x1$2.value$2;
+        $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise$3, value$2);
+        break matchEnd7
+      }
+    };
+    if (rc6) {
+      var resp$2 = x2.value$2;
+      var value$3 = resp$2.error;
+      var cause = new $c_jl_Exception().init___T($as_T(((value$3 === (void 0)) ? "Cause unknown" : value$3)));
+      $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise$3, cause);
+      break matchEnd7
+    };
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      var cause$1 = new $c_jl_Exception().init___T("No response from Facebook");
+      $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise$3, cause$1);
+      break matchEnd7
+    };
+    throw new $c_s_MatchError().init___O(x1)
+  }
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.logout__s_concurrent_Future = (function() {
   var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
   $g.FB.logout((function(arg$outer, promise$4) {
     return (function(arg1$2) {
-      return arg$outer.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__s_concurrent_Promise(promise$4, arg1$2)
+      arg$outer.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__V(promise$4, arg1$2)
     })
   })(this, promise));
   return promise
@@ -16306,12 +16234,12 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.getTaggableFrien
       arg$outer.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Array__V(arg1$2, friends$2)
     })
   })(this, friends);
-  $g.FB.api(this.fbURL__p1__T__sjs_js_UndefOr__T__T("/taggable_friends", (void 0), "me"), (function($this, promise$1, friends$1, callback$1) {
+  $g.FB.api(this.fbURL__p1__T__sjs_js_UndefOr__T__T("/taggable_friends", (void 0), "me"), (function($this, callback$1, promise$1, friends$1) {
     return (function(response$2) {
       $this.handlePaginatedResults__p1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Function1__V(response$2, callback$1);
       return $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise$1, friends$1)
     })
-  })(this, promise, friends, callback));
+  })(this, callback, promise, friends));
   return promise
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handlePaginatedResults__p1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Function1__V = (function(response, callback) {
@@ -16329,7 +16257,47 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handlePaginatedR
     }
   }
 });
-$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.login__s_concurrent_Promise = (function() {
+$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__V = (function(promise, response) {
+  var rc6 = false;
+  var x2 = null;
+  var x1 = ((response === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(response));
+  matchEnd7: {
+    if ((x1 instanceof $c_s_Some)) {
+      rc6 = true;
+      x2 = $as_s_Some(x1);
+      var resp = x2.value$2;
+      var value = resp.error;
+      if ((value === (void 0))) {
+        $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise, resp);
+        break matchEnd7
+      }
+    };
+    if (rc6) {
+      var resp$2 = x2.value$2;
+      var value$1 = resp$2.error;
+      var cause = new $c_jl_Exception().init___T($as_T(((value$1 === (void 0)) ? "Cause unknown" : value$1)));
+      $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise, cause);
+      break matchEnd7
+    };
+    var x = $m_s_None$();
+    if ((x === x1)) {
+      var cause$1 = new $c_jl_Exception().init___T("No response from Facebook");
+      $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise, cause$1);
+      break matchEnd7
+    };
+    throw new $c_s_MatchError().init___O(x1)
+  }
+});
+$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Array__V = (function(response, friends$2) {
+  var results = response.data;
+  if (($uI(results.length) !== 0)) {
+    friends$2.push.apply(friends$2, results);
+    var jsx$1 = $g.console;
+    var s = ($uI(friends$2.length) + " friend(s) loaded");
+    jsx$1.log(s)
+  }
+});
+$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.login__s_concurrent_Future = (function() {
   var promise = new $c_s_concurrent_impl_Promise$DefaultPromise().init___();
   $g.FB.login((function(arg$outer, promise$3) {
     return (function(arg1$2) {
@@ -16337,41 +16305,6 @@ $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.login__s_concurr
     })
   })(this, promise));
   return promise
-});
-$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.io$scalajs$npm$angularjs$facebook$FacebookService$$$anonfun$getTaggableFriends$1__Lio_scalajs_social_facebook_FacebookPagination__sjs_js_Array__V = (function(response, friends$2) {
-  var results = response.data;
-  if (($uI(results.length) !== 0)) {
-    friends$2.push.apply(friends$2, results);
-    var jsx$1 = $g.console;
-    var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["", " friend(s) loaded"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$uI(friends$2.length)]));
-    jsx$1.log(s)
-  }
-});
-$c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.handleResponse__p1__s_concurrent_Promise__sjs_js_UndefOr__s_concurrent_Promise = (function(promise, response) {
-  var rc6 = false;
-  var x2 = null;
-  var x1 = ((response === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(response));
-  if ((x1 instanceof $c_s_Some)) {
-    rc6 = true;
-    x2 = $as_s_Some(x1);
-    var resp = x2.value$2;
-    var value = resp.error;
-    if ((value === (void 0))) {
-      return $f_s_concurrent_Promise__success__O__s_concurrent_Promise(promise, resp)
-    }
-  };
-  if (rc6) {
-    var resp$2 = x2.value$2;
-    var value$1 = resp$2.error;
-    var cause = new $c_jl_Exception().init___T($as_T(((value$1 === (void 0)) ? "Cause unknown" : value$1)));
-    return $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise, cause)
-  };
-  var x = $m_s_None$();
-  if ((x === x1)) {
-    var cause$1 = new $c_jl_Exception().init___T("No response from Facebook");
-    return $f_s_concurrent_Promise__failure__jl_Throwable__s_concurrent_Promise(promise, cause$1)
-  };
-  throw new $c_s_MatchError().init___O(x1)
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.facebookID__sjs_js_UndefOr = (function() {
   var value = this.auth$1;
@@ -16399,6 +16332,74 @@ var $d_Lio_scalajs_npm_angularjs_facebook_FacebookService = new $TypeData().init
   Lio_scalajs_npm_angularjs_Service: 1
 });
 $c_Lio_scalajs_npm_angularjs_facebook_FacebookService.prototype.$classData = $d_Lio_scalajs_npm_angularjs_facebook_FacebookService;
+/** @constructor */
+function $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
+  $c_O.call(this)
+}
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype = new $h_O();
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.constructor = $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$;
+/** @constructor */
+function $h_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
+  /*<skip>*/
+}
+$h_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype = $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype;
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$10__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.init___ = (function() {
+  return this
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$7__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$11__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$13__sjs_js_Any = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$5__sjs_js_Any = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$1__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$4__sjs_js_Any = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$8__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$2__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$3__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$9__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$6__sjs_js_UndefOr = (function() {
+  return "lg"
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$$lessinit$greater$default$12__sjs_js_UndefOr = (function() {
+  return (void 0)
+});
+var $d_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = new $TypeData().initClass({
+  Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$: 0
+}, false, "io.scalajs.npm.angularjs.uibootstrap.ModalOptions$", {
+  Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$: 1,
+  O: 1,
+  Lio_scalajs_FlexibleOptions: 1
+});
+$c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$.prototype.$classData = $d_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$;
+var $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = (void 0);
+function $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$() {
+  if ((!$n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$)) {
+    $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$ = new $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().init___()
+  };
+  return $n_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$
+}
 /** @constructor */
 function $c_jl_Number() {
   $c_O.call(this)
@@ -18240,8 +18241,7 @@ $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainCon
   return $as_T(((value === (void 0)) ? null : value))
 });
 $c_Lcom_shocktrade_client_MainController.prototype.com$shocktrade$client$MainController$$$anonfun$new$44__V = (function() {
-  var task = this.facebook$1.login__s_concurrent_Promise();
-  task.onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
+  this.facebook$1.login__s_concurrent_Future().onComplete__F1__s_concurrent_ExecutionContext__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
     return (function(x0$2$2) {
       var x0$2 = $as_s_util_Try(x0$2$2);
       if ((x0$2 instanceof $c_s_util_Success)) {
@@ -21779,16 +21779,18 @@ var $b_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig = (void 0)
 function $a_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig() {
   if ((!$b_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig)) {
     /** @constructor */
-    var $c_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig = (function $c_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig(arg$1) {
+    var $c_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig = (function $c_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig(arg) {
       var jsx$1 = (arguments.length | 0);
       var jsx$2 = 1;
-      var arg$rest = [];
+      var rest = [];
       while ((jsx$2 < jsx$1)) {
-        arg$rest.push(arguments[jsx$2]);
+        rest.push(arguments[jsx$2]);
         jsx$2 = ((jsx$2 + 1) | 0)
       };
-      var url = $as_T(arg$1);
-      var filters = ((arg$rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig$().$$lessinit$greater$default$2__sjs_js_Array() : arg$rest[0]);
+      var prep = $as_T(arg);
+      var prep$2 = ((rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_fileupload_nervgh_FileUploaderConfig$().$$lessinit$greater$default$2__sjs_js_Array() : rest[0]);
+      var url = prep;
+      var filters = prep$2;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "url", {
         "configurable": true,
@@ -21820,8 +21822,9 @@ var $b_Lio_scalajs_npm_angularjs_nvd3_ChartOptions = (void 0);
 function $a_Lio_scalajs_npm_angularjs_nvd3_ChartOptions() {
   if ((!$b_Lio_scalajs_npm_angularjs_nvd3_ChartOptions)) {
     /** @constructor */
-    var $c_Lio_scalajs_npm_angularjs_nvd3_ChartOptions = (function $c_Lio_scalajs_npm_angularjs_nvd3_ChartOptions(arg$1) {
-      var chart = arg$1;
+    var $c_Lio_scalajs_npm_angularjs_nvd3_ChartOptions = (function $c_Lio_scalajs_npm_angularjs_nvd3_ChartOptions(arg) {
+      var prep = arg;
+      var chart = prep;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "chart", {
         "configurable": true,
@@ -21849,17 +21852,23 @@ function $a_Lio_scalajs_npm_angularjs_toaster_ToasterOptions() {
     var $c_Lio_scalajs_npm_angularjs_toaster_ToasterOptions = (function $c_Lio_scalajs_npm_angularjs_toaster_ToasterOptions() {
       var jsx$1 = (arguments.length | 0);
       var jsx$2 = 0;
-      var arg$rest = [];
+      var rest = [];
       while ((jsx$2 < jsx$1)) {
-        arg$rest.push(arguments[jsx$2]);
+        rest.push(arguments[jsx$2]);
         jsx$2 = ((jsx$2 + 1) | 0)
       };
-      var type = ((arg$rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-      var title = ((arg$rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-      var body = ((arg$rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-      var timeout = ((arg$rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-      var showCloseButton = ((arg$rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-      var closeHtml = ((arg$rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
+      var prep = ((rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : rest[0]);
+      var prep$2 = ((rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : rest[1]);
+      var prep$3 = ((rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : rest[2]);
+      var prep$4 = ((rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$4__sjs_js_UndefOr() : rest[3]);
+      var prep$5 = ((rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$5__sjs_js_UndefOr() : rest[4]);
+      var prep$6 = ((rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_toaster_ToasterOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : rest[5]);
+      var type = prep;
+      var title = prep$2;
+      var body = prep$3;
+      var timeout = prep$4;
+      var showCloseButton = prep$5;
+      var closeHtml = prep$6;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "type", {
         "configurable": true,
@@ -21922,24 +21931,37 @@ function $a_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions() {
     var $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions = (function $c_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions() {
       var jsx$1 = (arguments.length | 0);
       var jsx$2 = 0;
-      var arg$rest = [];
+      var rest = [];
       while ((jsx$2 < jsx$1)) {
-        arg$rest.push(arguments[jsx$2]);
+        rest.push(arguments[jsx$2]);
         jsx$2 = ((jsx$2 + 1) | 0)
       };
-      var template = ((arg$rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-      var templateUrl = ((arg$rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-      var controller = ((arg$rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-      var controllerAs = ((arg$rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$4__sjs_js_Any() : arg$rest[3]);
-      var scope = ((arg$rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$5__sjs_js_Any() : arg$rest[4]);
-      var size = ((arg$rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-      var windowClass = ((arg$rest[6] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-      var windowTemplateUrl = ((arg$rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-      var animation = ((arg$rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-      var backdrop = ((arg$rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-      var backdropClass = ((arg$rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-      var keyboard = ((arg$rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-      var resolve = ((arg$rest[12] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$13__sjs_js_Any() : arg$rest[12]);
+      var prep = ((rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$1__sjs_js_UndefOr() : rest[0]);
+      var prep$2 = ((rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$2__sjs_js_UndefOr() : rest[1]);
+      var prep$3 = ((rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$3__sjs_js_UndefOr() : rest[2]);
+      var prep$4 = ((rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$4__sjs_js_Any() : rest[3]);
+      var prep$5 = ((rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$5__sjs_js_Any() : rest[4]);
+      var prep$6 = ((rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$6__sjs_js_UndefOr() : rest[5]);
+      var prep$7 = ((rest[6] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$7__sjs_js_UndefOr() : rest[6]);
+      var prep$8 = ((rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$8__sjs_js_UndefOr() : rest[7]);
+      var prep$9 = ((rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$9__sjs_js_UndefOr() : rest[8]);
+      var prep$10 = ((rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$10__sjs_js_UndefOr() : rest[9]);
+      var prep$11 = ((rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$11__sjs_js_UndefOr() : rest[10]);
+      var prep$12 = ((rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$12__sjs_js_UndefOr() : rest[11]);
+      var prep$13 = ((rest[12] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uibootstrap_ModalOptions$().$$lessinit$greater$default$13__sjs_js_Any() : rest[12]);
+      var template = prep;
+      var templateUrl = prep$2;
+      var controller = prep$3;
+      var controllerAs = prep$4;
+      var scope = prep$5;
+      var size = prep$6;
+      var windowClass = prep$7;
+      var windowTemplateUrl = prep$8;
+      var animation = prep$9;
+      var backdrop = prep$10;
+      var backdropClass = prep$11;
+      var keyboard = prep$12;
+      var resolve = prep$13;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "template", {
         "configurable": true,
@@ -22051,23 +22073,35 @@ function $a_Lio_scalajs_npm_angularjs_uirouter_RouteTo() {
     var $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo = (function $c_Lio_scalajs_npm_angularjs_uirouter_RouteTo() {
       var jsx$1 = (arguments.length | 0);
       var jsx$2 = 0;
-      var arg$rest = [];
+      var rest = [];
       while ((jsx$2 < jsx$1)) {
-        arg$rest.push(arguments[jsx$2]);
+        rest.push(arguments[jsx$2]);
         jsx$2 = ((jsx$2 + 1) | 0)
       };
-      var controller = ((arg$rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-      var controllerFn = ((arg$rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-      var controllerAs = ((arg$rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-      var template = ((arg$rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-      var templateFn = ((arg$rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-      var templateUrl = ((arg$rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$6__sjs_js_UndefOr() : arg$rest[5]);
-      var templateUrlFn = ((arg$rest[6] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$7__sjs_js_UndefOr() : arg$rest[6]);
-      var resolve = ((arg$rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-      var redirectTo = ((arg$rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-      var redirectToFn = ((arg$rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-      var reloadOnSearch = ((arg$rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-      var caseInsensitiveMatch = ((arg$rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
+      var prep = ((rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$1__sjs_js_UndefOr() : rest[0]);
+      var prep$2 = ((rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$2__sjs_js_UndefOr() : rest[1]);
+      var prep$3 = ((rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$3__sjs_js_UndefOr() : rest[2]);
+      var prep$4 = ((rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$4__sjs_js_UndefOr() : rest[3]);
+      var prep$5 = ((rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$5__sjs_js_UndefOr() : rest[4]);
+      var prep$6 = ((rest[5] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$6__sjs_js_UndefOr() : rest[5]);
+      var prep$7 = ((rest[6] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$7__sjs_js_UndefOr() : rest[6]);
+      var prep$8 = ((rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$8__sjs_js_UndefOr() : rest[7]);
+      var prep$9 = ((rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$9__sjs_js_UndefOr() : rest[8]);
+      var prep$10 = ((rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$10__sjs_js_UndefOr() : rest[9]);
+      var prep$11 = ((rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$11__sjs_js_UndefOr() : rest[10]);
+      var prep$12 = ((rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_uirouter_RouteTo$().$$lessinit$greater$default$12__sjs_js_UndefOr() : rest[11]);
+      var controller = prep;
+      var controllerFn = prep$2;
+      var controllerAs = prep$3;
+      var template = prep$4;
+      var templateFn = prep$5;
+      var templateUrl = prep$6;
+      var templateUrlFn = prep$7;
+      var resolve = prep$8;
+      var redirectTo = prep$9;
+      var redirectToFn = prep$10;
+      var reloadOnSearch = prep$11;
+      var caseInsensitiveMatch = prep$12;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "controller", {
         "configurable": true,
@@ -22169,11 +22203,15 @@ var $b_Lio_scalajs_social_facebook_FacebookAppConfig = (void 0);
 function $a_Lio_scalajs_social_facebook_FacebookAppConfig() {
   if ((!$b_Lio_scalajs_social_facebook_FacebookAppConfig)) {
     /** @constructor */
-    var $c_Lio_scalajs_social_facebook_FacebookAppConfig = (function $c_Lio_scalajs_social_facebook_FacebookAppConfig(arg$1, arg$2, arg$3, arg$4) {
-      var appId = $as_T(arg$1);
-      var status = $uZ(arg$2);
-      var xfbml = $uZ(arg$3);
-      var version = $as_T(arg$4);
+    var $c_Lio_scalajs_social_facebook_FacebookAppConfig = (function $c_Lio_scalajs_social_facebook_FacebookAppConfig(arg, arg$2, arg$3, arg$4) {
+      var prep = $as_T(arg);
+      var prep$2 = $uZ(arg$2);
+      var prep$3 = $uZ(arg$3);
+      var prep$4 = $as_T(arg$4);
+      var appId = prep;
+      var status = prep$2;
+      var xfbml = prep$3;
+      var version = prep$4;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "appId", {
         "configurable": true,
@@ -23397,166 +23435,6 @@ function $m_s_Predef$() {
     $n_s_Predef$ = new $c_s_Predef$().init___()
   };
   return $n_s_Predef$
-}
-/** @constructor */
-function $c_s_StringContext$() {
-  $c_O.call(this)
-}
-$c_s_StringContext$.prototype = new $h_O();
-$c_s_StringContext$.prototype.constructor = $c_s_StringContext$;
-/** @constructor */
-function $h_s_StringContext$() {
-  /*<skip>*/
-}
-$h_s_StringContext$.prototype = $c_s_StringContext$.prototype;
-$c_s_StringContext$.prototype.init___ = (function() {
-  return this
-});
-$c_s_StringContext$.prototype.loop$1__p1__I__I__jl_StringBuilder__T__I__Z__T = (function(i, next, b$1, str$1, len$1, strict$1) {
-  _loop: while (true) {
-    if ((next >= 0)) {
-      if ((next > i)) {
-        b$1.append__jl_CharSequence__I__I__jl_StringBuilder(str$1, i, next)
-      };
-      var idx = ((1 + next) | 0);
-      if ((idx >= len$1)) {
-        throw new $c_s_StringContext$InvalidEscapeException().init___T__I(str$1, next)
-      };
-      var index = idx;
-      var x1 = (65535 & $uI(str$1.charCodeAt(index)));
-      switch (x1) {
-        case 98: {
-          var c = 8;
-          break
-        }
-        case 116: {
-          var c = 9;
-          break
-        }
-        case 110: {
-          var c = 10;
-          break
-        }
-        case 102: {
-          var c = 12;
-          break
-        }
-        case 114: {
-          var c = 13;
-          break
-        }
-        case 34: {
-          var c = 34;
-          break
-        }
-        case 39: {
-          var c = 39;
-          break
-        }
-        case 92: {
-          var c = 92;
-          break
-        }
-        default: {
-          if (((x1 >= 48) && (x1 <= 55))) {
-            if (strict$1) {
-              throw new $c_s_StringContext$InvalidEscapeException().init___T__I(str$1, next)
-            };
-            var index$1 = idx;
-            var leadch = (65535 & $uI(str$1.charCodeAt(index$1)));
-            var oct = (((-48) + leadch) | 0);
-            idx = ((1 + idx) | 0);
-            if ((idx < len$1)) {
-              var index$2 = idx;
-              var jsx$2 = ((65535 & $uI(str$1.charCodeAt(index$2))) >= 48)
-            } else {
-              var jsx$2 = false
-            };
-            if (jsx$2) {
-              var index$3 = idx;
-              var jsx$1 = ((65535 & $uI(str$1.charCodeAt(index$3))) <= 55)
-            } else {
-              var jsx$1 = false
-            };
-            if (jsx$1) {
-              var jsx$3 = oct;
-              var index$4 = idx;
-              oct = (((-48) + (((jsx$3 << 3) + (65535 & $uI(str$1.charCodeAt(index$4)))) | 0)) | 0);
-              idx = ((1 + idx) | 0);
-              if (((idx < len$1) && (leadch <= 51))) {
-                var index$5 = idx;
-                var jsx$5 = ((65535 & $uI(str$1.charCodeAt(index$5))) >= 48)
-              } else {
-                var jsx$5 = false
-              };
-              if (jsx$5) {
-                var index$6 = idx;
-                var jsx$4 = ((65535 & $uI(str$1.charCodeAt(index$6))) <= 55)
-              } else {
-                var jsx$4 = false
-              };
-              if (jsx$4) {
-                var jsx$6 = oct;
-                var index$7 = idx;
-                oct = (((-48) + (((jsx$6 << 3) + (65535 & $uI(str$1.charCodeAt(index$7)))) | 0)) | 0);
-                idx = ((1 + idx) | 0)
-              }
-            };
-            idx = (((-1) + idx) | 0);
-            var c = (65535 & oct)
-          } else {
-            var c;
-            throw new $c_s_StringContext$InvalidEscapeException().init___T__I(str$1, next)
-          }
-        }
-      };
-      idx = ((1 + idx) | 0);
-      b$1.append__C__jl_StringBuilder(c);
-      var temp$i = idx;
-      var temp$next = $m_sjsr_RuntimeString$().indexOf__T__I__I__I(str$1, 92, idx);
-      i = temp$i;
-      next = temp$next;
-      continue _loop
-    } else {
-      if ((i < len$1)) {
-        b$1.append__jl_CharSequence__I__I__jl_StringBuilder(str$1, i, len$1)
-      };
-      return b$1.java$lang$StringBuilder$$content$f
-    }
-  }
-});
-$c_s_StringContext$.prototype.treatEscapes0__p1__T__Z__T = (function(str, strict) {
-  var len = $uI(str.length);
-  var x1 = $m_sjsr_RuntimeString$().indexOf__T__I__I(str, 92);
-  switch (x1) {
-    case (-1): {
-      return str;
-      break
-    }
-    default: {
-      return this.replace$1__p1__I__T__I__Z__T(x1, str, len, strict)
-    }
-  }
-});
-$c_s_StringContext$.prototype.replace$1__p1__I__T__I__Z__T = (function(first, str$1, len$1, strict$1) {
-  var b = new $c_jl_StringBuilder().init___();
-  return this.loop$1__p1__I__I__jl_StringBuilder__T__I__Z__T(0, first, b, str$1, len$1, strict$1)
-});
-var $d_s_StringContext$ = new $TypeData().initClass({
-  s_StringContext$: 0
-}, false, "scala.StringContext$", {
-  s_StringContext$: 1,
-  O: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_s_StringContext$.prototype.$classData = $d_s_StringContext$;
-var $n_s_StringContext$ = (void 0);
-function $m_s_StringContext$() {
-  if ((!$n_s_StringContext$)) {
-    $n_s_StringContext$ = new $c_s_StringContext$().init___()
-  };
-  return $n_s_StringContext$
 }
 /** @constructor */
 function $c_s_concurrent_BatchingExecutor$Batch() {
@@ -26401,24 +26279,37 @@ function $a_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart() {
     var $c_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart = (function $c_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart() {
       var jsx$1 = (arguments.length | 0);
       var jsx$2 = 0;
-      var arg$rest = [];
+      var rest = [];
       while ((jsx$2 < jsx$1)) {
-        arg$rest.push(arguments[jsx$2]);
+        rest.push(arguments[jsx$2]);
         jsx$2 = ((jsx$2 + 1) | 0)
       };
-      var id = ((arg$rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$1__sjs_js_UndefOr() : arg$rest[0]);
-      var width = ((arg$rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$2__sjs_js_UndefOr() : arg$rest[1]);
-      var height = ((arg$rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$3__sjs_js_UndefOr() : arg$rest[2]);
-      var donutRatio = ((arg$rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$4__sjs_js_UndefOr() : arg$rest[3]);
-      var donut = ((arg$rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$5__sjs_js_UndefOr() : arg$rest[4]);
-      var x = arg$rest[5];
-      var y = arg$rest[6];
-      var duration = ((arg$rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$8__sjs_js_UndefOr() : arg$rest[7]);
-      var labelThreshold = ((arg$rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$9__sjs_js_UndefOr() : arg$rest[8]);
-      var labelSunbeamLayout = ((arg$rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$10__sjs_js_UndefOr() : arg$rest[9]);
-      var showLegend = ((arg$rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$11__sjs_js_UndefOr() : arg$rest[10]);
-      var showLabels = ((arg$rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$12__sjs_js_UndefOr() : arg$rest[11]);
-      var legend = ((arg$rest[12] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$13__sjs_js_UndefOr() : arg$rest[12]);
+      var prep = ((rest[0] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$1__sjs_js_UndefOr() : rest[0]);
+      var prep$2 = ((rest[1] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$2__sjs_js_UndefOr() : rest[1]);
+      var prep$3 = ((rest[2] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$3__sjs_js_UndefOr() : rest[2]);
+      var prep$4 = ((rest[3] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$4__sjs_js_UndefOr() : rest[3]);
+      var prep$5 = ((rest[4] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$5__sjs_js_UndefOr() : rest[4]);
+      var prep$6 = rest[5];
+      var prep$7 = rest[6];
+      var prep$8 = ((rest[7] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$8__sjs_js_UndefOr() : rest[7]);
+      var prep$9 = ((rest[8] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$9__sjs_js_UndefOr() : rest[8]);
+      var prep$10 = ((rest[9] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$10__sjs_js_UndefOr() : rest[9]);
+      var prep$11 = ((rest[10] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$11__sjs_js_UndefOr() : rest[10]);
+      var prep$12 = ((rest[11] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$12__sjs_js_UndefOr() : rest[11]);
+      var prep$13 = ((rest[12] === (void 0)) ? $m_Lio_scalajs_npm_angularjs_nvd3_chart_PieChart$().$$lessinit$greater$default$13__sjs_js_UndefOr() : rest[12]);
+      var id = prep;
+      var width = prep$2;
+      var height = prep$3;
+      var donutRatio = prep$4;
+      var donut = prep$5;
+      var x = prep$6;
+      var y = prep$7;
+      var duration = prep$8;
+      var labelThreshold = prep$9;
+      var labelSunbeamLayout = prep$10;
+      var showLegend = prep$11;
+      var showLabels = prep$12;
+      var legend = prep$13;
       $g.Object.call(this);
       $g.Object.defineProperty(this, "id", {
         "configurable": true,
@@ -26803,11 +26694,6 @@ $c_jl_StringBuilder.prototype.indexOf__T__I__I = (function(str, fromIndex) {
   var thiz = this.java$lang$StringBuilder$$content$f;
   return $uI(thiz.indexOf(str, fromIndex))
 });
-$c_jl_StringBuilder.prototype.append__jl_CharSequence__I__I__jl_StringBuilder = (function(s, start, end) {
-  var s$1 = $charSequenceSubSequence(((s === null) ? "null" : s), start, end);
-  this.java$lang$StringBuilder$$content$f = (("" + this.java$lang$StringBuilder$$content$f) + s$1);
-  return this
-});
 $c_jl_StringBuilder.prototype.length__I = (function() {
   var thiz = this.java$lang$StringBuilder$$content$f;
   return $uI(thiz.length)
@@ -26820,14 +26706,6 @@ $c_jl_StringBuilder.prototype.append__C__jl_StringBuilder = (function(c) {
 $c_jl_StringBuilder.prototype.substring__I__I__T = (function(start, end) {
   var thiz = this.java$lang$StringBuilder$$content$f;
   return $as_T(thiz.substring(start, end))
-});
-$c_jl_StringBuilder.prototype.init___T = (function(str) {
-  $c_jl_StringBuilder.prototype.init___.call(this);
-  if ((str === null)) {
-    throw new $c_jl_NullPointerException().init___()
-  };
-  this.java$lang$StringBuilder$$content$f = str;
-  return this
 });
 $c_jl_StringBuilder.prototype.charAt__I__C = (function(index) {
   var thiz = this.java$lang$StringBuilder$$content$f;
@@ -29183,108 +29061,6 @@ var $d_s_Predef$$anon$3 = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_s_Predef$$anon$3.prototype.$classData = $d_s_Predef$$anon$3;
-/** @constructor */
-function $c_s_StringContext() {
-  $c_O.call(this);
-  this.parts$1 = null
-}
-$c_s_StringContext.prototype = new $h_O();
-$c_s_StringContext.prototype.constructor = $c_s_StringContext;
-/** @constructor */
-function $h_s_StringContext() {
-  /*<skip>*/
-}
-$h_s_StringContext.prototype = $c_s_StringContext.prototype;
-$c_s_StringContext.prototype.productPrefix__T = (function() {
-  return "StringContext"
-});
-$c_s_StringContext.prototype.productArity__I = (function() {
-  return 1
-});
-$c_s_StringContext.prototype.equals__O__Z = (function(x$1) {
-  if ((this === x$1)) {
-    return true
-  } else if ((x$1 instanceof $c_s_StringContext)) {
-    var StringContext$1 = $as_s_StringContext(x$1);
-    var x = this.parts$1;
-    var x$2 = StringContext$1.parts$1;
-    return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
-  } else {
-    return false
-  }
-});
-$c_s_StringContext.prototype.productElement__I__O = (function(x$1) {
-  switch (x$1) {
-    case 0: {
-      return this.parts$1;
-      break
-    }
-    default: {
-      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
-    }
-  }
-});
-$c_s_StringContext.prototype.toString__T = (function() {
-  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
-});
-$c_s_StringContext.prototype.checkLengths__sc_Seq__V = (function(args) {
-  if ((this.parts$1.length__I() !== ((1 + args.length__I()) | 0))) {
-    throw new $c_jl_IllegalArgumentException().init___T((((("wrong number of arguments (" + args.length__I()) + ") for interpolated string with ") + this.parts$1.length__I()) + " parts"))
-  }
-});
-$c_s_StringContext.prototype.s__sc_Seq__T = (function(args) {
-  var f = (function($this) {
-    return (function(str$2) {
-      var str = $as_T(str$2);
-      var this$1 = $m_s_StringContext$();
-      return this$1.treatEscapes0__p1__T__Z__T(str, false)
-    })
-  })(this);
-  this.checkLengths__sc_Seq__V(args);
-  var pi = this.parts$1.iterator__sc_Iterator();
-  var ai = args.iterator__sc_Iterator();
-  var arg1 = pi.next__O();
-  var bldr = new $c_jl_StringBuilder().init___T($as_T(f(arg1)));
-  while (ai.hasNext__Z()) {
-    var obj = ai.next__O();
-    bldr.java$lang$StringBuilder$$content$f = (("" + bldr.java$lang$StringBuilder$$content$f) + obj);
-    var arg1$1 = pi.next__O();
-    var str$1 = $as_T(f(arg1$1));
-    bldr.java$lang$StringBuilder$$content$f = (("" + bldr.java$lang$StringBuilder$$content$f) + str$1)
-  };
-  return bldr.java$lang$StringBuilder$$content$f
-});
-$c_s_StringContext.prototype.init___sc_Seq = (function(parts) {
-  this.parts$1 = parts;
-  return this
-});
-$c_s_StringContext.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__I(this, (-889275714))
-});
-$c_s_StringContext.prototype.productIterator__sc_Iterator = (function() {
-  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
-});
-function $as_s_StringContext(obj) {
-  return (((obj instanceof $c_s_StringContext) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.StringContext"))
-}
-function $isArrayOf_s_StringContext(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_StringContext)))
-}
-function $asArrayOf_s_StringContext(obj, depth) {
-  return (($isArrayOf_s_StringContext(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.StringContext;", depth))
-}
-var $d_s_StringContext = new $TypeData().initClass({
-  s_StringContext: 0
-}, false, "scala.StringContext", {
-  s_StringContext: 1,
-  O: 1,
-  s_Product: 1,
-  s_Equals: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_s_StringContext.prototype.$classData = $d_s_StringContext;
 /** @constructor */
 function $c_s_concurrent_duration_Duration() {
   $c_O.call(this)
@@ -32384,44 +32160,6 @@ var $d_s_Some = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_s_Some.prototype.$classData = $d_s_Some;
-/** @constructor */
-function $c_s_StringContext$InvalidEscapeException() {
-  $c_jl_IllegalArgumentException.call(this);
-  this.index$5 = 0
-}
-$c_s_StringContext$InvalidEscapeException.prototype = new $h_jl_IllegalArgumentException();
-$c_s_StringContext$InvalidEscapeException.prototype.constructor = $c_s_StringContext$InvalidEscapeException;
-/** @constructor */
-function $h_s_StringContext$InvalidEscapeException() {
-  /*<skip>*/
-}
-$h_s_StringContext$InvalidEscapeException.prototype = $c_s_StringContext$InvalidEscapeException.prototype;
-$c_s_StringContext$InvalidEscapeException.prototype.init___T__I = (function(str, index) {
-  this.index$5 = index;
-  $m_s_Predef$().require__Z__V(((index >= 0) && (index < $uI(str.length))));
-  if ((index === (((-1) + $uI(str.length)) | 0))) {
-    var jsx$1 = "at terminal"
-  } else {
-    var index$1 = ((1 + index) | 0);
-    var c = (65535 & $uI(str.charCodeAt(index$1)));
-    var jsx$1 = (("'\\" + new $c_jl_Character().init___C(c)) + "' not one of [\\b, \\t, \\n, \\f, \\r, \\\\, \\\", \\'] at")
-  };
-  var s = (((((("invalid escape " + jsx$1) + " index ") + index) + " in \"") + str) + "\". Use \\\\ for literal \\.");
-  $c_jl_Throwable.prototype.init___T__jl_Throwable__Z__Z.call(this, s, null, true, true);
-  return this
-});
-var $d_s_StringContext$InvalidEscapeException = new $TypeData().initClass({
-  s_StringContext$InvalidEscapeException: 0
-}, false, "scala.StringContext$InvalidEscapeException", {
-  s_StringContext$InvalidEscapeException: 1,
-  jl_IllegalArgumentException: 1,
-  jl_RuntimeException: 1,
-  jl_Exception: 1,
-  jl_Throwable: 1,
-  O: 1,
-  Ljava_io_Serializable: 1
-});
-$c_s_StringContext$InvalidEscapeException.prototype.$classData = $d_s_StringContext$InvalidEscapeException;
 /** @constructor */
 function $c_s_concurrent_duration_Duration$Infinite() {
   $c_s_concurrent_duration_Duration.call(this)

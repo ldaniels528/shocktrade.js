@@ -3,9 +3,9 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.daycycle.daemons.EodDataCompanyUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO
 import com.shocktrade.server.services.EodDataSecuritiesService
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -20,10 +20,10 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
-  private implicit val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // DAO and service instances
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val eodDataService = new EodDataSecuritiesService()
 
   // internal variables
@@ -34,19 +34,19 @@ class EodDataCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCon
     * @param tradingClock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+  override def isReady(tradingClock: TradingClock): Boolean = !tradingClock.isTradingActive
 
   /**
     * Executes the process
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock) = {
+  override def run(tradingClock: TradingClock): Future[BulkUpdateStatistics] = {
     val startTime = js.Date.now()
     val inputs = getInputPages
     val outcome = processor.start(inputs, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[InputPages](inputs.size) {
       logger.info(s"Scheduling ${inputs.size} pages of securities for processing...")
 
-      override def onNext(ctx: ConcurrentContext, inputData: InputPages) = {
+      override def onNext(ctx: ConcurrentContext, inputData: InputPages): Future[BulkUpdateOutcome] = {
         for {
           quotes <- eodDataService(inputData.exchange, inputData.letterCode)
           results <- securitiesDAO.flatMap(_.updateEodQuotes(quotes))

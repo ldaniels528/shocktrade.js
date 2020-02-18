@@ -76,7 +76,7 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def findNewsFeed(feedId: String) = {
+  private def findNewsFeed(feedId: String): Unit = {
     console.log("Getting news feeds...")
     asyncLoading($scope)(newsService.getNewsFeed(feedId)) onComplete {
       case Success(response) =>
@@ -91,13 +91,13 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     }
   }
 
-  private def getEnrichedChannels(channels: js.Array[NewsChannel]) = {
+  private def getEnrichedChannels(channels: js.Array[NewsChannel]): js.Array[NewsChannel] = {
     channels map { channel =>
       channel.copy(items = channel.items.map(item => item.copy(description = replaceSymbols(item.description, item.quotes))))
     }
   }
 
-  private def removeImageTags(channels: js.Array[NewsChannel]) = {
+  private def removeImageTags(channels: js.Array[NewsChannel]): Unit = {
     for {
       channel <- channels
       item <- channel.items
@@ -111,7 +111,7 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     }
   }
 
-  private def replaceSymbols(description: String, quotes: js.Array[NewsQuote]) = {
+  private def replaceSymbols(description: String, quotes: js.Array[NewsQuote]): String = {
     val sb = new StringBuilder(description)
     quotes foreach { q =>
       val term = s"( ${q.symbol} )"
@@ -128,7 +128,7 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     sb.toString()
   }
 
-  private def popup(q: NewsQuote) = {
+  private def popup(q: NewsQuote): String = {
     s"""popover-title="${q.name} (${q.exchange})"
         popover="${q.sector} &#8212; ${q.industry}"
         popover-trigger="mouseenter"
@@ -136,12 +136,12 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
         """.stripPrefix(" ").stripSuffix(" ")
   }
 
-  private def populateQuotes(channels: js.Array[NewsChannel]) = {
+  private def populateQuotes(channels: js.Array[NewsChannel]): Unit = {
     console.log(s"channels = ${angular.toJson(channels, pretty = true)}")
     newsQuotes = channels.flatMap(_.items.flatMap(_.quotes))
   }
 
-  private def changeArrow(aChangePct: js.UndefOr[Double]) = aChangePct map { changePct =>
+  private def changeArrow(aChangePct: js.UndefOr[Double]): js.UndefOr[String] = aChangePct map { changePct =>
     val isNeg = changePct < 0.00
     val iconClass = if (isNeg) "fa-arrow-down" else "fa-arrow-up"
     val colorClass = if (isNeg) "negative" else "positive"

@@ -2,12 +2,12 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.ExposureData
 import com.shocktrade.common.models.quote.ExposureQuote
+import com.shocktrade.server.dao.contest.PortfolioDAO
 import com.shocktrade.server.dao.contest.PortfolioDAO._
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.dao.securities.SecuritiesDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -22,8 +22,8 @@ import scala.util.{Failure, Success}
 object ChartRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    implicit val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
-    implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+    implicit val portfolioDAO: Future[PortfolioDAO] = dbFuture.map(_.getPortfolioDAO)
+    implicit val securitiesDAO: Future[SecuritiesDAO] = dbFuture.map(SecuritiesDAO.apply)
 
     app.get("/api/charts/exposure/exchange/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureByExchange(request, response, next))
     app.get("/api/charts/exposure/industry/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureByIndustry(request, response, next))
@@ -35,7 +35,7 @@ object ChartRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def exposureByExchange(request: Request, response: Response, next: NextFunction) = {
+    def exposureByExchange(request: Request, response: Response, next: NextFunction): Unit = {
       val contestId = request.params.apply("id")
       val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.exchange) onComplete {
@@ -44,7 +44,7 @@ object ChartRoutes {
       }
     }
 
-    def exposureByIndustry(request: Request, response: Response, next: NextFunction) = {
+    def exposureByIndustry(request: Request, response: Response, next: NextFunction): Unit = {
       val contestId = request.params.apply("id")
       val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.industry) onComplete {
@@ -53,7 +53,7 @@ object ChartRoutes {
       }
     }
 
-    def exposureByMarket(request: Request, response: Response, next: NextFunction) = {
+    def exposureByMarket(request: Request, response: Response, next: NextFunction): Unit = {
       val contestId = request.params.apply("id")
       val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.market) onComplete {
@@ -62,7 +62,7 @@ object ChartRoutes {
       }
     }
 
-    def exposureBySector(request: Request, response: Response, next: NextFunction) = {
+    def exposureBySector(request: Request, response: Response, next: NextFunction): Unit = {
       val contestId = request.params.apply("id")
       val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.sector) onComplete {
@@ -71,7 +71,7 @@ object ChartRoutes {
       }
     }
 
-    def exposureBySecurities(request: Request, response: Response, next: NextFunction) = {
+    def exposureBySecurities(request: Request, response: Response, next: NextFunction): Unit = {
       val contestId = request.params.apply("id")
       val playerId = request.params.apply("userID")
       getExposureByXXX(contestId, playerId, _.symbol) onComplete {
@@ -84,7 +84,7 @@ object ChartRoutes {
     //      Private Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def getExposureByXXX(contestId: String, playerId: String, fx: RawData => String) = {
+    def getExposureByXXX(contestId: String, playerId: String, fx: RawData => String): Future[js.Array[ExposureData]] = {
       for {
       // lookup the portfolio by the contest and player IDs
         portfolio <- portfolioDAO.flatMap(_.findOneByPlayer(contestId, playerId)) map (_ orDie "Portfolio not found")

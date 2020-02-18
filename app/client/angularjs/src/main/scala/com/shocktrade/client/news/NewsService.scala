@@ -1,8 +1,7 @@
 package com.shocktrade.client.news
 
 import io.scalajs.npm.angularjs.Service
-import io.scalajs.npm.angularjs.http.Http
-import io.scalajs.util.ScalaJsHelper._
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
 import scala.scalajs.js
 
@@ -12,8 +11,8 @@ import scala.scalajs.js
   */
 class NewsService($http: Http) extends Service {
 
-  def getNewsSources = $http.get[js.Array[NewsSource]]("/api/news/sources")
+  def getNewsSources: js.Promise[HttpResponse[js.Array[NewsSource]]] = $http.get[js.Array[NewsSource]]("/api/news/sources")
 
-  def getNewsFeed(feedId: String) = $http.get[js.Array[NewsChannel]](s"/api/news/feed/$feedId")
+  def getNewsFeed(feedId: String): js.Promise[HttpResponse[js.Array[NewsChannel]]] = $http.get[js.Array[NewsChannel]](s"/api/news/feed/$feedId")
 
 }

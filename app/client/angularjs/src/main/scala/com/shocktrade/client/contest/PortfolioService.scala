@@ -3,7 +3,6 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.models.contest.{Order, Portfolio, Position}
 import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm}
 import com.shocktrade.common.models.contest._
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.Http
 

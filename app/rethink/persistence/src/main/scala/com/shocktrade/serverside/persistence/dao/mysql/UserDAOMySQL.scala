@@ -1,7 +1,7 @@
 package com.shocktrade.serverside.persistence.dao.mysql
 
 import com.shocktrade.serverside.persistence.dao.{UserDAO, UserData}
-import io.scalajs.npm.mysql.{MySQLConnectionOptions, MySQL}
+import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

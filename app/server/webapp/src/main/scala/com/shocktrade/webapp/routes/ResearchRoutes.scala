@@ -1,10 +1,9 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.forms.ResearchOptions
+import com.shocktrade.server.dao.securities.SecuritiesDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -17,7 +16,7 @@ import scala.util.{Failure, Success}
 object ResearchRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    implicit val quoteDAO = dbFuture.map(_.getSecuritiesDAO)
+    implicit val quoteDAO: Future[SecuritiesDAO] = dbFuture.map(SecuritiesDAO.apply)
 
     app.post("/api/research/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
@@ -28,7 +27,7 @@ object ResearchRoutes {
     /**
       * Searches symbols and company names for a match to the specified search term
       */
-    def search(request: Request, response: Response, next: NextFunction) = {
+    def search(request: Request, response: Response, next: NextFunction): Unit = {
       val options = request.bodyAs[ResearchOptions]
       quoteDAO.flatMap(_.research(options)) onComplete {
         case Success(results) => response.send(results); next()

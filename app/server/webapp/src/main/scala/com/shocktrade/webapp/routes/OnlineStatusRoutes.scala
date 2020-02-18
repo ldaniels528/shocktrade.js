@@ -2,7 +2,7 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.{Db, MongoDB}
+import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

@@ -5,8 +5,7 @@ import com.shocktrade.daycycle.daemons.SecuritiesRefreshKafkaDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.{SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.server.dao.securities.{SecuritiesUpdateDAO, SecurityRef, SecurityUpdateQuote, SnapshotQuote}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.npm.kafkanode._
@@ -36,7 +35,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
   )
 
   // get DAO references
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
 
   // internal variables
   private val processor = new ConcurrentProcessor()

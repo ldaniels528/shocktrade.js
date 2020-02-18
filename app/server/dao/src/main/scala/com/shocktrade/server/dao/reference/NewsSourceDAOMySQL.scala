@@ -18,7 +18,7 @@ class NewsSourceDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(optio
    * @return the promise of an option of a news source
    */
   def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[NewsSourceData]] = {
-    conn.queryFuture[NewsSourceData]("SELECT * FROM newsSources WHERE newsSrcID = ?", params = Seq(id)) map { case (rows, _) => rows.headOption }
+    conn.queryFuture[NewsSourceData]("SELECT * FROM newsSources WHERE _id = ?", params = Seq(id)) map { case (rows, _) => rows.headOption }
   }
 
   /**

@@ -1,19 +1,16 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.server.dao.securities.KeyStatisticsDAO._
-import com.shocktrade.server.dao.securities.KeyStatisticsData
-import com.shocktrade.server.dao.securities.NAICSDAO._
-import com.shocktrade.server.dao.securities.SICDAO._
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, DiscoverQuote, OrderQuote, ResearchQuote}
+import com.shocktrade.server.dao.securities.KeyStatisticsDAO._
+import com.shocktrade.server.dao.securities.NAICSDAO._
+import com.shocktrade.server.dao.securities.SICDAO._
+import com.shocktrade.server.dao.securities._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVHistoryService
-
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,10 +26,10 @@ import scala.util.{Failure, Success}
 object QuoteRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit  ec: ExecutionContext): Unit = {
-    implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
-    implicit val keyStatisticsDAO = dbFuture.map(_.getKeyStatisticsDAO)
-    implicit val naicsDAO = dbFuture.map(_.getNAICSDAO)
-    implicit val sicDAO = dbFuture.map(_.getSICDAO)
+    implicit val securitiesDAO: Future[SecuritiesDAO] = dbFuture.map(SecuritiesDAO.apply)
+    implicit val keyStatisticsDAO: Future[KeyStatisticsDAO] = dbFuture.map(_.getKeyStatisticsDAO)
+    implicit val naicsDAO: Future[NAICSDAO] = dbFuture.map(_.getNAICSDAO)
+    implicit val sicDAO: Future[SICDAO] = dbFuture.map(_.getSICDAO)
     val historySvc = new YahooFinanceCSVHistoryService()
 
     // collections of quotes
@@ -51,7 +48,7 @@ object QuoteRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def quoteBySymbol(request: Request, response: Response, next: NextFunction) = {
+    def quoteBySymbol(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       val outcome = for {
         quote <- securitiesDAO.flatMap(_.findCompleteQuote(symbol))
@@ -71,7 +68,7 @@ object QuoteRoutes {
       }
     }
 
-    def basicQuote(request: Request, response: Response, next: NextFunction) = {
+    def basicQuote(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       securitiesDAO.flatMap(_.findQuote[ResearchQuote](symbol, fields = ResearchQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
@@ -80,7 +77,7 @@ object QuoteRoutes {
       }
     }
 
-    def fullQuote(request: Request, response: Response, next: NextFunction) = {
+    def fullQuote(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       securitiesDAO.flatMap(_.findCompleteQuote(symbol)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
@@ -89,7 +86,7 @@ object QuoteRoutes {
       }
     }
 
-    def orderQuote(request: Request, response: Response, next: NextFunction) = {
+    def orderQuote(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       securitiesDAO.flatMap(_.findQuote[OrderQuote](symbol, fields = OrderQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
@@ -98,7 +95,7 @@ object QuoteRoutes {
       }
     }
 
-    def quotesList(request: Request, response: Response, next: NextFunction) = {
+    def quotesList(request: Request, response: Response, next: NextFunction): Unit = {
       val symbols = request.bodyAs[js.Array[String]]
       securitiesDAO.flatMap(_.findQuotesBySymbols[OrderQuote](symbols, fields = OrderQuote.Fields)) onComplete {
         case Success(quotes) => response.send(quotes); next()
@@ -106,7 +103,7 @@ object QuoteRoutes {
       }
     }
 
-    def statistics(request: Request, response: Response, next: NextFunction) = {
+    def statistics(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       keyStatisticsDAO.flatMap(_.findBySymbol(symbol)) onComplete {
         case Success(Some(keystats)) => response.send(keystats); next()
@@ -115,7 +112,7 @@ object QuoteRoutes {
       }
     }
 
-    def tradingHistory(request: Request, response: Response, next: NextFunction) = {
+    def tradingHistory(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.getSymbol
       historySvc(symbol, from = new js.Date() - 30.days, to = new js.Date()) onComplete {
         case Success(history) => response.send(history.quotes); next()
@@ -126,7 +123,7 @@ object QuoteRoutes {
     /**
       * Searches symbols and company names for a match to the specified search term
       */
-    def search(request: Request, response: Response, next: NextFunction) = {
+    def search(request: Request, response: Response, next: NextFunction): Unit = {
       request.query.get("searchTerm") match {
         case Some(searchTerm) =>
           val maxResults = request.getMaxResults(default = 20)

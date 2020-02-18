@@ -2,7 +2,7 @@ package com.shocktrade.autonomous
 
 import com.shocktrade.autonomous.AutonomousTradingEngine._
 import com.shocktrade.autonomous.dao.RobotDAO._
-import com.shocktrade.autonomous.dao.{BuyingFlow, RobotData, SellingFlow}
+import com.shocktrade.autonomous.dao.{BuyingFlow, RobotDAO, RobotData, SellingFlow}
 import com.shocktrade.common.events.{OrderEvents, RemoteEvent}
 import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.{CashAccount, Participant, PerformanceLike, PositionLike}
@@ -11,7 +11,6 @@ import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.dao.securities.SecuritiesDAO
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.services.RemoteEventService
 import io.scalajs.npm.mongodb.{Db, InsertWriteOpResult}
 import io.scalajs.npm.numeral._
@@ -33,12 +32,12 @@ import scala.util.{Failure, Success}
 class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
   // create DAO instances
   private implicit val contestDAO: ContestDAO = ContestDAO()
-  private implicit val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
-  private implicit val robotDAO = dbFuture.map(_.getRobotDAO)
-  private implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+  private implicit val portfolioDAO: Future[PortfolioUpdateDAO] = dbFuture.map(_.getPortfolioUpdateDAO)
+  private implicit val robotDAO: Future[RobotDAO] = dbFuture.map(_.getRobotDAO)
+  private implicit val securitiesDAO: Future[SecuritiesDAO] = dbFuture.map(SecuritiesDAO.apply)
 
   // create the service instances
-  private implicit val tradingClock = new TradingClock()
+  private implicit val tradingClock: TradingClock = new TradingClock()
   private val logger = LoggerFactory.getLogger(getClass)
   private val removeEventService = new RemoteEventService(webAppEndPoint)
 

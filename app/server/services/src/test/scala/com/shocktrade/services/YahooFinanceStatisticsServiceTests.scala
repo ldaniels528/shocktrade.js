@@ -1,10 +1,5 @@
 package com.shocktrade.services
-
-import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService._
-import io.scalajs.nodejs.console
 //import utest._
-
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
   * Yahoo Finance! Statistics Service Test

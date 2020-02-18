@@ -3,10 +3,9 @@ package com.shocktrade.daycycle.daemons
 import com.shocktrade.daycycle.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.{KeyStatisticsData, SecurityRef}
+import com.shocktrade.server.dao.securities.{KeyStatisticsData, SecuritiesUpdateDAO, SecurityRef}
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import io.scalajs.npm.mongodb.Db
@@ -25,10 +24,10 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
-  private implicit val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val yfKeyStatsSvc = new YahooFinanceKeyStatisticsService()
 
   // internal variables
@@ -39,20 +38,20 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  def isReady(clock: TradingClock) = !clock.isTradingActive
+  def isReady(clock: TradingClock): Boolean = !clock.isTradingActive
 
   /**
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(clock.getTradeStopTime))
       stats <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size, reportInterval = 15.seconds) {
         logger.info(s"Scheduling ${securities.size} securities for processing...")
 
-        override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
+        override def onNext(ctx: ConcurrentContext, security: SecurityRef): Future[BulkUpdateOutcome] = {
           for {
             stats_? <- yfKeyStatsSvc(security.symbol)
             w <- stats_? match {

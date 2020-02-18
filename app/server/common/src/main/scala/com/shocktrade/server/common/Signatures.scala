@@ -3,8 +3,6 @@ package com.shocktrade.server.common
 import io.scalajs.nodejs.buffer.Buffer
 import io.scalajs.nodejs.crypto.Crypto
 
-import scala.language.postfixOps
-
 /**
   * Service Signatures
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>

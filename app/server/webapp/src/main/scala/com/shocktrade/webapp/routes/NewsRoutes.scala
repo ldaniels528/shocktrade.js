@@ -42,7 +42,7 @@ object NewsRoutes {
     }
 
     def sourceByID(request: Request, response: Response, next: NextFunction): Unit = {
-      val id = request.params.apply("id")
+      val id = request.params("id")
       newsDAO.findByID(id) onComplete {
         case Success(Some(source)) => response.send(source); next()
         case Success(None) => response.notFound(id); next()

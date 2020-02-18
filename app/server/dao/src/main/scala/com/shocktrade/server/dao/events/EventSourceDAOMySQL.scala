@@ -4,7 +4,7 @@ import com.shocktrade.server.dao.contest.events._
 import com.shocktrade.server.dao.events.EventSourceDAOMySQL.EventData
 import io.scalajs.JSON
 import io.scalajs.npm.moment.Moment
-import io.scalajs.npm.mysql.{MySQLConnectionOptions, MySQL}
+import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

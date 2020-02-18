@@ -3,7 +3,6 @@ package com.shocktrade.common.models.quote
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a Complete Quote

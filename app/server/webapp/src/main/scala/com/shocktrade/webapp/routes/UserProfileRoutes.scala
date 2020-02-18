@@ -2,8 +2,7 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.server.dao.contest.PortfolioDAO._
-import com.shocktrade.server.dao.securities.QtyQuote
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.dao.securities.{QtyQuote, SecuritiesDAO}
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.{UserDAO, UserProfileData}
 import com.shocktrade.server.facade.PricingQuote
@@ -27,7 +26,7 @@ object UserProfileRoutes {
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
     val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
     val profileDAO = dbFuture.map(_.getProfileDAO)
-    val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+    val securitiesDAO = dbFuture.map(SecuritiesDAO.apply)
     val userDAO = UserDAO()
 
     app.get("/api/profile/facebook/:fbID", (request: Request, response: Response, next: NextFunction) => profileByFBID(request, response, next))

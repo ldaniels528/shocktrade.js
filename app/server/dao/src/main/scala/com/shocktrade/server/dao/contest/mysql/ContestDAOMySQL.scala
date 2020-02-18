@@ -4,7 +4,7 @@ import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.server.dao.contest.{ContestDAO, ContestData}
-import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

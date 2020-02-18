@@ -2,10 +2,9 @@ package com.shocktrade.daycycle.daemons
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateStatistics}
+import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
-import com.shocktrade.server.dao.securities.SecurityRef
+import com.shocktrade.server.dao.securities.{SecuritiesUpdateDAO, SecurityRef}
 import com.shocktrade.server.services.BarChartProfileService
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -20,10 +19,10 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
-  private implicit val logger = LoggerFactory.getLogger(getClass)
+  private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // get the DAO and service
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val profileService = new BarChartProfileService()
 
   // internal variables
@@ -34,20 +33,20 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock) = !clock.isTradingActive
+  override def isReady(clock: TradingClock): Boolean = !clock.isTradingActive
 
   /**
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock) = {
+  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsIfEmpty("description"))
       status <- processor.start(securities, ctx = ConcurrentContext(concurrency = 20), handler = new BulkUpdateHandler[SecurityRef](securities.size) {
         logger.info(s"Scheduling ${securities.size} securities for processing...")
 
-        override def onNext(ctx: ConcurrentContext, security: SecurityRef) = {
+        override def onNext(ctx: ConcurrentContext, security: SecurityRef): Future[BulkUpdateOutcome] = {
           for {
             response_? <- profileService(security.symbol)
             w <- response_? match {

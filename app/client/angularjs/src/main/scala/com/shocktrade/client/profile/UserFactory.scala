@@ -1,10 +1,10 @@
 package com.shocktrade.client.profile
 
-import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.{Factory, injected}
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -6,8 +6,8 @@ import io.scalajs.nodejs.http.IncomingMessage
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.request.{Request, RequestOptions}
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.Future
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
   * Remote Event Service

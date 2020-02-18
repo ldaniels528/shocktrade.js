@@ -1,9 +1,9 @@
 package com.shocktrade.server.services
 
 import com.shocktrade.common.util.StringHelper._
+import io.scalajs.nodejs.{Error, console}
 import io.scalajs.npm.htmlparser2
-import io.scalajs.npm.htmlparser2.{HtmlParser2, ParserHandler, ParserOptions}
-import io.scalajs.nodejs.{console, Error}
+import io.scalajs.npm.htmlparser2.{ParserHandler, ParserOptions}
 
 import scala.concurrent.Promise
 import scala.scalajs.js

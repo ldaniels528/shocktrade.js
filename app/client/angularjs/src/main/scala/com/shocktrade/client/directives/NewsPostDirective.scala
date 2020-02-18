@@ -4,8 +4,8 @@ import com.shocktrade.client.EmoticonSupport
 import io.scalajs.npm.angularjs.Directive._
 import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 

@@ -5,7 +5,6 @@ import com.shocktrade.common.models.EntitySearchResult
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.common.models.user.User
 import com.shocktrade.server.dao.securities.SecuritiesDAO
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.users.UserDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.{Collection, Db, _}
@@ -23,7 +22,7 @@ import scala.util.{Failure, Success}
 object SearchRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    implicit val securities: Future[SecuritiesSearchAgent] = dbFuture.map(_.getSecuritiesDAO).map(SecuritiesSearchAgent)
+    implicit val securities: Future[SecuritiesSearchAgent] = dbFuture.map(SecuritiesDAO.apply).map(SecuritiesSearchAgent)
     implicit val users: Future[UserSearchAgent] = Future.successful(UserSearchAgent(UserDAO()))
 
     app.get("/api/search", (request: Request, response: Response, next: NextFunction) => getSearchResults(request, response, next))
@@ -36,7 +35,8 @@ object SearchRoutes {
       val searchAgents = Seq(users, securities)
       val form = request.queryAs[SearchForm]
 
-      def search(searchTerm: String, maxResults: Int) = Future.sequence(searchAgents map (_.flatMap(_.search(searchTerm, maxResults)))) map (_.flatten)
+      def search(searchTerm: String, maxResults: Int): Future[Seq[EntitySearchResult]] =
+        Future.sequence(searchAgents map (_.flatMap(_.search(searchTerm, maxResults)))) map (_.flatten)
 
       form.searchTerm.toOption map ((_, form.getMaxResults())) match {
         case Some((searchTerm, maxResults)) =>
@@ -101,10 +101,10 @@ object SearchRoutes {
     * Securities Search Agent
     * @author lawrence.daniels@gmail.com
     */
-  case class SecuritiesSearchAgent(coll: SecuritiesDAO) extends SearchAgent[ResearchQuote] {
+  case class SecuritiesSearchAgent(dao: SecuritiesDAO) extends SearchAgent[ResearchQuote] {
     val fields = js.Array("symbol", "name")
 
-    override def toSearchResult(quote: ResearchQuote) = {
+    override def toSearchResult(quote: ResearchQuote): EntitySearchResult = {
       new EntitySearchResult(
         _id = quote.symbol,
         name = quote.symbol,
@@ -112,6 +112,8 @@ object SearchRoutes {
         `type` = "STOCK"
       )
     }
+
+    override def coll: Collection = ???
   }
 
   /**

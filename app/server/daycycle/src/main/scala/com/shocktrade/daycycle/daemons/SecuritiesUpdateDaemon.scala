@@ -6,13 +6,12 @@ import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
 import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
 import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.DbPool
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.dao.securities._
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.nodejs._
+import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.OptionHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -25,7 +24,7 @@ import scala.util.{Failure, Success}
   * Securities Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
+class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
@@ -37,8 +36,8 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
   )
 
   // get DAO references
-  private val securitiesDAO = new DbPool[SecuritiesUpdateDAO](dbConnectionString)(d => Future.successful(d.getSecuritiesUpdateDAO))
-  private val snapshotDAO = new DbPool[SecuritiesSnapshotDAO](dbConnectionString)(d => Future.successful(d.getSnapshotDAO))
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
+  private val snapshotDAO = dbFuture.map(_.getSnapshotDAO)
 
   // internal variables
   private val processor = new ConcurrentProcessor()
@@ -87,7 +86,7 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
 
   private def getSecurities(cutOffTime: js.Date): Future[js.Array[Seq[SecurityRef]]] = {
     for {
-      securities <- securitiesDAO().flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
+      securities <- securitiesDAO.flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches
   }
@@ -100,7 +99,7 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
   }
 
   private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
-    def insertSnapshot() = snapshotDAO().flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
+    def insertSnapshot() = snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
 
     def retrySnapshot(duration: FiniteDuration) = retry(() => insertSnapshot(), duration)
 
@@ -111,7 +110,7 @@ class SecuritiesUpdateDaemon(dbConnectionString: String)(implicit ec: ExecutionC
   }
 
   private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]) = {
-    def upsertSecurities() = securitiesDAO().flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
+    def upsertSecurities() = securitiesDAO.flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
 
     def retrySecurities(duration: FiniteDuration) = retry(() => upsertSecurities(), duration)
 

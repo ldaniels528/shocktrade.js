@@ -2,11 +2,10 @@ package com.shocktrade.common.forms
 
 import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
 import com.shocktrade.common.util.StringHelper._
-import io.scalajs.util.ScalaJsHelper._
 import io.scalajs.util.JsUnderOrHelper._
+import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Contest Creation Form

@@ -1,23 +1,6 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.common.models.contest.{ChatMessage, ContestLike, Participant}
-import com.shocktrade.common.models.user.User
-import com.shocktrade.server.common.ProcessHelper._
-import com.shocktrade.server.dao.contest.ContestDAO._
-import com.shocktrade.server.dao.contest.{ContestDAO, ContestData}
-import io.scalajs.nodejs.console
-import io.scalajs.npm.mongodb.MongoDB
-import io.scalajs.util.ScalaJsHelper._
-import io.scalajs.util.DateHelper._
-import io.scalajs.util.OptionHelper._
-import org.scalatest.time._
 import org.scalatest._
-
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 
 /**
   * Contest Close-Out Engine Tests
@@ -54,7 +37,7 @@ class ContestCloseOutEngineTests extends FreeSpec with Matchers {
     }
 
   }
-*/
+
   private def createContest()(implicit contestDAO: Future[ContestDAO]) = {
     val contest = new ContestData(
       _id = js.undefined,
@@ -74,12 +57,12 @@ class ContestCloseOutEngineTests extends FreeSpec with Matchers {
       perksAllowed = true,
       robotsAllowed = true
     )
-    contestDAO.flatMap(_.create(contest).toFuture) map {
+    contestDAO.create(contest) map {
       case w if w.isOk => w.opsAs[ContestData].headOption
       case w =>
         console.warn("Failed contest outcome => ", w)
         None
     }
-  }
+  }*/
 
 }

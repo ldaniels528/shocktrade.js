@@ -29,13 +29,13 @@ class ConcurrentProcessor {
 
     // create a proxy wrapper around the user's handler so that we can intercept the onComplete event
     val proxy = new ConcurrentTaskHandler[IN, OUT, SUMMARY] {
-      override def onNext(ctx: ConcurrentContext, item: IN) = handler.onNext(ctx, item)
+      override def onNext(ctx: ConcurrentContext, item: IN): Future[OUT] = handler.onNext(ctx, item)
 
-      override def onSuccess(ctx: ConcurrentContext, outcome: OUT)(implicit logger: Logger) = handler.onSuccess(ctx, outcome)
+      override def onSuccess(ctx: ConcurrentContext, outcome: OUT)(implicit logger: Logger): Unit = handler.onSuccess(ctx, outcome)
 
-      override def onFailure(ctx: ConcurrentContext, cause: Throwable) = handler.onFailure(ctx, cause)
+      override def onFailure(ctx: ConcurrentContext, cause: Throwable): Unit = handler.onFailure(ctx, cause)
 
-      override def onComplete(ctx: ConcurrentContext) = {
+      override def onComplete(ctx: ConcurrentContext): SUMMARY = {
         val result = handler.onComplete(ctx)
         promise.success(result)
         result
@@ -73,6 +73,7 @@ class ConcurrentProcessor {
           handler.onComplete(ctx)
         }
     }
+    ()
   }
 
   /**
@@ -85,6 +86,7 @@ class ConcurrentProcessor {
       setTimeout(() => scheduleNext(queue, ctx, handler), 1.seconds)
     else
       setImmediate(() => handleTask(queue, ctx, handler))
+    ()
   }
 
 }

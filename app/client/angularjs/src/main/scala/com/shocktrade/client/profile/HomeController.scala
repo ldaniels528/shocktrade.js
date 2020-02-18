@@ -1,12 +1,12 @@
 package com.shocktrade.client.profile
 
-import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.client.profile.HomeController.FacebookFriend
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Timeout, _}
-import io.scalajs.dom.html.browser.console
 import io.scalajs.social.facebook.TaggableFriend
+import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

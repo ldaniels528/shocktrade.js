@@ -3,7 +3,6 @@ package com.shocktrade.common.models.user
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.language.implicitConversions
 import scala.scalajs.js
 
 /**

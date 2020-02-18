@@ -4,10 +4,10 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.{PerksDialog, TransferFundsDialog}
 import com.shocktrade.client.{GlobalNavigation, MySessionService}
 import com.shocktrade.common.models.contest.Participant
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
-import io.scalajs.dom.html.browser.console
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 

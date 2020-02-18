@@ -5,7 +5,7 @@ import com.shocktrade.common.models.contest.{MarketValueResponse, Participant, P
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.contest._
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
+import com.shocktrade.server.dao.securities.SecuritiesDAO
 import com.shocktrade.server.facade.PricingQuote
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
@@ -37,7 +37,7 @@ object PortfolioRoutes {
     val contestDAO = ContestDAO()
     val perkDAO = PerksDAO()
     val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
-    val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+    val securitiesDAO = dbFuture.map(SecuritiesDAO.apply)
     val yfCsvQuoteSvc = new YahooFinanceCSVQuotesService()
     val cvsParams = yfCsvQuoteSvc.getParams("symbol", "exchange", "lastTrade", "open", "close", "tradeDate", "tradeTime", "volume")
 

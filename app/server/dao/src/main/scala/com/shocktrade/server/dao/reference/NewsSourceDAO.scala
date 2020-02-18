@@ -1,8 +1,6 @@
 package com.shocktrade.server.dao.reference
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import com.shocktrade.server.dao.contest.ContestDAO
-import com.shocktrade.server.dao.contest.mysql.ContestDAOMySQL
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}

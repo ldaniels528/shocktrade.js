@@ -3,7 +3,6 @@ package com.shocktrade.common.models.post
 import com.shocktrade.common.models.user.UserLike
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.ScalaJSDefined
 
 /**
   * Represents a reply

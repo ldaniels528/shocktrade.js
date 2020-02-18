@@ -1,7 +1,7 @@
 package com.shocktrade.server.concurrent.bulk
 
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentTaskHandler}
 import com.shocktrade.server.common.LoggerFactory.Logger
+import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentTaskHandler}
 
 import scala.concurrent.duration._
 

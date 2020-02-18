@@ -1,6 +1,5 @@
 package com.shocktrade.client
 
-import io.scalajs.util.DurationHelper._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
 import com.shocktrade.client.models.UserProfile
@@ -13,6 +12,7 @@ import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
+import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._

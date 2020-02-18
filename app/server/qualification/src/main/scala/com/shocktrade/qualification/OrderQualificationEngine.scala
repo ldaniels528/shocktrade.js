@@ -7,9 +7,8 @@ import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
-import com.shocktrade.server.dao.securities.QtyQuote
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
+import com.shocktrade.server.dao.securities.{QtyQuote, SecuritiesDAO}
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO
 import com.shocktrade.server.facade.PricingQuote
@@ -37,7 +36,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private val logger = LoggerFactory.getLogger(getClass)
   private val contestDAO = ContestDAO()
   private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesDAO.apply)
   private val snapshotDAO = dbFuture.map(_.getSnapshotDAO)
   private val userDAO = UserDAO()
   private val userProfileDAO = dbFuture.map(_.getProfileDAO)

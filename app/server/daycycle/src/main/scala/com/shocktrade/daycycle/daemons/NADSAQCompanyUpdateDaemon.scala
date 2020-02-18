@@ -1,14 +1,13 @@
 package com.shocktrade.daycycle.daemons
 
-import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome
 import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
+import com.shocktrade.server.dao.securities.SecuritiesUpdateDAO
 import com.shocktrade.server.services.NASDAQCompanyListService
 import com.shocktrade.server.services.NASDAQCompanyListService.NASDAQCompanyInfo
-
-import io.scalajs.npm.mongodb.Db
+import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -23,7 +22,7 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO and service references
-  private val securitiesDAO = dbFuture.map(_.getSecuritiesUpdateDAO)
+  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val companyListService = new NASDAQCompanyListService()
 
   /**
@@ -31,13 +30,13 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     * @param tradingClock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(tradingClock: TradingClock) = !tradingClock.isTradingActive
+  override def isReady(tradingClock: TradingClock): Boolean = !tradingClock.isTradingActive
 
   /**
     * Executes the process
     * @param tradingClock the given [[TradingClock trading clock]]
     */
-  override def run(tradingClock: TradingClock) = {
+  override def run(tradingClock: TradingClock): Future[BulkUpdateOutcome] = {
     val startTime = js.Date.now()
     val outcome = for {
       amex <- getCompanyList("AMEX")
@@ -56,12 +55,12 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     outcome
   }
 
-  private def processCompanyList(companies: Seq[NASDAQCompanyInfo]) = {
+  private def processCompanyList(companies: Seq[NASDAQCompanyInfo]): Future[BulkWriteOpResultObject] = {
     logger.info(s"Saving ${companies.size} company information record(s)...")
     securitiesDAO.flatMap(_.updateCompanyInfo(companies).toFuture)
   }
 
-  private def getCompanyList(exchange: String) = {
+  private def getCompanyList(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
     loadCompanyList(exchange) map { companies =>
       logger.info(s"$exchange: Retrieved %d company information record(s)", companies.size)
       companies
@@ -71,7 +70,7 @@ class NADSAQCompanyUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     }
   }
 
-  private def loadCompanyList(exchange: String) = {
+  private def loadCompanyList(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
     exchange match {
       case "AMEX" => companyListService.amex()
       case "NASDAQ" => companyListService.nasdaq()

@@ -102,7 +102,7 @@ object DayCycleJsApp {
       DaemonRef("EodDataCompanyUpdate", new EodDataCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 1.hours, frequency = 12.hours),
       DaemonRef("KeyStatisticsUpdate", new KeyStatisticsUpdateDaemon(dbFuture), kafkaReqd = false, delay = 2.hours, frequency = 12.hours),
       DaemonRef("NADSAQCompanyUpdate", new NADSAQCompanyUpdateDaemon(dbFuture), kafkaReqd = false, delay = 3.hours, frequency = 12.hours),
-      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbConnectionString), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes),
+      DaemonRef("SecuritiesUpdate", new SecuritiesUpdateDaemon(dbFuture), kafkaReqd = false, delay = 0.seconds, frequency = 1.minutes),
 
       // kafka-dependent daemons
       DaemonRef("SecuritiesRefreshKafka", new SecuritiesRefreshKafkaDaemon(dbFuture), kafkaReqd = true, delay = 10.days, frequency = 3.days)

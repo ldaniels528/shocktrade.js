@@ -1,6 +1,6 @@
 package com.shocktrade.server.dao.users
 
-import io.scalajs.npm.mysql.{MySQLConnectionOptions, MySQL}
+import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js

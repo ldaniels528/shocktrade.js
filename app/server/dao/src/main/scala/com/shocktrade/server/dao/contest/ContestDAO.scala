@@ -1,7 +1,7 @@
 package com.shocktrade.server.dao.contest
 
 import com.shocktrade.common.forms.ContestSearchForm
-import com.shocktrade.common.models.contest.{ChatMessage, Participant}
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.server.dao.contest.mysql.ContestDAOMySQL
 import io.scalajs.npm.mysql.MySQLConnectionOptions

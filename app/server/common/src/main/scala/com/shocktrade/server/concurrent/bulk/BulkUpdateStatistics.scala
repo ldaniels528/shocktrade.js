@@ -1,6 +1,5 @@
 package com.shocktrade.server.concurrent.bulk
 
-import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.LoggerFactory.Logger
 import io.scalajs.nodejs.duration2Int
 
@@ -12,7 +11,6 @@ import scala.scalajs.js
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class BulkUpdateStatistics(expectedPages: Int, reportInterval: FiniteDuration = 5.seconds) {
-  private val logger = LoggerFactory.getLogger(getClass)
   private var nPages = 0
   private var successes = 0
   private var failures = 0
@@ -24,11 +22,11 @@ class BulkUpdateStatistics(expectedPages: Int, reportInterval: FiniteDuration = 
   private var nUpserted = 0
   private var nFailures = 0
 
-  def completion = 100.0 * nPages / expectedPages
+  def completion: Double = 100.0 * nPages / expectedPages
 
-  def failed(cause: Throwable) = failures += 1
+  def failed(cause: Throwable): Unit = failures += 1
 
-  def update(result: BulkUpdateOutcome)(implicit logger: Logger) {
+  def update(result: BulkUpdateOutcome)(implicit logger: Logger): Unit = {
     // adjust the detail-level persistence info
     nInserted += result.nInserted
     nMatched += result.nMatched
@@ -55,7 +53,7 @@ class BulkUpdateStatistics(expectedPages: Int, reportInterval: FiniteDuration = 
     }
   }
 
-  override def toString = {
+  override def toString: String = {
     "Processed %d pages (%.01f%%), successes: %d, failures: %d [inserted: %d, matched: %d, modified: %d, upserted: %d, failures: %d]".format(
       nPages, completion, successes, failures, nInserted, nMatched, nModified, nUpserted, nFailures)
   }

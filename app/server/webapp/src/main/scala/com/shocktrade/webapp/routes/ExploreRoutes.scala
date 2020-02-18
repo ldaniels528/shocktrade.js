@@ -1,10 +1,9 @@
 package com.shocktrade.webapp.routes
 
-import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.common.models.quote.SectorInfoQuote
+import com.shocktrade.server.dao.securities.SecuritiesDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -17,7 +16,7 @@ import scala.util.{Failure, Success}
 object ExploreRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    implicit val quoteDAO = dbFuture.map(_.getSecuritiesDAO)
+    implicit val quoteDAO: Future[SecuritiesDAO] = dbFuture.map(SecuritiesDAO.apply)
 
     app.get("/api/explore/industries", (request: Request, response: Response, next: NextFunction) => industries(request, response, next))
     app.get("/api/explore/quotes", (request: Request, response: Response, next: NextFunction) => industryQuotes(request, response, next))
@@ -29,7 +28,7 @@ object ExploreRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def industries(request: Request, response: Response, next: NextFunction) = {
+    def industries(request: Request, response: Response, next: NextFunction): Unit = {
       request.query.get("sector") match {
         case Some(sector) =>
           quoteDAO.flatMap(_.exploreIndustries(sector)) onComplete {
@@ -41,7 +40,7 @@ object ExploreRoutes {
       }
     }
 
-    def industryQuotes(request: Request, response: Response, next: NextFunction) = {
+    def industryQuotes(request: Request, response: Response, next: NextFunction): Unit = {
       val result = for {
         sector <- request.query.get("sector")
         industry <- request.query.get("industry")
@@ -64,7 +63,7 @@ object ExploreRoutes {
       }
     }
 
-    def sectorInfo(request: Request, response: Response, next: NextFunction) = {
+    def sectorInfo(request: Request, response: Response, next: NextFunction): Unit = {
       val symbol = request.params.apply("symbol")
       quoteDAO.flatMap(_.findQuote[SectorInfoQuote](symbol, fields = SectorInfoQuote.Fields)) onComplete {
         case Success(Some(quote)) => response.send(quote); next()
@@ -73,14 +72,14 @@ object ExploreRoutes {
       }
     }
 
-    def sectors(request: Request, response: Response, next: NextFunction) = {
+    def sectors(request: Request, response: Response, next: NextFunction): Unit = {
       quoteDAO.flatMap(_.exploreSectors) onComplete {
         case Success(results) => response.send(results); next()
         case Failure(e) => response.internalServerError(e); next()
       }
     }
 
-    def subIndustries(request: Request, response: Response, next: NextFunction) = {
+    def subIndustries(request: Request, response: Response, next: NextFunction): Unit = {
       val result = for {
         sector <- request.query.get("sector")
         industry <- request.query.get("industry")
