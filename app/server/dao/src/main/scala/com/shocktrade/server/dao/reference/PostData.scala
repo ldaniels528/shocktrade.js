@@ -1,4 +1,4 @@
-package com.shocktrade.server.dao
+package com.shocktrade.server.dao.reference
 
 import com.shocktrade.common.models.post._
 import io.scalajs.npm.mongodb.ObjectID

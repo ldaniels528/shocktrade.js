@@ -2,9 +2,7 @@ package com.shocktrade.webapp.routes
 
 import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
 import com.shocktrade.common.models.contest.{CashAccount, MarginAccount, PerformanceLike}
-import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.ContestData._
-import com.shocktrade.server.dao.contest.PerksDAO._
 import com.shocktrade.server.dao.contest.PortfolioDAO._
 import com.shocktrade.server.dao.contest.{ContestData, _}
 import com.shocktrade.server.dao.users.ProfileDAO._
@@ -12,7 +10,6 @@ import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.npm.mongodb.Db
 import io.scalajs.util.ScalaJsHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -25,10 +22,10 @@ import scala.util.{Failure, Success}
 object ContestRoutes {
 
   def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext): Unit = {
-    val contestDAO = dbFuture.map(_.getContestDAO)
+    val contestDAO =  ContestDAO()
     val portfolioDAO = dbFuture.map(_.getPortfolioDAO)
     val profileDAO = dbFuture.map(_.getProfileDAO)
-    val perksDAO = dbFuture.map(_.getPerksDAO)
+    val perksDAO = PerksDAO()
 
     // individual contests
     app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
@@ -43,8 +40,8 @@ object ContestRoutes {
     //      API Methods
     //////////////////////////////////////////////////////////////////////////////////////
 
-    def availablePerks(request: Request, response: Response, next: NextFunction) = {
-      perksDAO.flatMap(_.findAvailablePerks) onComplete {
+    def availablePerks(request: Request, response: Response, next: NextFunction): Unit = {
+      perksDAO.findAvailablePerks onComplete {
         case Success(perks) => response.send(perks); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -53,9 +50,9 @@ object ContestRoutes {
     /**
       * Retrieves contests by player
       */
-    def contestByID(request: Request, response: Response, next: NextFunction) = {
-      val contestID = request.params.apply("id")
-      contestDAO.flatMap(_.findOneByID(contestID)) onComplete {
+    def contestByID(request: Request, response: Response, next: NextFunction): Unit = {
+      val contestID = request.params("id")
+      contestDAO.findOneByID(contestID) onComplete {
         case Success(Some(contest)) => response.send(contest); next()
         case Success(None) => response.notFound(contestID); next()
         case Failure(e) => response.internalServerError(e); next()
@@ -65,7 +62,7 @@ object ContestRoutes {
     /**
       * Creates a new contest
       */
-    def createContest(request: Request, response: Response, next: NextFunction) = {
+    def createContest(request: Request, response: Response, next: NextFunction): Unit = {
       val form = request.bodyAs[ContestCreateForm]
       console.log("form = %j", form)
       form.validate match {
@@ -87,15 +84,11 @@ object ContestRoutes {
       }
     }
 
-    def createNewContest(contest: ContestData) = {
+    def createNewContest(contest: ContestData): Future[Option[ContestData]] = {
       for {
-        w0 <- contestDAO.flatMap(_.create(contest).toFuture)
-        newContest = w0 match {
-          case w if w.isOk => w.opsAs[ContestData].headOption
-          case w =>
-            console.warn("Failed contest outcome = %j", w)
-            die(s"Contest '${contest.name.orNull}' creation failed")
-        }
+        isCreated <- contestDAO.create(contest)  if isCreated
+        contestID = contest._id.map(_.toHexString()).getOrElse(throw new IllegalStateException("Contest not created"))
+        newContest <- contestDAO.findOneByID(contestID)
       } yield newContest
     }
 
@@ -136,9 +129,9 @@ object ContestRoutes {
     /**
       * Retrieves contests by player
       */
-    def contestsByPlayer(request: Request, response: Response, next: NextFunction) = {
+    def contestsByPlayer(request: Request, response: Response, next: NextFunction): Unit = {
       val playerID = request.params.apply("playerID")
-      contestDAO.flatMap(_.findByPlayer(playerID).toFuture) onComplete {
+      contestDAO.findByPlayer(playerID) onComplete {
         case Success(contests) => response.send(contests); next()
         case Failure(e) => response.internalServerError(e); next()
       }
@@ -147,11 +140,11 @@ object ContestRoutes {
     /**
       * Searches for contest via a [[ContestSearchForm contest search form]]
       */
-    def search(request: Request, response: Response, next: NextFunction) = {
+    def search(request: Request, response: Response, next: NextFunction): Unit = {
       val form = request.bodyAs[ContestSearchForm]
       form.validate match {
         case messages if messages.isEmpty =>
-          contestDAO.flatMap(_.search(form).toFuture) onComplete {
+          contestDAO.search(form) onComplete {
             case Success(contests) => response.send(contests); next()
             case Failure(e) => response.internalServerError(e); next()
           }

@@ -1,4 +1,4 @@
-package com.shocktrade.server.dao
+package com.shocktrade.server.dao.reference
 
 import io.scalajs.npm.mongodb._
 

@@ -3,7 +3,6 @@ package com.shocktrade.qualification
 import com.shocktrade.common.Commissions
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.facade.{PricingFacade, PricingQuote}
@@ -26,7 +25,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO references
-  private val contestDAO = dbFuture.map(_.getContestDAO)
+  private val contestDAO = ContestDAO()
   private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
 
   // get the facade references
@@ -62,7 +61,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   }
 
   def closeExpireContests(): Future[Seq[UpdateWriteOpResultObject]] = for {
-    contests <- contestDAO.flatMap(_.findActiveContests()).map(_.toSeq)
+    contests <- contestDAO.findActiveContests.map(_.toSeq)
     w <- Future.sequence(contests map closeOut).map(_.flatten)
   } yield w
 

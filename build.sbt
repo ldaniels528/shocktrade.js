@@ -5,7 +5,7 @@ import sbt._
 
 val appVersion = "0.2.0"
 val appScalaVersion = "2.12.10"
-val scalaJsIOVersion = "0.4.2"
+val scalaJsIOVersion = "0.6.0"
 
 /////////////////////////////////////////////////////////////////////////////////
 //      Settings
@@ -95,7 +95,8 @@ lazy val dao = (project in file("./app/server/dao"))
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "mysql" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion
@@ -115,7 +116,8 @@ lazy val facades = (project in file("./app/server/facades"))
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "csv-parse" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
@@ -136,7 +138,8 @@ lazy val services = (project in file("./app/server/services"))
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "csv-parse" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
@@ -162,7 +165,8 @@ lazy val daycycle = (project in file("./app/server/daycycle"))
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "kafka-node" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion
@@ -182,7 +186,8 @@ lazy val qualification = (project in file("./app/server/qualification"))
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion
@@ -202,7 +207,8 @@ lazy val robots = (project in file("./app/server/robots"))
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "numeral" % scalaJsIOVersion,
@@ -293,7 +299,7 @@ lazy val angularjs = (project in file("./app/client/angularjs"))
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "dom-html" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "angular-bundle" % scalaJsIOVersion
+      "io.scalajs.web" %%% "angularjs-v1-bundle" % scalaJsIOVersion
     ))
 
 lazy val webapp = (project in file("./app/server/webapp"))
@@ -309,12 +315,13 @@ lazy val webapp = (project in file("./app/server/webapp"))
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "express-csv" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "express-fileupload" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "express-ws" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mean-stack" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion
     ))

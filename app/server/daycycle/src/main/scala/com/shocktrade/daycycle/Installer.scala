@@ -1,16 +1,12 @@
 package com.shocktrade.daycycle
 
-import io.scalajs.util.PromiseHelper.Implicits._
 import com.shocktrade.daycycle.daemons._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.NewsDAO._
-import com.shocktrade.server.dao.NewsSourceData
-import com.shocktrade.server.dao.contest.AwardsDAO._
-import com.shocktrade.server.dao.contest.PerksDAO._
-import com.shocktrade.server.dao.contest.{AwardData, PerkData}
+import com.shocktrade.server.dao.contest.{AwardData, AwardsDAO, PerkData, PerksDAO}
+import com.shocktrade.server.dao.reference.{NewsSourceDAO, NewsSourceData}
 import io.scalajs.nodejs.setImmediate
-import io.scalajs.npm.mongodb.{Db, MongoClient, WriteOptions}
+import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
@@ -23,16 +19,16 @@ import scala.util.{Failure, Success}
 class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
   implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
-  private val awardsDAO = dbFuture.map(_.getAwardsDAO)
-  private val newsDAO = dbFuture.map(_.getNewsDAO)
-  private val perksDAO = dbFuture.map(_.getPerksDAO)
+  private val awardsDAO = AwardsDAO()
+  private val newsDAO = NewsSourceDAO()
+  private val perksDAO = PerksDAO()
 
   def install()(implicit tradingClock: TradingClock) = {
     for {
     // setup contest reference data
-      r0 <- insertAwards()
-      r1 <- insertNewsSources()
-      r2 <- insertPerks()
+      //r0 <- insertAwards()
+      //r1 <- insertNewsSources()
+      //r2 <- insertPerks()
 
       // load company data
       d0 <- start(new NADSAQCompanyUpdateDaemon(dbFuture))
@@ -47,7 +43,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       d5 <- start(new BarChartProfileUpdateDaemon(dbFuture))
       d6 <- start(new CikUpdateDaemon(dbFuture))
 
-    } yield (r0, r1, r2, d0, d1, d2, d3, d4, d5, d6)
+    } yield (/*r0, r1, r2,*/ d0, d1, d2, d3, d4, d5, d6)
   }
 
   private def start[T](daemon: Daemon[T])(implicit tradingClock: TradingClock) = {
@@ -82,7 +78,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       new AwardData(name = "Crystal Ball", code = "CRYSTBAL", icon = "images/accomplishments/crystal_ball.png", description = "Your portfolio gained 500% or more"),
       new AwardData(name = "Checkered Flag", code = "CHKDFLAG", icon = "images/accomplishments/checkered_flag.png", description = "Finished a Game!"),
       new AwardData(name = "Gold Trophy", code = "GLDTRPHY", icon = "images/accomplishments/gold_trophy.png", description = "Came in first place! (out of 14 players)"))
-    awardsDAO.flatMap(_.insertMany(docs = awards, new WriteOptions(upsert = true)).toFuture)
+    //awardsDAO.flatMap(_.insertMany(docs = awards, new WriteOptions(upsert = true)).toFuture)
   }
 
   private def insertNewsSources() = {
@@ -93,7 +89,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       new NewsSourceData(name = "MarketWatch: Real-time Headlines", url = "http://feeds.marketwatch.com/marketwatch/realtimeheadlines/", priority = 4),
       new NewsSourceData(name = "MarketWatch: Stocks to Watch", url = "http://feeds.marketwatch.com/marketwatch/StockstoWatch/", priority = 5),
       new NewsSourceData(name = "NASDAQ Stocks News", url = "http://articlefeeds.nasdaq.com/nasdaq/categories?category=Stocks", priority = 6))
-    newsDAO.flatMap(_.insertMany(docs = newsSources, new WriteOptions(upsert = true)).toFuture)
+    //newsDAO.flatMap(_.insertMany(docs = newsSources, new WriteOptions(upsert = true)).toFuture)
   }
 
   private def insertPerks() = {
@@ -107,7 +103,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       new PerkData(name = "Loan Shark", code = "LOANSHRK", cost = 5000.0, description = "Gives the player the ability to loan other players money at any interest rate"),
       new PerkData(name = "The Feeling's Mutual", code = "MUTFUNDS", cost = 5000.0, description = "Gives the player the ability to create and use mutual funds"),
       new PerkData(name = "Risk Management", code = "RISKMGMT", cost = 5000.0, description = "Gives the player the ability to trade options"))
-    perksDAO.flatMap(_.insertMany(docs = perks, new WriteOptions(upsert = true)).toFuture)
+    //perksDAO.flatMap(_.insertMany(docs = perks, new WriteOptions(upsert = true)).toFuture)
   }
 
 }

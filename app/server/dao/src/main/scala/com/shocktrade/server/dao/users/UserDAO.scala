@@ -3,7 +3,7 @@ package com.shocktrade.server.dao.users
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.server.dao.events._
 import com.shocktrade.server.dao.users.events.UserEvent
-import io.scalajs.npm.mysql.ConnectionOptions
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -52,9 +52,9 @@ object UserDAO {
 
   /**
     * Creates a new User DAO instance
-    * @param options the given [[ConnectionOptions]]
+    * @param options the given [[MySQLConnectionOptions]]
     * @return a new [[UserDAO User DAO]]
     */
-  def apply(options: ConnectionOptions = DataAccessObjectHelper.getConnectionOptions): UserDAO = new UserDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): UserDAO = new UserDAOMySQL(options)
 
 }

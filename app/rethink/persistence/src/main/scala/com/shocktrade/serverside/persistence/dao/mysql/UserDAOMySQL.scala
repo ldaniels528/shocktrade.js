@@ -1,7 +1,7 @@
 package com.shocktrade.serverside.persistence.dao.mysql
 
 import com.shocktrade.serverside.persistence.dao.{UserDAO, UserData}
-import io.scalajs.npm.mysql.{ConnectionOptions, MySQL}
+import io.scalajs.npm.mysql.{MySQLConnectionOptions, MySQL}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -12,7 +12,7 @@ import scala.scalajs.js
   */
 class UserDAOMySQL()(implicit ec: ExecutionContext) extends UserDAO {
   private val datePattern = "YYYY-MM-DD HH:mm:ss"
-  private val conn = MySQL.createConnection(new ConnectionOptions(
+  private val conn = MySQL.createConnection(new MySQLConnectionOptions(
     host = "dev001",
     database = "shocktrade",
     user = "webapp",

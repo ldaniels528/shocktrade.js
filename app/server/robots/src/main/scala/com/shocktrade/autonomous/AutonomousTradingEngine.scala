@@ -8,13 +8,12 @@ import com.shocktrade.common.models.contest.OrderLike._
 import com.shocktrade.common.models.contest.{CashAccount, Participant, PerformanceLike, PositionLike}
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.dao.securities.SecuritiesDAO
 import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.services.RemoteEventService
-import io.scalajs.npm.mongodb.Db
+import io.scalajs.npm.mongodb.{Db, InsertWriteOpResult}
 import io.scalajs.npm.numeral._
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
@@ -33,7 +32,7 @@ import scala.util.{Failure, Success}
   */
 class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
   // create DAO instances
-  private implicit val contestDAO = dbFuture.map(_.getContestDAO)
+  private implicit val contestDAO: ContestDAO = ContestDAO()
   private implicit val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
   private implicit val robotDAO = dbFuture.map(_.getRobotDAO)
   private implicit val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
@@ -44,8 +43,8 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   private val removeEventService = new RemoteEventService(webAppEndPoint)
 
   // create the rule compiler and processor
-  private implicit val processor = new RuleProcessor()
-  private implicit val compiler = new RuleCompiler()
+  private implicit val processor: RuleProcessor = new RuleProcessor()
+  private implicit val compiler: RuleCompiler = new RuleCompiler()
 
   /**
     * Invokes the process
@@ -94,9 +93,9 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     * @param playerID the given player ID
     * @return the results of the join operations
     */
-  private def autoJoinContests(robot: RobotData, playerID: String) = {
+  private def autoJoinContests(robot: RobotData, playerID: String): Future[Seq[(Boolean, InsertWriteOpResult)]] = {
     for {
-      contests <- contestDAO.flatMap(_.findUnoccupied(playerID))
+      contests <- contestDAO.findUnoccupied(playerID)
       outcomes <- Future.sequence(contests map { contest =>
         robot.info("Attempting to join contest '%s'...", contest.name.orNull)
         val contestId = contest._id.map(_.toHexString()).orNull
@@ -114,7 +113,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
         )
 
         for {
-          w0 <- contestDAO.flatMap(_.join(contestId, participant))
+          w0 <- contestDAO.join(contestId, playerID) // TODO ???
           w1 <- portfolioDAO.flatMap(_.create(portfolio))
         } yield (w0, w1)
       } toSeq)
@@ -134,7 +133,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
         robot.info(s"Playing with portfolio #$portfolioId using the '$name' strategy")
 
         // create the robot environment
-        implicit val env = RobotEnvironment(name, portfolio)
+        implicit val env: RobotEnvironment = RobotEnvironment(name, portfolio)
 
         for {
         // execute the buying flow
@@ -169,7 +168,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     }
   }
 
-  private def createBuyOrders(robot: RobotData, buyingFlow: BuyingFlow, securities: Seq[ResearchQuote])(implicit env: RobotEnvironment) = {
+  private def createBuyOrders(robot: RobotData, buyingFlow: BuyingFlow, securities: Seq[ResearchQuote])(implicit env: RobotEnvironment): Seq[OrderData] = {
     if (securities.isEmpty) Nil
     else {
       // display the securities
@@ -208,7 +207,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     }
   }
 
-  private def createSellOrders(robot: RobotData, flow: SellingFlow, positions: Seq[PositionData]) = {
+  private def createSellOrders(robot: RobotData, flow: SellingFlow, positions: Seq[PositionData]): Future[Seq[OrderData]] = {
     if (positions.isEmpty) Future.successful(Seq.empty[OrderData])
     else {
       // display the current positions
@@ -241,7 +240,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
     }
   }
 
-  private def sendEvent(robot: RobotData, event: RemoteEvent) = {
+  private def sendEvent(robot: RobotData, event: RemoteEvent): Unit = {
     removeEventService.send(event) onComplete {
       case Success(_) => robot.log("Event transmitted")
       case Failure(e) => robot.error(s"Failed during transmission: ${e.getMessage}")
@@ -249,7 +248,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   }
 
   @inline
-  private def showQuotes(robot: RobotData, quotes: Seq[ResearchQuote]) = {
+  private def showQuotes(robot: RobotData, quotes: Seq[ResearchQuote]): Unit = {
     robot.log(s"${quotes.size} securities identified:")
     quotes foreach { q =>
       robot.log("| %s/%s | price: %d | low: %d | high: %d | volume: %s | avgVol: %s | spread: %d%% |",
@@ -260,7 +259,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   }
 
   @inline
-  private def showOrders(robot: RobotData, orders: Seq[OrderData]) = {
+  private def showOrders(robot: RobotData, orders: Seq[OrderData]): Unit = {
     robot.log(s"${orders.size} eligible order(s):")
     orders.zipWithIndex foreach { case (o, n) =>
       robot.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
@@ -268,7 +267,7 @@ class AutonomousTradingEngine(webAppEndPoint: String, dbFuture: Future[Db])(impl
   }
 
   @inline
-  private def showPositions(robot: RobotData, positions: Seq[PositionData]) = {
+  private def showPositions(robot: RobotData, positions: Seq[PositionData]): Unit = {
     robot.log(s"${positions.size} eligible position(s):")
     positions.zipWithIndex foreach { case (p, n) =>
       robot.log(s"[${n + 1}] ${p.symbol} @ ${p.pricePaid} x ${p.quantity} <${p._id}>")
@@ -346,7 +345,7 @@ object AutonomousTradingEngine {
   implicit class BuyingFlowExtensions(val flow: BuyingFlow) extends AnyVal {
 
     @inline
-    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, securitiesDAO: Future[SecuritiesDAO]) = {
+    def execute()(implicit ec: ExecutionContext, compiler: RuleCompiler, processor: RuleProcessor, env: RobotEnvironment, securitiesDAO: Future[SecuritiesDAO]): Future[Seq[ResearchQuote]] = {
       for {
       // get the collection of eligible quotes
         securities <- flow.searchOptions.toOption match {

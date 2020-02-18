@@ -4,7 +4,7 @@ import com.shocktrade.server.dao.contest.events._
 import com.shocktrade.server.dao.events.EventSourceDAOMySQL.EventData
 import io.scalajs.JSON
 import io.scalajs.npm.moment.Moment
-import io.scalajs.npm.mysql.{ConnectionOptions, MySQL}
+import io.scalajs.npm.mysql.{MySQLConnectionOptions, MySQL}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -14,7 +14,7 @@ import scala.scalajs.js
   * Event Source DAO (MySQL implementation)
   * @author lawrence.daniels@gmail.com
   */
-class EventSourceDAOMySQL(options: ConnectionOptions)(implicit ec: ExecutionContext) extends EventSourceDAO {
+class EventSourceDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends EventSourceDAO {
   private val datePattern = "YYYY-MM-DD HH:mm:ss"
   private val conn = MySQL.createConnection(options)
 

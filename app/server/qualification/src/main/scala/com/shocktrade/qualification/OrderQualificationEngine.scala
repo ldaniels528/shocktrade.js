@@ -5,7 +5,6 @@ import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.qualification.OrderQualificationEngine._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.contest.ContestDAO._
 import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
 import com.shocktrade.server.dao.contest._
 import com.shocktrade.server.dao.securities.QtyQuote
@@ -13,7 +12,6 @@ import com.shocktrade.server.dao.securities.SecuritiesDAO._
 import com.shocktrade.server.dao.securities.SecuritiesSnapshotDAO._
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.UserDAO
-import com.shocktrade.server.dao.users.UserDAO._
 import com.shocktrade.server.facade.PricingQuote
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.mongodb.{Db, ObjectID, UpdateWriteOpResultObject}
@@ -26,6 +24,7 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.Date
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success, Try}
 
@@ -36,7 +35,7 @@ import scala.util.{Failure, Success, Try}
 class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[UpdateWriteOpResultObject]] {
   // get DAO and service references
   private val logger = LoggerFactory.getLogger(getClass)
-  private val contestDAO = dbFuture.map(_.getContestDAO)
+  private val contestDAO = ContestDAO()
   private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
   private val securitiesDAO = dbFuture.map(_.getSecuritiesDAO)
   private val snapshotDAO = dbFuture.map(_.getSnapshotDAO)
@@ -74,7 +73,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     outcome.map(_._1)
   }
 
-  def qualifyAll(isMarketCloseEvent: Boolean) = {
+  def qualifyAll(isMarketCloseEvent: Boolean): Future[(Seq[UpdateWriteOpResultObject], Date, Long)] = {
     val startTime = System.currentTimeMillis()
     for {
       w <- updateContestsWithRankings()
@@ -83,26 +82,26 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     } yield (claims, new js.Date(startTime), System.currentTimeMillis() - startTime)
   }
 
-  def processOrderByPID(portfolioID: String, isMarketCloseEvent: Boolean) = {
+  def processOrderByPID(portfolioID: String, isMarketCloseEvent: Boolean): Future[Seq[UpdateWriteOpResultObject]] = {
     for {
       portfolio <- portfolioDAO.flatMap(_.findOneByID(portfolioID)).map(_.orDie(s"Portfolio #$portfolioID not found"))
       results <- processOrders(portfolio, isMarketCloseEvent)
     } yield results
   }
 
-  def getQualifyingOrdersByPID(portfolioID: String, isMarketCloseEvent: Boolean) = {
+  def getQualifyingOrdersByPID(portfolioID: String, isMarketCloseEvent: Boolean): Future[List[OrderData]] = {
     for {
       portfolio <- portfolioDAO.flatMap(_.findOneByID(portfolioID)).map(_.orDie(s"Portfolio #$portfolioID not found"))
       orders = getQualifyingOrders(portfolio, isMarketCloseEvent)
     } yield orders
   }
 
-  def getQualifyingOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
+  def getQualifyingOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean): List[OrderData] = {
     val asOfTime = portfolio.lastUpdate.flat.getOrElse(new js.Date())
     portfolio.findEligibleOrders(asOfTime)
   }
 
-  private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean) = {
+  private def processOrders(portfolio: PortfolioData, isMarketCloseEvent: Boolean): Future[Seq[UpdateWriteOpResultObject]] = {
     logger.log(separator)
     logger.log(s"Processing portfolio ${portfolio.playerID} / ${portfolio.contestName}")
 
@@ -122,7 +121,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     } yield outcome
   }
 
-  private def fulfillOrders(workOrders: Seq[WorkOrder]) = {
+  private def fulfillOrders(workOrders: Seq[WorkOrder]): Future[Seq[UpdateWriteOpResultObject]] = {
     logger.log(s"Processing order fulfillment...")
     Future.sequence {
       workOrders map { wo =>
@@ -143,7 +142,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     }
   }
 
-  private def lookupWorkQuotes(portfolio: PortfolioData, orders: Seq[OrderLike]) = {
+  private def lookupWorkQuotes(portfolio: PortfolioData, orders: Seq[OrderLike]): Future[Seq[WorkQuote]] = {
     val eligibleQuotes = Future.sequence(orders.map { order =>
       snapshotDAO.flatMap(_.findMatch(order) map {
         case Some(quote) => Some(order -> quote)
@@ -168,7 +167,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     workQuotes
   }
 
-  private def performQualification(portfolio: PortfolioData, orders: Seq[OrderData], quotes: Seq[WorkQuote]) = {
+  private def performQualification(portfolio: PortfolioData, orders: Seq[OrderData], quotes: Seq[WorkQuote]): Seq[WorkOrder] = {
     logger.log(s"Performing qualification <portfolio ${portfolio.playerID} / ${portfolio.contestName}>")
     val quoteMapping = js.Dictionary(quotes flatMap (q => q.symbol.map(_ -> q).toOption): _*)
     orders flatMap { order =>
@@ -185,7 +184,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     }
   }
 
-  private def removeEmptyPositions(portfolioID: ObjectID) = {
+  private def removeEmptyPositions(portfolioID: ObjectID): Future[UpdateWriteOpResultObject] = {
     logger.log("removing zero-quantity positions...")
     portfolioDAO.flatMap(_.removeEmptyPositions(portfolioID)) map {
       case outcome if outcome.result.isOk =>
@@ -197,7 +196,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     }
   }
 
-  private def showOrders(portfolio: PortfolioData, orders: Seq[OrderData]) = {
+  private def showOrders(portfolio: PortfolioData, orders: Seq[OrderData]): Unit = {
     logger.log(s"Portfolio '${portfolio._id}' - ${orders.size} eligible order(s):")
     orders.zipWithIndex foreach { case (o, n) =>
       logger.log(s"[${n + 1}] ${o.orderType} / ${o.symbol} @ ${o.price getOrElse "MARKET"} x ${o.quantity} - ${o.priceType} <${o._id}>")
@@ -205,7 +204,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     logger.log("")
   }
 
-  private def showQuotes(portfolio: PortfolioData, quotes: Seq[WorkQuote]) = {
+  private def showQuotes(portfolio: PortfolioData, quotes: Seq[WorkQuote]): Unit = {
     logger.log(s"Portfolio '${portfolio._id}' - ${quotes.size} quote(s):")
     quotes.zipWithIndex foreach { case (q, n) =>
       logger.log(f"[${n + 1}] ${q.symbol} ${q.lastTrade} ${q.tradeDateTime} [${q.tradeDateTime.map(t => Moment(new js.Date(t)).format("MM/DD/YYYY HH:mm:ss"))}]")
@@ -213,7 +212,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     logger.log("")
   }
 
-  private def updatePlayerNetWorth(userID: String) = {
+  private def updatePlayerNetWorth(userID: String): Future[UpdateWriteOpResultObject] = {
     for {
       user <- userDAO.findByID(userID).map(_.orDie("User not found"))
       portfolios <- portfolioDAO.flatMap(_.findByPlayer(userID))
@@ -236,10 +235,10 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     } yield w
   }
 
-  private def updateContestsWithRankings() = {
+  private def updateContestsWithRankings(): Future[Seq[Int]] = {
     logger.log("Updating contests...")
     val outcome = for {
-      contests <- contestDAO.flatMap(_.findActiveContests())
+      contests <- contestDAO.findActiveContests
       results <- Future.sequence(contests.map(updateContestRankings).toSeq)
     } yield results
 
@@ -253,7 +252,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     outcome
   }
 
-  private def updateContestRankings(contest: ContestData) = {
+  private def updateContestRankings(contest: ContestData): Future[Int] = {
     for {
     // lookup the contest portfolios
       portfolios <- contest._id.toOption match {
@@ -294,7 +293,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
       }
 
       // perform the update
-      w <- contestDAO.flatMap(_.updateContest(contest).toFuture)
+      w <- contestDAO.updateContest(contest)
 
     } yield w
   }
@@ -305,7 +304,7 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
     * @param mapping   the symbol to quotes mapping
     * @return the player's total investment
     */
-  private def computeInvestment(positions: Seq[PositionLike], mapping: Map[String, PricingQuote]) = {
+  private def computeInvestment(positions: Seq[PositionLike], mapping: Map[String, PricingQuote]): Double = {
     positions flatMap { p =>
       (for {
         symbol <- p.symbol
@@ -344,7 +343,7 @@ object OrderQualificationEngine {
   final implicit class OrderQualificationLogic(val order: OrderLike) extends AnyVal {
 
     @inline
-    def qualify(quote: WorkQuote) = Try {
+    def qualify(quote: WorkQuote): Try[Claim] = Try {
       // ensure the quote's properties
       val symbol = quote.symbol orDie "Missing symbol"
       val exchange = quote.exchange orDie "Missing exchange"

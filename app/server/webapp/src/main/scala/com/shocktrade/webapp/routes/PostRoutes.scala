@@ -3,10 +3,11 @@ package com.shocktrade.webapp.routes
 import com.shocktrade.common.forms.MaxResultsForm
 import com.shocktrade.common.models.OperationResult
 import com.shocktrade.common.models.post.{Attachment, Post}
-import com.shocktrade.server.dao.PostAttachmentDAO._
-import com.shocktrade.server.dao.PostDAO._
-import com.shocktrade.server.dao.PostData._
 import com.shocktrade.server.dao._
+import com.shocktrade.server.dao.reference.PostAttachmentDAO._
+import com.shocktrade.server.dao.reference.PostDAO._
+import com.shocktrade.server.dao.reference.PostData._
+import com.shocktrade.server.dao.reference.{PostAttachmentDAO, PostDAO}
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.{ProfileDAO, UserDAO, UserProfileData}
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
@@ -61,7 +62,7 @@ object PostRoutes {
       * Creates a new post
       * @example POST /api/post
       */
-    def createPost(request: Request, response: Response, next: NextFunction) = {
+    def createPost(request: Request, response: Response, next: NextFunction): Unit = {
       val post = request.bodyAs[Post].toData
       post.creationTime = new js.Date()
       post.lastUpdateTime = new js.Date()
@@ -76,7 +77,7 @@ object PostRoutes {
       * Deletes a post by ID
       * @example DELETE /api/post/56fd562b9a421db70c9172c1
       */
-    def deletePost(request: Request, response: Response, next: NextFunction) = {
+    def deletePost(request: Request, response: Response, next: NextFunction): Unit = {
       val postID = request.params.apply("postID")
       postDAO.flatMap(_.deleteOne("_id" $eq postID.$oid)) onComplete {
         case Success(outcome) => response.send(new OperationResult(success = outcome.result.isOk)); next()
@@ -88,7 +89,7 @@ object PostRoutes {
       * Downloads a post attachment by ID
       * @example GET /api/posts/attachments/56fd562b9a421db70c9172c1
       */
-    def downloadAttachment(request: Request, response: Response, next: NextFunction) = {
+    def downloadAttachment(request: Request, response: Response, next: NextFunction): Unit = {
       val attachmentID = request.params.apply("attachmentID")
       attachmentDAO map (_.openDownloadStream(attachmentID.$oid).pipe(response)) onComplete {
         case Success(downloadStream) => downloadStream.onEnd(() => next())
@@ -100,7 +101,7 @@ object PostRoutes {
       * Retrieves all attachment IDs for a given user
       * @example GET /api/posts/attachments/user/5633c756d9d5baa77a714803
       */
-    def getAttachementIDs(request: Request, response: Response, next: NextFunction) = {
+    def getAttachementIDs(request: Request, response: Response, next: NextFunction): Unit = {
       val userID = request.params.apply("userID")
       attachmentDAO.flatMap(_.find[Attachment]("metadata.userID" $eq userID.$oid).toArray()) onComplete {
         case Success(attachments) => response.send(attachments); next()
@@ -112,7 +113,7 @@ object PostRoutes {
       * Uploads an attachment for the given post and user
       * @example POST /api/post/563cff811b591f4c7870aaa1/attachment/5633c756d9d5baa77a714803
       */
-    def uploadAttachment(request: Request with UploadedFiles, response: Response, next: NextFunction) = {
+    def uploadAttachment(request: Request with UploadedFiles, response: Response, next: NextFunction): Unit = {
       val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       request.files.values foreach { file =>
         val outcome = for {
@@ -135,7 +136,7 @@ object PostRoutes {
       * Retrieve a post by ID
       * @example GET /api/post/5633c756d9d5baa77a714803
       */
-    def getPost(request: Request, response: Response, next: NextFunction) = {
+    def getPost(request: Request, response: Response, next: NextFunction): Unit = {
       val postID = request.params.apply("postID")
       postDAO.flatMap(_.findById[Post](postID)) onComplete {
         case Success(Some(post)) => response.send(post); next()
@@ -148,7 +149,7 @@ object PostRoutes {
       * Retrieve all posts
       * @example GET /api/posts
       */
-    def getPosts(request: Request, response: Response, next: NextFunction) = {
+    def getPosts(request: Request, response: Response, next: NextFunction): Unit = {
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
       postDAO.flatMap(_.find[Post]().limit(maxResults).toArray()) onComplete {
         case Success(posts) => response.send(posts); next()
@@ -160,7 +161,7 @@ object PostRoutes {
       * Retrieve all posts for a given user
       * @example /api/posts/user/56340a6f3c21a4b485d47c55
       */
-    def getPostsByOwner(request: Request, response: Response, next: NextFunction) = {
+    def getPostsByOwner(request: Request, response: Response, next: NextFunction): Unit = {
       val ownerID = request.params.apply("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
       postDAO.flatMap(_.find[Post]("submitterId" $eq ownerID).limit(maxResults).toArray()) onComplete {
@@ -173,7 +174,7 @@ object PostRoutes {
       * Retrieve the news feed posts by user ID
       * @example GET /api/posts/user/5633c756d9d5baa77a714803/newsfeed
       */
-    def getNewsFeed(request: Request, response: Response, next: NextFunction) = {
+    def getNewsFeed(request: Request, response: Response, next: NextFunction): Unit = {
       val ownerID = request.params.apply("ownerID")
       val maxResults = request.queryAs[MaxResultsForm].getMaxResults()
       val outcome = for {
@@ -192,7 +193,7 @@ object PostRoutes {
       * Retrieves the SEO information for embedding within a post
       * @example /api/social/content?url=http://www.businessinsider.com/how-to-remember-everything-you-learn-2015-10
       */
-    def getSEOContent(request: Request, response: Response, next: NextFunction) = {
+    def getSEOContent(request: Request, response: Response, next: NextFunction): Unit = {
       val form = request.queryAs[SharedContentForm]
       form.url.toOption match {
         case Some(url) =>
@@ -213,7 +214,7 @@ object PostRoutes {
       * Likes an post by user ID
       * @example PUT /api/post/564e4b60e7aabce5a152b10b/like/5633c756d9d5baa77a714803
       */
-    def likePost(request: Request, response: Response, next: NextFunction) = {
+    def likePost(request: Request, response: Response, next: NextFunction): Unit = {
       val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       postDAO.flatMap(_.like(postID, userID)) onComplete {
         case Success(outcome) =>
@@ -230,7 +231,7 @@ object PostRoutes {
       * Unlikes an post by user ID
       * @example DELETE /api/post/564e4b60e7aabce5a152b10b/like/5633c756d9d5baa77a714803
       */
-    def unlike(request: Request, response: Response, next: NextFunction) = {
+    def unlike(request: Request, response: Response, next: NextFunction): Unit = {
       val (postID, userID) = (request.params.apply("postID"), request.params.apply("userID"))
       postDAO.flatMap(_.unlike(postID, userID)) onComplete {
         case Success(outcome) =>
@@ -246,7 +247,7 @@ object PostRoutes {
       * Updates an existing post
       * @example PUT /api/post
       */
-    def updatePost(request: Request, response: Response, next: NextFunction) = {
+    def updatePost(request: Request, response: Response, next: NextFunction): Unit = {
       val form = request.bodyAs[Post]
       form._id.flat.toOption match {
         case Some(_id) =>

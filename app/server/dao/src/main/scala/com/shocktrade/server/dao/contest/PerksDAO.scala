@@ -1,46 +1,38 @@
 package com.shocktrade.server.dao.contest
 
-import io.scalajs.npm.mongodb.{Collection, Db}
+import com.shocktrade.server.dao.DataAccessObjectHelper
+import com.shocktrade.server.dao.contest.mysql.PerkDAOMySQL
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * Perks DAO
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-@js.native
-trait PerksDAO extends Collection
+ * Perks DAO
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+trait PerksDAO {
+
+  /**
+   * Retrieves the collection of available perks
+   * @param ec  the implicit [[ExecutionContext]]
+   * @return the collection of available [[PerkData perks]]
+   */
+  def findAvailablePerks(implicit ec: ExecutionContext): Future[js.Array[PerkData]]
+
+}
 
 /**
-  * Perks DAO Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Perks DAO Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PerksDAO {
 
   /**
-    * Perks DAO Extensions
-    * @param dao the given [[PerksDAO Perks DAO]]
-    */
-  implicit class PerksDAOExtensions(val dao: PerksDAO) {
-
-    @inline
-    def findAvailablePerks(implicit ec: ExecutionContext): js.Promise[js.Array[PerkData]] = {
-      dao.find[PerkData]().toArray()
-    }
-
-  }
-
-  /**
-    * Perks DAO Constructors
-    * @param db the given [[Db database]]
-    */
-  implicit class PerksDAOConstructors(val db: Db) extends AnyVal {
-
-    @inline
-    def getPerksDAO: PerksDAO = {
-      db.collection("Perks").asInstanceOf[PerksDAO]
-    }
-  }
+   * Creates a new Perks DAO instance
+   * @param options the given [[MySQLConnectionOptions]]
+   * @return a new [[PerksDAO Perks DAO]]
+   */
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): PerksDAO = new PerkDAOMySQL(options)
 
 }

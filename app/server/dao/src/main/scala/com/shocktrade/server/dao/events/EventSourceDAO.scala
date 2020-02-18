@@ -1,6 +1,6 @@
 package com.shocktrade.server.dao.events
 
-import io.scalajs.npm.mysql.ConnectionOptions
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -41,6 +41,6 @@ trait EventSourceDAO {
   */
 object EventSourceDAO {
 
-  def apply(options: ConnectionOptions)(implicit ec: ExecutionContext): EventSourceDAO = new EventSourceDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions)(implicit ec: ExecutionContext): EventSourceDAO = new EventSourceDAOMySQL(options)
 
 }

@@ -1,7 +1,8 @@
 package com.shocktrade.server.dao.contest
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import io.scalajs.npm.mysql.ConnectionOptions
+import com.shocktrade.server.dao.contest.mysql.AwardsDAOMySQL
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -15,7 +16,7 @@ trait AwardsDAO {
   /**
     * Retrieves the collection of available awards
     * @param ec  the implicit [[ExecutionContext]]
-    * @return the collection of available [[AwardData]]
+    * @return the collection of available [[AwardData awards]]
     */
   def findAvailableAwards(implicit ec: ExecutionContext): Future[js.Array[AwardData]]
 
@@ -28,10 +29,10 @@ trait AwardsDAO {
 object AwardsDAO {
 
   /**
-    * Creates a new User DAO instance
-    * @param options the given [[ConnectionOptions]]
-    * @return a new [[AwardsDAO User DAO]]
+    * Creates a new Awards DAO instance
+    * @param options the given [[MySQLConnectionOptions]]
+    * @return a new [[AwardsDAO Awards DAO]]
     */
-  def apply(options: ConnectionOptions = DataAccessObjectHelper.getConnectionOptions): AwardsDAO = new AwardsDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): AwardsDAO = new AwardsDAOMySQL(options)
 
 }
