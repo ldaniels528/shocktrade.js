@@ -254,8 +254,8 @@ class OrderQualificationEngine(dbFuture: Future[Db])(implicit ec: ExecutionConte
   private def updateContestRankings(contest: ContestData): Future[Int] = {
     for {
     // lookup the contest portfolios
-      portfolios <- contest._id.toOption match {
-        case Some(_id) => portfolioDAO.flatMap(_.findByContest(_id.toHexString()))
+      portfolios <- contest.contestID.toOption match {
+        case Some(_id) => portfolioDAO.flatMap(_.findByContest(_id))
         case None => Future.successful(emptyArray)
       }
 

@@ -8,38 +8,35 @@ import io.scalajs.npm.mongodb.Db
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Remote Event Routes
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-object RemoteEventRoutes {
+ * Remote Event Routes
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+class RemoteEventRoutes(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) = {
+  // define the API
+  app.post("/api/events/relay", (request: Request, response: Response, next: NextFunction) => relayEvent(request, response, next))
 
-    // define the API
-    app.post("/api/events/relay", (request: Request, response: Response, next: NextFunction) => relayEvent(request, response, next))
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      API Methods
+  //////////////////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    //      API Methods
-    //////////////////////////////////////////////////////////////////////////////////////
+  def relayEvent(request: Request, response: Response, next: NextFunction): Unit = {
+    val form = request.bodyAs[RemoteEvent]
+    val result = for {
+      action <- form.action
+      data <- form.data
+    } yield (action, data)
 
-    def relayEvent(request: Request, response: Response, next: NextFunction) = {
-      val form = request.bodyAs[RemoteEvent]
-      val result = for {
-        action <- form.action
-        data <- form.data
-      } yield (action, data)
-
-      result.toOption match {
-        case Some((action, data)) =>
-          WebSocketHandler.emit(action, data)
-          response.send("Ok")
-          next()
-        case None =>
-          logger.error("BadRequest: invalid event => %j", form)
-          response.badRequest(form)
-          next()
-      }
+    result.toOption match {
+      case Some((action, data)) =>
+        WebSocketHandler.emit(action, data)
+        response.send("Ok")
+        next()
+      case None =>
+        logger.error("BadRequest: invalid event => %j", form)
+        response.badRequest(form)
+        next()
     }
   }
 

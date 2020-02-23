@@ -2,16 +2,19 @@ package com.shocktrade.client
 
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.auth.SignInDialogController.SignInDialogResult
+import com.shocktrade.client.auth.{AuthenticationService, SignInDialogController}
 import com.shocktrade.client.contest.ContestService
-import com.shocktrade.client.dialogs.SignUpDialog
+import com.shocktrade.client.dialogs.SignUpDialogController
+import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.profile.UserProfileService
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.dom.html.browser.console
-import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalOptions}
 import io.scalajs.npm.angularjs.{Controller, Location, Scope, Timeout, injected, _}
 import io.scalajs.social.facebook.{FacebookProfileResponse, TaggableFriend}
 import io.scalajs.util.DurationHelper._
@@ -26,15 +29,14 @@ import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
 /**
-  * Main Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
+ * Main Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
                      @injected("ContestService") contestService: ContestService,
-                     @injected("Facebook") facebook: FacebookService,
+                     @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("MySessionService") mySession: MySessionService,
-                     @injected("UserProfileService") profileService: UserProfileService,
-                     @injected("SignUpDialog") signUpDialog: SignUpDialog)
+                     @injected("UserProfileService") profileService: UserProfileService)
   extends Controller with GlobalLoading {
 
   private var loadingIndex = 0
@@ -166,19 +168,8 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  $scope.login = () => {
-    facebook.login() onComplete {
-      case Success(response) =>
-        console.log(s"response = ${angular.toJson(response)}")
-        facebook.facebookID map (mySession.doPostLoginUpdates(_, userInitiated = true))
-      case Failure(e) =>
-        console.error(s"main:login error")
-        e.printStackTrace()
-    }
-  }
-
   $scope.logout = () => {
-    facebook.logout() onComplete {
+    authenticationService.logout() onComplete {
       case Success(_) => mySession.logout()
       case Failure(e) =>
         toaster.error("An error occurred during logout")
@@ -187,10 +178,28 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
+  $scope.signIn = () => {
+    val modalInstance = $uibModal.open[SignInDialogResult](new ModalOptions(
+      templateUrl = "sign_in_dialog.html",
+      controller = classOf[SignInDialogController].getSimpleName
+    ))
+    modalInstance.result onComplete {
+      case Success(response) =>
+        console.log(s"response = ${JSON.stringify(response)}")
+        //mySession.setUserProfile(profile, profileFB = js.undefined)
+      case Failure(e) =>
+        toaster.error(e.getMessage)
+    }
+  }
+
   $scope.signUp = () => {
-    signUpDialog.popup() onComplete {
-      case Success((profile, fbProfile)) =>
-        mySession.setUserProfile(profile, fbProfile)
+    val modalInstance = $uibModal.open[SignUpDialogResult](new ModalOptions(
+      controller = classOf[SignUpDialogController].getSimpleName,
+      templateUrl = "sign_up_dialog.html"
+    ))
+    modalInstance.result onComplete {
+      case Success(profile) =>
+        mySession.setUserProfile(profile, js.undefined)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -246,9 +255,9 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 }
 
 /**
-  * Main Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Main Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
 
@@ -292,9 +301,9 @@ object MainController {
 }
 
 /**
-  * Main Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Main Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait MainControllerScope extends Scope with GlobalNavigation {
   // variables
@@ -336,8 +345,8 @@ trait MainControllerScope extends Scope with GlobalNavigation {
 
   var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
   var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
-  var login: js.Function0[Unit] = js.native
   var logout: js.Function0[Unit] = js.native
+  var signIn: js.Function0[Unit] = js.native
   var signUp: js.Function0[Unit] = js.native
 
 }

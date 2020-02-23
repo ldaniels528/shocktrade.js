@@ -10,6 +10,7 @@ import com.shocktrade.server.dao.reference.PostData._
 import com.shocktrade.server.dao.reference.{PostAttachmentDAO, PostDAO}
 import com.shocktrade.server.dao.users.ProfileDAO._
 import com.shocktrade.server.dao.users.{ProfileDAO, UserDAO, UserProfileData}
+import com.shocktrade.webapp.routes.PostRoutes._
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
 import io.scalajs.npm.express.fileupload.UploadedFiles
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -26,9 +27,7 @@ import scala.util.{Failure, Success}
   * Post Routes
   * @author lawrence.daniels@gmail.com
   */
-object PostRoutes {
-
-  def init(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
+class PostRoutes(app: Application, dbFuture: Future[Db])(implicit ec: ExecutionContext) {
     implicit val postDAO: Future[PostDAO] = dbFuture.map(_.getPostDAO)
     implicit val profileDAO: Future[ProfileDAO] = dbFuture.map(_.getProfileDAO)
     implicit val userDAO: UserDAO = UserDAO()
@@ -262,6 +261,12 @@ object PostRoutes {
     }
 
   }
+
+/**
+ * Post Routes
+ * @author lawrence.daniels@gmail.com
+ */
+object PostRoutes {
 
   /**
     * Shared Content Form

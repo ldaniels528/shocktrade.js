@@ -405,7 +405,7 @@ trait PostingCapabilities extends GlobalLoading {
   //      Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def loadPostsByTags(tags: js.Array[String]) = {
+  private def loadPostsByTags(tags: js.Array[String]): Unit = {
     asyncLoading($scope)(postService.getPostsByTag(tags)) onComplete {
       case Success(response) =>
         val posts = response.data

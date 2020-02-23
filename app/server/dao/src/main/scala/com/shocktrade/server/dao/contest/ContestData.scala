@@ -14,7 +14,7 @@ import scala.scalajs.js
   * Contest Data Model
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class ContestData(var _id: js.UndefOr[ObjectID],
+class ContestData(var contestID: js.UndefOr[String],
                   var name: js.UndefOr[String],
                   var creator: js.UndefOr[User],
                   var startTime: js.UndefOr[js.Date],
@@ -45,7 +45,7 @@ object ContestData {
 
     @inline
     def toContest = new ContestData(
-      _id = js.undefined,
+      contestID = js.undefined,
       name = form.name,
       creator = User(_id = form.playerId, facebookID = form.facebookId, name = form.playerName),
       startingBalance = form.startingBalance.map(_.value),

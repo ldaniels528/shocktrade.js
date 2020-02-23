@@ -87,7 +87,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
           // create the new game
           contestService.createNewGame(form) onComplete {
             case Success(response) =>
-              $modalInstance.close(response)
+              $modalInstance.close(response.data)
               $timeout.cancel(promise)
               processing = false
             case Failure(e) =>
@@ -131,7 +131,7 @@ object NewGameDialogController {
 
   type NewGameDialogResult = Contest
 
-  val GameDurations = js.Array(
+  val GameDurations: js.Array[GameDuration] = js.Array(
     new GameDuration(label = "1 Week", value = 7),
     new GameDuration(label = "2 Weeks", value = 14),
     new GameDuration(label = "3 Weeks", value = 21),
@@ -139,7 +139,7 @@ object NewGameDialogController {
     new GameDuration(label = "5 Weeks", value = 35),
     new GameDuration(label = "6 Weeks", value = 42))
 
-  val StartingBalances = js.Array(
+  val StartingBalances: js.Array[GameBalance] = js.Array(
     new GameBalance(label = "$ 1,000", value = 1000.00),
     new GameBalance(label = "$ 2,500", value = 2500.00),
     new GameBalance(label = "$ 5,000", value = 5000.00),

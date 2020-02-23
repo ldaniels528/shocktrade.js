@@ -1,7 +1,6 @@
 package com.shocktrade.server.dao
 package securities
 
-import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote._
 import com.shocktrade.server.dao.securities.mongo.SecuritiesDAOMongoDB
 import io.scalajs.npm.mongodb._
@@ -28,13 +27,7 @@ trait SecuritiesDAO {
 
   def findQuotesBySubIndustry(sector: String, industry: String, subIndustry: String): Future[js.Array[ResearchQuote]]
 
-  def findQuote[T <: js.Any](symbol: String, fields: Seq[String])(implicit ec: ExecutionContext): Future[Option[T]]
-
-  def findQuotes[T <: js.Any](selector: js.Any, fields: Seq[String]): Future[js.Array[T]]
-
   def findQuotesBySymbols[T <: js.Any](symbols: Seq[String], fields: Seq[String]): Future[js.Array[T]]
-
-  def research(options: ResearchOptions): Future[js.Array[ResearchQuote]]
 
   def search(searchTerm: String, maxResults: Int): Future[js.Array[AutoCompleteQuote]]
 

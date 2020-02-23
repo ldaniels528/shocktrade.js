@@ -5,9 +5,9 @@ import com.shocktrade.client.{GlobalLoading, MainController}
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
@@ -17,17 +17,17 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Research Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Research Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                          @injected("ResearchService") researchService: ResearchService)
   extends Controller with GlobalLoading {
 
   // search reference data components
   private var exchangeCounts = js.Dictionary[Int]()
-  private var filteredResults = emptyArray[ResearchQuote]
-  private var searchResults = emptyArray[ResearchQuote]
+  private var filteredResults: js.Array[ResearchQuote] = emptyArray
+  private var searchResults: js.Array[ResearchQuote] = emptyArray
 
   //////////////////////////////////////////////////////////////////////
   //              Public Data
@@ -160,25 +160,25 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
 }
 
 /**
-  * Research Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Research Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ResearchController {
   private val CookieName = "ShockTrade_Research_SearchOptions"
 
   // data collections
-  val MaxResultsSet = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
-  val PriceRanges = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
-  val VolumeRanges = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
-  val Percentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
-  val ChangePercentages = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
+  val MaxResultsSet: js.Array[Int] = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
+  val PriceRanges: js.Array[Int] = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
+  val VolumeRanges: js.Array[Int] = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
+  val Percentages: js.Array[Int] = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
+  val ChangePercentages: js.Array[Int] = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
 
 }
 
 /**
-  * Research Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Research Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ResearchScope extends Scope {
   // variables

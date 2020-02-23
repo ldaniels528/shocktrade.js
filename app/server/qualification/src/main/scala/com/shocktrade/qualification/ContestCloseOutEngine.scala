@@ -66,7 +66,7 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   } yield w
 
   def closeOut(contest: ContestData): Future[Seq[UpdateWriteOpResultObject]] = {
-    contest._id.map(_.toHexString()).toOption match {
+    contest.contestID.toOption match {
       case Some(contestId) =>
         for {
           portfolios <- portfolioDAO.flatMap(_.findByContest(contestId).map(_.toSeq))

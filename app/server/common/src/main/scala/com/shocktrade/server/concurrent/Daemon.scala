@@ -38,8 +38,9 @@ object Daemon {
     * @param clock the given [[TradingClock trading clock]]
     * @param ref   the given [[DaemonRef daemon reference]]
     */
-  def run[T](clock: TradingClock, ref: DaemonRef[T]) = {
+  def run[T](clock: TradingClock, ref: DaemonRef[T]): Unit = {
     if (ref.daemon.isReady(clock)) start(clock, ref)
+    ()
   }
 
   /**
@@ -47,7 +48,7 @@ object Daemon {
     * @param clock the given [[TradingClock trading clock]]
     * @param ref   the given [[DaemonRef daemon reference]]
     */
-  def start[T](clock: TradingClock, ref: DaemonRef[T]) = {
+  def start[T](clock: TradingClock, ref: DaemonRef[T]): Future[T] = {
     logger.info(s"Starting daemon '${ref.name}'...")
     ref.daemon.run(clock)
   }
@@ -57,7 +58,7 @@ object Daemon {
     * Schedules the collection of daemons for execution
     * @param daemons the given collection of [[DaemonRef daemon references]]
     */
-  def schedule[T](clock: TradingClock, daemons: Seq[DaemonRef[T]]) = {
+  def schedule[T](clock: TradingClock, daemons: Seq[DaemonRef[T]]): Unit = {
     daemons foreach { ref =>
       logger.info(s"Configuring '${ref.name}' to run every ${ref.frequency}, after an initial delay of ${ref.delay}...")
       setTimeout(() => {

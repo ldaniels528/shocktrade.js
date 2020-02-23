@@ -23,8 +23,8 @@ class ContestService($http: Http) extends Service {
     * Creates a new game
     * @return the promise of the result of creating a new game
     */
-  def createNewGame(form: ContestCreateForm)(implicit ec: ExecutionContext): Future[Contest] = {
-    $http.post[Contest]("/api/contest", form).map(_.data)
+  def createNewGame(form: ContestCreateForm)(implicit ec: ExecutionContext): Future[HttpResponse[Contest]] = {
+    $http.post[Contest]("/api/contest", form)
   }
 
   def deleteContest(contestId: String): js.Promise[HttpResponse[js.Dynamic]] = {

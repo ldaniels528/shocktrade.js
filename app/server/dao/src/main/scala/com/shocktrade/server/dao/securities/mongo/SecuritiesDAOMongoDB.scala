@@ -1,11 +1,8 @@
 package com.shocktrade.server.dao.securities.mongo
 
-import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote, ExploreQuote, ResearchQuote}
-import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.securities.SecuritiesDAO
 import io.scalajs.npm.mongodb.{$group, $match, $or, Collection, doc, _}
-import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -63,37 +60,6 @@ class SecuritiesDAOMongoDB(conn: Collection) extends SecuritiesDAO {
     conn.find[T]("symbol" $in js.Array(symbols: _*), projection = fields.toProjection).toArray().toFuture
   }
 
-  def research(options: ResearchOptions): Future[js.Array[ResearchQuote]] = {
-    // build the query
-    val selector = doc("active" $eq true, "symbol" $ne null)
-    toRange("beta", options.betaMin, options.betaMax) foreach (selector ++= _)
-    toRange("changePct", options.changeMin, options.changeMax) foreach (selector ++= _)
-    toRange("lastTrade", options.priceMin, options.priceMax) foreach (selector ++= _)
-    toRange("spread", options.spreadMin, options.spreadMax) foreach (selector ++= _)
-    toRange("volume", options.volumeMin, options.volumeMax) foreach (selector ++= _)
-    toRange("avgVolume10Day", options.avgVolumeMin, options.avgVolumeMax) foreach (selector ++= _)
-    LoggerFactory.getLogger(getClass).info("query: %j", selector)
-
-    // is there an array of sort fields?
-    val sortFields: js.Array[js.Any] = options.sortFields map (_ flatMap { sf =>
-      js.Array(sf.field, sf.direction).asInstanceOf[js.Array[js.Any]]
-    }) getOrElse {
-      val sortField = options.sortBy.flat.getOrElse("symbol")
-      val sortDirection = if (options.reverse.isTrue) -1 else 1
-      js.Array(sortField, sortDirection)
-    }
-
-    // determine the maximum number of results
-    val maxResults = options.maxResults.flat.getOrElse(25)
-
-    // perform the query
-    conn.find[ResearchQuote](selector, projection = ResearchQuote.Fields.toProjection)
-      .limit(maxResults)
-      .sort(sortFields)
-      .toArray()
-      .toFuture
-  }
-
   def search(searchTerm: String, maxResults: Int): Future[js.Array[AutoCompleteQuote]] = {
     conn.find[AutoCompleteQuote](
       // { active : true, $or : [ {symbol : { $regex: ^?0, $options:'i' }}, {name : { $regex: ^?0, $options:'i' }} ] }
@@ -108,13 +74,5 @@ class SecuritiesDAOMongoDB(conn: Collection) extends SecuritiesDAO {
       .toFuture
   }
 
-  private def toRange(field: String, minValue: js.UndefOr[Double], maxValue: js.UndefOr[Double]) = {
-    (minValue.flat.toOption, maxValue.flat.toOption) match {
-      case (Some(min), Some(max)) => Some(doc(field between minValue -> maxValue))
-      case (Some(min), None) => Some(doc(field $gte min))
-      case (None, Some(max)) => Some(doc(field $lte max))
-      case (None, None) => None
-    }
-  }
-
 }
+

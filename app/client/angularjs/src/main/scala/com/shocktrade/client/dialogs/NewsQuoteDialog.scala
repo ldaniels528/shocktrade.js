@@ -2,7 +2,6 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.dialogs.NewsQuoteDialogController.NewsQuoteDialogResult
 import com.shocktrade.client.discover.QuoteService
-import com.shocktrade.common.models.quote.ResearchQuote
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper.ExceptionExtensions
 import io.scalajs.npm.angularjs._
@@ -47,11 +46,11 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
                                 @injected("symbol") symbol: String)
   extends Controller {
 
-  $scope.quote = ResearchQuote(symbol = symbol)
+  $scope.quote = js.Dictionary("symbol" -> symbol)
 
   $scope.init = (aSymbol: js.UndefOr[String]) => aSymbol foreach { symbol =>
     quoteService.getBasicQuote(symbol) onComplete {
-      case Success(quote) => $scope.quote = quote.data
+      case Success(quote) => $scope.quote = quote.data.asInstanceOf[NewsQuoteDialogResult]
       case Failure(e) =>
         toaster.error(e.getMessage)
         console.error(s"Error retrieving order quote: ${e.displayMessage}")
@@ -60,7 +59,7 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
 
   $scope.cancel = () => $modalInstance.dismiss("cancel")
 
-  $scope.ok = (aForm: js.UndefOr[ResearchQuote]) => aForm foreach $modalInstance.close
+  $scope.ok = (aForm: js.UndefOr[NewsQuoteDialogResult]) => aForm foreach $modalInstance.close
 
 }
 
@@ -69,7 +68,7 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $modalInstance: ModalIns
   */
 object NewsQuoteDialogController {
 
-  type NewsQuoteDialogResult = ResearchQuote
+  type NewsQuoteDialogResult = js.Dictionary[String]
 
 }
 
@@ -79,12 +78,12 @@ object NewsQuoteDialogController {
 @js.native
 trait NewsQuoteScope extends Scope {
   // variables
-  var quote: js.UndefOr[ResearchQuote]
+  var quote: js.UndefOr[NewsQuoteDialogResult]
 
   // functions
   var init: js.Function1[js.UndefOr[String], Unit]
   var cancel: js.Function0[Unit]
-  var ok: js.Function1[js.UndefOr[ResearchQuote], Unit]
+  var ok: js.Function1[js.UndefOr[NewsQuoteDialogResult], Unit]
 
 }
 

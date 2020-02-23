@@ -8,6 +8,7 @@
 .lib/
 dist/
 target/
+temp/
 lib_managed/
 src_managed/
 project/boot/
@@ -20,6 +21,6 @@ project/plugins/project/
 # app specific
 bower_components
 node_modules
-public/javascripts
+public/javascripts/
 *fastopt.js
 *fastopt.js.map

@@ -39,7 +39,7 @@ object ParsingHelper {
       else {
         // find the terminating sequence
         val p1 = src.indexOf(endSeq, p0 + beginSeq.length)
-        if (p1 == -1) None else Some(p0, p1 + endSeq.length)
+        if (p1 == -1) None else Some((p0, p1 + endSeq.length))
       }
     }
 
@@ -68,11 +68,11 @@ object ParsingHelper {
     def findNestedSpan(searchSeq: String, beginSeq: String, endSeq: String, p0: Int, p1: Int, level: Int = 0): Option[(Int, Int)] = {
       // are there nested copies of the starting sequence?
       val d0 = src.indexOf(beginSeq, p0 + searchSeq.length)
-      if (d0 == -1 || d0 > p1) Some(p0, p1)
+      if (d0 == -1 || d0 > p1) Some((p0, p1))
       else {
         // find a new ending sequence
         val d1 = src.indexOf(endSeq, p1)
-        if (d1 == -1) Some(p0, p1)
+        if (d1 == -1) Some((p0, p1))
         else findNestedSpan(searchSeq, beginSeq, endSeq, p0, d1 + endSeq.length, level + 1)
       }
     }
@@ -95,9 +95,9 @@ object ParsingHelper {
     * String Extensions (Type C)
     * @author Lawrence Daniels <lawrence.daniels@gmail.com>
     */
-  implicit class ExtStringC(src: StringBuilder) {
+ final implicit class ExtStringC(src: StringBuilder) {
 
-    def extractTag(locatorTag: String, startTag: String, endTag: String, pos: Int = 0) = {
+    def extractTag(locatorTag: String, startTag: String, endTag: String, pos: Int = 0): Option[String] = {
       src.indexOptionOf(locatorTag, endTag, pos) match {
         case Some((start, end)) =>
           // find the end of the span

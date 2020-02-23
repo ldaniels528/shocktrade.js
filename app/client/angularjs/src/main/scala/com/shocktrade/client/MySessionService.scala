@@ -53,7 +53,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   //          Authentication & Authorization Functions
   /////////////////////////////////////////////////////////////////////
 
-  def setUserProfile(profile: UserProfile, profileFB: FacebookProfileResponse) {
+  def setUserProfile(profile: UserProfile, profileFB: js.UndefOr[FacebookProfileResponse]) {
     this.userProfile = profile
     this.fbProfile_? = profileFB
     this.facebookID = fbProfile_?.map(_.id)

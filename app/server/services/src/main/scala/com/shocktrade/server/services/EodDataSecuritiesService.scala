@@ -32,14 +32,14 @@ class EodDataSecuritiesService() {
     Request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
       case Success((response, html)) =>
         val parser = new htmlparser2.Parser(new ParserHandler {
-          val quotes = js.Array[EodDataSecurity]()
-          val attributesStack = js.Array[js.Dictionary[String]]()
-          val textStack = js.Dictionary[StringBuilder]()
+          val quotes: js.Array[EodDataSecurity] = js.Array[EodDataSecurity]()
+          val attributesStack: js.Array[js.Dictionary[String]] = js.Array[js.Dictionary[String]]()
+          val textStack: js.Dictionary[StringBuilder] = js.Dictionary[StringBuilder]()
           var currentTag = ""
           var inTable = false
           var done = false
-          val columns = js.Array[String]()
-          val headers = js.Array[String]()
+          val columns: js.Array[String] = js.Array[String]()
+          val headers: js.Array[String] = js.Array[String]()
           var skip = 0
 
           override def onopentag(tag: String, attributes: js.Dictionary[String]) {
@@ -70,9 +70,7 @@ class EodDataSecuritiesService() {
             }
           }
 
-          override def ontext(text: String) {
-            textStack.getOrElseUpdate(currentTag, new StringBuilder()).append(text.trim)
-          }
+          override def ontext(text: String): Unit = textStack.getOrElseUpdate(currentTag, new StringBuilder()).append(text.trim)
 
           override def onend(): Unit = promise.success(quotes)
 
@@ -87,7 +85,7 @@ class EodDataSecuritiesService() {
     promise.future
   }
 
-  private def toQuote(exchange: String, headers: js.Array[String], columns: js.Array[String]) = {
+  private def toQuote(exchange: String, headers: js.Array[String], columns: js.Array[String]): EodDataSecurity = {
     val mapping = js.Dictionary(headers zip columns: _*)
     val symbol = mapping.get("Code").orUndefined
     new EodDataSecurity(
@@ -104,7 +102,7 @@ class EodDataSecuritiesService() {
   }
 
   @inline
-  private def toDouble(fieldName: String, value: String) = {
+  private def toDouble(fieldName: String, value: String): Option[Double] = {
     if (value.isEmpty) None
     else {
       Try(value.filter(c => c == '.' || c.isDigit).toDouble) match {

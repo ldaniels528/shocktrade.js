@@ -15,7 +15,7 @@ lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directo
 copyJS := {
   val out_dir = baseDirectory.value
   val files = for {
-    (base, pname) <- Seq("client" -> "controlpanel", "server" -> "daycycle", "server" -> "qualification", "server" -> "robots", "server" -> "webapp")
+    (base, pname) <- Seq("client" -> "controlpanel", "server" -> "ingestion", "server" -> "qualification", "server" -> "robots", "server" -> "webapp")
     my_dir = out_dir / "app" / base / pname / "target" / s"scala-${appScalaVersion.take(4)}"
     filePair <- Seq("", ".map").map(s"shocktrade-$pname-fastopt.js" + _).map(s => (my_dir / s, out_dir / s))
   } yield filePair
@@ -150,16 +150,16 @@ lazy val services = (project in file("./app/server/services"))
 //      Server-Side Processing projects
 /////////////////////////////////////////////////////////////////////////////////
 
-lazy val daycycle = (project in file("./app/server/daycycle"))
+lazy val ingestion = (project in file("./app/server/ingestion"))
   .aggregate(sharedCommon, serverCommon, dao, services, facades)
   .dependsOn(sharedCommon, serverCommon, dao, services, facades)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
-    name := "shocktrade-daycycle",
+    name := "shocktrade-ingestion",
     organization := "com.shocktrade",
     version := appVersion,
-    mainClass := Some("com.shocktrade.daycycle.DayCycleJsApp"),
+    mainClass := Some("com.shocktrade.ingestion.IngestionJsApp"),
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
@@ -190,28 +190,6 @@ lazy val qualification = (project in file("./app/server/qualification"))
       "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
-    ))
-
-lazy val robots = (project in file("./app/server/robots"))
-  .aggregate(sharedCommon, serverCommon, dao, facades)
-  .dependsOn(sharedCommon, serverCommon, dao, facades)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
-  .settings(
-    name := "shocktrade-robots",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.autonomous.AutonomousTradingJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "numeral" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
@@ -331,7 +309,7 @@ lazy val webapp = (project in file("./app/server/webapp"))
 /////////////////////////////////////////////////////////////////////////////////
 
 lazy val shocktradejs = (project in file("."))
-  .aggregate(angularjs, webapp, controlPanel, daycycle, neo_qualification, persistence, qualification, robots)
+  .aggregate(angularjs, webapp, controlPanel, ingestion, neo_qualification, persistence, qualification)
   .dependsOn(angularjs, webapp)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)

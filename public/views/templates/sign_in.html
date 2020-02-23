@@ -1,0 +1,39 @@
+<script type="text/ng-template" id="sign_in_dialog.html">
+    <div class="modal-header st_modal_header">
+        <h4>Sign into ShockTrade</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                Hello <span class="bold">{{ form.name }}</span> and welcome back to <span class="emphasis">ShockTrade</span>.
+            </div>
+            <div class="col-md-12 header">Username</div>
+            <div class="col-md-12">
+                <input class="form-control" ng-model="form.username" type="text" placeholder="Screen Name" size="43">
+            </div>
+            <div class="col-md-12 header">Password</div>
+            <div class="col-md-12">
+                <input class="form-control" ng-model="form.password" type="password" placeholder="Password" size="43">
+            </div>
+        </div>
+
+        <!-- error messages -->
+        <div class="row">
+            <ul class="error">
+                <li class="error" ng-repeat="message in getMessages()">
+                    <span class="error">{{message}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-left" ng-disabled="isLoading()" ng-click="signIn(form)">
+                <img ng-show="isLoading()" src="/images/status/loading16.gif"> Sign In
+            </button>
+            <button class="btn btn-warning pull-right" ng-disabled="isLoading()" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</script>

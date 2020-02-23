@@ -14,9 +14,9 @@ import scala.scalajs.runtime._
 import scala.util.{Failure, Success}
 
 /**
-  * Cik Lookup Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Cik Lookup Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class CikLookupService() {
 
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[CikLookupResponse]] = {
@@ -29,7 +29,7 @@ class CikLookupService() {
     promise.future
   }
 
-  private def parseHtml(symbol: String, html: String, startTime: Double, promise: Promise[Option[CikLookupResponse]]) = {
+  private def parseHtml(symbol: String, html: String, startTime: Double, promise: Promise[Option[CikLookupResponse]]): Unit = {
     val quotes = js.Array[CikLookupResponse]()
     var values = js.Dictionary[js.Array[String]]()
     val attributesStack = js.Array[js.Dictionary[String]]()
@@ -74,9 +74,9 @@ class CikLookupService() {
         promise.success(values.get("CIK") map { cikNumber =>
           new CikLookupResponse(
             symbol = symbol,
-            CIK = cikNumber.mkString("\n"),
+            cikNumber = cikNumber.mkString("\n"),
             companyName = values.get("companyName").map(_.mkString("\n")).orUndefined,
-            mailerAddress = values.get("mailerAddress").orUndefined,
+            mailingAddress = values.get("mailerAddress").orUndefined,
             responseTime = js.Date.now() - startTime
           )
         })
@@ -93,15 +93,15 @@ class CikLookupService() {
 }
 
 /**
-  * Cik Lookup Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Cik Lookup Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object CikLookupService {
 
   class CikLookupResponse(val symbol: String,
-                          val CIK: String,
+                          val cikNumber: String,
                           val companyName: js.UndefOr[String],
-                          val mailerAddress: js.UndefOr[js.Array[String]],
+                          val mailingAddress: js.UndefOr[js.Array[String]],
                           val responseTime: js.UndefOr[Double]) extends js.Object
 
 }

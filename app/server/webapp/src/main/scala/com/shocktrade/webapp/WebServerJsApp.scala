@@ -4,6 +4,11 @@ import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.webapp.routes._
+import com.shocktrade.webapp.routes.account.{UserAccountRoutes, AuthenticationRoutes, UserProfileRoutes, UserRoutes}
+import com.shocktrade.webapp.routes.contest.{ChartRoutes, ChatRoutes, ContestRoutes, PortfolioRoutes}
+import com.shocktrade.webapp.routes.explore.ExploreRoutes
+import com.shocktrade.webapp.routes.news.NewsRoutes
+import com.shocktrade.webapp.routes.research.ResearchRoutes
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
 import io.scalajs.npm.express.fileupload.ExpressFileUpload
@@ -31,9 +36,8 @@ object WebServerJsApp {
     val startTime = js.Date.now()
 
     // setup mongodb connection
-    logger.info("Loading MongoDB module...")
     val dbConnect = "mongodb://dev001:27017/shocktrade"
-    logger.info("Connecting to database '%s'...", dbConnect)
+    logger.info(s"Connecting to database '$dbConnect'...")
     implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnect)
 
     // setup the application
@@ -49,6 +53,10 @@ object WebServerJsApp {
     }
   }
 
+  /**
+   * Creates a new application
+   * @return the [[Application]]
+   */
   def configureApplication()(implicit dbFuture: Future[Db]): Application with WsRouting = {
     logger.info("Loading Express modules...")
     implicit val app: Application with WsRouting = Express().withWsRouting
@@ -85,22 +93,23 @@ object WebServerJsApp {
 
     // setup all other routes
     logger.info("Setting up all other routes...")
-    ChartRoutes.init(app, dbFuture)
-    ChatRoutes.init(app, dbFuture)
-    ContestRoutes.init(app, dbFuture)
-    ExploreRoutes.init(app, dbFuture)
-    NewsRoutes.init(app, dbFuture)
-    OnlineStatusRoutes.init(app, dbFuture)
-    PortfolioRoutes.init(app, dbFuture)
-    PostRoutes.init(app, dbFuture)
-    UserProfileRoutes.init(app, dbFuture)
-    RemoteEventRoutes.init(app, dbFuture)
-    QuoteRoutes.init(app, dbFuture)
-    ResearchRoutes.init(app, dbFuture)
-    SearchRoutes.init(app, dbFuture)
-    SocialRoutes.init(app, dbFuture)
-    TradingClockRoutes.init(app, dbFuture)
-    UserRoutes.init(app, dbFuture)
+    new AuthenticationRoutes(app)
+    new ChartRoutes(app, dbFuture)
+    new ChatRoutes(app)
+    new ContestRoutes(app, dbFuture)
+    new ExploreRoutes(app)
+    new NewsRoutes(app)
+    new OnlineStatusRoutes(app, dbFuture)
+    new PortfolioRoutes(app, dbFuture)
+    new PostRoutes(app, dbFuture)
+    new UserProfileRoutes(app, dbFuture)
+    new RemoteEventRoutes(app, dbFuture)
+    new QuoteRoutes(app, dbFuture)
+    new ResearchRoutes(app)
+    new SearchRoutes(app, dbFuture)
+    new TradingClockRoutes(app, dbFuture)
+    new UserAccountRoutes(app)
+    new UserRoutes(app, dbFuture)
     app
   }
 

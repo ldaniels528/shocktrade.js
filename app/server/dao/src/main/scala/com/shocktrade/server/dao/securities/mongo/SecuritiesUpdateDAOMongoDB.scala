@@ -56,7 +56,7 @@ class SecuritiesUpdateDAOMongoDB(val dao: Collection) extends SecuritiesUpdateDA
 
   @inline
   def updateCik(cik: CikLookupResponse): js.Promise[UpdateWriteOpResultObject] = {
-    dao.updateOne(filter = "symbol" $eq cik.symbol, update = $set("cikNumber" -> cik.CIK))
+    dao.updateOne(filter = "symbol" $eq cik.symbol, update = $set("cikNumber" -> cik.cikNumber))
   }
 
   @inline

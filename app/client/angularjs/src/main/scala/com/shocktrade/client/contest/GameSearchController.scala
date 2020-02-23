@@ -23,9 +23,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Game Search Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Game Search Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
@@ -34,9 +34,9 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   extends GameController($scope, $location, toaster, mySession, portfolioService) with GlobalLoading {
 
   // public variables
-  var searchResults = js.Array[Contest]()
-  var selectedContest: js.UndefOr[Contest] = js.undefined
-  var splitScreen = false
+  private var searchResults = js.Array[Contest]()
+  private var selectedContest: js.UndefOr[Contest] = js.undefined
+  private var splitScreen = false
 
   $scope.contest = null
   $scope.searchTerm = null
@@ -308,8 +308,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-    * Listen for contest creation events
-    */
+   * Listen for contest creation events
+   */
   $scope.onContestCreated { (_, contest) =>
     console.log(s"New contest created '${contest.name}'")
     searchResults.push(contest)
@@ -317,16 +317,16 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   }
 
   /**
-    * Listen for contest deletion events
-    */
+   * Listen for contest deletion events
+   */
   $scope.onContestDeleted { (_, contest) =>
     selectedContest = js.undefined
     searchResults = searchResults.filterNot(_._id ?== contest._id)
   }
 
   /**
-    * Listen for contest update events
-    */
+   * Listen for contest update events
+   */
   $scope.onContestUpdated { (_, contest) =>
     console.log(s"Contest '${contest.name} updated")
     contest._id foreach { contestId =>
@@ -341,9 +341,9 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 }
 
 /**
-  * Game Search Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Game Search Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait GameSearchScope extends GameScope {
   // variables

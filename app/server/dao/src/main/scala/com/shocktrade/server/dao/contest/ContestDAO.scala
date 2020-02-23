@@ -1,7 +1,6 @@
 package com.shocktrade.server.dao.contest
 
 import com.shocktrade.common.forms.ContestSearchForm
-import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.server.dao.contest.mysql.ContestDAOMySQL
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -17,15 +16,6 @@ trait ContestDAO {
 
   /**
     *
-    * @param contestID
-    * @param message
-    * @param ec
-    * @return
-    */
-  def addChatMessage(contestID: String, playerID: String, message: String)(implicit ec: ExecutionContext): Future[Boolean]
-
-  /**
-    *
     * @param contest
     * @return
     */
@@ -37,14 +27,6 @@ trait ContestDAO {
     * @return
     */
   def findActiveContests()(implicit ec: ExecutionContext): Future[js.Array[ContestData]]
-
-  /**
-    *
-    * @param contestID
-    * @param ec
-    * @return
-    */
-  def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]]
 
   /**
     *

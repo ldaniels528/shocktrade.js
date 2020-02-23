@@ -1,5 +1,6 @@
 package com.shocktrade.client.discover
 
+import com.shocktrade.client.discover.QuoteService.BasicQuote
 import com.shocktrade.common.models.quote._
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -17,8 +18,8 @@ class QuoteService($http: Http) extends Service {
     $http.get[js.Array[AutoCompleteQuote]](s"/api/quotes/search?searchTerm=$searchTerm&maxResults=$maxResults")
   }
 
-  def getBasicQuote(symbol: String): js.Promise[HttpResponse[ResearchQuote]] = {
-    $http.get[ResearchQuote](s"/api/quote/$symbol/basic")
+  def getBasicQuote(symbol: String): js.Promise[HttpResponse[BasicQuote]] = {
+    $http.get[BasicQuote](s"/api/quote/$symbol/basic")
   }
 
   def getBasicQuotes(symbols: js.Array[String]): js.Promise[HttpResponse[js.Array[OrderQuote]]] = {
@@ -53,5 +54,11 @@ class QuoteService($http: Http) extends Service {
   def getTradingHistory(symbol: String): js.Promise[HttpResponse[js.Array[HistoricalQuote]]] = {
     $http.get[js.Array[HistoricalQuote]](s"/api/quote/$symbol/history")
   }
+
+}
+
+object QuoteService {
+
+  type BasicQuote = js.Object
 
 }

@@ -1,5 +1,7 @@
 package com.shocktrade.client
 
+import com.shocktrade.client.account.UserAccountService
+import com.shocktrade.client.auth.{AuthenticationService, SignInDialogController}
 import com.shocktrade.client.contest._
 import com.shocktrade.client.dialogs._
 import com.shocktrade.client.directives._
@@ -8,57 +10,54 @@ import com.shocktrade.client.news._
 import com.shocktrade.client.posts.{PostController, PostService}
 import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
-import com.shocktrade.common.models.FacebookAppInfo
-import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
-import io.scalajs.npm.angularjs.{Module, Scope, Timeout, angular}
-import io.scalajs.social.facebook.{FB, FacebookAppConfig}
-import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.npm.angularjs.{Module, QProvider, Scope, angular}
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
-import scala.util.{Failure, Success}
 
 /**
-  * ShockTrade Web Application Client
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * ShockTrade Web Application Client
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object WebClientJsApp {
 
   @JSExport
   def main(args: Array[String]): Unit = {
     // create the application
-    val module = angular.createModule("shocktrade",
+    val app = angular.createModule("shocktrade",
       js.Array("ngAnimate", "ngCookies", "ngRoute", "ngSanitize", "nvd3", "angularFileUpload", "toaster", "ui.bootstrap"))
 
     // add the custom directives
-    module.directiveOf[AvatarDirective]("avatar")
-    module.directiveOf[ChangeArrowDirective]("changearrow")
-    module.directiveOf[CountryDirective]("country")
-    module.directiveOf[NewsDirective]("news")
-    module.directiveOf[StockQuoteDirective]("stock-quote")
+    app.directiveOf[AvatarDirective]("avatar")
+    app.directiveOf[ChangeArrowDirective]("changearrow")
+    app.directiveOf[CountryDirective]("country")
+    app.directiveOf[NewsDirective]("news")
+    app.directiveOf[StockQuoteDirective]("stock-quote")
 
     // add the custom filters
-    module.filter("abs", Filters.abs)
-    module.filter("bigNumber", Filters.bigNumber)
-    module.filter("capitalize", Filters.capitalize)
-    module.filter("duration", Filters.duration)
-    module.filter("escape", Filters.escape)
-    module.filter("newsDuration", Filters.newsDuration)
-    module.filter("quoteChange", Filters.quoteChange)
-    module.filter("quoteNumber", Filters.quoteNumber)
-    module.filter("yesno", Filters.yesNo)
+    app.filter("abs", Filters.abs)
+    app.filter("bigNumber", Filters.bigNumber)
+    app.filter("capitalize", Filters.capitalize)
+    app.filter("duration", Filters.duration)
+    app.filter("escape", Filters.escape)
+    app.filter("newsDuration", Filters.newsDuration)
+    app.filter("quoteChange", Filters.quoteChange)
+    app.filter("quoteNumber", Filters.quoteNumber)
+    app.filter("yesno", Filters.yesNo)
 
     // add the controllers and services
-    configureServices(module)
-    configureFactories(module)
-    configureControllers(module)
-    configureDialogs(module)
+    configureServices(app)
+    configureFactories(app)
+    configureControllers(app)
+    configureDialogs(app)
 
     // define the routes
-    module.config({ ($routeProvider: RouteProvider) =>
+    app.config { ($routeProvider: RouteProvider, $qProvider: QProvider) =>
+      // setup the rejection handler
+      $qProvider.errorOnUnhandledRejections(true)
+
       // configure the routes
       $routeProvider
         .when("/about/investors", new RouteTo(templateUrl = "/views/about/investors.html"))
@@ -75,17 +74,15 @@ object WebClientJsApp {
         .when("/search", new RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
         .otherwise(new RouteTo(redirectTo = "/about/us"))
       ()
-    })
+    }
 
     // initialize the application
-    module.run({ ($rootScope: Scope, $timeout: Timeout,
-                  MySessionService: MySessionService, SocialServices: SocialServices, WebSocketService: WebSocketService) =>
-      // configure the Social Network callbacks
-      configureSocialNetworkCallbacks($timeout, MySessionService, SocialServices)
-
+    app.run({ ($rootScope: Scope, WebSocketService: WebSocketService) =>
       // initialize the web socket service
       WebSocketService.init()
+      ()
     })
+    ()
   }
 
   private def configureDialogs(module: Module) {
@@ -96,7 +93,6 @@ object WebClientJsApp {
     module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
     module.serviceOf[PerksDialog]("PerksDialog")
     module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
-    module.serviceOf[SignUpDialog]("SignUpDialog")
     module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
 
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
@@ -105,15 +101,19 @@ object WebClientJsApp {
     module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
     module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
     module.controllerOf[PerksDialogController]("PerksDialogController")
-    module.controllerOf[SignUpDialogController]("SignUpController")
+    module.controllerOf[SignInDialogController]("SignInDialogController")
+    module.controllerOf[SignUpDialogController]("SignUpDialogController")
     module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
+    ()
   }
 
   private def configureFactories(module: Module): Unit = {
     module.factoryOf[UserFactory]("UserFactory")
+    ()
   }
 
   private def configureServices(module: Module) {
+    module.serviceOf[AuthenticationService]("AuthenticationService")
     module.serviceOf[ChatService]("ChatService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
@@ -128,8 +128,10 @@ object WebClientJsApp {
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[SocialServices]("SocialServices")
+    module.serviceOf[UserAccountService]("UserAccountService")
     module.serviceOf[UserService]("UserService")
     module.serviceOf[WebSocketService]("WebSocketService")
+    ()
   }
 
   private def configureControllers(module: Module) {
@@ -153,27 +155,7 @@ object WebClientJsApp {
     module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")
-  }
-
-  private def configureSocialNetworkCallbacks($timeout: Timeout, mySession: MySessionService, socialServices: SocialServices): Unit = {
-    socialServices.getFacebookAppInfo onComplete {
-      case Success(response) => initializeFacebookApp($timeout, mySession, response.data)
-      case Failure(e) => console.error("Error initializing Facebook App")
-    }
-  }
-
-  private def initializeFacebookApp($timeout: Timeout, mySession: MySessionService, appInfo: FacebookAppInfo): Unit = {
-    // setup the initialization callback for Facebook
-    js.Dynamic.global.fbAsyncInit = () => {
-      console.log("fbAsyncInit: Setting up Facebook integration...")
-      val config = FacebookAppConfig(appId = appInfo.appId, status = true, xfbml = true)
-      FB.init(config)
-      console.log(s"Initialized Facebook SDK (App ID # ${config.appId}) and version (${config.version}) on the Angular Facebook service...")
-
-      FB.getLoginStatus { response =>
-        console.log(s"initializeFacebookApp: 'getLoginStatus' response = ${angular.toJson(response)}")
-      }
-    }
+    ()
   }
 
 }
