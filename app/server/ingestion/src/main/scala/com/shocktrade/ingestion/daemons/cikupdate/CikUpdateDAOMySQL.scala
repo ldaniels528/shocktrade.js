@@ -25,10 +25,10 @@ class CikUpdateDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
   override def updateCik(cik: CikUpdateData)(implicit ec: ExecutionContext): Future[Int] = {
     import cik._
     conn.executeFuture(
-      """|REPLACE INTO stocks_cik (symbol, exchange, companyName, cikNumber, mailingAddress)
+      """|REPLACE INTO stocks_cik (symbol, exchange, name, cikNumber, mailingAddress)
          |VALUES (?, ?, ?, ?, ?)
          |""".stripMargin,
-      js.Array(symbol, exchange, companyName, cikNumber, mailingAddress)) map (_.affectedRows)
+      js.Array(symbol, exchange, name, cikNumber, mailingAddress)) map (_.affectedRows)
   }
 
 }

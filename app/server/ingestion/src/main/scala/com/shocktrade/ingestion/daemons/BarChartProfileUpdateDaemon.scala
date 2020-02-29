@@ -1,18 +1,12 @@
 package com.shocktrade.ingestion.daemons
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.{SecuritiesUpdateDAO, SecurityRef}
+import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
+import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
 import com.shocktrade.server.services.BarChartProfileService
 import io.scalajs.npm.mongodb.Db
-import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
-import scala.util.{Failure, Success}
 
 /**
   * Bar Chart Profile Update Daemon
@@ -22,7 +16,7 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // get the DAO and service
-  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
+  //private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val profileService = new BarChartProfileService()
 
   // internal variables
@@ -40,6 +34,7 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
     * @param clock the given [[TradingClock trading clock]]
     */
   override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+    /*
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsIfEmpty("description"))
@@ -65,7 +60,7 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome*/???
   }
 
 }

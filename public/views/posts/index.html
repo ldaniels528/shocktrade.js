@@ -1,6 +1,6 @@
 <div ng-controller="PostController" ng-init="init()" class="row">
     <div class="col-md-7">
-        <div ng-show="newPost && getFacebookProfile()" ng-include="'/views/posts/new_post.html'"></div>
+        <div ng-show="newPost" ng-include="'/views/posts/new_post.html'"></div>
         <div ng-include="'/views/posts/posts_header.html'"></div>
         <div ng-include="'/views/posts/postings.html'"></div>
     </div>

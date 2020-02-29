@@ -1,23 +1,15 @@
 package com.shocktrade.ingestion.daemons
 
-import com.shocktrade.ingestion.daemons.KeyStatisticsUpdateDaemon._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.{KeyStatisticsData, SecuritiesUpdateDAO, SecurityRef}
+import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
+import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
 import io.scalajs.npm.mongodb.Db
-import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.scalajs.js
-import scala.util.{Failure, Success}
 
 /**
   * Key Statistics Update Daemon
@@ -27,7 +19,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
-  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
+  //private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val yfKeyStatsSvc = new YahooFinanceKeyStatisticsService()
 
   // internal variables
@@ -45,6 +37,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     * @param clock the given [[TradingClock trading clock]]
     */
   override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+    /*
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(clock.getTradeStopTime))
@@ -70,7 +63,7 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome*/???
   }
 
 }
@@ -80,6 +73,8 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object KeyStatisticsUpdateDaemon {
+
+  trait SecurityRef extends js.Object
 
   /**
     * Implicitly converts a quantity into a double value
@@ -96,6 +91,7 @@ object KeyStatisticsUpdateDaemon {
 
     @inline
     def toData(security: SecurityRef) = {
+      /*
       new KeyStatisticsData(
         _id = security._id,
         symbol = security.symbol,
@@ -147,7 +143,7 @@ object KeyStatisticsUpdateDaemon {
         `yield` = stats.summaryDetail.flatMap(_.`yield`),
         ytdReturn = stats.summaryDetail.flatMap(_.ytdReturn),
         lastUpdated = new js.Date()
-      )
+      )*/???
     }
 
   }

@@ -10,7 +10,6 @@ import scala.scalajs.js
   */
 class Participant(var _id: js.UndefOr[String],
                   var name: js.UndefOr[String],
-                  var facebookID: js.UndefOr[String],
                   var rank: js.UndefOr[String] = js.undefined,
                   var totalEquity: js.UndefOr[Double] = js.undefined,
                   var gainLoss: js.UndefOr[Double] = js.undefined,

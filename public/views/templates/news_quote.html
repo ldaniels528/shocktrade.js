@@ -8,7 +8,7 @@
                 <td colspan="4">
                     <span style="font-weight: bold">{{ quote.name }}</span>
                     <span ng-show="quote.exchange">(<span ng-class="quote.exchange">{{ quote.exchange }}</span>)</span>
-                    <span ng-hide="quote.name">&nbsp;</span>
+                    <span ng-hide="quote.companyName">&nbsp;</span>
 
                     <span ng-show="quote.changePct > 0">&#8212;</span>
                     <span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>

@@ -1,18 +1,12 @@
 package com.shocktrade.ingestion.daemons
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateOutcome._
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.{SecuritiesUpdateDAO, SecurityRef}
+import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
+import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
 import com.shocktrade.server.services.BloombergQuoteService
 import io.scalajs.npm.mongodb.Db
-import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.scalajs.js
-import scala.util.{Failure, Success}
 
 /**
   * Bloomberg Update Daemon
@@ -25,7 +19,7 @@ class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   private val quoteService = new BloombergQuoteService()
 
   // internal variables
-  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
+  //private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
   private val processor = new ConcurrentProcessor()
 
   /**
@@ -40,6 +34,7 @@ class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext)
     * @param clock the given [[TradingClock trading clock]]
     */
   override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+    /*
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsIfEmpty("sector"))
@@ -65,7 +60,7 @@ class BloombergUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext)
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome*/???
   }
 
 }

@@ -8,7 +8,7 @@ import scala.scalajs.js
   */
 trait PortfolioLike extends js.Object {
 
-  def playerID: js.UndefOr[String]
+  def portfolioID: js.UndefOr[String]
 
   def active: js.UndefOr[Boolean]
 

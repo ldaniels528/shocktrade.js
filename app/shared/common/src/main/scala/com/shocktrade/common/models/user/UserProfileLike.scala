@@ -8,9 +8,7 @@ import scala.scalajs.js
   */
 trait UserProfileLike extends UserLike {
 
-  def facebookID: js.UndefOr[String]
-
-  def name: js.UndefOr[String]
+  def username: js.UndefOr[String]
 
   def country: js.UndefOr[String]
 

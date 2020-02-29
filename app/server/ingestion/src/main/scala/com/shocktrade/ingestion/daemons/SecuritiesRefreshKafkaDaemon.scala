@@ -1,22 +1,17 @@
 package com.shocktrade.ingestion.daemons
 
-import com.shocktrade.common.util.ExchangeHelper
-import com.shocktrade.ingestion.daemons.SecuritiesRefreshKafkaDaemon._
+import com.shocktrade.ingestion.daemons.KeyStatisticsUpdateDaemon.SecurityRef
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.{BulkUpdateHandler, BulkUpdateOutcome, BulkUpdateStatistics}
-import com.shocktrade.server.concurrent.{ConcurrentContext, ConcurrentProcessor, Daemon}
-import com.shocktrade.server.dao.securities.{SecuritiesUpdateDAO, SecurityRef, SecurityUpdateQuote, SnapshotQuote}
+import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
+import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.npm.kafkanode._
 import io.scalajs.npm.mongodb.Db
-import io.scalajs.util.OptionHelper._
-import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.scalajs.js.JSON
-import scala.util.{Failure, Success}
 
 /**
   * Securities Update Kafka Daemon
@@ -35,7 +30,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
   )
 
   // get DAO references
-  private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
+  //private val securitiesDAO = dbFuture.map(SecuritiesUpdateDAO.apply)
 
   // internal variables
   private val processor = new ConcurrentProcessor()
@@ -53,6 +48,7 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
     * @param clock the given [[TradingClock trading clock]]
     */
   override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+    /*
     val startTime = js.Date.now()
     val outcome = for {
       securities <- getSecurities(clock.getTradeStopTime)
@@ -77,14 +73,15 @@ class SecuritiesRefreshKafkaDaemon(dbFuture: Future[Db])(implicit ec: ExecutionC
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome*/???
   }
 
   private def getSecurities(cutOffTime: js.Date) = {
+    /*
     for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForFinanceUpdate(cutOffTime))
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
-    } yield batches
+    } yield batches*/
   }
 
   private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2) = {
@@ -118,7 +115,7 @@ object SecuritiesRefreshKafkaDaemon {
   implicit class YFCSVQuoteExtensions(val quote: YFCSVQuote) extends AnyVal {
 
     @inline
-    def toUpdateQuote(mapping: js.Dictionary[SecurityRef]) = new SecurityUpdateQuote(
+    def toUpdateQuote(mapping: js.Dictionary[SecurityRef]) = ??? /*new SecurityUpdateQuote(
       symbol = quote.symbol,
       exchange = quote.normalizedExchange(mapping),
       subExchange = quote.exchange,
@@ -143,7 +140,7 @@ object SecuritiesRefreshKafkaDaemon {
       errorMessage = quote.errorMessage,
       yfCsvResponseTime = quote.responseTimeMsec,
       yfCsvLastUpdated = new js.Date()
-    )
+    )*/
 
     @inline
     def spread: js.UndefOr[Double] = {
@@ -154,7 +151,7 @@ object SecuritiesRefreshKafkaDaemon {
     }
 
     @inline
-    def toSnapshot(mapping: js.Dictionary[SecurityRef]) = new SnapshotQuote(
+    def toSnapshot(mapping: js.Dictionary[SecurityRef]) = ???/*new SnapshotQuote(
       symbol = quote.symbol,
       exchange = quote.normalizedExchange(mapping),
       subExchange = quote.exchange,
@@ -163,16 +160,17 @@ object SecuritiesRefreshKafkaDaemon {
       tradeDate = quote.tradeDate,
       tradeTime = quote.tradeTime,
       volume = quote.volume
-    )
+    )*/
 
     @inline
     def normalizedExchange(mapping: js.Dictionary[SecurityRef]): String = {
+      /*
       val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
       originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
         case Some(exchange) => exchange
         case None if quote.symbol.endsWith(".OB") => "OTCBB"
         case None => originalExchange_? getOrElse "UNKNOWN"
-      }
+      }*/ ???
     }
 
   }

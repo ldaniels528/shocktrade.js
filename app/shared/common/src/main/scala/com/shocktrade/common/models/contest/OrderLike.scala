@@ -12,7 +12,7 @@ import scala.scalajs.js
   */
 trait OrderLike extends js.Object {
 
-  def _id: js.UndefOr[String]
+  def orderID: js.UndefOr[String]
 
   def symbol: js.UndefOr[String]
 

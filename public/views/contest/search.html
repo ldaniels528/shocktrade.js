@@ -46,7 +46,7 @@
                 <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable"
                     ng-click="selectContest(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
+                        <i class="fa fa-user" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">

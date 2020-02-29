@@ -1,16 +1,12 @@
 package com.shocktrade.common.forms
 
-import com.shocktrade.common.forms.ResearchOptions.SortField
-
 import scala.scalajs.js
 
 /**
-  * Securities Research Options
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-class ResearchOptions(var betaMax: js.UndefOr[Double] = js.undefined,
-                      var betaMin: js.UndefOr[Double] = js.undefined,
-                      var changeMax: js.UndefOr[Double] = js.undefined,
+ * Research Options
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+class ResearchOptions(var changeMax: js.UndefOr[Double] = js.undefined,
                       var changeMin: js.UndefOr[Double] = js.undefined,
                       var priceMax: js.UndefOr[Double] = js.undefined,
                       var priceMin: js.UndefOr[Double] = js.undefined,
@@ -18,19 +14,31 @@ class ResearchOptions(var betaMax: js.UndefOr[Double] = js.undefined,
                       var spreadMin: js.UndefOr[Double] = js.undefined,
                       var volumeMax: js.UndefOr[Double] = js.undefined,
                       var volumeMin: js.UndefOr[Double] = js.undefined,
-                      var avgVolumeMax: js.UndefOr[Double] = js.undefined,
-                      var avgVolumeMin: js.UndefOr[Double] = js.undefined,
-                      var sortFields: js.UndefOr[js.Array[SortField]] = js.undefined,
                       var sortBy: js.UndefOr[String] = js.undefined,
                       var reverse: js.UndefOr[Boolean] = js.undefined,
-                      var maxResults: js.UndefOr[Int] = 25) extends js.Object
+                      var maxResults: js.UndefOr[Int] = js.undefined) extends js.Object
 
 /**
-  * Research Options Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Research Options Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ResearchOptions {
 
-  class SortField(val field: String, val direction: Int) extends js.Object
+  final implicit class ResearchOptionsEnriched(val options: ResearchOptions) extends AnyVal {
+
+    def toQueryString: String = {
+      import options._
+      val values = js.Array(
+        "changeMax" -> changeMax, "changeMin" -> changeMin,
+        "priceMax" -> priceMax, "priceMin" -> priceMin,
+        "spreadMax" -> spreadMax, "spreadMin" -> spreadMin,
+        "volumeMax" -> volumeMax, "volumeMin" -> volumeMin,
+        "sortBy" -> sortBy, "reverse" -> reverse,
+        "maxResults" -> maxResults
+      )
+
+      (for ((name, value) <- values if value.nonEmpty) yield s"$name=$value").mkString("&")
+    }
+  }
 
 }

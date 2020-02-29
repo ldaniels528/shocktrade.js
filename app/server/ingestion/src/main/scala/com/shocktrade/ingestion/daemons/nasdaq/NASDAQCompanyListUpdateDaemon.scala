@@ -34,14 +34,14 @@ class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
   def run(tradingClock: TradingClock): Future[Int] = {
     val startTime = js.Date.now()
     val outcome = for {
-      amex <- getCompanyList("AMEX")
-      amexCount <- processCompanyList(amex)
-
       nasdaq <- getCompanyList("NASDAQ")
       nasdaqCount <- processCompanyList(nasdaq)
 
       nyse <- getCompanyList("NYSE")
       nyseCount <- processCompanyList(nyse)
+
+      amex <- getCompanyList("AMEX")
+      amexCount <- processCompanyList(amex)
 
     } yield amexCount + nasdaqCount + nyseCount
 
@@ -63,20 +63,19 @@ class NASDAQCompanyListUpdateDaemon()(implicit ec: ExecutionContext) {
         new NASDAQCompanyData(
           symbol = data.symbol,
           exchange = data.exchange,
-          companyName = data.name,
+          name = data.name,
           lastTrade = data.lastSale,
           marketCap = data.marketCap,
           ADRTSO = data.ADRTSO,
           IPOyear = data.IPOyear,
           sector = data.sector,
-          industry = data.industry,
-          summary = data.summary,
-          quote = data.quote
+          industry = data.industry
         ))
     }) map (_.sum)
   }
 
   private def getCompanyList(exchange: String): Future[Seq[NASDAQCompanyInfo]] = {
+    logger.info(s"$exchange: Requesting company information records...")
     loadCompanyList(exchange) map { companies =>
       logger.info(s"$exchange: Retrieved %d company information record(s)", companies.size)
       companies

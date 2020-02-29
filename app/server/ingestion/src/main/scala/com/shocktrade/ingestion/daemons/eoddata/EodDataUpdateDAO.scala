@@ -1,7 +1,6 @@
 package com.shocktrade.ingestion.daemons.eoddata
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import com.shocktrade.server.services.EodDataSecuritiesService.EodDataSecurity
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -14,19 +13,19 @@ trait EodDataUpdateDAO {
 
   /**
    * Updates a stock with EOD Data
-   * @param quote the given [[EodDataSecurity]]
+   * @param quote the given [[EodDataRecord]]
    * @param ec the implicit [[ExecutionContext]]
    * @return the number of records updated
    */
-  def update(quote: EodDataSecurity)(implicit ec: ExecutionContext): Future[Int]
+  def update(quote: EodDataRecord)(implicit ec: ExecutionContext): Future[Int]
 
   /**
    * Updates a collection of stocks with EOD Data
-   * @param quotes the given collection of [[EodDataSecurity]]
+   * @param quotes the given collection of [[EodDataRecord]]
    * @param ec the implicit [[ExecutionContext]]
    * @return the number of records updated
    */
-  def updateAll(quotes: Seq[EodDataSecurity])(implicit ec: ExecutionContext): Future[Int] =
+  def updateAll(quotes: Seq[EodDataRecord])(implicit ec: ExecutionContext): Future[Int] =
     Future.sequence(quotes.map(update)).map(_.sum)
 
 }

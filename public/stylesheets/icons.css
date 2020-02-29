@@ -1,9 +1,20 @@
+.entity_description {
+    color: #0000ff;
+    font-size: 9pt;
+}
+
+.simulation_icon {
+    color: #5bc0ee;
+    font-weight: bold;
+}
+
 .stock_icon {
     color: #ff8000;
     font-weight: bold;
 }
 
-.entity_description {
-    color: #0000ff;
-    font-size: 9pt;
+.user_icon {
+    color: #5bc0ee;
+    font-weight: bold;
 }
+

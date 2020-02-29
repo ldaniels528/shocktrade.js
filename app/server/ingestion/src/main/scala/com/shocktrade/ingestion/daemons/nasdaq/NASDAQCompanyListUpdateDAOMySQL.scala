@@ -15,10 +15,10 @@ class NASDAQCompanyListUpdateDAOMySQL(options: MySQLConnectionOptions) extends M
   override def updateCompanyList(data: NASDAQCompanyData)(implicit ec: ExecutionContext): Future[Int] = {
     import data._
     conn.executeFuture(
-      """|REPLACE INTO stocks_nasdaq (symbol, exchange, companyName, lastTrade, marketCap, ADRTSO, IPOyear, sector, industry, summary, quote)
-         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      """|REPLACE INTO stocks_nasdaq (symbol, exchange, name, lastTrade, marketCap, ADRTSO, IPOyear, sector, industry)
+         |VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
          |""".stripMargin,
-      js.Array(symbol, exchange, companyName, lastTrade, marketCap, ADRTSO, IPOyear, sector, industry, summary, quote)) map (_.affectedRows)
+      js.Array(symbol, exchange, name, lastTrade, marketCap, ADRTSO, IPOyear, sector, industry)) map (_.affectedRows)
   }
 
 }

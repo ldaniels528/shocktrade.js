@@ -10,7 +10,7 @@ trait PostLike extends js.Object {
 
   def text: js.UndefOr[String]
 
-  def submitterId: js.UndefOr[String]
+  def userID: js.UndefOr[String]
 
   def summary: js.UndefOr[SharedContent]
 

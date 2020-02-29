@@ -1,19 +1,13 @@
 package com.shocktrade.qualification
 
-import com.shocktrade.common.Commissions
+import com.shocktrade.qualification.ContestCloseOutEngine.ContestData
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.server.dao.contest._
-import com.shocktrade.server.facade.{PricingFacade, PricingQuote}
 import io.scalajs.npm.mongodb.{Db, UpdateWriteOpResultObject}
-import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -25,11 +19,8 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
   private val logger = LoggerFactory.getLogger(getClass)
 
   // get DAO references
-  private val contestDAO = ContestDAO()
-  private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
-
-  // get the facade references
-  private val pricingFacade = new PricingFacade(dbFuture)
+  //private val contestDAO = ContestDAO()
+  //private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
 
   /**
     * Indicates whether the daemon is eligible to be executed
@@ -60,40 +51,28 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
     outcome
   }
 
-  def closeExpireContests(): Future[Seq[UpdateWriteOpResultObject]] = for {
-    contests <- contestDAO.findActiveContests.map(_.toSeq)
-    w <- Future.sequence(contests map closeOut).map(_.flatten)
-  } yield w
+  def closeExpireContests(): Future[Seq[UpdateWriteOpResultObject]] = ???
 
-  def closeOut(contest: ContestData): Future[Seq[UpdateWriteOpResultObject]] = {
-    contest.contestID.toOption match {
-      case Some(contestId) =>
-        for {
-          portfolios <- portfolioDAO.flatMap(_.findByContest(contestId).map(_.toSeq))
-          symbols = portfolios.flatMap(_.positions.getOrElse(emptyArray).flatMap(_.symbol.toOption)).distinct
-          quotes <- pricingFacade.findQuotes(symbols)
-          quoteMap = Map(quotes.map(q => q.symbol -> q): _*)
-          w <- Future.sequence(portfolios.map(liquidatePositions(_, quoteMap))).map(_.flatten)
-        } yield w
-      case None =>
-        Future.successful(Nil)
-    }
-  }
+  def closeOut(contest: ContestData): Future[Seq[UpdateWriteOpResultObject]] = ???
 
-  def liquidatePositions(portfolio: PortfolioData, quotes: Map[String, PricingQuote]): Future[List[UpdateWriteOpResultObject]] = Future.sequence {
-    for {
-      positions <- portfolio.positions.toList
-      portfolioId <- portfolio._id.toList
-      position <- positions
-      price <- determinePrice(position, quotes).toList
-    } yield {
-      portfolioDAO.flatMap(_.liquidatePosition(
-        portfolioId,
-        position,
-        price,
-        commission = Commissions.MARKET_COST,
-        asOfTime = new js.Date()
-      ))
+  /*
+  def liquidatePositions(portfolio: PortfolioData, quotes: Map[String, PricingQuote]): Future[List[UpdateWriteOpResultObject]] = {
+    Future.failed(new Exception())
+    Future.sequence {
+      for {
+        positions <- portfolio.positions.toList
+        portfolioId <- portfolio.portfolioID.toList
+        position <- positions
+        price <- determinePrice(position, quotes).toList
+      } yield {
+        portfolioDAO.flatMap(_.liquidatePosition(
+          portfolioId,
+          position,
+          price,
+          commission = Commissions.MARKET_COST,
+          asOfTime = new js.Date()
+        ))
+      }
     }
   }
 
@@ -103,7 +82,12 @@ class ContestCloseOutEngine(dbFuture: Future[Db])(implicit ec: ExecutionContext)
       quote <- quotes.get(symbol).orUndefined
       price <- quote.lastTrade
     } yield price
-  }
+  }*/
 
 }
 
+object ContestCloseOutEngine {
+
+  trait ContestData extends js.Object
+
+}

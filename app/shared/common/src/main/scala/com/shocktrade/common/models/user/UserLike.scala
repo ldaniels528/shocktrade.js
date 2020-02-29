@@ -7,8 +7,7 @@ import scala.scalajs.js
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 trait UserLike extends js.Object {
-  var facebookID: js.UndefOr[String]
-  var name: js.UndefOr[String]
+  var username: js.UndefOr[String]
   var wallet: js.UndefOr[Double]
 
 }

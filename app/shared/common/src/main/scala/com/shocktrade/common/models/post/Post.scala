@@ -10,10 +10,10 @@ import scala.scalajs.js
   * Represents a Post model object
   * @author lawrence.daniels@gmail.com
   */
-class Post(var _id: js.UndefOr[String] = js.undefined,
+class Post(var postID: js.UndefOr[String] = js.undefined,
            var text: js.UndefOr[String] = js.undefined,
            var submitter: js.UndefOr[User] = js.undefined,
-           var submitterId: js.UndefOr[String] = js.undefined,
+           var userID: js.UndefOr[String] = js.undefined,
            var summary: js.UndefOr[SharedContent] = js.undefined,
            var likes: js.UndefOr[Int] = js.undefined,
            var likedBy: js.UndefOr[js.Array[String]] = js.undefined,
@@ -46,7 +46,7 @@ object Post {
     post.creationTime = new js.Date()
     post.lastUpdateTime = new js.Date()
     post.submitter = user
-    post.submitterId = user._id
+    post.userID = user.userID
     post.text = ""
     post.likes = 0
     post.attachments = emptyArray[String]
@@ -85,10 +85,10 @@ object Post {
              refreshLoading: js.UndefOr[Boolean] = js.undefined,
              summaryLoaded: js.UndefOr[Boolean] = js.undefined,
              summaryLoadQueued: js.UndefOr[Boolean] = js.undefined) = new Post(
-      _id = _id ?? post._id,
+      postID = _id ?? post.postID,
       text = text ?? post.text,
       submitter = submitter ?? post.submitter,
-      submitterId = submitterId ?? post.submitterId,
+      userID = submitterId ?? post.userID,
       summary = summary ?? post.summary,
       likes = likes ?? post.likes,
       likedBy = likedBy ?? post.likedBy,

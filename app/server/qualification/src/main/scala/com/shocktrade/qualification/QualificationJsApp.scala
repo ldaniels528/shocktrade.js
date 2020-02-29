@@ -6,9 +6,10 @@ import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon._
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser.{BodyParser, UrlEncodedBodyOptions}
-import io.scalajs.npm.express.Express
-import io.scalajs.npm.mongodb.MongoClient
+import io.scalajs.npm.express.{Application, Express}
+import io.scalajs.npm.mongodb.Db
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.{queue => Q}
 import scala.scalajs.js.annotation.JSExport
@@ -32,23 +33,20 @@ object QualificationJsApp {
     val dbConnectionString = process.dbConnect getOrElse "mongodb://localhost:27017/shocktrade"
 
     // create the trading clock instance
-    implicit val tradingClock = new TradingClock()
+    implicit val tradingClock: TradingClock = new TradingClock()
 
     logger.info("Loading Express modules...")
-    implicit val app = Express()
+    implicit val app: Application = Express()
 
     // setup the body parsers
     logger.log("Setting up body parsers...")
     app.use(BodyParser.json())
     app.use(BodyParser.urlencoded(new UrlEncodedBodyOptions(extended = true)))
 
-    // setup mongodb connection
-    logger.log("Loading MongoDB module...")
-    logger.log("Connecting to '%s'...", dbConnectionString)
-    implicit val dbFuture = MongoClient.connectFuture(dbConnectionString)
-
     // disable caching
     app.disable("etag")
+
+    implicit val dbFuture: Future[Db] = Future.failed(new Exception())
 
     // instantiate the qualification engine
     val qualificationEngine = new OrderQualificationEngine(dbFuture)

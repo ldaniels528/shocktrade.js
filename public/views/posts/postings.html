@@ -3,8 +3,8 @@
         <div class="home_post">
             <div class="home_post_header">
                 <span class="pull-left" style="color: #0088aa">
-                    <avatar ng-show="post.submitter" id="{{ post.submitter.facebookID }}" class="avatar-20"></avatar>
-                    <span ng-click="navigateToProfileViewer(post.submitterId)"
+                    <i ng-show="post.userID" class="fa fa-user"></i>
+                    <span ng-click="navigateToProfileViewer(post.userID)"
                           class="home_poster sk_clickable">{{ post.submitter.name }}</span>
                 </span>
                 <span class="home_mini_label small pull-right">{{ post.creationTime | duration }}</span>

@@ -4,22 +4,16 @@ import com.shocktrade.common.models.contest.OrderLike
 import com.shocktrade.qualification.IntraDayQuoteDaemon._
 import com.shocktrade.server.common.TradingClock
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.contest.PortfolioUpdateDAO._
-import com.shocktrade.server.dao.securities.IntraDayQuoteData
-import com.shocktrade.server.dao.securities.IntraDayQuotesDAO._
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
 import io.scalajs.nodejs.console
 import io.scalajs.npm.moment.Moment
-import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
-import io.scalajs.util.PromiseHelper.Implicits._
+import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db, ObjectID}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
-import scala.util.{Failure, Success}
 
 /**
   * Intra-Day Quote Daemon (NASDAQ Datafeed)
@@ -28,8 +22,8 @@ import scala.util.{Failure, Success}
 class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[Seq[BulkWriteOpResultObject]] {
   // get DAO and service references
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
-  private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
-  private val intraDayDAO = dbFuture.map(_.getIntraDayQuotesDAO)
+  //private val portfolioDAO = dbFuture.map(_.getPortfolioUpdateDAO)
+  //private val intraDayDAO = dbFuture.map(_.getIntraDayQuotesDAO)
 
   // internal fields
   private val loaded = js.Dictionary[(TimeSlot, TimeSlot)]()
@@ -47,6 +41,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) e
     * @param tradingClock the given [[TradingClock trading clock]]
     */
   override def run(tradingClock: TradingClock): Future[Seq[BulkWriteOpResultObject]] = {
+    /*
     val startTime = js.Date.now()
     val outcome = for {
       portfolios <- portfolioDAO.flatMap(_.findActiveOrders())
@@ -64,7 +59,8 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) e
         console.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome
+    outcome*/
+    ???
   }
 
   /**
@@ -103,10 +99,7 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) e
   }
 
   @inline
-  private def saveQuotes(quotes: Seq[IntraDayQuoteData]) = {
-    console.log(s"Saving ${quotes.size} x ${quotes.headOption.orUndefined.flatMap(_.symbol)} quotes to disk...")
-    intraDayDAO.flatMap(_.saveQuotes(quotes).toFuture)
-  }
+  private def saveQuotes(quotes: Seq[IntraDayQuoteData]): Future[js.Object] = ???
 
 }
 
@@ -115,6 +108,19 @@ class IntraDayQuoteDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) e
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 object IntraDayQuoteDaemon {
+
+  /**
+   * Intra-Day Quote Data
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  class IntraDayQuoteData(val _id: js.UndefOr[ObjectID] = js.undefined,
+                          val symbol: js.UndefOr[String],
+                          val price: js.UndefOr[Double],
+                          val time: js.UndefOr[String],
+                          val volume: js.UndefOr[Double],
+                          var aggregateVolume: js.UndefOr[Double],
+                          val tradeDateTime: js.UndefOr[js.Date],
+                          val creationTime: js.Date = new js.Date()) extends js.Object
 
   /**
     * NASDAQ Intra-Day Response Extensions

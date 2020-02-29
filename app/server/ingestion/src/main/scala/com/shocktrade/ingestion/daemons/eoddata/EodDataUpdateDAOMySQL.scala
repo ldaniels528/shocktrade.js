@@ -1,7 +1,6 @@
 package com.shocktrade.ingestion.daemons.eoddata
 
 import com.shocktrade.server.dao.MySQLDAO
-import com.shocktrade.server.services.EodDataSecuritiesService.EodDataSecurity
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,7 +12,7 @@ import scala.scalajs.js
  */
 class EodDataUpdateDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with EodDataUpdateDAO {
 
-  override def update(quote: EodDataSecurity)(implicit ec: ExecutionContext): Future[Int] = {
+  override def update(quote: EodDataRecord)(implicit ec: ExecutionContext): Future[Int] = {
     import quote._
     conn.executeFuture(
       """|REPLACE INTO stocks_eoddata (symbol, exchange, name, high, low, `close`, volume, `change`, changePct)

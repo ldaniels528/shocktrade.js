@@ -1,15 +1,10 @@
 package com.shocktrade.ingestion
 
-import com.shocktrade.ingestion.daemons._
-import com.shocktrade.ingestion.daemons.nasdaq.NASDAQCompanyListUpdateDaemon
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.concurrent.Daemon
-import com.shocktrade.server.dao.contest.{AwardData, AwardsDAO, PerkData, PerksDAO}
 import io.scalajs.nodejs.setImmediate
-import io.scalajs.npm.mongodb.{Db, MongoClient}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
@@ -17,34 +12,9 @@ import scala.util.{Failure, Success}
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
 class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
-  implicit val dbFuture: Future[Db] = MongoClient.connectFuture(dbConnectionString)
   private val logger = LoggerFactory.getLogger(getClass)
-  private val awardsDAO = AwardsDAO()
-  //private val newsDAO = NewsSourceDAO()
-  private val perksDAO = PerksDAO()
 
-  def install()(implicit tradingClock: TradingClock): Future[_] = {
-    for {
-    // setup contest reference data
-      //r0 <- insertAwards()
-      //r1 <- insertNewsSources()
-      //r2 <- insertPerks()
-
-      // load company data
-      //d0 <- start(new NASDAQCompanyUpdateDaemon(dbFuture))
-      //d1 <- start(new EodDataCompanyUpdateDaemon())
-
-      // update securities
-      d2 <- start(new SecuritiesUpdateDaemon(dbFuture))
-      d3 <- start(new KeyStatisticsUpdateDaemon(dbFuture))
-
-      // update company profile
-      d4 <- start(new BloombergUpdateDaemon(dbFuture))
-      d5 <- start(new BarChartProfileUpdateDaemon(dbFuture))
-      //d6 <- start(new CikUpdateDaemon())
-
-    } yield ()
-  }
+  def install()(implicit tradingClock: TradingClock): Future[_] = Future.successful(())
 
   private def start[T](daemon: Daemon[T])(implicit tradingClock: TradingClock): Future[T] = {
     val promise = Promise[T]()
@@ -59,6 +29,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
   }
 
   private def insertAwards(): Unit = {
+    /*
     val awards = js.Array(
       new AwardData(name = "Told your friends!", code = "FACEBOOK", icon = "images/accomplishments/facebook.jpg", description = "Posted to FaceBook from ShockTrade"),
       new AwardData(name = "Right back at cha!", code = "FBLIKEUS", icon = "images/accomplishments/facebook.jpg", description = "<i>Told your friends</i> and <span class='facebook'><img src='images/contests/icon_facebook.jpg'>Liked</span> ShockTrade on FaceBook (<i>Pays 1 Perk</i>)"),
@@ -79,6 +50,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       new AwardData(name = "Checkered Flag", code = "CHKDFLAG", icon = "images/accomplishments/checkered_flag.png", description = "Finished a Game!"),
       new AwardData(name = "Gold Trophy", code = "GLDTRPHY", icon = "images/accomplishments/gold_trophy.png", description = "Came in first place! (out of 14 players)"))
     //awardsDAO.flatMap(_.insertMany(docs = awards, new WriteOptions(upsert = true)).toFuture)
+     */
   }
 
   private def insertNewsSources() = {
@@ -94,6 +66,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
   }
 
   private def insertPerks() = {
+    /*
     val perks = js.Array(
       new PerkData(name = "Purchase Eminent", code = "PRCHEMNT", cost = 500.0, description = "Gives the player the ability to create SELL orders for securities not yet owned"),
       new PerkData(name = "Perfect Timing", code = "PRFCTIMG", cost = 500.0, description = "Gives the player the ability to create BUY orders for more than cash currently available"),
@@ -105,6 +78,7 @@ class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
       new PerkData(name = "The Feeling's Mutual", code = "MUTFUNDS", cost = 5000.0, description = "Gives the player the ability to create and use mutual funds"),
       new PerkData(name = "Risk Management", code = "RISKMGMT", cost = 5000.0, description = "Gives the player the ability to trade options"))
     //perksDAO.flatMap(_.insertMany(docs = perks, new WriteOptions(upsert = true)).toFuture)
+     */
   }
 
 }

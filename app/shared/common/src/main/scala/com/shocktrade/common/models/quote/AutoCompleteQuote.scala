@@ -9,8 +9,8 @@ import scala.scalajs.js
 @js.native
 trait AutoCompleteQuote extends js.Object {
   var symbol: js.UndefOr[String] = js.native
-  var name: js.UndefOr[String] = js.native
   var exchange: js.UndefOr[String] = js.native
+  var name: js.UndefOr[String] = js.native
   var assetType: js.UndefOr[String] = js.native
   var icon: js.UndefOr[String] = js.native
 }

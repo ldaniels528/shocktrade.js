@@ -40,7 +40,18 @@ class EodDataCompanyUpdateDaemon()(implicit ec: ExecutionContext) {
       val procStartTime = js.Date.now()
       for {
         quotes <- eodDataService(input.exchange, input.letterCode)
-        count <- securitiesDAO.updateAll(quotes)
+        count <- securitiesDAO.updateAll(quotes.map(q =>
+          new EodDataRecord(
+            symbol = q.symbol,
+            exchange = q.symbol,
+            name = q.name,
+            high = q.high,
+            low = q.low,
+            close = q.close,
+            volume = q.volume,
+            change = q.change,
+            changePct = q.changePct
+          )))
       } yield new EodDataStats(input.exchange, input.letterCode.toString, count, js.Date.now() - procStartTime)
     })
 

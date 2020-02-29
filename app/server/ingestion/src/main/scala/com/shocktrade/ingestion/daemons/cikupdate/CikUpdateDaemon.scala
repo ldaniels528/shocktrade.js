@@ -44,7 +44,7 @@ class CikUpdateDaemon()(implicit ec: ExecutionContext) {
                 symbol = response.symbol,
                 exchange = missingCik.exchange,
                 cikNumber = response.cikNumber,
-                companyName = response.companyName,
+                name = response.name,
                 mailingAddress = response.mailingAddress.map(_.mkString(", "))
               ))
             case None =>

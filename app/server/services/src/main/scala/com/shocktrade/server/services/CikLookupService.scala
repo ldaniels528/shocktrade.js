@@ -75,7 +75,7 @@ class CikLookupService() {
           new CikLookupResponse(
             symbol = symbol,
             cikNumber = cikNumber.mkString("\n"),
-            companyName = values.get("companyName").map(_.mkString("\n")).orUndefined,
+            name = values.get("name").map(_.mkString("\n")).orUndefined,
             mailingAddress = values.get("mailerAddress").orUndefined,
             responseTime = js.Date.now() - startTime
           )
@@ -100,7 +100,7 @@ object CikLookupService {
 
   class CikLookupResponse(val symbol: String,
                           val cikNumber: String,
-                          val companyName: js.UndefOr[String],
+                          val name: js.UndefOr[String],
                           val mailingAddress: js.UndefOr[js.Array[String]],
                           val responseTime: js.UndefOr[Double]) extends js.Object
 
