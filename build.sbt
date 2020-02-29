@@ -11,19 +11,6 @@ val scalaJsIOVersion = "0.6.0"
 //      Settings
 /////////////////////////////////////////////////////////////////////////////////
 
-lazy val copyJS = TaskKey[Unit]("copyJS", "Copy JavaScript files to root directory")
-copyJS := {
-  val out_dir = baseDirectory.value
-  val files = for {
-    (base, pname) <- Seq("web" -> "controlpanel", "server" -> "ingestion", "server" -> "qualification", "web" -> "webapp")
-    my_dir = out_dir / "app" / base / pname / "target" / s"scala-${appScalaVersion.take(4)}"
-    filePair <- Seq("", ".map").map(s"shocktrade-$pname-fastopt.js" + _).map(s => (my_dir / s, out_dir / s))
-  } yield filePair
-  files foreach { case (src, dest) =>
-    IO.copyFile(src, dest, preserveLastModified = false)
-  }
-}
-
 lazy val jsCommonSettings = Seq(
   javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8", "-target", "1.8", "-g:vars"),
   scalacOptions ++= Seq("-encoding", "UTF-8", "-target:jvm-1.8", "-unchecked", "-Ywarn-adapted-args", "-Ywarn-value-discard", "-Xlint"),
@@ -57,11 +44,11 @@ lazy val uiSettings = jsCommonSettings ++ Seq(
 //      Common projects
 /////////////////////////////////////////////////////////////////////////////////
 
-lazy val server_common = (project in file("./app/server/common"))
+lazy val server_common = (project in file("./app/shared/common"))
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(
-    name := "shocktrade-server-common",
+    name := "shocktrade-serverside-common",
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
@@ -72,9 +59,9 @@ lazy val server_common = (project in file("./app/server/common"))
       "io.scalajs.npm" %%% "mysql" % scalaJsIOVersion
     ))
 
-lazy val services = (project in file("./app/server/services"))
-  .aggregate(api_common, server_common)
-  .dependsOn(api_common, server_common)
+lazy val services = (project in file("./app/shared/services"))
+  .aggregate(models, server_common)
+  .dependsOn(models, server_common)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(
@@ -88,8 +75,7 @@ lazy val services = (project in file("./app/server/services"))
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
 lazy val utils = (project in file("./app/shared/utils"))
@@ -104,16 +90,16 @@ lazy val utils = (project in file("./app/shared/utils"))
     ))
 
 /////////////////////////////////////////////////////////////////////////////////
-//      Server-Side Processing projects
+//      Back-end projects
 /////////////////////////////////////////////////////////////////////////////////
 
-lazy val ingestion = (project in file("./app/server/ingestion"))
-  .aggregate(api_common, server_common, services)
-  .dependsOn(api_common, server_common, services)
+lazy val ingestion = (project in file("./app/backends/ingestion"))
+  .aggregate(models, server_common, services)
+  .dependsOn(models, server_common, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
-    name := "shocktrade-ingestion",
+    name := "shocktrade-ingest",
     organization := "com.shocktrade",
     version := appVersion,
     mainClass := Some("com.shocktrade.ingestion.IngestionJsApp"),
@@ -121,74 +107,15 @@ lazy val ingestion = (project in file("./app/server/ingestion"))
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "kafka-node" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion
     ))
 
-lazy val qualification = (project in file("./app/server/qualification"))
-  .aggregate(api_common, server_common, services)
-  .dependsOn(api_common, server_common, services)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
-  .settings(
-    name := "shocktrade-qualification",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.qualification.QualificationJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "htmlparser2" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
-    ))
-
-/////////////////////////////////////////////////////////////////////////////////
-//      Web Application projects
-/////////////////////////////////////////////////////////////////////////////////
-
-lazy val controlPanel = (project in file("./app/web/controlpanel"))
-  .aggregate(api_common, server_common, services)
-  .dependsOn(api_common, server_common, services)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(appSettings: _*)
-  .settings(
-    name := "shocktrade-controlpanel",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.controlpanel.ControlPanelJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
-    ))
-
-lazy val angularjs = (project in file("./app/web/angularjs"))
-  .aggregate(api_common)
-  .dependsOn(api_common)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(uiSettings: _*)
-  .settings(
-    name := "shocktrade-client-angularjs",
-    organization := "com.shocktrade",
-    version := appVersion,
-    mainClass := Some("com.shocktrade.client.WebClientJsApp"),
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "dom-html" % scalaJsIOVersion,
-      "io.scalajs.web" %%% "angularjs-v1-bundle" % scalaJsIOVersion
-    ))
-
-lazy val webapp = (project in file("./app/web/webapp"))
-  .aggregate(api_common, server_common, services)
-  .dependsOn(api_common, server_common, services)
+lazy val webapp = (project in file("./app/backends/webapp"))
+  .aggregate(models, server_common)
+  .dependsOn(models, server_common)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -207,15 +134,52 @@ lazy val webapp = (project in file("./app/web/webapp"))
       "io.scalajs.npm" %%% "feedparser-promised" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "md5" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "request" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion
+      "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
     ))
 
-lazy val api_common = (project in file("./app/web/common"))
+/////////////////////////////////////////////////////////////////////////////////
+//      Front-end projects
+/////////////////////////////////////////////////////////////////////////////////
+
+lazy val cli = (project in file("./app/frontends/cli"))
+  .aggregate(models, server_common)
+  .dependsOn(models, server_common)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-cli",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.cli.CliJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
+    ))
+
+lazy val angularjs = (project in file("./app/frontends/angularjs"))
+  .aggregate(models)
+  .dependsOn(models)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(uiSettings: _*)
+  .settings(
+    name := "shocktrade-angularjs",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.client.WebClientJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "dom-html" % scalaJsIOVersion,
+      "io.scalajs.web" %%% "angularjs-v1-bundle" % scalaJsIOVersion
+    ))
+
+lazy val models = (project in file("./app/frontends/models"))
   .dependsOn(utils)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(
-    name := "shocktrade-common",
+    name := "shocktrade-models",
     organization := "com.shocktrade",
     version := appVersion,
     libraryDependencies ++= Seq(
@@ -227,7 +191,7 @@ lazy val api_common = (project in file("./app/web/common"))
 /////////////////////////////////////////////////////////////////////////////////
 
 lazy val shocktradejs = (project in file("."))
-  .aggregate(angularjs, webapp, controlPanel, ingestion, qualification)
+  .aggregate(angularjs, webapp, cli, ingestion)
   .dependsOn(angularjs, webapp)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
@@ -236,14 +200,9 @@ lazy val shocktradejs = (project in file("."))
     organization := "com.shocktrade",
     version := appVersion,
     scalaVersion := appScalaVersion,
-    //compile in Compile <<= (compile in Compile) dependsOn (fastOptJS in(angularjs, Compile)),
-    //ivyScala := ivyScala.value map (_.copy(overrideScalaVersion = true)),
     Seq(scalaJSUseMainModuleInitializer, fastOptJS, fullOptJS) map { packageJSKey =>
       crossTarget in(angularjs, Compile, packageJSKey) := baseDirectory.value / "public" / "javascripts"
     })
-
-// add the alias
-addCommandAlias("fastOptJSCopy", ";fastOptJS;copyJS")
 
 // loads the jvm project at sbt startup
 onLoad in Global := (Command.process("project shocktradejs", _: State)) compose (onLoad in Global).value
