@@ -24,7 +24,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val positionDAO = PositionDAO()
 
   // individual objects
-  app.get("/api/portfolio/contest/:contestID/player/:portfolioID", (request: Request, response: Response, next: NextFunction) => portfolioByPlayer(request, response, next))
+  app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => portfolioByUser(request, response, next))
   app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
   app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => perksByID(request, response, next))
   app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
@@ -108,12 +108,11 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a portfolio by a contest ID and user ID
    */
-  def portfolioByPlayer(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestID = request.params("contestID")
+  def portfolioByUser(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    portfolioDAO.findOneByContest(contestID, userID) onComplete {
+    portfolioDAO.findOneByUser(userID) onComplete {
       case Success(Some(portfolio)) => response.send(portfolio); next()
-      case Success(None) => response.notFound(s"Contest: $contestID, User: $userID"); next()
+      case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }

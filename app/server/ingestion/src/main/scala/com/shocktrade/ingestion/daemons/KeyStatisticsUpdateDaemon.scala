@@ -1,13 +1,11 @@
 package com.shocktrade.ingestion.daemons
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
-import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
+import com.shocktrade.server.concurrent.ConcurrentProcessor
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
-import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.{YFKeyStatistics, YFQuantityType}
-import io.scalajs.npm.mongodb.Db
+import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.YFQuantityType
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 import scala.scalajs.js
 
@@ -15,7 +13,7 @@ import scala.scalajs.js
   * Key Statistics Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
+class KeyStatisticsUpdateDaemon()(implicit ec: ExecutionContext) {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // create the DAO and services instances
@@ -36,8 +34,8 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
-    /*
+   def run(clock: TradingClock): Unit = {
+     /*
     val startTime = js.Date.now()
     val outcome = for {
       securities <- securitiesDAO.flatMap(_.findSymbolsForKeyStatisticsUpdate(clock.getTradeStopTime))
@@ -63,8 +61,8 @@ class KeyStatisticsUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCont
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome*/???
-  }
+    outcome*/ ???
+   }
 
 }
 
@@ -83,69 +81,5 @@ object KeyStatisticsUpdateDaemon {
     */
   implicit def quantityToDouble(quantity: js.UndefOr[YFQuantityType]): js.UndefOr[Double] = quantity.flatMap(_.raw)
 
-  /**
-    * Yahoo! Finance: Key Statistics Extensions
-    * @param stats the given [[YFKeyStatistics statistics]]
-    */
-  implicit class YFKeyStatisticsExtensions(val stats: YFKeyStatistics) extends AnyVal {
-
-    @inline
-    def toData(security: SecurityRef) = {
-      /*
-      new KeyStatisticsData(
-        _id = security._id,
-        symbol = security.symbol,
-        exchange = security.exchange ?? stats.price.flatMap(_.exchange),
-        ask = stats.summaryDetail.flatMap(_.ask),
-        askSize = stats.summaryDetail.flatMap(_.askSize),
-        averageDailyVolume10Day = stats.summaryDetail.flatMap(_.averageDailyVolume10Day),
-        averageVolume = stats.summaryDetail.flatMap(_.averageVolume),
-        averageVolume10days = stats.summaryDetail.flatMap(_.averageVolume10days),
-        beta = stats.summaryDetail.flatMap(_.beta),
-        bid = stats.summaryDetail.flatMap(_.bid),
-        bidSize = stats.summaryDetail.flatMap(_.bidSize),
-        dayHigh = stats.summaryDetail.flatMap(_.dayHigh),
-        dayLow = stats.summaryDetail.flatMap(_.dayLow),
-        dividendRate = stats.summaryDetail.flatMap(_.dividendRate),
-        dividendYield = stats.summaryDetail.flatMap(_.dividendYield),
-        exDividendDate = stats.summaryDetail.flatMap(_.exDividendDate),
-        expireDate = stats.summaryDetail.flatMap(_.expireDate),
-        movingAverage50Day = stats.summaryDetail.flatMap(_.fiftyDayAverage),
-        high52Week = stats.summaryDetail.flatMap(_.fiftyTwoWeekHigh),
-        low52Week = stats.summaryDetail.flatMap(_.fiftyTwoWeekLow),
-        fiveYearAvgDividendYield = stats.summaryDetail.flatMap(_.fiveYearAvgDividendYield),
-        forwardPE = stats.summaryDetail.flatMap(_.forwardPE),
-        marketCap = stats.summaryDetail.flatMap(_.marketCap),
-        maxAge = stats.summaryDetail.flatMap(_.maxAge),
-        navPrice = stats.summaryDetail.flatMap(_.navPrice),
-        openInterest = stats.summaryDetail.flatMap(_.openInterest),
-        postMarketChange = stats.price.flatMap(_.postMarketChange),
-        postMarketChangePercent = stats.price.flatMap(_.postMarketChangePercent),
-        postMarketPrice = stats.price.flatMap(_.postMarketPrice),
-        postMarketSource = stats.price.flatMap(_.postMarketSource),
-        postMarketTime = stats.price.flatMap(_.postMarketTime),
-        preMarketChange = stats.price.flatMap(_.preMarketChange),
-        preMarketPrice = stats.price.flatMap(_.preMarketPrice),
-        preMarketSource = stats.price.flatMap(_.preMarketSource),
-        previousClose = stats.summaryDetail.flatMap(_.previousClose),
-        priceToSalesTrailing12Months = stats.summaryDetail.flatMap(_.priceToSalesTrailing12Months),
-        regularMarketDayLow = stats.summaryDetail.flatMap(_.regularMarketDayLow),
-        regularMarketOpen = stats.summaryDetail.flatMap(_.regularMarketOpen),
-        regularMarketPreviousClose = stats.summaryDetail.flatMap(_.regularMarketPreviousClose),
-        regularMarketVolume = stats.summaryDetail.flatMap(_.regularMarketVolume),
-        strikePrice = stats.summaryDetail.flatMap(_.strikePrice),
-        totalAssets = stats.summaryDetail.flatMap(_.totalAssets),
-        trailingAnnualDividendRate = stats.summaryDetail.flatMap(_.trailingAnnualDividendRate),
-        trailingAnnualDividendYield = stats.summaryDetail.flatMap(_.trailingAnnualDividendYield),
-        trailingPE = stats.summaryDetail.flatMap(_.trailingPE),
-        movingAverage200Day = stats.summaryDetail.flatMap(_.twoHundredDayAverage),
-        volume = stats.summaryDetail.flatMap(_.volume),
-        `yield` = stats.summaryDetail.flatMap(_.`yield`),
-        ytdReturn = stats.summaryDetail.flatMap(_.ytdReturn),
-        lastUpdated = new js.Date()
-      )*/???
-    }
-
-  }
 
 }

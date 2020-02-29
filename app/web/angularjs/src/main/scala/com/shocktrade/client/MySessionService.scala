@@ -26,9 +26,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * My Session Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * My Session Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toaster,
                             @injected("Facebook") facebook: FacebookService,
                             @injected("ChatService") chatService: ChatService,
@@ -58,26 +58,26 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   }
 
   /**
-    * Returns the user ID for the current user's name
-    * @return {*}
-    */
+   * Returns the user ID for the current user's name
+   * @return {*}
+   */
   def getUserName: js.UndefOr[String] = userProfile.username
 
   /**
-    * Indicates whether the given user is an administrator
-    * @return {boolean}
-    */
+   * Indicates whether the given user is an administrator
+   * @return {boolean}
+   */
   def isAdmin: Boolean = userProfile.isAdmin.isTrue
 
   /**
-    * Indicates whether the user is logged in
-    * @return {boolean}
-    */
+   * Indicates whether the user is logged in
+   * @return {boolean}
+   */
   def isAuthenticated: Boolean = userProfile.userID.isAssigned
 
   /**
-    * Logout function
-    */
+   * Logout function
+   */
   def logout(): Unit = {
     userProfile = createSpectatorProfile()
     resetContest()
@@ -145,7 +145,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
         console.log(s"Loading contest $contestId (player: $portfolioID)...")
         for {
           contest <- contestService.findContestByID(contestId).map(_.data)
-          portfolio <- portfolioService.getPortfolioByPlayer(contestId, portfolioID).map(_.data)
+          portfolio <- portfolioService.getPortfolioByPlayer(portfolioID).map(_.data)
           participantOpt = contest.participants.toOption.flatMap(_.find(_.is(portfolioID)))
         } yield {
           // set the variables
@@ -191,7 +191,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       } yield participant
 
       // lookup the portfolio
-      portfolioService.getPortfolioByPlayer(contestId, portfolioID).map(_.data) foreach { portfolio =>
+      portfolioService.getPortfolioByPlayer(portfolioID).map(_.data) foreach { portfolio =>
         portfolio_? = Option(portfolio)
       }
     }
@@ -201,8 +201,8 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   }
 
   /**
-    * Returns the combined total funds for both the cash and margin accounts
-    */
+   * Returns the combined total funds for both the cash and margin accounts
+   */
   def getCompleteFundsAvailable: Option[Double] = {
     for {
       cashAccount <- cashAccount_?
@@ -321,9 +321,9 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
   ////////////////////////////////////////////////////////////
 
   /**
-    * Creates a default 'Spectator' user profile
-    * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
-    */
+   * Creates a default 'Spectator' user profile
+   * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
+   */
   private def createSpectatorProfile() = {
     notifications.removeAll()
     resetContest()
@@ -350,7 +350,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       otherId <- profile.userID
     } if (userId == otherId) {
       userProfile.wallet = profile.wallet
-      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds/*, "trustedHtml"*/)
+      toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds /*, "trustedHtml"*/)
     }
   }
 

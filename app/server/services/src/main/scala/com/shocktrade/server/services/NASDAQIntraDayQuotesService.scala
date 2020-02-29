@@ -13,6 +13,7 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.Dictionary
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
@@ -50,15 +51,15 @@ class NASDAQIntraDayQuotesService() {
     * @param ec  the implicit execution context
     * @return a response containing quotes for the given symbol
     */
-  private def getPage(url: String)(implicit ec: ExecutionContext) = {
+  private def getPage(url: String)(implicit ec: ExecutionContext): Future[NASDAQIntraDayPage] = {
     val startTime = js.Date.now()
     val promise = Promise[NASDAQIntraDayPage]()
     Request.getFuture(url) foreach { case (response, html) =>
       val parser = new htmlparser2.Parser(new ParserHandler {
         val sb = new StringBuilder()
-        val headers = js.Array[String]()
-        val rows = js.Array[js.Dictionary[String]]()
-        var columns = js.Dictionary[String]()
+        val headers: js.Array[String] = js.Array[String]()
+        val rows: js.Array[Dictionary[String]] = js.Array[js.Dictionary[String]]()
+        var columns: Dictionary[String] = js.Dictionary[String]()
         var inDiv: Boolean = false
         var inTable: Boolean = false
         var nextPageUrl_? : Option[String] = None
@@ -157,7 +158,7 @@ class NASDAQIntraDayQuotesService() {
                      rows: js.Array[js.Dictionary[String]],
                      pageUrl: String,
                      nextPageUrl_? : Option[String],
-                     responseTime: Double) = {
+                     responseTime: Double): NASDAQIntraDayPage = {
     new NASDAQIntraDayPage(
       pageUrl = pageUrl,
       nextPageUrl = nextPageUrl_?.orUndefined,
@@ -179,7 +180,8 @@ class NASDAQIntraDayQuotesService() {
     * @return the URL for the service call (e.g. "http://www.nasdaq.com/symbol/aapl/time-sales?time=2")
     */
   @inline
-  private def toURL(symbol: String, timeSlot: TimeSlot, pageNo: Int) = {
+  private def toURL(symbol: String, timeSlot: TimeSlot, pageNo: Int): String = {
+    // TODO https://www.nasdaq.com/market-activity/stocks/aapl/latest-real-time-trades
     s"http://www.nasdaq.com/symbol/${symbol.toLowerCase}/time-sales?time=$timeSlot&pageno=$pageNo"
   }
 

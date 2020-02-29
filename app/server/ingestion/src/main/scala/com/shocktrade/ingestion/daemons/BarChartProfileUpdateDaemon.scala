@@ -1,18 +1,16 @@
 package com.shocktrade.ingestion.daemons
 
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
-import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
+import com.shocktrade.server.concurrent.ConcurrentProcessor
 import com.shocktrade.server.services.BarChartProfileService
-import io.scalajs.npm.mongodb.Db
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 /**
-  * Bar Chart Profile Update Daemon
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
-class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
+ * Bar Chart Profile Update Daemon
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+class BarChartProfileUpdateDaemon()(implicit ec: ExecutionContext) extends {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
   // get the DAO and service
@@ -23,17 +21,17 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
   private val processor = new ConcurrentProcessor()
 
   /**
-    * Indicates whether the daemon is eligible to be executed
-    * @param clock the given [[TradingClock trading clock]]
-    * @return true, if the daemon is eligible to be executed
-    */
-  override def isReady(clock: TradingClock): Boolean = !clock.isTradingActive
+   * Indicates whether the daemon is eligible to be executed
+   * @param clock the given [[TradingClock trading clock]]
+   * @return true, if the daemon is eligible to be executed
+   */
+  def isReady(clock: TradingClock): Boolean = !clock.isTradingActive
 
   /**
-    * Executes the process
-    * @param clock the given [[TradingClock trading clock]]
-    */
-  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+   * Executes the process
+   * @param clock the given [[TradingClock trading clock]]
+   */
+  def run(clock: TradingClock): Unit = {
     /*
     val startTime = js.Date.now()
     val outcome = for {
@@ -60,7 +58,7 @@ class BarChartProfileUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionCo
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome*/???
+    outcome*/ ???
   }
 
 }

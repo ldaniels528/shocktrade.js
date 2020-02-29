@@ -8,7 +8,7 @@ import com.shocktrade.server.services.NASDAQIntraDayQuotesService
 import com.shocktrade.server.services.NASDAQIntraDayQuotesService._
 import io.scalajs.nodejs.console
 import io.scalajs.npm.moment.Moment
-import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db, ObjectID}
+import io.scalajs.npm.mongodb.{BulkWriteOpResultObject, Db}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
@@ -113,7 +113,7 @@ object IntraDayQuoteDaemon {
    * Intra-Day Quote Data
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class IntraDayQuoteData(val _id: js.UndefOr[ObjectID] = js.undefined,
+  class IntraDayQuoteData(val _id: js.UndefOr[String] = js.undefined,
                           val symbol: js.UndefOr[String],
                           val price: js.UndefOr[Double],
                           val time: js.UndefOr[String],
@@ -129,7 +129,7 @@ object IntraDayQuoteDaemon {
   implicit class NASDAQIntraDayResponseExtensions(val response: NASDAQIntraDayResponse) extends AnyVal {
 
     @inline
-    def toQuotes = {
+    def toQuotes: js.Array[IntraDayQuoteData] = {
       val yyyy_mm_dd = Moment(new js.Date()).format("YYYY-MM-DD")
       val rawQuotes = for {
         page <- response.pages

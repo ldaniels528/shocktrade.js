@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.discover
 
 import com.shocktrade.common.models.quote.KeyStatistics
-import io.scalajs.npm.mongodb.ObjectID
 
 import scala.scalajs.js
 
@@ -9,7 +8,7 @@ import scala.scalajs.js
   * Represents a Key Statistics Data object
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class KeyStatisticsData(var _id: js.UndefOr[ObjectID],
+class KeyStatisticsData(var _id: js.UndefOr[String],
                         var symbol: js.UndefOr[String],
                         var exchange: js.UndefOr[String],
                         var ask: js.UndefOr[Double],

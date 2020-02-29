@@ -4,9 +4,9 @@ package social
 import com.shocktrade.webapp.routes.social.PostRoutes.SharedContentForm
 import com.shocktrade.webapp.{SharedContentParser, SharedContentProcessor}
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.doc
 
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
@@ -31,7 +31,7 @@ class SocialRoutes(app: Application)(implicit ec: ExecutionContext) {
           case Success(result) =>
             SharedContentProcessor.parseMetaData(result) match {
               case Some(content) => response.send(content.toJson)
-              case None => response.send(doc())
+              case None => response.send(js.Dictionary[js.Any]())
             }
             next()
           case Failure(e) => response.internalServerError(e); next()

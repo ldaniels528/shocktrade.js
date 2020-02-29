@@ -1,3 +1,5 @@
+USE shocktrade;
+
 DELIMITER //
 DROP PROCEDURE IF EXISTS createContest;
 CREATE PROCEDURE createContest(

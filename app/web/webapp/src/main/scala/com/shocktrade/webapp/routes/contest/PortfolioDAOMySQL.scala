@@ -22,13 +22,13 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
       js.Array(contestID, userID, funds, asOfDate, active)) map (_.affectedRows)
   }
 
-  override def findOneByContest(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+  override def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
     conn.queryFuture[PortfolioData](
       """|SELECT *
          |FROM portfolios
-         |WHERE contestID = ? AND userID = ?
+         |WHERE userID = ?
          |""".stripMargin,
-      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
+      js.Array(userID)) map { case (rows, _) => rows.headOption }
   }
 
   override def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {

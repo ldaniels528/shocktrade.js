@@ -1,3 +1,5 @@
+USE shocktrade;
+
 -- ------------------------------------------------------------
 -- Contest tables
 -- ------------------------------------------------------------
@@ -106,14 +108,12 @@ DROP TABLE IF EXISTS positions;
 CREATE TABLE positions (
      positionID CHAR(36) PRIMARY KEY,
      portfolioID CHAR(36) NOT NULL,
-     userID CHAR(36) NOT NULL,
      orderID CHAR(36) NOT NULL,
      symbol VARCHAR(12) NOT NULL,
      exchange VARCHAR(12) NOT NULL,
      price DECIMAL(12,5) NOT NULL,
      quantity INTEGER NOT NULL,
      tradeDateTime DATETIME NOT NULL,
-     processedTime DATETIME NULL,
      creationTime DATETIME NOT NULL DEFAULT now()
 );
 CREATE UNIQUE INDEX positions_xpk ON positions (orderID);

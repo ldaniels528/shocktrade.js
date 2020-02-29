@@ -16,12 +16,11 @@ class PortfolioService($http: Http) extends Service {
 
   /**
     * Retrieves a portfolio by a contest ID and player ID
-    * @param contestID the given contest ID
     * @param portfolioID  the given player ID
     * @return the promise of a [[Portfolio portfolio]]
     */
-  def getPortfolioByPlayer(contestID: String, portfolioID: String): js.Promise[HttpResponse[Portfolio]] = {
-    $http.get[Portfolio](s"/api/portfolio/contest/$contestID/player/$portfolioID")
+  def getPortfolioByPlayer( portfolioID: String): js.Promise[HttpResponse[Portfolio]] = {
+    $http.get[Portfolio](s"/api/portfolio/$portfolioID")
   }
 
   /**

@@ -1,4 +1,4 @@
-
+USE shocktrade;
 
 update stocks_eoddata set prevClose = `close` - `change`;
 update stocks_eoddata set prevClose = `close` - `change`;

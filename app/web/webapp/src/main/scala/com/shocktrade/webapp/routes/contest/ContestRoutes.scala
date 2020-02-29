@@ -92,7 +92,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
 
           // create & retrieve the portfolio
           w1 <- portfolioDAO.create(portfolio) if w1 == 1
-          newPortfolio <- portfolioDAO.findOneByContest(contestID = contestID, userID = userID)
+          newPortfolio <- portfolioDAO.findOneByUser(userID)
             .map(_.getOrElse(throw new IllegalStateException("Portfolio not found")))
 
           // capture the portfolioID

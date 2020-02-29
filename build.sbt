@@ -57,7 +57,7 @@ lazy val uiSettings = jsCommonSettings ++ Seq(
 //      Common projects
 /////////////////////////////////////////////////////////////////////////////////
 
-lazy val serverCommon = (project in file("./app/server/common"))
+lazy val server_common = (project in file("./app/server/common"))
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(
@@ -69,31 +69,12 @@ lazy val serverCommon = (project in file("./app/server/common"))
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
       "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion
-    ))
-
-lazy val dao = (project in file("./app/server/dao"))
-  .aggregate(api_common, services)
-  .dependsOn(api_common, services)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(moduleSettings: _*)
-  .settings(
-    name := "shocktrade-dao",
-    organization := "com.shocktrade",
-    version := appVersion,
-    libraryDependencies ++= Seq(
-      "io.scalajs" %%% "core" % scalaJsIOVersion,
-      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "body-parser" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mongodb" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "mysql" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment" % scalaJsIOVersion,
-      "io.scalajs.npm" %%% "moment-timezone" % scalaJsIOVersion
+      "io.scalajs.npm" %%% "mysql" % scalaJsIOVersion
     ))
 
 lazy val services = (project in file("./app/server/services"))
-  .aggregate(api_common, serverCommon)
-  .dependsOn(api_common, serverCommon)
+  .aggregate(api_common, server_common)
+  .dependsOn(api_common, server_common)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(
@@ -111,13 +92,24 @@ lazy val services = (project in file("./app/server/services"))
       "io.scalajs.npm" %%% "xml2js" % scalaJsIOVersion
     ))
 
+lazy val utils = (project in file("./app/shared/utils"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(moduleSettings: _*)
+  .settings(
+    name := "shocktrade-utils",
+    organization := "com.shocktrade",
+    version := appVersion,
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion
+    ))
+
 /////////////////////////////////////////////////////////////////////////////////
 //      Server-Side Processing projects
 /////////////////////////////////////////////////////////////////////////////////
 
 lazy val ingestion = (project in file("./app/server/ingestion"))
-  .aggregate(api_common, serverCommon, dao, services)
-  .dependsOn(api_common, serverCommon, dao, services)
+  .aggregate(api_common, server_common, services)
+  .dependsOn(api_common, server_common, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -138,8 +130,8 @@ lazy val ingestion = (project in file("./app/server/ingestion"))
     ))
 
 lazy val qualification = (project in file("./app/server/qualification"))
-  .aggregate(api_common, serverCommon, dao, services)
-  .dependsOn(api_common, serverCommon, dao, services)
+  .aggregate(api_common, server_common, services)
+  .dependsOn(api_common, server_common, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -163,8 +155,8 @@ lazy val qualification = (project in file("./app/server/qualification"))
 /////////////////////////////////////////////////////////////////////////////////
 
 lazy val controlPanel = (project in file("./app/web/controlpanel"))
-  .aggregate(api_common, serverCommon, services)
-  .dependsOn(api_common, serverCommon, services)
+  .aggregate(api_common, server_common, services)
+  .dependsOn(api_common, server_common, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -195,8 +187,8 @@ lazy val angularjs = (project in file("./app/web/angularjs"))
     ))
 
 lazy val webapp = (project in file("./app/web/webapp"))
-  .aggregate(api_common, serverCommon, dao, services)
-  .dependsOn(api_common, serverCommon, dao, services)
+  .aggregate(api_common, server_common, services)
+  .dependsOn(api_common, server_common, services)
   .enablePlugins(ScalaJSPlugin)
   .settings(appSettings: _*)
   .settings(
@@ -218,7 +210,8 @@ lazy val webapp = (project in file("./app/web/webapp"))
       "io.scalajs.npm" %%% "splitargs" % scalaJsIOVersion
     ))
 
-lazy val api_common = (project in file("./app/shared/common"))
+lazy val api_common = (project in file("./app/web/common"))
+  .dependsOn(utils)
   .enablePlugins(ScalaJSPlugin)
   .settings(moduleSettings: _*)
   .settings(

@@ -56,7 +56,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
       val outcome = for {
         (attachmentId, success) <- attachmentDAO map { fs =>
           val ustream = fs.openUploadStream(file.name, new UploadStreamOptions(metadata = doc("userID" -> userID.$oid, "postID" -> postID.$oid)))
-          val id = new ObjectID()
+          val id = new String()
           (id, ustream.end(file.data))
         }
         result <- postDAO.flatMap(_.findOneAndUpdate("_id" $eq postID.$oid, "attachments" $addToSet attachmentId.toHexString()))

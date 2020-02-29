@@ -2,12 +2,10 @@ package com.shocktrade.ingestion.daemons
 
 import com.shocktrade.ingestion.daemons.KeyStatisticsUpdateDaemon.SecurityRef
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.server.concurrent.bulk.BulkUpdateStatistics
-import com.shocktrade.server.concurrent.{ConcurrentProcessor, Daemon}
+import com.shocktrade.server.concurrent.ConcurrentProcessor
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.nodejs._
-import io.scalajs.npm.mongodb.Db
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -17,7 +15,7 @@ import scala.scalajs.js
   * Securities Update Daemon
   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
   */
-class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext) extends Daemon[BulkUpdateStatistics] {
+class SecuritiesUpdateDaemon()(implicit ec: ExecutionContext) {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
 
@@ -41,13 +39,13 @@ class SecuritiesUpdateDaemon(dbFuture: Future[Db])(implicit ec: ExecutionContext
     * @param clock the given [[TradingClock trading clock]]
     * @return true, if the daemon is eligible to be executed
     */
-  override def isReady(clock: TradingClock): Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
+  def isReady(clock: TradingClock): Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
     * Executes the process
     * @param clock the given [[TradingClock trading clock]]
     */
-  override def run(clock: TradingClock): Future[BulkUpdateStatistics] = {
+  def run(clock: TradingClock): Future[js.Any] = {
     /*
     val startTime = js.Date.now()
     val outcome = for {

@@ -5,9 +5,8 @@ import com.shocktrade.server.concurrent.Daemon
 import com.shocktrade.server.concurrent.Daemon.DaemonRef
 import io.scalajs.nodejs._
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.npm.mongodb.Db
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
@@ -17,7 +16,7 @@ import scala.scalajs.js.JSConverters._
   */
 object DaemonRoutes {
 
-  def init[T](app: Application, daemons: Seq[DaemonRef[T]])(implicit ec: ExecutionContext, dbFuture: Future[Db]): Unit = {
+  def init[T](app: Application, daemons: Seq[DaemonRef[T]])(implicit ec: ExecutionContext): Unit = {
     val clock = new TradingClock()
     val daemonDict = js.Dictionary(daemons.map(d => d.name -> new DaemonJs(d.name, d.delay, d.frequency)): _*)
     val daemonMap = Map(daemons.map(d => d.name -> d): _*)

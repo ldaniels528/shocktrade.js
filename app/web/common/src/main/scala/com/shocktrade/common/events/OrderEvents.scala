@@ -8,7 +8,7 @@ import com.shocktrade.common.events.RemoteEvent._
   */
 object OrderEvents {
 
-  def updated(portfolioId: String) = {
+  def updated(portfolioId: String): RemoteEvent = {
     new RemoteEvent(action = OrderUpdated, data = portfolioId)
   }
 

@@ -18,7 +18,7 @@ trait PortfolioDAO {
 
   def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
 
-  def findOneByContest(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
+  def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
 
   def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
 
