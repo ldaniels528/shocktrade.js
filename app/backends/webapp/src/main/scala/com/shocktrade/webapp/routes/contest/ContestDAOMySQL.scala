@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
+import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -36,18 +37,13 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
       .map { case (rows, _) => rows.headOption }
   }
 
-  override def findOneByName(name: String)(implicit ec: ExecutionContext): Future[Option[ContestData]] = {
-    conn.queryFuture[ContestData]("SELECT * FROM contests WHERE name = ?", js.Array(name))
-      .map { case (rows, _) => rows.headOption }
-  }
-
-  override def findByUser(userID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRankingData]] = {
-    conn.queryFuture[ContestRankingData]("SELECT * FROM contest_rankings WHERE userID = ?", js.Array(userID))
+  override def findByUser(userID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {
+    conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE userID = ?", js.Array(userID))
       .map { case (rows, _) => rows }
   }
 
-  override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRankingData]] = {
-    conn.queryFuture[ContestRankingData]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
+  override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {
+    conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
       .map { case (rows, _) => rows }
   }
 

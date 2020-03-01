@@ -5,7 +5,7 @@ import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioServ
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest._
 import com.shocktrade.client.profile.UserProfileService
-import com.shocktrade.common.models.contest.{ChatMessage, Participant}
+import com.shocktrade.common.models.contest.{CashAccount, ChatMessage, MarginAccount, Participant}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -335,9 +335,9 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     )
   }
 
-  private[client] def cashAccount_? = portfolio_?.flatMap(_.cashAccount.toOption)
+  private[client] def cashAccount_? : Option[CashAccount] = portfolio_?.flatMap(_.cashAccount.toOption)
 
-  private[client] def marginAccount_? = portfolio_?.flatMap(_.marginAccount.toOption)
+  private[client] def marginAccount_? : Option[MarginAccount] = portfolio_?.flatMap(_.marginAccount.toOption)
 
   /////////////////////////////////////////////////////////////////////////////
   //			Events
@@ -353,7 +353,5 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
       toaster.success("Your Wallet", s"<ul><li>Your wallet now has $$${profile.wallet}</li></ul>", 5.seconds /*, "trustedHtml"*/)
     }
   }
-
-  private def info(contest: Contest, message: String): Unit = console.log(s"${contest.name}: $message")
 
 }

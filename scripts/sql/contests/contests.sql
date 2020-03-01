@@ -28,6 +28,7 @@ SELECT
     P.portfolioID,
     U.userID,
     U.username,
+    U.iconID,
     P.funds + SUM(S.lastTrade * PS.quantity) AS totalEquity,
     (100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100 AS gainLoss
 FROM contests C

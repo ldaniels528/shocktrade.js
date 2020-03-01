@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
+import com.shocktrade.webapp.routes.social.IconData
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,6 +33,10 @@ trait UserDAO {
    * @return a promise of a collection of users
    */
   def findByUsername(name: String)(implicit ec: ExecutionContext): Future[js.Array[UserData]]
+
+  def createIcon(userID: String, name: String, mime: String, blob: js.Any)(implicit ec: ExecutionContext): Future[Int]
+
+  def findIcon(iconID: String)(implicit ec: ExecutionContext): Future[Option[IconData]]
 
 }
 

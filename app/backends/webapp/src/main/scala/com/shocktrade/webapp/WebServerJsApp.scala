@@ -8,7 +8,7 @@ import com.shocktrade.webapp.routes.account.{AuthenticationRoutes, UserAccountRo
 import com.shocktrade.webapp.routes.contest._
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
-import com.shocktrade.webapp.routes.social.{OnlineStatusRoutes, PostAttachmentRoutes, PostRoutes}
+import com.shocktrade.webapp.routes.social.{OnlineStatusRoutes, PostAttachmentRoutes, PostRoutes, SocialRoutes}
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
 import io.scalajs.npm.express.fileupload.{ExpressFileUpload, FileUploadOptions}
@@ -100,6 +100,7 @@ object WebServerJsApp {
     new QuoteRoutes(app)
     new RemoteEventRoutes(app)
     new ResearchRoutes(app)
+    new SocialRoutes(app)
     new TradingClockRoutes(app)
     new UserAccountRoutes(app)
     new UserProfileRoutes(app)

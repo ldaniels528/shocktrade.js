@@ -21,7 +21,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
 
   // collections of contests
   app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => availablePerks(request, response, next))
-  app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => contestsByPlayer(request, response, next))
+  app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => contestsByUser(request, response, next))
   app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
           case Success(Some(result)) => response.send(result); next()
           case Success(None) => response.badRequest(form); next()
           case Failure(e) =>
-            e.printStackTrace()
             response.internalServerError(e); next()
         }
     }
@@ -72,9 +71,18 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves contests by userID
    */
-  def contestsByPlayer(request: Request, response: Response, next: NextFunction): Unit = {
+  def contestsByUser(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    contestDAO.findByUser(userID) onComplete {
+    val outcome = for {
+      contests <- contestDAO.findByUser(userID)
+      sortedContests = contests.sortBy(-_.gainLoss.getOrElse(0.0))
+      rankings = sortedContests.zipWithIndex map { case (ranking, rank) =>
+        ranking.rank = rankOf(rank + 1)
+        ranking
+      }
+    } yield rankings
+
+    outcome onComplete {
       case Success(contests) => response.send(contests); next()
       case Failure(e) => response.internalServerError(e); next()
     }
@@ -94,6 +102,17 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
       case messages =>
         response.badRequest(new ValidationErrors(messages)); next()
     }
+  }
+
+  private def rankOf(rank: Int): String = {
+    val suffix = rank.toString match {
+      case n if n.endsWith("11") => "th"
+      case n if n.endsWith("1") => "st"
+      case n if n.endsWith("2") => "nd"
+      case n if n.endsWith("3") => "rd"
+      case _ => "th"
+    }
+    s"$rank$suffix"
   }
 
 }

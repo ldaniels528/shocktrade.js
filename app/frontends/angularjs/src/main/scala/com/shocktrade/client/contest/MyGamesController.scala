@@ -4,7 +4,7 @@ import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
 import com.shocktrade.client.models.contest.Contest
-import com.shocktrade.common.models.contest.ContestRankings
+import com.shocktrade.common.models.contest.ContestRanking
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -29,9 +29,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
   extends GameController($scope, $location, toaster, mySession, portfolioService) {
 
   private var myContests = js.Array[Contest]()
-  private var myRankings = js.Array[ContestRankings]()
-
-  $scope.includeExpiry = false
+  private var myRankings = js.Array[ContestRanking]()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Scope Functions
@@ -104,8 +102,6 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
  */
 @js.native
 trait MyGamesScope extends GameScope {
-  var includeExpiry: Boolean = js.native
-
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[Contest]] = js.native

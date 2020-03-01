@@ -6,7 +6,7 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.forms.PlayerInfoForm
-import com.shocktrade.common.models.contest.Participant
+import com.shocktrade.common.models.contest.{ContestRanking, Participant}
 import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -39,6 +39,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   private var splitScreen: Boolean = false
 
   $scope.contest = null
+  $scope.portfolios = js.Array()
   $scope.searchTerm = null
   $scope.searchOptions = new ContestSearchOptions()
 
@@ -349,6 +350,7 @@ trait GameSearchScope extends GameScope {
   var contest: Contest = js.native
   var searchTerm: String = js.native
   var searchOptions: ContestSearchOptions = js.native
+  var portfolios: js.Array[ContestRanking] = js.native
 
   // general functions
   var contestStatusClass: js.Function1[js.UndefOr[Contest], js.UndefOr[String]] = js.native

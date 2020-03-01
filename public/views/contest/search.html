@@ -46,7 +46,7 @@
                 <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable"
                     ng-click="selectContest(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <i class="fa fa-user" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                        <avatar id="{{ c.userID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
@@ -80,7 +80,7 @@
 
     <!-- Game Lobby -->
     <div ng-show="isSplitScreen()" class="col-md-8">
-        <fieldset class="contest" ng-show="getSelectedContest().participants">
+        <fieldset class="contest" ng-show="portfolios">
             <legend class="contest">
                 <span class="game_title clickable" ng-click="toggleSplitScreen()">
                     <i class="fa fa-chevron-circle-left st_control" title="Return to results"></i> {{getSelectedContest().name}}
