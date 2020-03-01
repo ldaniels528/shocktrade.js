@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest
 
-import com.shocktrade.common.forms.ContestSearchForm
+import com.shocktrade.common.forms.{ContestCreateForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -13,7 +13,7 @@ import scala.scalajs.js
   */
 trait ContestDAO {
 
-  def create(contest: ContestData)(implicit ec: ExecutionContext): Future[Int]
+  def create(form: ContestCreateForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]]
 
   def findActiveContests()(implicit ec: ExecutionContext): Future[js.Array[ContestData]]
 

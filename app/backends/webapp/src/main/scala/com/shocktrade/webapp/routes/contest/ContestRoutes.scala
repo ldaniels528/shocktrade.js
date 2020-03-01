@@ -5,8 +5,6 @@ import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
 import com.shocktrade.common.models.contest._
 import com.shocktrade.webapp.routes.account.{UserAccountDAO, UserDAO}
 import com.shocktrade.webapp.routes.contest.ContestRoutes._
-import io.scalajs.JSON
-import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.DateHelper._
 import io.scalajs.util.JsUnderOrHelper._
@@ -22,11 +20,7 @@ import scala.util.{Failure, Success}
  */
 class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val contestDAO = ContestDAO()
-  private val chatDAO = ChatDAO()
-  private val portfolioDAO = PortfolioDAO()
   private val perksDAO = PerksDAO()
-  private val userDAO = UserDAO()
-  private val userAccountDAO = UserAccountDAO()
 
   // individual contests
   app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
@@ -68,50 +62,17 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
    */
   def createContest(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.bodyAs[ContestCreateForm]
-    val args = (for {
-      userID <- form.userID
-      startingBalance <- form.startingBalance.flatMap(_.value)
-    } yield (userID, startingBalance)).toOption
-    console.log(s"form = ${JSON.stringify(form)}")
-
-    (args, form.validate) match {
-      case (Some((userID, startingBalance)), messages) if messages.isEmpty =>
-        val (contest, portfolio) = toRecords(form)
-        val outcome = for {
-          // lookup the user
-          user <- userDAO.findByID(userID)
-            .map(_.getOrElse(throw new IllegalStateException(s"User $userID not found")))
-
-          // create & retrieve the contest
-          w0 <- contestDAO.create(contest) if w0 == 1
-          newContest <- contestDAO.findOneByName(contest.name.orNull)
-            .map(_.getOrElse(throw new IllegalStateException("Contest not found")))
-
-          // capture the contestID
-          contestID = newContest.contestID.getOrElse(throw new IllegalStateException("Contest ID not found"))
-
-          // create & retrieve the portfolio
-          w1 <- portfolioDAO.create(portfolio) if w1 == 1
-          newPortfolio <- portfolioDAO.findOneByUser(userID)
-            .map(_.getOrElse(throw new IllegalStateException("Portfolio not found")))
-
-          // capture the portfolioID
-          portfolioID = newPortfolio.portfolioID.getOrElse(throw new IllegalStateException("Portfolio ID not found"))
-
-          // deduct the funds for the contest
-          w2 <- userAccountDAO.deductFunds(userID, startingBalance) if w2 == 1
-
-          // create the welcome message
-          w3 <- chatDAO.addChatMessage(contestID = contestID, portfolioID = portfolioID, message = s"Welcome to ${form.name}") if w3 == 1
-        } yield (user, newContest, newPortfolio)
-
-        outcome onComplete {
-          case Success((user, contest, portfolio)) => response.send(new ContestAndPortfolio(contest, portfolio)); next()
-          case Success(_) => response.badRequest("Contest could not be created"); next()
-          case Failure(e) => response.internalServerError(e); next()
-        }
-      case (_, messages) =>
+    form.validate match {
+      case messages if messages.nonEmpty =>
         response.badRequest(new ValidationErrors(messages)); next()
+      case _ =>
+        contestDAO.create(form) onComplete {
+          case Success(Some(result)) => response.send(result); next()
+          case Success(None) => response.badRequest(form); next()
+          case Failure(e) =>
+            e.printStackTrace()
+            response.internalServerError(e); next()
+        }
     }
   }
 

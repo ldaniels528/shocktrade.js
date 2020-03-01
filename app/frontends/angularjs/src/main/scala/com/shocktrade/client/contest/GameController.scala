@@ -10,9 +10,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Abstract Game Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Abstract Game Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 abstract class GameController($scope: GameScope,
                               $location: Location,
                               toaster: Toaster,
@@ -20,7 +20,11 @@ abstract class GameController($scope: GameScope,
                               portfolioService: PortfolioService)
   extends Controller {
 
-  $scope.enterGame = (aContest: js.UndefOr[Contest]) => aContest foreach { contest =>
+  $scope.enterGame = (aContest: js.UndefOr[Contest]) => enterGame(aContest)
+
+  $scope.isParticipant = (aContest: js.UndefOr[Contest]) => isParticipant(aContest)
+
+  private def enterGame(aContest: js.UndefOr[Contest]): Unit = aContest foreach { contest =>
     if ($scope.isParticipant(contest)) {
       val results = for {
         contestID <- contest.contestID.toOption
@@ -46,16 +50,16 @@ abstract class GameController($scope: GameScope,
     }
   }
 
-  $scope.isParticipant = (aContest: js.UndefOr[Contest]) => aContest exists { contest =>
+  private def isParticipant(aContest: js.UndefOr[Contest]): Boolean = aContest exists { contest =>
     contest.participants.exists(_.exists(_.is(mySession.userProfile.userID)))
   }
 
 }
 
 /**
-  * Game Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Game Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait GameScope extends Scope {
   // functions
