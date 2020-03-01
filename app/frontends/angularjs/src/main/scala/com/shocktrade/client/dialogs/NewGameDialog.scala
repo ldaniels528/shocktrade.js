@@ -3,9 +3,8 @@ package com.shocktrade.client.dialogs
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.NewGameDialogController._
-import com.shocktrade.client.models.contest.Contest
-import com.shocktrade.common.forms.ContestCreateForm
-import com.shocktrade.common.forms.ContestCreateForm.{GameBalance, GameDuration}
+import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration, LevelCap}
+import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -14,20 +13,21 @@ import io.scalajs.util.DurationHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * New Game Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Game Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewGameDialog($uibModal: Modal) extends Service {
 
   /**
-    * Sign-up Modal Dialog
-    */
+   * Sign-up Modal Dialog
+   */
   def popup(): js.Promise[NewGameDialogResult] = {
     val $uibModalInstance = $uibModal.open[NewGameDialogResult](new ModalOptions(
       templateUrl = "new_game_dialog.html",
@@ -39,9 +39,9 @@ class NewGameDialog($uibModal: Modal) extends Service {
 }
 
 /**
-  * New Game Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Game Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toaster: Toaster,
                               $uibModalInstance: ModalInstance[NewGameDialogResult],
                               @injected("ContestService") contestService: ContestService,
@@ -57,8 +57,9 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
   /////////////////////////////////////////////////////////////////////////////
 
   $scope.durations = GameDurations
+  $scope.levelCaps = LevelCaps
   $scope.startingBalances = StartingBalances
-  $scope.form = new ContestCreateForm(
+  $scope.form = new ContestCreationForm(
     perksAllowed = true,
     robotsAllowed = true,
     startAutomatically = true,
@@ -71,7 +72,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
 
   $scope.cancel = () => $uibModalInstance.dismiss("cancel")
 
-  $scope.createGame = (aForm: js.UndefOr[ContestCreateForm]) => aForm foreach { form =>
+  $scope.createGame = (aForm: js.UndefOr[ContestCreationForm]) => aForm foreach { form =>
     if (isValidForm(form)) {
       mySession.userProfile.userID.toOption match {
         case Some(userId) =>
@@ -109,7 +110,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def isValidForm(form: ContestCreateForm) = {
+  private def isValidForm(form: ContestCreationForm) = {
     errors.removeAll()
 
     if (!mySession.isAuthenticated) errors.push("You must login to create games")
@@ -121,12 +122,12 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
 }
 
 /**
-  * New Game Dialog Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Game Dialog Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NewGameDialogController {
 
-  type NewGameDialogResult = Contest
+  type NewGameDialogResult = ContestCreationResponse
 
   val GameDurations: js.Array[GameDuration] = js.Array(
     new GameDuration(label = "1 Week", value = 7),
@@ -135,6 +136,8 @@ object NewGameDialogController {
     new GameDuration(label = "4 Weeks", value = 28),
     new GameDuration(label = "5 Weeks", value = 35),
     new GameDuration(label = "6 Weeks", value = 42))
+
+  val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
 
   val StartingBalances: js.Array[GameBalance] = js.Array(
     new GameBalance(label = "$ 1,000", value = 1000.00),
@@ -149,19 +152,20 @@ object NewGameDialogController {
 }
 
 /**
-  * New Game Dialog Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Game Dialog Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewGameDialogScope extends Scope {
   // variables
   var durations: js.Array[GameDuration] = js.native
-  var form: ContestCreateForm = js.native
+  var form: ContestCreationForm = js.native
+  var levelCaps: js.Array[LevelCap] = js.native
   var startingBalances: js.Array[GameBalance] = js.native
 
   // functions
   var cancel: js.Function0[Unit] = js.native
-  var createGame: js.Function1[js.UndefOr[ContestCreateForm], Unit] = js.native
+  var createGame: js.Function1[js.UndefOr[ContestCreationForm], Unit] = js.native
   var enforceInvitationOnly: js.Function0[Unit] = js.native
   var getMessages: js.Function0[js.Array[String]] = js.native
   var isProcessing: js.Function0[Boolean] = js.native

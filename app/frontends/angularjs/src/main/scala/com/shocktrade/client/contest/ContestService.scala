@@ -1,7 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
-import com.shocktrade.common.forms.{ContestCreateForm, PlayerInfoForm}
+import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, PlayerInfoForm}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
@@ -21,8 +21,8 @@ class ContestService($http: Http) extends Service {
     * Creates a new game
     * @return the promise of the result of creating a new game
     */
-  def createNewGame(form: ContestCreateForm): js.Promise[HttpResponse[Contest]] = {
-    $http.post[Contest]("/api/contest", form)
+  def createNewGame(form: ContestCreationForm): js.Promise[HttpResponse[ContestCreationResponse]] = {
+    $http.post[ContestCreationResponse]("/api/contest", form)
   }
 
   def deleteContest(contestID: String): js.Promise[HttpResponse[js.Dynamic]] = {

@@ -10,8 +10,7 @@ CREATE PROCEDURE createContest(
     a_duration INTEGER,
     a_friendsOnly BIT,
     a_invitationOnly BIT,
-    a_levelCapAllowed BIT,
-    a_levelCap VARCHAR(40),
+    a_levelCap INTEGER,
     a_perksAllowed BIT,
     a_robotsAllowed BIT
 )
@@ -37,8 +36,12 @@ BEGIN
         --  create the contest
         -- ---------------------------------------------------------------------------
         SET v_contestID = uuid();
-        INSERT INTO contests (contestID, hostUserID, name, startingBalance, expirationTime)
-        SELECT v_contestID, U.userID, a_name, a_startingBalance, DATE_ADD(now(), INTERVAL a_duration DAY)
+        INSERT INTO contests (
+            contestID, hostUserID, name, startingBalance, expirationTime,
+            friendsOnly, invitationOnly, levelCap, perksAllowed, robotsAllowed
+        )
+        SELECT v_contestID, U.userID, a_name, a_startingBalance, DATE_ADD(now(), INTERVAL a_duration DAY),
+               a_friendsOnly, a_invitationOnly, a_levelCap, a_perksAllowed, a_robotsAllowed
         FROM users U
         WHERE U.userID = a_creatorUserID;
 
@@ -64,12 +67,13 @@ BEGIN
         -- ---------------------------------------------------------------------------
 
         SELECT v_contestID, v_portfolioID;
+        COMMIT;
     ELSE
         SELECT NULL, NULL;
+        ROLLBACK;
     END IF;
 
 	-- commit and re-enable auto-commit
-    COMMIT;
     SET autocommit = ON;
 
 END //

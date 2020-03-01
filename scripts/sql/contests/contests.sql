@@ -13,7 +13,7 @@ CREATE TABLE contests (
      startingBalance DECIMAL(12,5) NOT NULL,
      friendsOnly BIT NOT NULL DEFAULT 0,
      invitationOnly BIT NOT NULL DEFAULT 0,
-     levelCap BIT NOT NULL DEFAULT 0,
+     levelCap INTEGER NOT NULL DEFAULT 0,
      perksAllowed BIT NOT NULL DEFAULT 1,
      robotsAllowed BIT NOT NULL DEFAULT 1,
      creationTime DATETIME NOT NULL DEFAULT now(),

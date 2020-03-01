@@ -1,13 +1,13 @@
 package com.shocktrade.webapp.routes.contest
 
-import com.shocktrade.common.forms.{ContestCreateForm, ContestCreationResponse, ContestSearchForm}
+import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 
 /**
  * Contest DAO (MySQL implementation)
@@ -16,13 +16,14 @@ import scala.scalajs.js.JSON
 class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with ContestDAO {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  override def create(form: ContestCreateForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]] = {
+  override def create(form: ContestCreationForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]] = {
     import form._
-    val params = js.Array(
-      name, userID, startingBalance.flatMap(_.value), startAutomatically, duration.flatMap(_.value), friendsOnly,
-      invitationOnly, levelCapAllowed, levelCap, perksAllowed, robotsAllowed).map(_.orNull)
-    conn.queryFuture[ContestCreationResponse]("CALL createContest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", params)
-      .map { case (rows, _) => rows.headOption }
+    conn.queryFuture[ContestCreationResponse](
+      "CALL createContest(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", js.Array(
+        name, userID, startingBalance.flatMap(_.value), startAutomatically, duration.flatMap(_.value),
+        friendsOnly ?? false, invitationOnly ?? false, levelCap.flatMap(_.value) ?? 0, perksAllowed ?? true, robotsAllowed ?? true
+      ).map(_.orNull)
+    ) map { case (rows, _) => rows.headOption }
   }
 
   override def findActiveContests()(implicit ec: ExecutionContext): Future[js.Array[ContestData]] = {
@@ -41,17 +42,13 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   }
 
   override def findByUser(userID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRankingData]] = {
-    conn.queryFuture[ContestRankingData](
-      """|SELECT * FROM contest_rankings WHERE userID = ?
-         |""".stripMargin,
-      js.Array(userID)) map { case (rows, _) => rows }
+    conn.queryFuture[ContestRankingData]("SELECT * FROM contest_rankings WHERE userID = ?", js.Array(userID))
+      .map { case (rows, _) => rows }
   }
 
   override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRankingData]] = {
-    conn.queryFuture[ContestRankingData](
-      """|SELECT * FROM contest_rankings WHERE contestID = ?
-         |""".stripMargin,
-      js.Array(contestID)) map { case (rows, _) => rows }
+    conn.queryFuture[ContestRankingData]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
+      .map { case (rows, _) => rows }
   }
 
   override def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {

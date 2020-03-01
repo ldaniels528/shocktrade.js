@@ -52,9 +52,9 @@
             <div class="col-md-6">
                 <select class="form-control"
                         ng-model="form.levelCap"
-                        ng-disabled="!form.levelCapAllowed">
+                        ng-disabled="!form.levelCapAllowed"
+                        ng-options="lc.label for lc in levelCaps">
                     <option value="">-- Level Cap --</option>
-                    <option ng-repeat="level in levels" value="{{ level.number }}">{{ level.number + ': ' + level.description }}</option>
                 </select>
             </div>
             <div class="col-md-6">

@@ -1,17 +1,10 @@
 package com.shocktrade.webapp.routes
 package contest
 
-import com.shocktrade.common.forms.{ContestCreateForm, ContestSearchForm}
-import com.shocktrade.common.models.contest._
-import com.shocktrade.webapp.routes.account.{UserAccountDAO, UserDAO}
-import com.shocktrade.webapp.routes.contest.ContestRoutes._
+import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.util.DateHelper._
-import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration._
-import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
@@ -61,7 +54,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
    * Creates a new contest
    */
   def createContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestCreateForm]
+    val form = request.bodyAs[ContestCreationForm]
     form.validate match {
       case messages if messages.nonEmpty =>
         response.badRequest(new ValidationErrors(messages)); next()
@@ -74,32 +67,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
             response.internalServerError(e); next()
         }
     }
-  }
-
-  private def toRecords(form: ContestCreateForm): (ContestData, PortfolioData) = {
-    val contestRecord = new ContestData(
-      contestID = js.undefined,
-      name = form.name,
-      hostUserID = form.userID,
-      startingBalance = form.startingBalance.map(_.value),
-      startTime = new js.Date(),
-      expirationTime = form.duration.map(_.value.days + new js.Date()),
-      status = ContestLike.StatusActive,
-      friendsOnly = form.friendsOnly ?? false,
-      invitationOnly = form.invitationOnly ?? false,
-      levelCap = form.levelCap,
-      perksAllowed = form.perksAllowed ?? false,
-      robotsAllowed = form.robotsAllowed ?? false
-    )
-    val portfolioRecord = new PortfolioData(
-      contestID = js.undefined,
-      portfolioID = js.undefined,
-      userID = form.userID,
-      funds = form.startingBalance.map(_.value),
-      asOfDate = new js.Date(),
-      active = true
-    )
-    (contestRecord, portfolioRecord)
   }
 
   /**
@@ -128,17 +95,5 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
         response.badRequest(new ValidationErrors(messages)); next()
     }
   }
-
-}
-
-/**
- * Contest Routes Companion
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-object ContestRoutes {
-
-  class ContestAndPortfolio(val contest: ContestData, val portfolio: PortfolioData) extends js.Object
-
-  class ValidationErrors(val messages: js.Array[String]) extends js.Object
 
 }

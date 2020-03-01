@@ -48,13 +48,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
 
   $scope.popupNewGameDialog = () => {
     newGameDialog.popup() onComplete {
-      case Success(contest) =>
-        if (contest.error.nonEmpty) toaster.error(contest.error.getOrElse("General Fault"))
-        else {
-          // TODO add to Contests
-          $scope.$apply(() => reload())
-        }
-
+      case Success(_) => $scope.$apply(() => reload())
       case Failure(e) =>
         toaster.error("Failed to create game")
         console.error(s"Failed to create game ${e.displayMessage}")
