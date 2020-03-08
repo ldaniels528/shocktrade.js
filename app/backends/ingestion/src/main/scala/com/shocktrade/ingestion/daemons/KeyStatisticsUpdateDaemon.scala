@@ -1,7 +1,7 @@
 package com.shocktrade.ingestion.daemons
 
-import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.ingestion.concurrent.ConcurrentProcessor
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService
 import com.shocktrade.server.services.yahoo.YahooFinanceKeyStatisticsService.YFQuantityType
 

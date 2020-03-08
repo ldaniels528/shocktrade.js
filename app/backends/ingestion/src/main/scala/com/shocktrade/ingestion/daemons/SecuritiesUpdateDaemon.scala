@@ -1,8 +1,8 @@
 package com.shocktrade.ingestion.daemons
 
+import com.shocktrade.ingestion.concurrent.ConcurrentProcessor
 import com.shocktrade.ingestion.daemons.KeyStatisticsUpdateDaemon.SecurityRef
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
-import com.shocktrade.ingestion.concurrent.ConcurrentProcessor
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService
 import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService.YFCSVQuote
 import io.scalajs.nodejs._

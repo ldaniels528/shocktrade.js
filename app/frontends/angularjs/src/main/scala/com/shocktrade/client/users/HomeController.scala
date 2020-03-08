@@ -1,10 +1,10 @@
-package com.shocktrade.client.profile
+package com.shocktrade.client.users
 
-import com.shocktrade.client.profile.HomeController.FacebookFriend
+import com.shocktrade.client.users.HomeController.FacebookFriend
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Timeout, _}
+import io.scalajs.npm.angularjs.{Scope, Timeout, _}
 import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
 class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
                      @injected("UserService") userService: UserService,
-                     @injected("UserProfileService") profileService: UserProfileService)
+                     @injected("UserService") profileService: UserService)
   extends Controller with GlobalLoading {
 
   /////////////////////////////////////////////////////////////////////////////
@@ -81,8 +81,8 @@ object HomeController {
 }
 
 /**
-  * Home Controller Scope
-  */
+ * Home Controller Scope
+ */
 @js.native
 trait HomeControllerScope extends Scope with GlobalNavigation {
   // variables

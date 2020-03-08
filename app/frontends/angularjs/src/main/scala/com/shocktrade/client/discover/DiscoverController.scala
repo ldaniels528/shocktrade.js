@@ -5,7 +5,7 @@ import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.profile.UserProfileService
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -31,7 +31,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
                               @injected("MarketStatus") marketStatus: MarketStatusService,
                               @injected("MySessionService") mySession: MySessionService,
                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                              @injected("UserProfileService") profileService: UserProfileService,
+                              @injected("UserService") profileService: UserService,
                               @injected("QuoteService") quoteService: QuoteService)
   extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading with GlobalSelectedSymbol {
 

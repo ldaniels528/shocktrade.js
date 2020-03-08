@@ -1,7 +1,7 @@
 package com.shocktrade.ingestion
 
-import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.ingestion.concurrent.Daemon
+import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import io.scalajs.nodejs.setImmediate
 
 import scala.concurrent.{ExecutionContext, Future, Promise}

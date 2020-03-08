@@ -12,7 +12,7 @@ import scala.scalajs.js
  * @example <avatar id="{{ p.facebookID }}" class="avatar-24"></avatar>
  */
 class AvatarDirective extends Directive with ElementRestriction with LinkSupport[AvatarDirectiveScope] with TemplateSupport {
-  private val UNKNOWN_PERSON = "/images/avatars/avatar100.png"
+  private val unknownPerson = "/images/avatars/avatar100.png"
   override val scope = new AvatarDirectiveInputs(id = "@id", link = "@link", `class` = "@class", style = "@style")
   override val template = """<img ng-src="{{ url }}" ng-class="myClass" class="{{ class }}" style="{{ style }}">"""
 
@@ -28,10 +28,10 @@ class AvatarDirective extends Directive with ElementRestriction with LinkSupport
     }
 
     // determine the image URL
-    scope.url = scope.id.flatMap(fixBlanks).map(id => s"/api/user/icon/$id") ?? UNKNOWN_PERSON
+    scope.url = scope.id.flatMap(fixBlanks).map(id => s"/api/user/$id/icon") ?? unknownPerson
 
     // set the class
-    scope.myClass = if (scope.url.contains(UNKNOWN_PERSON)) "spectatorAvatar" else "playerAvatar"
+    scope.myClass = if (scope.url.contains(unknownPerson)) "spectatorAvatar" else "playerAvatar"
   }
 }
 
@@ -39,7 +39,10 @@ class AvatarDirective extends Directive with ElementRestriction with LinkSupport
  * Avatar Directive Input Parameters
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AvatarDirectiveInputs(val id: js.UndefOr[String], val link: js.UndefOr[String], val `class`: String, val style: String) extends js.Object
+class AvatarDirectiveInputs(val id: js.UndefOr[String],
+                            val link: js.UndefOr[String],
+                            val `class`: String,
+                            val style: String) extends js.Object
 
 /**
  * Avatar Directive Scope

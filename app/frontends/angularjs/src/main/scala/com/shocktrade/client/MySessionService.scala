@@ -4,7 +4,7 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioService}
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest._
-import com.shocktrade.client.profile.UserProfileService
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.contest.{CashAccount, ChatMessage, MarginAccount, Participant}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -34,7 +34,7 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
                             @injected("ChatService") chatService: ChatService,
                             @injected("ContestService") contestService: ContestService,
                             @injected("PortfolioService") portfolioService: PortfolioService,
-                            @injected("UserProfileService") profileService: UserProfileService,
+                            @injected("UserService") profileService: UserService,
                             @injected("QuoteCache") quoteCache: QuoteCache)
   extends Service {
 

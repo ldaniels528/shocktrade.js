@@ -1,7 +1,7 @@
-package com.shocktrade.client.auth
+package com.shocktrade.client.users
 
-import com.shocktrade.client.auth.SignInDialogController.SignInDialogResult
 import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.users.SignInDialogController.SignInDialogResult
 import com.shocktrade.common.auth.AuthenticationForm
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.dom.html.browser.console
@@ -125,4 +125,3 @@ trait SignInDialogScope extends js.Object {
   var signIn: js.Function1[js.UndefOr[AuthenticationForm], Unit]
 
 }
-

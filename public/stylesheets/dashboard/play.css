@@ -165,10 +165,11 @@ div.header_bar {
 }
 
 div.availGamesContainer {
+	border-bottom: 1px solid #888888;
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 200px;
+	height: 400px;
 }
 
 div.myPerksContainer {

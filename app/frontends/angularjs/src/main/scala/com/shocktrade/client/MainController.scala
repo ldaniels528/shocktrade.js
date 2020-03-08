@@ -2,13 +2,12 @@ package com.shocktrade.client
 
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.auth.SignInDialogController.SignInDialogResult
-import com.shocktrade.client.auth.{AuthenticationService, SignInDialogController}
 import com.shocktrade.client.contest.{ContestService, GameLevel}
 import com.shocktrade.client.dialogs.SignUpDialogController
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.profile.UserProfileService
+import com.shocktrade.client.users.SignInDialogController.SignInDialogResult
+import com.shocktrade.client.users.{AuthenticationService, SignInDialogController, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.dom.html.browser.console
@@ -35,7 +34,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("ContestService") contestService: ContestService,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("MySessionService") mySession: MySessionService,
-                     @injected("UserProfileService") profileService: UserProfileService)
+                     @injected("UserService") profileService: UserService)
   extends Controller with GlobalLoading {
 
   private var loadingIndex = 0

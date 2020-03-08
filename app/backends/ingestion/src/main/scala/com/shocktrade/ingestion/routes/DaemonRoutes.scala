@@ -1,8 +1,8 @@
 package com.shocktrade.ingestion.routes
 
-import com.shocktrade.server.common.TradingClock
 import com.shocktrade.ingestion.concurrent.Daemon
 import com.shocktrade.ingestion.concurrent.Daemon.DaemonRef
+import com.shocktrade.server.common.TradingClock
 import io.scalajs.nodejs._
 import io.scalajs.npm.express.{Application, Request, Response}
 

@@ -1,14 +1,14 @@
-package com.shocktrade.client.profile
+package com.shocktrade.client.users
 
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
-import com.shocktrade.client.profile.MyQuotesController._
+import com.shocktrade.client.users.MyQuotesController._
 import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, _}
+import io.scalajs.npm.angularjs.{Location, Scope, _}
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -24,11 +24,11 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySessionService") mySession: MySessionService,
                          @injected("PortfolioService") portfolioService: PortfolioService,
-                         @injected("UserProfileService") profileService: UserProfileService,
+                         @injected("UserService") profileService: UserService,
                          @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
 
-  private val quoteSets = js.Dictionary(QuoteLists map { case (name, icon) =>
+  private val quoteSets = js.Dictionary(quoteLists map { case (name, icon) =>
     name -> new Expandable(icon = icon, quotes = null, expanded = false, loading = false)
   }: _*)
 
@@ -151,7 +151,7 @@ object MyQuotesController {
   private val Held = "Held Securities"
   private val Recents = "Recently Viewed"
 
-  private val QuoteLists = js.Array(
+  private val quoteLists = js.Array(
     Favorites -> "fa-heart",
     Held -> "fa-star",
     Recents -> "fa-history"
@@ -162,12 +162,13 @@ object MyQuotesController {
                    var expanded: Boolean = false,
                    var loading: Boolean = false) extends js.Object
 
+
 }
 
 /**
-  * My Quotes Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * My Quotes Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait MyQuotesControllerScope extends Scope {
   // variables

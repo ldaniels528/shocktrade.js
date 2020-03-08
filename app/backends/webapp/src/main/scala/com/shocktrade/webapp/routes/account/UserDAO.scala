@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
-import com.shocktrade.webapp.routes.social.IconData
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,13 +29,49 @@ trait UserDAO {
   /**
    * Attempts to retrieve a user by username
    * @param name the given username
-   * @return a promise of a collection of users
+   * @return a promise of the option of a users
    */
   def findByUsername(name: String)(implicit ec: ExecutionContext): Future[js.Array[UserData]]
 
-  def createIcon(userID: String, name: String, mime: String, blob: js.Any)(implicit ec: ExecutionContext): Future[Int]
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Icon Management
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  def findIcon(iconID: String)(implicit ec: ExecutionContext): Future[Option[IconData]]
+  def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int]
+
+  def findIcon(userID: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]]
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Account Management
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserAccountData]]
+
+  def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[Double]]
+
+  def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int]
+
+  def depositFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int]
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Favorite Symbols
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def addFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
+
+  def findFavoriteSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]]
+
+  def removeFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Recent Symbols
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  def addRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
+
+  def findRecentSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]]
+
+  def removeRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int]
 
 }
 

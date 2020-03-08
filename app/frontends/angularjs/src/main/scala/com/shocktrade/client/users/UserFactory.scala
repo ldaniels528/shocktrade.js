@@ -1,4 +1,4 @@
-package com.shocktrade.client.profile
+package com.shocktrade.client.users
 
 import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console

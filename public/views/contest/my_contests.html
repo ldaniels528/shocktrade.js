@@ -15,11 +15,11 @@
     <!-- Game Title -->
     <div class="col-md-4">
         <img ng-show="c.loading" src="/images/status/loading16.gif">
-        <i ng-hide="c.loading" class="fa fa-user"></i> {{ c.name }}
+        <avatar ng-hide="c.loading" id="{{ c.userID }}" class="avatar-16" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar> {{ c.name }}
     </div>
     <!-- Leader -->
     <div class="col-md-3 center">
-        <avatar id="{{ c.userID }}" class="avatar-20" title="{{ c.username }}"></avatar>
+        <avatar id="{{ c.userID }}" class="avatar-16" title="{{ c.username }}"></avatar>
          <span class="positive">$ {{ c.totalEquity | number:2 }}</span>
         <span ng-class="c.gainLoss >= 0 ? 'positive' : 'negative'">
             <changearrow value="{{ c.gainLoss }}"></changearrow>

@@ -1,6 +1,6 @@
 package com.shocktrade.client.posts
 
-import com.shocktrade.client.profile.{UserFactory, UserService}
+import com.shocktrade.client.users.{UserFactory, UserService}
 import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.models.post._
 import io.scalajs.dom.html.browser.console
@@ -136,7 +136,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
   /**
     * Loads the user's followers and posts
     */
-  private def loadFollowersAndPostings() = {
+  private def loadFollowersAndPostings(): Unit = {
     val outcome = asyncLoading($scope) {
       for {
         posts <- postService.getPosts.map(_.data)
@@ -155,7 +155,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
     }
   }
 
-  private def enrichPosts(posts: js.Array[Post]) = {
+  private def enrichPosts(posts: js.Array[Post]): Future[js.Array[Post]] = {
     val userIds = posts.flatMap(_.userID.flat.toOption)
     userFactory.getUsers(userIds) map { users =>
       console.log(s"users = ${angular.toJson(users)}")

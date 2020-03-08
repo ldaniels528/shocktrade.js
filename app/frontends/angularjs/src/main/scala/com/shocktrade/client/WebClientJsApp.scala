@@ -1,15 +1,13 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.account.UserAccountService
-import com.shocktrade.client.auth.{AuthenticationService, SignInDialogController}
 import com.shocktrade.client.contest._
 import com.shocktrade.client.dialogs._
 import com.shocktrade.client.directives._
 import com.shocktrade.client.discover._
 import com.shocktrade.client.news._
 import com.shocktrade.client.posts.{PostController, PostService}
-import com.shocktrade.client.profile._
 import com.shocktrade.client.social._
+import com.shocktrade.client.users.{AuthenticationService, SignInDialogController, _}
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
 import io.scalajs.npm.angularjs.{Module, QProvider, Scope, angular}
@@ -122,7 +120,7 @@ object WebClientJsApp {
     module.serviceOf[MySessionService]("MySessionService")
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[PortfolioService]("PortfolioService")
-    module.serviceOf[UserProfileService]("UserProfileService")
+    module.serviceOf[UserService]("UserService")
     module.serviceOf[PostService]("PostService")
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")

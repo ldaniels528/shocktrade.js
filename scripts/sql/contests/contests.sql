@@ -28,14 +28,14 @@ SELECT
     P.portfolioID,
     U.userID,
     U.username,
-    U.iconID,
-    P.funds + SUM(S.lastTrade * PS.quantity) AS totalEquity,
-    (100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100 AS gainLoss
+    IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
+    IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
 FROM contests C
 LEFT JOIN portfolios P ON P.contestID = C.contestID
 LEFT JOIN users U ON U.userID = P.userID
 LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
 LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+WHERE C.contestID = '1cbada39-5b5a-11ea-9a88-0800273905de'
 GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
 ORDER BY totalEquity DESC;
 

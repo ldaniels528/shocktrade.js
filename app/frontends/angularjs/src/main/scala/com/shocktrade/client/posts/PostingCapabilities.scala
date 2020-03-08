@@ -1,6 +1,6 @@
 package com.shocktrade.client.posts
 
-import com.shocktrade.client.profile.UserFactory
+import com.shocktrade.client.users.UserFactory
 import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.models.post.{Comment, Post, Reply}
 import com.shocktrade.common.models.user.User

@@ -1,4 +1,4 @@
-package com.shocktrade.client.auth
+package com.shocktrade.client.users
 
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
