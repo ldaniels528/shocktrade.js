@@ -1,12 +1,14 @@
 package com.shocktrade.client.users
 
+import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.SignInDialogController.SignInDialogResult
 import com.shocktrade.common.auth.AuthenticationForm
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.uibootstrap.ModalInstance
+import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -16,6 +18,22 @@ import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
+
+/**
+ * Sign-In Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+class SignInDialog($http: Http, $uibModal: Modal) extends Service {
+
+  def signIn(): js.Promise[SignUpDialogResult] = {
+    val modalInstance = $uibModal.open[SignInDialogResult](new ModalOptions(
+      templateUrl = "sign_in_dialog.html",
+      controller = classOf[SignInDialogController].getSimpleName
+    ))
+    modalInstance.result
+  }
+
+}
 
 /**
  * Sign-Up Dialog Controller

@@ -3,18 +3,17 @@ package com.shocktrade.client
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestService, GameLevel}
-import com.shocktrade.client.dialogs.SignUpDialogController
-import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
+import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.SignInDialogController.SignInDialogResult
-import com.shocktrade.client.users.{AuthenticationService, SignInDialogController, UserService}
+import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
-import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalOptions}
-import io.scalajs.npm.angularjs.{Controller, Location, Scope, Timeout, injected, _}
+import io.scalajs.npm.angularjs.uibootstrap.Modal
+import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected, _}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -23,7 +22,6 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
 /**
@@ -34,6 +32,8 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("ContestService") contestService: ContestService,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("MySessionService") mySession: MySessionService,
+                     @injected("SignInDialog") signInDialog: SignInDialog,
+                     @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") profileService: UserService)
   extends Controller with GlobalLoading {
 
@@ -84,15 +84,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
-  $scope.postLoginUpdates = (aFacebookID: js.UndefOr[String], aUserInitiated: js.UndefOr[Boolean]) => {
-    for {
-      facebookID <- aFacebookID
-      userInitiated <- aUserInitiated
-    } {
-      mySession.doPostLoginUpdates(facebookID, userInitiated)
-    }
-  }
-
   //////////////////////////////////////////////////////////////////////
   //              My Session Service Functions
   //////////////////////////////////////////////////////////////////////
@@ -109,15 +100,26 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
 
-  $scope.getNetWorth = () => mySession.userProfile.netWorth.orZero
+  $scope.getNetWorth = () => $scope.userProfile.flatMap(_.netWorth).orZero
 
-  $scope.getWallet = () => mySession.userProfile.wallet.orZero
+  $scope.getWallet = () => $scope.userProfile.flatMap(_.wallet).orZero
 
-  $scope.getUserID = () => mySession.userProfile.userID.orNull
+  $scope.getWealthChange = () => {
+    val original = 250e+3
+    (for {
+      netWorth <- $scope.netWorth
+      cash <- netWorth.wallet
+      funds <- netWorth.funds
+      equity <- netWorth.equity
+      change = ((cash + funds + equity) - original) / original * 100.0
+    } yield change).orZero
+  }
 
-  $scope.getUserName = () => mySession.getUserName.orNull
+  $scope.getUserID = () => $scope.userProfile.flatMap(_.userID).orNull
 
-  $scope.getUserProfile = () => mySession.userProfile
+  $scope.getUserName = () => $scope.userProfile.flatMap(_.username).orNull
+
+  $scope.getUserProfile = () => $scope.userProfile.orNull
 
   $scope.hasNotifications = () => mySession.hasNotifications
 
@@ -171,27 +173,22 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   $scope.signIn = () => {
-    val modalInstance = $uibModal.open[SignInDialogResult](new ModalOptions(
-      templateUrl = "sign_in_dialog.html",
-      controller = classOf[SignInDialogController].getSimpleName
-    ))
-    modalInstance.result onComplete {
+    signInDialog.signIn() onComplete {
       case Success(response) =>
-        console.log(s"response = ${JSON.stringify(response)}")
+        console.log(s"response = ${angular.toJson(response)}")
+        $scope.$apply(() => $scope.userProfile = response)
         mySession.setUserProfile(response)
+        $scope.userProfile.flatMap(_.userID) foreach updateNetWorth
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
   }
 
   $scope.signUp = () => {
-    val modalInstance = $uibModal.open[SignUpDialogResult](new ModalOptions(
-      controller = classOf[SignUpDialogController].getSimpleName,
-      templateUrl = "sign_up_dialog.html"
-    ))
-    modalInstance.result onComplete {
-      case Success(profile) =>
-        mySession.setUserProfile(profile)
+    signUpDialog.signUp() onComplete {
+      case Success(response) =>
+        console.log(s"response = ${angular.toJson(response)}")
+        mySession.setUserProfile(response)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -214,7 +211,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.switchToNewsFeed = () => $scope.switchToTab(MainTab.NewsFeed)
 
   $scope.switchToTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
-    mySession.userProfile.userID.toOption match {
+    $scope.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
           case Success(response) =>
@@ -238,11 +235,32 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     $location.url(tab.url)
   }
 
+  private def updateNetWorth(userID: String): Unit = {
+    profileService.getNetWorth(userID) onComplete {
+      case Success(response) => $scope.$apply(() => $scope.netWorth = response.data)
+      case Failure(e) =>
+        e.printStackTrace()
+    }
+  }
+
   //////////////////////////////////////////////////////////////////////
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.onUserStatusChanged((_, newState) => console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}"))
+  $scope.onUserProfileChanged { (_, profile) =>
+    console.log(s"profile = ${JSON.stringify(profile)}")
+    $scope.$apply(() => $scope.userProfile = profile)
+    profile.userID foreach updateNetWorth
+  }
+
+  $scope.onUserProfileUpdated { (_, profile) =>
+    console.log(s"profile = ${JSON.stringify(profile)}")
+    $scope.$apply(() => $scope.userProfile = profile)
+  }
+
+  $scope.onUserStatusChanged { (_, newState) =>
+    console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}")
+  }
 
 }
 
@@ -297,7 +315,7 @@ object MainController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MainControllerScope extends Scope with GlobalNavigation {
+trait MainControllerScope extends RootScope with GlobalNavigation {
   // variables
   var appTabs: js.Array[MainTab] = js.native
   var levels: js.Array[GameLevel] = js.native
@@ -314,7 +332,6 @@ trait MainControllerScope extends Scope with GlobalNavigation {
   var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
   var getTabIndex: js.Function0[Int] = js.native
   var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
-  var postLoginUpdates: js.Function2[js.UndefOr[String], js.UndefOr[Boolean], Unit] = js.native
 
   var contestIsEmpty: js.Function0[Boolean] = js.native
   var getContestID: js.Function0[js.UndefOr[String]] = js.native
@@ -325,6 +342,7 @@ trait MainControllerScope extends Scope with GlobalNavigation {
   var getTotalInvestment: js.Function0[Double] = js.native
   var getNetWorth: js.Function0[Double] = js.native
   var getWallet: js.Function0[Double] = js.native
+  var getWealthChange: js.Function0[Double] = js.native
   var getUserID: js.Function0[String] = js.native
   var getUserName: js.Function0[String] = js.native
   var getUserProfile: js.Function0[UserProfile] = js.native

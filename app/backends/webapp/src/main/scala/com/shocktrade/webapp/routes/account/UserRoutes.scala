@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.common.forms.SignUpForm
-import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.webapp.routes.{NextFunction, Ok}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -9,7 +8,6 @@ import io.scalajs.npm.express.{Application, Request, Response}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -23,7 +21,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createAccount(request, response, next))
   app.get("/api/user/:userID", (request: Request, response: Response, next: NextFunction) => userByID(request, response, next))
   app.get("/api/user/:userID/icon", (request: Request, response: Response, next: NextFunction) => userIcon(request, response, next))
-  app.get("/api/user/:userID/netWorth", (request: Request, response: Response, next: NextFunction) => netWorth(request, response, next))
+  app.get("/api/user/:userID/netWorth", (request: Request, response: Response, next: NextFunction) => computeNetWorth(request, response, next))
   app.put("/api/user/:userID/favorite/:symbol", (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
   app.put("/api/user/:userID/recent/:symbol", (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
 
@@ -98,10 +96,11 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def netWorth(request: Request, response: Response, next: NextFunction): Unit = {
+  def computeNetWorth(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
     userDAO.computeNetWorth(userID) onComplete {
-      case Success(total) => response.send(new NetWorth(total.orUndefined))
+      case Success(Some(netWorth)) => response.send(netWorth)
+      case Success(None) => response.notFound(request.params)
       case Failure(e) =>
         response.internalServerError(e); next()
     }

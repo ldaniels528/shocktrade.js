@@ -4,15 +4,15 @@
             <div class="positive" title="Liquid cash available">
                 <img ng-src="/images/status/{{ isWebSocketConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
                      title="{{ isWebSocketConnected() ? 'Connected' : 'Not Connected' }}">
-                <i class="fa fa-money"></i> {{ getNetWorth() | number:2 }}
+                <i class="fa fa-money"></i> {{ netWorth.wallet || 0.0 | number: 2 }}
             </div>
             <div class="emphasis" title="Total investment value">
                 <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
                    title="{{ hasNotifications() ? 'New events available' : 'No events available' }}"></i>
-                <i class="fa fa-line-chart"></i>
+                <i class="fa fa-line-chart"></i> {{ (netWorth.funds + netWorth.equity) || 0.0 | number: 2 }}
                 <span class="pull-right">
                     <changearrow value="{{ getWealthChange() }}"></changearrow>
-                    <span ng-class="getWealthChange() < 0 ? 'negative' : 'positive'">{{ getWealthChange() | number:1 }}%</span>
+                    <span ng-class="getWealthChange() < 0 ? 'negative' : 'positive'">{{ getWealthChange() | number:2 }}%</span>
                 </span>
             </div>
         </div>
@@ -46,7 +46,8 @@
             </span>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-            <span ng-show="isAuthenticated()"  class="title_color" ng-show="getUserName()">&#8212; {{ getUserName() }}</span>
+            <span ng-show="isAuthenticated()"  class="title_color" ng-show="getUserName()">
+                &#8212; <avatar id="{{ getUserID() }}" class="avatar-16""></avatar> {{ getUserName() }}</span>
         </span>
     </div>
 </div>

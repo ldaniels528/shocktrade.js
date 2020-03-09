@@ -17,7 +17,7 @@ object Filters {
   /**
     * Absolute Value
     */
-  val abs: js.Function = () => { (value: js.UndefOr[Any]) =>
+  val abs: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
       case v: Number => Math.abs(v.doubleValue())
@@ -45,14 +45,14 @@ object Filters {
   /**
     * Capitalize: Returns the capitalize representation of a given string
     */
-  val capitalize: js.Function = () => { (value: js.UndefOr[String]) =>
+  val capitalize: js.Function = () => { value: js.UndefOr[String] =>
     value map { s => if (s.nonEmpty) s.head.toUpper + s.tail else "" }
   }: js.Function
 
   /**
     * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
     */
-  val duration: js.Function = () => { (time: js.Dynamic) => toDuration(time, noFuture = false) }: js.Function
+  val duration: js.Function = () => { time: js.Dynamic => toDuration(time, noFuture = false) }: js.Function
 
   /**
     * Escape: Performs an escape
@@ -62,7 +62,7 @@ object Filters {
   /**
     * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
     */
-  val newsDuration: js.Function = () => { (time: js.UndefOr[js.Any]) => toDuration(time, noFuture = true) }: js.Function
+  val newsDuration: js.Function = () => { time: js.UndefOr[js.Any] => toDuration(time, noFuture = true) }: js.Function
 
   /**
     * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
@@ -104,7 +104,7 @@ object Filters {
     * @param aTime the given [[js.Date]] or time stamp (in milliseconds)
     * @return the duration (e.g. "10 mins ago")
     */
-  def toDuration(aTime: js.UndefOr[js.Any], noFuture: Boolean = false) = aTime map { time =>
+  def toDuration(aTime: js.UndefOr[js.Any], noFuture: Boolean = false): js.UndefOr[String] = aTime map { time =>
     val ts = time.toString match {
       case s if s.matches("\\d+") => s.toDouble
       case s => js.Date.parse(s)

@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.account
 
+import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.webapp.routes.SymbolData
 import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
@@ -48,13 +49,17 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
     } yield newAccount
   }
 
-  override def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[Double]] = {
-    conn.queryFuture[UserAccountData](
-      """|SELECT wallet
-         |FROM portfolios
-         |WHERE userID = ?
+  override def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[NetWorth]] = {
+    conn.queryFuture[NetWorth](
+      """|SELECT U.userID, U.username, U.wallet, SUM(P.funds) funds, SUM(S.lastTrade * PS.quantity) equity
+         |FROM users U
+         |INNER JOIN contests C
+         |INNER JOIN portfolios P ON P.contestID = C.contestID AND P.userID = U.userID
+         |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
+         |INNER JOIN stocks S ON S.symbol = PS.symbol
+         |WHERE U.userID = ?
          |""".stripMargin,
-      js.Array(userID)) map { case (rows, _) => rows.headOption.flatMap(_.wallet.toOption) }
+      js.Array(userID)) map { case (rows, _) => rows.headOption }
   }
 
   override def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int] = {

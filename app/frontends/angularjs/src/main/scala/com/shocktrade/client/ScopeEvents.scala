@@ -102,6 +102,7 @@ object ScopeEvents {
     private def broadcast(action: String, entity: js.Any): Unit = {
       console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
       $scope.$broadcast(ContestCreated, entity)
+      $scope.$emit(ContestCreated, entity)
       ()
     }
 

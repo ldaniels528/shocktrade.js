@@ -1,9 +1,8 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.ScopeEvents._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.{Controller, Q, Scope, injected}
+import io.scalajs.npm.angularjs.{Controller, Q, injected}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -12,16 +11,16 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Information Bar Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Information Bar Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class InformationBarController($scope: InformationBarScope, $q: Q,
                                @injected("MySessionService") mySession: MySessionService,
                                @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
                                @injected("WebSocketService") webSocket: WebSocketService) extends Controller {
 
   $scope.init = () => {
-    // do something in the future
+    console.log(s"${getClass.getSimpleName} is initializing...")
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -42,8 +41,6 @@ class InformationBarController($scope: InformationBarScope, $q: Q,
     name <- result.name
   } yield name
 
-  $scope.getWealthChange = () => mySession.userProfile.netWorth.map(nw => 100 * (nw - 250e+3) / 250e+3).orZero
-
   $scope.isWebSocketConnected = () => webSocket.isConnected
 
   $scope.onSelectedItem = (item: js.UndefOr[js.Any], aModel: js.UndefOr[EntitySearchResult], label: js.UndefOr[String]) => {
@@ -60,25 +57,17 @@ class InformationBarController($scope: InformationBarScope, $q: Q,
     }
   }
 
-  // setup a listener for user profile changes
-  $scope.onUserProfileChanged { (_, profile) =>
-    $scope.$apply(() => {
-
-    })
-  }
-
 }
 
 /**
-  * Information Bar Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Information Bar Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
-trait InformationBarScope extends Scope {
+trait InformationBarScope extends RootScope {
   var init: js.Function0[Unit] = js.native
   var autoCompleteSearch: js.Function1[String, js.Promise[js.Array[EntitySearchResult]]] = js.native
   var formatSearchResult: js.Function1[js.UndefOr[EntitySearchResult], js.UndefOr[String]] = js.native
-  var getWealthChange: js.Function0[Double] = js.native
   var isWebSocketConnected: js.Function0[Boolean] = js.native
   var onSelectedItem: js.Function3[js.UndefOr[js.Any], js.UndefOr[EntitySearchResult], js.UndefOr[String], Unit] = js.native
 

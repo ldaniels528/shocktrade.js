@@ -10,7 +10,7 @@ import com.shocktrade.client.social._
 import com.shocktrade.client.users.{AuthenticationService, SignInDialogController, _}
 import io.scalajs.npm.angularjs.facebook.FacebookService
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
-import io.scalajs.npm.angularjs.{Module, QProvider, Scope, angular}
+import io.scalajs.npm.angularjs.{Module, QProvider, angular}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -75,7 +75,7 @@ object WebClientJsApp {
     }
 
     // initialize the application
-    app.run({ ($rootScope: Scope, WebSocketService: WebSocketService) =>
+    app.run({ ($rootScope: RootScope, WebSocketService: WebSocketService) =>
       // initialize the web socket service
       WebSocketService.init()
       ()
@@ -91,6 +91,8 @@ object WebClientJsApp {
     module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
     module.serviceOf[PerksDialog]("PerksDialog")
     module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
+    module.serviceOf[SignInDialog]("SignInDialog")
+    module.serviceOf[SignUpDialog]("SignUpDialog")
     module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
 
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
