@@ -1,7 +1,7 @@
 USE shocktrade;
 
 -- ------------------------------------------------------------
--- Contest tables
+-- Contest table
 -- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS contests;
@@ -9,7 +9,7 @@ CREATE TABLE contests (
      contestID CHAR(36) PRIMARY KEY,
      name VARCHAR(128) NOT NULL,
      hostUserID CHAR(36) NOT NULL,
-     status VARCHAR(12) NOT NULL DEFAULT 'ACTIVE',
+     statusID INTEGER NOT NULL DEFAULT 2,
      startingBalance DECIMAL(12,5) NOT NULL,
      friendsOnly BIT NOT NULL DEFAULT 0,
      invitationOnly BIT NOT NULL DEFAULT 0,
@@ -21,21 +21,40 @@ CREATE TABLE contests (
      expirationTime DATETIME NULL
 );
 
+-- ------------------------------------------------------------
+-- Contest Status table
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS contest_statuses;
+CREATE TABLE contest_statuses (
+    statusID INTEGER AUTO_INCREMENT PRIMARY KEY,
+    status VARCHAR(20) NOT NULL
+);
+
+INSERT INTO contest_statuses (status) VALUES ('QUEUED');
+INSERT INTO contest_statuses (status) VALUES ('ACTIVE');
+INSERT INTO contest_statuses (status) VALUES ('CLOSED');
+
+-- ------------------------------------------------------------
+-- Contest Ranking view
+-- ------------------------------------------------------------
+
 DROP VIEW IF EXISTS contest_rankings;
 CREATE VIEW contest_rankings AS
 SELECT
     C.*,
+    CS.status,
     P.portfolioID,
     U.userID,
     U.username,
     IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
     IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
 FROM contests C
+LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
 LEFT JOIN portfolios P ON P.contestID = C.contestID
 LEFT JOIN users U ON U.userID = P.userID
 LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
 LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-WHERE C.contestID = '1cbada39-5b5a-11ea-9a88-0800273905de'
 GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
 ORDER BY totalEquity DESC;
 

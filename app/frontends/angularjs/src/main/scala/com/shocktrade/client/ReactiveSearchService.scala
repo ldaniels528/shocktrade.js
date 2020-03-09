@@ -1,7 +1,7 @@
 package com.shocktrade.client
 
 import io.scalajs.npm.angularjs.Service
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
 import scala.scalajs.js
 
@@ -11,7 +11,7 @@ import scala.scalajs.js
   */
 class ReactiveSearchService($http: Http) extends Service {
 
-  def search(searchTerm: String, maxResults: Int = 20) = {
+  def search(searchTerm: String, maxResults: Int = 20): js.Promise[HttpResponse[js.Array[EntitySearchResult]]] = {
     $http.get[js.Array[EntitySearchResult]](s"/api/search?searchTerm=$searchTerm&maxResults=$maxResults")
   }
 

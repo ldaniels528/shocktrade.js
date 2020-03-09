@@ -8,24 +8,32 @@ TRUNCATE positions;
 -- ------------------------------------------------------------
 -- Contests
 -- ------------------------------------------------------------
-INSERT INTO contests (contestID, hostUserID, name, startingBalance, expirationTime)
-SELECT uuid(), userID, 'Winter is here', 25000, DATE_ADD(now(), INTERVAL 30 DAY)
+INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, expirationTime)
+SELECT uuid(), userID, 'Winter is here', CS.statusID, 25000, DATE_ADD(now(), INTERVAL 30 DAY)
 FROM users
+LEFT JOIN contest_statuses CS ON CS.status = 'ACTIVE'
 WHERE username = 'ldaniels528';
 
-INSERT INTO contests (contestID, hostUserID, name, startingBalance, expirationTime)
-SELECT uuid(), userID, 'Winter is coming', 25000, DATE_ADD(now(), INTERVAL 30 DAY)
+INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, expirationTime)
+SELECT uuid(), userID, 'Winter is coming', CS.statusID, 25000, DATE_ADD(now(), INTERVAL 30 DAY)
 FROM users
+LEFT JOIN contest_statuses CS ON CS.status = 'ACTIVE'
 WHERE username = 'ldaniels';
 
-INSERT INTO contests (contestID, hostUserID, name, startingBalance, expirationTime)
-SELECT uuid(), userID, 'Girl Power', 25000, DATE_ADD(now(), INTERVAL 30 DAY)
+INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, expirationTime)
+SELECT uuid(), userID, 'Girl Power', CS.statusID, 25000, DATE_ADD(now(), INTERVAL 30 DAY)
 FROM users
+LEFT JOIN contest_statuses CS ON CS.status = 'ACTIVE'
 WHERE username = 'daisy';
 
 -- ------------------------------------------------------------
 -- Portfolios
 -- ------------------------------------------------------------
+INSERT INTO portfolios (portfolioID, userID, contestID, funds)
+SELECT uuid(), U.userID, C.contestID, C.startingBalance
+FROM users U
+INNER JOIN contests C ON C.name = 'Winter is here';
+
 INSERT INTO portfolios (portfolioID, userID, contestID, funds)
 SELECT uuid(), U.userID, C.contestID, C.startingBalance
 FROM users U

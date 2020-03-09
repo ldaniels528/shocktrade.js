@@ -3,7 +3,6 @@ package social
 
 import com.shocktrade.common.forms.MaxResultsForm
 import com.shocktrade.common.models.post.Post
-import com.shocktrade.webapp.routes.account.UserDAO
 import com.shocktrade.webapp.routes.social.PostRoutes._
 import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -20,7 +19,6 @@ import scala.util.{Failure, Success}
  */
 class PostRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val postDAO = PostDAO()
-  private val userDAO = UserDAO()
 
   // Post CRUD
   app.post("/api/post", (request: Request, response: Response, next: NextFunction) => createPost(request, response, next))

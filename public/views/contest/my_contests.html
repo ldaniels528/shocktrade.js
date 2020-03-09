@@ -6,8 +6,8 @@
 
 <div class="row" ng-show="getMyContests().length">
     <div class="col-md-4 header left padding-left-16">Game Title</div>
-    <div class="col-md-3 header center">Leader</div>
     <div class="col-md-3 header center">My Ranking</div>
+    <div class="col-md-3 header center">Leading Player</div>
     <div class="col-md-2 header right">Game Features</div>
 </div>
 
@@ -15,28 +15,27 @@
     <!-- Game Title -->
     <div class="col-md-4">
         <img ng-show="c.loading" src="/images/status/loading16.gif">
-        <avatar ng-hide="c.loading" id="{{ c.userID }}" class="avatar-16" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar> {{ c.name }}
-    </div>
-    <!-- Leader -->
-    <div class="col-md-3 center">
-        <avatar id="{{ c.userID }}" class="avatar-16" title="{{ c.username }}"></avatar>
-         <span class="positive">$ {{ c.totalEquity | number:2 }}</span>
-        <span ng-class="c.gainLoss >= 0 ? 'positive' : 'negative'">
-            <changearrow value="{{ c.gainLoss }}"></changearrow>
-            {{ c.gainLoss | abs | number:2 }}%
-        </span>
+        <avatar ng-hide="c.loading" id="{{ c.hostUserID }}" class="avatar-16" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar> {{ c.name }}
     </div>
     <!-- My Ranking -->
     <div class="col-md-3 center">
-        <span ng-if="getMyRankings(c)">
-            <span ng-class="'rank_' + getMyRankings(c).rank">{{ getMyRankings(c).rank }}</span>
-            <span ng-class="getMyRankings(c).gainLoss >= 0 ? 'positive' : 'negative'">
-                <changearrow value="{{ getMyRankings(c).gainLoss }}"></changearrow>
-                {{ getMyRankings(c).gainLoss | abs | number:2 }}%
-            </span>
+        <span ng-class="'rank_' + c.playerRank">{{ rankOf(c.playerRank) }}</span>
+        <avatar id="{{ c.playerID }}" class="avatar-16" title="{{ c.playerName }}"></avatar>
+        <span ng-class="c.playerGainLoss >= 0 ? 'positive' : 'negative'">
+            <changearrow value="{{ c.playerGainLoss }}"></changearrow>
+            {{ c.playerGainLoss | abs | number:2 }}%
         </span>
-        <span ng-hide="getMyRankings(c)" class="null">
+        <span ng-hide="c.contestID" class="null">
             <img src="/images/status/loading16.gif"> Loading...
+        </span>
+    </div>
+    <!-- Leader -->
+    <div class="col-md-3 center">
+        <span ng-class="'rank_' + c.leaderRank">{{ rankOf(c.leaderRank) }}</span>
+        <avatar id="{{ c.leaderID }}" class="avatar-16" title="{{ c.leaderName }}"></avatar>
+        <span ng-class="c.leaderGainLoss >= 0 ? 'positive' : 'negative'">
+            <changearrow value="{{ c.leaderGainLoss }}"></changearrow>
+            {{ c.leaderGainLoss | abs | number:2 }}%
         </span>
     </div>
     <!-- Game Features -->

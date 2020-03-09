@@ -5,17 +5,17 @@ import io.scalajs.npm.express.{Request, Response}
 import scala.scalajs.js
 
 /**
-  * Routes package object
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Routes package object
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 package object routes {
 
   type NextFunction = js.Function0[Unit]
 
   /**
-    * Request Extensions
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Request Extensions
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   implicit class RequestExtensions(val request: Request) extends AnyVal {
 
     def getMaxResults(default: Int = 20): Int = request.query.get("maxResults") map (_.toInt) getOrElse default
@@ -25,9 +25,9 @@ package object routes {
   }
 
   /**
-    * Parameter Extensions
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Parameter Extensions
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   implicit class ParameterExtensions(val params: js.Dictionary[String]) extends AnyVal {
 
     @inline
@@ -38,10 +38,15 @@ package object routes {
   }
 
   /**
-    * Response Extensions
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Response Extensions
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   implicit class ResponseExtensions(val response: Response) extends AnyVal {
+
+    def showException(e: Throwable): response.type = {
+      e.printStackTrace()
+      response
+    }
 
     @inline
     def missingParams(params: String*): Unit = {

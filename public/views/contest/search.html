@@ -43,8 +43,7 @@
                     <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
                 </div>
 
-                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable"
-                    ng-click="selectContest(c)">
+                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="selectContest(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
@@ -61,7 +60,7 @@
                         <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2 center">
-                        <span ng-class="getSelectionClass(c)">{{ c.participants.length || 0 }}</span>
+                        <span ng-class="getSelectionClass(c)">{{ c.playerCount }}</span>
                     </div>
                     <div ng-hide="isSplitScreen()" class="col-md-2">
                         <span class="pull-right">

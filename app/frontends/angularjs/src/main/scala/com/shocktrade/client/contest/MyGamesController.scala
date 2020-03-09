@@ -3,8 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
-import com.shocktrade.client.models.contest.Contest
-import com.shocktrade.common.models.contest.ContestRanking
+import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -14,7 +13,6 @@ import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -28,8 +26,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
                         @injected("PortfolioService") portfolioService: PortfolioService)
   extends GameController($scope, $location, toaster, mySession, portfolioService) {
 
-  private var myContests = js.Array[Contest]()
-  private var myRankings = js.Array[ContestRanking]()
+  private var myContests = js.Array[MyContest]()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Scope Functions
@@ -39,29 +36,17 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
 
   $scope.getMyContests = () => myContests
 
-  $scope.getMyRankings = (aContest: js.UndefOr[Contest]) => aContest flatMap { contest =>
-    //mySession.updateRankings(contest).player
-    myContests.headOption.orUndefined
-  }
+  $scope.popupNewGameDialog = () => popupNewGameDialog()
 
-  $scope.popupNewGameDialog = () => {
-    newGameDialog.popup() onComplete {
-      case Success(_) => $scope.$apply(() => reload())
-      case Failure(e) =>
-        toaster.error("Failed to create game")
-        console.error(s"Failed to create game ${e.displayMessage}")
-    }
-  }
+  $scope.rankOf = (rank: js.UndefOr[Int]) => rank.map(rankOf)
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def reload(): Unit = mySession.userProfile.userID foreach loadMyContests
-
   private def loadMyContests(userID: String): Unit = {
     console.log(s"Loading 'My Contests' for user '$userID'...")
-    contestService.findContestsByUserID(userID) onComplete {
+    contestService.findMyContests(userID) onComplete {
       case Success(response) if response.status == 200 =>
         val contests = response.data
         console.log(s"Loaded ${contests.length} contest(s)")
@@ -74,6 +59,28 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
         console.error(s"Failed to load 'My Contests': ${JSON.stringify(e.displayMessage)}")
     }
   }
+
+  private def popupNewGameDialog(): Unit = {
+    newGameDialog.popup() onComplete {
+      case Success(_) => $scope.$apply(() => reload())
+      case Failure(e) =>
+        toaster.error("Failed to create game")
+        console.error(s"Failed to create game: ${e.displayMessage}")
+    }
+  }
+
+  private def rankOf(rank: Int): String = {
+    val suffix = rank.toString match {
+      case n if n.endsWith("11") | n.endsWith("12") | n.endsWith("13") => "th"
+      case n if n.endsWith("1") => "st"
+      case n if n.endsWith("2") => "nd"
+      case n if n.endsWith("3") => "rd"
+      case _ => "th"
+    }
+    s"$rank$suffix"
+  }
+
+  private def reload(): Unit = mySession.userProfile.userID foreach loadMyContests
 
   ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners
@@ -104,8 +111,8 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
 trait MyGamesScope extends GameScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
-  var getMyContests: js.Function0[js.Array[Contest]] = js.native
-  var getMyRankings: js.Function1[js.UndefOr[Contest], js.UndefOr[Contest]] = js.native
+  var getMyContests: js.Function0[js.Array[MyContest]] = js.native
   var popupNewGameDialog: js.Function0[Unit] = js.native
+  var rankOf: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
 
 }

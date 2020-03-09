@@ -1,7 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.MySessionService
-import com.shocktrade.client.models.contest.Contest
+import com.shocktrade.client.models.contest.ContestSearchResultUI
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Location, Scope}
 
@@ -20,11 +20,11 @@ abstract class GameController($scope: GameScope,
                               portfolioService: PortfolioService)
   extends Controller {
 
-  $scope.enterGame = (aContest: js.UndefOr[Contest]) => enterGame(aContest)
+  $scope.enterGame = (aContest: js.UndefOr[ContestSearchResultUI]) => enterGame(aContest)
 
-  $scope.isParticipant = (aContest: js.UndefOr[Contest]) => isParticipant(aContest)
+  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => isParticipant(aContest)
 
-  private def enterGame(aContest: js.UndefOr[Contest]): Unit = aContest foreach { contest =>
+  private def enterGame(aContest: js.UndefOr[ContestSearchResultUI]): Unit = aContest foreach { contest =>
     if ($scope.isParticipant(contest)) {
       val results = for {
         contestID <- contest.contestID.toOption
@@ -50,8 +50,8 @@ abstract class GameController($scope: GameScope,
     }
   }
 
-  private def isParticipant(aContest: js.UndefOr[Contest]): Boolean = aContest exists { contest =>
-    contest.participants.exists(_.exists(_.is(mySession.userProfile.userID)))
+  private def isParticipant(aContest: js.UndefOr[ContestSearchResultUI]): Boolean = aContest exists { contest =>
+    contest.hostUserID == mySession.userProfile.userID
   }
 
 }
@@ -63,6 +63,7 @@ abstract class GameController($scope: GameScope,
 @js.native
 trait GameScope extends Scope {
   // functions
-  var enterGame: js.Function1[js.UndefOr[Contest], Unit] = js.native
-  var isParticipant: js.Function1[js.UndefOr[Contest], Boolean] = js.native
+  var enterGame: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
+  var isParticipant: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
+
 }

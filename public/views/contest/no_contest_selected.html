@@ -19,7 +19,7 @@
             <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20"></avatar>{{ c.name }}
         </div>
         <div class="col-md-2 center">
-            <span ng-class="c.status === 'ACTIVE' ? '' : 'null'">{{ c.participants.length || 0 }}</span>
+            <span ng-class="isActive(c) ? '' : 'null'">{{ c.participants.length || 0 }}</span>
         </div>
         <div class="col-md-3">
             <span class="pull-right">

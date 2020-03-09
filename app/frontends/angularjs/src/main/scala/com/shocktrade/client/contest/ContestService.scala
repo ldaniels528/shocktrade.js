@@ -1,7 +1,8 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest.{Contest, ContestSearchOptions}
-import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, PlayerInfoForm}
+import com.shocktrade.client.models.contest.Contest
+import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm, PlayerInfoForm}
+import com.shocktrade.common.models.contest.{ContestSearchResult, MyContest}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
@@ -45,8 +46,8 @@ class ContestService($http: Http) extends Service {
   //          Contest Finders
   ///////////////////////////////////////////////////////////////
 
-  def findContests(searchOptions: ContestSearchOptions): js.Promise[HttpResponse[js.Array[Contest]]] = {
-    $http.post[js.Array[Contest]]("/api/contests/search", searchOptions)
+  def findContests(searchOptions: ContestSearchForm): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
+    $http.post[js.Array[ContestSearchResult]]("/api/contests/search", searchOptions)
   }
 
   def findContestByID(contestID: String): js.Promise[HttpResponse[Contest]] = {
@@ -57,8 +58,8 @@ class ContestService($http: Http) extends Service {
     $http.get[Contest](s"/api/contest/$contestID/user/$userID")
   }
 
-  def findContestsByUserID(userID: String): js.Promise[HttpResponse[js.Array[Contest]]] = {
-    $http.get[js.Array[Contest]](s"/api/contests/user/$userID")
+  def findMyContests(userID: String): js.Promise[HttpResponse[js.Array[MyContest]]] = {
+    $http.get[js.Array[MyContest]](s"/api/contests/user/$userID")
   }
 
 }

@@ -37,7 +37,7 @@ trait ContestLike extends js.Object {
 
   def invitationOnly: js.UndefOr[Boolean]
 
-  def levelCap: js.UndefOr[String]
+  def levelCap: js.UndefOr[Int]
 
   def perksAllowed: js.UndefOr[Boolean]
 

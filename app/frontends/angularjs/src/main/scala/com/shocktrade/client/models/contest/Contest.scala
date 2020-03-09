@@ -25,7 +25,7 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
               // indicators
               var friendsOnly: js.UndefOr[Boolean] = js.undefined,
               var invitationOnly: js.UndefOr[Boolean] = js.undefined,
-              var levelCap: js.UndefOr[String] = js.undefined,
+              var levelCap: js.UndefOr[Int] = js.undefined,
               var perksAllowed: js.UndefOr[Boolean] = js.undefined,
               var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends ContestLike {
 

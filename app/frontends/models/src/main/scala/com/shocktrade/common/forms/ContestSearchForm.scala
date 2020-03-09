@@ -13,7 +13,7 @@ class ContestSearchForm(var activeOnly: js.UndefOr[Boolean],
                         var available: js.UndefOr[Boolean],
                         var friendsOnly: js.UndefOr[Boolean],
                         var invitationOnly: js.UndefOr[Boolean],
-                        var levelCap: js.UndefOr[String],
+                        var levelCap: js.UndefOr[Int],
                         var levelCapAllowed: js.UndefOr[Boolean],
                         var perksAllowed: js.UndefOr[Boolean],
                         var robotsAllowed: js.UndefOr[Boolean]) extends js.Object
