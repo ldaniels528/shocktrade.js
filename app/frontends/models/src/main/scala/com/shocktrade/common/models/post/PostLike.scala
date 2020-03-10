@@ -3,9 +3,9 @@ package com.shocktrade.common.models.post
 import scala.scalajs.js
 
 /**
-  * Represents a Post-like model
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents a Post-like model
+ * @author lawrence.daniels@gmail.com
+ */
 trait PostLike extends js.Object {
 
   def text: js.UndefOr[String]

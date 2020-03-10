@@ -12,9 +12,9 @@ import scala.scalajs.js
  * @example <avatar id="{{ p.facebookID }}" class="avatar-24"></avatar>
  */
 class AvatarDirective extends Directive with ElementRestriction with LinkSupport[AvatarDirectiveScope] with TemplateSupport {
-  private val unknownPerson = "/images/avatars/avatar100.png"
   override val scope = new AvatarDirectiveInputs(id = "@id", link = "@link", `class` = "@class", style = "@style")
   override val template = """<img ng-src="{{ url }}" ng-class="myClass" class="{{ class }}" style="{{ style }}">"""
+  private val unknownPerson = "/images/avatars/avatar100.png"
 
   override def link(scope: AvatarDirectiveScope, element: JQLite, attrs: Attributes): Unit = {
     scope.$watch("id", (newValue: Any, oldValue: Any) => populateScope(scope, newValue, oldValue))

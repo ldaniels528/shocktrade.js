@@ -19,9 +19,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Chat Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Chat Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $location: Location, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
                      @injected("ChatService") chatService: ChatService,
@@ -92,9 +92,9 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
   private def colorOf(name: String) = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
 
   /**
-    * Sends a chat message to the server
-    * @param messageText the given chat message text
-    */
+   * Sends a chat message to the server
+   * @param messageText the given chat message text
+   */
   private def sendChatMessage(messageText: String) {
     val outcome = for {
       portfolioID <- mySession.userProfile.userID.toOption
@@ -153,9 +153,9 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
 }
 
 /**
-  * Chat Controller Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Chat Controller Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ChatController {
 
   private val Colors = js.Array("#0088ff", "#ff00ff", "#008888", "#2200ff")
@@ -186,9 +186,9 @@ object ChatController {
 }
 
 /**
-  * Chat Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Chat Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ChatControllerScope extends Scope {
   // variables

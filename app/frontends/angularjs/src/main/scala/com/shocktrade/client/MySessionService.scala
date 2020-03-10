@@ -5,7 +5,7 @@ import com.shocktrade.client.contest.{ChatService, ContestService, PortfolioServ
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest._
 import com.shocktrade.client.users.UserService
-import com.shocktrade.common.models.contest.{CashAccount, ChatMessage, MarginAccount, Participant}
+import com.shocktrade.common.models.contest.{ChatMessage, Participant}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -83,6 +83,35 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     resetContest()
   }
 
+  def resetContest(): Unit = {
+    contest_? = None
+    participant_? = None
+    portfolio_? = None
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  //          NetWorth Functions
+  /////////////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a default 'Spectator' user profile
+   * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
+   */
+  private def createSpectatorProfile() = {
+    notifications.removeAll()
+    resetContest()
+
+    new UserProfile(
+      username = "Spectator",
+      country = "us",
+      lastSymbol = "AAPL"
+    )
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  //          Symbols - Favorites, Recent, etc.
+  /////////////////////////////////////////////////////////////////////
+
   def refresh(): Unit = {
     userProfile.userID foreach { userID =>
 
@@ -99,39 +128,55 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     }*/
   }
 
-  /////////////////////////////////////////////////////////////////////
-  //          NetWorth Functions
-  /////////////////////////////////////////////////////////////////////
-
   def deduct(amount: Double): Unit = userProfile.wallet = userProfile.wallet.map(_ - amount)
-
-  /////////////////////////////////////////////////////////////////////
-  //          Symbols - Favorites, Recent, etc.
-  /////////////////////////////////////////////////////////////////////
 
   def addFavoriteSymbol(symbol: String): Unit = userProfile.userID foreach (id => profileService.addFavoriteSymbol(id, symbol))
 
-  def getFavoriteSymbols: js.UndefOr[js.Array[String]] = userProfile.favoriteSymbols
-
   def isFavoriteSymbol(symbol: String): Boolean = getFavoriteSymbols.exists(_.contains(symbol))
+
+  def getFavoriteSymbols: js.UndefOr[js.Array[String]] = userProfile.favoriteSymbols
 
   def removeFavoriteSymbol(symbol: String): Unit = userProfile.userID foreach (id => profileService.removeFavoriteSymbol(id, symbol))
 
   def addRecentSymbol(symbol: String): Unit = userProfile.userID foreach (id => profileService.addRecentSymbol(id, symbol))
 
-  def getRecentSymbols: js.UndefOr[js.Array[String]] = userProfile.recentSymbols
-
   def isRecentSymbol(symbol: String): Boolean = getRecentSymbols.exists(_.contains(symbol))
 
   def removeRecentSymbol(symbol: String): Unit = userProfile.userID foreach (id => profileService.removeRecentSymbol(id, symbol))
-
-  def getMostRecentSymbol: String = getRecentSymbols.toOption.flatMap(_.lastOption) getOrElse "AAPL"
 
   /////////////////////////////////////////////////////////////////////
   //          Contest Functions
   /////////////////////////////////////////////////////////////////////
 
+  def getMostRecentSymbol: String = getRecentSymbols.toOption.flatMap(_.lastOption) getOrElse "AAPL"
+
+  def getRecentSymbols: js.UndefOr[js.Array[String]] = userProfile.recentSymbols
+
   def getContest: js.Object = contest_? getOrElse JS()
+
+  def setContest(contest: Contest): Unit = {
+    contest_? = Option(contest)
+
+    // if the player is defined ...
+    for {
+      contestId <- contest.contestID
+      portfolioID <- userProfile.userID
+    } {
+      // attempt to find the participant
+      participant_? = for {
+        portfolioID <- userProfile.userID.toOption
+        participant <- contest.participants.toOption.flatMap(_.find(_.is(portfolioID)))
+      } yield participant
+
+      // lookup the portfolio
+      portfolioService.getPortfolioByPlayer(portfolioID).map(_.data) foreach { portfolio =>
+        portfolio_? = Option(portfolio)
+      }
+    }
+
+    console.log(s"setContest: contest = %s, participant = %s, portfolio = %s",
+      angular.toJson(contest), angular.toJson(participant_?.orNull), angular.toJson(portfolio_?.orNull))
+  }
 
   def getContestID: js.UndefOr[String] = contest_?.orUndefined.flatMap(_.contestID)
 
@@ -176,53 +221,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     portfolio_? = Option(portfolio)
   }
 
-  def setContest(contest: Contest): Unit = {
-    contest_? = Option(contest)
-
-    // if the player is defined ...
-    for {
-      contestId <- contest.contestID
-      portfolioID <- userProfile.userID
-    } {
-      // attempt to find the participant
-      participant_? = for {
-        portfolioID <- userProfile.userID.toOption
-        participant <- contest.participants.toOption.flatMap(_.find(_.is(portfolioID)))
-      } yield participant
-
-      // lookup the portfolio
-      portfolioService.getPortfolioByPlayer(portfolioID).map(_.data) foreach { portfolio =>
-        portfolio_? = Option(portfolio)
-      }
-    }
-
-    console.log(s"setContest: contest = %s, participant = %s, portfolio = %s",
-      angular.toJson(contest), angular.toJson(participant_?.orNull), angular.toJson(portfolio_?.orNull))
-  }
-
-  /**
-   * Returns the combined total funds for both the cash and margin accounts
-   */
-  def getCompleteFundsAvailable: Option[Double] = {
-    for {
-      cashAccount <- cashAccount_?
-      cashFunds = cashAccount.funds getOrElse 0.00d
-      marginAccount <- marginAccount_?
-      marginFunds = marginAccount.funds getOrElse 0.00d
-    } yield cashFunds + marginFunds
-  }
-
-  def getFundsAvailable: Double = cashAccount_?.orUndefined.flatMap(_.funds) getOrElse 0.00d
-
-  def deductFundsAvailable(amount: Double): Unit = {
-    portfolio_? foreach { portfolio =>
-      console.log(s"Deducting funds: $amount from ${portfolio.cashAccount.flatMap(_.funds)}")
-      portfolio.cashAccount.foreach(acct => acct.funds = acct.funds.map(_ - amount))
-      // TODO rethink this
-    }
-    ()
-  }
-
   def getMessages: js.Array[ChatMessage] = {
     contest_?.orUndefined.flatMap(_.messages.flat) getOrElse emptyArray[ChatMessage]
   }
@@ -237,21 +235,15 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
 
   def getPerformance: js.Array[Performance] = portfolio_?.orUndefined.flatMap(_.performance) getOrElse emptyArray
 
-  def getPerks: js.Array[String] = portfolio_?.orUndefined.flatMap(_.perks) getOrElse emptyArray
-
   def hasPerk(perkCode: String): Boolean = getPerks.contains(perkCode)
 
-  def getPositions: js.Array[Position] = portfolio_?.orUndefined.flatMap(_.positions) getOrElse emptyArray
-
-  def resetContest(): Unit = {
-    contest_? = None
-    participant_? = None
-    portfolio_? = None
-  }
+  def getPerks: js.Array[String] = portfolio_?.orUndefined.flatMap(_.perks) getOrElse emptyArray
 
   ////////////////////////////////////////////////////////////
   //          Social Network Methods
   ////////////////////////////////////////////////////////////
+
+  def getPositions: js.Array[Position] = portfolio_?.orUndefined.flatMap(_.positions) getOrElse emptyArray
 
   def doFacebookLogin(): Unit = {
     // perform the login
@@ -264,6 +256,10 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
         console.error(s"Facebook: ${e.displayMessage}")
     }
   }
+
+  ////////////////////////////////////////////////////////////
+  //          Notification Methods
+  ////////////////////////////////////////////////////////////
 
   def doPostLoginUpdates(facebookID: String, userInitiated: Boolean): Unit = {
     /*
@@ -292,10 +288,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     }*/
   }
 
-  ////////////////////////////////////////////////////////////
-  //          Notification Methods
-  ////////////////////////////////////////////////////////////
-
   def addNotification(message: String): js.Array[String] = {
     while (notifications.push(message) > 20) notifications.shift()
     notifications
@@ -303,10 +295,14 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
 
   def getNotifications: js.Array[String] = notifications
 
+  ////////////////////////////////////////////////////////////
+  //          Participant Methods
+  ////////////////////////////////////////////////////////////
+
   def hasNotifications: Boolean = notifications.nonEmpty
 
   ////////////////////////////////////////////////////////////
-  //          Participant Methods
+  //          Private Methods
   ////////////////////////////////////////////////////////////
 
   def findPlayerByID(contest: Contest, portfolioID: String): Option[Participant] = {
@@ -315,29 +311,6 @@ case class MySessionService($rootScope: Scope, $timeout: Timeout, toaster: Toast
     else
       None
   }
-
-  ////////////////////////////////////////////////////////////
-  //          Private Methods
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Creates a default 'Spectator' user profile
-   * @return {{name: string, country: string, level: number, lastSymbol: string, friends: Array, filters: *[]}}
-   */
-  private def createSpectatorProfile() = {
-    notifications.removeAll()
-    resetContest()
-
-    new UserProfile(
-      username = "Spectator",
-      country = "us",
-      lastSymbol = "AAPL"
-    )
-  }
-
-  private[client] def cashAccount_? : Option[CashAccount] = portfolio_?.flatMap(_.cashAccount.toOption)
-
-  private[client] def marginAccount_? : Option[MarginAccount] = portfolio_?.flatMap(_.marginAccount.toOption)
 
   /////////////////////////////////////////////////////////////////////////////
   //			Events

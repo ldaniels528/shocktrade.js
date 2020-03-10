@@ -1,7 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.dialogs.{PerksDialog, TransferFundsDialog}
+import com.shocktrade.client.dialogs.PerksDialog
 import com.shocktrade.client.{GlobalNavigation, MySessionService}
 import com.shocktrade.common.models.contest.Participant
 import io.scalajs.dom.html.browser.console
@@ -17,15 +17,14 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Dashboard Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Dashboard Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
                           @injected("MySessionService") mySession: MySessionService,
                           @injected("PerksDialog") perksDialog: PerksDialog,
-                          @injected("PortfolioService") portfolioService: PortfolioService,
-                          @injected("TransferFundsDialog") transferFundsDialog: TransferFundsDialog)
+                          @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller {
 
   private var accountMode = false
@@ -60,16 +59,6 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
     perksDialog.popup() onComplete {
       case Success(portfolio) =>
         $scope.$apply(() => mySession.updatePortfolio(portfolio))
-      case Failure(e) =>
-        if (e.getMessage != "cancel") {
-          e.printStackTrace()
-        }
-    }
-  }
-
-  $scope.popupTransferFundsDialog = () => {
-    transferFundsDialog.popup() onComplete {
-      case Success(portfolio) => mySession.updatePortfolio(portfolio)
       case Failure(e) =>
         if (e.getMessage != "cancel") {
           e.printStackTrace()
@@ -125,9 +114,9 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 }
 
 /**
-  * Dashboard Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Dashboard Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait DashboardScope extends Scope with GlobalNavigation {
   // functions
@@ -139,16 +128,15 @@ trait DashboardScope extends Scope with GlobalNavigation {
   var getAccountMode: js.Function0[Boolean] = js.native
   var getAccountType: js.Function0[String] = js.native
   var popupPerksDialog: js.Function0[Unit] = js.native
-  var popupTransferFundsDialog: js.Function0[Unit] = js.native
   var toggleAccountMode: js.Function0[Unit] = js.native
   var toggleRankingsShown: js.Function0[Unit] = js.native
 
 }
 
 /**
-  * Dashboard Route Params
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Dashboard Route Params
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait DashboardRouteParams extends js.Object {
   var contestId: js.UndefOr[String] = js.native

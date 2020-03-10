@@ -12,9 +12,9 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.runtime._
 
 /**
-  * Yahoo! Finance Profile Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo! Finance Profile Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceProfileService() {
 
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFProfile]] = {
@@ -26,12 +26,12 @@ class YahooFinanceProfileService() {
   }
 
   /**
-    * Parsing the HTML into the option of a Bar Chart company profile
-    * @param symbol    the given symbol (e.g. "AAPL")
-    * @param html      the given HTML document
-    * @param startTime the given service execution start time
-    * @return the option of a [[YFProfile Bar Chart profile]]
-    */
+   * Parsing the HTML into the option of a Bar Chart company profile
+   * @param symbol    the given symbol (e.g. "AAPL")
+   * @param html      the given HTML document
+   * @param startTime the given service execution start time
+   * @return the option of a [[YFProfile Bar Chart profile]]
+   */
   private def parseHtml(symbol: String, html: String, startTime: Double) = {
     val promise = Promise[Option[YFProfile]]()
     val parser = new htmlparser2.Parser(new ParserHandler {
@@ -91,17 +91,17 @@ class YahooFinanceProfileService() {
 }
 
 /**
-  * Yahoo! Finance Profile Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo! Finance Profile Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object YahooFinanceProfileService {
 
   /**
-    * Represents an HTML tag
-    * @param name       the name of the tag (e.g. "table")
-    * @param attributes the tag element's attributes
-    * @param text       the tag's text
-    */
+   * Represents an HTML tag
+   * @param name       the name of the tag (e.g. "table")
+   * @param attributes the tag element's attributes
+   * @param text       the tag's text
+   */
   case class Tag(name: String, attributes: js.Dictionary[String], text: StringBuilder = new StringBuilder()) {
 
     def isClass(className: String): Boolean = attributes.get("class").contains(className)
@@ -109,9 +109,9 @@ object YahooFinanceProfileService {
   }
 
   /**
-    * Represents a Yahoo! Finance profile
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Represents a Yahoo! Finance profile
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class YFProfile(val symbol: String, val responseTime: Double) extends js.Object
 
 }

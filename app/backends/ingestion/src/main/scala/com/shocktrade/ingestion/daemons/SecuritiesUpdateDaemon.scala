@@ -12,9 +12,9 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.scalajs.js
 
 /**
-  * Securities Update Daemon
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Securities Update Daemon
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class SecuritiesUpdateDaemon()(implicit ec: ExecutionContext) {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
   private val batchSize = 40
@@ -35,16 +35,16 @@ class SecuritiesUpdateDaemon()(implicit ec: ExecutionContext) {
   private var lastRun: js.Date = new js.Date()
 
   /**
-    * Indicates whether the daemon is eligible to be executed
-    * @param clock the given [[TradingClock trading clock]]
-    * @return true, if the daemon is eligible to be executed
-    */
+   * Indicates whether the daemon is eligible to be executed
+   * @param clock the given [[TradingClock trading clock]]
+   * @return true, if the daemon is eligible to be executed
+   */
   def isReady(clock: TradingClock): Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
 
   /**
-    * Executes the process
-    * @param clock the given [[TradingClock trading clock]]
-    */
+   * Executes the process
+   * @param clock the given [[TradingClock trading clock]]
+   */
   def run(clock: TradingClock): Future[js.Any] = {
     /*
     val startTime = js.Date.now()
@@ -83,35 +83,36 @@ class SecuritiesUpdateDaemon()(implicit ec: ExecutionContext) {
       batches = js.Array(securities.sliding(batchSize, batchSize).map(_.toSeq).toSeq: _*)
     } yield batches*/ ???
   }
-/*
-  private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2): Future[Seq[YFCSVQuote]] = {
-    csvQuoteSvc.getQuotes(csvQuoteParams, symbols: _*) recover { case e =>
-      logger.error(s"Service call failure [${e.getMessage}] for symbols: %s", symbols.mkString("+"))
-      Seq.empty
+
+  /*
+    private def getYahooCSVQuotes(symbols: Seq[String], attemptsLeft: Int = 2): Future[Seq[YFCSVQuote]] = {
+      csvQuoteSvc.getQuotes(csvQuoteParams, symbols: _*) recover { case e =>
+        logger.error(s"Service call failure [${e.getMessage}] for symbols: %s", symbols.mkString("+"))
+        Seq.empty
+      }
     }
-  }
 
-  private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
-    def insertSnapshot(): Future[BulkUpdateOutcome] = snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
+    private def createSnapshots(snapshots: Seq[SnapshotQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
+      def insertSnapshot(): Future[BulkUpdateOutcome] = snapshotDAO.flatMap(_.updateSnapshots(snapshots).toFuture.map(_.toBulkWrite))
 
-    def retrySnapshot(duration: FiniteDuration): Future[BulkUpdateOutcome] = retry(() => insertSnapshot(), duration)
+      def retrySnapshot(duration: FiniteDuration): Future[BulkUpdateOutcome] = retry(() => insertSnapshot(), duration)
 
-    insertSnapshot() /*fallbackTo retrySnapshot(5.seconds)*/ recover { case e =>
-      logger.error("Snapshot insert error: %s", e.getMessage)
-      BulkUpdateOutcome(nFailures = snapshots.size)
+      insertSnapshot() /*fallbackTo retrySnapshot(5.seconds)*/ recover { case e =>
+        logger.error("Snapshot insert error: %s", e.getMessage)
+        BulkUpdateOutcome(nFailures = snapshots.size)
+      }
     }
-  }
 
-  private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
-    def upsertSecurities(): Future[BulkUpdateOutcome] = securitiesDAO.flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
+    private def updateSecurities(securities: Seq[SecurityUpdateQuote], mapping: js.Dictionary[SecurityRef]): Future[BulkUpdateOutcome] = {
+      def upsertSecurities(): Future[BulkUpdateOutcome] = securitiesDAO.flatMap(_.updateSecurities(securities).toFuture.map(_.toBulkWrite))
 
-    def retrySecurities(duration: FiniteDuration): Future[BulkUpdateOutcome] = retry(() => upsertSecurities(), duration)
+      def retrySecurities(duration: FiniteDuration): Future[BulkUpdateOutcome] = retry(() => upsertSecurities(), duration)
 
-    upsertSecurities() /*fallbackTo retrySecurities(5.seconds)*/ recover { case e =>
-      logger.error("Securities update error: %s", e.getMessage)
-      BulkUpdateOutcome(nFailures = securities.size)
-    }
-  }*/
+      upsertSecurities() /*fallbackTo retrySecurities(5.seconds)*/ recover { case e =>
+        logger.error("Securities update error: %s", e.getMessage)
+        BulkUpdateOutcome(nFailures = securities.size)
+      }
+    }*/
 
   private def retry[T](f: () => Future[T], duration: FiniteDuration): Future[T] = {
     val promise = Promise[T]()
@@ -124,9 +125,9 @@ class SecuritiesUpdateDaemon()(implicit ec: ExecutionContext) {
 }
 
 /**
-  * Securities Update Daemon Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Securities Update Daemon Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object SecuritiesUpdateDaemon {
 
   type InputBatch = Seq[SecurityRef]
@@ -134,38 +135,40 @@ object SecuritiesUpdateDaemon {
   trait SnapshotQuote extends js.Object
 
   /**
-    * Yahoo! Finance CSV Quote Extensions
-    * @param quote the given [[YFCSVQuote quote]]
-    */
+   * Yahoo! Finance CSV Quote Extensions
+   * @param quote the given [[YFCSVQuote quote]]
+   */
   implicit class YFCSVQuoteExtensions(val quote: YFCSVQuote) extends AnyVal {
 
     @inline
-    def toUpdateQuote(mapping: js.Dictionary[SecurityRef]) = ??? /*new SecurityUpdateQuote(
-      symbol = quote.symbol,
-      exchange = quote.normalizedExchange(mapping),
-      subExchange = quote.exchange,
-      lastTrade = quote.lastTrade,
-      prevClose = quote.prevClose,
-      open = quote.open,
-      close = quote.close,
-      high = quote.high,
-      low = quote.low,
-      spread = quote.spread,
-      change = quote.change,
-      changePct = quote.changePct,
-      high52Week = quote.high52Week,
-      low52Week = quote.low52Week,
-      tradeDateTime = quote.tradeDateTime,
-      tradeDate = quote.tradeDate,
-      tradeTime = quote.tradeTime,
-      volume = quote.volume,
-      marketCap = quote.marketCap,
-      target1Yr = quote.target1Yr,
-      active = true,
-      errorMessage = quote.errorMessage,
-      yfCsvResponseTime = quote.responseTimeMsec,
-      yfCsvLastUpdated = new js.Date()
-    )*/
+    def toUpdateQuote(mapping: js.Dictionary[SecurityRef]) = ???
+
+    /*new SecurityUpdateQuote(
+         symbol = quote.symbol,
+         exchange = quote.normalizedExchange(mapping),
+         subExchange = quote.exchange,
+         lastTrade = quote.lastTrade,
+         prevClose = quote.prevClose,
+         open = quote.open,
+         close = quote.close,
+         high = quote.high,
+         low = quote.low,
+         spread = quote.spread,
+         change = quote.change,
+         changePct = quote.changePct,
+         high52Week = quote.high52Week,
+         low52Week = quote.low52Week,
+         tradeDateTime = quote.tradeDateTime,
+         tradeDate = quote.tradeDate,
+         tradeTime = quote.tradeTime,
+         volume = quote.volume,
+         marketCap = quote.marketCap,
+         target1Yr = quote.target1Yr,
+         active = true,
+         errorMessage = quote.errorMessage,
+         yfCsvResponseTime = quote.responseTimeMsec,
+         yfCsvLastUpdated = new js.Date()
+       )*/
 
     @inline
     def spread: js.UndefOr[Double] = {
@@ -176,26 +179,30 @@ object SecuritiesUpdateDaemon {
     }
 
     @inline
-    def toSnapshot(mapping: js.Dictionary[SecurityRef]) = ??? /* new SnapshotQuote(
-      symbol = quote.symbol,
-      exchange = quote.normalizedExchange(mapping),
-      subExchange = quote.exchange,
-      lastTrade = quote.lastTrade,
-      tradeDateTime = quote.tradeDateTime,
-      tradeDate = quote.tradeDate,
-      tradeTime = quote.tradeTime,
-      volume = quote.volume
-    )*/
+    def toSnapshot(mapping: js.Dictionary[SecurityRef]) = ???
+
+    /* new SnapshotQuote(
+         symbol = quote.symbol,
+         exchange = quote.normalizedExchange(mapping),
+         subExchange = quote.exchange,
+         lastTrade = quote.lastTrade,
+         tradeDateTime = quote.tradeDateTime,
+         tradeDate = quote.tradeDate,
+         tradeTime = quote.tradeTime,
+         volume = quote.volume
+       )*/
 
     @inline
-    def normalizedExchange(mapping: js.Dictionary[SecurityRef]): String = ??? /*{
-      val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
-      originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
-        case Some(exchange) => exchange
-        case None if quote.symbol.endsWith(".OB") => "OTCBB"
-        case None => originalExchange_? getOrElse "UNKNOWN"
-      }
-    }*/
+    def normalizedExchange(mapping: js.Dictionary[SecurityRef]): String = ???
+
+    /*{
+         val originalExchange_? = mapping.get(quote.symbol).flatMap(_.exchange.toOption)
+         originalExchange_? ?? quote.exchange.toOption.flatMap(ExchangeHelper.lookupExchange) match {
+           case Some(exchange) => exchange
+           case None if quote.symbol.endsWith(".OB") => "OTCBB"
+           case None => originalExchange_? getOrElse "UNKNOWN"
+         }
+       }*/
 
   }
 

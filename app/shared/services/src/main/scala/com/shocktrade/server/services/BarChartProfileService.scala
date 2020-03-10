@@ -11,16 +11,16 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.runtime._
 
 /**
-  * Bar Chart Company Profile Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Bar Chart Company Profile Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class BarChartProfileService() {
 
   /**
-    * Returns the promise of an option of a Bar Chart company profile for the given symbol
-    * @param symbol the given symbol (e.g. "AAPL")
-    * @return the promise of an option of a [[BarChartProfile Bar Chart profile]]
-    */
+   * Returns the promise of an option of a Bar Chart company profile for the given symbol
+   * @param symbol the given symbol (e.g. "AAPL")
+   * @return the promise of an option of a [[BarChartProfile Bar Chart profile]]
+   */
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BarChartProfile]] = {
     val startTime = js.Date.now()
     for {
@@ -30,12 +30,12 @@ class BarChartProfileService() {
   }
 
   /**
-    * Parsing the HTML into the option of a Bar Chart company profile
-    * @param symbol    the given symbol (e.g. "AAPL")
-    * @param html      the given HTML document
-    * @param startTime the given service execution start time
-    * @return the option of a [[BarChartProfile Bar Chart profile]]
-    */
+   * Parsing the HTML into the option of a Bar Chart company profile
+   * @param symbol    the given symbol (e.g. "AAPL")
+   * @param html      the given HTML document
+   * @param startTime the given service execution start time
+   * @return the option of a [[BarChartProfile Bar Chart profile]]
+   */
   private def parseHtml(symbol: String, html: RequestBody, startTime: Double)(implicit ec: ExecutionContext) = {
     val promise = Promise[Option[BarChartProfile]]()
     val tagStack = js.Array[Tag]()
@@ -102,17 +102,17 @@ class BarChartProfileService() {
 }
 
 /**
-  * Bar Chart Company Profile Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Bar Chart Company Profile Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object BarChartProfileService {
 
   /**
-    * Represents an HTML tag
-    * @param name       the name of the tag (e.g. "table")
-    * @param attributes the tag element's attributes
-    * @param text       the tag's text
-    */
+   * Represents an HTML tag
+   * @param name       the name of the tag (e.g. "table")
+   * @param attributes the tag element's attributes
+   * @param text       the tag's text
+   */
   case class Tag(name: String, attributes: js.Dictionary[String], text: StringBuilder = new StringBuilder()) {
 
     def isClass(className: String): Boolean = attributes.get("class").contains(className)
@@ -120,8 +120,8 @@ object BarChartProfileService {
   }
 
   /**
-    * Represents a Bar Chart company profile
-    */
+   * Represents a Bar Chart company profile
+   */
   class BarChartProfile(val symbol: String,
                         val exchange: js.UndefOr[String],
                         val contactInfo: js.UndefOr[js.Array[String]],

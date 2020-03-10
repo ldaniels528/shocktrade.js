@@ -10,9 +10,9 @@ import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
-  * Remote Event Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Remote Event Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class RemoteEventService(webAppEndPoint: String) {
   private val logger = LoggerFactory.getLogger(getClass)
 

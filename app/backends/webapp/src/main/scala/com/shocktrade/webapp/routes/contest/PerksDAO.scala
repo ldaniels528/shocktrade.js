@@ -14,14 +14,14 @@ trait PerksDAO {
 
   /**
    * Retrieves the collection of available perks
-   * @param ec  the implicit [[ExecutionContext]]
+   * @param ec the implicit [[ExecutionContext]]
    * @return the collection of available [[PerkData perks]]
    */
   def findAvailablePerks(implicit ec: ExecutionContext): Future[js.Array[PerkData]]
 
   /**
    * Retrieves the collection of perks
-   * @param ec  the implicit [[ExecutionContext]]
+   * @param ec the implicit [[ExecutionContext]]
    * @return the collection of available [[PerkData perks]]
    */
   def findPerks(implicit ec: ExecutionContext): Future[js.Array[PerkData]]

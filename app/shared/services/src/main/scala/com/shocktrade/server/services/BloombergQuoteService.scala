@@ -7,17 +7,17 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * Bloomberg Quote Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Bloomberg Quote Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class BloombergQuoteService() {
   private val scriptParser = new ScriptParser[BloombergQuote]()
 
   /**
-    * Attempts to retrieve the quote for the given symbol
-    * @param symbol the given symbol
-    * @return the promise of the option of a [[BloombergQuote quote]] object
-    */
+   * Attempts to retrieve the quote for the given symbol
+   * @param symbol the given symbol
+   * @return the promise of the option of a [[BloombergQuote quote]] object
+   */
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[BloombergQuote]] = {
     for {
       (response, html) <- Request.getFuture(s"http://www.bloomberg.com/quote/$symbol:US")
@@ -28,9 +28,9 @@ class BloombergQuoteService() {
 }
 
 /**
-  * Bloomberg Quote Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Bloomberg Quote Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object BloombergQuoteService {
 
   @js.native

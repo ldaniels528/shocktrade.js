@@ -9,9 +9,9 @@ import io.scalajs.util.OptionHelper._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Shared Content Parser
-  * @author lawrence.daniels@gmail.com
-  */
+ * Shared Content Parser
+ * @author lawrence.daniels@gmail.com
+ */
 class SharedContentParser() {
 
   def parse(url: String)(implicit ec: ExecutionContext): Future[Map[String, String]] = {

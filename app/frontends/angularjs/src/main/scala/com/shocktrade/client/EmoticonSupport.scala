@@ -5,14 +5,10 @@ import com.shocktrade.client.EmoticonSupport.Emoticon
 import scala.scalajs.js
 
 /**
-  * Emoticon Support
-  * @author lawrence.daniels@gmail.com
-  */
+ * Emoticon Support
+ * @author lawrence.daniels@gmail.com
+ */
 trait EmoticonSupport {
-
-  def enrichWithEmoticons(text: String) = Emoticons.foldLeft(text) { (html, emoticon) =>
-    html.replaceAllLiterally(emoticon.symbol, s"""<img src="/images/smilies/${emoticon.uri}">""")
-  }
 
   private val Emoticons = js.Array(
     new Emoticon(symbol = ":-@", uri = "icon_mrgreen.gif", tooltip = "Big Grin"),
@@ -35,18 +31,22 @@ trait EmoticonSupport {
     new Emoticon(symbol = "(?)", uri = "icon_question.gif", tooltip = "Question"),
     new Emoticon(symbol = "=>", uri = "icon_arrow.gif", tooltip = "Arrow"))
 
+  def enrichWithEmoticons(text: String) = Emoticons.foldLeft(text) { (html, emoticon) =>
+    html.replaceAllLiterally(emoticon.symbol, s"""<img src="/images/smilies/${emoticon.uri}">""")
+  }
+
 }
 
 /**
-  * Emoticon Support Companion
-  * @author lawrence.daniels@gmail.com
-  */
+ * Emoticon Support Companion
+ * @author lawrence.daniels@gmail.com
+ */
 object EmoticonSupport {
 
   /**
-    * Represents an Emoticon
-    * @author lawrence.daniels@gmail.com
-    */
+   * Represents an Emoticon
+   * @author lawrence.daniels@gmail.com
+   */
   class Emoticon(var symbol: String, var uri: String, var tooltip: String) extends js.Object
 
 }

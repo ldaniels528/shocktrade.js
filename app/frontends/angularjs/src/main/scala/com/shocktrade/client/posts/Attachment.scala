@@ -3,9 +3,9 @@ package com.shocktrade.client.posts
 import scala.scalajs.js
 
 /**
-  * Represents a File Attachment
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents a File Attachment
+ * @author lawrence.daniels@gmail.com
+ */
 @js.native
 trait Attachment extends js.Object {
   var _id: js.UndefOr[String] = js.native

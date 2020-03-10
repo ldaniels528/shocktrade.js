@@ -3,9 +3,9 @@ package com.shocktrade.webapp.routes.contest
 import scala.scalajs.js
 
 /**
-  * Contest Data Model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Data Model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ContestData(var contestID: js.UndefOr[String],
                   var name: js.UndefOr[String],
                   var hostUserID: js.UndefOr[String],

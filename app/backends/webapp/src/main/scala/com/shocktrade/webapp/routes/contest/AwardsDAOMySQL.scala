@@ -7,9 +7,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * MySQL implementation of the Awards DAO
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * MySQL implementation of the Awards DAO
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class AwardsDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with AwardsDAO {
 
   override def findAvailableAwards(implicit ec: ExecutionContext): Future[js.Array[AwardData]] = {

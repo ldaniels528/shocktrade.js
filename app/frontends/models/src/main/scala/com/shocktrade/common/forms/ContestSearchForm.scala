@@ -6,9 +6,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Contest Search Form
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Search Form
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ContestSearchForm(var activeOnly: js.UndefOr[Boolean],
                         var available: js.UndefOr[Boolean],
                         var friendsOnly: js.UndefOr[Boolean],
@@ -20,15 +20,15 @@ class ContestSearchForm(var activeOnly: js.UndefOr[Boolean],
 
 
 /**
-  * Contest Search Form Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Search Form Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ContestSearchForm {
 
   /**
-    * Contest Search Validations
-    * @param form the given [[ContestSearchForm form]]
-    */
+   * Contest Search Validations
+   * @param form the given [[ContestSearchForm form]]
+   */
   implicit class ContestSearchValidations(val form: ContestSearchForm) extends AnyVal {
 
     def validate: js.Array[String] = {

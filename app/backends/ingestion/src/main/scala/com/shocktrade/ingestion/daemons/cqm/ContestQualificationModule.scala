@@ -21,17 +21,6 @@ class ContestQualificationModule(implicit clock: TradingClock, ec: ExecutionCont
   private var lastRun: js.Date = new js.Date()
 
   /**
-   * Indicates whether the daemon is eligible to be executed
-   * @return true, if the daemon is eligible to be executed
-   */
-  def isReady: Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
-
-  /**
-   * Executes the process
-   */
-  def execute(marketClosed: Boolean): Future[Int] = qualificationDAO.doQualification()
-
-  /**
    * Executes the process
    */
   def run(): Unit = {
@@ -53,5 +42,16 @@ class ContestQualificationModule(implicit clock: TradingClock, ec: ExecutionCont
       lastRun = startTime
     }
   }
+
+  /**
+   * Indicates whether the daemon is eligible to be executed
+   * @return true, if the daemon is eligible to be executed
+   */
+  def isReady: Boolean = clock.isTradingActive || clock.isTradingActive(lastRun)
+
+  /**
+   * Executes the process
+   */
+  def execute(marketClosed: Boolean): Future[Int] = qualificationDAO.doQualification()
 
 }

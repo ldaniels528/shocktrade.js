@@ -3,9 +3,9 @@ package com.shocktrade.cli.runtime
 import io.scalajs.util.OptionHelper._
 
 /**
-  * Represents a local scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a local scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class LocalScope(parentScope: Scope) extends RootScope {
 
   override def findFunction(name: String) = {

@@ -3,9 +3,9 @@ package com.shocktrade.common.models.quote
 import scala.scalajs.js
 
 /**
-  * Exposure Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exposure Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ExposureQuote extends js.Object {
   var symbol: String = js.native
@@ -34,9 +34,9 @@ trait ExposureQuote extends js.Object {
 }
 
 /**
-  * Exposure Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exposure Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ExposureQuote {
 
   val Fields = List(

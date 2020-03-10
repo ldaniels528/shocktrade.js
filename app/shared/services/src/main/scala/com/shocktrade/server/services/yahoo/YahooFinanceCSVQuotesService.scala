@@ -8,18 +8,18 @@ import scala.language.postfixOps
 import scala.scalajs.js
 
 /**
-  * Yahoo Finance! CSV Quotes Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV Quotes Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceCSVQuotesService() {
   private val parser = new YahooFinanceCSVQuotesParser()
 
   /**
-    * Performs the service call and returns a single object read from the service.
-    * @param symbols the given stock symbols (e.g., "AAPL", "AMD", "INTC")
-    * @param params  the given stock fields (e.g., "soxq2")
-    * @return the [[YFCSVQuote quote]]
-    */
+   * Performs the service call and returns a single object read from the service.
+   * @param symbols the given stock symbols (e.g., "AAPL", "AMD", "INTC")
+   * @param params  the given stock fields (e.g., "soxq2")
+   * @return the [[YFCSVQuote quote]]
+   */
   def getQuotes(params: String, symbols: String*)(implicit ec: ExecutionContext): Future[Seq[YFCSVQuote]] = {
     val startTime = js.Date.now()
     val symbolList = symbols mkString "+"
@@ -29,15 +29,15 @@ class YahooFinanceCSVQuotesService() {
   }
 
   /**
-    * Returns all supported parameter codes
-    * @return all supported parameter codes
-    */
+   * Returns all supported parameter codes
+   * @return all supported parameter codes
+   */
   def getAllParams: String = FieldNameToCodes.keys.mkString
 
   /**
-    * Returns the parameter codes required to retrieve values for the given fields
-    * @return the parameter codes required to retrieve values for the given fields
-    */
+   * Returns the parameter codes required to retrieve values for the given fields
+   * @return the parameter codes required to retrieve values for the given fields
+   */
   def getParams(fields: String*): String = {
     (fields flatMap FieldNameToCodes.get).map(c => if (c.endsWith("0")) c.dropRight(1) else c).mkString
   }
@@ -45,20 +45,115 @@ class YahooFinanceCSVQuotesService() {
 }
 
 /**
-  * Yahoo Finance! CSV Quotes Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV Quotes Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object YahooFinanceCSVQuotesService {
 
+  val CodeToFieldNames = Map(
+    "a0" -> "ask",
+    "a2" -> "avgVol",
+    "a5" -> "askSize",
+    "b0" -> "bid",
+    // b1 - ???? Ask/Bid?
+    "b2" -> "askRealTime",
+    "b3" -> "bidRealTime",
+    "b4" -> "bookValuePerShare",
+    "b6" -> "bidSize",
+    "c0" -> "changePct", // Change & Percent Change
+    "c1" -> "change",
+    "c3" -> "commission",
+    "c4" -> "currencyCode", // Currency Code (e.g. "USD")
+    "c6" -> "changeRealTime",
+    "c8" -> "changeAfterHours",
+    "d0" -> "divShare", // Dividend/Share (Trailing Annual)
+    "d1" -> "tradeDate", // Last Trade Date
+    // d2 - Trade Date? (-)
+    // d3 - Last Trade Time? ("Feb  3", "10:56am")
+    "e0" -> "eps", // Earnings/Share (Diluted)
+    "e1" -> "errorMessage", // Error Indication (returned for symbol changed / invalid)
+    "e7" -> "epsEstCurrentYear", // EPS Estimate Current Year
+    "e8" -> "epsEstNextYear", // EPS Estimate Next Year
+    "e9" -> "epsEstNextQtr", // EPS Estimate Next Quarter
+    "f6" -> "floatShares",
+    "g0" -> "low", // Day's Low
+    "g1" -> "holdingsGainPct",
+    "g3" -> "annualizedGain",
+    "g4" -> "holdingsGain",
+    "g5" -> "holdingsGainPctRealTime",
+    "g6" -> "holdingsGainRealTime",
+    "h0" -> "high", // Day's High
+    "i0" -> "moreInfo",
+    "i5" -> "orderBookRealTime",
+    "j0" -> "low52Week",
+    "j1" -> "marketCap",
+    "j2" -> "sharesOutstanding",
+    "j3" -> "marketCapRealTime",
+    "j4" -> "EBITDA",
+    "j5" -> "change52WeekLow",
+    "j6" -> "changePct52WeekLow",
+    "k0" -> "high52Week",
+    // k1 - Last Trade With Time (Real-time)
+    "k2" -> "changePctRealTime",
+    "k3" -> "lastTradeSize",
+    "k4" -> "change52WeekHigh",
+    "k5" -> "changePct52WeekHigh",
+    // l0 - Last Trade (With Time)
+    "l1" -> "lastTrade", // Last Trade (Price Only)
+    "l2" -> "highLimit",
+    "l3" -> "lowLimit",
+    "m0" -> "daysRange",
+    // m2 - Day's Range (Real-time)
+    "m3" -> "movingAverage50Day", // 50-day Moving Average
+    "m4" -> "movingAverage200Day", // 200-day Moving Average
+    "m5" -> "change200DayMovingAvg", // Change From 200-day Moving Average
+    "m6" -> "changePct200DayMovingAvg",
+    "m7" -> "change50DayMovingAvg", // Change From 50-day Moving Average
+    "m8" -> "changePct50DayMovingAvg",
+    "n0" -> "name",
+    "n4" -> "notes",
+    "o0" -> "open",
+    "p0" -> "prevClose",
+    "p1" -> "pricePaid",
+    "p2" -> "changePct",
+    "p5" -> "priceOverSales", // Price/Sales
+    "p6" -> "priceOverBook", // Price/Book
+    "q0" -> "exDividendDate",
+    // q1 - ????
+    "q2" -> "close",
+    "r0" -> "peRatio", // P/E Ratio
+    "r1" -> "dividendPayDate",
+    "r2" -> "peRatioRealTime",
+    "r5" -> "pegRatio", //  Price/Earnings Growth Ratio
+    "r6" -> "priceOverEPSCurYr", // Price/EPS Estimate Current Year
+    "r7" -> "priceOverEPSNextYr", //  - Price/EPS Estimate Next Year
+    "s0" -> "symbol",
+    "s1" -> "sharesOwned",
+    "s6" -> "revenue",
+    "s7" -> "shortRatio",
+    "t1" -> "tradeTime", // Last Trade Time (hh:mm)
+    // t6 - Trade Links
+    // t7 - Ticker Trend
+    "t8" -> "target1Y", //  1-Year Target Price
+    "v0" -> "volume", // Volume
+    "v1" -> "holdingsValue", //  Holdings Value
+    "v7" -> "holdingsValueRealTime",
+    // w0 - 52-week Range
+    // w1 - Day's Value Change
+    // w4 - Day's Value Change (Real-time)
+    "x0" -> "exchange",
+    "y0" -> "divYield") // Dividend Yield (Trailing Annual)
+  val FieldNameToCodes: Map[String, String] = CodeToFieldNames map { case (k, v) => (v, k) }
+
   /**
-    * Represents a Yahoo! Finance Stock Quote (Web Service Object)
-    * @see http://www.gummy-stuff.org/Yahoo-data.htm
-    * @see http://www.codeproject.com/Articles/37550/Stock-quote-and-chart-from-Yahoo-in-C
-    * @see http://people.stern.nyu.edu/adamodar/New_Home_Page/data.html
-    * @see http://code.google.com/p/yahoo-finance-managed/wiki/enumQuoteProperty
-    * @see http://code.google.com/p/yahoo-finance-managed/wiki/CSVAPI
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Represents a Yahoo! Finance Stock Quote (Web Service Object)
+   * @see http://www.gummy-stuff.org/Yahoo-data.htm
+   * @see http://www.codeproject.com/Articles/37550/Stock-quote-and-chart-from-Yahoo-in-C
+   * @see http://people.stern.nyu.edu/adamodar/New_Home_Page/data.html
+   * @see http://code.google.com/p/yahoo-finance-managed/wiki/enumQuoteProperty
+   * @see http://code.google.com/p/yahoo-finance-managed/wiki/CSVAPI
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class YFCSVQuote(val symbol: String,
                    val ask: js.UndefOr[Double], // a0 - Ask
                    val avgVol: js.UndefOr[Double], // a2 - Average Daily Volume
@@ -155,101 +250,5 @@ object YahooFinanceCSVQuotesService {
                    val exchange: js.UndefOr[String], // x0 - Stock Exchange
                    val divYield: js.UndefOr[Double], // y0 - Dividend Yield (Trailing Annual)
                    val responseTimeMsec: Double) extends js.Object
-
-  val CodeToFieldNames = Map(
-    "a0" -> "ask",
-    "a2" -> "avgVol",
-    "a5" -> "askSize",
-    "b0" -> "bid",
-    // b1 - ???? Ask/Bid?
-    "b2" -> "askRealTime",
-    "b3" -> "bidRealTime",
-    "b4" -> "bookValuePerShare",
-    "b6" -> "bidSize",
-    "c0" -> "changePct", // Change & Percent Change
-    "c1" -> "change",
-    "c3" -> "commission",
-    "c4" -> "currencyCode", // Currency Code (e.g. "USD")
-    "c6" -> "changeRealTime",
-    "c8" -> "changeAfterHours",
-    "d0" -> "divShare", // Dividend/Share (Trailing Annual)
-    "d1" -> "tradeDate", // Last Trade Date
-    // d2 - Trade Date? (-)
-    // d3 - Last Trade Time? ("Feb  3", "10:56am")
-    "e0" -> "eps", // Earnings/Share (Diluted)
-    "e1" -> "errorMessage", // Error Indication (returned for symbol changed / invalid)
-    "e7" -> "epsEstCurrentYear", // EPS Estimate Current Year
-    "e8" -> "epsEstNextYear", // EPS Estimate Next Year
-    "e9" -> "epsEstNextQtr", // EPS Estimate Next Quarter
-    "f6" -> "floatShares",
-    "g0" -> "low", // Day's Low
-    "g1" -> "holdingsGainPct",
-    "g3" -> "annualizedGain",
-    "g4" -> "holdingsGain",
-    "g5" -> "holdingsGainPctRealTime",
-    "g6" -> "holdingsGainRealTime",
-    "h0" -> "high", // Day's High
-    "i0" -> "moreInfo",
-    "i5" -> "orderBookRealTime",
-    "j0" -> "low52Week",
-    "j1" -> "marketCap",
-    "j2" -> "sharesOutstanding",
-    "j3" -> "marketCapRealTime",
-    "j4" -> "EBITDA",
-    "j5" -> "change52WeekLow",
-    "j6" -> "changePct52WeekLow",
-    "k0" -> "high52Week",
-    // k1 - Last Trade With Time (Real-time)
-    "k2" -> "changePctRealTime",
-    "k3" -> "lastTradeSize",
-    "k4" -> "change52WeekHigh",
-    "k5" -> "changePct52WeekHigh",
-    // l0 - Last Trade (With Time)
-    "l1" -> "lastTrade", // Last Trade (Price Only)
-    "l2" -> "highLimit",
-    "l3" -> "lowLimit",
-    "m0" -> "daysRange",
-    // m2 - Day's Range (Real-time)
-    "m3" -> "movingAverage50Day", // 50-day Moving Average
-    "m4" -> "movingAverage200Day", // 200-day Moving Average
-    "m5" -> "change200DayMovingAvg", // Change From 200-day Moving Average
-    "m6" -> "changePct200DayMovingAvg",
-    "m7" -> "change50DayMovingAvg", // Change From 50-day Moving Average
-    "m8" -> "changePct50DayMovingAvg",
-    "n0" -> "name",
-    "n4" -> "notes",
-    "o0" -> "open",
-    "p0" -> "prevClose",
-    "p1" -> "pricePaid",
-    "p2" -> "changePct",
-    "p5" -> "priceOverSales", // Price/Sales
-    "p6" -> "priceOverBook", // Price/Book
-    "q0" -> "exDividendDate",
-    // q1 - ????
-    "q2" -> "close",
-    "r0" -> "peRatio", // P/E Ratio
-    "r1" -> "dividendPayDate",
-    "r2" -> "peRatioRealTime",
-    "r5" -> "pegRatio", //  Price/Earnings Growth Ratio
-    "r6" -> "priceOverEPSCurYr", // Price/EPS Estimate Current Year
-    "r7" -> "priceOverEPSNextYr", //  - Price/EPS Estimate Next Year
-    "s0" -> "symbol",
-    "s1" -> "sharesOwned",
-    "s6" -> "revenue",
-    "s7" -> "shortRatio",
-    "t1" -> "tradeTime", // Last Trade Time (hh:mm)
-    // t6 - Trade Links
-    // t7 - Ticker Trend
-    "t8" -> "target1Y", //  1-Year Target Price
-    "v0" -> "volume", // Volume
-    "v1" -> "holdingsValue", //  Holdings Value
-    "v7" -> "holdingsValueRealTime",
-    // w0 - 52-week Range
-    // w1 - Day's Value Change
-    // w4 - Day's Value Change (Real-time)
-    "x0" -> "exchange",
-    "y0" -> "divYield") // Dividend Yield (Trailing Annual)
-
-  val FieldNameToCodes: Map[String, String] = CodeToFieldNames map { case (k, v) => (v, k) }
 
 }

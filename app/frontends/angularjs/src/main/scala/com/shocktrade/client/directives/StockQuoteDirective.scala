@@ -12,10 +12,10 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Stock Quote Directive
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  * @example {{{ <stock-quote symbol="{{ quote.symbol }}" field="lastTrade"></stock-quote> }}}
-  */
+ * Stock Quote Directive
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ * @example {{{ <stock-quote symbol="{{ quote.symbol }}" field="lastTrade"></stock-quote> }}}
+ */
 class StockQuoteDirective(@injected("QuoteCache") cache: QuoteCache) extends Directive
   with ElementRestriction
   with LinkSupport[StockQuoteDirectiveScope]
@@ -44,15 +44,15 @@ class StockQuoteDirective(@injected("QuoteCache") cache: QuoteCache) extends Dir
 }
 
 /**
-  * Stock Quote Directive Input Parameters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Stock Quote Directive Input Parameters
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class StockQuoteDirectiveInputs(val symbol: String, val field: String) extends js.Object
 
 /**
-  * Stock Quote Directive Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Stock Quote Directive Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait StockQuoteDirectiveScope extends StockQuoteDirectiveInputs with Scope {
   var failed: js.UndefOr[Boolean] = js.native

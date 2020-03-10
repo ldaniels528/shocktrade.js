@@ -8,9 +8,9 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.{Failure, Success}
 
 /**
-  * Application Installer
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Application Installer
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Installer(dbConnectionString: String)(implicit ec: ExecutionContext) {
   private val logger = LoggerFactory.getLogger(getClass)
 

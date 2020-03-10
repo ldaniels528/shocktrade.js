@@ -3,9 +3,9 @@ package com.shocktrade.common.models.quote
 import scala.scalajs.js
 
 /**
-  * Key Statistics
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Key Statistics
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait KeyStatistics extends js.Object {
   var symbol: js.UndefOr[String]
   var exchange: js.UndefOr[String]

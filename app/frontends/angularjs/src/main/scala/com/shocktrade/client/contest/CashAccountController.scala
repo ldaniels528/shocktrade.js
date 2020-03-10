@@ -1,18 +1,17 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
+import com.shocktrade.client.{MySessionService, RootScope}
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, injected}
+import io.scalajs.npm.angularjs.{Controller, injected}
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.language.postfixOps
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 
 /**
-  * Cash Account Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Cash Account Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class CashAccountController($scope: CashAccountScope, toaster: Toaster,
                             @injected("MySessionService") mySession: MySessionService)
   extends Controller {
@@ -21,17 +20,15 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
   //          Public Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.asOfDate = () => mySession.cashAccount_?.flatMap(a => a.asOfDate.toOption) getOrElse new js.Date()
+  $scope.asOfDate = () => new js.Date()
 
   $scope.getTotalOrders = () => Seq("BUY", "SELL") map computeTotalOrdersByType sum
 
-  $scope.getTotalEquity = () => $scope.getTotalInvestment() + $scope.getFundsAvailable()
+  $scope.getTotalEquity = () => $scope.getTotalInvestment() + $scope.getFundsAvailable().orZero
 
   $scope.getTotalBuyOrders = () => computeTotalOrdersByType(orderType = "BUY")
 
   $scope.getTotalSellOrders = () => computeTotalOrdersByType(orderType = "SELL")
-
-  $scope.getFundsAvailable = () => mySession.cashAccount_?.orUndefined.flatMap(_.funds) orZero
 
   $scope.getTotalInvestment = () => {
     val outcome = for {
@@ -46,7 +43,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
-  private def computeTotalOrdersByType(orderType: String) = {
+  private def computeTotalOrdersByType(orderType: String): Double = {
     val outcome = for {
       portfolio <- mySession.portfolio_?.toList
       orders <- portfolio.orders.toList
@@ -58,17 +55,16 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
 }
 
 /**
-  * Cash Account Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Cash Account Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
-trait CashAccountScope extends Scope {
+trait CashAccountScope extends RootScope {
   var asOfDate: js.Function0[js.Date] = js.native
   var getTotalOrders: js.Function0[Double] = js.native
   var getTotalEquity: js.Function0[Double] = js.native
   var getTotalBuyOrders: js.Function0[Double] = js.native
   var getTotalSellOrders: js.Function0[Double] = js.native
-  var getFundsAvailable: js.Function0[Double] = js.native
   var getTotalInvestment: js.Function0[Double] = js.native
 
 }

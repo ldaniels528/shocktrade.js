@@ -4,9 +4,9 @@ import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.OrderLike
 
 /**
-  * Commissions Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Commissions Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Commissions {
   val LIMIT_COST = 14.99
   val MARKET_AT_CLOSE_COST = 9.99

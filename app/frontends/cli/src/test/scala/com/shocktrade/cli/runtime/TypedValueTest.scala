@@ -3,9 +3,9 @@ package com.shocktrade.cli.runtime
 import org.scalatest.{FreeSpec, Matchers}
 
 /**
-  * Typed Value Test
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Typed Value Test
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class TypedValueTest extends FreeSpec with Matchers {
 
   "TypedValues should evaluate mathematically" - {

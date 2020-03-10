@@ -6,9 +6,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Represents an application user
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an application user
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait User extends UserLike {
   var userID: js.UndefOr[String]
   var username: js.UndefOr[String]
@@ -16,9 +16,9 @@ trait User extends UserLike {
 }
 
 /**
-  * User Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * User Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object User {
 
   def apply(_id: js.UndefOr[String],
@@ -32,9 +32,9 @@ object User {
   }
 
   /**
-    * User Enrichment
-    * @param user the given [[User user]]
-    */
+   * User Enrichment
+   * @param user the given [[User user]]
+   */
   implicit class UserEnrichment(val user: User) extends AnyVal {
 
     @inline

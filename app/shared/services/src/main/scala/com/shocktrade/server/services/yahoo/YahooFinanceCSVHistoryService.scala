@@ -11,9 +11,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.Try
 
 /**
-  * Yahoo Finance! CSV History Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV History Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceCSVHistoryService() {
 
   def apply(symbol: String, from: js.Date, to: js.Date)(implicit ec: ExecutionContext): Future[YFHistoricalQuotes] = {
@@ -50,9 +50,9 @@ class YahooFinanceCSVHistoryService() {
 }
 
 /**
-  * Yahoo Finance! CSV History Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV History Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object YahooFinanceCSVHistoryService {
 
   class YFHistoricalQuotes(val symbol: String,

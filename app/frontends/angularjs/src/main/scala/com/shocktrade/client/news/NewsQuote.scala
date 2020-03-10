@@ -3,9 +3,9 @@ package com.shocktrade.client.news
 import scala.scalajs.js
 
 /**
-  * News Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewsQuote extends js.Object {
   var name: js.UndefOr[String] = js.native

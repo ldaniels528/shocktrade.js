@@ -47,7 +47,8 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
               username = accountData.username,
               email = accountData.email,
               wallet = accountData.wallet
-            )); next()
+            ));
+            next()
           case Success(None) =>
             response.notFound(form); next()
           case Failure(e) =>

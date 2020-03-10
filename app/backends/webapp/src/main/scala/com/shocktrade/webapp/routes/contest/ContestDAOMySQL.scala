@@ -96,6 +96,10 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     conn.queryFuture[ContestSearchResult](sql) map { case (rows, _) => rows }
   }
 
+  override def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int] = {
+    Future.sequence(contests.map(updateContest)).map(_.sum)
+  }
+
   override def updateContest(contest: ContestData)(implicit ec: ExecutionContext): Future[Int] = {
     import contest._
     conn.executeFuture(
@@ -104,10 +108,6 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
          |WHERE contestID = ?
          |""".stripMargin,
       js.Array(name, contestID)) map (_.affectedRows)
-  }
-
-  override def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int] = {
-    Future.sequence(contests.map(updateContest)).map(_.sum)
   }
 
 }

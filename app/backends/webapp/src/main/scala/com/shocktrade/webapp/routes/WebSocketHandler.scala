@@ -15,9 +15,9 @@ import scala.scalajs.js.JSON
 import scala.util.{Failure, Success, Try}
 
 /**
-  * WebSocket Handler
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * WebSocket Handler
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object WebSocketHandler {
   private val logger = LoggerFactory.getLogger(getClass)
   private val clients = js.Array[WsClient]()
@@ -52,9 +52,9 @@ object WebSocketHandler {
   }
 
   /**
-    * Represents a web-socket client
-    * @param ws the given [[WebSocket web socket]]
-    */
+   * Represents a web-socket client
+   * @param ws the given [[WebSocket web socket]]
+   */
   case class WsClient(ip: String, ws: WebSocket) {
     val uid: EventType = UUID.randomUUID().toString
 

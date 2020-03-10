@@ -9,9 +9,9 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * Contest Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ContestService($http: Http) extends Service {
 
   ///////////////////////////////////////////////////////////////
@@ -19,9 +19,9 @@ class ContestService($http: Http) extends Service {
   ///////////////////////////////////////////////////////////////
 
   /**
-    * Creates a new game
-    * @return the promise of the result of creating a new game
-    */
+   * Creates a new game
+   * @return the promise of the result of creating a new game
+   */
   def createNewGame(form: ContestCreationForm): js.Promise[HttpResponse[ContestCreationResponse]] = {
     $http.post[ContestCreationResponse]("/api/contest", form)
   }

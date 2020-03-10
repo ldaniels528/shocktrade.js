@@ -5,9 +5,9 @@ import io.scalajs.npm.angularjs.Scope
 import scala.scalajs.js
 
 /**
-  * Global Navigation
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Global Navigation
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait GlobalNavigation extends js.Object {
   self: Scope =>

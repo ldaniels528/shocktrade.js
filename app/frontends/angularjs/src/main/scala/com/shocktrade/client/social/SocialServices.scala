@@ -7,9 +7,9 @@ import io.scalajs.npm.angularjs.http.Http
 import scala.scalajs.js.annotation.JSExportAll
 
 /**
-  * Social Networking Setup Services
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Social Networking Setup Services
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @JSExportAll
 class SocialServices($http: Http) extends Service {
 

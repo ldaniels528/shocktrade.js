@@ -3,9 +3,9 @@ package com.shocktrade.common.models.contest
 import scala.scalajs.js
 
 /**
-  * Represents a Performance-like model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Performance-like model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait PerformanceLike extends js.Object {
 
   def _id: js.UndefOr[String]
@@ -23,15 +23,15 @@ trait PerformanceLike extends js.Object {
 }
 
 /**
-  * Performance-Like Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Performance-Like Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PerformanceLike {
 
   /**
-    * Performance-Like Enrichment
-    * @param performance the given [[Performance performance]]
-    */
+   * Performance-Like Enrichment
+   * @param performance the given [[Performance performance]]
+   */
   implicit class PerformanceLikeEnrichment(val performance: PerformanceLike) extends AnyVal {
 
     @inline
@@ -47,18 +47,18 @@ object PerformanceLike {
     } yield soldValue - totalCost
 
     @inline
-    def totalCost = for {
-      pricePaid <- performance.pricePaid
-      quantity <- performance.quantity
-      commission <- performance.commissions
-    } yield pricePaid * quantity + commission
-
-    @inline
     def totalSold = for {
       priceSold <- performance.priceSold
       quantity <- performance.quantity
       commission <- performance.commissions
     } yield priceSold * quantity - commission
+
+    @inline
+    def totalCost = for {
+      pricePaid <- performance.pricePaid
+      quantity <- performance.quantity
+      commission <- performance.commissions
+    } yield pricePaid * quantity + commission
 
   }
 

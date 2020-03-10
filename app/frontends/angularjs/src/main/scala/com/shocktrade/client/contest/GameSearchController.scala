@@ -288,8 +288,6 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   //              Broadcast Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  private def indexOfContest(contestId: String) = searchResults.indexWhere(_.contestID.contains(contestId))
-
   private def updateContestInList(searchResults: js.Array[ContestSearchResultUI], contestId: String) {
     val index = searchResults.indexWhere(_.contestID.contains(contestId))
     if (index != -1) {
@@ -312,6 +310,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
 
     if (selectedContest.exists(_.contestID ?== contestId)) selectedContest = js.undefined
   }
+
+  private def indexOfContest(contestId: String) = searchResults.indexWhere(_.contestID.contains(contestId))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners

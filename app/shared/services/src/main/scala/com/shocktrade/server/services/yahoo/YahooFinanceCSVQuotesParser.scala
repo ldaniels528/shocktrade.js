@@ -15,18 +15,18 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Yahoo Finance! CSV Quotes Parser
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV Quotes Parser
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceCSVQuotesParser() {
   MomentTimezone
 
   /**
-    * Parses the given encoded stock quote string into a stock quote object
-    * @param parameters the given encoded parameter string
-    * @param csvdata    the given stock quote data
-    * @return the [[YFCSVQuote quote]]
-    */
+   * Parses the given encoded stock quote string into a stock quote object
+   * @param parameters the given encoded parameter string
+   * @param csvdata    the given stock quote data
+   * @return the [[YFCSVQuote quote]]
+   */
   def parseQuote(parameters: String, csvdata: String, startTime: Double): Option[YFCSVQuote] = {
     // capture the response time (in milliseconds)
     val responseTimeMsec = System.currentTimeMillis() - startTime
@@ -188,8 +188,61 @@ class YahooFinanceCSVQuotesParser() {
   }
 
   /**
-    * Optionally extracts the new ticker from given HTML string
-    */
+   * Extracts the 52-Week Range components (high52Week & low52Week)
+   */
+  private def extract52WeekRange(codedString: String): Option[Seq[(String, String)]] = {
+    tuplize(codedString) match {
+      case (Some(valueA), Some(valueB)) => Some(Seq("high52Week" -> valueA, "low52Week" -> valueB))
+      case (Some(valueA), None) => Some(Seq("high52Week" -> valueA))
+      case _ => None
+    }
+  }
+
+  /**
+   * Extracts the real-time 52-Week Range components (high52WeekRealTime & low52WeekRealTime)
+   */
+  private def extract52WeekRangeRealTime(codedString: String): Option[Seq[(String, String)]] = {
+    tuplize(codedString) match {
+      case (Some(valueA), Some(valueB)) => Some(Seq("high52WeekRealTime" -> valueA, "low52WeekRealTime" -> valueB))
+      case (Some(valueA), None) => Some(Seq("high52WeekRealTime" -> valueA))
+      case _ => None
+    }
+  }
+
+  /**
+   * Extracts the change & percent change components (change & changePct)
+   */
+  private def extractChangeAndPercent(codedString: String): Option[Seq[(String, String)]] = {
+    tuplize(codedString) match {
+      case (Some(valueA), Some(valueB)) => Some(Seq("change" -> valueA, "changePct" -> valueB))
+      case (Some(valueA), None) => Some(Seq("change" -> valueA))
+      case _ => None
+    }
+  }
+
+  /**
+   * Extracts the change after hours components (changeAfterHours & ??? TODO)
+   */
+  private def extractChangeAterHours(codedString: String): Option[Seq[(String, String)]] = {
+    tuplize(codedString) match {
+      case (Some(valueA), Some(valueB)) => Some(Seq("changeAfterHours" -> valueA))
+      case _ => None
+    }
+  }
+
+  /**
+   * Extracts the trade time and last trade components (tradeTime & lastTrade)
+   */
+  private def extractLastTradeWithTime(codedString: String): Option[Seq[(String, String)]] = {
+    tuplize(codedString) match {
+      case (Some(valueA), Some(valueB)) => Some(Seq("tradeTime" -> valueA, "lastTrade" -> valueB))
+      case _ => None
+    }
+  }
+
+  /**
+   * Optionally extracts the new ticker from given HTML string
+   */
   private def getChangedSymbol(htmlString: js.UndefOr[String]): js.UndefOr[String] = {
 
     // error message is: "Ticker symbol has changed to <a href="/q?s=TNCC.PK">TNCC.PK</a>"
@@ -204,59 +257,6 @@ class YahooFinanceCSVQuotesParser() {
     } yield cleanmsg
 
     result.orUndefined
-  }
-
-  /**
-    * Extracts the 52-Week Range components (high52Week & low52Week)
-    */
-  private def extract52WeekRange(codedString: String): Option[Seq[(String, String)]] = {
-    tuplize(codedString) match {
-      case (Some(valueA), Some(valueB)) => Some(Seq("high52Week" -> valueA, "low52Week" -> valueB))
-      case (Some(valueA), None) => Some(Seq("high52Week" -> valueA))
-      case _ => None
-    }
-  }
-
-  /**
-    * Extracts the real-time 52-Week Range components (high52WeekRealTime & low52WeekRealTime)
-    */
-  private def extract52WeekRangeRealTime(codedString: String): Option[Seq[(String, String)]] = {
-    tuplize(codedString) match {
-      case (Some(valueA), Some(valueB)) => Some(Seq("high52WeekRealTime" -> valueA, "low52WeekRealTime" -> valueB))
-      case (Some(valueA), None) => Some(Seq("high52WeekRealTime" -> valueA))
-      case _ => None
-    }
-  }
-
-  /**
-    * Extracts the change & percent change components (change & changePct)
-    */
-  private def extractChangeAndPercent(codedString: String): Option[Seq[(String, String)]] = {
-    tuplize(codedString) match {
-      case (Some(valueA), Some(valueB)) => Some(Seq("change" -> valueA, "changePct" -> valueB))
-      case (Some(valueA), None) => Some(Seq("change" -> valueA))
-      case _ => None
-    }
-  }
-
-  /**
-    * Extracts the change after hours components (changeAfterHours & ??? TODO)
-    */
-  private def extractChangeAterHours(codedString: String): Option[Seq[(String, String)]] = {
-    tuplize(codedString) match {
-      case (Some(valueA), Some(valueB)) => Some(Seq("changeAfterHours" -> valueA))
-      case _ => None
-    }
-  }
-
-  /**
-    * Extracts the trade time and last trade components (tradeTime & lastTrade)
-    */
-  private def extractLastTradeWithTime(codedString: String): Option[Seq[(String, String)]] = {
-    tuplize(codedString) match {
-      case (Some(valueA), Some(valueB)) => Some(Seq("tradeTime" -> valueA, "lastTrade" -> valueB))
-      case _ => None
-    }
   }
 
   private def appendLastTradeDateTime(kvps: Map[String, String]): Map[String, String] = {
@@ -279,18 +279,18 @@ class YahooFinanceCSVQuotesParser() {
   }
 
   /**
-    * Indicates whether the given string is a valid time string
-    * @param s the given time string (e.g. "10:12am")
-    * @return true, if the given string is a valid time string
-    */
+   * Indicates whether the given string is a valid time string
+   * @param s the given time string (e.g. "10:12am")
+   * @return true, if the given string is a valid time string
+   */
   private def isTime(s: String) = s.toUpperCase.matches("\\d{1,2}:\\d{2}(:\\d{2})?(A|P|AM|PM)")
 
 }
 
 /**
-  * Yahoo Finance! CSV Quotes Parser Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV Quotes Parser Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object YahooFinanceCSVQuotesParser {
   // parsing constants
   val NOT_APPLICABLE = Set("NaN", "-", "N/A", "\"N/A\"", null)
@@ -298,10 +298,10 @@ object YahooFinanceCSVQuotesParser {
   val BOLD_END = "</b>"
 
   /**
-    * Parses the encoded string value into a decimal value
-    * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
-    * @return the [[Double]] value or <tt>null</tt> if a parsing error occurred
-    */
+   * Parses the encoded string value into a decimal value
+   * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
+   * @return the [[Double]] value or <tt>null</tt> if a parsing error occurred
+   */
   private def decimalValue(field: String, encodedString: String): js.UndefOr[Double] = {
     val rawString = encodedString.replaceAll("[$]", "").replaceAll("[+]", "").replaceAll("[,]", "")
     try {
@@ -327,28 +327,28 @@ object YahooFinanceCSVQuotesParser {
   }
 
   /**
-    * Parses the string value into a date value
-    * @param encodedString the given string value
-    * @return the [[js.Date date]] or <tt>null</tt> if a parsing error occurred
-    */
+   * Parses the string value into a date value
+   * @param encodedString the given string value
+   * @return the [[js.Date date]] or <tt>null</tt> if a parsing error occurred
+   */
   private def dateValue(field: String, encodedString: String): js.UndefOr[js.Date] = {
     stringValue(field, encodedString) map (s => new js.Date(s))
   }
 
   /**
-    * Parses the string value into an integer value
-    * @param encodedString the given string value
-    * @return the [[Int]] value or <tt>null</tt> if a parsing error occurred
-    */
+   * Parses the string value into an integer value
+   * @param encodedString the given string value
+   * @return the [[Int]] value or <tt>null</tt> if a parsing error occurred
+   */
   private def intValue(field: String, encodedString: String): js.UndefOr[Int] = {
     decimalValue(field, encodedString) map (_.toInt)
   }
 
   /**
-    * Extracts the display-friendly string value from the encoded string value
-    * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
-    * @return the string value (e.g. <tt>614.33</tt>)
-    */
+   * Extracts the display-friendly string value from the encoded string value
+   * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
+   * @return the string value (e.g. <tt>614.33</tt>)
+   */
   private def stringValue(encodedString: String): js.UndefOr[String] = {
     // if null or contains null indicator, return null
     if (encodedString.isBlank || NOT_APPLICABLE.contains(encodedString)) js.undefined
@@ -368,10 +368,10 @@ object YahooFinanceCSVQuotesParser {
   }
 
   /**
-    * Extracts the display-friendly string value from the encoded string value
-    * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
-    * @return the string value (e.g. <tt>614.33</tt>)
-    */
+   * Extracts the display-friendly string value from the encoded string value
+   * @param encodedString the given encoded string value (e.g. <tt>"&ltb&gt614.33&lt/b&gt"</tt>)
+   * @return the string value (e.g. <tt>614.33</tt>)
+   */
   private def stringValue(field: String, encodedString: String): js.UndefOr[String] = {
     // if null or contains null indicator, return null
     if (encodedString.isBlank || NOT_APPLICABLE.contains(encodedString)) js.undefined
@@ -391,10 +391,10 @@ object YahooFinanceCSVQuotesParser {
   }
 
   /**
-    * Extracts a value tuple from the given encoded string
-    * @param encodedString the given encoded string
-    * @return a tuple of options of a string
-    */
+   * Extracts a value tuple from the given encoded string
+   * @param encodedString the given encoded string
+   * @return a tuple of options of a string
+   */
   private def tuplize(encodedString: String): (Option[String], Option[String]) = {
     stringValue(encodedString).toOption match {
       case None => (None, None)
@@ -409,13 +409,10 @@ object YahooFinanceCSVQuotesParser {
   }
 
   /**
-    * Map Extensions
-    * @param m the given [[Map map]]
-    */
+   * Map Extensions
+   * @param m the given [[Map map]]
+   */
   implicit class MapExtensions(val m: Map[String, String]) extends AnyVal {
-
-    @inline
-    def uget(key: String): js.UndefOr[String] = m.get(key).orUndefined
 
     @inline
     def getDate(key: String): js.UndefOr[Date] = uget(key) flatMap (dateValue(key, _))
@@ -425,6 +422,9 @@ object YahooFinanceCSVQuotesParser {
 
     @inline
     def getInteger(key: String): js.UndefOr[Int] = uget(key) flatMap (intValue(key, _))
+
+    @inline
+    def uget(key: String): js.UndefOr[String] = m.get(key).orUndefined
 
     @inline
     def getString(key: String): js.UndefOr[String] = uget(key) flatMap (stringValue(key, _))

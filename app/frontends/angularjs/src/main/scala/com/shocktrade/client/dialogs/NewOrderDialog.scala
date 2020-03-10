@@ -26,14 +26,14 @@ import scala.scalajs.js
 import scala.util.{Failure, Success, Try}
 
 /**
-  * New Order Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewOrderDialog($http: Http, $uibModal: Modal) extends Service {
 
   /**
-    * Opens a new Order Entry Pop-up Dialog
-    */
+   * Opens a new Order Entry Pop-up Dialog
+   */
   def popup(params: NewOrderParams): js.Promise[NewOrderDialogResult] = {
     val $uibModalInstance = $uibModal.open[NewOrderDialogResult](new ModalOptions(
       templateUrl = "new_order_dialog.html",
@@ -46,9 +46,9 @@ class NewOrderDialog($http: Http, $uibModal: Modal) extends Service {
 }
 
 /**
-  * New Order Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
                                @injected("MySessionService") mySession: MySessionService,
@@ -172,7 +172,6 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
 
   private def validate(form: NewOrderForm): Future[js.Array[String]] = {
     val messages = form.validate
-    if (form.isMarginAccount && mySession.marginAccount_?.isEmpty) messages.push("You do not have a Margin Account (must buy the Perk)")
     if (messages.isEmpty) {
       form.symbol.toOption match {
         case Some(symbol) => quoteService.getOrderQuote(symbol).map(_.data) map { quote =>
@@ -201,17 +200,17 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
 }
 
 /**
-  * New Order Dialog Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Dialog Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NewOrderDialogController {
 
   type NewOrderDialogResult = Portfolio
 
   /**
-    * New Order Dialog Parameters
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * New Order Dialog Parameters
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class NewOrderParams(val symbol: js.UndefOr[String] = js.undefined,
                        val accountType: js.UndefOr[String] = js.undefined,
                        val quantity: js.UndefOr[Double] = js.undefined) extends js.Object
@@ -219,9 +218,9 @@ object NewOrderDialogController {
 }
 
 /**
-  * New Order Dialog Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Dialog Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewOrderScope extends AutoCompletionControllerScope {
   // variables

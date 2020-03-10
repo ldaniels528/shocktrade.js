@@ -1,8 +1,8 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.dialogs.PerksDialogController._
-import com.shocktrade.client.models.contest.{Contest, Perk, Portfolio}
+import com.shocktrade.client.models.contest.{Perk, Portfolio}
+import com.shocktrade.client.{MySessionService, RootScope}
 import com.shocktrade.common.forms.PerksResponse
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -19,14 +19,14 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Perks Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Perks Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class PerksDialog($http: Http, $uibModal: Modal) extends Service {
 
   /**
-    * Perks Modal Dialog
-    */
+   * Perks Modal Dialog
+   */
   def popup(): js.Promise[PerksDialogResult] = {
     val $uibModalInstance = $uibModal.open[PerksDialogResult](new ModalOptions(
       templateUrl = "perks_dialog.html",
@@ -36,29 +36,29 @@ class PerksDialog($http: Http, $uibModal: Modal) extends Service {
   }
 
   /**
-    * Retrieves the promise of a sequence of perks
-    * @param portfolioID the given portfolio ID
-    * @return the promise of a sequence of [[Perk perks]]
-    */
+   * Retrieves the promise of a sequence of perks
+   * @param portfolioID the given portfolio ID
+   * @return the promise of a sequence of [[Perk perks]]
+   */
   def getPerks(portfolioID: String): js.Promise[HttpResponse[js.Array[Perk]]] = {
     $http.get[js.Array[Perk]]("/api/contests/perks")
   }
 
   /**
-    * Retrieves the promise of an option of a perks response
-    * @param portfolioID the given portfolio ID
-    * @return the promise of an option of a [[PerksResponse perks response]]
-    */
+   * Retrieves the promise of an option of a perks response
+   * @param portfolioID the given portfolio ID
+   * @return the promise of an option of a [[PerksResponse perks response]]
+   */
   def getMyPerkCodes(portfolioID: String): js.Promise[HttpResponse[PerksResponse]] = {
     $http.get[PerksResponse](s"/api/portfolio/$portfolioID/perks")
   }
 
   /**
-    * Attempts to purchase the given perk codes
-    * @param portfolioID the given portfolio ID
-    * @param perkCodes   the given perk codes to purchase
-    * @return the promise of a [[Contest contest]]
-    */
+   * Attempts to purchase the given perk codes
+   * @param portfolioID the given portfolio ID
+   * @param perkCodes   the given perk codes to purchase
+   * @return the promise of a [[PerksDialogResult contest]]
+   */
   def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): js.Promise[HttpResponse[PerksDialogResult]] = {
     $http.post[Portfolio](s"/api/portfolio/$portfolioID/perks", perkCodes)
   }
@@ -66,9 +66,9 @@ class PerksDialog($http: Http, $uibModal: Modal) extends Service {
 }
 
 /**
-  * Perks Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Perks Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalInstance[PerksDialogResult], toaster: Toaster,
                             @injected("MySessionService") mySession: MySessionService,
                             @injected("PerksDialog") perksSvc: PerksDialog)
@@ -96,17 +96,17 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   $scope.isPerksSelected = () => $scope.availablePerks.exists(p => p.selected && !p.owned)
 
   $scope.getPerkCostClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || mySession.getFundsAvailable >= perk.cost) "positive"
-    else if (mySession.getFundsAvailable < perk.cost) "negative"
+    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "positive"
+    else if ($scope.getFundsAvailable().exists(_ < perk.cost)) "negative"
     else "null"
   }
 
   $scope.getPerkNameClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || mySession.getFundsAvailable >= perk.cost) "st_bkg_color" else "null"
+    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "st_bkg_color" else "null"
   }
 
   $scope.getPerkDescClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || mySession.getFundsAvailable >= perk.cost) "" else "null"
+    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "" else "null"
   }
 
   $scope.loadPerks = () => {
@@ -164,8 +164,8 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   private def getSelectedPerks = $scope.availablePerks.filter(perk => perk.selected && !perk.owned)
 
   /**
-    * Setup the perks state; indicating which perks are owned
-    */
+   * Setup the perks state; indicating which perks are owned
+   */
   private def setupPerks() {
     $scope.availablePerks.foreach { perk =>
       perk.owned = myPerkCodes.contains(perk.code)
@@ -176,9 +176,9 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 }
 
 /**
-  * Perks Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Perks Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PerksDialogController {
 
   type PerksDialogResult = Portfolio
@@ -186,11 +186,11 @@ object PerksDialogController {
 }
 
 /**
-  * Perks Dialog Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Perks Dialog Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
-trait PerksDialogScope extends Scope {
+trait PerksDialogScope extends RootScope {
   // variables
   var availablePerks: js.Array[Perk] = js.native
   var fundsAvailable: js.UndefOr[Double] = js.native

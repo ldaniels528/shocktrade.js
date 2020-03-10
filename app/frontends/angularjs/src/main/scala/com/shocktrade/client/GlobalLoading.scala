@@ -6,9 +6,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 /**
-  * Global Loading Control
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Global Loading Control
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait GlobalLoading {
 
   def syncLoading[T]($scope: Scope, $timeout: Timeout)(block: => T): T = {

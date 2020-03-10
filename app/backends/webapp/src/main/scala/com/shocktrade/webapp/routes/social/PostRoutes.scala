@@ -91,7 +91,8 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success((posts, tags)) =>
         val models = posts.map(_.toModel(tags))
         console.log(s"models = ${JSON.stringify(models)}")
-        response.send(models); next()
+        response.send(models);
+        next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }

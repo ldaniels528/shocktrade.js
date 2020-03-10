@@ -10,10 +10,10 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * News Post Directive
-  * @author lawrence.daniels@gmail.com
-  * @example <news-post text="{{ post.text }}"></news-post>
-  */
+ * News Post Directive
+ * @author lawrence.daniels@gmail.com
+ * @example <news-post text="{{ post.text }}"></news-post>
+ */
 class NewsPostDirective($sce: Sce) extends Directive
   with ElementRestriction with EmoticonSupport with LinkSupport[NewsPostDirectiveScope] with TemplateSupport {
 
@@ -53,9 +53,9 @@ class NewsPostDirective($sce: Sce) extends Directive
 }
 
 /**
-  * News Post Directive Scope
-  * @author lawrence.daniels@gmail.com
-  */
+ * News Post Directive Scope
+ * @author lawrence.daniels@gmail.com
+ */
 @js.native
 trait NewsPostDirectiveScope extends Scope {
   // input fields
@@ -67,9 +67,9 @@ trait NewsPostDirectiveScope extends Scope {
 }
 
 /**
-  * News Post Directive Scope Companion
-  * @author lawrence.daniels@gmail.com
-  */
+ * News Post Directive Scope Companion
+ * @author lawrence.daniels@gmail.com
+ */
 object NewsPostDirectiveScope {
 
   def apply(text: String, callback: String): NewsPostDirectiveScope = {

@@ -3,9 +3,9 @@ package com.shocktrade.cli.runtime
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Represents a Typed Value
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Typed Value
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 sealed trait TypedValue extends Evaluatable {
 
   def value: Any
@@ -25,9 +25,9 @@ sealed trait TypedValue extends Evaluatable {
 }
 
 /**
-  * Represents an array value
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an array value
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class ArrayValue(value: Seq[Any]) extends TypedValue {
 
   override def +(tv: TypedValue) = tv match {
@@ -46,9 +46,9 @@ case class ArrayValue(value: Seq[Any]) extends TypedValue {
 }
 
 /**
-  * Represents a Null value
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Null value
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Null extends TypedValue {
 
   override def value: Any = null
@@ -66,9 +66,9 @@ object Null extends TypedValue {
 }
 
 /**
-  * Represents a Numeric Value
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Numeric Value
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class NumericValue(value: Double) extends TypedValue {
 
   override def +(tv: TypedValue) = tv match {
@@ -103,9 +103,9 @@ case class NumericValue(value: Double) extends TypedValue {
 }
 
 /**
-  * Represents a String Value
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a String Value
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class TextValue(value: String) extends TypedValue {
 
   override def +(tv: TypedValue) = tv match {

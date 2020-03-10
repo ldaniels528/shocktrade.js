@@ -8,17 +8,17 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 /**
-  * Shared Content Processor
-  * @author lawrence.daniels@gmail.com
-  */
+ * Shared Content Processor
+ * @author lawrence.daniels@gmail.com
+ */
 object SharedContentProcessor {
   private[this] val expandables = List("&quot;" -> "\"", "&#x27;" -> "'") ::: (27 to 383).map(n => s"&#$n;" -> f"$n%c").toList
 
   /**
-    * Parses Social media metadata
-    * @param metadata the given news/article URL
-    * @return the aggregated Social media metadata
-    */
+   * Parses Social media metadata
+   * @param metadata the given news/article URL
+   * @return the aggregated Social media metadata
+   */
   def parseMetaData(metadata: Map[String, String]): Option[SharedContent] = {
     // gather as much meta data as possible
     val results = metadata.toSeq // extractTitle(doc) ++ extractMetaData(doc, keyName = "name") ++ extractMetaData(doc, keyName = "property")
@@ -61,18 +61,18 @@ object SharedContentProcessor {
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-    * Parses Google (Article, etc.) SEO metadata
-    * <pre>
-    * article:author => http://www.businessinsider.com/author/drake-baer
-    * article:modified_time => 2015-10-28T11:12:34+00:00
-    * article:publisher => businessinsider
-    * article:published_time => 2015-10-28T11:10:20+00:00
-    * article:section => Job Hunting
-    * article:tag => Job Hunting
-    * article:tag => Job Skills
-    * article:tag => Unemployment
-    * </pre>
-    */
+   * Parses Google (Article, etc.) SEO metadata
+   * <pre>
+   * article:author => http://www.businessinsider.com/author/drake-baer
+   * article:modified_time => 2015-10-28T11:12:34+00:00
+   * article:publisher => businessinsider
+   * article:published_time => 2015-10-28T11:10:20+00:00
+   * article:section => Job Hunting
+   * article:tag => Job Hunting
+   * article:tag => Job Skills
+   * article:tag => Unemployment
+   * </pre>
+   */
   private def extractArticleMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     val author = props.get("article:author")
     val tags = results.filter(_._1 == "article:tag").map(_._2).toList
@@ -83,23 +83,23 @@ object SharedContentProcessor {
   }
 
   /**
-    * Parses Facebook SEO metadata
-    * <pre>
-    * fb:app_id => 155043519637
-    * </pre>
-    */
+   * Parses Facebook SEO metadata
+   * <pre>
+   * fb:app_id => 155043519637
+   * </pre>
+   */
   private def extractFacebookMetaData(results: Seq[(String, String)], props: Map[String, String]): Option[SharedContent] = None
 
   /**
-    * Parses Generic (legacy) SEO metadata
-    * <pre>
-    * author => Drake Baer
-    * date => 2015-10-22
-    * description => Learning strategies that really work.
-    * news_keywords => Learning, Cognitive Function, Education, Productivity, Psychology, Features, Drake Baer,
-    * title => 4 strategies for remembering everything you learn
-    * </pre>
-    */
+   * Parses Generic (legacy) SEO metadata
+   * <pre>
+   * author => Drake Baer
+   * date => 2015-10-22
+   * description => Learning strategies that really work.
+   * news_keywords => Learning, Cognitive Function, Education, Productivity, Psychology, Features, Drake Baer,
+   * title => 4 strategies for remembering everything you learn
+   * </pre>
+   */
   private def extractGenericMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     val author = props.get("author")
     val date = props.get("date").flatMap(parseDate(_, format = "yyyy-MM-dd"))
@@ -110,26 +110,33 @@ object SharedContentProcessor {
   }
 
   /**
-    * Parses LinkedIn SEO metadata
-    * <pre>
-    * linkedin:owner => mid:1d5f7b
-    * </pre>
-    */
+   * Parses the given tag string into a collection of tags
+   * @param tagList the given tag string
+   * @return a collection of tags
+   */
+  private def parseTags(tagList: String) = tagList.trim.split("[,]").toList
+
+  /**
+   * Parses LinkedIn SEO metadata
+   * <pre>
+   * linkedin:owner => mid:1d5f7b
+   * </pre>
+   */
   private def extractLinkedInMetaData(results: Seq[(String, String)], props: Map[String, String]) = None
 
   /**
-    * Parses Open Graph SEO metadata
-    * <pre>
-    * og:locale => en_US
-    * og:type => article
-    * og:title => Tech Unemployment Rises In Some Categories - Dice Insights
-    * og:description => The technology industry’s unemployment rate crept up to 3.0 percent in the third quarter of 2015, according to the U.S. Bureau of Labor Statistics (BLS).
-    * og:url => http://insights.dice.com/2015/10/28/tech-unemployment-rises-in-some-categories/
-    * og:site_name => Dice Insights
-    * og:updated_time => 2015-10-28T11:12:34+00:00
-    * og:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1.png
-    * </pre>
-    */
+   * Parses Open Graph SEO metadata
+   * <pre>
+   * og:locale => en_US
+   * og:type => article
+   * og:title => Tech Unemployment Rises In Some Categories - Dice Insights
+   * og:description => The technology industry’s unemployment rate crept up to 3.0 percent in the third quarter of 2015, according to the U.S. Bureau of Labor Statistics (BLS).
+   * og:url => http://insights.dice.com/2015/10/28/tech-unemployment-rises-in-some-categories/
+   * og:site_name => Dice Insights
+   * og:updated_time => 2015-10-28T11:12:34+00:00
+   * og:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1.png
+   * </pre>
+   */
   private def extractOpenGraphMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     for {
       image <- props.get("og:image")
@@ -143,19 +150,26 @@ object SharedContentProcessor {
   }
 
   /**
-    * Parses Sailthru SEO metadata
-    * <pre>
-    * sailthru.author => Drake Baer
-    * sailthru.date => 2015-10-22
-    * sailthru.description => Learning strategies that really work.
-    * sailthru.image.full => http://static5.businessinsider.com/image/56292a629dd7cc1b008c4139/4-strategies-for-remembering-everything-you-learn.jpg
-    * sailthru.image.thumb => http://static2.businessinsider.com/image/56292a629dd7cc1b008c4139-50-50/4-strategies-for-remembering-everything-you-learn.jpg
-    * sailthru.tags => Learning, Cognitive Function, Education, Productivity, Psychology, Features, Drake Baer,
-    * sailthru.title => 4 strategies for remembering everything you learn
-    * sailthru.verticals => warroom,education,science
-    * </pre>
-    * @param results the given collection of key-value pairs
-    */
+   * Parses the given text and returns its date equivalent
+   * @param text the given text string
+   * @return the [[java.util.Date date]]
+   */
+  private def parseDate(text: String, format: String) = Option(new js.Date(js.Date.parse(text)))
+
+  /**
+   * Parses Sailthru SEO metadata
+   * <pre>
+   * sailthru.author => Drake Baer
+   * sailthru.date => 2015-10-22
+   * sailthru.description => Learning strategies that really work.
+   * sailthru.image.full => http://static5.businessinsider.com/image/56292a629dd7cc1b008c4139/4-strategies-for-remembering-everything-you-learn.jpg
+   * sailthru.image.thumb => http://static2.businessinsider.com/image/56292a629dd7cc1b008c4139-50-50/4-strategies-for-remembering-everything-you-learn.jpg
+   * sailthru.tags => Learning, Cognitive Function, Education, Productivity, Psychology, Features, Drake Baer,
+   * sailthru.title => 4 strategies for remembering everything you learn
+   * sailthru.verticals => warroom,education,science
+   * </pre>
+   * @param results the given collection of key-value pairs
+   */
   private def extractSailthruMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     for {
       imageThumb <- props.get("sailthru.image.thumb")
@@ -169,22 +183,26 @@ object SharedContentProcessor {
     } yield SharedContent(author = author, description = description, tags = tags, thumbnailUrl = imageFull, title = title, url = url, publishedTime = date)
   }
 
+  ///////////////////////////////////////////////////////////////////////////
+  //      Utility functions
+  ///////////////////////////////////////////////////////////////////////////
+
   /**
-    * Parses Shareaholic SEO metadata
-    * <pre>
-    * shareaholic:site_name => Dice Insights
-    * shareaholic:language => en-US
-    * shareaholic:url => http://insights.dice.com/2015/10/28/tech-unemployment-rises-in-some-categories/
-    * shareaholic:keywords => job hunting, job skills, unemployment, technology, industry
-    * shareaholic:article_published_time => 2015-10-28T15:10:20+00:00
-    * shareaholic:article_modified_time => 2015-11-23T16:16:26+00:00
-    * shareaholic:shareable_page => true
-    * shareaholic:article_author_name => Dice Staff
-    * shareaholic:site_id => 95e918a36eb505f905f5ad1d1c1400ee
-    * shareaholic:wp_version => 7.6.1.8
-    * shareaholic:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1-1024x665.png
-    * </pre>
-    */
+   * Parses Shareaholic SEO metadata
+   * <pre>
+   * shareaholic:site_name => Dice Insights
+   * shareaholic:language => en-US
+   * shareaholic:url => http://insights.dice.com/2015/10/28/tech-unemployment-rises-in-some-categories/
+   * shareaholic:keywords => job hunting, job skills, unemployment, technology, industry
+   * shareaholic:article_published_time => 2015-10-28T15:10:20+00:00
+   * shareaholic:article_modified_time => 2015-11-23T16:16:26+00:00
+   * shareaholic:shareable_page => true
+   * shareaholic:article_author_name => Dice Staff
+   * shareaholic:site_id => 95e918a36eb505f905f5ad1d1c1400ee
+   * shareaholic:wp_version => 7.6.1.8
+   * shareaholic:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1-1024x665.png
+   * </pre>
+   */
   private def extractShareaholicMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     for {
       image <- props.get("shareaholic:image")
@@ -198,17 +216,17 @@ object SharedContentProcessor {
   }
 
   /**
-    * Parses Twitter SEO metadata
-    * <pre>
-    * twitter:card => summary_large_image
-    * twitter:creator => drake_baer
-    * twitter:description => The technology industry’s unemployment rate crept up to 3.0 percent in the third quarter of 2015, according to the U.S. Bureau of Labor Statistics (BLS).
-    * twitter:title => Tech Unemployment Rises In Some Categories - Dice Insights
-    * twitter:domain => Dice Insights
-    * twitter:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1.png
-    * twitter:site => bi_strategy
-    * </pre>
-    */
+   * Parses Twitter SEO metadata
+   * <pre>
+   * twitter:card => summary_large_image
+   * twitter:creator => drake_baer
+   * twitter:description => The technology industry’s unemployment rate crept up to 3.0 percent in the third quarter of 2015, according to the U.S. Bureau of Labor Statistics (BLS).
+   * twitter:title => Tech Unemployment Rises In Some Categories - Dice Insights
+   * twitter:domain => Dice Insights
+   * twitter:image => http://insights.dice.com/wp-content/uploads/2015/10/2015-Q3_Full_Report_Image1.png
+   * twitter:site => bi_strategy
+   * </pre>
+   */
   private def extractTwitterMetaData(results: Seq[(String, String)], props: Map[String, String]) = {
     for {
       image <- props.get("twitter:image")
@@ -220,30 +238,12 @@ object SharedContentProcessor {
     } yield SharedContent(author = creator, description = description, thumbnailUrl = image, title = title, source = site)
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //      Utility functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  /**
-    * Parses the given text and returns its date equivalent
-    * @param text the given text string
-    * @return the [[java.util.Date date]]
-    */
-  private def parseDate(text: String, format: String) = Option(new js.Date(js.Date.parse(text)))
-
-  /**
-    * Parses the given tag string into a collection of tags
-    * @param tagList the given tag string
-    * @return a collection of tags
-    */
-  private def parseTags(tagList: String) = tagList.trim.split("[,]").toList
-
   implicit def value2Option[T](value: T): Option[T] = Option(value)
 
   /**
-    * Represents Shared Content; usually posted from a news site, etc.
-    * @author lawrence.daniels@gmail.com
-    */
+   * Represents Shared Content; usually posted from a news site, etc.
+   * @author lawrence.daniels@gmail.com
+   */
   case class SharedContent(author: Option[String] = None,
                            description: Option[String] = None,
                            locale: Option[String] = None,
@@ -281,9 +281,9 @@ object SharedContentProcessor {
   }
 
   /**
-    * String Extensions
-    * @author lawrence.daniels@gmail.com
-    */
+   * String Extensions
+   * @author lawrence.daniels@gmail.com
+   */
   implicit class StringExtensions(val text: String) extends AnyVal {
 
     def expandMarkup: String = {

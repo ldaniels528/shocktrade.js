@@ -4,9 +4,9 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 
 /**
-  * Discover Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait DiscoverQuote extends CompleteQuote {
   // standard codes
   var advisory: js.UndefOr[String]
@@ -20,15 +20,15 @@ trait DiscoverQuote extends CompleteQuote {
 }
 
 /**
-  * Discover Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object DiscoverQuote {
 
   /**
-    * Full Quote Constructors
-    * @param quote the given [[CompleteQuote full quote]]
-    */
+   * Full Quote Constructors
+   * @param quote the given [[CompleteQuote full quote]]
+   */
   implicit class DiscoverQuoteConstructors(val quote: CompleteQuote) extends AnyVal {
 
     @inline

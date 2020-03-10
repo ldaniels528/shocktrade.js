@@ -5,9 +5,9 @@ import com.shocktrade.cli.runtime.functions.Function
 import scala.collection.mutable
 
 /**
-  * Represents a root scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a root scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class RootScope() extends Scope {
   private val functions = mutable.Map[String, Function]()
   private val variables = mutable.Map[String, TypedValue]()

@@ -1,6 +1,6 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest.{ContestSearchResultUI, Portfolio}
+import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.client.{MySessionService, RootScope}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -28,7 +28,7 @@ abstract class GameController($scope: GameScope,
 
   $scope.enterGame = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest foreach enterGame
 
-  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest exists  isParticipant
+  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest exists isParticipant
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
@@ -68,8 +68,5 @@ trait GameScope extends RootScope {
   // functions
   var enterGame: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var isParticipant: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
-
-  // variables
- var portfolio: js.UndefOr[Portfolio] = js.native
 
 }

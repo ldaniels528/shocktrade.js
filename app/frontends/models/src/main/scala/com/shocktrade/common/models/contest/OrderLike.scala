@@ -7,9 +7,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Represents an Order-like model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an Order-like model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait OrderLike extends js.Object {
 
   def orderID: js.UndefOr[String]
@@ -39,9 +39,9 @@ trait OrderLike extends js.Object {
 }
 
 /**
-  * Order-like Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Order-like Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object OrderLike {
   val ACCOUNT_TYPE_CASH = "CASH"
   val ACCOUNT_TYPE_MARGIN = "MARGIN"
@@ -54,9 +54,9 @@ object OrderLike {
   val PRICE_TYPE_MARKET_AT_CLOSE = "MARKET_AT_CLOSE"
 
   /**
-    * Order Enrichment
-    * @param order the given [[OrderLike order]]
-    */
+   * Order Enrichment
+   * @param order the given [[OrderLike order]]
+   */
   implicit class OrderLikeEnrichment(val order: OrderLike) extends AnyVal {
 
     @inline

@@ -10,7 +10,7 @@ import scala.scalajs.js
  * Stock Quote DAO (MySQL implementation)
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class StockQuoteDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with StockQuoteDAO  {
+class StockQuoteDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with StockQuoteDAO {
 
   override def findQuote[A <: js.Any](symbol: String)(implicit ec: ExecutionContext): Future[Option[A]] = {
     conn.queryFuture[A]("SELECT * FROM stocks WHERE symbol = ?", js.Array(symbol)) map { case (rows, _) => rows.headOption }

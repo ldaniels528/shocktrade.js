@@ -37,8 +37,8 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("UserService") profileService: UserService)
   extends Controller with GlobalLoading {
 
-  private var loadingIndex = 0
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
+  private var loadingIndex = 0
 
   $scope.appTabs = MainTab.Tabs
   $scope.levels = GameLevel.Levels
@@ -96,7 +96,9 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getContestStatus = () => mySession.getContestStatus
 
-  $scope.getFundsAvailable = () => mySession.getFundsAvailable
+  $scope.getFundsAvailable = () => getFundsAvailable
+
+  private def getFundsAvailable: js.UndefOr[Double] = $scope.portfolio.flatMap(_.funds)
 
   $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
 
@@ -338,7 +340,6 @@ trait MainControllerScope extends RootScope with GlobalNavigation {
   var getContestName: js.Function0[String] = js.native
   var getContestStatus: js.Function0[String] = js.native
 
-  var getFundsAvailable: js.Function0[Double] = js.native
   var getTotalInvestment: js.Function0[Double] = js.native
   var getNetWorth: js.Function0[Double] = js.native
   var getWallet: js.Function0[Double] = js.native

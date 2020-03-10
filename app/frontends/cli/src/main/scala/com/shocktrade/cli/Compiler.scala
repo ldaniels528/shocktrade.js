@@ -8,16 +8,16 @@ import com.shocktrade.cli.runtime.ops.{DefineFunctionOp, DefineVariableOp, MathO
 import com.shocktrade.cli.runtime.values.{ArrayReference, FunctionReference, VariableReference}
 
 /**
-  * ShockScript Compiler
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * ShockScript Compiler
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Compiler(tokenizer: Tokenizer) {
 
   /**
-    * Compiles the given script into executable code
-    * @param script the given script
-    * @return the [[CodeBlock executable code]]
-    */
+   * Compiles the given script into executable code
+   * @param script the given script
+   * @return the [[CodeBlock executable code]]
+   */
   def compile(script: String): Evaluatable = {
     var list: List[Evaluatable] = Nil
     val it = tokenizer.parse(script)
@@ -28,10 +28,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses an expression (e.g. "10 * (5 + 1)")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return an [[Evaluatable evaluatable]] representing the quantity
-    */
+   * Parses an expression (e.g. "10 * (5 + 1)")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return an [[Evaluatable evaluatable]] representing the quantity
+   */
   def expression(it: TokenIterator): Evaluatable = {
     var previous = it.peek match {
       case "$" => variableReference(it)
@@ -54,10 +54,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses an array reference (e.g. "[1, 2, 3]")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return the [[ArrayReference array reference]]
-    */
+   * Parses an array reference (e.g. "[1, 2, 3]")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return the [[ArrayReference array reference]]
+   */
   def arrayReference(it: TokenIterator): ArrayReference = {
     it.expect("[")
     var items: List[Evaluatable] = Nil
@@ -68,10 +68,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses a function declaration (e.g. "def combine(a, b) = $a + $b")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return the [[DefineFunctionOp function definition]]
-    */
+   * Parses a function declaration (e.g. "def combine(a, b) = $a + $b")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return the [[DefineFunctionOp function definition]]
+   */
   def defineFunction(it: TokenIterator): DefineFunctionOp = {
     it.next() // skip "def" keyword
     val name = it.next()
@@ -89,10 +89,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses a variable declaration (e.g. "var array = [1, 2, 3]")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return the [[DefineVariableOp variable definition]]
-    */
+   * Parses a variable declaration (e.g. "var array = [1, 2, 3]")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return the [[DefineVariableOp variable definition]]
+   */
   def defineVariable(it: TokenIterator): DefineVariableOp = {
     it.next() // skip "var" keyword
     val name = it.next()
@@ -101,10 +101,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses a function reference (e.g. "sum(1, 2, 3)")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return the [[FunctionReference function reference]]
-    */
+   * Parses a function reference (e.g. "sum(1, 2, 3)")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return the [[FunctionReference function reference]]
+   */
   def functionReference(it: TokenIterator): FunctionReference = {
     val name = it.next()
     it.expect("(")
@@ -116,10 +116,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses a quantity (e.g. "(1 + 2) * 3")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return an [[Evaluatable evaluatable]] representing the quantity
-    */
+   * Parses a quantity (e.g. "(1 + 2) * 3")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return an [[Evaluatable evaluatable]] representing the quantity
+   */
   def quantity(it: TokenIterator): Evaluatable = {
     it.expect("(")
     var aggregate = expression(it)
@@ -140,10 +140,10 @@ class Compiler(tokenizer: Tokenizer) {
   }
 
   /**
-    * Parses a variable reference (e.g. "$a")
-    * @param it the given [[TokenIterator token iterator]]
-    * @return a [[VariableReference variable reference]]
-    */
+   * Parses a variable reference (e.g. "$a")
+   * @param it the given [[TokenIterator token iterator]]
+   * @return a [[VariableReference variable reference]]
+   */
   def variableReference(it: TokenIterator): VariableReference = {
     it.next() // skip variable reference symbol ($)
     new VariableReference(name = it.next())
@@ -161,23 +161,23 @@ class Compiler(tokenizer: Tokenizer) {
 }
 
 /**
-  * Compiler Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compiler Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Compiler {
 
   /**
-    * Default Constructor
-    * @return a new Compiler instance using a default tokenizer
-    */
+   * Default Constructor
+   * @return a new Compiler instance using a default tokenizer
+   */
   def apply(): Compiler = {
     new Compiler(new Tokenizer())
   }
 
   /**
-    * Tokenizer Extensions
-    * @param it the given [[TokenIterator token iterator]]
-    */
+   * Tokenizer Extensions
+   * @param it the given [[TokenIterator token iterator]]
+   */
   final implicit class TokenizerExtensions(val it: TokenIterator) extends AnyVal {
 
     def assert(f: TokenIterator => Boolean): String = {
@@ -189,6 +189,8 @@ object Compiler {
           throw new IllegalArgumentException(s"Unexpected end of input")
       }
     }
+
+    def peekOption: Option[String] = if (it.hasNext) Some(it.peek) else None
 
     def expect(tokens: String*): String = {
       if (!it.hasNext)
@@ -202,8 +204,6 @@ object Compiler {
     }
 
     def nextOption(): Option[String] = if (it.hasNext) Option(it.next()) else None
-
-    def peekOption: Option[String] = if (it.hasNext) Some(it.peek) else None
 
   }
 

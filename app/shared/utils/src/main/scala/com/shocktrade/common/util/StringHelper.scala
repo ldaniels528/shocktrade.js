@@ -1,9 +1,9 @@
 package com.shocktrade.common.util
 
 /**
-  * String Helper
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * String Helper
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object StringHelper {
 
   implicit class NthExtensions(val number: Int) extends AnyVal {
@@ -23,9 +23,9 @@ object StringHelper {
   }
 
   /**
-    * String Extensions
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * String Extensions
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   implicit class StringExtensions(val string: String) extends AnyVal {
 
     @inline
@@ -37,12 +37,6 @@ object StringHelper {
     @inline
     def findIndices(tok0: String, tok1: String) = for {
       start <- string.indexOfOpt(tok0)
-      end <- string.indexOfOpt(tok1, start)
-    } yield (start, end)
-
-    @inline
-    def findIndices(tok0: String, tok1: String, fromIndex: Int) = for {
-      start <- string.indexOfOpt(tok0, fromIndex)
       end <- string.indexOfOpt(tok1, start)
     } yield (start, end)
 
@@ -59,19 +53,25 @@ object StringHelper {
     }
 
     @inline
+    def findIndices(tok0: String, tok1: String, fromIndex: Int) = for {
+      start <- string.indexOfOpt(tok0, fromIndex)
+      end <- string.indexOfOpt(tok1, start)
+    } yield (start, end)
+
+    @inline
     def isBlank = string.trim.isEmpty
 
     @inline
     def nonBlank = string.trim.nonEmpty
 
     @inline
-    def isValidEmail = string.contains("@") // TODO
-
-    @inline
     def nonValidEmail = !string.isValidEmail
 
     @inline
-    def limitTo(length: Int) = if(string.length > length) string.take(length) + "..." else string
+    def isValidEmail = string.contains("@") // TODO
+
+    @inline
+    def limitTo(length: Int) = if (string.length > length) string.take(length) + "..." else string
 
     @inline
     def unquote = string match {

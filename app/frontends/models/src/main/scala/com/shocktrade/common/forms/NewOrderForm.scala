@@ -5,9 +5,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * New Order Form
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Form
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
                    var exchange: js.UndefOr[String] = js.undefined,
                    var accountType: js.UndefOr[String] = js.undefined,
@@ -20,15 +20,15 @@ class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
                    var emailNotify: js.UndefOr[Boolean] = js.undefined) extends js.Object
 
 /**
-  * New Order Form
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * New Order Form
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NewOrderForm {
 
   /**
-    * New Order Form Enrichment
-    * @param form the given [[NewOrderForm form]]
-    */
+   * New Order Form Enrichment
+   * @param form the given [[NewOrderForm form]]
+   */
   implicit class NewOrderFormEnrichment(val form: NewOrderForm) extends AnyVal {
 
     @inline
@@ -36,15 +36,6 @@ object NewOrderForm {
 
     @inline
     def isMarginAccount: Boolean = form.accountType.contains("MARGIN")
-
-    @inline
-    def isBuyOrder: Boolean = form.orderType.contains("BUY")
-
-    @inline
-    def isSellOrder: Boolean = form.orderType.contains("SELL")
-
-    @inline
-    def isLimitOrder: Boolean = form.priceType.contains("LIMIT")
 
     @inline
     def isMarketOrder: Boolean = form.priceType.contains("MARKET")
@@ -65,6 +56,15 @@ object NewOrderForm {
       if (!form.isBuyOrder && !form.isSellOrder) messages.append("BUY or SELL is required")
       messages
     }
+
+    @inline
+    def isBuyOrder: Boolean = form.orderType.contains("BUY")
+
+    @inline
+    def isSellOrder: Boolean = form.orderType.contains("SELL")
+
+    @inline
+    def isLimitOrder: Boolean = form.priceType.contains("LIMIT")
 
   }
 

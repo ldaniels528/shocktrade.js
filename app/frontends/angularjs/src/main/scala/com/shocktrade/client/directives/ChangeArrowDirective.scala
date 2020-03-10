@@ -9,10 +9,10 @@ import scala.scalajs.js.JSConverters._
 import scala.util.Try
 
 /**
-  * Change Arrow Directive
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  * @example <changearrow value="{{ q.change }}"></changearrow>
-  */
+ * Change Arrow Directive
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ * @example <changearrow value="{{ q.change }}"></changearrow>
+ */
 class ChangeArrowDirective extends Directive with ElementRestriction with LinkSupport[ChangeArrowDirectiveScope] with TemplateSupport {
   override val scope = new ChangeArrowDirectiveInputs(value = "@value")
   override val transclude = true
@@ -37,15 +37,15 @@ class ChangeArrowDirective extends Directive with ElementRestriction with LinkSu
 }
 
 /**
-  * Change Arrow Directive Input Parameters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Change Arrow Directive Input Parameters
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ChangeArrowDirectiveInputs(val value: String) extends js.Object
 
 /**
-  * Change Arrow Directive Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Change Arrow Directive Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ChangeArrowDirectiveScope extends ChangeArrowDirectiveInputs with Scope {
   // output fields

@@ -8,17 +8,17 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * Yahoo Finance! Key Statistics Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! Key Statistics Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceKeyStatisticsService() {
   private val scriptParser = new ScriptParser[YFKeyStatistics]()
 
   /**
-    * Attempts to retrieve the statistics for the given symbol
-    * @param symbol the given symbol
-    * @return the promise of the option of a [[YFKeyStatistics key statistics]] object
-    */
+   * Attempts to retrieve the statistics for the given symbol
+   * @param symbol the given symbol
+   * @return the promise of the option of a [[YFKeyStatistics key statistics]] object
+   */
   def apply(symbol: String)(implicit ec: ExecutionContext): Future[Option[YFKeyStatistics]] = {
     for {
       (response, html) <- Request.getFuture(s"https://finance.yahoo.com/quote/$symbol/key-statistics")
@@ -29,15 +29,15 @@ class YahooFinanceKeyStatisticsService() {
 }
 
 /**
-  * Yahoo Finance! Statistics Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! Statistics Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object YahooFinanceKeyStatisticsService {
 
   /**
-    * Represents the Yahoo! Finance Quote Summary Store object
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Represents the Yahoo! Finance Quote Summary Store object
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   @js.native
   trait YFKeyStatistics extends js.Object {
     var symbol: js.UndefOr[String] = js.native

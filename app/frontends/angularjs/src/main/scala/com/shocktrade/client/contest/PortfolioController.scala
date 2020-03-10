@@ -19,9 +19,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Portfolio Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Portfolio Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                                @injected("MySessionService") mySession: MySessionService,
                                @injected("ContestService") contestService: ContestService,
@@ -226,23 +226,23 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
 }
 
 /**
-  * Portfolio Controller Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Portfolio Controller Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PortfolioController {
 
   /**
-    * Portfolio Tab
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Portfolio Tab
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class PortfolioTab(val name: String, val icon: String, val path: String, var active: Boolean = false) extends js.Object
 
 }
 
 /**
-  * Portfolio Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Portfolio Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait PortfolioScope extends GlobalSelectedSymbolScope {
   // variables

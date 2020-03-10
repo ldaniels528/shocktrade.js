@@ -21,11 +21,14 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Posting Capabilities
-  * @author lawrence.daniels@gmail.com
-  */
+ * Posting Capabilities
+ * @author lawrence.daniels@gmail.com
+ */
 trait PostingCapabilities extends GlobalLoading {
   self: Controller =>
+
+  // define the last post containing a file upload
+  private var lastUploadedPost: Option[Post] = None
 
   def $scope: PostingCapabilitiesScope
 
@@ -40,9 +43,6 @@ trait PostingCapabilities extends GlobalLoading {
   def toaster: Toaster
 
   def userFactory: UserFactory
-
-  // define the last post containing a file upload
-  private var lastUploadedPost: Option[Post] = None
 
   $scope.posts = emptyArray
   $scope.tags = emptyArray
@@ -486,9 +486,9 @@ trait PostingCapabilities extends GlobalLoading {
 }
 
 /**
-  * Posting Capabilities Scope
-  * @author lawrence.daniels@gmail.com
-  */
+ * Posting Capabilities Scope
+ * @author lawrence.daniels@gmail.com
+ */
 @js.native
 trait PostingCapabilitiesScope extends Scope {
   var newPost: js.UndefOr[Post] = js.native

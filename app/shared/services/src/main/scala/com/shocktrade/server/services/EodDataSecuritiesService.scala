@@ -15,18 +15,18 @@ import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Eod Data Securities Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Eod Data Securities Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class EodDataSecuritiesService() {
   private val logger = LoggerFactory.getLogger(getClass)
 
   /**
-    * Retrieves a list of securities with limited stock quotes
-    * @param exchange    the given exchange (e.g. "OTCBB")
-    * @param firstLetter the given first letter (e.g. "A")
-    * @return the promise of a collection of [[EodDataSecurity securities]]
-    */
+   * Retrieves a list of securities with limited stock quotes
+   * @param exchange    the given exchange (e.g. "OTCBB")
+   * @param firstLetter the given first letter (e.g. "A")
+   * @return the promise of a collection of [[EodDataSecurity securities]]
+   */
   def apply(exchange: String, firstLetter: Char)(implicit ec: ExecutionContext): Future[Seq[EodDataSecurity]] = {
     val promise = Promise[Seq[EodDataSecurity]]()
     Request.getFuture(s"http://eoddata.com/stocklist/$exchange/$firstLetter.htm") onComplete {
@@ -117,9 +117,9 @@ class EodDataSecuritiesService() {
 }
 
 /**
-  * Eod Data Securities Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Eod Data Securities Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object EodDataSecuritiesService {
 
   class EodDataSecurity(val symbol: js.UndefOr[String],

@@ -8,9 +8,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Globally Selected Symbol
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Globally Selected Symbol
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait GlobalSelectedSymbol {
   self: Controller =>
 
@@ -39,9 +39,9 @@ trait GlobalSelectedSymbol {
 }
 
 /**
-  * Globally Selected Symbol Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Globally Selected Symbol Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait GlobalSelectedSymbolScope extends Scope {
   var selectedSymbol: js.UndefOr[String] = js.native

@@ -9,9 +9,9 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * Explore Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Explore Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ExploreService($http: Http) extends Service {
 
   def loadSectorInfo(symbol: String): js.Promise[HttpResponse[SectorInfoQuote]] = {
@@ -45,15 +45,15 @@ class ExploreService($http: Http) extends Service {
 }
 
 /**
-  * Explore Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Explore Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ExploreService {
 
   /**
-    * URL encodes the given string; replacing the amperstand (&) in the string identifier to fix URL encoding problems
-    * @param s the given string identifier
-    */
+   * URL encodes the given string; replacing the amperstand (&) in the string identifier to fix URL encoding problems
+   * @param s the given string identifier
+   */
   implicit class URLStringFix(val s: String) extends AnyVal {
 
     @inline
@@ -62,9 +62,9 @@ object ExploreService {
   }
 
   /**
-    * Aggregated Sector/Industry data
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Aggregated Sector/Industry data
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   @js.native
   trait AggregatedSectorData extends js.Object {
     val _id: String = js.native

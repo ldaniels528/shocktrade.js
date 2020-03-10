@@ -5,9 +5,9 @@ import com.shocktrade.common.models.contest.OrderLike
 import scala.scalajs.js
 
 /**
-  * Represents an Order model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an Order model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Order(var orderID: js.UndefOr[String],
             var symbol: js.UndefOr[String],
             var exchange: js.UndefOr[String],

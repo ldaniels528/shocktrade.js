@@ -44,6 +44,17 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
+  private def popupNewGameDialog(): Unit = {
+    newGameDialog.popup() onComplete {
+      case Success(_) => $scope.$apply(() => reload())
+      case Failure(e) =>
+        toaster.error("Failed to create game")
+        console.error(s"Failed to create game: ${e.displayMessage}")
+    }
+  }
+
+  private def reload(): Unit = mySession.userProfile.userID foreach loadMyContests
+
   private def loadMyContests(userID: String): Unit = {
     console.log(s"Loading 'My Contests' for user '$userID'...")
     contestService.findMyContests(userID) onComplete {
@@ -60,15 +71,6 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
     }
   }
 
-  private def popupNewGameDialog(): Unit = {
-    newGameDialog.popup() onComplete {
-      case Success(_) => $scope.$apply(() => reload())
-      case Failure(e) =>
-        toaster.error("Failed to create game")
-        console.error(s"Failed to create game: ${e.displayMessage}")
-    }
-  }
-
   private def rankOf(rank: Int): String = {
     val suffix = rank.toString match {
       case n if n.endsWith("11") | n.endsWith("12") | n.endsWith("13") => "th"
@@ -79,8 +81,6 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
     }
     s"$rank$suffix"
   }
-
-  private def reload(): Unit = mySession.userProfile.userID foreach loadMyContests
 
   ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners

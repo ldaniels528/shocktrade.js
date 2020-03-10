@@ -9,19 +9,19 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Concurrent Processor
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Concurrent Processor
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ConcurrentProcessor {
 
   /**
-    * Starts the concurrent processor. 
-    * <b>NOTE</b>: For performance reasons the input items are used directly for processing.
-    * @param queue   the given [[js.Array input queue]]
-    * @param ctx     the given [[ConcurrentContext concurrent context]]
-    * @param handler the given [[ConcurrentTaskHandler concurrent task handler]]
-    * @return the promise of a result
-    */
+   * Starts the concurrent processor.
+   * <b>NOTE</b>: For performance reasons the input items are used directly for processing.
+   * @param queue   the given [[js.Array input queue]]
+   * @param ctx     the given [[ConcurrentContext concurrent context]]
+   * @param handler the given [[ConcurrentTaskHandler concurrent task handler]]
+   * @return the promise of a result
+   */
   def start[IN, OUT, SUMMARY](queue: js.Array[IN],
                               ctx: ConcurrentContext = ConcurrentContext(concurrency = 1),
                               handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger): Future[SUMMARY] = {
@@ -48,10 +48,10 @@ class ConcurrentProcessor {
   }
 
   /**
-    * Manages the asynchronous processing all of items in the queue
-    * @param ctx     the given [[ConcurrentContext processing context]]
-    * @param handler the given [[ConcurrentTaskHandler task handler]]
-    */
+   * Manages the asynchronous processing all of items in the queue
+   * @param ctx     the given [[ConcurrentContext processing context]]
+   * @param handler the given [[ConcurrentTaskHandler task handler]]
+   */
   private def handleTask[IN, OUT, RESULT](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, RESULT])(implicit ec: ExecutionContext, logger: Logger): Unit = {
     val anItem = if (queue.nonEmpty) Option(queue.pop()) else None
     anItem match {
@@ -77,10 +77,10 @@ class ConcurrentProcessor {
   }
 
   /**
-    * Schedules the next item in the queue for processing
-    * @param ctx     the given [[ConcurrentContext processing context]]
-    * @param handler the given [[ConcurrentTaskHandler task handler]]
-    */
+   * Schedules the next item in the queue for processing
+   * @param ctx     the given [[ConcurrentContext processing context]]
+   * @param handler the given [[ConcurrentTaskHandler task handler]]
+   */
   private def scheduleNext[IN, OUT, SUMMARY](queue: js.Array[IN], ctx: ConcurrentContext, handler: ConcurrentTaskHandler[IN, OUT, SUMMARY])(implicit ec: ExecutionContext, logger: Logger): Unit = {
     if (ctx.isPaused)
       setTimeout(() => scheduleNext(queue, ctx, handler), 1.seconds)

@@ -40,12 +40,12 @@ class SignInDialog($http: Http, $uibModal: Modal) extends Service {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: ModalInstance[SignInDialogResult],
-                             $timeout: Timeout, toaster: Toaster,
-                             @injected("AuthenticationService") authenticationService: AuthenticationService)
+                                  $timeout: Timeout, toaster: Toaster,
+                                  @injected("AuthenticationService") authenticationService: AuthenticationService)
   extends Controller {
 
-  private val messages:js.Array[String] = emptyArray
-  private var loading:Boolean = false
+  private val messages: js.Array[String] = emptyArray
+  private var loading: Boolean = false
 
   $scope.form = new AuthenticationForm()
 

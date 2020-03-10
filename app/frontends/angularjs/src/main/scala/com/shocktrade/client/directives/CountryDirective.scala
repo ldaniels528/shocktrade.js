@@ -6,9 +6,9 @@ import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 import scala.scalajs.js
 
 /**
-  * Country Directive
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Country Directive
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class CountryDirective extends Directive with ElementRestriction with LinkSupport[CountryDirectiveScope] with TemplateSupport {
 
   override def scope = new CountryDirectiveInputs(profile = "@profile")
@@ -24,15 +24,15 @@ class CountryDirective extends Directive with ElementRestriction with LinkSuppor
 }
 
 /**
-  * Country Directive Input Parameters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Country Directive Input Parameters
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class CountryDirectiveInputs(val profile: String) extends js.Object
 
 /**
-  * Country Directive Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Country Directive Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait CountryDirectiveScope extends CountryDirectiveInputs with Scope {
   // output fields

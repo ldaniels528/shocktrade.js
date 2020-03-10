@@ -9,9 +9,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Quote Services
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Quote Services
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class QuoteService($http: Http) extends Service {
 
   def autoCompleteSymbols(searchTerm: String, maxResults: Int): js.Promise[HttpResponse[js.Array[AutoCompleteQuote]]] = {

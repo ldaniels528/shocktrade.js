@@ -9,10 +9,10 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * News Directive
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  * @example {{{ <news content="{{ myDate }}"></news> }}}
-  */
+ * News Directive
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ * @example {{{ <news content="{{ myDate }}"></news> }}}
+ */
 class NewsDirective($sce: Sce) extends Directive with ElementRestriction with LinkSupport[NewsDirectiveScope] with TemplateSupport {
   override val scope = new NewsDirectiveInputs(`class` = "@class", content = "@content")
   override val template = """<div class="{{ class }}" ng-bind-html="output"></div>"""
@@ -58,15 +58,15 @@ class NewsDirective($sce: Sce) extends Directive with ElementRestriction with Li
 }
 
 /**
-  * News Directive Input Parameters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Directive Input Parameters
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsDirectiveInputs(val `class`: String, val content: String) extends js.Object
 
 /**
-  * News Directive Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Directive Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewsDirectiveScope extends NewsDirectiveInputs with Scope {
   // output fields

@@ -11,16 +11,16 @@ import io.scalajs.npm.angularjs.{Scope, angular}
 import scala.scalajs.js
 
 /**
-  * ShockTrade Application Events
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * ShockTrade Application Events
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ScopeEvents {
 
   /**
-    * Scope Enrichment
-    * @param $scope the given [[Scope scope]]
-    * @tparam T the given type
-    */
+   * Scope Enrichment
+   * @param $scope the given [[Scope scope]]
+   * @tparam T the given type
+   */
   implicit class ScopeEnrichment[T <: Scope](val $scope: T) extends AnyVal {
 
     /////////////////////////////////////////////////////////////////////
@@ -46,6 +46,14 @@ object ScopeEvents {
     def emitContestDeleted(contest: Contest): Unit = broadcast(ContestDeleted, contest)
 
     @inline
+    private def broadcast(action: String, entity: js.Any): Unit = {
+      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
+      $scope.$broadcast(ContestCreated, entity)
+      $scope.$emit(ContestCreated, entity)
+      ()
+    }
+
+    @inline
     def emitContestSelected(contest: Contest): Unit = broadcast(ContestSelected, contest)
 
     @inline
@@ -57,12 +65,12 @@ object ScopeEvents {
     @inline
     def emitUserProfileUpdated(profile: UserProfile): Unit = broadcast(UserProfileUpdated, profile)
 
-    @inline
-    def emitUserStatusChanged(status: String): Unit = broadcast(UserStatusChanged, status)
-
     /////////////////////////////////////////////////////////////////////
     //          Reactors
     /////////////////////////////////////////////////////////////////////
+
+    @inline
+    def emitUserStatusChanged(status: String): Unit = broadcast(UserStatusChanged, status)
 
     @inline
     def onContestCreated(callback: (Event, Contest) => Any): Unit = reactTo(ContestCreated, callback)
@@ -91,20 +99,12 @@ object ScopeEvents {
     @inline
     def onUserProfileUpdated(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileUpdated, callback)
 
-    @inline
-    def onUserStatusChanged(callback: (Event, String) => Any): Unit = reactTo(UserStatusChanged, callback)
-
     /////////////////////////////////////////////////////////////////////
     //          Private Methods
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    private def broadcast(action: String, entity: js.Any): Unit = {
-      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
-      $scope.$broadcast(ContestCreated, entity)
-      $scope.$emit(ContestCreated, entity)
-      ()
-    }
+    def onUserStatusChanged(callback: (Event, String) => Any): Unit = reactTo(UserStatusChanged, callback)
 
     private def reactTo(action: String, callback: js.Function): Unit = {
       console.info(s"Listening for '$action'...")

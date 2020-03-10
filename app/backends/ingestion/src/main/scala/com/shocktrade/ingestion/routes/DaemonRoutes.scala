@@ -11,9 +11,9 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 /**
-  * Daemon Routes
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Daemon Routes
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object DaemonRoutes {
 
   def init[T](app: Application, daemons: Seq[DaemonRef[T]])(implicit ec: ExecutionContext): Unit = {
@@ -35,8 +35,8 @@ object DaemonRoutes {
     //////////////////////////////////////////////////////////////////////////////////////
 
     /**
-      * Returns a daemon by its unique identifier
-      */
+     * Returns a daemon by its unique identifier
+     */
     def daemonById(request: Request, response: Response, next: NextFunction): Unit = {
       val id = request.params("id")
       daemonDict.get(id) match {
@@ -47,16 +47,16 @@ object DaemonRoutes {
     }
 
     /**
-      * Returns the list of configured daemons
-      */
+     * Returns the list of configured daemons
+     */
     def listDaemons(request: Request, response: Response, next: NextFunction): Unit = {
       response.send(daemonDict.values.toJSArray)
       next()
     }
 
     /**
-      * Pauses the daemon process, if running.
-      */
+     * Pauses the daemon process, if running.
+     */
     def pauseDaemon(request: Request, response: Response, next: NextFunction): Unit = {
       val id = request.params("id")
       daemonMap.get(id) match {
@@ -69,8 +69,8 @@ object DaemonRoutes {
     }
 
     /**
-      * Resume the daemon process, if paused.
-      */
+     * Resume the daemon process, if paused.
+     */
     def resumeDaemon(request: Request, response: Response, next: NextFunction): Unit = {
       val id = request.params("id")
       daemonMap.get(id) match {
@@ -83,8 +83,8 @@ object DaemonRoutes {
     }
 
     /**
-      * Starts the daemon process
-      */
+     * Starts the daemon process
+     */
     def startDaemon(request: Request, response: Response, next: NextFunction): Unit = {
       val id = request.params("id")
       daemonMap.get(id) match {
@@ -99,11 +99,11 @@ object DaemonRoutes {
   }
 
   /**
-    * The JSON representation of a daemon reference
-    * @param name      the name of the daemon
-    * @param delay     the initial delay before the process runs
-    * @param frequency the frequency/interval of the process
-    */
+   * The JSON representation of a daemon reference
+   * @param name      the name of the daemon
+   * @param delay     the initial delay before the process runs
+   * @param frequency the frequency/interval of the process
+   */
   class DaemonJs(val name: String, val delay: Int, val frequency: Int) extends js.Object
 
 }

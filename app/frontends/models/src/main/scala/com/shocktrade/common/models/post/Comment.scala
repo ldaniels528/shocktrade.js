@@ -6,9 +6,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Represents a comment
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents a comment
+ * @author lawrence.daniels@gmail.com
+ */
 class Comment extends js.Object {
   var _id: js.UndefOr[String] = js.undefined
   var text: js.UndefOr[String] = js.undefined
@@ -25,9 +25,9 @@ class Comment extends js.Object {
 }
 
 /**
-  * Comment Companion
-  * @author lawrence.daniels@gmail.com
-  */
+ * Comment Companion
+ * @author lawrence.daniels@gmail.com
+ */
 object Comment {
 
   def apply(text: String, submitter: UserLike): Comment = {

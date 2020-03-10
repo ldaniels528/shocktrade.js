@@ -19,13 +19,6 @@ class PostDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
       js.Array(limit)) map { case (rows, _) => rows }
   }
 
-  override def findByUser(userID: String, limit: Int)(implicit ec: ExecutionContext): Future[js.Array[PostData]] = {
-    conn.queryFuture[PostData](
-      s"""|SELECT * FROM posts WHERE postID = ? LIMIT ?
-          |""".stripMargin,
-      js.Array(userID, limit)) map { case (rows, _) => rows }
-  }
-
   override def findOneByID(postID: String)(implicit ec: ExecutionContext): Future[Option[PostData]] = {
     conn.queryFuture[PostData](
       s"""|SELECT * FROM posts WHERE postID = ?
@@ -34,6 +27,13 @@ class PostDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
   }
 
   override def findNewsFeed(userID: String, limit: Int)(implicit ec: ExecutionContext): Future[js.Array[PostData]] = findByUser(userID, limit)
+
+  override def findByUser(userID: String, limit: Int)(implicit ec: ExecutionContext): Future[js.Array[PostData]] = {
+    conn.queryFuture[PostData](
+      s"""|SELECT * FROM posts WHERE postID = ? LIMIT ?
+          |""".stripMargin,
+      js.Array(userID, limit)) map { case (rows, _) => rows }
+  }
 
   override def findTags(postIDs: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[PostTagData]] = {
     conn.queryFuture[PostTagData](

@@ -3,18 +3,18 @@ package com.shocktrade.client.contest
 import scala.scalajs.js
 
 /**
-  * Represents an Award
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an Award
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Award(val name: String,
             val code: String,
             val icon: String,
             val description: String) extends js.Object
 
 /**
-  * Award Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Award Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Award {
   val FACEBOOK = "FACEBOOK"
   val FBLIKEUS = "FBLIKEUS"
@@ -35,8 +35,8 @@ object Award {
   val GLDTRPHY = "GLDTRPHY"
 
   /**
-    * Represents the collection of contest awards
-    */
+   * Represents the collection of contest awards
+   */
   val availableAwards: js.Array[Award] = js.Array(
     new Award(
       name = "Told your friends!",

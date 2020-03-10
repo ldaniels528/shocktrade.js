@@ -20,14 +20,6 @@ class NASDAQCompanyListService() {
     download(exchange = "AMEX", url = "http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=AMEX&render=download")
   }
 
-  def nasdaq()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
-    download(exchange = "NASDAQ", url = "http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download")
-  }
-
-  def nyse()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
-    download(exchange = "NYSE", url = "http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download")
-  }
-
   private def download(exchange: String, url: String)(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
     Request.get(url).onResponse { response =>
       logger.info(s"esponse.statusCode = ${response.statusCode}")
@@ -63,6 +55,14 @@ class NASDAQCompanyListService() {
   @inline
   private def nullify(s: String) = {
     if (s.isEmpty || s == "n/a") None else Option(s)
+  }
+
+  def nasdaq()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
+    download(exchange = "NASDAQ", url = "http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&render=download")
+  }
+
+  def nyse()(implicit ec: ExecutionContext): Future[Seq[NASDAQCompanyInfo]] = {
+    download(exchange = "NYSE", url = "http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download")
   }
 
 }

@@ -10,9 +10,9 @@ import io.scalajs.social.facebook.TaggableFriend
 import scala.scalajs.js
 
 /**
-  * User Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * User Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class UserService($http: Http) extends Service {
 
   /**
@@ -42,9 +42,9 @@ class UserService($http: Http) extends Service {
   //////////////////////////////////////////////////////////////////////
 
   /**
-    * Updates and retrieves the user's net worth
-    * @param userID the given user ID
-    */
+   * Updates and retrieves the user's net worth
+   * @param userID the given user ID
+   */
   def getNetWorth(userID: String): js.Promise[HttpResponse[NetWorth]] = {
     $http.get[NetWorth](s"/api/user/$userID/netWorth")
   }

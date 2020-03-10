@@ -7,9 +7,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * News Source DAO
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Source DAO
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait NewsSourceDAO {
 
   /**
@@ -28,9 +28,9 @@ trait NewsSourceDAO {
 }
 
 /**
-  * News Source DAO Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Source DAO Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NewsSourceDAO {
 
   /**

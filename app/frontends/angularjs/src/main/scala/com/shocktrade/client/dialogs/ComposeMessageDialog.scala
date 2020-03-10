@@ -11,9 +11,9 @@ import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
-  * Compose Message Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ComposeMessageDialog($http: Http, $uibModal: Modal) extends Service {
 
   def popup(): Future[ComposeMessageResult] = {
@@ -26,9 +26,9 @@ class ComposeMessageDialog($http: Http, $uibModal: Modal) extends Service {
 }
 
 /**
-  * Compose Message Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ComposeMessageDialogController($scope: ComposeMessageScope,
                                      $uibModalInstance: ModalInstance[ComposeMessageResult],
                                      @injected("ComposeMessageDialog") composeMessageDialog: ComposeMessageDialog)
@@ -43,18 +43,18 @@ class ComposeMessageDialogController($scope: ComposeMessageScope,
 }
 
 /**
-  * Compose Message Dialog Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Dialog Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ComposeMessageDialogController {
 
   type ComposeMessageResult = ComposeMessageForm
 }
 
 /**
-  * Compose Message Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ComposeMessageScope extends Scope {
   // variables
@@ -67,16 +67,16 @@ trait ComposeMessageScope extends Scope {
 }
 
 /**
-  * Compose Message Form
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Form
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ComposeMessageForm extends js.Object
 
 /**
-  * Compose Message Form Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Compose Message Form Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ComposeMessageForm {
 
   def apply() = New[ComposeMessageForm]

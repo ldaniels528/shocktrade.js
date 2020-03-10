@@ -7,16 +7,13 @@ import scala.scalajs.js.Dynamic.{global => g}
 import scala.util.Try
 
 /**
-  * ShockTrade Filters
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * ShockTrade Filters
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Filters {
-  private val timeUnits = Seq("min", "hour", "day", "month", "year")
-  private val timeFactors = Seq(60, 24, 30, 12)
-
   /**
-    * Absolute Value
-    */
+   * Absolute Value
+   */
   val abs: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
@@ -24,10 +21,9 @@ object Filters {
       case _ => 0.0d
     } getOrElse value
   }: js.Function
-
   /**
-    * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
-    */
+   * Big Number: Formats large numbers into as a compact expression (e.g. "1.2M")
+   */
   val bigNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => Try(s.toCharArray).toOption.getOrElse(0.0d)
@@ -41,32 +37,27 @@ object Filters {
       case _ => 0.0d
     } getOrElse ""
   }: js.Function
-
   /**
-    * Capitalize: Returns the capitalize representation of a given string
-    */
+   * Capitalize: Returns the capitalize representation of a given string
+   */
   val capitalize: js.Function = () => { value: js.UndefOr[String] =>
     value map { s => if (s.nonEmpty) s.head.toUpper + s.tail else "" }
   }: js.Function
-
   /**
-    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
-    */
+   * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
+   */
   val duration: js.Function = () => { time: js.Dynamic => toDuration(time, noFuture = false) }: js.Function
-
   /**
-    * Escape: Performs an escape
-    */
+   * Escape: Performs an escape
+   */
   val escape: js.Function = () => { () => g.window.escape }: js.Function
-
   /**
-    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
-    */
+   * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
+   */
   val newsDuration: js.Function = () => { time: js.UndefOr[js.Any] => toDuration(time, noFuture = true) }: js.Function
-
   /**
-    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
-    */
+   * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
+   */
   val quoteChange: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => s
@@ -78,10 +69,9 @@ object Filters {
       case _ => ""
     } getOrElse ""
   }: js.Function
-
   /**
-    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
-    */
+   * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
+   */
   val quoteNumber: js.Function = () => { value: js.UndefOr[Any] =>
     value map {
       case s: String if s.nonEmpty => s
@@ -93,17 +83,18 @@ object Filters {
       case _ => ""
     } getOrElse ""
   }: js.Function
-
   /**
-    * Yes/No: Converts a boolean value into 'Yes' or 'No'
-    */
+   * Yes/No: Converts a boolean value into 'Yes' or 'No'
+   */
   val yesNo: js.Function = () => ((state: Boolean) => if (state) "Yes" else "No"): js.Function
+  private val timeUnits = Seq("min", "hour", "day", "month", "year")
+  private val timeFactors = Seq(60, 24, 30, 12)
 
   /**
-    * Converts the given time expression to a textual duration
-    * @param aTime the given [[js.Date]] or time stamp (in milliseconds)
-    * @return the duration (e.g. "10 mins ago")
-    */
+   * Converts the given time expression to a textual duration
+   * @param aTime the given [[js.Date]] or time stamp (in milliseconds)
+   * @return the duration (e.g. "10 mins ago")
+   */
   def toDuration(aTime: js.UndefOr[js.Any], noFuture: Boolean = false): js.UndefOr[String] = aTime map { time =>
     val ts = time.toString match {
       case s if s.matches("\\d+") => s.toDouble

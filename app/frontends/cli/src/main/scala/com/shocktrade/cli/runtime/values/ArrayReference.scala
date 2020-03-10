@@ -5,9 +5,9 @@ import com.shocktrade.cli.runtime._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Represents an array reference
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an array reference
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ArrayReference(items: Seq[Evaluatable]) extends Evaluatable {
 
   override def eval(rc: RuntimeContext, scope: Scope)(implicit ec: ExecutionContext) = {

@@ -12,9 +12,9 @@ import scala.scalajs.js.annotation.JSExport
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Control Panel JavaScript Application
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Control Panel JavaScript Application
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object CliJsApp {
   private val logger = LoggerFactory.getLogger(getClass)
   private val compiler = Compiler()

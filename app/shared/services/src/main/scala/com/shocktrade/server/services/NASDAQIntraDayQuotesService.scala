@@ -19,9 +19,9 @@ import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * NASDAQ Intra-day Quotes Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * NASDAQ Intra-day Quotes Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NASDAQIntraDayQuotesService() {
   private val timeSlotStrings = Seq(
     "ET_0930_TO_0959", "ET_1000_TO_1029", "ET_1030_TO_1059", "ET_1100_TO_1129",
@@ -34,23 +34,55 @@ class NASDAQIntraDayQuotesService() {
   MomentTimezone
 
   /**
-    * Returns a response containing quotes for the given symbol starting from the given time slot and page number
-    * @param symbol         the given symbol (e.g. "INTC")
-    * @param timeSlot       the given [[TimeSlot time slot]]
-    * @param startingPageNo the optional starting page number
-    * @param ec             the implicit execution context
-    * @return a response containing quotes for the given symbol
-    */
+   * Returns a response containing quotes for the given symbol starting from the given time slot and page number
+   * @param symbol         the given symbol (e.g. "INTC")
+   * @param timeSlot       the given [[TimeSlot time slot]]
+   * @param startingPageNo the optional starting page number
+   * @param ec             the implicit execution context
+   * @return a response containing quotes for the given symbol
+   */
   def apply(symbol: String, timeSlot: TimeSlot, startingPageNo: Int = 1)(implicit ec: ExecutionContext): Future[NASDAQIntraDayResponse] = {
     collectPages(getPage(toURL(symbol, timeSlot, startingPageNo))) map (pages => new NASDAQIntraDayResponse(symbol, js.Array(pages: _*)))
   }
 
   /**
-    * Returns a response containing quotes for the given URL
-    * @param url the given URL
-    * @param ec  the implicit execution context
-    * @return a response containing quotes for the given symbol
-    */
+   * Returns the appropriate time slot constant based on the given time
+   * @param time the given time
+   * @return the [[TimeSlot time slot]]
+   */
+  @inline
+  def getTimeSlot(time: js.Date): TimeSlot = {
+    Moment(time).tz("America/New_York").format("HHmm").toInt match {
+      case t if t < 1000 => ET_0930_TO_0959
+      case t if t >= 1000 && t <= 1029 => ET_1000_TO_1029
+      case t if t >= 1030 && t <= 1059 => ET_1030_TO_1059
+      case t if t >= 1100 && t <= 1129 => ET_1100_TO_1129
+      case t if t >= 1130 && t <= 1159 => ET_1130_TO_1159
+      case t if t >= 1200 && t <= 1229 => ET_1200_TO_1229
+      case t if t >= 1230 && t <= 1259 => ET_1230_TO_1259
+      case t if t >= 1300 && t <= 1329 => ET_1300_TO_1329
+      case t if t >= 1330 && t <= 1359 => ET_1330_TO_1359
+      case t if t >= 1400 && t <= 1429 => ET_1400_TO_1429
+      case t if t >= 1430 && t <= 1459 => ET_1430_TO_1459
+      case t if t >= 1500 && t <= 1529 => ET_1500_TO_1529
+      case t if t >= 1530 => ET_1530_TO_1600
+    }
+  }
+
+  /**
+   * Returns the text-based identifier for the given time slot
+   * @param timeSlot the given [[TimeSlot time slot]]
+   * @return the text-based identifier (e.g. "ET_0930_TO_0959")
+   */
+  @inline
+  def getTimeSlotText(timeSlot: TimeSlot): String = timeSlotStrings(timeSlot - 1)
+
+  /**
+   * Returns a response containing quotes for the given URL
+   * @param url the given URL
+   * @param ec  the implicit execution context
+   * @return a response containing quotes for the given symbol
+   */
   private def getPage(url: String)(implicit ec: ExecutionContext): Future[NASDAQIntraDayPage] = {
     val startTime = js.Date.now()
     val promise = Promise[NASDAQIntraDayPage]()
@@ -105,43 +137,11 @@ class NASDAQIntraDayQuotesService() {
   }
 
   /**
-    * Returns the appropriate time slot constant based on the given time
-    * @param time the given time
-    * @return the [[TimeSlot time slot]]
-    */
-  @inline
-  def getTimeSlot(time: js.Date): TimeSlot = {
-    Moment(time).tz("America/New_York").format("HHmm").toInt match {
-      case t if t < 1000 => ET_0930_TO_0959
-      case t if t >= 1000 && t <= 1029 => ET_1000_TO_1029
-      case t if t >= 1030 && t <= 1059 => ET_1030_TO_1059
-      case t if t >= 1100 && t <= 1129 => ET_1100_TO_1129
-      case t if t >= 1130 && t <= 1159 => ET_1130_TO_1159
-      case t if t >= 1200 && t <= 1229 => ET_1200_TO_1229
-      case t if t >= 1230 && t <= 1259 => ET_1230_TO_1259
-      case t if t >= 1300 && t <= 1329 => ET_1300_TO_1329
-      case t if t >= 1330 && t <= 1359 => ET_1330_TO_1359
-      case t if t >= 1400 && t <= 1429 => ET_1400_TO_1429
-      case t if t >= 1430 && t <= 1459 => ET_1430_TO_1459
-      case t if t >= 1500 && t <= 1529 => ET_1500_TO_1529
-      case t if t >= 1530 => ET_1530_TO_1600
-    }
-  }
-
-  /**
-    * Returns the text-based identifier for the given time slot
-    * @param timeSlot the given [[TimeSlot time slot]]
-    * @return the text-based identifier (e.g. "ET_0930_TO_0959")
-    */
-  @inline
-  def getTimeSlotText(timeSlot: TimeSlot): String = timeSlotStrings(timeSlot - 1)
-
-  /**
-    * Recursively retrieves the next page of results for each response and returns a composite response reflecting the results
-    * @param promisedPage the promise of a [[NASDAQIntraDayPage page]]
-    * @param ec           the implicit execution context
-    * @return a composite response reflecting the results
-    */
+   * Recursively retrieves the next page of results for each response and returns a composite response reflecting the results
+   * @param promisedPage the promise of a [[NASDAQIntraDayPage page]]
+   * @param ec           the implicit execution context
+   * @return a composite response reflecting the results
+   */
   @inline
   private def collectPages(promisedPage: Future[NASDAQIntraDayPage])(implicit ec: ExecutionContext): Future[List[NASDAQIntraDayPage]] = {
     for {
@@ -173,12 +173,12 @@ class NASDAQIntraDayQuotesService() {
   }
 
   /**
-    * Generates the URL for the service call
-    * @param symbol   the given symbol (e.g. "INTC")
-    * @param timeSlot the given [[TimeSlot time slot]]
-    * @param pageNo   the given page number
-    * @return the URL for the service call (e.g. "http://www.nasdaq.com/symbol/aapl/time-sales?time=2")
-    */
+   * Generates the URL for the service call
+   * @param symbol   the given symbol (e.g. "INTC")
+   * @param timeSlot the given [[TimeSlot time slot]]
+   * @param pageNo   the given page number
+   * @return the URL for the service call (e.g. "http://www.nasdaq.com/symbol/aapl/time-sales?time=2")
+   */
   @inline
   private def toURL(symbol: String, timeSlot: TimeSlot, pageNo: Int): String = {
     // TODO https://www.nasdaq.com/market-activity/stocks/aapl/latest-real-time-trades
@@ -196,9 +196,9 @@ class NASDAQIntraDayQuotesService() {
 }
 
 /**
-  * NASDAQ Intra-day Quotes Service Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * NASDAQ Intra-day Quotes Service Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NASDAQIntraDayQuotesService {
   type TimeSlot = Int
   val ET_0930_TO_0959: TimeSlot = 1
@@ -216,31 +216,31 @@ object NASDAQIntraDayQuotesService {
   val ET_1530_TO_1600: TimeSlot = 13
 
   /**
-    * NASDAQ Intra-day Quotes Service Response
-    * @param symbol the given stock ticker
-    * @param pages  the collection of pages
-    */
+   * NASDAQ Intra-day Quotes Service Response
+   * @param symbol the given stock ticker
+   * @param pages  the collection of pages
+   */
   class NASDAQIntraDayResponse(val symbol: String,
                                val pages: js.Array[NASDAQIntraDayPage]) extends js.Object
 
   /**
-    * NASDAQ Intra-day Quotes Service Page
-    * @param pageUrl      the given URL for this page
-    * @param nextPageUrl  the optional URL for the next page of results
-    * @param quotes       the collection of quotes
-    * @param responseTime the given mapping of URL to response time in milliseconds
-    */
+   * NASDAQ Intra-day Quotes Service Page
+   * @param pageUrl      the given URL for this page
+   * @param nextPageUrl  the optional URL for the next page of results
+   * @param quotes       the collection of quotes
+   * @param responseTime the given mapping of URL to response time in milliseconds
+   */
   class NASDAQIntraDayPage(val pageUrl: String,
                            val nextPageUrl: js.UndefOr[String],
                            val quotes: js.Array[NASDAQIntraDayQuote],
                            val responseTime: Double) extends js.Object
 
   /**
-    * NASDAQ Intra-day Quote Snapshot
-    * @param price  the given share price
-    * @param time   the given trading time
-    * @param volume the given trading volume
-    */
+   * NASDAQ Intra-day Quote Snapshot
+   * @param price  the given share price
+   * @param time   the given trading time
+   * @param volume the given trading volume
+   */
   class NASDAQIntraDayQuote(val price: js.UndefOr[Double],
                             val time: js.UndefOr[String],
                             val volume: js.UndefOr[Double]) extends js.Object

@@ -12,9 +12,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Chart Routes
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Chart Routes
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ChartRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val portfolioDAO = PortfolioDAO()
   private val securitiesDAO = StockQuoteDAO()
@@ -55,28 +55,6 @@ class ChartRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Failure(e) => response.internalServerError(e); next()
     }
   }
-
-  def exposureBySector(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestId = request.params("id")
-    val portfolioID = request.params("userID")
-    getExposureByXXX(contestId, portfolioID, _.sector) onComplete {
-      case Success(data) => response.send(data); next()
-      case Failure(e) => response.internalServerError(e); next()
-    }
-  }
-
-  def exposureBySecurities(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestId = request.params("id")
-    val portfolioID = request.params("userID")
-    getExposureByXXX(contestId, portfolioID, _.symbol) onComplete {
-      case Success(data) => response.send(data); next()
-      case Failure(e) => response.internalServerError(e); next()
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  //      Private Methods
-  //////////////////////////////////////////////////////////////////////////////////////
 
   def getExposureByXXX(contestId: String, portfolioID: String, fx: RawData => String): Future[js.Array[ExposureData]] = {
     /*
@@ -121,6 +99,28 @@ class ChartRoutes(app: Application)(implicit ec: ExecutionContext) {
 
     } yield js.Array(values: _*)*/
     ???
+  }
+
+  def exposureBySector(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestId = request.params("id")
+    val portfolioID = request.params("userID")
+    getExposureByXXX(contestId, portfolioID, _.sector) onComplete {
+      case Success(data) => response.send(data); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      Private Methods
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  def exposureBySecurities(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestId = request.params("id")
+    val portfolioID = request.params("userID")
+    getExposureByXXX(contestId, portfolioID, _.symbol) onComplete {
+      case Success(data) => response.send(data); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
   }
 
 }

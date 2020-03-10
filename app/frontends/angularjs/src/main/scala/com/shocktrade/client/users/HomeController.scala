@@ -16,9 +16,9 @@ import scala.scalajs.js.UndefOr
 import scala.util.{Failure, Success}
 
 /**
-  * Home Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Home Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
                      @injected("MySessionService") mySession: MySessionService,
                      @injected("UserService") userService: UserService,
@@ -64,9 +64,9 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 }
 
 /**
-  * Home Controller Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Home Controller Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object HomeController {
 
   @js.native

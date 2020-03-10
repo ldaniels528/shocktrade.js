@@ -5,9 +5,9 @@ import com.shocktrade.cli.runtime._
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Represents a reference to a function
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a reference to a function
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class FunctionReference(val name: String, args: Seq[Evaluatable]) extends Evaluatable {
 
   override def eval(rc: RuntimeContext, scope: Scope)(implicit ec: ExecutionContext) = {

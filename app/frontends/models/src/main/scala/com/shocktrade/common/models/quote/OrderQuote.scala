@@ -5,9 +5,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Order Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Order Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait OrderQuote extends js.Object {
   var symbol: js.UndefOr[String]
   var name: js.UndefOr[String]
@@ -31,9 +31,9 @@ trait OrderQuote extends js.Object {
 }
 
 /**
-  * Order Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Order Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object OrderQuote {
   val Fields = List(
     "symbol", "name", "exchange", "market", "lastTrade", "tradeDateTime", "open", "prevClose", "high", "low",

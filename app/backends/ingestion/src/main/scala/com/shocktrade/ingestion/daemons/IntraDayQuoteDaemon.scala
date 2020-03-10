@@ -15,9 +15,9 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 
 /**
-  * Intra-Day Quote Daemon (NASDAQ Datafeed)
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Intra-Day Quote Daemon (NASDAQ Datafeed)
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class IntraDayQuoteDaemon()(implicit ec: ExecutionContext) extends Daemon[Int] {
   // get DAO and service references
   private val intraDayQuoteSvc = new NASDAQIntraDayQuotesService()
@@ -29,16 +29,16 @@ class IntraDayQuoteDaemon()(implicit ec: ExecutionContext) extends Daemon[Int] {
   private var lastRun: js.Date = new js.Date()
 
   /**
-    * Indicates whether the daemon is eligible to be executed
-    * @param tradingClock the given [[TradingClock trading clock]]
-    * @return true, if the daemon is eligible to be executed
-    */
+   * Indicates whether the daemon is eligible to be executed
+   * @param tradingClock the given [[TradingClock trading clock]]
+   * @return true, if the daemon is eligible to be executed
+   */
   override def isReady(tradingClock: TradingClock): Boolean = tradingClock.isTradingActive || tradingClock.isTradingActive(lastRun)
 
   /**
-    * Persists intra-day quotes for all active orders to disk
-    * @param tradingClock the given [[TradingClock trading clock]]
-    */
+   * Persists intra-day quotes for all active orders to disk
+   * @param tradingClock the given [[TradingClock trading clock]]
+   */
   override def run(tradingClock: TradingClock): Future[Int] = {
     /*
     val startTime = js.Date.now()
@@ -63,10 +63,10 @@ class IntraDayQuoteDaemon()(implicit ec: ExecutionContext) extends Daemon[Int] {
   }
 
   /**
-    * Processes intra-day quotes for the given collection of orders
-    * @param orders the given orders
-    * @return the promise of the collection of write results
-    */
+   * Processes intra-day quotes for the given collection of orders
+   * @param orders the given orders
+   * @return the promise of the collection of write results
+   */
   private def processQuotes(orders: Seq[OrderLike]) = {
     val symbols = orders.filterNot(_.isMarketAtCloseOrder).flatMap(_.symbol.toOption).distinct
     Future.sequence {
@@ -103,9 +103,9 @@ class IntraDayQuoteDaemon()(implicit ec: ExecutionContext) extends Daemon[Int] {
 }
 
 /**
-  * Intra-Day Quote Refresh Engine Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Intra-Day Quote Refresh Engine Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object IntraDayQuoteDaemon {
 
   /**
@@ -122,9 +122,9 @@ object IntraDayQuoteDaemon {
                           val creationTime: js.Date = new js.Date()) extends js.Object
 
   /**
-    * NASDAQ Intra-Day Response Extensions
-    * @param response the given [[NASDAQIntraDayResponse response]]
-    */
+   * NASDAQ Intra-Day Response Extensions
+   * @param response the given [[NASDAQIntraDayResponse response]]
+   */
   implicit class NASDAQIntraDayResponseExtensions(val response: NASDAQIntraDayResponse) extends AnyVal {
 
     @inline
@@ -171,10 +171,10 @@ object IntraDayQuoteDaemon {
   case class RawQuote(symbol: String, price: Double, time: String, volume: Double)
 
   /**
-    * UndefOr Extensions
-    * @param aValue the given optional value
-    * @tparam T the value type
-    */
+   * UndefOr Extensions
+   * @param aValue the given optional value
+   * @tparam T the value type
+   */
   implicit class MyUndefOrExtensions[T](val aValue: js.UndefOr[T]) extends AnyVal {
 
     @inline

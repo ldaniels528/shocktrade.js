@@ -10,9 +10,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Represents a symbol auto-completion controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a symbol auto-completion controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 abstract class AutoCompletionController($scope: AutoCompletionControllerScope, $q: Q, quoteService: QuoteService)
   extends Controller {
 
@@ -28,8 +28,8 @@ abstract class AutoCompletionController($scope: AutoCompletionControllerScope, $
 }
 
 /**
-  * Auto-Completion Controller Scope
-  */
+ * Auto-Completion Controller Scope
+ */
 @js.native
 trait AutoCompletionControllerScope extends Scope {
   var autoCompleteSymbols: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[AutoCompleteQuote]]]] = js.native

@@ -3,9 +3,9 @@ package com.shocktrade.common.models.user
 import scala.scalajs.js
 
 /**
-  * Represents a Friend Status Model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Friend Status Model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class FriendStatus(var facebookID: js.UndefOr[String],
                    var name: js.UndefOr[String],
                    var status: js.UndefOr[String],

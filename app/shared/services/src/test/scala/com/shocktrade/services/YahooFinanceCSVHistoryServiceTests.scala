@@ -3,9 +3,9 @@ package com.shocktrade.services
 import org.scalatest.TestSuite
 
 /**
-  * Yahoo Finance! CSV History Service Tests
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Yahoo Finance! CSV History Service Tests
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class YahooFinanceCSVHistoryServiceTests extends TestSuite {
   /*
   private val service = new YahooFinanceCSVHistoryService()(require)

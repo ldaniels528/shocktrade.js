@@ -3,9 +3,9 @@ package com.shocktrade.common.models.quote
 import scala.scalajs.js
 
 /**
-  * Auto-Completion Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Auto-Completion Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait AutoCompleteQuote extends js.Object {
   var symbol: js.UndefOr[String] = js.native
@@ -16,9 +16,9 @@ trait AutoCompleteQuote extends js.Object {
 }
 
 /**
-  * Auto-Completion Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Auto-Completion Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object AutoCompleteQuote {
 
   val Fields = List("symbol", "name", "exchange", "assetType")

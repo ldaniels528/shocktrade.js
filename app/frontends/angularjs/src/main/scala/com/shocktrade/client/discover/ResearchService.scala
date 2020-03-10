@@ -8,9 +8,9 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * Research Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Research Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ResearchService($http: Http) extends Service {
 
   def search(options: ResearchOptions): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = {

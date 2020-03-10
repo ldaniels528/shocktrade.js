@@ -8,9 +8,9 @@ import io.scalajs.npm.request.Request
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Daemons Function
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Daemons Function
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class DaemonsFx() extends Function {
 
   override def name = "daemons"

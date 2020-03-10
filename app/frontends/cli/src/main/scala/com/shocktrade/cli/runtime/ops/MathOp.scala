@@ -5,9 +5,9 @@ import com.shocktrade.cli.runtime.{Evaluatable, RuntimeContext, Scope}
 import scala.concurrent.ExecutionContext
 
 /**
-  * Math Operation
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Math Operation
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class MathOp(operator: String, value0: Evaluatable, value1: Evaluatable) extends Evaluatable {
 
   override def eval(rc: RuntimeContext, scope: Scope)(implicit ec: ExecutionContext) = {

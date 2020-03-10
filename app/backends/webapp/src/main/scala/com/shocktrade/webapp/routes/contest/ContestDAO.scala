@@ -9,9 +9,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 
 /**
-  * Contest DAO
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest DAO
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait ContestDAO {
 
   def create(form: ContestCreationForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]]
@@ -33,16 +33,16 @@ trait ContestDAO {
 }
 
 /**
-  * Contest DAO Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest DAO Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ContestDAO {
 
   /**
-    * Creates a new Contest DAO instance
-    * @param options the given [[MySQLConnectionOptions]]
-    * @return a new [[ContestDAO Contest DAO]]
-    */
+   * Creates a new Contest DAO instance
+   * @param options the given [[MySQLConnectionOptions]]
+   * @return a new [[ContestDAO Contest DAO]]
+   */
   def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): ContestDAO = new ContestDAOMySQL(options)
 
 }

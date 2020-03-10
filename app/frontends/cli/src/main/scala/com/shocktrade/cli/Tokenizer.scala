@@ -4,9 +4,9 @@ import com.shocktrade.cli.Tokenizer.TokenIterator
 import io.scalajs.util.OptionHelper._
 
 /**
-  * Tokenizer
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Tokenizer
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Tokenizer() {
 
   def parse(text: String) = new TokenIterator(text)
@@ -21,17 +21,17 @@ class Tokenizer() {
 }
 
 /**
-  * Tokenizer Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Tokenizer Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Tokenizer {
 
   type Token = String
 
   /**
-    * Token Iterator
-    * @param input the given [[String input text]]
-    */
+   * Token Iterator
+   * @param input the given [[String input text]]
+   */
   class TokenIterator(input: String) extends Iterator[Token] {
     private val ca = input.toCharArray
     private var pos = 0
@@ -103,9 +103,9 @@ object Tokenizer {
   }
 
   /**
-    * Token Enrichment
-    * @param token the givne [[Token token]]
-    */
+   * Token Enrichment
+   * @param token the givne [[Token token]]
+   */
   implicit class TokenEnrichment(val token: Token) extends AnyVal {
 
     @inline
@@ -118,12 +118,6 @@ object Tokenizer {
     def isNumeric = token.matches("^[-+]?\\d+(\\.\\d+)?$")
 
     @inline
-    def isOperator = token match {
-      case "+" | "-" | "*" | "/" | "%" => true
-      case _ => false
-    }
-
-    @inline
     def isQuoted = isBackTickQuoted || isDoubleQuoted || isSingleQuoted
 
     @inline
@@ -134,6 +128,12 @@ object Tokenizer {
 
     @inline
     def isSingleQuoted = token.startsWith("'") && token.endsWith("'")
+
+    @inline
+    def isOperator = token match {
+      case "+" | "-" | "*" | "/" | "%" => true
+      case _ => false
+    }
 
   }
 

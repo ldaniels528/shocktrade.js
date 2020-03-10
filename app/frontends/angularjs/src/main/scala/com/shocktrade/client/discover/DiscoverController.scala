@@ -23,9 +23,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Discover Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
                               $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
                               @injected("MarketStatus") marketStatus: MarketStatusService,
@@ -104,38 +104,9 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
       }
   }
 
-  private def updateQuote(ticker: String) {
-    // get the symbol (e.g. "AAPL - Apple Inc")
-    val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
-
-    // load the quote
-    asyncLoading($scope)(quoteService.getCompleteQuote(symbol).map(_.data)) onComplete {
-      case Success(quote) if quote.symbol.isAssigned =>
-        $scope.$apply { () =>
-          // capture the quote
-          $scope.q = quote
-          $scope.ticker = s"${quote.symbol} - ${quote.name}"
-
-          // update the address bar
-          $location.search("symbol", quote.symbol)
-
-          // add the symbol to the Recently-viewed Symbols
-          mySession.addRecentSymbol(symbol)
-
-          // load the trading history
-          $scope.tradingHistory = null
-          if ($scope.expanders(6).expanded) {
-            $scope.expandSection($scope.expanders(6))
-          }
-        }
-      case Success(quote) =>
-        console.log(s"quote = ${angular.toJson(quote)}")
-        toaster.warning(s"Symbol not found")
-
-      case Failure(e) =>
-        console.error(s"Failed to retrieve quote: ${e.getMessage}")
-        toaster.error(s"Error loading quote $symbol")
-    }
+  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) = {
+    console.log(s"The selected symbol has changed to '$newSymbol'")
+    updateQuote(newSymbol)
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -264,9 +235,38 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
 
-  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) = {
-    console.log(s"The selected symbol has changed to '$newSymbol'")
-    updateQuote(newSymbol)
+  private def updateQuote(ticker: String) {
+    // get the symbol (e.g. "AAPL - Apple Inc")
+    val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
+
+    // load the quote
+    asyncLoading($scope)(quoteService.getCompleteQuote(symbol).map(_.data)) onComplete {
+      case Success(quote) if quote.symbol.isAssigned =>
+        $scope.$apply { () =>
+          // capture the quote
+          $scope.q = quote
+          $scope.ticker = s"${quote.symbol} - ${quote.name}"
+
+          // update the address bar
+          $location.search("symbol", quote.symbol)
+
+          // add the symbol to the Recently-viewed Symbols
+          mySession.addRecentSymbol(symbol)
+
+          // load the trading history
+          $scope.tradingHistory = null
+          if ($scope.expanders(6).expanded) {
+            $scope.expandSection($scope.expanders(6))
+          }
+        }
+      case Success(quote) =>
+        console.log(s"quote = ${angular.toJson(quote)}")
+        toaster.warning(s"Symbol not found")
+
+      case Failure(e) =>
+        console.error(s"Failed to retrieve quote: ${e.getMessage}")
+        toaster.error(s"Error loading quote $symbol")
+    }
   }
 
   // setup the chart range
@@ -275,9 +275,9 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
 }
 
 /**
-  * Discover Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object DiscoverController {
 
   def isPerformanceRisk: js.Function1[js.UndefOr[CompleteQuote], Boolean] = (aQuote: js.UndefOr[CompleteQuote]) => aQuote.exists { q =>
@@ -326,18 +326,18 @@ object DiscoverController {
   }
 
   /**
-    * Discover Route Parameters
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Discover Route Parameters
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   @js.native
   trait DiscoverRouteParams extends js.Object {
     var symbol: js.UndefOr[String] = js.native
   }
 
   /**
-    * Module Expander
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Module Expander
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class ModuleExpander(val title: String,
                        val url: String,
                        val icon: String,
@@ -347,9 +347,9 @@ object DiscoverController {
 }
 
 /**
-  * Discover Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalSelectedSymbolScope {
   // variables
@@ -387,7 +387,7 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalS
 }
 
 /**
-  * Discover Options
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Discover Options
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class DiscoverOptions(var range: String) extends js.Object

@@ -20,9 +20,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Explore Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Explore Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cookies: Cookies, $location: Location,
                              $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
                              @injected("ExploreService") exploreService: ExploreService)
@@ -120,6 +120,18 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
   //          Private Functions
   /////////////////////////////////////////////////////////////////////
 
+  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) {
+    if (!oldSymbol.contains(newSymbol)) {
+      exploreService.loadSectorInfo(newSymbol).map(_.data) onComplete {
+        case Success(info) =>
+          $location.search("symbol", newSymbol)
+          $scope.$apply(() => $scope.q = info)
+        case Failure(e) =>
+          console.error(s"Failed to load sector info for $newSymbol")
+      }
+    }
+  }
+
   private def expandAllForSymbol(symbol: String) {
     console.log(s"Attempting to expand sectors for symbol $symbol...")
     val startTime = System.currentTimeMillis()
@@ -161,6 +173,13 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     }
   }
 
+  private def updateSector(sector: Sector, data: js.Array[AggregatedSectorData]) = {
+    sector.loading = false
+    sector.industries = data.map(v => new Industry(label = v._id, total = v.total))
+    sector.expanded = true
+    Some(sector)
+  }
+
   private def expandIndustry(info: SectorInfoQuote, sector: Sector): Future[Option[Industry]] = {
     val result = for {
       industryName <- info.industry.toOption
@@ -180,6 +199,14 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     }
   }
 
+  private def updateIndustry(industry: Industry, data: js.Array[AggregatedSectorData], quotes: js.Array[ResearchQuote]) = {
+    industry.loading = false
+    industry.quotes = quotes
+    industry.subIndustries = data.map { v => new SubIndustry(label = v._id, total = v.total) }
+    industry.expanded = true
+    Some(industry)
+  }
+
   private def expandSubIndustry(info: SectorInfoQuote, sector: Sector, industry: Industry): Future[Option[SubIndustry]] = {
     val result = for {
       subIndustryName <- info.subIndustry.toOption
@@ -194,20 +221,9 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     }
   }
 
-  private def updateIndustry(industry: Industry, data: js.Array[AggregatedSectorData], quotes: js.Array[ResearchQuote]) = {
-    industry.loading = false
-    industry.quotes = quotes
-    industry.subIndustries = data.map { v => new SubIndustry(label = v._id, total = v.total) }
-    industry.expanded = true
-    Some(industry)
-  }
-
-  private def updateSector(sector: Sector, data: js.Array[AggregatedSectorData]) = {
-    sector.loading = false
-    sector.industries = data.map(v => new Industry(label = v._id, total = v.total))
-    sector.expanded = true
-    Some(sector)
-  }
+  /////////////////////////////////////////////////////////////////////
+  //          Event Listeners
+  /////////////////////////////////////////////////////////////////////
 
   private def updateSubIndustry(subIndustry: SubIndustry, quotes: js.Array[ResearchQuote]) = {
     subIndustry.loading = false
@@ -216,51 +232,26 @@ case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, 
     Some(subIndustry)
   }
 
-  /////////////////////////////////////////////////////////////////////
-  //          Event Listeners
-  /////////////////////////////////////////////////////////////////////
-
-  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) {
-    if (!oldSymbol.contains(newSymbol)) {
-      exploreService.loadSectorInfo(newSymbol).map(_.data) onComplete {
-        case Success(info) =>
-          $location.search("symbol", newSymbol)
-          $scope.$apply(() => $scope.q = info)
-        case Failure(e) =>
-          console.error(s"Failed to load sector info for $newSymbol")
-      }
-    }
-  }
-
 }
 
 /**
-  * Explore Controller Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Explore Controller Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ExploreController {
 
   /**
-    * Explore Route Params
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Explore Route Params
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   @js.native
   trait ExploreRouteParams extends js.Object {
     var symbol: js.UndefOr[String] = js.native
   }
 
   /**
-    * Sector Definition
-    */
-  class Sector(val label: String, val total: Int) extends js.Object {
-    var industries: js.UndefOr[js.Array[Industry]] = js.undefined
-    var expanded: js.UndefOr[Boolean] = js.undefined
-    var loading: js.UndefOr[Boolean] = js.undefined
-  }
-
-  /**
-    * Industry-Like Definition
-    */
+   * Industry-Like Definition
+   */
   trait IndustryLike extends js.Object {
     val label: String
     val total: Int
@@ -270,18 +261,27 @@ object ExploreController {
   }
 
   /**
-    * Industry Definition
-    */
-  class Industry(val label: String, val total: Int) extends IndustryLike {
-    var subIndustries: js.UndefOr[js.Array[SubIndustry]] = js.undefined
-    override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
-    override var expanded: js.UndefOr[Boolean] = js.undefined
-    override var loading: js.UndefOr[Boolean] = js.undefined
+   * Sector Definition
+   */
+  class Sector(val label: String, val total: Int) extends js.Object {
+    var industries: js.UndefOr[js.Array[Industry]] = js.undefined
+    var expanded: js.UndefOr[Boolean] = js.undefined
+    var loading: js.UndefOr[Boolean] = js.undefined
   }
 
   /**
-    * Sub-industry Definition
-    */
+   * Industry Definition
+   */
+  class Industry(val label: String, val total: Int) extends IndustryLike {
+    override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
+    override var expanded: js.UndefOr[Boolean] = js.undefined
+    override var loading: js.UndefOr[Boolean] = js.undefined
+    var subIndustries: js.UndefOr[js.Array[SubIndustry]] = js.undefined
+  }
+
+  /**
+   * Sub-industry Definition
+   */
   class SubIndustry(val label: String, val total: Int) extends IndustryLike {
     override var quotes: js.UndefOr[js.Array[ResearchQuote]] = js.undefined
     override var expanded: js.UndefOr[Boolean] = js.undefined
@@ -291,9 +291,9 @@ object ExploreController {
 }
 
 /**
-  * Explore Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Explore Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ExploreScope extends GlobalSelectedSymbolScope {
   // variables

@@ -5,9 +5,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Participant Model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Participant Model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Participant(var _id: js.UndefOr[String],
                   var name: js.UndefOr[String],
                   var rank: js.UndefOr[String] = js.undefined,
@@ -16,15 +16,15 @@ class Participant(var _id: js.UndefOr[String],
                   var joinedTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
 
 /**
-  * Participant Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Participant Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Participant {
 
   /**
-    * Participant Enrichment
-    * @param participant the given [[Participant participant]]
-    */
+   * Participant Enrichment
+   * @param participant the given [[Participant participant]]
+   */
   implicit class ParticipantEnrichment(val participant: Participant) extends AnyVal {
 
     @inline

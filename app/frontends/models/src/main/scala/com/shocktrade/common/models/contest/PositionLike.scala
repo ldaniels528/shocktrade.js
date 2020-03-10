@@ -5,9 +5,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Represents a Position-like model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Position-like model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait PositionLike extends js.Object {
 
   def _id: js.UndefOr[String]
@@ -31,15 +31,15 @@ trait PositionLike extends js.Object {
 }
 
 /**
-  * Position-Like Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Position-Like Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PositionLike {
 
   /**
-    * Position Enrichment
-    * @param position the given [[PositionLike position]]
-    */
+   * Position Enrichment
+   * @param position the given [[PositionLike position]]
+   */
   implicit class PositionLikeEnrichment(val position: PositionLike) extends AnyVal {
 
     @inline

@@ -1,9 +1,9 @@
 package com.shocktrade.common
 
 /**
-  * Order Term Constants
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Order Term Constants
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object OrderTerms {
   val GOOD_FOR_DAY = 1
   val GOOD_FOR_3_DAYS = 3

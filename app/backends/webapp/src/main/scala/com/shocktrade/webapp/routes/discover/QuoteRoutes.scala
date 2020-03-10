@@ -93,7 +93,8 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success(None) => response.notFound(); next()
       case Failure(e) => response.internalServerError(e); next()
     }*/
-    response.internalServerError("Not implemented"); next()
+    response.internalServerError("Not implemented");
+    next()
   }
 
   def tradingHistory(request: Request, response: Response, next: NextFunction): Unit = {

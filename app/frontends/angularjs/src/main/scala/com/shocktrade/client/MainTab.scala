@@ -3,9 +3,9 @@ package com.shocktrade.client
 import scala.scalajs.js
 
 /**
-  * Represents a Main Tab
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Main Tab
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class MainTab(val name: String,
               val icon_class: String,
               val tool_tip: String,
@@ -14,9 +14,9 @@ class MainTab(val name: String,
               val authenticationRequired: Boolean = false) extends js.Object
 
 /**
-  * Main Tab Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Main Tab Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object MainTab {
 
   val About = 0

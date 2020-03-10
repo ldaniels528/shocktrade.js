@@ -16,9 +16,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Exposure Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exposure Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
                          @injected("PortfolioService") portfolioService: PortfolioService) extends Controller {
 
@@ -74,23 +74,23 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
 }
 
 /**
-  * Exposure Controller Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exposure Controller Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ExposureController {
 
   /**
-    * Exposure Selection Model
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
+   * Exposure Selection Model
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
   class ExposureSelection(val label: String, val value: String) extends js.Object
 
 }
 
 /**
-  * Exposure Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exposure Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait ExposureControllerScope extends Scope {
   // variables

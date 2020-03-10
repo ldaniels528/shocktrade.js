@@ -14,9 +14,9 @@ import scala.scalajs.js
 import scala.scalajs.js.JSON
 
 /**
-  * Web Socket Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Web Socket Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
                        @injected("MySessionService") mySession: MySessionService)
   extends Service {
@@ -26,8 +26,8 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   private var attemptsLeft: Int = 3
 
   /**
-    * Initializes the service
-    */
+   * Initializes the service
+   */
   def init() {
     console.log("Initializing WebSocket service...")
     if (window.WebSocket.isEmpty) {
@@ -43,14 +43,14 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   }
 
   /**
-    * Indicates whether a connection is established
-    */
+   * Indicates whether a connection is established
+   */
   def isConnected: Boolean = Option(socket).nonEmpty && connected
 
   /**
-    * Transmits the message to the server via web-socket
-    * @param message the given message
-    */
+   * Transmits the message to the server via web-socket
+   * @param message the given message
+   */
   def send(message: String): Boolean = {
     window.WebSocket.toOption match {
       case Some(_) if socket.readyState == WebSocket.OPEN =>
@@ -66,8 +66,8 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   }
 
   /**
-    * Establishes a web socket connection
-    */
+   * Establishes a web socket connection
+   */
   private def connect() {
     val endpoint = s"ws://${$location.host()}:${$location.port()}/websocket"
     console.log(s"Connecting to WebSocket endpoint '$endpoint'...")
@@ -96,9 +96,9 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   }
 
   /**
-    * Handles the incoming web socket message event
-    * @param event the given web socket message event
-    */
+   * Handles the incoming web socket message event
+   * @param event the given web socket message event
+   */
   private def handleMessage(event: MessageEvent) {
     Option(event.data) match {
       case Some(rawMessage: String) =>
@@ -124,9 +124,9 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
   }
 
   /**
-    * Transmits the current "connected" state of the user
-    * @param connected the given connection status indicator
-    */
+   * Transmits the current "connected" state of the user
+   * @param connected the given connection status indicator
+   */
   private def sendState(connected: Boolean) {
     mySession.userProfile.userID.toOption match {
       case Some(userID) =>

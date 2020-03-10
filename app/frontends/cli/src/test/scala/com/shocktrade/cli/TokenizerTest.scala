@@ -3,9 +3,9 @@ package com.shocktrade.cli
 import org.scalatest.{FreeSpec, Matchers}
 
 /**
-  * Tokenizer Tests
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Tokenizer Tests
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class TokenizerTest extends FreeSpec with Matchers {
 
   "parseFully() should parse text into tokens" - {

@@ -6,9 +6,9 @@ import com.shocktrade.cli.runtime.{Null, RuntimeContext, Scope}
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * exit() Function
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * exit() Function
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ExitFx() extends Function {
 
   override def name = "exit"

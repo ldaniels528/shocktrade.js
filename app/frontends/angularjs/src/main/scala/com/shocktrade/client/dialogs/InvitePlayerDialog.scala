@@ -14,14 +14,14 @@ import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
-  * Invite Player Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Invite Player Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
 
   /**
-    * Invite a player via pop-up dialog
-    */
+   * Invite a player via pop-up dialog
+   */
   def popup(participant: Participant): Future[InvitePlayerDialogResult] = {
     val modalInstance = $uibModal.open[InvitePlayerDialogResult](new ModalOptions(
       templateUrl = "invite_player_dialog.html",
@@ -32,9 +32,9 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
 }
 
 /**
-  * Invite Player Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Invite Player Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class InvitePlayerDialogController($scope: InvitePlayerScope, $uibModalInstance: ModalInstance[InvitePlayerDialogResult],
                                    @injected("MySessionService") mySession: MySessionService)
   extends Controller {
@@ -70,18 +70,18 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $uibModalInstance:
 }
 
 /**
-  * Invite Player Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Invite Player Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object InvitePlayerDialogController {
   type InvitePlayerDialogResult = js.Array[TaggableFriend]
 
 }
 
 /**
-  * Invite Player Dialog Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Invite Player Dialog Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait InvitePlayerScope extends Scope {
   // variables

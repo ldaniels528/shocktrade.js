@@ -7,9 +7,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Represents a Post model object
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents a Post model object
+ * @author lawrence.daniels@gmail.com
+ */
 class Post(var postID: js.UndefOr[String] = js.undefined,
            var text: js.UndefOr[String] = js.undefined,
            var submitter: js.UndefOr[User] = js.undefined,
@@ -36,9 +36,9 @@ class Post(var postID: js.UndefOr[String] = js.undefined,
            var summaryLoadQueued: js.UndefOr[Boolean] = js.undefined) extends PostLike
 
 /**
-  * Post Companion
-  * @author lawrence.daniels@gmail.com
-  */
+ * Post Companion
+ * @author lawrence.daniels@gmail.com
+ */
 object Post {
 
   def apply(user: User): Post = {
@@ -58,9 +58,9 @@ object Post {
   }
 
   /**
-    * Post Enrichment
-    * @param post the given [[Post post]]
-    */
+   * Post Enrichment
+   * @param post the given [[Post post]]
+   */
   implicit class PostEnrichment(val post: Post) extends AnyVal {
 
     @inline

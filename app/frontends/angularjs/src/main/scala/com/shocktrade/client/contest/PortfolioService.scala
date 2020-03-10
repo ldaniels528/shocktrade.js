@@ -9,34 +9,34 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * Portfolio Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Portfolio Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class PortfolioService($http: Http) extends Service {
 
   /**
-    * Retrieves a portfolio by a contest ID and player ID
-    * @param portfolioID  the given player ID
-    * @return the promise of a [[Portfolio portfolio]]
-    */
-  def getPortfolioByPlayer( portfolioID: String): js.Promise[HttpResponse[Portfolio]] = {
+   * Retrieves a portfolio by a contest ID and player ID
+   * @param portfolioID the given player ID
+   * @return the promise of a [[Portfolio portfolio]]
+   */
+  def getPortfolioByPlayer(portfolioID: String): js.Promise[HttpResponse[Portfolio]] = {
     $http.get(s"/api/portfolio/$portfolioID")
   }
 
   /**
-    * Retrieves a collection of portfolios by a contest ID
-    * @param contestID the given contest ID
-    * @return the promise of an array of [[Portfolio portfolios]]
-    */
+   * Retrieves a collection of portfolios by a contest ID
+   * @param contestID the given contest ID
+   * @return the promise of an array of [[Portfolio portfolios]]
+   */
   def getPortfoliosByContest(contestID: String): js.Promise[HttpResponse[js.Array[Portfolio]]] = {
     $http.get(s"/api/portfolios/contest/$contestID")
   }
 
   /**
-    * Retrieves a collection of portfolios by a player ID
-    * @param portfolioID the given player ID
-    * @return the promise of an array of [[Portfolio portfolios]]
-    */
+   * Retrieves a collection of portfolios by a player ID
+   * @param portfolioID the given player ID
+   * @return the promise of an array of [[Portfolio portfolios]]
+   */
   def getPortfoliosByPlayer(portfolioID: String): js.Promise[HttpResponse[js.Array[Portfolio]]] = {
     $http.get(s"/api/portfolios/$portfolioID")
   }

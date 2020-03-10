@@ -4,15 +4,15 @@ import io.scalajs.nodejs.process
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 /**
-  * Data Access Object Helper
-  * @author lawrence.daniels@gmail.com
-  */
+ * Data Access Object Helper
+ * @author lawrence.daniels@gmail.com
+ */
 object DataAccessObjectHelper {
 
   /**
-    * Retrieves the connection options for the database connection from an environment variable called "db_connection"
-    * @return the [[MySQLConnectionOptions]]
-    */
+   * Retrieves the connection options for the database connection from an environment variable called "db_connection"
+   * @return the [[MySQLConnectionOptions]]
+   */
   def getConnectionOptions: MySQLConnectionOptions = {
     val name = "db_connection"
     process.env.get(name) flatMap { connectionString =>
@@ -26,7 +26,7 @@ object DataAccessObjectHelper {
           ))
         case _ => None
       }
-    } getOrElse(throw new IllegalStateException(s"Environment variable '$name' is required. Invoke '. ~/shocktrade-env.sh' and try again."))
+    } getOrElse (throw new IllegalStateException(s"Environment variable '$name' is required. Invoke '. ~/shocktrade-env.sh' and try again."))
   }
 
 }

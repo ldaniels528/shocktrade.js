@@ -3,9 +3,9 @@ package com.shocktrade.cli.runtime
 import com.shocktrade.cli.runtime.functions.Function
 
 /**
-  * Represents a Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait Scope {
 
   def +=(function: Function): Unit

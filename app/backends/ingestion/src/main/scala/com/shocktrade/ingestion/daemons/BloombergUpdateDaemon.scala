@@ -7,9 +7,9 @@ import com.shocktrade.server.services.BloombergQuoteService
 import scala.concurrent.ExecutionContext
 
 /**
-  * Bloomberg Update Daemon
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Bloomberg Update Daemon
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class BloombergUpdateDaemon()(implicit ec: ExecutionContext) {
   private implicit val logger: LoggerFactory.Logger = LoggerFactory.getLogger(getClass)
 
@@ -21,16 +21,16 @@ class BloombergUpdateDaemon()(implicit ec: ExecutionContext) {
   private val processor = new ConcurrentProcessor()
 
   /**
-    * Indicates whether the daemon is eligible to be executed
-    * @param clock the given [[TradingClock trading clock]]
-    * @return true, if the daemon is eligible to be executed
-    */
+   * Indicates whether the daemon is eligible to be executed
+   * @param clock the given [[TradingClock trading clock]]
+   * @return true, if the daemon is eligible to be executed
+   */
   def isReady(clock: TradingClock): Boolean = !clock.isTradingActive
 
   /**
-    * Executes the process
-    * @param clock the given [[TradingClock trading clock]]
-    */
+   * Executes the process
+   * @param clock the given [[TradingClock trading clock]]
+   */
   def run(clock: TradingClock): Unit = {
     /*
     val startTime = js.Date.now()
@@ -58,7 +58,7 @@ class BloombergUpdateDaemon()(implicit ec: ExecutionContext) {
         logger.error(s"Failed during processing: ${e.getMessage}")
         e.printStackTrace()
     }
-    outcome*/???
+    outcome*/ ???
   }
 
 }

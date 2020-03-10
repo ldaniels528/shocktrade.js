@@ -164,14 +164,13 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object ResearchController {
-  private val CookieName = "ShockTrade_Research_SearchOptions"
-
   // data collections
   val MaxResultsSet: js.Array[Int] = js.Array(10, 25, 50, 75, 100, 150, 200, 250)
   val PriceRanges: js.Array[Int] = js.Array(0, 1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)
   val VolumeRanges: js.Array[Int] = js.Array(0, 1000, 5000, 10000, 20000, 50000, 100000, 250000, 500000, 1000000, 5000000, 10000000, 20000000, 50000000)
   val Percentages: js.Array[Int] = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
   val ChangePercentages: js.Array[Int] = js.Array(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, -5, -10, -15, -25, -50, -75, -100)
+  private val CookieName = "ShockTrade_Research_SearchOptions"
 
 }
 

@@ -1,9 +1,9 @@
 package com.shocktrade.common.util
 
 /**
-  * Exchange Utility
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Exchange Utility
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ExchangeHelper {
   private val exchangeMapping = Map(
     "ASE" -> "NYSE",

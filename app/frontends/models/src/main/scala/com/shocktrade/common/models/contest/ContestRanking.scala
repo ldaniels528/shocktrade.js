@@ -3,9 +3,9 @@ package com.shocktrade.common.models.contest
 import scala.scalajs.js
 
 /**
-  * Contest Portfolio Ranking
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Portfolio Ranking
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ContestRanking(var contestID: js.UndefOr[String],
                      var name: js.UndefOr[String],
                      var hostUserID: js.UndefOr[String],

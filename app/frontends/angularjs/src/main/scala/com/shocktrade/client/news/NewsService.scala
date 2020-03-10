@@ -6,9 +6,9 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * News Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsService($http: Http) extends Service {
 
   def getNewsSources: js.Promise[HttpResponse[js.Array[NewsSource]]] = $http.get[js.Array[NewsSource]]("/api/news/sources")

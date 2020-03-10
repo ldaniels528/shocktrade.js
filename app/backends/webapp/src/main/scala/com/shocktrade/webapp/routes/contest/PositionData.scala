@@ -9,9 +9,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Position Data
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Position Data
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class PositionData(var _id: js.UndefOr[String] = UUID.randomUUID().toString,
                    var symbol: js.UndefOr[String],
                    var exchange: js.UndefOr[String],
@@ -24,15 +24,15 @@ class PositionData(var _id: js.UndefOr[String] = UUID.randomUUID().toString,
 
 
 /**
-  * Position Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Position Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object PositionData {
 
   /**
-    * Position Enrichment
-    * @param position the given [[PositionData position]]
-    */
+   * Position Enrichment
+   * @param position the given [[PositionData position]]
+   */
   implicit class PositionDataEnrichment(val position: PositionData) extends AnyVal {
 
     @inline

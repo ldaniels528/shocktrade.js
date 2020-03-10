@@ -17,9 +17,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * My Quotes Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * My Quotes Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, toaster: Toaster,
                          @injected("ContestService") contestService: ContestService,
                          @injected("MySessionService") mySession: MySessionService,
@@ -136,16 +136,16 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
   /////////////////////////////////////////////////////////////////////////////
 
   /**
-    * Listen for changes to the player's profile
-    */
+   * Listen for changes to the player's profile
+   */
   $scope.onUserProfileChanged((_, profile) => reloadQuotes())
 
 }
 
 /**
-  * My Quotes Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * My Quotes Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object MyQuotesController {
   private val Favorites = "Favorites"
   private val Held = "Held Securities"

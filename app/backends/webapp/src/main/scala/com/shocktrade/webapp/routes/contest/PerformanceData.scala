@@ -5,9 +5,9 @@ import com.shocktrade.common.models.contest.PerformanceLike
 import scala.scalajs.js
 
 /**
-  * Trading Performance Model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Trading Performance Model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class PerformanceData(var _id: js.UndefOr[String] = js.undefined,
                       var symbol: js.UndefOr[String] = js.undefined,
                       var pricePaid: js.UndefOr[Double] = js.undefined,

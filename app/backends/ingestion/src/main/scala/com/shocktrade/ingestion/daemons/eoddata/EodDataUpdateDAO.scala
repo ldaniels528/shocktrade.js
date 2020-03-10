@@ -14,7 +14,7 @@ trait EodDataUpdateDAO {
   /**
    * Updates a stock with EOD Data
    * @param quote the given [[EodDataRecord]]
-   * @param ec the implicit [[ExecutionContext]]
+   * @param ec    the implicit [[ExecutionContext]]
    * @return the number of records updated
    */
   def update(quote: EodDataRecord)(implicit ec: ExecutionContext): Future[Int]
@@ -22,7 +22,7 @@ trait EodDataUpdateDAO {
   /**
    * Updates a collection of stocks with EOD Data
    * @param quotes the given collection of [[EodDataRecord]]
-   * @param ec the implicit [[ExecutionContext]]
+   * @param ec     the implicit [[ExecutionContext]]
    * @return the number of records updated
    */
   def updateAll(quotes: Seq[EodDataRecord])(implicit ec: ExecutionContext): Future[Int] =

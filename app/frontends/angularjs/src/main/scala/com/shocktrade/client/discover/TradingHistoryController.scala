@@ -12,9 +12,9 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * Trading History Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Trading History Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class TradingHistoryController($scope: TradingHistoryControllerScope, toaster: Toaster,
                                @injected("QuoteService") quoteService: QuoteService)
   extends Controller {
@@ -56,9 +56,9 @@ class TradingHistoryController($scope: TradingHistoryControllerScope, toaster: T
 }
 
 /**
-  * Trading History Controller Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Trading History Controller Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait TradingHistoryControllerScope extends Scope {
   // functions

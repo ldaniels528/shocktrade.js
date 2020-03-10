@@ -25,7 +25,7 @@ class ResearchRoutes(app: Application)(implicit ec: ExecutionContext) {
    * Searches symbols and company names for a match to the specified search term
    */
   def search(request: Request, response: Response, next: NextFunction): Unit = {
-    val nullFilter = (s: String) => if(s == "" || s == "null") None else Some(s)
+    val nullFilter = (s: String) => if (s == "" || s == "null") None else Some(s)
     val options = new ResearchOptions(
       changeMax = request.query.get("changeMax").flatMap(nullFilter).map(_.toDouble).orUndefined,
       changeMin = request.query.get("changeMin").flatMap(nullFilter).map(_.toDouble).orUndefined,

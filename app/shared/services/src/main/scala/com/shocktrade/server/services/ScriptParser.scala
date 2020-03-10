@@ -12,9 +12,9 @@ import scala.scalajs.runtime._
 import scala.util.{Failure, Success, Try}
 
 /**
-  * HTML Script Parser
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * HTML Script Parser
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ScriptParser[T]() {
 
   def parse(html: String, anchor: String): Future[Option[T]] = {
@@ -73,5 +73,5 @@ class ScriptParser[T]() {
 
     if (level == 0) Some(pos) else None
   }
-  
+
 }

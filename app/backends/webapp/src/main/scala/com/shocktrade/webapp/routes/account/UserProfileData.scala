@@ -5,9 +5,9 @@ import com.shocktrade.common.models.user.UserProfileLike
 import scala.scalajs.js
 
 /**
-  * Represents a User Profile data model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a User Profile data model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class UserProfileData(var userID: js.UndefOr[String],
                       var username: js.UndefOr[String],
                       var country: js.UndefOr[String],

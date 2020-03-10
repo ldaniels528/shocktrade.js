@@ -6,9 +6,9 @@ import com.shocktrade.common.models.user.User
 import scala.scalajs.js
 
 /**
-  * Represents a Contest model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Contest model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class Contest(var contestID: js.UndefOr[String] = js.undefined,
               var name: js.UndefOr[String] = js.undefined,
               var creator: js.UndefOr[User] = js.undefined,
@@ -40,15 +40,15 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
 }
 
 /**
-  * Contest Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Contest {
 
   /**
-    * Contest Enrichment
-    * @param contest the given [[Contest contest]]
-    */
+   * Contest Enrichment
+   * @param contest the given [[Contest contest]]
+   */
   final implicit class ContestEnrichment(val contest: Contest) extends AnyVal {
 
     @inline

@@ -6,9 +6,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Represents a Contest-like model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Contest-like model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait ContestLike extends js.Object {
 
   def name: js.UndefOr[String]
@@ -46,9 +46,9 @@ trait ContestLike extends js.Object {
 }
 
 /**
-  * Contest-like Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Contest-like Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ContestLike {
   val MaxPlayers = 24
 
@@ -57,9 +57,9 @@ object ContestLike {
   val StatusClosed = "CLOSED"
 
   /**
-    * Contest Enrichment
-    * @param contest the given [[ContestLike contest]]
-    */
+   * Contest Enrichment
+   * @param contest the given [[ContestLike contest]]
+   */
   implicit class ContestEnrichment(val contest: ContestLike) extends AnyVal {
 
     @inline

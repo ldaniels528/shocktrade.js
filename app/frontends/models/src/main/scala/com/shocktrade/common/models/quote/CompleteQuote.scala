@@ -5,9 +5,9 @@ import io.scalajs.util.ScalaJsHelper._
 import scala.scalajs.js
 
 /**
-  * Represents a Complete Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a Complete Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait CompleteQuote extends KeyStatistics {
   var symbol: js.UndefOr[String]
   var name: js.UndefOr[String]
@@ -32,9 +32,9 @@ trait CompleteQuote extends KeyStatistics {
 }
 
 /**
-  * Complete Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Complete Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object CompleteQuote {
 
   def apply(): CompleteQuote = New[CompleteQuote]

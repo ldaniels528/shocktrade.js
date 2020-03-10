@@ -3,9 +3,9 @@ package com.shocktrade.common.models.quote
 import scala.scalajs.js
 
 /**
-  * Sector Information Quote
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Sector Information Quote
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait SectorInfoQuote extends js.Object {
   // basic fields
@@ -23,9 +23,9 @@ trait SectorInfoQuote extends js.Object {
 }
 
 /**
-  * Sector Information Quote Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Sector Information Quote Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object SectorInfoQuote {
   val Fields = js.Array("symbol", "exchange", "name", "lastTrade", "active", "sector", "industry", "subIndustry")
 

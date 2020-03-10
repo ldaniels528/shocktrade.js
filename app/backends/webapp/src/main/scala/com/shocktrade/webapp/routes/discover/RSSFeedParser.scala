@@ -10,17 +10,17 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 /**
-  * RSS Feed Parser
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * RSS Feed Parser
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class RSSFeedParser() {
 
   /**
-    * Parses the RSS feed represented by the given URL
-    * @param url the given URL
-    * @param ec  the implicit [[ExecutionContext execution context]]
-    * @return a promise of a collection of RSS channels
-    */
+   * Parses the RSS feed represented by the given URL
+   * @param url the given URL
+   * @param ec  the implicit [[ExecutionContext execution context]]
+   * @return a promise of a collection of RSS channels
+   */
   def parse(url: String)(implicit ec: ExecutionContext): Future[js.Array[RSSChannel]] = {
     for {
       (response, body) <- Request.getFuture(url)
@@ -40,45 +40,13 @@ class RSSFeedParser() {
 }
 
 /**
-  * RSS Feed Parser Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * RSS Feed Parser Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object RSSFeedParser {
 
   ////////////////////////////////////////////////////////////
   //    JSON RSS Model
-  ////////////////////////////////////////////////////////////
-
-  class RSSChannel(val title: js.UndefOr[String],
-                   val description: js.UndefOr[String],
-                   val link: js.UndefOr[String],
-                   val pubDate: js.UndefOr[Double],
-                   val language: js.UndefOr[String],
-                   val copyright: js.UndefOr[String],
-                   val ttl: js.UndefOr[Double],
-                   val images: js.Array[RSSImage],
-                   val items: js.Array[RSSItem]) extends js.Object
-
-  class RSSImage(val title: js.UndefOr[String],
-                 val description: js.UndefOr[String],
-                 val link: js.UndefOr[String],
-                 val url: js.UndefOr[String],
-                 val width: js.UndefOr[Double],
-                 val height: js.UndefOr[Double]) extends js.Object
-
-  class RSSItem(val title: js.UndefOr[String],
-                val description: js.UndefOr[String],
-                val link: js.UndefOr[String],
-                val pubDate: js.UndefOr[Double],
-                val guid: js.UndefOr[String],
-                val thumbNail: js.UndefOr[RSSMediaThumbNail]) extends js.Object
-
-  class RSSMediaThumbNail(val url: js.UndefOr[String],
-                          val width: js.UndefOr[Double],
-                          val height: js.UndefOr[Double]) extends js.Object
-
-  ////////////////////////////////////////////////////////////
-  //    XML RSS Model
   ////////////////////////////////////////////////////////////
 
   @js.native
@@ -114,6 +82,10 @@ object RSSFeedParser {
     var height: js.Array[String] = js.native
   }
 
+  ////////////////////////////////////////////////////////////
+  //    XML RSS Model
+  ////////////////////////////////////////////////////////////
+
   @js.native
   trait XMLRSSItem extends js.Object {
     var title: js.Array[String] = js.native
@@ -130,14 +102,42 @@ object RSSFeedParser {
     var height: js.UndefOr[String] = js.native
   }
 
+  class RSSChannel(val title: js.UndefOr[String],
+                   val description: js.UndefOr[String],
+                   val link: js.UndefOr[String],
+                   val pubDate: js.UndefOr[Double],
+                   val language: js.UndefOr[String],
+                   val copyright: js.UndefOr[String],
+                   val ttl: js.UndefOr[Double],
+                   val images: js.Array[RSSImage],
+                   val items: js.Array[RSSItem]) extends js.Object
+
+  class RSSImage(val title: js.UndefOr[String],
+                 val description: js.UndefOr[String],
+                 val link: js.UndefOr[String],
+                 val url: js.UndefOr[String],
+                 val width: js.UndefOr[Double],
+                 val height: js.UndefOr[Double]) extends js.Object
+
+  class RSSItem(val title: js.UndefOr[String],
+                val description: js.UndefOr[String],
+                val link: js.UndefOr[String],
+                val pubDate: js.UndefOr[Double],
+                val guid: js.UndefOr[String],
+                val thumbNail: js.UndefOr[RSSMediaThumbNail]) extends js.Object
+
+  class RSSMediaThumbNail(val url: js.UndefOr[String],
+                          val width: js.UndefOr[Double],
+                          val height: js.UndefOr[Double]) extends js.Object
+
   ////////////////////////////////////////////////////////////
   //    Conversion Logic
   ////////////////////////////////////////////////////////////
 
   /**
-    * RSS root conversions
-    * @param root the given [[XMLRSSRoot XML RSS root]]
-    */
+   * RSS root conversions
+   * @param root the given [[XMLRSSRoot XML RSS root]]
+   */
   final implicit class RSSRootConversions(val root: XMLRSSRoot) extends AnyVal {
 
     @inline
@@ -145,9 +145,9 @@ object RSSFeedParser {
   }
 
   /**
-    * XML RSS channel conversions
-    * @param channel the given [[XMLRSSChannel XML RSS channel]]
-    */
+   * XML RSS channel conversions
+   * @param channel the given [[XMLRSSChannel XML RSS channel]]
+   */
   final implicit class RSSChannelConversions(val channel: XMLRSSChannel) extends AnyVal {
 
     @inline
@@ -165,9 +165,9 @@ object RSSFeedParser {
   }
 
   /**
-    * XML RSS image conversions
-    * @param image the given [[XMLRSSImage XML RSS image]]
-    */
+   * XML RSS image conversions
+   * @param image the given [[XMLRSSImage XML RSS image]]
+   */
   final implicit class RSSImageConversions(val image: XMLRSSImage) extends AnyVal {
 
     @inline
@@ -182,9 +182,9 @@ object RSSFeedParser {
   }
 
   /**
-    * XML RSS item conversions
-    * @param item the given [[XMLRSSItem XML RSS item]]
-    */
+   * XML RSS item conversions
+   * @param item the given [[XMLRSSItem XML RSS item]]
+   */
   final implicit class RSSItemConversions(val item: XMLRSSItem) extends AnyVal {
 
     @inline
@@ -198,16 +198,16 @@ object RSSFeedParser {
     )
 
     /**
-      * {{{
-      * "media:thumbnail": [{
-      *   "$": {
-      *     "url": "http:\/\/i2.cdn.turner.com\/money\/dam\/assets\/160816101117-neuromama-stock-120x90.jpg",
-      *     "height": "90",
-      *     "width": "120"
-      *   }
-      * }]
-      * }}}
-      */
+     * {{{
+     * "media:thumbnail": [{
+     *   "$": {
+     *     "url": "http:\/\/i2.cdn.turner.com\/money\/dam\/assets\/160816101117-neuromama-stock-120x90.jpg",
+     *     "height": "90",
+     *     "width": "120"
+     *   }
+     * }]
+     * }}}
+     */
     @inline
     def getThumbNail: js.UndefOr[RSSMediaThumbNail] = {
       val outerDict = item.asInstanceOf[js.Dictionary[js.Array[js.Dictionary[XMLRSSMediaThumbNail]]]]

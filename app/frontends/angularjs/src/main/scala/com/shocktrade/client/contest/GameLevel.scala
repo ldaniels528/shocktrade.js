@@ -3,14 +3,14 @@ package com.shocktrade.client.contest
 import scala.scalajs.js
 
 /**
-  * Game Level
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Game Level
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class GameLevel(val number: Int, val nextLevelXP: Int, val description: String) extends js.Object
 
 /**
-  * Game Level Singleton
-  */
+ * Game Level Singleton
+ */
 object GameLevel {
 
   val Levels: js.Array[GameLevel] = js.Array(

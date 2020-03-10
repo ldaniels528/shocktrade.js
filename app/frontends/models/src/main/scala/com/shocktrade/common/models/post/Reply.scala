@@ -5,10 +5,10 @@ import com.shocktrade.common.models.user.UserLike
 import scala.scalajs.js
 
 /**
-  * Represents a reply
-  * @author lawrence.daniels@gmail.com
-  * @see [[ReplyLikes]]
-  */
+ * Represents a reply
+ * @author lawrence.daniels@gmail.com
+ * @see [[ReplyLikes]]
+ */
 class Reply extends js.Object {
   var _id: js.UndefOr[String] = js.undefined
   var text: js.UndefOr[String] = js.undefined
@@ -21,9 +21,9 @@ class Reply extends js.Object {
 }
 
 /**
-  * Reply Companion
-  * @author lawrence.daniels@gmail.com
-  */
+ * Reply Companion
+ * @author lawrence.daniels@gmail.com
+ */
 object Reply {
 
   def apply(text: String, submitter: UserLike): Reply = {

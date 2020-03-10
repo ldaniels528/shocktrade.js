@@ -16,17 +16,17 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Quote Cache Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Quote Cache Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: QuoteService) extends Service {
   private val quotes = js.Dictionary[Future[CompleteQuote]]()
 
   /**
-    * Synchronously retrieves the quote for the given symbol
-    * @param symbol the given symbol
-    * @return the quote or <tt>undefined</tt> if it is not immediately available
-    */
+   * Synchronously retrieves the quote for the given symbol
+   * @param symbol the given symbol
+   * @return the quote or <tt>undefined</tt> if it is not immediately available
+   */
   def apply(symbol: String)(implicit ec: ExecutionContext): js.UndefOr[CompleteQuote] = {
     val value = quotes.get(symbol) flatMap {
       case f if f.isCompleted => f.value.flatMap(_.toOption)
@@ -38,19 +38,19 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
   }
 
   /**
-    * Asynchronously retrieves the quote for the given symbol
-    * @param symbol the given symbol
-    * @return the promise of a quote
-    */
+   * Asynchronously retrieves the quote for the given symbol
+   * @param symbol the given symbol
+   * @return the promise of a quote
+   */
   def get(symbol: String)(implicit ec: ExecutionContext): Future[CompleteQuote] = {
     quotes.getOrElseUpdate(symbol, loadQuote(symbol))
   }
 
   /**
-    * Asynchronously retrieves the quotes for the given symbols
-    * @param symbols the given array of symbols
-    * @return the promise of a collection of quotes
-    */
+   * Asynchronously retrieves the quotes for the given symbols
+   * @param symbols the given array of symbols
+   * @return the promise of a collection of quotes
+   */
   def get(symbols: js.Array[String])(implicit ec: ExecutionContext): Future[Seq[CompleteQuote]] = {
     Future.sequence(symbols.toSeq map { symbol =>
       quotes.getOrElseUpdate(symbol, loadQuote(symbol))
@@ -58,11 +58,11 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
   }
 
   /**
-    * Retrieves a quote for the given symbol (e.g. "AAPL")
-    * @param symbol the given symbol
-    * @param ec     the given [[ExecutionContext execution context]]
-    * @return the promise of a quote
-    */
+   * Retrieves a quote for the given symbol (e.g. "AAPL")
+   * @param symbol the given symbol
+   * @param ec     the given [[ExecutionContext execution context]]
+   * @return the promise of a quote
+   */
   private def loadQuote(symbol: String)(implicit ec: ExecutionContext) = {
     val response = quoteService.getCompleteQuote(symbol).map(_.data)
     response onComplete {

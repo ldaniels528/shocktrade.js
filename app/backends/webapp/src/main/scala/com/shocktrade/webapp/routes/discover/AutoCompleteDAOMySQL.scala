@@ -16,11 +16,11 @@ class AutoCompleteDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(opt
   override def search(searchTerm: String, maxResults: Int)(implicit ec: ExecutionContext): Future[js.Array[AutoCompleteQuote]] = {
     conn.queryFuture[AutoCompleteQuote](
       s"""|SELECT symbol, name, exchange, assetType
-         |FROM stocks
-         |WHERE symbol LIKE '$searchTerm%'
-         |OR name LIKE '$searchTerm%'
-         |""".stripMargin
-    ) map { case (rows, _ ) => rows }
+          |FROM stocks
+          |WHERE symbol LIKE '$searchTerm%'
+          |OR name LIKE '$searchTerm%'
+          |""".stripMargin
+    ) map { case (rows, _) => rows }
   }
 
 }

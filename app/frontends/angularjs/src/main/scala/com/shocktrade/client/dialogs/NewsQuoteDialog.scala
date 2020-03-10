@@ -16,14 +16,14 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
-  * News Quote Dialog Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Quote Dialog Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsQuoteDialog($http: Http, $uibModal: Modal) extends Service {
 
   /**
-    * Popups the News Quote Dialog
-    */
+   * Popups the News Quote Dialog
+   */
   def popup(symbol: String): js.Promise[NewsQuoteDialogResult] = {
     // create an instance of the dialog
     val $uibModalInstance = $uibModal.open[NewsQuoteDialogResult](new ModalOptions(
@@ -37,9 +37,9 @@ class NewsQuoteDialog($http: Http, $uibModal: Modal) extends Service {
 }
 
 /**
-  * News Quote Dialog Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Quote Dialog Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsQuoteDialogController($scope: NewsQuoteScope, $uibModalInstance: ModalInstance[NewsQuoteDialogResult], toaster: Toaster,
                                 @injected("NewsQuoteDialog") newsQuoteDialog: NewsQuoteDialog,
                                 @injected("QuoteService") quoteService: QuoteService,
@@ -64,8 +64,8 @@ class NewsQuoteDialogController($scope: NewsQuoteScope, $uibModalInstance: Modal
 }
 
 /**
-  * News Quote Dialog Controller
-  */
+ * News Quote Dialog Controller
+ */
 object NewsQuoteDialogController {
 
   type NewsQuoteDialogResult = js.Dictionary[String]
@@ -73,8 +73,8 @@ object NewsQuoteDialogController {
 }
 
 /**
-  * News Quote Dialog Scope
-  */
+ * News Quote Dialog Scope
+ */
 @js.native
 trait NewsQuoteScope extends Scope {
   // variables

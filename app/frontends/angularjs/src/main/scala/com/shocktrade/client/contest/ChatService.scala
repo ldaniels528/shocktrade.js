@@ -7,9 +7,9 @@ import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import scala.scalajs.js
 
 /**
-  * Chat Service
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Chat Service
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class ChatService($http: Http) extends Service {
 
   def getMessages(contestId: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {

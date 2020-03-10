@@ -16,9 +16,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * News Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: Toaster,
                      @injected("NewsService") newsService: NewsService)
   extends Controller with GlobalLoading {
@@ -60,8 +60,8 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
   }
 
   /**
-    * Return the appropriate class to create a diagonal grid
-    */
+   * Return the appropriate class to create a diagonal grid
+   */
   $scope.gridClass = (aIndex: js.UndefOr[Double]) => aIndex map (_.toInt) map { index =>
     val row = Math.floor(index / 2)
     val cell = if (row % 2 == 0) index % 2 else (index + 1) % 2
@@ -91,12 +91,6 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     }
   }
 
-  private def getEnrichedChannels(channels: js.Array[NewsChannel]): js.Array[NewsChannel] = {
-    channels map { channel =>
-      channel.copy(items = channel.items.map(item => item.copy(description = replaceSymbols(item.description, item.quotes))))
-    }
-  }
-
   private def removeImageTags(channels: js.Array[NewsChannel]): Unit = {
     for {
       channel <- channels
@@ -108,6 +102,12 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
         val block = item.description.substring(start, end + 2)
         item.description = item.description.replaceAllLiterally(block, "")
       }
+    }
+  }
+
+  private def getEnrichedChannels(channels: js.Array[NewsChannel]): js.Array[NewsChannel] = {
+    channels map { channel =>
+      channel.copy(items = channel.items.map(item => item.copy(description = replaceSymbols(item.description, item.quotes))))
     }
   }
 
@@ -136,11 +136,6 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
         """.stripPrefix(" ").stripSuffix(" ")
   }
 
-  private def populateQuotes(channels: js.Array[NewsChannel]): Unit = {
-    console.log(s"channels = ${angular.toJson(channels, pretty = true)}")
-    newsQuotes = channels.flatMap(_.items.flatMap(_.quotes))
-  }
-
   private def changeArrow(aChangePct: js.UndefOr[Double]): js.UndefOr[String] = aChangePct map { changePct =>
     val isNeg = changePct < 0.00
     val iconClass = if (isNeg) "fa-arrow-down" else "fa-arrow-up"
@@ -148,21 +143,26 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
     f"""<span class="fa $iconClass $colorClass">$changePct%.2f%%</span>"""
   }
 
+  private def populateQuotes(channels: js.Array[NewsChannel]): Unit = {
+    console.log(s"channels = ${angular.toJson(channels, pretty = true)}")
+    newsQuotes = channels.flatMap(_.items.flatMap(_.quotes))
+  }
+
 }
 
 /**
-  * News Controller Singleton
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object NewsController {
   val ViewTypeCookie = "NewsController_view"
 
 }
 
 /**
-  * News Scope
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Scope
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewsScope extends Scope {
   // variables
@@ -180,15 +180,15 @@ trait NewsScope extends Scope {
 }
 
 /**
-  * News Feed Selection
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Feed Selection
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class NewsFeedSelection(var feed: js.UndefOr[String]) extends js.Object
 
 /**
-  * News Source
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * News Source
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 @js.native
 trait NewsSource extends js.Object {
   var _id: js.UndefOr[String] = js.native

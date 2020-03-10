@@ -93,7 +93,6 @@ object WebClientJsApp {
     module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
     module.serviceOf[SignInDialog]("SignInDialog")
     module.serviceOf[SignUpDialog]("SignUpDialog")
-    module.serviceOf[TransferFundsDialog]("TransferFundsDialog")
 
     module.controllerOf[ComposeMessageDialogController]("ComposeMessageDialogController")
     module.controllerOf[InvitePlayerDialogController]("InvitePlayerDialogController")
@@ -103,7 +102,6 @@ object WebClientJsApp {
     module.controllerOf[PerksDialogController]("PerksDialogController")
     module.controllerOf[SignInDialogController]("SignInDialogController")
     module.controllerOf[SignUpDialogController]("SignUpDialogController")
-    module.controllerOf[TransferFundsDialogController]("TransferFundsDialogController")
     ()
   }
 
@@ -146,7 +144,6 @@ object WebClientJsApp {
     module.controllerOf[HomeController]("HomeController")
     module.controllerOf[InformationBarController]("InformationBarController")
     module.controllerOf[MainController]("MainController")
-    module.controllerOf[MarginAccountController]("MarginAccountController")
     module.controllerOf[MyGamesController]("MyGamesController")
     module.controllerOf[MyQuotesController]("MyQuotesController")
     module.controllerOf[NavigationController]("NavigationController")

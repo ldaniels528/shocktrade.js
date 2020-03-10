@@ -21,9 +21,9 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
-  * Post Controller
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Post Controller
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
                           @injected("FileUploader") fileUploader: FileUploader,
                           @injected("PostService") postService: PostService,
@@ -134,8 +134,8 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-    * Loads the user's followers and posts
-    */
+   * Loads the user's followers and posts
+   */
   private def loadFollowersAndPostings(): Unit = {
     val outcome = asyncLoading($scope) {
       for {
@@ -170,9 +170,9 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
 }
 
 /**
-  * Post Controller Scope
-  * @author lawrence.daniels@gmail.com
-  */
+ * Post Controller Scope
+ * @author lawrence.daniels@gmail.com
+ */
 @js.native
 trait PostControllerScope extends PostingCapabilitiesScope {
 

@@ -6,24 +6,24 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 /**
-  * Represents OTC advisory information
-  * @param description the given advisory description
-  * @param type        the given advisory type
-  */
+ * Represents OTC advisory information
+ * @param description the given advisory description
+ * @param type        the given advisory type
+ */
 class Advisory(val description: String, val `type`: js.UndefOr[String]) extends js.Object
 
 /**
-  * Advisory Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Advisory Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object Advisory {
 
   /**
-    * Optionally returns an advisory for the given symbol
-    * @param symbol   the given symbol
-    * @param exchange the given exchange
-    * @return an optional [[Advisory advisory]]
-    */
+   * Optionally returns an advisory for the given symbol
+   * @param symbol   the given symbol
+   * @param exchange the given exchange
+   * @return an optional [[Advisory advisory]]
+   */
   def apply(symbol: String, exchange: js.UndefOr[String] = js.undefined): js.UndefOr[Advisory] = {
     if (symbol.length != 5) js.undefined
     else {
@@ -74,9 +74,9 @@ object Advisory {
   }
 
   /**
-    * Advisory Enrichment
-    * @param advisory the given [[Advisory advisory]]
-    */
+   * Advisory Enrichment
+   * @param advisory the given [[Advisory advisory]]
+   */
   implicit class AdvisoryEnrichment(val advisory: Advisory) extends AnyVal {
 
     @inline

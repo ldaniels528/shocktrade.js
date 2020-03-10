@@ -3,29 +3,29 @@ package com.shocktrade.common.util
 import scala.language.reflectiveCalls
 
 /**
-  * Parsing Helper
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Parsing Helper
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object ParsingHelper {
 
   /**
-    * String Extensions (Type A)
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  implicit class ExtStringA[T <: { def indexOf(s: String, p: Int): Int }](src: T) {
+   * String Extensions (Type A)
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  implicit class ExtStringA[T <: {def indexOf(s: String, p: Int): Int}](src: T) {
 
     def findMatches(beginSeq: String, endSeq: String, pos: Int = -1): List[(Int, Int)] = {
-      src indexOptionOf (beginSeq, endSeq, pos) match {
+      src indexOptionOf(beginSeq, endSeq, pos) match {
         case Some((start, end)) => (start, end) :: findMatches(beginSeq, endSeq, end)
         case None => Nil
       }
     }
 
     /**
-      * <pre>
-      * 	<tag>content</tag>
-      * </pre>
-      */
+     * <pre>
+     * <tag>content</tag>
+     * </pre>
+     */
     def tagContent(tag: String, pos: Int = -1) = {
       (src.indexOptionOf(s"<$tag", ">", pos), src.optionOf(s"</$tag>", pos)) match {
         case (Some((a0, a1)), Some(a2)) => Some((a1, a2))
@@ -49,7 +49,7 @@ object ParsingHelper {
     }
 
     def findNestedMatches(searchSeq: String, beginSeq: String, endSeq: String, pos: Int = -1): List[(Int, Int)] = {
-      src nestedIndexOptionOf (searchSeq, beginSeq, endSeq, pos) match {
+      src nestedIndexOptionOf(searchSeq, beginSeq, endSeq, pos) match {
         case Some((start, end)) => (start, end) :: findNestedMatches(searchSeq, beginSeq, endSeq, end)
         case None => Nil
       }
@@ -80,10 +80,10 @@ object ParsingHelper {
   }
 
   /**
-    * String Extensions (Type B)
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
-  implicit class ExtStringB[T <: { def lastIndexOf(s: String): Int }](src: T) {
+   * String Extensions (Type B)
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  implicit class ExtStringB[T <: {def lastIndexOf(s: String): Int}](src: T) {
 
     def optionOfLastIndexOf(s: String): Option[Int] = {
       val index = src.lastIndexOf(s)
@@ -92,10 +92,10 @@ object ParsingHelper {
   }
 
   /**
-    * String Extensions (Type C)
-    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-    */
- final implicit class ExtStringC(src: StringBuilder) {
+   * String Extensions (Type C)
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  final implicit class ExtStringC(src: StringBuilder) {
 
     def extractTag(locatorTag: String, startTag: String, endTag: String, pos: Int = 0): Option[String] = {
       src.indexOptionOf(locatorTag, endTag, pos) match {

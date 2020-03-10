@@ -8,9 +8,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.scalajs.js
 
 /**
-  * Represents an Order data model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents an Order data model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 class OrderData(var orderID: js.UndefOr[String] = UUID.randomUUID().toString,
                 var symbol: js.UndefOr[String],
                 var exchange: js.UndefOr[String],
@@ -25,16 +25,22 @@ class OrderData(var orderID: js.UndefOr[String] = UUID.randomUUID().toString,
                 var statusMessage: js.UndefOr[String] = js.undefined) extends OrderLike
 
 /**
-  * Order Data Companion
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Order Data Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 object OrderData {
 
   /**
-    * Order Data Enrichment
-    * @param order the given [[OrderData order]]
-    */
+   * Order Data Enrichment
+   * @param order the given [[OrderData order]]
+   */
   implicit class OrderEnrichment(val order: OrderData) extends AnyVal {
+
+    @inline
+    def toClosedOrder(statusMessage: String, asOfDate: js.Date = new js.Date()): OrderData = order.copy(
+      statusMessage = statusMessage,
+      processedTime = asOfDate
+    )
 
     @inline
     def copy(_id: js.UndefOr[String] = js.undefined,
@@ -63,12 +69,6 @@ object OrderData {
         processedTime = processedTime ?? order.processedTime,
         statusMessage = statusMessage ?? order.statusMessage)
     }
-
-    @inline
-    def toClosedOrder(statusMessage: String, asOfDate: js.Date = new js.Date()): OrderData = order.copy(
-      statusMessage = statusMessage,
-      processedTime = asOfDate
-    )
 
   }
 

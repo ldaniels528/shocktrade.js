@@ -1,9 +1,9 @@
 package com.shocktrade.webapp.routes.contest
 
 /**
-  * Represents an enumeration of price types
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents an enumeration of price types
+ * @author lawrence.daniels@gmail.com
+ */
 object PriceTypes {
   type PriceType = String
 

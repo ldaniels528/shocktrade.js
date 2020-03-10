@@ -3,9 +3,9 @@ package com.shocktrade.common.models.post
 import scala.scalajs.js
 
 /**
-  * Represents Shared Content; usually posted from a news site, etc.
-  * @author lawrence.daniels@gmail.com
-  */
+ * Represents Shared Content; usually posted from a news site, etc.
+ * @author lawrence.daniels@gmail.com
+ */
 @js.native
 trait SharedContent extends js.Object {
   var author: js.UndefOr[String] = js.native

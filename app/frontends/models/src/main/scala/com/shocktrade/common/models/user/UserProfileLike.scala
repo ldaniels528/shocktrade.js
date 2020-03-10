@@ -3,10 +3,12 @@ package com.shocktrade.common.models.user
 import scala.scalajs.js
 
 /**
-  * Represents a User Profile-like model
-  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-  */
+ * Represents a User Profile-like model
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
 trait UserProfileLike extends UserLike {
+
+  var followers: js.UndefOr[js.Array[String]]
 
   def username: js.UndefOr[String]
 
@@ -25,8 +27,6 @@ trait UserProfileLike extends UserLike {
   def favoriteSymbols: js.UndefOr[js.Array[String]]
 
   def recentSymbols: js.UndefOr[js.Array[String]]
-
-  var followers: js.UndefOr[js.Array[String]]
 
   def friends: js.UndefOr[js.Array[String]]
 
