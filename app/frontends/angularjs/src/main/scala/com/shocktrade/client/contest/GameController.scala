@@ -1,9 +1,11 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
-import com.shocktrade.client.models.contest.ContestSearchResultUI
+import com.shocktrade.client.models.contest.{ContestSearchResultUI, Portfolio}
+import com.shocktrade.client.{MySessionService, RootScope}
+import io.scalajs.JSON
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Location, Scope}
+import io.scalajs.npm.angularjs.{Controller, Location}
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -20,39 +22,40 @@ abstract class GameController($scope: GameScope,
                               portfolioService: PortfolioService)
   extends Controller {
 
-  $scope.enterGame = (aContest: js.UndefOr[ContestSearchResultUI]) => enterGame(aContest)
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => isParticipant(aContest)
+  $scope.enterGame = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest foreach enterGame
 
-  private def enterGame(aContest: js.UndefOr[ContestSearchResultUI]): Unit = aContest foreach { contest =>
-    if ($scope.isParticipant(contest)) {
-      val results = for {
-        contestID <- contest.contestID.toOption
-        portfolioID <- mySession.userProfile.userID.toOption
-      } yield (contestID, portfolioID)
+  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest exists  isParticipant
 
-      results match {
-        case Some((contestID, portfolioID)) =>
-          contest.loading = true
-          mySession.loadContestByID(contestID) onComplete {
-            case Success(result) =>
-              $scope.$apply(() => contest.loading = false)
-              $location.path(s"/dashboard/$contestID")
-            case Failure(e) =>
-              contest.loading = false
-          }
-        case None =>
-          toaster.error("The contest has not been loaded properly")
-      }
-    }
-    else {
-      toaster.error("You must join the contest first")
+  ///////////////////////////////////////////////////////////////////////////
+  //          Private Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  private def enterGame(contest: ContestSearchResultUI): Unit = {
+    val results = for {
+      contestID <- contest.contestID.toOption
+      portfolioID <- mySession.userProfile.userID.toOption
+    } yield (contestID, portfolioID)
+
+    results match {
+      case Some((contestID, portfolioID)) =>
+        //$scope.$apply(() => contest.loading = true)
+        portfolioService.findParticipant(contestID, portfolioID).toFuture onComplete {
+          case Success(response) =>
+            val portfolio = response.data
+            console.info(s"portfolio = ${JSON.stringify(portfolio)}")
+            //$scope.$apply(() => contest.loading = false)
+            $location.path(s"/dashboard/$contestID")
+          case Failure(e) =>
+            contest.loading = false
+        }
     }
   }
 
-  private def isParticipant(aContest: js.UndefOr[ContestSearchResultUI]): Boolean = aContest exists { contest =>
-    contest.hostUserID == mySession.userProfile.userID
-  }
+  private def isParticipant(contest: ContestSearchResultUI): Boolean = $scope.userProfile.exists(_.userID == contest.hostUserID)
 
 }
 
@@ -61,9 +64,12 @@ abstract class GameController($scope: GameScope,
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait GameScope extends Scope {
+trait GameScope extends RootScope {
   // functions
   var enterGame: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var isParticipant: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
+
+  // variables
+ var portfolio: js.UndefOr[Portfolio] = js.native
 
 }

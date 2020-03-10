@@ -20,7 +20,7 @@ class PortfolioService($http: Http) extends Service {
     * @return the promise of a [[Portfolio portfolio]]
     */
   def getPortfolioByPlayer( portfolioID: String): js.Promise[HttpResponse[Portfolio]] = {
-    $http.get[Portfolio](s"/api/portfolio/$portfolioID")
+    $http.get(s"/api/portfolio/$portfolioID")
   }
 
   /**
@@ -29,7 +29,7 @@ class PortfolioService($http: Http) extends Service {
     * @return the promise of an array of [[Portfolio portfolios]]
     */
   def getPortfoliosByContest(contestID: String): js.Promise[HttpResponse[js.Array[Portfolio]]] = {
-    $http.get[js.Array[Portfolio]](s"/api/portfolios/contest/$contestID")
+    $http.get(s"/api/portfolios/contest/$contestID")
   }
 
   /**
@@ -38,16 +38,11 @@ class PortfolioService($http: Http) extends Service {
     * @return the promise of an array of [[Portfolio portfolios]]
     */
   def getPortfoliosByPlayer(portfolioID: String): js.Promise[HttpResponse[js.Array[Portfolio]]] = {
-    $http.get[js.Array[Portfolio]](s"/api/portfolios/$portfolioID")
+    $http.get(s"/api/portfolios/$portfolioID")
   }
 
-  /**
-    * Retrieves the rankings for the given contest by ID
-    * @param contestId the given contest ID
-    * @return the array of [[Participant rankings]]
-    */
-  def getRankings(contestId: String): js.Promise[HttpResponse[js.Array[Participant]]] = {
-    $http.get[js.Array[Participant]](s"/api/portfolios/contest/$contestId/rankings")
+  def findParticipant(contestID: String, userID: String): js.Promise[HttpResponse[Portfolio]] = {
+    $http.get(s"/api/portfolio/contest/$contestID/user/$userID")
   }
 
   /////////////////////////////////////////////////////////////////////////////

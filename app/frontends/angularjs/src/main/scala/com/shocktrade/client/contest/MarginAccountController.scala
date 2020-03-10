@@ -38,7 +38,7 @@ class MarginAccountController($scope: MarginAccountScope, $timeout: Timeout, toa
     investmentMarketValue = investmentCost
 
     for {
-      portfolioID <- mySession.portfolio_?.flatMap(_._id.toOption)
+      portfolioID <- mySession.portfolio_?.flatMap(_.portfolioID.toOption)
     } {
       // load the margin accounts market value
       portfolioService.getMarginAccountMarketValue(portfolioID) onComplete {

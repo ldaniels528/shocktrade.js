@@ -111,7 +111,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.loadPerks = () => {
     // load the player's perks
-    mySession.portfolio_?.flatMap(_._id.toOption) match {
+    mySession.portfolio_?.flatMap(_.portfolioID.toOption) match {
       case Some(portfolioId) =>
         val outcome = for {
           thePerks <- perksSvc.getPerks(portfolioId).map(_.data)
@@ -141,7 +141,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.purchasePerks = () => {
     $scope.errors.removeAll()
-    mySession.portfolio_?.flatMap(_._id.toOption) match {
+    mySession.portfolio_?.flatMap(_.portfolioID.toOption) match {
       case Some(portfolioId) =>
         val perkCodes = getSelectedPerks map (_.code)
 

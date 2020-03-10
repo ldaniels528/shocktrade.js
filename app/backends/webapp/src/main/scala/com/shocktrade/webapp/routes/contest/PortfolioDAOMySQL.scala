@@ -49,6 +49,13 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
       js.Array(contestID)) map { case (rows, _) => rows }
   }
 
+  override def findParticipant(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+    conn.queryFuture[PortfolioData](
+      """|SELECT * FROM portfolios WHERE contestID = ? AND userID = ?
+         |""".stripMargin,
+      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
+  }
+
   override def findByUser(userID: String)(implicit ec: ExecutionContext): Future[js.Array[PortfolioData]] = {
     conn.queryFuture[PortfolioData](
       """|SELECT *

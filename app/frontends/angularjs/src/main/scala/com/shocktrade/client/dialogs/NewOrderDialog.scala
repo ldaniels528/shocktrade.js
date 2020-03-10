@@ -89,7 +89,7 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   $scope.ok = (aForm: js.UndefOr[NewOrderForm]) => aForm foreach { form =>
     messages.removeAll()
     val inputs = for {
-      portfolioId <- mySession.portfolio_?.flatMap(_._id.toOption)
+      portfolioId <- mySession.portfolio_?.flatMap(_.portfolioID.toOption)
       portfolioID <- mySession.userProfile.userID.toOption
     } yield (portfolioId, portfolioID)
 
@@ -189,7 +189,7 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
 
-  mySession.portfolio_?.flatMap(_._id.toOption) foreach { portfolioId =>
+  mySession.portfolio_?.flatMap(_.portfolioID.toOption) foreach { portfolioId =>
     // load the player"s perks
     perksDialog.getMyPerkCodes(portfolioId) onComplete {
       case Success(contest) => $scope.form.perks = contest.data.perkCodes

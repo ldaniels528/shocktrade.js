@@ -73,7 +73,7 @@ class TransferFundsDialogController($scope: TransferFundsScope, $uibModalInstanc
   $scope.accept = (form: TransferFundsForm) => {
     if (isValidated(form)) {
       (for {
-        portfolioId <- mySession.portfolio_?.flatMap(_._id.toOption)
+        portfolioId <- mySession.portfolio_?.flatMap(_.portfolioID.toOption)
       } yield {
         portfolioService.transferFunds(portfolioId, form) onComplete {
           case Success(response) => $uibModalInstance.close(response.data)

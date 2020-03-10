@@ -30,6 +30,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
   app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => positionsByID(request, response, next))
   app.get("/api/portfolio/:portfolioID/heldSecurities", (request: Request, response: Response, next: NextFunction) => heldSecurities(request, response, next))
+  app.get("/api/portfolio/contest/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findParticipant(request, response, next))
 
   // collections
   app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => portfoliosByContest(request, response, next))
@@ -60,6 +61,16 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findHeldSecurities(portfolioID) onComplete {
       case Success(symbols) => response.send(symbols); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  def findParticipant(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestID = request.params("contestID")
+    val userID = request.params("userID")
+    portfolioDAO.findParticipant(contestID, userID) onComplete {
+      case Success(Some(participant)) => response.send(participant); next()
+      case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }
@@ -177,7 +188,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   }
 
 }
-
 
 /**
  * Portfolio Routes Companion

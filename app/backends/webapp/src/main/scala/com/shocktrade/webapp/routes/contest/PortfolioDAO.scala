@@ -30,6 +30,8 @@ trait PortfolioDAO {
 
   def findPurchasedPerks(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PerkData]] = ???
 
+  def findParticipant(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
+
   def purchasePerks(portfolioID: String, purchasePerkCodes: Seq[String], perksCost: Double)(implicit ec: ExecutionContext): Future[Int] = ???
 
 }
