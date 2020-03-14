@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.contest
 
+import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.MySQLDAO
-import com.shocktrade.webapp.routes.contest.PortfolioDAOMySQL.Ticker
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -75,15 +75,5 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
          |""".stripMargin,
       js.Array(portfolioID)) map { case (rows, _) => rows.flatMap(_.symbol.toOption) }
   }
-
-}
-
-/**
- * PortfolioDAOMySQL Companion
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-object PortfolioDAOMySQL {
-
-  class Ticker(val symbol: js.UndefOr[String]) extends js.Object
 
 }

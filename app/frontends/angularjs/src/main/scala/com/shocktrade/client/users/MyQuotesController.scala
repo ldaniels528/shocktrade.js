@@ -1,6 +1,6 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.MySessionService
+import com.shocktrade.client.RootScope
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.discover.QuoteService
@@ -8,7 +8,7 @@ import com.shocktrade.client.users.MyQuotesController._
 import com.shocktrade.common.models.quote.{OrderQuote, ResearchQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, Scope, _}
+import io.scalajs.npm.angularjs.{Location, _}
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -20,13 +20,12 @@ import scala.util.{Failure, Success}
  * My Quotes Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, toaster: Toaster,
-                         @injected("ContestService") contestService: ContestService,
-                         @injected("MySessionService") mySession: MySessionService,
-                         @injected("PortfolioService") portfolioService: PortfolioService,
-                         @injected("UserService") profileService: UserService,
-                         @injected("QuoteService") quoteService: QuoteService)
-  extends Controller {
+case class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, $q: Q, toaster: Toaster,
+                              @injected("ContestService") contestService: ContestService,
+                              @injected("PortfolioService") portfolioService: PortfolioService,
+                              @injected("UserService") userService: UserService,
+                              @injected("QuoteService") quoteService: QuoteService)
+  extends Controller with PersonalSymbolSupport[MyQuotesControllerScope] {
 
   private val quoteSets = js.Dictionary(quoteLists map { case (name, icon) =>
     name -> new Expandable(icon = icon, quotes = null, expanded = false, loading = false)
@@ -46,26 +45,9 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
 
   $scope.getQuoteSets = () => quoteSets
 
-  $scope.addFavoriteSymbol = (aSymbol: js.UndefOr[String]) => aSymbol foreach addFavoriteSymbol
-
-  $scope.isFavorite = (aSymbol: js.UndefOr[String]) => aSymbol exists mySession.isFavoriteSymbol
-
-  $scope.removeFavoriteSymbol = (aSymbol: js.UndefOr[String]) => aSymbol foreach removeFavoriteSymbol
-
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
-
-  private def addFavoriteSymbol(symbol: String) = {
-    mySession.userProfile.userID foreach { userId =>
-      profileService.addFavoriteSymbol(userId, symbol) onComplete {
-        case Success(response) =>
-        case Failure(e) =>
-          toaster.error("Failed to add favorite symbol")
-          console.error(s"Failed to add favorite symbol: ${e.getMessage}")
-      }
-    }
-  }
 
   private def expandList(name: String) {
     quoteSets.get(name) foreach { obj =>
@@ -73,9 +55,9 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
       if (obj.expanded && !isDefined(obj.quotes)) {
         obj.quotes = emptyArray[OrderQuote]
         name match {
-          case Favorites => loadQuotes(name, mySession.getFavoriteSymbols getOrElse emptyArray, obj)
+          case Favorites => loadQuotes(name, $scope.favoriteSymbols, obj)
           case Held => loadHeldSecurities(obj)
-          case Recents => loadQuotes(name, mySession.getRecentSymbols getOrElse emptyArray, obj)
+          case Recents => loadQuotes(name, $scope.recentSymbols, obj)
           case _ =>
             console.error(s"$name is not a recognized list")
         }
@@ -96,7 +78,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
 
   private def loadHeldSecurities(obj: Expandable): Unit = {
     for {
-      portfolioID <- mySession.userProfile.userID
+      portfolioID <- $scope.userProfile.flatMap(_.userID)
     } {
       val outcome = for {
         symbols <- portfolioService.getHeldSecurities(portfolioID).map(_.data)
@@ -112,25 +94,6 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
     }
   }
 
-  private def reloadQuotes() {
-    console.log("Updating Favorite Symbols...")
-    /*
-    if (mySession.getFavoriteSymbols().nonEmpty) loadQuotes(Favorites, mySession.getFavoriteSymbols())
-    if (mySession.getRecentSymbols().nonEmpty) loadQuotes(Recents, mySession.getFavoriteSymbols())
-    */
-  }
-
-  private def removeFavoriteSymbol(symbol: String) = {
-    mySession.userProfile.userID foreach { userId =>
-      profileService.removeFavoriteSymbol(userId, symbol) onComplete {
-        case Success(response) => $scope.$apply(() => {})
-        case Failure(e) =>
-          toaster.error("Failed to remove favorite symbol")
-          console.error(s"Failed to remove favorite symbol: ${e.getMessage}")
-      }
-    }
-  }
-
   /////////////////////////////////////////////////////////////////////////////
   //			Event Listeners
   /////////////////////////////////////////////////////////////////////////////
@@ -138,7 +101,7 @@ class MyQuotesController($scope: MyQuotesControllerScope, $location: Location, t
   /**
    * Listen for changes to the player's profile
    */
-  $scope.onUserProfileChanged((_, profile) => reloadQuotes())
+  $scope.onUserProfileChanged((_, profile) => profile.userID.foreach(refreshMySymbols))
 
 }
 
@@ -170,14 +133,9 @@ object MyQuotesController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MyQuotesControllerScope extends Scope {
+trait MyQuotesControllerScope extends RootScope with PersonalSymbolSupportScope {
   // variables
   var selectedQuote: js.UndefOr[ResearchQuote] = js.native
-
-  // symbol-related functions
-  var addFavoriteSymbol: js.Function1[js.UndefOr[String], Unit] = js.native
-  var isFavorite: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], Unit] = js.native
 
   // quote-related functions
   var expandList: js.Function1[js.UndefOr[String], Unit] = js.native

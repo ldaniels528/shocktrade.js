@@ -42,7 +42,7 @@ class NewsQuoteDialog($http: Http, $uibModal: Modal) extends Service {
 class NewsQuoteDialogController($scope: NewsQuoteScope, $uibModalInstance: ModalInstance[NewsQuoteDialogResult], toaster: Toaster,
                                 @injected("NewsQuoteDialog") newsQuoteDialog: NewsQuoteDialog,
                                 @injected("QuoteService") quoteService: QuoteService,
-                                @injected("symbol") symbol: String)
+                                @injected("symbol") symbol: => String)
   extends Controller {
 
   $scope.quote = js.Dictionary("symbol" -> symbol)

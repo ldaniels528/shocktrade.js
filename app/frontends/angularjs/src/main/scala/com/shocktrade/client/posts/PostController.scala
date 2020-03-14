@@ -1,7 +1,7 @@
 package com.shocktrade.client.posts
 
+import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.users.{UserFactory, UserService}
-import com.shocktrade.client.{GlobalLoading, MySessionService}
 import com.shocktrade.common.models.post._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -27,7 +27,6 @@ import scala.util.{Failure, Success}
 case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
                           @injected("FileUploader") fileUploader: FileUploader,
                           @injected("PostService") postService: PostService,
-                          @injected("MySessionService") mySession: MySessionService,
                           @injected("UserFactory") userFactory: UserFactory,
                           @injected("UserService") userService: UserService)
   extends Controller with PostingCapabilities with GlobalLoading {
@@ -67,13 +66,13 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
   }
 
   $scope.isRefreshable = (aPost: js.UndefOr[Post]) => {
-    val user = mySession.userProfile
+    val user = $scope.userProfile
     for {
       post <- aPost
       text <- post.text
       submitterId <- post.userID
-      userId <- user.userID
-    } yield text.contains("http") && (user.isAdmin.contains(true) || (submitterId == userId))
+      userId <- user.flatMap(_.userID)
+    } yield text.contains("http") && (user.flatMap(_.isAdmin).contains(true) || (submitterId == userId))
   }
 
   $scope.updateWebSummary = (aPost: js.UndefOr[Post]) => aPost foreach { post =>

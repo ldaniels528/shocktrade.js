@@ -167,7 +167,7 @@
 				<table class="results">
 					<tr ng-repeat="quote in getSearchResults() | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
 						<td class="results">
-							<a class="links" ng-href="#/discover?symbol={{ quote.symbol }}">
+							<a class="links" ng-href="/#!/discover/{{ quote.symbol }}">
 								<i ng-class="getPreferenceIcon(row)"></i>
 								<span ng-class="quote.exchange"
 									popover="{{ quote.name }}"

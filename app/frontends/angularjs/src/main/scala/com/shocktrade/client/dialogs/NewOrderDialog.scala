@@ -4,10 +4,11 @@ import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.models.contest.Portfolio
-import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope, MySessionService}
+import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
 import com.shocktrade.common.Commissions
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
+import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -51,12 +52,11 @@ class NewOrderDialog($http: Http, $uibModal: Modal) extends Service {
  */
 class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
-                               @injected("MySessionService") mySession: MySessionService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService,
                                @injected("QuoteService") quoteService: QuoteService,
-                               @injected("params") params: NewOrderParams)
+                               @injected("params") params: => NewOrderParams)
   extends AutoCompletionController($scope, $q, quoteService) {
 
   private val messages = emptyArray[String]
@@ -89,16 +89,16 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   $scope.ok = (aForm: js.UndefOr[NewOrderForm]) => aForm foreach { form =>
     messages.removeAll()
     val inputs = for {
-      portfolioId <- mySession.portfolio_?.flatMap(_.portfolioID.toOption)
-      portfolioID <- mySession.userProfile.userID.toOption
-    } yield (portfolioId, portfolioID)
+      userID <- $scope.userProfile.flatMap(_.userID).toOption
+      portfolioID <- $scope.portfolio.flatMap(_.portfolioID).toOption
+    } yield (userID, portfolioID)
 
     inputs match {
-      case Some((portfolioId, portfolioID)) =>
+      case Some((userID, portfolioID)) =>
         processing = true
         val outcome = for {
           messages <- validate(form)
-          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(portfolioId, $scope.form).map(_.data).map(Option(_)) else Future.successful(None)
+          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(userID, $scope.form).map(_.data).map(Option(_)) else Future.successful(None)
         } yield (messages, portfolio_?)
 
         outcome onComplete {
@@ -111,7 +111,7 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
           case Failure(e) =>
             $timeout(() => processing = false, 0.5.seconds)
             messages.push(s"The order could not be processed")
-            console.error(s"order processing error: portfolioId = $portfolioId, portfolioID = $portfolioID, form = ${angular.toJson(form)}")
+            console.error(s"order processing error: portfolioId = $userID, portfolioID = $portfolioID, form = ${angular.toJson(form)}")
             e.printStackTrace()
         }
       case None =>
@@ -188,7 +188,7 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
 
-  mySession.portfolio_?.flatMap(_.portfolioID.toOption) foreach { portfolioId =>
+  $scope.portfolio.flatMap(_.portfolioID) foreach { portfolioId =>
     // load the player"s perks
     perksDialog.getMyPerkCodes(portfolioId) onComplete {
       case Success(contest) => $scope.form.perks = contest.data.perkCodes
@@ -225,8 +225,10 @@ object NewOrderDialogController {
 trait NewOrderScope extends AutoCompletionControllerScope {
   // variables
   var form: NewOrderForm = js.native
+  var portfolio: js.UndefOr[Portfolio] = js.native
   var quote: OrderQuote = js.native
   var ticker: js.Any = js.native
+  var userProfile: js.UndefOr[User] = js.native
 
   // functions
   var init: js.Function0[Unit] = js.native

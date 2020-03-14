@@ -54,6 +54,10 @@ class ContestService($http: Http) extends Service {
     $http.get[Contest](s"/api/contest/$contestID")
   }
 
+  def findHeldSecurities(userID: String): js.Promise[HttpResponse[js.Array[String]]] = {
+    $http.get[js.Array[String]](s"/api/contest/user/$userID/heldSecurities")
+  }
+
   def findPortfolioByID(contestID: String, userID: String): js.Promise[HttpResponse[Contest]] = {
     $http.get[Contest](s"/api/contest/$contestID/user/$userID")
   }

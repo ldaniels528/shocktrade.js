@@ -30,7 +30,7 @@ class QuoteCache($timeout: Timeout, @injected("QuoteService") quoteService: Quot
   def apply(symbol: String)(implicit ec: ExecutionContext): js.UndefOr[CompleteQuote] = {
     val value = quotes.get(symbol) flatMap {
       case f if f.isCompleted => f.value.flatMap(_.toOption)
-      case f => None
+      case _ => None
     } orUndefined
 
     if (value.isEmpty) get(symbol)

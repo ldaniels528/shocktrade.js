@@ -6,7 +6,7 @@ import io.scalajs.dom.html.browser.{console, window}
 import io.scalajs.dom.ws._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, Service, Timeout, injected, _}
+import io.scalajs.npm.angularjs.{Location, Service, Timeout, _}
 import io.scalajs.util.DurationHelper._
 
 import scala.concurrent.duration._
@@ -17,10 +17,7 @@ import scala.scalajs.js.JSON
  * Web Socket Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster,
-                       @injected("MySessionService") mySession: MySessionService)
-  extends Service {
-
+class WebSocketService($rootScope: RootScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster) extends Service {
   private var socket: WebSocket = _
   private var connected: Boolean = false
   private var attemptsLeft: Int = 3
@@ -128,7 +125,7 @@ class WebSocketService($rootScope: Scope, $http: Http, $location: Location, $tim
    * @param connected the given connection status indicator
    */
   private def sendState(connected: Boolean) {
-    mySession.userProfile.userID.toOption match {
+    $rootScope.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         console.log(s"Sending connected status for user $userID ...")
         if (connected) $http.put(s"/api/online/$userID")

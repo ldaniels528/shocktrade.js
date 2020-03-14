@@ -1,26 +1,30 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.contest.AwardsController._
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.{Scope, _}
 
 import scala.language.postfixOps
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.util.{Failure, Success}
 
 /**
  * Awards Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AwardsController($scope: AwardsControllerScope, $http: Http,
-                       @injected("MySessionService") mySession: MySessionService) extends Controller {
+class AwardsController($scope: AwardsControllerScope,
+                       @injected("AwardService") awardService: AwardService) extends Controller {
+
+  $scope.awards = js.Array()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.getAwards = () => getAwards
+  $scope.getAwards = () => $scope.awards
 
   $scope.getAwardImage = (aCode: js.UndefOr[String]) => getAwardImage(aCode)
 
@@ -30,10 +34,17 @@ class AwardsController($scope: AwardsControllerScope, $http: Http,
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def getAwards: js.Array[MyAward] = {
+  private def loadAwards(userID: String): Unit = {
+    awardService.findByUser(userID).toFuture onComplete {
+      case Success(awards) => $scope.awards = awards.data
+      case Failure(e) => console.error(e.displayMessage)
+    }
+  }
+
+  private def getMyAwards: js.Array[MyAward] = {
     Award.availableAwards map { award =>
       val myAward = award.asInstanceOf[MyAward]
-      myAward.owned = mySession.getMyAwards.contains(award.code)
+      myAward.owned = false //mySession.getMyAwards.contains(award.code)
       myAward
     } sortBy (_.owned) reverse
   }
@@ -41,8 +52,6 @@ class AwardsController($scope: AwardsControllerScope, $http: Http,
   private def getAwardImage(aCode: js.UndefOr[String]): js.UndefOr[String] = {
     aCode.toOption.flatMap(AwardIconsByCode.get).orUndefined
   }
-
-  private def getMyAwards: js.Array[Award] = mySession.getMyAwards flatMap AwardsByCode.get
 
 }
 
@@ -61,9 +70,13 @@ object AwardsController {
  */
 @js.native
 trait AwardsControllerScope extends Scope {
-  var getAwards: js.Function0[js.Array[MyAward]] = js.native
+  // variables
+  var awards: js.Array[Award] = js.native
+
+  // functions
+  var getAwards: js.Function0[js.Array[Award]] = js.native
   var getAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-  var getMyAwards: js.Function0[js.Array[Award]] = js.native
+  var getMyAwards: js.Function0[js.Array[MyAward]] = js.native
 }
 
 /**

@@ -14,7 +14,6 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class InformationBarController($scope: InformationBarScope, $q: Q,
-                               @injected("MySessionService") mySession: MySessionService,
                                @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
                                @injected("WebSocketService") webSocket: WebSocketService) extends Controller {
 

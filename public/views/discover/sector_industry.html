@@ -43,15 +43,15 @@
         <i class="fa fa-heart-o clickable heart"
             popover="Add to Favorites"
             popover-trigger="mouseenter"
-            ng-show="q.active && !isFavorite(q.symbol)"
-            ng-click="addFavoriteSymbol(q.symbol)"></i>
+            ng-show="q.active && !isFavorite(userProfile.userID, q.symbol)"
+            ng-click="addFavoriteSymbol(userProfile.userID, q.symbol)"></i>
 
 		<!-- Un-Favorite -->
         <i class="fa fa-heart clickable heart"
            popover="Remove from Favorites"
            popover-trigger="mouseenter"
-           ng-show="q.active && isFavorite(q.symbol)"
-           ng-click="removeFavoriteSymbol(q.symbol)"></i>
+           ng-show="q.active && isFavorite(userProfile.userID, q.symbol)"
+           ng-click="removeFavoriteSymbol(userProfile.userID, q.symbol)"></i>
 
 		<!-- Trade button -->
 		<i class="fa fa-cart-plus clickable sector_cart st_control"

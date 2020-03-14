@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
 import com.shocktrade.common.models.contest.MyContest
@@ -21,10 +20,9 @@ import scala.util.{Failure, Success}
  */
 class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                         @injected("ContestService") contestService: ContestService,
-                        @injected("MySessionService") mySession: MySessionService,
                         @injected("NewGameDialog") newGameDialog: NewGameDialog,
                         @injected("PortfolioService") portfolioService: PortfolioService)
-  extends GameController($scope, $location, toaster, mySession, portfolioService) {
+  extends GameController($scope, $location, toaster, portfolioService) {
 
   private var myContests = js.Array[MyContest]()
 
@@ -53,7 +51,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
     }
   }
 
-  private def reload(): Unit = mySession.userProfile.userID foreach loadMyContests
+  private def reload(): Unit = $scope.userProfile.flatMap(_.userID) foreach loadMyContests
 
   private def loadMyContests(userID: String): Unit = {
     console.log(s"Loading 'My Contests' for user '$userID'...")

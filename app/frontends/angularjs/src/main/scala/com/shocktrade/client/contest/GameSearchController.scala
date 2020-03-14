@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
@@ -31,9 +30,8 @@ import scala.util.{Failure, Success}
 class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                            @injected("ContestService") contestService: ContestService,
                            @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
-                           @injected("MySessionService") mySession: MySessionService,
                            @injected("PortfolioService") portfolioService: PortfolioService)
-  extends GameController($scope, $location, toaster, mySession, portfolioService) {
+  extends GameController($scope, $location, toaster, portfolioService) {
 
   // public variables
   private var searchResults = js.Array[ContestSearchResultUI]()
@@ -96,14 +94,14 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
     }: _*)
   }
 
-  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI], aPlayerID: js.UndefOr[String]): Unit = {
+  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI], aUserID: js.UndefOr[String]): Unit = {
     for {
       contest <- aContest
-      portfolioID <- aPlayerID
+      userID <- aUserID
     } {
-      mySession.participant_? match {
-        case Some(participant) =>
-          invitePlayerDialog.popup(participant)
+      $scope.portfolio.toOption match {
+        case Some(portfolio) =>
+          invitePlayerDialog.popup(portfolio)
         case _ =>
           toaster.error("You must join the game to use this feature")
       }
@@ -227,11 +225,12 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   private def joinContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     for {
       contest <- aContest
-      contestId <- contest.contestID.toOption
-      userId <- mySession.userProfile.userID.toOption
+      contestId <- contest.contestID
+      userID <- $scope.userProfile.flatMap(_.userID)
+      username <- $scope.userProfile.flatMap(_.username)
     } {
       contest.joining = true
-      val form = new PlayerInfoForm(player = User(_id = userId, name = mySession.userProfile.username))
+      val form = new PlayerInfoForm(player = User(_id = userID, name = username))
       asyncLoading($scope)(contestService.joinContest(contestId, form)) onComplete {
         case Success(response) =>
           val joinedContest = response.data
@@ -255,8 +254,8 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   private def quitContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     for {
       contest <- aContest
-      userId <- mySession.userProfile.userID.toOption
-      contestId <- contest.contestID.toOption
+      userId <- $scope.userProfile.flatMap(_.userID)
+      contestId <- contest.contestID
     } {
       contest.quitting = true
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {

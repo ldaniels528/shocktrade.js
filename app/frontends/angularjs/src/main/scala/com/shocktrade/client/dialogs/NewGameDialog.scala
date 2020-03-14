@@ -1,10 +1,10 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.NewGameDialogController._
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration, LevelCap}
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse}
+import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -45,7 +45,6 @@ class NewGameDialog($uibModal: Modal) extends Service {
 class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toaster: Toaster,
                               $uibModalInstance: ModalInstance[NewGameDialogResult],
                               @injected("ContestService") contestService: ContestService,
-                              @injected("MySessionService") mySession: MySessionService,
                               @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends Controller {
 
@@ -74,7 +73,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
 
   $scope.createGame = (aForm: js.UndefOr[ContestCreationForm]) => aForm foreach { form =>
     if (isValidForm(form)) {
-      mySession.userProfile.userID.toOption match {
+      $scope.userProfile.flatMap(_.userID).toOption match {
         case Some(userId) =>
           processing = true
           val promise = $timeout(() => processing = false, 30.seconds)
@@ -113,7 +112,7 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
   private def isValidForm(form: ContestCreationForm) = {
     errors.removeAll()
 
-    if (!mySession.isAuthenticated) errors.push("You must login to create games")
+    if ($scope.userProfile.flatMap(_.userID).isEmpty) errors.push("You must login to create games")
     if (!isDefined(form.name) || form.name.exists(_.isEmpty)) errors.push("Game Title is required")
     if (!isDefined(form.duration)) errors.push("Game Duration is required")
     errors.isEmpty
@@ -162,6 +161,7 @@ trait NewGameDialogScope extends Scope {
   var form: ContestCreationForm = js.native
   var levelCaps: js.Array[LevelCap] = js.native
   var startingBalances: js.Array[GameBalance] = js.native
+  var userProfile: js.UndefOr[User] = js.native
 
   // functions
   var cancel: js.Function0[Unit] = js.native

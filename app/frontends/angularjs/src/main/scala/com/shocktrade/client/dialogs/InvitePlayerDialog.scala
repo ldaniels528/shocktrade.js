@@ -1,8 +1,7 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.client.MySessionService
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
-import com.shocktrade.common.models.contest.Participant
+import com.shocktrade.client.models.contest.Portfolio
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -22,10 +21,11 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
   /**
    * Invite a player via pop-up dialog
    */
-  def popup(participant: Participant): Future[InvitePlayerDialogResult] = {
+  def popup(portfolio: Portfolio): Future[InvitePlayerDialogResult] = {
     val modalInstance = $uibModal.open[InvitePlayerDialogResult](new ModalOptions(
       templateUrl = "invite_player_dialog.html",
-      controller = classOf[InvitePlayerDialogController].getSimpleName
+      controller = classOf[InvitePlayerDialogController].getSimpleName,
+      resolve = js.Dictionary("portfolio" -> (() => portfolio))
     ))
     modalInstance.result
   }
@@ -36,10 +36,11 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class InvitePlayerDialogController($scope: InvitePlayerScope, $uibModalInstance: ModalInstance[InvitePlayerDialogResult],
-                                   @injected("MySessionService") mySession: MySessionService)
+                                   @injected("portfolio") portfolio: Portfolio)
   extends Controller {
 
   private val myFriends = emptyArray[TaggableFriend]
+
   $scope.invites = emptyArray[TaggableFriend]
 
   /////////////////////////////////////////////////////////////////////////////

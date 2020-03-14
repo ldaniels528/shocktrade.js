@@ -1,16 +1,15 @@
 package com.shocktrade.client.discover
 
 import com.shocktrade.client._
+import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.UserService
+import com.shocktrade.client.users.{PersonalSymbolSupport, PersonalSymbolSupportScope, UserService}
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
-import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{angular, injected, _}
 import io.scalajs.util.JsUnderOrHelper._
@@ -28,17 +27,20 @@ import scala.util.{Failure, Success, Try}
  */
 case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
                               $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
-                              @injected("MarketStatus") marketStatus: MarketStatusService,
-                              @injected("MySessionService") mySession: MySessionService,
+                              @injected("ContestService") contestService: ContestService,
+                              @injected("MarketStatusService") marketStatusService: MarketStatusService,
                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                              @injected("UserService") profileService: UserService,
-                              @injected("QuoteService") quoteService: QuoteService)
-  extends AutoCompletionController($scope, $q, quoteService) with GlobalLoading with GlobalSelectedSymbol {
+                              @injected("QuoteService") quoteService: QuoteService,
+                              @injected("UserService") userService: UserService)
+  extends AutoCompletionController($scope, $q, quoteService)
+    with GlobalLoading
+    with GlobalSelectedSymbol
+    with PersonalSymbolSupport[DiscoverControllerScope] {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
 
   // setup the public variables
-  $scope.ticker = null
+  $scope.ticker = $routeParams.symbol.orNull
   $scope.q = CompleteQuote()
 
   // define the display options
@@ -104,7 +106,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
       }
   }
 
-  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) = {
+  override def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]): Unit = {
     console.log(s"The selected symbol has changed to '$newSymbol'")
     updateQuote(newSymbol)
   }
@@ -125,48 +127,6 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
       console.log(s"Loading '$symbol' => ${angular.toJson(aModel)}")
       $scope.loadQuote(symbol)
     }
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Symbols - Favorites
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.addFavoriteSymbol = (aSymbol: js.UndefOr[String]) => {
-    for {
-      symbol <- aSymbol
-      userId <- mySession.userProfile.userID
-    } yield profileService.addFavoriteSymbol(userId, symbol)
-  }
-
-  $scope.isFavorite = (aSymbol: js.UndefOr[String]) => aSymbol.exists(mySession.isFavoriteSymbol)
-
-  $scope.removeFavoriteSymbol = (aSymbol: js.UndefOr[String]) => {
-    for {
-      symbol <- aSymbol
-      userId <- mySession.userProfile.userID
-    } yield profileService.removeFavoriteSymbol(userId, symbol)
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Symbols - Recently Viewed
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.addRecentSymbol = (aSymbol: js.UndefOr[String]) => {
-    for {
-      symbol <- aSymbol
-      userId <- mySession.userProfile.userID
-    } yield profileService.addRecentSymbol(userId, symbol)
-  }
-
-  $scope.isRecentSymbol = (symbol: js.UndefOr[String]) => {
-    symbol.exists(mySession.isRecentSymbol)
-  }
-
-  $scope.removeRecentSymbol = (aSymbol: js.UndefOr[String]) => {
-    for {
-      symbol <- aSymbol
-      userId <- mySession.userProfile.userID
-    } yield profileService.removeRecentSymbol(userId, symbol)
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -204,7 +164,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
         if (!loading) {
           usMarketStatus = Right(true)
           console.log("Retrieving market status...")
-          marketStatus.getMarketStatus onComplete {
+          marketStatusService.getMarketStatus onComplete {
             case Success(response) =>
               val status = response.data
 
@@ -227,8 +187,11 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
   //          Initialization
   ///////////////////////////////////////////////////////////////////////////
 
-  $routeParams.symbol foreach { symbol =>
+  // auto-load the passed symbol
+  $routeParams.symbol.foreach { symbol =>
+    console.info(s"Auto-loading symbol '$symbol'...")
     $scope.selectedSymbol = symbol
+    updateQuote(symbol)
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -240,8 +203,9 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
     val symbol = if (ticker.contains(" ")) ticker.substring(0, ticker.indexOf(" ")).trim else ticker
 
     // load the quote
-    asyncLoading($scope)(quoteService.getCompleteQuote(symbol).map(_.data)) onComplete {
-      case Success(quote) if quote.symbol.isAssigned =>
+    asyncLoading($scope)(quoteService.getCompleteQuote(symbol)) onComplete {
+      case Success(response) if response.data.symbol.isAssigned =>
+        val quote = response.data
         $scope.$apply { () =>
           // capture the quote
           $scope.q = quote
@@ -251,7 +215,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
           $location.search("symbol", quote.symbol)
 
           // add the symbol to the Recently-viewed Symbols
-          mySession.addRecentSymbol(symbol)
+          $scope.userProfile.flatMap(_.userID) foreach { userID => userService.addRecentSymbol(userID, symbol) }
 
           // load the trading history
           $scope.tradingHistory = null
@@ -351,7 +315,7 @@ object DiscoverController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalSelectedSymbolScope {
+trait DiscoverControllerScope extends RootScope with AutoCompletionControllerScope with GlobalSelectedSymbolScope with PersonalSymbolSupportScope {
   // variables
   var expanders: js.Array[ModuleExpander] = js.native
   var options: DiscoverOptions = js.native
@@ -368,16 +332,6 @@ trait DiscoverControllerScope extends AutoCompletionControllerScope with GlobalS
   // type-ahead functions
   var formatSearchResult: js.Function1[js.UndefOr[AutoCompleteQuote], js.UndefOr[String]] = js.native
   var onSelectedItem: js.Function3[js.UndefOr[AutoCompleteQuote], js.UndefOr[AutoCompleteQuote], js.UndefOr[String], Unit] = js.native
-
-  // favorite quote functions
-  var addFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
-  var isFavorite: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeFavoriteSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
-
-  // recently-viewed quote functions
-  var addRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
-  var isRecentSymbol: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var removeRecentSymbol: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
 
   // risk functions
   var getBetaClass: js.Function1[js.UndefOr[Double], js.UndefOr[Object]] = js.native

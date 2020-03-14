@@ -5,10 +5,9 @@ import com.shocktrade.client.dialogs._
 import com.shocktrade.client.directives._
 import com.shocktrade.client.discover._
 import com.shocktrade.client.news._
-import com.shocktrade.client.posts.{PostController, PostService}
+import com.shocktrade.client.posts._
 import com.shocktrade.client.social._
-import com.shocktrade.client.users.{AuthenticationService, SignInDialogController, _}
-import io.scalajs.npm.angularjs.facebook.FacebookService
+import com.shocktrade.client.users._
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
 import io.scalajs.npm.angularjs.{Module, QProvider, angular}
 
@@ -64,6 +63,7 @@ object WebClientJsApp {
         .when("/dashboard", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/dashboard/:contestID", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/discover", new RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
+        .when("/discover/:symbol", new RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
         .when("/explore", new RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
         .when("/home", new RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))
         .when("/news", new RouteTo(templateUrl = "/views/news/news_center.html", controller = classOf[NewsController].getSimpleName))
@@ -112,12 +112,11 @@ object WebClientJsApp {
 
   private def configureServices(module: Module) {
     module.serviceOf[AuthenticationService]("AuthenticationService")
+    module.serviceOf[AwardService]("AwardService")
     module.serviceOf[ChatService]("ChatService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
-    module.serviceOf[FacebookService]("Facebook")
-    module.serviceOf[MarketStatusService]("MarketStatus")
-    module.serviceOf[MySessionService]("MySessionService")
+    module.serviceOf[MarketStatusService]("MarketStatusService")
     module.serviceOf[NewsService]("NewsService")
     module.serviceOf[PortfolioService]("PortfolioService")
     module.serviceOf[UserService]("UserService")

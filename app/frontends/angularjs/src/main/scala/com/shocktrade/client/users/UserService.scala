@@ -1,7 +1,8 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.forms.{ExchangesForm, FacebookFriendForm}
+import com.shocktrade.common.models.OperationResult
+import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.common.models.user.{FriendStatus, NetWorth, OnlineStatus, User}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -83,24 +84,32 @@ class UserService($http: Http) extends Service {
   //              Favorite Symbols Functions
   //////////////////////////////////////////////////////////////////////
 
-  def addFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[UserProfile]] = {
-    $http.put[UserProfile](s"/api/user/$userID/favorite/$symbol")
+  def addFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
+    $http.put[OperationResult](s"/api/user/$userID/favorite/$symbol")
   }
 
-  def removeFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[UserProfile]] = {
-    $http.delete[UserProfile](s"/api/user/$userID/favorite/$symbol")
+  def findFavoriteSymbols(userID: String): js.Promise[HttpResponse[js.Array[Ticker]]] = {
+    $http.get[js.Array[Ticker]](s"/api/user/$userID/favorite")
+  }
+
+  def removeFavoriteSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
+    $http.delete[OperationResult](s"/api/user/$userID/favorite/$symbol")
   }
 
   //////////////////////////////////////////////////////////////////////
   //              Recent Symbols Functions
   //////////////////////////////////////////////////////////////////////
 
-  def addRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[UserProfile]] = {
-    $http.put[UserProfile](s"/api/user/$userID/recent/$symbol")
+  def addRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
+    $http.put[OperationResult](s"/api/user/$userID/recent/$symbol")
   }
 
-  def removeRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[UserProfile]] = {
-    $http.delete[UserProfile](s"/api/user/$userID/recent/$symbol")
+  def findRecentSymbols(userID: String): js.Promise[HttpResponse[js.Array[Ticker]]] = {
+    $http.get[js.Array[Ticker]](s"/api/user/$userID/recent")
+  }
+
+  def removeRecentSymbol(userID: String, symbol: String): js.Promise[HttpResponse[OperationResult]] = {
+    $http.delete[OperationResult](s"/api/user/$userID/recent/$symbol")
   }
 
 }

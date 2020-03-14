@@ -1,7 +1,7 @@
 package com.shocktrade.client.posts
 
 import com.shocktrade.client.users.UserFactory
-import com.shocktrade.client.{GlobalLoading, MySessionService}
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.post.{Comment, Post, Reply}
 import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
@@ -36,8 +36,6 @@ trait PostingCapabilities extends GlobalLoading {
 
   def postService: PostService
 
-  def mySession: MySessionService
-
   def $timeout: Timeout
 
   def toaster: Toaster
@@ -55,9 +53,8 @@ trait PostingCapabilities extends GlobalLoading {
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.deletePost = (aPost: js.UndefOr[Post]) => {
-    val user = mySession.userProfile
     for {
-      userID <- user.userID
+      userID <- $scope.userProfile.flatMap(_.userID)
       post <- aPost
       postID <- post.postID
     } {
@@ -91,14 +88,14 @@ trait PostingCapabilities extends GlobalLoading {
   $scope.isDeletable = (aPost: js.UndefOr[Post]) => {
     for {
       post <- aPost
-      user = mySession.userProfile
-    } yield user.userID ?== post.userID
+      userID <- $scope.userProfile.flatMap(_.userID)
+    } yield post.userID.contains(userID)
   }
 
   $scope.isLikedPost = (aPost: js.UndefOr[Post]) => {
     for {
       post <- aPost
-      userID <- mySession.userProfile.userID
+      userID <- $scope.userProfile.flatMap(_.userID)
     } yield post.likedBy.exists(_.contains(userID))
   }
 
@@ -108,11 +105,11 @@ trait PostingCapabilities extends GlobalLoading {
 
   private def likeOrUnlikePost(aPost: js.UndefOr[Post], like: Boolean) {
     val aPostID = aPost.flatMap(_.postID)
-    val aUserID = mySession.userProfile.userID
+    val aUserID = $scope.userProfile.flatMap(_.userID)
     val result = for {
       post <- aPost.toOption
       postID <- post.postID.toOption
-      userID <- mySession.userProfile.userID.toOption
+      userID <- $scope.userProfile.flatMap(_.userID).toOption
     } yield (post, postID, userID)
 
     result match {
@@ -138,7 +135,7 @@ trait PostingCapabilities extends GlobalLoading {
   $scope.publishPost = (aPost: js.UndefOr[Post]) => {
     for {
       post <- aPost
-      user = mySession.userProfile
+      user <- $scope.userProfile
     } {
       post.loading = true
       post.submitter = user
@@ -186,7 +183,7 @@ trait PostingCapabilities extends GlobalLoading {
 
   $scope.setupNewPost = () => {
     console.log(s"Setting up a new post...")
-    $scope.newPost = Post(mySession.userProfile)
+    $scope.newPost = $scope.userProfile.map(Post.apply)
   }
 
   $scope.updatePost = (anUpdatedPost: js.UndefOr[Post]) => anUpdatedPost foreach { updatedPost =>
@@ -212,7 +209,7 @@ trait PostingCapabilities extends GlobalLoading {
   $scope.isLikedComment = (aComment: js.UndefOr[Comment]) => {
     for {
       comment <- aComment
-      userID <- mySession.userProfile.userID
+      userID <- $scope.userProfile.flatMap(_.userID)
     } yield comment.likedBy.exists(_.contains(userID))
   }
 
@@ -225,7 +222,7 @@ trait PostingCapabilities extends GlobalLoading {
   }
 
   private def likeOrUnlikeComment(aPostID: js.UndefOr[String], aComment: js.UndefOr[Comment], like: Boolean) {
-    val aUserID = mySession.userProfile.userID
+    val aUserID = $scope.userProfile.flatMap(_.userID)
     val result = for {
       comment <- aComment.toOption
       commentID <- comment._id.toOption
@@ -260,7 +257,7 @@ trait PostingCapabilities extends GlobalLoading {
     for {
       post <- aPost
       postID <- post.postID
-      user = mySession.userProfile
+      user <- $scope.userProfile
       text <- aComment
     } {
       val submitter = user
@@ -286,7 +283,7 @@ trait PostingCapabilities extends GlobalLoading {
       post <- aPost
       reply <- aReply
       replyLikes <- post.replyLikes
-      userID <- mySession.userProfile.userID
+      userID <- $scope.userProfile.flatMap(_.userID)
     } yield replyLikes.exists(_.likedBy.exists(_.contains(userID)))
   }
 
@@ -299,7 +296,7 @@ trait PostingCapabilities extends GlobalLoading {
   }
 
   private def likeOrUnlikeReply(aPostID: js.UndefOr[String], aCommentID: js.UndefOr[String], aReply: js.UndefOr[Reply], like: Boolean) {
-    val aUserID = mySession.userProfile.userID
+    val aUserID = $scope.userProfile.flatMap(_.userID)
     val result = for {
       postID <- aPostID.toOption
       commentID <- aCommentID.toOption
@@ -337,7 +334,7 @@ trait PostingCapabilities extends GlobalLoading {
       postID <- post.postID
       comment <- aComment
       commentID <- comment._id
-      user = mySession.userProfile
+      user <- $scope.userProfile
       text <- aText
     } {
       val submitter = user
@@ -450,7 +447,7 @@ trait PostingCapabilities extends GlobalLoading {
 
     for {
       newPost <- $scope.newPost
-      user = mySession.userProfile
+      user <- $scope.userProfile
       userId <- user.userID.flat
     } {
       // if the post itself has not already been created ...
@@ -490,7 +487,7 @@ trait PostingCapabilities extends GlobalLoading {
  * @author lawrence.daniels@gmail.com
  */
 @js.native
-trait PostingCapabilitiesScope extends Scope {
+trait PostingCapabilitiesScope extends RootScope {
   var newPost: js.UndefOr[Post] = js.native
   var posts: js.Array[Post] = js.native
   var postsLoading: js.UndefOr[Boolean] = js.native

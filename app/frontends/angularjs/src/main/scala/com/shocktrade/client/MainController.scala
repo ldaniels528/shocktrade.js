@@ -31,7 +31,6 @@ import scala.util.{Failure, Success}
 class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
                      @injected("ContestService") contestService: ContestService,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
-                     @injected("MySessionService") mySession: MySessionService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)
@@ -42,6 +41,10 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.appTabs = MainTab.Tabs
   $scope.levels = GameLevel.Levels
+
+  $scope.favoriteSymbols = js.Dictionary()
+  $scope.recentSymbols = js.Dictionary()
+  $scope.notifications = js.Array()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Loading Functions
@@ -90,11 +93,11 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.contestIsEmpty = () => $scope.contest.isEmpty
 
-  $scope.getContestID = () => mySession.getContestID
+  $scope.getContestID = () => $scope.contest.flatMap(_.contestID)
 
-  $scope.getContestName = () => mySession.getContestName
+  $scope.getContestName = () => $scope.contest.flatMap(_.name).orNull
 
-  $scope.getContestStatus = () => mySession.getContestStatus
+  $scope.getContestStatus = () => $scope.contest.flatMap(_.status).orNull
 
   $scope.getFundsAvailable = () => getFundsAvailable
 
@@ -123,13 +126,13 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getUserProfile = () => $scope.userProfile.orNull
 
-  $scope.hasNotifications = () => mySession.hasNotifications
+  $scope.hasNotifications = () => $scope.notifications.nonEmpty
 
-  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => aPerkCode.exists(mySession.hasPerk)
+  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
 
-  $scope.isAdmin = () => mySession.isAdmin
+  $scope.isAdmin = () => $scope.userProfile.exists(_.isAdmin.isTrue)
 
-  $scope.isAuthenticated = () => mySession.isAuthenticated
+  $scope.isAuthenticated = () => $scope.userProfile.flatMap(_.userID).isAssigned
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
@@ -157,7 +160,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     else {
       // check for favorite and held securities
       q.symbol.asOpt[String] map { symbol =>
-        if (mySession.isFavoriteSymbol(symbol)) "fa fa-heart"
+        if ($scope.favoriteSymbols.exists(_._1 == symbol)) "fa fa-heart"
         //else if (heldSecurities.isHeld(symbol)) "fa fa-star"
         else ""
       } getOrElse ""
@@ -166,10 +169,10 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.logout = () => {
     authenticationService.logout() onComplete {
-      case Success(_) => mySession.logout()
+      case Success(_) => logout()
       case Failure(e) =>
         toaster.error("An error occurred during logout")
-        mySession.logout()
+        logout()
         e.printStackTrace()
     }
   }
@@ -189,7 +192,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
           $scope.netWorth = networthResponse.data
         }
         $scope.emitUserProfileChanged(signinResponse)
-        mySession.setUserProfile(signinResponse)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -199,7 +201,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     signUpDialog.signUp() onComplete {
       case Success(response) =>
         console.log(s"response = ${angular.toJson(response)}")
-        mySession.setUserProfile(response)
+        $scope.userProfile = response
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -210,7 +212,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.isVisibleTab = (aTab: js.UndefOr[MainTab]) => aTab.exists { tab =>
-    (loadingIndex == 0) && ((!tab.contestRequired || $scope.contest.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
+    (loadingIndex == 0) && ((!tab.contestRequired || $scope.contest.isDefined) && (!tab.authenticationRequired || $scope.userProfile.flatMap(_.userID).isAssigned))
   }
 
   $scope.switchToDiscover = () => $scope.switchToTab(MainTab.Discover)
@@ -240,10 +242,18 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  private def performTabSwitch(tabIndex: Int) {
+  private def performTabSwitch(tabIndex: Int): Unit = {
     val tab = MainTab.Tabs(tabIndex)
-    console.log(s"Changing location for ${mySession.getUserName.orNull} to ${tab.url}")
+    console.log(s"Changing location for ${$scope.userProfile.flatMap(_.username).orNull} to ${tab.url}")
     $location.url(tab.url)
+  }
+
+  private def logout(): Unit = {
+    $scope.contest = js.undefined
+    $scope.favoriteSymbols.clear()
+    $scope.portfolio = js.undefined
+    $scope.recentSymbols.clear()
+    $scope.userProfile = js.undefined
   }
 
   private def updateNetWorth(userID: String): Unit = {
@@ -329,7 +339,10 @@ object MainController {
 trait MainControllerScope extends RootScope with GlobalNavigation {
   // variables
   var appTabs: js.Array[MainTab] = js.native
+  var favoriteSymbols: js.Dictionary[String] = js.native
   var levels: js.Array[GameLevel] = js.native
+  var notifications: js.Array[String] = js.native
+  var recentSymbols: js.Dictionary[String] = js.native
 
   // loading functions
   var isLoading: js.Function0[Boolean]

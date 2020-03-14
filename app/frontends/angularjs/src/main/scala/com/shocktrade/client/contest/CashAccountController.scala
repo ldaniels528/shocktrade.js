@@ -1,8 +1,8 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.{MySessionService, RootScope}
+import com.shocktrade.client.RootScope
+import io.scalajs.npm.angularjs.Controller
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, injected}
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.language.postfixOps
@@ -12,9 +12,7 @@ import scala.scalajs.js
  * Cash Account Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class CashAccountController($scope: CashAccountScope, toaster: Toaster,
-                            @injected("MySessionService") mySession: MySessionService)
-  extends Controller {
+class CashAccountController($scope: CashAccountScope, toaster: Toaster) extends Controller {
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -32,7 +30,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
 
   $scope.getTotalInvestment = () => {
     val outcome = for {
-      portfolio <- mySession.portfolio_?.toList
+      portfolio <- $scope.portfolio.toList
       positions <- portfolio.positions.toList
       cashPositions = positions.filter(_.isCashAccount)
     } yield cashPositions.map(_.netValue.orZero).sum
@@ -45,7 +43,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster,
 
   private def computeTotalOrdersByType(orderType: String): Double = {
     val outcome = for {
-      portfolio <- mySession.portfolio_?.toList
+      portfolio <- $scope.portfolio.toList
       orders <- portfolio.orders.toList
       cashOrders = orders.filter(o => o.orderType.contains(orderType) && o.isCashAccount)
     } yield cashOrders.map(_.totalCost.orZero).sum

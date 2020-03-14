@@ -1,6 +1,6 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.{GlobalLoading, MySessionService, RootScope}
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.contest.ContestSearchResult
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -21,7 +21,6 @@ import scala.util.{Failure, Success}
 abstract class GameController($scope: GameScope,
                               $location: Location,
                               toaster: Toaster,
-                              mySession: MySessionService,
                               portfolioService: PortfolioService)
   extends Controller with GlobalLoading {
 

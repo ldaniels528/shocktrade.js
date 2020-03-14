@@ -1,10 +1,10 @@
 package com.shocktrade.client.users
 
 import com.shocktrade.client.users.HomeController.FacebookFriend
-import com.shocktrade.client.{GlobalLoading, GlobalNavigation, MySessionService}
+import com.shocktrade.client.{GlobalLoading, GlobalNavigation, RootScope}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Scope, Timeout, _}
+import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.social.facebook.TaggableFriend
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
@@ -20,9 +20,7 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: Toaster,
-                     @injected("MySessionService") mySession: MySessionService,
-                     @injected("UserService") userService: UserService,
-                     @injected("UserService") profileService: UserService)
+                     @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
   /////////////////////////////////////////////////////////////////////////////
@@ -30,18 +28,18 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
   /////////////////////////////////////////////////////////////////////////////
 
   $scope.init = () => {
-    if (!mySession.isAuthenticated) $scope.switchToDiscover()
+    //if (!mySession.isAuthenticated) $scope.switchToDiscover()
   }
 
-  $scope.getAwards = () => mySession.userProfile.awards getOrElse emptyArray
+  $scope.getAwards = () => $scope.userProfile.flatMap(_.awards) getOrElse emptyArray
 
   $scope.getFriends = () => js.Array()
 
-  $scope.getNextLevelXP = () => mySession.userProfile.nextLevelXP
+  $scope.getNextLevelXP = () => $scope.userProfile.flatMap(_.nextLevelXP)
 
-  $scope.getStars = () => (1 to mySession.userProfile.rep.getOrElse(3)).toJSArray
+  $scope.getStars = () => (1 to $scope.userProfile.flatMap(_.rep).getOrElse(3)).toJSArray
 
-  $scope.getTotalXP = () => mySession.userProfile.totalXP.getOrElse(0)
+  $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP).getOrElse(0)
 
   $scope.selectFriend = (friendOpt: js.UndefOr[FacebookFriend]) => friendOpt foreach { friend =>
     console.log(s"selecting friend ${angular.toJson(friend)}")
@@ -84,7 +82,7 @@ object HomeController {
  * Home Controller Scope
  */
 @js.native
-trait HomeControllerScope extends Scope with GlobalNavigation {
+trait HomeControllerScope extends RootScope with GlobalNavigation {
   // variables
   var selectedFriend: js.UndefOr[TaggableFriend] = js.native
 

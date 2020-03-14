@@ -11,7 +11,7 @@ import scala.scalajs.js
  */
 class ReactiveSearchService($http: Http) extends Service {
 
-  def search(searchTerm: String, maxResults: Int = 20): js.Promise[HttpResponse[js.Array[EntitySearchResult]]] = {
+  def search(searchTerm: String, maxResults: Int): js.Promise[HttpResponse[js.Array[EntitySearchResult]]] = {
     $http.get[js.Array[EntitySearchResult]](s"/api/search?searchTerm=$searchTerm&maxResults=$maxResults")
   }
 
