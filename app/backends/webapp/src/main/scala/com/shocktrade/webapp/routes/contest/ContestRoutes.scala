@@ -2,9 +2,12 @@ package com.shocktrade.webapp.routes
 package contest
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
+import com.shocktrade.common.util.StringHelper._
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
+import scala.language.postfixOps
+import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
@@ -20,6 +23,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
 
   // collections of contests
+  app.get("/api/contest/:contestID/rankings", (request: Request, response: Response, next: NextFunction) => rankingsByContest(request, response, next))
   app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => availablePerks(request, response, next))
   app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => myContests(request, response, next))
   app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
@@ -81,6 +85,32 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
     outcome onComplete {
       case Success(contests) => response.send(contests); next()
       case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  /**
+   * Retrieves a collection of rankings by contest
+   */
+  def rankingsByContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestID = request.params("contestID")
+    val outcome = for {
+      rankings <- contestDAO.findRankings(contestID)
+
+      // sort the rankings and add the position (e.g. "1st")
+      sortedRankings = {
+        val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0.0))
+        myRankings.zipWithIndex foreach { case (ranking, index) =>
+          ranking.rank = (index + 1) nth
+        }
+        js.Array(myRankings: _*)
+      }
+
+    } yield sortedRankings
+
+    outcome onComplete {
+      case Success(rankings) => response.send(rankings); next()
+      case Failure(e) =>
+        response.internalServerError(e); next()
     }
   }
 

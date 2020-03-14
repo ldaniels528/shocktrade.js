@@ -1,8 +1,10 @@
 package com.shocktrade.client.dialogs
 
+import com.shocktrade.client.RootScope
+import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.PerksDialogController._
 import com.shocktrade.client.models.contest.{Perk, Portfolio}
-import com.shocktrade.client.{MySessionService, RootScope}
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.forms.PerksResponse
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -10,6 +12,7 @@ import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
+import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -27,12 +30,21 @@ class PerksDialog($http: Http, $uibModal: Modal) extends Service {
   /**
    * Perks Modal Dialog
    */
-  def popup(): js.Promise[PerksDialogResult] = {
+  def popup(contestID: String, userID: String): js.Promise[PerksDialogResult] = {
     val $uibModalInstance = $uibModal.open[PerksDialogResult](new ModalOptions(
       templateUrl = "perks_dialog.html",
-      controller = classOf[PerksDialogController].getSimpleName
+      controller = classOf[PerksDialogController].getSimpleName,
+      resolve = js.Dictionary("contestID" -> (() => contestID), "userID" -> (() => userID))
     ))
     $uibModalInstance.result
+  }
+
+  /**
+   * Retrieves the promise of a sequence of available perks
+   * @return the promise of a sequence of available [[Perk perk]]s
+   */
+  def getAvailablePerks: js.Promise[HttpResponse[js.Array[Perk]]] = {
+    $http.get[js.Array[Perk]]("/api/contests/perks")
   }
 
   /**
@@ -70,16 +82,42 @@ class PerksDialog($http: Http, $uibModal: Modal) extends Service {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalInstance[PerksDialogResult], toaster: Toaster,
-                            @injected("MySessionService") mySession: MySessionService,
-                            @injected("PerksDialog") perksSvc: PerksDialog)
+                            @injected("PerksDialog") perksDialog: PerksDialog,
+                            @injected("PortfolioService") portfolioService: PortfolioService,
+                            @injected("UserService") userService: UserService,
+                            @injected("contestID") contestID: => String,
+                            @injected("userID") userID: => String)
   extends Controller {
 
   private var myPerkCodes = emptyArray[String]
   private var perkMapping = js.Dictionary[Perk]()
 
   $scope.availablePerks = emptyArray[Perk]
-  $scope.fundsAvailable = js.undefined
   $scope.errors = emptyArray[String]
+  $scope.fundsAvailable = js.undefined
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => {
+    console.info(s"Loading portfolio for contest $contestID user $userID...")
+
+    val outcome = for {
+      portfolio <- portfolioService.findPortfolio(contestID, userID)
+      perks <- perksDialog.getPerks(portfolio.data.portfolioID.orNull)
+    } yield (perks, portfolio)
+
+    outcome onComplete {
+      case Success((perks, portfolio)) =>
+        $scope.$apply { () =>
+          $scope.availablePerks = perks.data
+          $scope.fundsAvailable = portfolio.data.funds
+        }
+      case Failure(e) =>
+        toaster.error(e.displayMessage)
+    }
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -87,35 +125,35 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.cancel = () => $uibModalInstance.dismiss("cancel")
 
-  $scope.countOwnedPerks = () => $scope.availablePerks.count(_.owned)
+  $scope.countOwnedPerks = () => $scope.availablePerks.count(_.owned.isTrue)
 
   $scope.getTotalCost = () => getSelectedPerks map (_.cost) sum
 
-  $scope.hasSufficientFunds = () => $scope.fundsAvailable exists ($scope.getTotalCost() <= _)
+  $scope.hasSufficientFunds = () => $scope.fundsAvailable.exists($scope.getTotalCost() <= _)
 
-  $scope.isPerksSelected = () => $scope.availablePerks.exists(p => p.selected && !p.owned)
+  $scope.isPerksSelected = () => $scope.availablePerks.exists(p => p.selected.isTrue && !p.owned.isTrue)
 
   $scope.getPerkCostClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "positive"
-    else if ($scope.getFundsAvailable().exists(_ < perk.cost)) "negative"
+    if (perk.selected.isTrue || $scope.fundsAvailable.exists(_ >= perk.cost)) "positive"
+    else if ($scope.fundsAvailable.exists(_ < perk.cost)) "negative"
     else "null"
   }
 
   $scope.getPerkNameClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "st_bkg_color" else "null"
+    if (perk.selected.isTrue || $scope.fundsAvailable.exists(_ >= perk.cost)) "st_bkg_color" else "null"
   }
 
   $scope.getPerkDescClass = (aPerk: js.UndefOr[Perk]) => aPerk map { perk =>
-    if (perk.selected || $scope.getFundsAvailable().exists(_ >= perk.cost)) "" else "null"
+    if (perk.selected.isTrue || $scope.fundsAvailable.exists(_ >= perk.cost)) "" else "null"
   }
 
   $scope.loadPerks = () => {
     // load the player's perks
-    mySession.portfolio_?.flatMap(_.portfolioID.toOption) match {
+    $scope.portfolio.flatMap(_.portfolioID).toOption match {
       case Some(portfolioId) =>
         val outcome = for {
-          thePerks <- perksSvc.getPerks(portfolioId).map(_.data)
-          perksResponse <- perksSvc.getMyPerkCodes(portfolioId).map(_.data)
+          thePerks <- perksDialog.getPerks(portfolioId).map(_.data)
+          perksResponse <- perksDialog.getMyPerkCodes(portfolioId).map(_.data)
         } yield (thePerks, perksResponse)
 
         outcome onComplete {
@@ -125,7 +163,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
             this.perkMapping = js.Dictionary(thePerks.map(p => p.code -> p): _*)
 
             // capture the owned perk codes
-            $scope.fundsAvailable = perksResponse.fundsAvailable
+            //$scope.fundsAvailable = perksResponse.fundsAvailable
             this.myPerkCodes = perksResponse.perkCodes
 
             $scope.$apply(() => setupPerks())
@@ -141,12 +179,12 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.purchasePerks = () => {
     $scope.errors.removeAll()
-    mySession.portfolio_?.flatMap(_.portfolioID.toOption) match {
+    $scope.portfolio.flatMap(_.portfolioID).toOption match {
       case Some(portfolioId) =>
         val perkCodes = getSelectedPerks map (_.code)
 
         // send the purchase order
-        perksSvc.purchasePerks(portfolioId, perkCodes) onComplete {
+        perksDialog.purchasePerks(portfolioId, perkCodes) onComplete {
           case Success(response) => $uibModalInstance.close(response.data)
           case Failure(e) =>
             $scope.$apply(() => $scope.errors.push(s"Failed to purchase ${perkCodes.length} Perk(s)"))
@@ -161,7 +199,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   //          Private Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  private def getSelectedPerks = $scope.availablePerks.filter(perk => perk.selected && !perk.owned)
+  private def getSelectedPerks = $scope.availablePerks.filter(perk => perk.selected.isTrue && !perk.owned.isTrue)
 
   /**
    * Setup the perks state; indicating which perks are owned
@@ -201,6 +239,7 @@ trait PerksDialogScope extends RootScope {
   var getTotalCost: js.Function0[Double] = js.native
   var hasSufficientFunds: js.Function0[Boolean] = js.native
 
+  var init: js.Function0[Unit] = js.native
   var countOwnedPerks: js.Function0[Int] = js.native
   var isPerksSelected: js.Function0[Boolean] = js.native
   var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native

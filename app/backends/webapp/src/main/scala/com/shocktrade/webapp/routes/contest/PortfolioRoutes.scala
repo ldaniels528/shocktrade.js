@@ -2,7 +2,6 @@ package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.{MarketValueResponse, TotalInvestment}
-import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.webapp.routes.{NextFunction, Ok}
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.DateHelper._
@@ -34,7 +33,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
 
   // collections
   app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => portfoliosByContest(request, response, next))
-  app.get("/api/portfolios/contest/:contestID/rankings", (request: Request, response: Response, next: NextFunction) => rankingsByContest(request, response, next))
   app.get("/api/portfolios/user/:userID", (request: Request, response: Response, next: NextFunction) => portfoliosByUser(request, response, next))
   app.get("/api/portfolios/:portfolioID/totalInvestment", (request: Request, response: Response, next: NextFunction) => totalInvestment(request, response, next))
 
@@ -147,32 +145,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
     portfolioDAO.findByUser(userID) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
       case Failure(e) => response.internalServerError(e); next()
-    }
-  }
-
-  /**
-   * Retrieves a collection of rankings by contest
-   */
-  def rankingsByContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestID = request.params("contestID")
-    val outcome = for {
-      rankings <- contestDAO.findRankings(contestID)
-
-      // sort the rankings and add the position (e.g. "1st")
-      sortedRankings = {
-        val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0.0))
-        myRankings.zipWithIndex foreach { case (ranking, index) =>
-          ranking.rank = (index + 1) nth
-        }
-        js.Array(myRankings: _*)
-      }
-
-    } yield sortedRankings
-
-    outcome onComplete {
-      case Success(rankings) => response.send(rankings); next()
-      case Failure(e) =>
-        response.internalServerError(e); next()
     }
   }
 

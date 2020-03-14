@@ -2,12 +2,13 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.PerksDialog
-import com.shocktrade.client.{GlobalNavigation, MySessionService}
+import com.shocktrade.client.{GlobalNavigation, RootScope}
 import com.shocktrade.common.models.contest.Participant
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -22,7 +23,6 @@ import scala.util.{Failure, Success}
  */
 class DashboardController($scope: DashboardScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
                           @injected("ContestService") contestService: ContestService,
-                          @injected("MySessionService") mySession: MySessionService,
                           @injected("PerksDialog") perksDialog: PerksDialog,
                           @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller {
@@ -34,7 +34,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   /////////////////////////////////////////////////////////////////////
 
   $scope.init = () => {
-    if (!mySession.isAuthenticated || mySession.portfolio_?.isEmpty) $scope.switchToDiscover()
+    //if (!mySession.isAuthenticated || mySession.portfolio_?.isEmpty) $scope.switchToDiscover()
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -49,20 +49,26 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 
   $scope.getAccountMode = () => accountMode
 
-  $scope.getAccountType = () => if (accountMode) "MARGIN" else "CASH"
+  $scope.getAccountType = () => "CASH"
 
   /////////////////////////////////////////////////////////////////////
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.popupPerksDialog = () => {
-    perksDialog.popup() onComplete {
-      case Success(portfolio) =>
-        $scope.$apply(() => mySession.updatePortfolio(portfolio))
-      case Failure(e) =>
-        if (e.getMessage != "cancel") {
-          e.printStackTrace()
-        }
+  $scope.popupPerksDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String]) => {
+    console.info(s"aContestID = ${(aContestID ?? $routeParams.contestID ?? $scope.contest.flatMap(_.contestID)).orNull}, aUserID = ${aUserID.orNull}")
+    for {
+      contestID <- aContestID ?? $routeParams.contestID ?? $scope.contest.flatMap(_.contestID)
+      userID <- aUserID
+    } {
+      perksDialog.popup(contestID, userID) onComplete {
+        case Success(portfolio) =>
+          $scope.$apply(() => $scope.portfolio = portfolio)
+        case Failure(e) =>
+          if (e.getMessage != "cancel") {
+            e.printStackTrace()
+          }
+      }
     }
   }
 
@@ -70,13 +76,13 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   //          Participant Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.isRankingsShown = () => !mySession.contest_?.exists(_.rankingsHidden.isTrue)
+  $scope.isRankingsShown = () => !$scope.rankingsHidden.isTrue
 
-  $scope.toggleRankingsShown = () => mySession.contest_?.foreach(c => c.rankingsHidden = !c.rankingsHidden.isTrue)
+  $scope.toggleRankingsShown = () => $scope.rankingsHidden = !$scope.rankingsHidden.isTrue
 
   $scope.getRankings = () => {
     /*
-    mySession.contest_?.orUndefined flatMap { contest =>
+    $scope.contest.orUndefined flatMap { contest =>
       mySession.updateRankings(contest).participants
     }*/
     js.undefined
@@ -87,21 +93,20 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   ///////////////////////////////////////////////////////////////////////////
 
   // if a contest ID was passed, load the contest.
-  $routeParams.contestId foreach loadContest
+  console.info(s"PARAMS: contest '${$routeParams.contestID.orNull}' user '${JSON.stringify($scope.userProfile.orNull)}' networth: ${JSON.stringify($scope.netWorth.orNull)}'")
+  for {
+    contestID <- $routeParams.contestID
+    userID <- $scope.userProfile.flatMap(_.userID)
+  } loadContest(contestID, userID)
 
-  private def loadContest(contestId: String) {
-    console.info(s"Attempting to load contest $contestId...")
-    mySession.userProfile.userID.toOption match {
-      case Some(portfolioID) =>
-        mySession.loadContestByID(contestId) onComplete {
-          case Success(_) => $scope.$apply(() => {})
-          case Failure(e) =>
-            toaster.error(s"Error loading contest")
-            console.error(s"Error loading contest $contestId: ${e.displayMessage}")
-            e.printStackTrace()
-        }
-      case None =>
-        console.warn(s"Contest #$contestId cannot be loaded because the player ID is missing")
+  def loadContest(contestID: String, userID: String): Unit = {
+    console.info(s"Loading portfolio for contest '$contestID' user '$userID'...'")
+    portfolioService.findPortfolio(contestID, userID) onComplete {
+      case Success(response) => $scope.$apply { () => $scope.portfolio = response.data }
+      case Failure(e) =>
+        toaster.error(s"Error loading contest")
+        console.error(s"Error loading contest $contestID: ${e.displayMessage}")
+        e.printStackTrace()
     }
   }
 
@@ -109,7 +114,13 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   //          Events
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileChanged((_, profile) => $routeParams.contestId foreach loadContest)
+  $scope.onUserProfileChanged { (_, profile) =>
+    console.info(s"UPDATE: contest '${$routeParams.contestID.orNull}' user '${JSON.stringify($scope.userProfile.orNull)}' networth: ${JSON.stringify($scope.netWorth.orNull)}'")
+    for {
+      contestID <- $routeParams.contestID
+      userID <- profile.userID
+    } loadContest(contestID, userID)
+  }
 
 }
 
@@ -118,7 +129,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait DashboardScope extends Scope with GlobalNavigation {
+trait DashboardScope extends RootScope with GlobalNavigation {
   // functions
   var init: js.Function0[Unit] = js.native
   var getRankings: js.Function0[js.UndefOr[js.Array[Participant]]] = js.native
@@ -127,9 +138,12 @@ trait DashboardScope extends Scope with GlobalNavigation {
   var isRankingsShown: js.Function0[Boolean] = js.native
   var getAccountMode: js.Function0[Boolean] = js.native
   var getAccountType: js.Function0[String] = js.native
-  var popupPerksDialog: js.Function0[Unit] = js.native
+  var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
   var toggleAccountMode: js.Function0[Unit] = js.native
   var toggleRankingsShown: js.Function0[Unit] = js.native
+
+  // variables
+  var rankingsHidden: js.UndefOr[Boolean] = js.native
 
 }
 
@@ -139,6 +153,6 @@ trait DashboardScope extends Scope with GlobalNavigation {
  */
 @js.native
 trait DashboardRouteParams extends js.Object {
-  var contestId: js.UndefOr[String] = js.native
+  var contestID: js.UndefOr[String] = js.native
 
 }

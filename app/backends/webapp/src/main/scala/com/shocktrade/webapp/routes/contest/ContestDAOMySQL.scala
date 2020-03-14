@@ -29,6 +29,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     conn.queryFuture[ContestData](
       """|SELECT C.*, CS.status
          |FROM contests C
+         |LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
          |WHERE C.contestID = ?
          |""".stripMargin, js.Array(contestID))
       .map { case (rows, _) => rows.headOption }

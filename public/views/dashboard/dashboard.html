@@ -4,15 +4,15 @@
             <div class="rankings_container">
                 <div class="rank_cell" ng-repeat="p in getRankings() | orderBy:'rank'">
                     <div class="pull-left" style="display: inline">
-                        <avatar id="{{ p.facebookID }}" class="avatar-45"></avatar>
+                        <avatar id="{{ p.userID }}" class="avatar-45"></avatar>
                     </div>
                     <div class="pull-left" style="display: inline">
                         <div>
                             <img ng-src="/images/status/{{ isOnline(p) ? 'greenlight' : 'offlight' }}.png">
                             <span ng-class="'rank_' + p.rank">{{ p.rank }}</span>
-                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '1st'" src="/images/contests/gold.png">
-                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '2nd'" src="/images/contests/silver.png">
-                            <img ng-if="getContestStatus() === 'CLOSED' && p.rank === '3rd'" src="/images/contests/bronze.png">
+                            <img ng-if="contest.status === 'CLOSED' && p.rank === 1" src="/images/contests/gold.png">
+                            <img ng-if="contest.status === 'CLOSED' && p.rank === 2" src="/images/contests/silver.png">
+                            <img ng-if="contest.status === 'CLOSED' && p.rank === 3" src="/images/contests/bronze.png">
                             <span class="null">&#8212;</span>
                             <span class="st_text_color" ng-click="showGamerCard(p.name)">{{ p.name }}</span>
                         </div>

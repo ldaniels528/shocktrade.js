@@ -5,7 +5,7 @@ import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioController.PortfolioTab
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.models.contest.{Order, Performance, Position}
+import com.shocktrade.client.models.contest.{Order, Performance, Portfolio, Position}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
@@ -23,7 +23,6 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                               @injected("MySessionService") mySession: MySessionService,
                                @injected("ContestService") contestService: ContestService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("QuoteCache") quoteCache: QuoteCache,
@@ -31,6 +30,12 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   extends Controller with GlobalLoading with GlobalSelectedSymbol {
 
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
+
+  $scope.closedOrders = js.Array()
+  $scope.orders = js.Array()
+  $scope.performance = js.Array()
+  $scope.portfolios = js.Array()
+  $scope.positions = js.Array()
 
   $scope.selectedClosedOrder = js.undefined
   $scope.selectedOrder = js.undefined
@@ -49,11 +54,11 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   /////////////////////////////////////////////////////////////////////
 
   $scope.getClosedOrders = () => {
-    mySession.getClosedOrders.filter(_.accountType.contains($scope.getAccountType()))
+    $scope.closedOrders.filter(_.accountType.contains($scope.getAccountType()))
   }
 
   $scope.isClosedOrderSelected = () => {
-    $scope.getClosedOrders().nonEmpty && $scope.selectedClosedOrder.nonEmpty
+    $scope.closedOrders.nonEmpty && $scope.selectedClosedOrder.nonEmpty
   }
 
   $scope.selectClosedOrder = (closeOrder: js.UndefOr[Order]) => {
@@ -74,7 +79,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
       orderId <- anOrderId
     } {
       asyncLoading($scope)(portfolioService.cancelOrder(portfolioId, orderId)) onComplete {
-        case Success(response) => $scope.$apply(() => mySession.updatePortfolio(response.data))
+        case Success(response) => $scope.$apply(() => $scope.portfolio = response.data)
         case Failure(err) =>
           toaster.error("Failed to cancel order")
           console.error(s"Failed to cancel order: ${err.displayMessage}")
@@ -85,7 +90,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
   $scope.getActiveOrders = () => {
-    val orders = mySession.getOrders filter (_.accountType.contains($scope.getAccountType()))
+    val orders = $scope.orders filter (_.accountType.contains($scope.getAccountType()))
     enrichOrders(orders)
     orders
   }
@@ -102,7 +107,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
       accountType = anAccountType
     ))
     promise onComplete {
-      case Success(portfolio) => mySession.updatePortfolio(portfolio)
+      case Success(portfolio) => $scope.portfolio = portfolio
       case Failure(e) =>
         toaster.error("New Order", e.displayMessage)
     }
@@ -117,7 +122,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   //          Performance Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.getPerformance = () => mySession.getPerformance
+  $scope.getPerformance = () => $scope.performance
 
   $scope.isPerformanceSelected = () => $scope.getPerformance().nonEmpty && $scope.selectedPerformance.nonEmpty
 
@@ -138,7 +143,7 @@ case class PortfolioController($scope: PortfolioScope, $cookies: Cookies, $timeo
   /////////////////////////////////////////////////////////////////////
 
   $scope.getPositions = () => {
-    val positions = mySession.getPositions filter (_.accountType.contains($scope.getAccountType()))
+    val positions = $scope.positions filter (_.accountType.contains($scope.getAccountType()))
     enrichPositions(positions)
     positions
   }
@@ -244,13 +249,20 @@ object PortfolioController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait PortfolioScope extends GlobalSelectedSymbolScope {
+trait PortfolioScope extends RootScope with GlobalSelectedSymbolScope {
   // variables
   var portfolioTabs: js.Array[PortfolioTab] = js.native
   var selectedClosedOrder: js.UndefOr[Order] = js.native
   var selectedOrder: js.UndefOr[Order] = js.native
   var selectedPerformance: js.UndefOr[Performance] = js.native
   var selectedPosition: js.UndefOr[Position] = js.native
+
+  // model variables
+  var closedOrders: js.Array[Order] = js.native
+  var orders: js.Array[Order] = js.native
+  var performance: js.Array[Performance] = js.native
+  var portfolios: js.Array[Portfolio] = js.native
+  var positions: js.Array[Position] = js.native
 
   // closed order functions
   var getClosedOrders: js.Function0[js.Array[Order]] = js.native

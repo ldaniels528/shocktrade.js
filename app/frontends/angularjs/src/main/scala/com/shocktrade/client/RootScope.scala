@@ -1,7 +1,7 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.Portfolio
+import com.shocktrade.client.models.contest.{ContestSearchResultUI, Portfolio}
 import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.npm.angularjs.Scope
 
@@ -17,8 +17,9 @@ trait RootScope extends Scope {
   var getFundsAvailable: js.Function0[js.UndefOr[Double]] = js.native
 
   // variables
-  var netWorth: js.UndefOr[NetWorth] = js.undefined
-  var portfolio: js.UndefOr[Portfolio] = js.undefined
-  var userProfile: js.UndefOr[UserProfile] = js.undefined
+  var contest: js.UndefOr[ContestSearchResultUI] = js.native
+  var netWorth: js.UndefOr[NetWorth] = js.native
+  var portfolio: js.UndefOr[Portfolio] = js.native
+  var userProfile: js.UndefOr[UserProfile] = js.native
 
 }

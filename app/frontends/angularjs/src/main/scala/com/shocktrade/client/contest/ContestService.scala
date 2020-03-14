@@ -2,7 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm, PlayerInfoForm}
-import com.shocktrade.common.models.contest.{ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult, MyContest}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
@@ -60,6 +60,15 @@ class ContestService($http: Http) extends Service {
 
   def findMyContests(userID: String): js.Promise[HttpResponse[js.Array[MyContest]]] = {
     $http.get[js.Array[MyContest]](s"/api/contests/user/$userID")
+  }
+
+  /**
+   * Retrieves a collection of contest rankings
+   * @param contestID the given contest ID
+   * @return the promise of an array of [[ContestRanking contest rankings]]
+   */
+  def findRankingsByContest(contestID: String): js.Promise[HttpResponse[js.Array[ContestRanking]]] = {
+    $http.get(s"/api/contest/$contestID/rankings")
   }
 
 }

@@ -41,7 +41,7 @@ class PortfolioService($http: Http) extends Service {
     $http.get(s"/api/portfolios/$portfolioID")
   }
 
-  def findParticipant(contestID: String, userID: String): js.Promise[HttpResponse[Portfolio]] = {
+  def findPortfolio(contestID: String, userID: String): js.Promise[HttpResponse[Portfolio]] = {
     $http.get(s"/api/portfolio/contest/$contestID/user/$userID")
   }
 

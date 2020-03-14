@@ -34,7 +34,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("MySessionService") mySession: MySessionService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
-                     @injected("UserService") profileService: UserService)
+                     @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
@@ -88,7 +88,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //              My Session Service Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.contestIsEmpty = () => mySession.contest_?.isEmpty
+  $scope.contestIsEmpty = () => $scope.contest.isEmpty
 
   $scope.getContestID = () => mySession.getContestID
 
@@ -139,7 +139,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     player.userID.exists { portfolioID =>
       if (!onlinePlayers.contains(portfolioID)) {
         onlinePlayers(portfolioID) = new OnlineStatus(connected = false)
-        profileService.getOnlineStatus(portfolioID) onComplete {
+        userService.getOnlineStatus(portfolioID) onComplete {
           case Success(response) =>
             val newState = response.data
             onlinePlayers(portfolioID) = newState
@@ -175,12 +175,21 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   $scope.signIn = () => {
-    signInDialog.signIn() onComplete {
-      case Success(response) =>
-        console.log(s"response = ${angular.toJson(response)}")
-        $scope.$apply(() => $scope.userProfile = response)
-        mySession.setUserProfile(response)
-        $scope.userProfile.flatMap(_.userID) foreach updateNetWorth
+    val outcome = for {
+      signinResponse <- signInDialog.signIn()
+      networthResponse <- userService.getNetWorth(signinResponse.userID.orNull)
+    } yield (signinResponse, networthResponse)
+
+    outcome onComplete {
+      case Success((signinResponse, networthResponse)) =>
+        console.log(s"signinResponse = ${angular.toJson(signinResponse)}")
+        console.log(s"networthResponse = ${angular.toJson(networthResponse.data)}")
+        $scope.$apply { () =>
+          $scope.userProfile = signinResponse
+          $scope.netWorth = networthResponse.data
+        }
+        $scope.emitUserProfileChanged(signinResponse)
+        mySession.setUserProfile(signinResponse)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -201,7 +210,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.isVisibleTab = (aTab: js.UndefOr[MainTab]) => aTab.exists { tab =>
-    (loadingIndex == 0) && ((!tab.contestRequired || mySession.contest_?.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
+    (loadingIndex == 0) && ((!tab.contestRequired || $scope.contest.isDefined) && (!tab.authenticationRequired || mySession.isAuthenticated))
   }
 
   $scope.switchToDiscover = () => $scope.switchToTab(MainTab.Discover)
@@ -215,7 +224,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.switchToTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
     $scope.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
-        asyncLoading($scope)(profileService.setIsOnline(userID)) onComplete {
+        asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>
             val outcome = response.data
             if (isDefined(outcome.error)) {
@@ -238,7 +247,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   private def updateNetWorth(userID: String): Unit = {
-    profileService.getNetWorth(userID) onComplete {
+    userService.getNetWorth(userID) onComplete {
       case Success(response) => $scope.$apply(() => $scope.netWorth = response.data)
       case Failure(e) =>
         e.printStackTrace()

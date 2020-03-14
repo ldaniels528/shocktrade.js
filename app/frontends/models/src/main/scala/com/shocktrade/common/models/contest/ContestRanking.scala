@@ -9,6 +9,8 @@ import scala.scalajs.js
 class ContestRanking(var contestID: js.UndefOr[String],
                      var name: js.UndefOr[String],
                      var hostUserID: js.UndefOr[String],
+                     var userID: js.UndefOr[String],
+                     var username: js.UndefOr[String],
                      var startTime: js.UndefOr[js.Date],
                      var expirationTime: js.UndefOr[js.Date],
                      var startingBalance: js.UndefOr[Double],

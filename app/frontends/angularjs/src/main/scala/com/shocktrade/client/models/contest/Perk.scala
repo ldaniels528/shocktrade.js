@@ -10,6 +10,6 @@ class Perk(val name: String,
            val code: String,
            val description: String,
            val cost: Double,
-           var owned: Boolean = false,
-           var selected: Boolean = false) extends js.Object
+           var owned: js.UndefOr[Boolean] = js.undefined,
+           var selected: js.UndefOr[Boolean] = js.undefined) extends js.Object
 

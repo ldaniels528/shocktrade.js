@@ -1,13 +1,13 @@
 <script type="text/ng-template" id="perks_dialog.html">
     <div class="modal-header st_modal_header">
-        <h4 style="color: #345688">Perks</h4>
+        <h4 style="color: #345688">Purchase Perks</h4>
     </div>
     <div class="modal-body">
         <div ng-if="errors.length" ng-repeat="error in errors" style="margin-bottom: 15px">
             <span class="error">{{ error }}</span>
         </div>
 
-        <div ng-init="loadPerks()">
+        <div ng-init="init()">
             <div>
                 <span class="st_sub_heading bold st_bkg_color">Total Purchase Cost:
                     <span ng-class="hasSufficientFunds() ? 'positive' : 'negative'">

@@ -1,16 +1,15 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.Filters.toDuration
-import com.shocktrade.client.MySessionService
+import com.shocktrade.client.RootScope
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.common.models.contest.ChatMessage
-import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Location, Scope, injected}
+import io.scalajs.npm.angularjs.{Controller, Location, injected}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -23,7 +22,6 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $location: Location, toaster: Toaster,
-                     @injected("MySessionService") mySession: MySessionService,
                      @injected("ChatService") chatService: ChatService,
                      @injected("ContestService") contestService: ContestService)
   extends Controller {
@@ -34,6 +32,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
   private var cachedHtml = ""
 
   $scope.chatMessage = ""
+  $scope.chatMessages = js.Array()
 
   /////////////////////////////////////////////////////////////////
   //    Scope Methods
@@ -46,17 +45,16 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
   $scope.getEmoticons = () => Emoticons
 
   $scope.getMessages = () => {
-    val messages = mySession.getMessages
-    if ((messages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 1000) cachedHtml
+    if (($scope.chatMessages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 1000) cachedHtml
     else {
       // capture the start time
       val startTime = js.Date.now()
 
       // capture the new number of lines
-      lastMessageCount = messages.length
+      lastMessageCount = $scope.chatMessages.length
 
       // build an HTML string with emoticons
-      val html = messages.foldLeft[String]("") { (html, msg) =>
+      val html = $scope.chatMessages.foldLeft[String]("") { (html, msg) =>
         // replace the symbols with icon images
         var text = msg.text getOrElse ""
         if (text.nonEmpty) {
@@ -65,11 +63,12 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
           }
         }
 
-        val senderName = msg.sender.flatMap(_.username).orNull
-        html +
-          s"""<img src="http://graph.facebook.com/${msg.sender.flatMap(_.userID)}/picture" class="chat_icon">
-                   <span class="bold" style="color: ${colorOf(senderName)}">$senderName</span>&nbsp;
-                   [<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>""".stripPrefix(" ")
+        val senderName = msg.username.orNull
+        s"""|$html
+            |<img src="http://graph.facebook.com/${msg.userID}/picture" class="chat_icon">
+            |<span class="bold" style="color: ${colorOf(senderName)}">$senderName</span>&nbsp;
+            |[<span class="st_bkg_color">${toDuration(msg.sentTime)}</span>]&nbsp;$text<br>
+            |""".stripMargin
       }
 
       //console.log(f"Generated HTML in ${js.Date.now() - startTime}%.1f msec(s)")
@@ -89,7 +88,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
   //			Local Functions and Data
   /////////////////////////////////////////////////////////////////////////////
 
-  private def colorOf(name: String) = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
+  private def colorOf(name: String): String = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
 
   /**
    * Sends a chat message to the server
@@ -97,18 +96,15 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
    */
   private def sendChatMessage(messageText: String) {
     val outcome = for {
-      portfolioID <- mySession.userProfile.userID.toOption
-      contestId <- mySession.contest_?.flatMap(_.contestID.toOption)
-    } yield (portfolioID, contestId)
+      userID <- $scope.userProfile.flatMap(_.userID).toOption
+      contestId <- $scope.contest.flatMap(_.contestID).toOption
+    } yield (userID, contestId)
 
     outcome match {
-      case Some((portfolioID, contestId)) =>
+      case Some((userID, contestId)) =>
         if (messageText.trim.nonEmpty) {
           // build the message blob
-          val message = new ChatMessage(
-            sender = User(_id = portfolioID, name = mySession.getUserName),
-            text = messageText
-          )
+          val message = new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), text = messageText)
 
           // transmit the message
           chatService.sendChatMessage(contestId, message) onComplete {
@@ -116,7 +112,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
               val messages = response.data
               $scope.$apply { () =>
                 $scope.chatMessage = ""
-                mySession.setMessages(messages)
+                $scope.chatMessages = messages
               }
             case Failure(e) =>
               toaster.error("Failed to send message")
@@ -134,13 +130,13 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
 
   $scope.onMessagesUpdated((_, contestId) => {
     // was our contest updated?
-    console.log(s"Updating chat messages for $contestId <${mySession.contest_?.flatMap(_.contestID.toOption).orNull}>")
-    if (mySession.contest_?.exists(_.contestID.contains(contestId))) {
+    console.log(s"Updating chat messages for $contestId <${$scope.contest.flatMap(_.contestID.toOption).orNull}>")
+    if ($scope.contest.exists(_.contestID.contains(contestId))) {
       chatService.getMessages(contestId) onComplete {
         case Success(response) =>
           val messages = response.data
           $scope.$apply { () =>
-            mySession.contest_?.foreach(_.messages = messages)
+            $scope.chatMessages = messages
             //$location.hash("end_of_message")
             $anchorScroll()
           }
@@ -190,9 +186,10 @@ object ChatController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait ChatControllerScope extends Scope {
+trait ChatControllerScope extends RootScope {
   // variables
   var chatMessage: String = js.native
+  var chatMessages: js.Array[ChatMessage] = js.native
 
   // functions
   var addSmiley: js.Function1[js.UndefOr[Emoticon], Unit] = js.native

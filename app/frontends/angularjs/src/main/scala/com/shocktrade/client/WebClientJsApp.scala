@@ -62,7 +62,7 @@ object WebClientJsApp {
         .when("/about/me", new RouteTo(templateUrl = "/views/about/me.html"))
         .when("/about/us", new RouteTo(templateUrl = "/views/about/us.html"))
         .when("/dashboard", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
-        .when("/dashboard/:contestId", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
+        .when("/dashboard/:contestID", new RouteTo(templateUrl = "/views/dashboard/dashboard.html", controller = classOf[DashboardController].getSimpleName))
         .when("/discover", new RouteTo(templateUrl = "/views/discover/discover.html", controller = classOf[DiscoverController].getSimpleName))
         .when("/explore", new RouteTo(templateUrl = "/views/explore/drill_down.html", controller = classOf[ExploreController].getSimpleName, reloadOnSearch = false))
         .when("/home", new RouteTo(templateUrl = "/views/profile/home.html", controller = classOf[HomeController].getSimpleName))

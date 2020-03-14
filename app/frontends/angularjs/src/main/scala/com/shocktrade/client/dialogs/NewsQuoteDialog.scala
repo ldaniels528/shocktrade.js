@@ -25,7 +25,6 @@ class NewsQuoteDialog($http: Http, $uibModal: Modal) extends Service {
    * Popups the News Quote Dialog
    */
   def popup(symbol: String): js.Promise[NewsQuoteDialogResult] = {
-    // create an instance of the dialog
     val $uibModalInstance = $uibModal.open[NewsQuoteDialogResult](new ModalOptions(
       templateUrl = "news_quote_dialog.html",
       controller = classOf[NewsQuoteDialogController].getSimpleName,
