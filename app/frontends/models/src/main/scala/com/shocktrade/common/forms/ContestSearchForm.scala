@@ -9,7 +9,8 @@ import scala.scalajs.js
  * Contest Search Form
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestSearchForm(var activeOnly: js.UndefOr[Boolean],
+class ContestSearchForm(var userID: js.UndefOr[String],
+                        var activeOnly: js.UndefOr[Boolean],
                         var available: js.UndefOr[Boolean],
                         var friendsOnly: js.UndefOr[Boolean],
                         var invitationOnly: js.UndefOr[Boolean],

@@ -2,12 +2,12 @@ package com.shocktrade.client
 
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.contest.{ContestService, GameLevel}
+import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.user.OnlineStatus
+import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.http.Http
@@ -29,7 +29,7 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
-                     @injected("ContestService") contestService: ContestService,
+                     @injected("ContestFactory") contestFactory: ContestFactory,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
@@ -90,18 +90,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //////////////////////////////////////////////////////////////////////
   //              My Session Service Functions
   //////////////////////////////////////////////////////////////////////
-
-  $scope.contestIsEmpty = () => $scope.contest.isEmpty
-
-  $scope.getContestID = () => $scope.contest.flatMap(_.contestID)
-
-  $scope.getContestName = () => $scope.contest.flatMap(_.name).orNull
-
-  $scope.getContestStatus = () => $scope.contest.flatMap(_.status).orNull
-
-  $scope.getFundsAvailable = () => getFundsAvailable
-
-  private def getFundsAvailable: js.UndefOr[Double] = $scope.portfolio.flatMap(_.funds)
 
   $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
 
@@ -184,14 +172,12 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     } yield (signinResponse, networthResponse)
 
     outcome onComplete {
-      case Success((signinResponse, networthResponse)) =>
-        console.log(s"signinResponse = ${angular.toJson(signinResponse)}")
-        console.log(s"networthResponse = ${angular.toJson(networthResponse.data)}")
+      case Success((userAccount, netWorth)) =>
         $scope.$apply { () =>
-          $scope.userProfile = signinResponse
-          $scope.netWorth = networthResponse.data
+          $scope.userProfile = userAccount
+          $scope.netWorth = netWorth.data
         }
-        $scope.emitUserProfileChanged(signinResponse)
+        $scope.emitUserProfileChanged(userAccount)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -199,9 +185,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.signUp = () => {
     signUpDialog.signUp() onComplete {
-      case Success(response) =>
-        console.log(s"response = ${angular.toJson(response)}")
-        $scope.userProfile = response
+      case Success(response) => $scope.userProfile = response
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -212,7 +196,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.isVisibleTab = (aTab: js.UndefOr[MainTab]) => aTab.exists { tab =>
-    (loadingIndex == 0) && ((!tab.contestRequired || $scope.contest.isDefined) && (!tab.authenticationRequired || $scope.userProfile.flatMap(_.userID).isAssigned))
+    (loadingIndex == 0) && (!tab.contestRequired && (!tab.authenticationRequired || $scope.userProfile.flatMap(_.userID).isAssigned))
   }
 
   $scope.switchToDiscover = () => $scope.switchToTab(MainTab.Discover)
@@ -249,9 +233,8 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   private def logout(): Unit = {
-    $scope.contest = js.undefined
+    contestFactory.logout()
     $scope.favoriteSymbols.clear()
-    $scope.portfolio = js.undefined
     $scope.recentSymbols.clear()
     $scope.userProfile = js.undefined
   }
@@ -277,10 +260,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.onUserProfileUpdated { (_, profile) =>
     console.log(s"profile = ${JSON.stringify(profile)}")
     $scope.$apply(() => $scope.userProfile = profile)
-  }
-
-  $scope.onUserStatusChanged { (_, newState) =>
-    console.log(s"user_status_changed: newState = ${JSON.stringify(newState)}")
   }
 
 }
@@ -341,6 +320,7 @@ trait MainControllerScope extends RootScope with GlobalNavigation {
   var appTabs: js.Array[MainTab] = js.native
   var favoriteSymbols: js.Dictionary[String] = js.native
   var levels: js.Array[GameLevel] = js.native
+  var netWorth: js.UndefOr[NetWorth] = js.native
   var notifications: js.Array[String] = js.native
   var recentSymbols: js.Dictionary[String] = js.native
 
@@ -356,11 +336,6 @@ trait MainControllerScope extends RootScope with GlobalNavigation {
   var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
   var getTabIndex: js.Function0[Int] = js.native
   var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
-
-  var contestIsEmpty: js.Function0[Boolean] = js.native
-  var getContestID: js.Function0[js.UndefOr[String]] = js.native
-  var getContestName: js.Function0[String] = js.native
-  var getContestStatus: js.Function0[String] = js.native
 
   var getTotalInvestment: js.Function0[Double] = js.native
   var getNetWorth: js.Function0[Double] = js.native

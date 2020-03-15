@@ -1,6 +1,5 @@
 package com.shocktrade.client.dialogs
 
-import com.shocktrade.client.RootScope
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.PerksDialogController._
 import com.shocktrade.client.models.contest.{Perk, Portfolio}
@@ -85,8 +84,8 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
                             @injected("PerksDialog") perksDialog: PerksDialog,
                             @injected("PortfolioService") portfolioService: PortfolioService,
                             @injected("UserService") userService: UserService,
-                            @injected("contestID") contestID: => String,
-                            @injected("userID") userID: => String)
+                            @injected("contestID") contestID: () => String,
+                            @injected("userID") userID: () => String)
   extends Controller {
 
   private var myPerkCodes = emptyArray[String]
@@ -101,10 +100,9 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.init = () => {
-    console.info(s"Loading portfolio for contest $contestID user $userID...")
-
+    console.info(s"Loading portfolio for contest ${contestID()} user ${userID()}...")
     val outcome = for {
-      portfolio <- portfolioService.findPortfolio(contestID, userID)
+      portfolio <- portfolioService.findPortfolio(contestID(), userID())
       perks <- perksDialog.getPerks(portfolio.data.portfolioID.orNull)
     } yield (perks, portfolio)
 
@@ -112,6 +110,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
       case Success((perks, portfolio)) =>
         $scope.$apply { () =>
           $scope.availablePerks = perks.data
+          $scope.portfolio = portfolio.data
           $scope.fundsAvailable = portfolio.data.funds
         }
       case Failure(e) =>
@@ -228,11 +227,12 @@ object PerksDialogController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait PerksDialogScope extends RootScope {
+trait PerksDialogScope extends Scope {
   // variables
   var availablePerks: js.Array[Perk] = js.native
-  var fundsAvailable: js.UndefOr[Double] = js.native
   var errors: js.Array[String] = js.native
+  var fundsAvailable: js.UndefOr[Double] = js.native
+  var portfolio: js.UndefOr[Portfolio] = js.native
 
   // functions
   var cancel: js.Function0[Unit] = js.native

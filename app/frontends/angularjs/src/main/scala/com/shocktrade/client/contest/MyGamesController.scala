@@ -2,12 +2,13 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
+import com.shocktrade.client.{ContestFactory, GlobalLoading}
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -18,11 +19,11 @@ import scala.util.{Failure, Success}
  * My Games Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
-                        @injected("ContestService") contestService: ContestService,
-                        @injected("NewGameDialog") newGameDialog: NewGameDialog,
-                        @injected("PortfolioService") portfolioService: PortfolioService)
-  extends GameController($scope, $location, toaster, portfolioService) {
+case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+                             @injected("ContestFactory") contestFactory: ContestFactory,
+                             @injected("ContestService") contestService: ContestService,
+                             @injected("NewGameDialog") newGameDialog: NewGameDialog)
+  extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
   private var myContests = js.Array[MyContest]()
 
@@ -106,7 +107,7 @@ class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Tim
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MyGamesScope extends GameScope {
+trait MyGamesScope extends GameSearchScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native

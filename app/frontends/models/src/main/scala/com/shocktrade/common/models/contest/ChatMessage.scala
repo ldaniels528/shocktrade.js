@@ -10,11 +10,11 @@ import scala.scalajs.js
  * Represents a chat message
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ChatMessage(val chatID: js.UndefOr[String] = UUID.randomUUID().toString,
+class ChatMessage(val messageID: js.UndefOr[String] = UUID.randomUUID().toString,
                   val userID: js.UndefOr[String],
                   val username: js.UndefOr[String],
-                  val text: js.UndefOr[String],
-                  val sentTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
+                  val message: js.UndefOr[String],
+                  val creationTime: js.UndefOr[js.Date] = new js.Date()) extends js.Object
 
 /**
  * Chat Message Companion
@@ -34,11 +34,11 @@ object ChatMessage {
              username: js.UndefOr[String] = js.undefined,
              text: js.UndefOr[String] = js.undefined,
              sentTime: js.UndefOr[js.Date] = js.undefined) = new ChatMessage(
-      chatID = chatID ?? message.chatID,
+      messageID = chatID ?? message.messageID,
       userID = userID ?? message.userID,
       username = username ?? message.username,
-      text = text ?? message.text,
-      sentTime = sentTime ?? message.sentTime
+      message = text ?? message.message,
+      creationTime = sentTime ?? message.creationTime
     )
   }
 

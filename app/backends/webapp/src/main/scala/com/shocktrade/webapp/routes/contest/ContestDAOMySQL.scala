@@ -85,16 +85,22 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     form.perksAllowed.foreach(checked => if (checked) options = "perksAllowed = 1" :: options)
     form.robotsAllowed.foreach(checked => if (checked) options = "robotsAllowed = 1" :: options)
     for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
+    val userID = form.userID.getOrElse("")
     val sql =
-      s"""|SELECT C.*, CS.status, IFNULL(P.playerCount, 0) AS playerCount
+      s"""|SELECT C.*, CS.status,
+          |	IFNULL(PC.playerCount, 0) AS playerCount,
+          |    IFNULL(PC.isParticipant, 0) isParticipant,
+          |	CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
           |FROM contests C
           |LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
           |LEFT JOIN (
-          |   SELECT contestID, COUNT(*) AS playerCount FROM portfolios GROUP BY contestID
-          |) AS P ON P.contestID = C.contestID
+          |   SELECT contestID, COUNT(*) AS playerCount,
+          |	  SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant
+          |   FROM portfolios GROUP BY contestID
+          |) AS PC ON PC.contestID = C.contestID
           |${if (options.nonEmpty) s"WHERE ${options.mkString(" AND ")} " else ""}
           |""".stripMargin
-    conn.queryFuture[ContestSearchResult](sql) map { case (rows, _) => rows }
+    conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID)) map { case (rows, _) => rows }
   }
 
   override def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int] = {

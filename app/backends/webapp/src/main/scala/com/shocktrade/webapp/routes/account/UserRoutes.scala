@@ -33,11 +33,17 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   //////////////////////////////////////////////////////////////////////////////////////
 
   /*
-    writeImage(userID = "47d09c0a-55d2-11ea-a02d-0800273905de", name = "dcu", mime = "image/png", path = "./public/images/avatars/dcu.png") onComplete {
-      case Success(value) => println(s"w = $value")
-      case Failure(e) =>
-        e.printStackTrace()
-    }*/
+  Seq(
+    ("47d09c0a-55d2-11ea-a02d-0800273905de", "ldaniels", "./public/images/avatars/gears.jpg"),
+    ("47d1d41d-55d2-11ea-a02d-0800273905de", "gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
+    ("47d27ded-55d2-11ea-a02d-0800273905de", "gadget", "./public/images/avatars/dcu.png"),
+    ("47d2e18c-55d2-11ea-a02d-0800273905de", "daisy", "./public/images/avatars/daisy.jpg"),
+    ("8c9c9d63-5662-11ea-a02d-0800273905de", "ldaniels528", "./public/images/avatars/fugitive528.jpg")) foreach { case (uid, name, path) =>
+    writeImage(userID = uid, name = name, path = path) onComplete {
+      case Success(value) => println(s"$name ~> $path: count = $value")
+      case Failure(e) => e.printStackTrace()
+    }
+  }*/
 
   def addFavoriteSymbol(request: Request, response: Response, next: NextFunction): Unit = {
     val (userID, symbol) = (request.params("userID"), request.params("symbol"))
@@ -143,7 +149,16 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  private def writeImage(userID: String, name: String, mime: String, path: String): Future[Int] = {
+  def writeImage(userID: String, name: String, path: String): Future[Int] = {
+    val suffix = path.lastIndexOf(".") match {
+      case -1 => None
+      case index => Some(path.substring(index + 1).toLowerCase())
+    }
+    val mime = suffix match {
+      case None => "image/png"
+      case Some("jpg") => "image/jpeg"
+      case Some(imageType) => s"image/$imageType"
+    }
     for {
       data <- Fs.readFileFuture(path)
       w <- userDAO.createIcon(new UserIconData(userID = userID, name = name, mime = mime, image = data))

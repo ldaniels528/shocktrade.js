@@ -5,18 +5,18 @@ div.rank_cell {
 	margin-bottom: 5px;
 }
 
-.rank_1, .rank_2, .rank_3 {
+.rank_1st, .rank_2nd, .rank_3rd {
 	font-weight: bold;
 	color: #009000;
 }
 
-.rank_4 {
+.rank_4th {
 	font-weight: bold;
 	color: #ff7f00;
 }
 
-.rank_5, .rank_6, .rank_7, .rank_8, .rank_9, .rank_10, .rank_11, .rank_12, .rank_13, .rank_14,
-.rank_15, .rank_16, .rank_17, .rank_18, .rank_19, .rank_20, .rank_21, .rank_22, .rank_23, .rank_24 {
+.rank_5th, .rank_6th, .rank_7th, .rank_8th, .rank_9th, .rank_10th, .rank_11th, .rank_12th, .rank_13th, .rank_14th,
+.rank_15th, .rank_16th, .rank_17th, .rank_18th, .rank_19th, .rank_20th, .rank_21th, .rank_22th, .rank_23th, .rank_24th {
 	font-weight: bold;
 	color: #cf0000;
 }

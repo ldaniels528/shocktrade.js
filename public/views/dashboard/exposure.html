@@ -1,5 +1,5 @@
 <div class="row"
-    ng-controller="ExposureController" ng-init="exposureChart(getContestID(), getUserID(), selectedExposure)">
+    ng-controller="ExposureController" ng-init="exposureChart(contest.contestID, userProfile.userID, selectedExposure)">
     <div class="col-md-12" style="padding-bottom: 4px">
         <select class="form-control symbol_input_text_field"
                 ng-model="selectedExposure"

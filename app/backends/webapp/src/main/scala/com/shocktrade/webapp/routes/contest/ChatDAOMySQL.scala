@@ -13,16 +13,22 @@ import scala.scalajs.js
  */
 class ChatDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with ChatDAO {
 
-  override def addChatMessage(contestID: String, portfolioID: String, message: String)(implicit ec: ExecutionContext): Future[Int] = {
+  override def addChatMessage(contestID: String, userID: String, message: String)(implicit ec: ExecutionContext): Future[Int] = {
     conn.executeFuture(
-      """|INSERT INTO contest_chats (messageID, contestID, portfolioID, message)
+      """|INSERT INTO contest_chats (messageID, contestID, userID, message)
          |VALUES (now(), ?, ?, ?)
          |""".stripMargin,
-      js.Array(contestID, portfolioID, message)) map (_.affectedRows)
+      js.Array(contestID, userID, message)) map (_.affectedRows)
   }
 
   override def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]] = {
-    conn.queryFuture[ChatMessage]("SELECT * FROM contest_chats WHERE contestID = ?", js.Array(contestID)) map { case (rows, _) => rows }
+    conn.queryFuture[ChatMessage](
+      """|SELECT CC.*, U.username
+         |FROM contest_chats CC
+         |INNER JOIN users U ON U.userID = CC.userID
+         |WHERE CC.contestID = ?
+         |""".stripMargin,
+      js.Array(contestID)) map { case (rows, _) => rows }
   }
 
 }

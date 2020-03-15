@@ -194,32 +194,28 @@
                 </div>
             </div>
             <div class="row" style="margin-top: 5px">
-                <div class="col-md-2" ng-show="isParticipant(selectedContest)">
+                <div class="col-md-12">
                     <button class="btn btn-default st_button" ng-click="enterGame(selectedContest)">
                         <i class="fa fa-arrow-circle-right"></i>
                         <img ng-show="selectedContest.entering" src="/images/status/loading16.gif"> Enter
                     </button>
-                </div>
-                <div class="col-md-2" ng-show="isContestOwner(selectedContest) && !selectedContest.startTime">
-                    <button class="btn btn-default st_button" ng-click="startContest(selectedContest)">
+
+                    <button class="btn btn-default st_button" ng-click="startContest(selectedContest)" ng-show="selectedContest.isOwner && !selectedContest.startTime">
                         <i ng-hide="selectedContest.starting" class="fa fa-youtube-play"></i>
                         <img ng-show="selectedContest.starting" src="/images/status/loading16.gif"> Start
                     </button>
-                </div>
-                <div class="col-md-2" ng-show="isJoinable(selectedContest)">
-                    <button class="btn btn-default st_button" ng-click="joinContest(selectedContest)">
+
+                    <button class="btn btn-default st_button" ng-click="joinContest(selectedContest)" ng-show="userProfile.userID && !selectedContest.isParticipant">
                         <i ng-hide="selectedContest.joining" class="fa fa-user"></i>
                         <img ng-show="selectedContest.joining" src="/images/status/loading16.gif"> Join
                     </button>
-                </div>
-                <div class="col-md-2" ng-show="isDeletable(selectedContest)">
-                    <button class="btn btn-default st_button" ng-click="deleteContest(selectedContest)">
+
+                    <button class="btn btn-default st_button" ng-click="deleteContest(selectedContest)" ng-show="selectedContest.isOwner">
                         <i ng-hide="selectedContest.deleting" class="fa fa-ban"></i>
                         <img ng-show="selectedContest.deleting" src="/images/status/loading16.gif"> Delete
                     </button>
-                </div>
-                <div class="col-md-2" ng-show="!isContestOwner(selectedContest) && isParticipant(selectedContest)">
-                    <button class="btn btn-default st_button" ng-click="quitContest(selectedContest)">
+
+                    <button class="btn btn-default st_button" ng-click="quitContest(selectedContest)" ng-show="!selectedContest.isOwner && selectedContest.isParticipant">
                         <i ng-hide="selectedContest.quitting" class="fa fa-warning"></i>
                         <img ng-show="selectedContest.quitting" src="/images/status/loading16.gif"> Quit
                     </button>

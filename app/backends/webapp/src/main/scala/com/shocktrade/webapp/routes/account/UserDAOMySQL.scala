@@ -86,7 +86,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
 
   override def createIcon(icon: UserIconData)(implicit ec: ExecutionContext): Future[Int] = {
     import icon._
-    conn.executeFuture("INSERT INTO user_icons (userID, name, mime, image) VALUES (?, ?, ?, ?)", js.Array(userID, name, mime, image))
+    conn.executeFuture("REPLACE INTO user_icons (userID, name, mime, image) VALUES (?, ?, ?, ?)", js.Array(userID, name, mime, image))
       .map(_.affectedRows)
   }
 

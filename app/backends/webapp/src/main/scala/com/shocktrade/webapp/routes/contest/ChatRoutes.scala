@@ -16,7 +16,7 @@ class ChatRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val chatDAO = ChatDAO()
 
   app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => listChatMessages(request, response, next))
-  app.post("/api/contest/:id/player/:portfolioID/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
+  app.post("/api/contest/:id/user/:userID/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -26,16 +26,16 @@ class ChatRoutes(app: Application)(implicit ec: ExecutionContext) {
     // get the arguments
     val form = for {
       contestID <- request.params.get("id")
-      portfolioID <- request.params.get("portfolioID")
+      userID <- request.params.get("userID")
       newMessage <- request.body.asInstanceOf[js.UndefOr[String]].toOption
-    } yield (contestID, portfolioID, newMessage)
+    } yield (contestID, userID, newMessage)
 
     // handle the request
     form match {
-      case Some((contestID, portfolioID, newMessage)) =>
+      case Some((contestID, userID, newMessage)) =>
         // asynchronously create the message
         val outcome = for {
-          count <- chatDAO.addChatMessage(contestID, portfolioID, newMessage) if count == 1
+          count <- chatDAO.addChatMessage(contestID, userID, newMessage) if count == 1
           messages <- chatDAO.findChatMessages(contestID)
         } yield messages
 
@@ -51,7 +51,7 @@ class ChatRoutes(app: Application)(implicit ec: ExecutionContext) {
         }
       // HTTP/404 NOT FOUND
       case None =>
-        response.notFound("User not found"); next()
+        response.notFound(request.params); next()
     }
   }
 

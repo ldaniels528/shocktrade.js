@@ -107,13 +107,13 @@ object WebClientJsApp {
 
   private def configureFactories(module: Module): Unit = {
     module.factoryOf[UserFactory]("UserFactory")
+    module.factoryOf[ContestFactory]("ContestFactory")
     ()
   }
 
   private def configureServices(module: Module) {
     module.serviceOf[AuthenticationService]("AuthenticationService")
     module.serviceOf[AwardService]("AwardService")
-    module.serviceOf[ChatService]("ChatService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")
     module.serviceOf[MarketStatusService]("MarketStatusService")

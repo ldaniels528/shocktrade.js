@@ -28,14 +28,22 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
 
     @inline
+    private def broadcast(action: String, entity: js.Any): Unit = {
+      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
+      $scope.$broadcast(action, entity)
+      // $scope.$emit(action, entity)
+      ()
+    }
+
+    @inline
     def emit(action: String, data: js.Any) {
       console.log(s"Broadcasting action '$action' => ${angular.toJson(data)}...")
       action match {
         case ChatMessagesUpdated =>
-          $scope.$emit(action, data)
+        //  $scope.$emit(action, data)
           $scope.$broadcast(action, data)
         case _ =>
-          $scope.$broadcast(action, data)
+          $scope.$emit(action, data)
       }
     }
 
@@ -44,14 +52,6 @@ object ScopeEvents {
 
     @inline
     def emitContestDeleted(contest: Contest): Unit = broadcast(ContestDeleted, contest)
-
-    @inline
-    private def broadcast(action: String, entity: js.Any): Unit = {
-      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
-      $scope.$broadcast(ContestCreated, entity)
-      $scope.$emit(ContestCreated, entity)
-      ()
-    }
 
     @inline
     def emitContestSelected(contest: Contest): Unit = broadcast(ContestSelected, contest)

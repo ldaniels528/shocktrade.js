@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold"
                 ng-click="popupNewOrderDialog(selectedSymbol, getAccountType())"
-                ng-hide="getContestStatus() === 'CLOSED'"
+                ng-hide="contest.status === 'CLOSED'"
                 title="Create a new order">
             <i class="fa fa-cart-plus"></i> Order
         </button>
@@ -10,7 +10,7 @@
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold pull-right"
                 ng-click="popupTransferFundsDialog()"
-                ng-hide="getContestStatus() === 'CLOSED' || !hasPerk('MARGIN')"
+                ng-hide="contest.status === 'CLOSED' || !hasPerk('MARGIN')"
                 title="Use your margin account">
             <i class="fa fa-sign-out"></i> Transfers
         </button>
@@ -18,7 +18,7 @@
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold pull-right"
                 ng-click="popupPerksDialog(contest.contestID, userProfile.userID)"
-                ng-hide="getContestStatus() === 'CLOSED'"
+                ng-hide="contest.status === 'CLOSED'"
                 title="Create a new order">
             <i class="fa fa-gift"></i> Perks
         </button>

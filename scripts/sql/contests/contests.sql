@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS contest_chats;
 CREATE TABLE contest_chats (
      messageID CHAR(36) PRIMARY KEY,
      contestID CHAR(36) NOT NULL,
-     portfolioID CHAR(36) NOT NULL,
+     userID CHAR(36) NOT NULL,
      message TEXT NOT NULL,
      creationTime DATETIME NOT NULL DEFAULT now()
 );

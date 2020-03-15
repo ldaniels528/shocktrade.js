@@ -1,8 +1,8 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.RootScope
-import io.scalajs.npm.angularjs.Controller
+import com.shocktrade.client.models.contest.Portfolio
 import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope}
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.language.postfixOps
@@ -19,6 +19,8 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster) extends 
   /////////////////////////////////////////////////////////////////////
 
   $scope.asOfDate = () => new js.Date()
+
+  $scope.getFundsAvailable = () => $scope.portfolio.flatMap(_.funds)
 
   $scope.getTotalOrders = () => Seq("BUY", "SELL") map computeTotalOrdersByType sum
 
@@ -57,8 +59,13 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster) extends 
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait CashAccountScope extends RootScope {
+trait CashAccountScope extends Scope {
+  // variables
+  var portfolio: js.UndefOr[Portfolio] = js.native
+
+  // functions
   var asOfDate: js.Function0[js.Date] = js.native
+  var getFundsAvailable: js.Function0[js.UndefOr[Double]] = js.native
   var getTotalOrders: js.Function0[Double] = js.native
   var getTotalEquity: js.Function0[Double] = js.native
   var getTotalBuyOrders: js.Function0[Double] = js.native

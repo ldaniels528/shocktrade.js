@@ -3,6 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
+import com.shocktrade.client.{ContestFactory, GlobalLoading, RootScope}
 import com.shocktrade.common.forms.{ContestSearchForm, PlayerInfoForm}
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.models.contest.ContestSearchResult._
@@ -11,7 +12,7 @@ import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Location, Timeout, angular, injected}
+import io.scalajs.npm.angularjs._
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -27,21 +28,23 @@ import scala.util.{Failure, Success}
  * Game Search Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
-                           @injected("ContestService") contestService: ContestService,
-                           @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
-                           @injected("PortfolioService") portfolioService: PortfolioService)
-  extends GameController($scope, $location, toaster, portfolioService) {
+case class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+                                @injected("ContestFactory") contestFactory: ContestFactory,
+                                @injected("ContestService") contestService: ContestService,
+                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
+                                @injected("PortfolioService") portfolioService: PortfolioService)
+  extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
 
   // public variables
   private var searchResults = js.Array[ContestSearchResultUI]()
   private var splitScreen: Boolean = false
 
   $scope.contest = null
-  $scope.contestRankings = js.undefined
+  $scope.rankings = js.undefined
   $scope.portfolios = js.Array()
   $scope.searchTerm = null
   $scope.searchOptions = new ContestSearchForm(
+    userID = js.undefined,
     activeOnly = false,
     available = false,
     friendsOnly = false,
@@ -56,28 +59,25 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
+  $scope.getAvailableCount = () => searchResults.count(_.isActive)
+
+  $scope.getAvailableSlots = (aContest: js.UndefOr[ContestSearchResultUI], aRowIndex: js.UndefOr[Number]) => getAvailableSlots(aContest, aRowIndex)
+
   $scope.getSearchResults = (aSearchTerm: js.UndefOr[String]) => getSearchResults(aSearchTerm)
 
   $scope.getSelectedContest = () => $scope.selectedContest
 
   $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI], aPlayerID: js.UndefOr[String]) => invitePlayerPopup(aContest, aPlayerID)
 
-  $scope.isParticipant = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest exists isParticipant
-
-  $scope.getAvailableCount = () => searchResults.count(_.isActive)
-
-  $scope.getAvailableSlots = (aContest: js.UndefOr[ContestSearchResultUI], aRowIndex: js.UndefOr[Number]) => getAvailableSlots(aContest, aRowIndex)
-
-  $scope.isActive = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest.map(_.isActive)
-
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
 
   private def contestSearch(searchOptions: ContestSearchForm): Unit = {
+    searchOptions.userID = $scope.userProfile.flatMap(_.userID)
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
         $scope.$apply(() => searchResults = contests.data.map(_.asInstanceOf[ContestSearchResultUI]))
       case Failure(e) =>
-        toaster.error("Failed to execute ContestSearchResultUI Search")
+        toaster.error("Failed to execute Contest Search")
         console.error(s"Failed: searchOptions = ${angular.toJson(searchOptions)}")
     }
   }
@@ -95,6 +95,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   }
 
   private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI], aUserID: js.UndefOr[String]): Unit = {
+    /*
     for {
       contest <- aContest
       userID <- aUserID
@@ -105,7 +106,7 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
         case _ =>
           toaster.error("You must join the game to use this feature")
       }
-    }
+    }*/
   }
 
   private def isParticipant(contest: ContestSearchResultUI): Boolean = {
@@ -181,20 +182,12 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
   private def toggleSplitScreen(): Unit = splitScreen = false
 
   ///////////////////////////////////////////////////////////////////////////
-  //          ContestSearchResultUI Management Functions
+  //          Contest Management Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isDeletable = (aContest: js.UndefOr[ContestSearchResultUI]) => $scope.isContestOwner(aContest)
-
-  $scope.isContestOwner = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest exists { contest =>
-    contest.hostUserID == $scope.userProfile.flatMap(_.userID)
-  }
+  $scope.isActive = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest.map(_.isActive)
 
   $scope.deleteContest = (aContest: js.UndefOr[ContestSearchResultUI]) => deleteContest(aContest)
-
-  $scope.isJoinable = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest.flat exists { contest =>
-    $scope.userProfile.isAssigned && !contest.invitationOnly.isTrue && !$scope.isParticipant(contest)
-  }
 
   $scope.joinContest = (aContest: js.UndefOr[ContestSearchResultUI]) => joinContest(aContest)
 
@@ -286,10 +279,6 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
         case Success(response) =>
           val theContest = response.data
           console.log(s"response = ${JSON.stringify(response.data)}")
-          theContest.error foreach { error =>
-            toaster.error(error)
-            console.error(error)
-          }
           $timeout(() => theContest.starting = false, 0.5.seconds)
 
         case Failure(e) =>
@@ -381,9 +370,10 @@ class GameSearchController($scope: GameSearchScope, $location: Location, $timeou
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait GameSearchScope extends GameScope {
+trait GameSearchScope extends RootScope with ContestEntrySupportScope {
   // variables
-  var contestRankings: js.UndefOr[js.Array[ContestRanking]] = js.native
+  var contest: js.UndefOr[ContestSearchResultUI] = js.native
+  var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
   var searchTerm: String = js.native
   var searchOptions: ContestSearchForm = js.native
   var selectedContest: js.UndefOr[ContestSearchResultUI] = js.native
@@ -395,7 +385,6 @@ trait GameSearchScope extends GameScope {
   var getAvailableSlots: js.Function2[js.UndefOr[ContestSearchResultUI], js.UndefOr[Number], js.UndefOr[js.Array[ContestRanking]]] = js.native
   var getSelectionClass: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[String]] = js.native
   var getStatusClass: js.Function1[js.UndefOr[ContestSearchResultUI], String] = js.native
-  var isParticipant: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
   var isSplitScreen: js.Function0[Boolean] = js.native
   var toggleSplitScreen: js.Function0[Unit] = js.native
   var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
@@ -407,9 +396,6 @@ trait GameSearchScope extends GameScope {
   var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResultUI]] = js.native
   var invitePlayerPopup: js.Function2[js.UndefOr[ContestSearchResultUI], js.UndefOr[String], Unit] = js.native
   var isActive: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[Boolean]] = js.native
-  var isContestOwner: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
-  var isDeletable: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
-  var isJoinable: js.Function1[js.UndefOr[ContestSearchResultUI], Boolean] = js.native
   var joinContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var quitContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var selectContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native

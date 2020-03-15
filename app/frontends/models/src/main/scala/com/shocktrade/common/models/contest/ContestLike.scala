@@ -1,6 +1,5 @@
 package com.shocktrade.common.models.contest
 
-import com.shocktrade.common.models.user.User
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
@@ -13,7 +12,7 @@ trait ContestLike extends js.Object {
 
   def name: js.UndefOr[String]
 
-  def creator: js.UndefOr[User]
+  def hostUserID: js.UndefOr[String]
 
   def startTime: js.UndefOr[js.Date]
 
@@ -27,7 +26,7 @@ trait ContestLike extends js.Object {
   //  Participants and Rankings
   /////////////////////////////////////////////////////////////////////////
 
-  def participants: js.UndefOr[js.Array[Participant]]
+  def portfolios: js.UndefOr[js.Array[Participant]]
 
   /////////////////////////////////////////////////////////////////////////
   //  Indicators
@@ -69,13 +68,13 @@ object ContestLike {
     def isClosed = contest.status.contains(StatusClosed)
 
     @inline
-    def isEmpty = contest.participants.exists(_.isEmpty)
+    def isEmpty = contest.portfolios.exists(_.isEmpty)
 
     @inline
-    def isFull = contest.participants.exists(_.length >= MaxPlayers)
+    def isFull = contest.portfolios.exists(_.length >= MaxPlayers)
 
     @inline
-    def isAlmostFull = contest.participants.exists(_.length + 1 >= MaxPlayers)
+    def isAlmostFull = contest.portfolios.exists(_.length + 1 >= MaxPlayers)
 
   }
 
