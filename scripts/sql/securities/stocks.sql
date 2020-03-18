@@ -48,6 +48,18 @@ CREATE TABLE stocks_nasdaq (
     PRIMARY KEY(symbol, exchange)
 );
 
+DROP TABLE IF EXISTS stocks_wikipedia;
+CREATE TABLE stocks_wikipedia (
+    symbol VARCHAR(12) NOT NULL,
+    name VARCHAR(128),
+    sector VARCHAR(128),
+    industry VARCHAR(128),
+    cityState VARCHAR(128),
+    initialReportingDate VARCHAR(12),
+    cikNumber VARCHAR(11),
+    yearFounded VARCHAR(4)
+);
+
 -- ------------------------------------------------------------
 -- Stocks views
 -- ------------------------------------------------------------
@@ -57,7 +69,7 @@ CREATE VIEW stocks AS
 SELECT
     EOD.symbol,
     EOD.exchange,
-    COALESCE(EOD.name, CIK.name) AS name,
+    COALESCE(EOD.name, CIK.name, WIK.name) AS name,
     EOD.lastTrade,
     EOD.tradeDateTime,
     EOD.prevClose,
@@ -71,8 +83,11 @@ SELECT
     EOD.volume,
     NULL AS avgVolume10Day,
     NULL AS beta,
-    CIK.cikNumber
+    COALESCE(CIK.cikNumber, WIK.cikNumber) AS cikNumber,
+    WIK.sector,
+    WIK.industry
 FROM stocks_eoddata EOD
 LEFT JOIN stocks_cik CIK ON CIK.symbol = EOD.symbol AND CIK.exchange = EOD.exchange
+LEFT JOIN stocks_wikipedia WIK ON WIK.symbol = EOD.symbol
 -- LEFT JOIN stocks_nasdaq NAS ON NAS.symbol = EOD.symbol AND NAS.exchange = EOD.exchange
 ;

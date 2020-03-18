@@ -35,7 +35,6 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
     new ExposureSelection(value = "sector", label = "Sector Exposure"),
     new ExposureSelection(value = "industry", label = "Industry Exposure"),
     new ExposureSelection(value = "exchange", label = "Exchange Exposure"),
-    new ExposureSelection(value = "market", label = "Exchange Sub-Market Exposure"),
     new ExposureSelection(value = "securities", label = "Securities Exposure"))
 
   $scope.selectedExposure = $scope.exposures.headOption.orUndefined

@@ -103,7 +103,7 @@ lazy val onetime = (project in file("./app/backends/onetime"))
     libraryDependencies ++= Seq(
       "log4j" % "log4j" % "1.2.17",
       "org.slf4j" % "slf4j-api" % "1.7.25",
-      "org.slf4j" % "slf4j-log4j12" % "1.7.25" % "test"
+      "org.slf4j" % "slf4j-log4j12" % "1.7.25"
     ))
 
 lazy val ingestion = (project in file("./app/backends/ingestion"))

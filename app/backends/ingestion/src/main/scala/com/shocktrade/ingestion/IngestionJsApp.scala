@@ -4,6 +4,7 @@ import com.shocktrade.ingestion.daemons.cikupdate.CikUpdateDaemon
 import com.shocktrade.ingestion.daemons.cqm.ContestQualificationModule
 import com.shocktrade.ingestion.daemons.eoddata.EodDataCompanyUpdateDaemon
 import com.shocktrade.ingestion.daemons.nasdaq.NASDAQCompanyListUpdateDaemon
+import com.shocktrade.ingestion.daemons.onetime.WikipediaCompanyLoader
 import com.shocktrade.ingestion.routes.QualificationRoutes
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
@@ -64,6 +65,8 @@ object IngestionJsApp {
 
     // start the listener
     app.listen(port, () => logger.log(s"Server now listening on port $port [${System.currentTimeMillis() - startTime} msec]"))
+
+    //setTimeout(() => new WikipediaCompanyLoader().run(), 1.second)
 
     // schedule the daemons
     schedule(name = "Contest Qualification Module")(initialDelay = 0.hours, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))

@@ -15,15 +15,14 @@ class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options
 
   override def findExposure(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]] = {
     val column = chart match {
-      case "exchange" => "PS.exchange"
-      case "industry" => "PS.exchange"
-      case "market" => "PS.exchange"
-      case "sector" => "PS.exchange"
-      case "securities" => "PS.symbol"
+      case "exchange" => "S.exchange"
+      case "industry" => "S.industry"
+      case "sector" => "S.sector"
+      case "securities" => "S.symbol"
       case unknown => Future.failed(js.JavaScriptException(s"Chart type '$unknown' is unrecognized"))
     }
     conn.queryFuture[ExposureData](
-      s"""|SELECT $column AS name, SUM(S.lastTrade * PS.quantity) AS value
+      s"""|SELECT IFNULL($column, 'Unclassified') AS name, SUM(S.lastTrade * PS.quantity) AS value
           |FROM users U
           |INNER JOIN portfolios P ON P.userID = P.userID
           |INNER JOIN contests C ON C.contestID = P.contestID
