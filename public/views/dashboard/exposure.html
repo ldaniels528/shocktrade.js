@@ -4,10 +4,10 @@
         <select class="form-control symbol_input_text_field"
                 ng-model="selectedExposure"
                 ng-options="e.label for e in exposures"
-                ng-change="exposureChart(getContestID(), getUserID(), selectedExposure)">
+                ng-change="exposureChart(contest.contestID, userProfile.userID, selectedExposure)">
             <option value="">-- Select an Exposure --</option>
         </select>
     </div>
 
-    <nvd3 ng-if="data" options="options" data="data"></nvd3>
+    <div id="chart_div"></div>
 </div>

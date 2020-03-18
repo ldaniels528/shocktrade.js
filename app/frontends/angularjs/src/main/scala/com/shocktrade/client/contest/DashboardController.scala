@@ -4,7 +4,6 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.PerksDialog
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.{ContestFactory, GlobalNavigation, RootScope}
-import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -39,7 +38,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   }
 
   def reload(contestID: String): Unit = {
-    contestFactory.getContest(contestID) onComplete {
+    contestFactory.findContest(contestID) onComplete {
       case Success(contest) => $scope.$apply { () => $scope.contest = contest }
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
@@ -92,7 +91,6 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.onUserProfileChanged { (_, profile) =>
-    console.info(s" DashboardController: User => ${JSON.stringify(profile)}")
     for {contestID <- $routeParams.contestID} reload(contestID)
   }
 

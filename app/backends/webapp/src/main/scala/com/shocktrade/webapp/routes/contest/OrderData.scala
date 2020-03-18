@@ -22,7 +22,8 @@ class OrderData(var orderID: js.UndefOr[String] = UUID.randomUUID().toString,
                 var creationTime: js.UndefOr[js.Date],
                 var expirationTime: js.UndefOr[js.Date] = js.undefined,
                 var processedTime: js.UndefOr[js.Date] = js.undefined,
-                var statusMessage: js.UndefOr[String] = js.undefined) extends OrderLike
+                var statusMessage: js.UndefOr[String] = js.undefined,
+                var closed: js.UndefOr[Boolean] = js.undefined) extends OrderLike
 
 /**
  * Order Data Companion
@@ -54,7 +55,8 @@ object OrderData {
              creationTime: js.UndefOr[js.Date] = js.undefined,
              expirationTime: js.UndefOr[js.Date] = js.undefined,
              processedTime: js.UndefOr[js.Date] = js.undefined,
-             statusMessage: js.UndefOr[String] = js.undefined): OrderData = {
+             statusMessage: js.UndefOr[String] = js.undefined,
+             closed: js.UndefOr[Boolean] = js.undefined): OrderData = {
       new OrderData(
         orderID = _id ?? order.orderID,
         symbol = symbol ?? order.symbol,
@@ -67,7 +69,8 @@ object OrderData {
         creationTime = creationTime ?? order.creationTime,
         expirationTime = expirationTime ?? order.expirationTime,
         processedTime = processedTime ?? order.processedTime,
-        statusMessage = statusMessage ?? order.statusMessage)
+        statusMessage = statusMessage ?? order.statusMessage,
+        closed = closed ?? order.closed)
     }
 
   }

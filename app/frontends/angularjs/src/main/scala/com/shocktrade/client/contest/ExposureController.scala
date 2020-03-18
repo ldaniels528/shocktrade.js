@@ -1,13 +1,17 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.RootScope
+import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ExposureController.ExposureSelection
 import com.shocktrade.common.models.ExposureData
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.amcharts.AmChart.Export
+import io.scalajs.npm.amcharts.{AmCharts, AmPieChart}
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.nvd3._
 import io.scalajs.npm.angularjs.nvd3.chart._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
+import io.scalajs.npm.angularjs.{Controller, angular, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -19,7 +23,7 @@ import scala.util.{Failure, Success}
  * Exposure Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
+class ExposureController($scope: ExposureControllerScope, $routeParams: DashboardRouteParams, toaster: Toaster,
                          @injected("PortfolioService") portfolioService: PortfolioService) extends Controller {
 
   ///////////////////////////////////////////////////////////////////////////
@@ -27,7 +31,6 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.data = null
-
   $scope.exposures = js.Array(
     new ExposureSelection(value = "sector", label = "Sector Exposure"),
     new ExposureSelection(value = "industry", label = "Industry Exposure"),
@@ -36,21 +39,30 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
     new ExposureSelection(value = "securities", label = "Securities Exposure"))
 
   $scope.selectedExposure = $scope.exposures.headOption.orUndefined
-
   $scope.options = new ChartOptions(
     new PieChart(
       width = 800,
       height = 400,
       donut = true,
       donutRatio = 0.25,
-      x = (d: ExposureData) => d.key,
+      x = (d: ExposureData) => d.name,
       y = (d: ExposureData) => d.value,
       labelThreshold = 0.01,
       showLabels = false,
       showLegend = true
     ))
 
-  console.log(s"options = ${angular.toJson($scope.options, pretty = true)}")
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  def init(): Unit = {
+    console.info(s"Initializing ${getClass.getSimpleName}...")
+    for {
+      contestID <- $routeParams.contestID
+      userID <- $scope.userProfile.flatMap(_.userID)
+    } $scope.exposureChart(contestID, userID, $scope.exposures.headOption.orUndefined)
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -61,15 +73,44 @@ class ExposureController($scope: ExposureControllerScope, toaster: Toaster,
       contestID <- aContestID
       userID <- aUserID
       exposure <- anExposure
+      value <- exposure.value
     } {
-      portfolioService.getExposureChartData(contestID, userID, exposure.value) onComplete {
-        case Success(response) => $scope.$apply(() => $scope.data = response.data)
+      portfolioService.getExposureChartData(contestID, userID, value) onComplete {
+        case Success(response) =>
+          updateChart(response.data)
+          $scope.$apply(() => $scope.data = response.data)
         case Failure(e) =>
-          toaster.error(s"Error loading ${exposure.label}")
-          console.error(s"Failed to load exposure data for ${exposure.label}: ${e.displayMessage}")
+          toaster.error(s"Error loading ${exposure.label.orNull}")
+          console.error(s"Failed to load exposure data for ${exposure.label.orNull}: ${e.displayMessage}")
       }
     }
   }
+
+  def updateChart(datums: js.Array[ExposureData]): Unit = {
+    AmCharts.makeChart(container = "chart_div", AmPieChart(
+      dataProvider = datums,
+      titleField = "name",
+      valueField = "value",
+      labelRadius = 30.0,
+      angle = 30.0,
+      outlineAlpha = 0.4,
+      depth3D = 15.0,
+     // balloonText = """[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>""",
+     // startDuration = js.undefined,
+      export = new Export(enabled = false),
+      theme = "light",
+      listeners = js.Array(AmPieChart.onClickSlice { clickEvent =>
+        console.log(s"Click event occurred - ${angular.toJson(clickEvent)}")
+      })
+    ))
+    ()
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Events
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.onUserProfileChanged { (_, profile) => init() }
 
 }
 
@@ -83,7 +124,7 @@ object ExposureController {
    * Exposure Selection Model
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class ExposureSelection(val label: String, val value: String) extends js.Object
+  class ExposureSelection(val label: js.UndefOr[String], val value: js.UndefOr[String]) extends js.Object
 
 }
 
@@ -92,7 +133,7 @@ object ExposureController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait ExposureControllerScope extends Scope {
+trait ExposureControllerScope extends RootScope {
   // variables
   var data: js.Array[_ <: js.Any] = js.native
   var exposures: js.Array[ExposureSelection] = js.native

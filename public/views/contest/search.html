@@ -215,7 +215,7 @@
                         <img ng-show="selectedContest.deleting" src="/images/status/loading16.gif"> Delete
                     </button>
 
-                    <button class="btn btn-default st_button" ng-click="quitContest(selectedContest)" ng-show="!selectedContest.isOwner && selectedContest.isParticipant">
+                    <button class="btn btn-default quit_button" ng-click="quitContest(selectedContest)" ng-show="!selectedContest.isOwner && selectedContest.isParticipant">
                         <i ng-hide="selectedContest.quitting" class="fa fa-warning"></i>
                         <img ng-show="selectedContest.quitting" src="/images/status/loading16.gif"> Quit
                     </button>

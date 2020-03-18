@@ -1,9 +1,9 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.Contest
+import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.common.events.RemoteEvent._
-import com.shocktrade.common.models.contest.{ChatMessage, Participant}
+import com.shocktrade.common.models.contest.ChatMessage
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Scope, angular}
@@ -91,7 +91,7 @@ object ScopeEvents {
     def onOrderUpdated(callback: (Event, String) => Any): Unit = reactTo(OrderUpdated, callback)
 
     @inline
-    def onParticipantUpdated(callback: (Event, Participant) => Any): Unit = reactTo(ParticipantUpdated, callback)
+    def onPortfolioUpdated(callback: (Event, Portfolio) => Any): Unit = reactTo(PortfolioUpdated, callback)
 
     @inline
     def onUserProfileChanged(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileChanged, callback)

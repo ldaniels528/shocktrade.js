@@ -36,3 +36,39 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
   var starting: Boolean = false
 
 }
+
+/**
+ * Contest Companion
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object Contest {
+  val MaxPlayers = 24
+
+  // status constants
+  val StatusActive = "ACTIVE"
+  val StatusClosed = "CLOSED"
+
+  /**
+   * Contest Enrichment
+   * @param contest the given [[ContestLike contest]]
+   */
+  implicit class ContestEnrichment(val contest: Contest) extends AnyVal {
+
+    @inline
+    def isActive: Boolean = contest.status.contains(StatusActive)
+
+    @inline
+    def isClosed: Boolean = contest.status.contains(StatusClosed)
+
+    @inline
+    def isEmpty: Boolean = contest.portfolios.exists(_.isEmpty)
+
+    @inline
+    def isFull: Boolean = contest.portfolios.exists(_.length >= MaxPlayers)
+
+    @inline
+    def isAlmostFull: Boolean = contest.portfolios.exists(_.length + 1 >= MaxPlayers)
+
+  }
+
+}

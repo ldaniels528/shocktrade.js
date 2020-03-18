@@ -93,6 +93,19 @@ lazy val utils = (project in file("./app/shared/utils"))
 //      Back-end projects
 /////////////////////////////////////////////////////////////////////////////////
 
+lazy val onetime = (project in file("./app/backends/onetime"))
+  .settings(
+    name := "shocktrade-onetime",
+    organization := "com.shocktrade",
+    version := appVersion,
+    scalaVersion := "2.13.1",
+    javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint"),
+    libraryDependencies ++= Seq(
+      "log4j" % "log4j" % "1.2.17",
+      "org.slf4j" % "slf4j-api" % "1.7.25",
+      "org.slf4j" % "slf4j-log4j12" % "1.7.25" % "test"
+    ))
+
 lazy val ingestion = (project in file("./app/backends/ingestion"))
   .aggregate(models, server_common, services)
   .dependsOn(models, server_common, services)
@@ -171,7 +184,8 @@ lazy val angularjs = (project in file("./app/frontends/angularjs"))
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "dom-html" % scalaJsIOVersion,
-      "io.scalajs.web" %%% "angularjs-v1-bundle" % scalaJsIOVersion
+      "io.scalajs.web" %%% "angularjs-v1-bundle" % scalaJsIOVersion,
+      "io.scalajs.web" %%% "amcharts" % scalaJsIOVersion
     ))
 
 lazy val models = (project in file("./app/frontends/models"))

@@ -49,17 +49,13 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
 
   $scope.initPortfolio = () => {
     console.info(s"${getClass.getSimpleName} initializing... routeParams = ${JSON.stringify($routeParams)}")
-    for {
-      contestID <- $routeParams.contestID
-      userID <- $scope.userProfile.flatMap(_.userID)
-    } {
-      contestFactory.getPortfolio(contestID, userID) onComplete {
-        case Success(portfolio) =>
-          console.info(s"portfolio graph => ${JSON.stringify(portfolio)}")
-          $scope.$apply(() => $scope.portfolio = portfolio)
-        case Failure(e) => toaster.error("Error", "Failed to load portfolio")
-          e.printStackTrace()
-      }
+    for {contestID <- $routeParams.contestID; userID <- $scope.userProfile.flatMap(_.userID)} init(contestID, userID)
+  }
+
+  def init(contestID: String, userID: String): Unit = {
+    contestFactory.findPortfolio(contestID, userID) onComplete {
+      case Success(portfolio) => $scope.$apply { () => $scope.portfolio = portfolio }
+      case Failure(e) => toaster.error("Error", "Failed to load portfolio")
     }
   }
 
@@ -104,12 +100,9 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
   $scope.isOrderSelected = () => $scope.getActiveOrders().nonEmpty && $scope.selectedOrder.nonEmpty
 
   $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String], anAccountType: js.UndefOr[String]) => {
-    val promise = newOrderDialog.popup(new NewOrderParams(
-      symbol = aSymbol,
-      accountType = anAccountType
-    ))
+    val promise = newOrderDialog.popup(new NewOrderParams(symbol = aSymbol, accountType = anAccountType))
     promise onComplete {
-      case Success(portfolio) => $scope.portfolio = portfolio
+      case Success(result) => console.log(s"result = ${JSON.stringify(result)}")
       case Failure(e) =>
         toaster.error("New Order", e.displayMessage)
     }
@@ -161,50 +154,33 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
 
   $scope.tradingStart = () => new js.Date()
 
-  // TODO get this from a service
-
-  /////////////////////////////////////////////////////////////////////
-  //          Private Functions
-  /////////////////////////////////////////////////////////////////////
-
-  private def resetOrders() {
-    $scope.selectedOrder = js.undefined
-    $scope.selectedClosedOrder = js.undefined
-  }
-
-  private def resetPositions() {
-    $scope.selectedPosition = js.undefined
-    $scope.selectedPerformance = js.undefined
-  }
-
   //////////////////////////////////////////////////////////////////////
   //              Watch Event Listeners
   //////////////////////////////////////////////////////////////////////
 
   $scope.onContestSelected { (_, contest) =>
     console.log(s"[Portfolio] Contest '${contest.name}' selected")
-    resetOrders()
-    resetPositions()
+    $scope.initPortfolio()
   }
 
   $scope.onContestUpdated { (_, contest) =>
     console.log(s"[Portfolio] Contest '${contest.name}' updated")
-    resetOrders()
-    resetPositions()
+    $scope.initPortfolio()
   }
 
   $scope.onOrderUpdated { (_, portfolioId) =>
     console.log(s"[Portfolio] Orders for Portfolio '$portfolioId' updated")
-    resetOrders()
+    $scope.initPortfolio()
   }
 
-  $scope.onParticipantUpdated { (_, participant) =>
-    console.log(s"[Portfolio] Player '${participant.name}' updated")
-    resetPositions()
+  $scope.onPortfolioUpdated { (_, portfolio) =>
+    console.log(s"[Portfolio] Player '${portfolio.userID}' updated")
+    $scope.initPortfolio()
   }
 
   $scope.onUserProfileChanged { (_, profile) =>
     console.info(s" PortfolioController: User => ${JSON.stringify(profile)}")
+    $scope.initPortfolio()
   }
 
 }
@@ -239,7 +215,7 @@ trait PortfolioScope extends DashboardScope with GlobalSelectedSymbolScope {
   // model variables
   var portfolio: js.UndefOr[Portfolio] = js.native
 
-  // functions
+  // portfolio functions
   var initPortfolio: js.Function0[Unit] = js.native
 
   // closed order functions

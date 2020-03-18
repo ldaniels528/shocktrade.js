@@ -2,6 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ContestFactory
 import com.shocktrade.client.Filters.toDuration
+import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.common.models.contest.ChatMessage
 import io.scalajs.dom.html.browser.console
@@ -51,9 +52,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
         // replace the symbols with icon images
         var text = msg.message getOrElse ""
         if (text.nonEmpty) {
-          Emoticons.foreach { emo =>
-            text = text.replaceAllLiterally(emo.symbol, s"""<img src="/images/smilies/${emo.uri}">""")
-          }
+          Emoticons.foreach { emo => text = text.replaceAllLiterally(emo.symbol, s"""<img src="/images/smilies/${emo.uri}">""") }
         }
 
         val senderName = msg.username.orNull
@@ -89,7 +88,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
    * Sends a chat message to the server
    * @param messageText the given chat message text
    */
-  private def sendChatMessage(messageText: String) {
+  private def sendChatMessage(messageText: String): Unit = {
     val outcome = for {
       userID <- $scope.userProfile.flatMap(_.userID).toOption
       contestId <- $scope.contest.flatMap(_.contestID).toOption
@@ -119,6 +118,12 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
         toaster.error("No game selected")
     }
   }
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Events
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.onUserProfileChanged { (_, profile) => $scope.init() }
 
 }
 

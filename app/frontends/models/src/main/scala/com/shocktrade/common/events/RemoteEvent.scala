@@ -29,7 +29,7 @@ object RemoteEvent {
 
   val ChatMessagesUpdated = "chat_messages_updated"
   val OrderUpdated = "orders_updated"
-  val ParticipantUpdated = "participant_updated"
+  val PortfolioUpdated = "participant_updated"
   val PerksUpdated = "perks_updated"
 
   /////////////////////////////////////////////////////////////////////

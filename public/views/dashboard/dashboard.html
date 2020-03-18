@@ -35,14 +35,8 @@
                 <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
                 </span>
-
-                <span ng-show="hasPerk('MARGIN')" class="clickable pull-right" ng-click="toggleAccountMode()">
-                    <span class="st_blue bold" title="Switch account type">{{ isMarginAccount() ? 'Margin' : 'Cash' }} Account</span>
-                    <i ng-class="isMarginAccount() ? 'fa-toggle-on' : 'fa-toggle-off'" class="fa fa-lg st_blue"></i>
-                </span>
             </div>
-            <div ng-show="isCashAccount()" ng-include src="'/views/dashboard/cash_account.html'"></div>
-            <div ng-if="isMarginAccount()" ng-include src="'/views/dashboard/margin_account.html'"></div>
+            <div ng-include src="'/views/dashboard/cash_account.html'"></div>
         </div>
     </div>
 </div>

@@ -233,7 +233,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   private def logout(): Unit = {
-    contestFactory.logout()
+    contestFactory.clear()
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
     $scope.userProfile = js.undefined

@@ -1,7 +1,11 @@
 package com.shocktrade.webapp.routes.contest
 
+import com.shocktrade.common.models.ExposureData
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 
 /**
  * Position DAO (MySQL implementation)
@@ -9,4 +13,34 @@ import io.scalajs.npm.mysql.MySQLConnectionOptions
  */
 class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with PositionDAO {
 
+  override def findExposure(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]] = {
+    val column = chart match {
+      case "exchange" => "PS.exchange"
+      case "industry" => "PS.exchange"
+      case "market" => "PS.exchange"
+      case "sector" => "PS.exchange"
+      case "securities" => "PS.symbol"
+      case unknown => Future.failed(js.JavaScriptException(s"Chart type '$unknown' is unrecognized"))
+    }
+    conn.queryFuture[ExposureData](
+      s"""|SELECT $column AS name, SUM(S.lastTrade * PS.quantity) AS value
+          |FROM users U
+          |INNER JOIN portfolios P ON P.userID = P.userID
+          |INNER JOIN contests C ON C.contestID = P.contestID
+          |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
+          |INNER JOIN stocks S ON S.symbol = PS.symbol
+          |WHERE C.contestID = ? AND U.userID = ?
+          |GROUP BY $column
+          |""".stripMargin, js.Array(contestID, userID)).map { case (rows, _) => rows }
+  }
+
+  override def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]] = {
+    conn.queryFuture[PositionData](
+      """|SELECT * FROM positions
+         |WHERE portfolioID = ?
+         |""".stripMargin,
+      js.Array(portfolioID)) map { case (rows, _) => rows }
+  }
+
 }
+

@@ -17,8 +17,10 @@ import scala.util.{Failure, Success}
 class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val contestDAO = ContestDAO()
   private val perksDAO = PerksDAO()
+  private val positionDAO = PositionDAO()
 
   // individual contests
+  app.get("/api/charts/exposure/:chart/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureChart(request, response, next))
   app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
   app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
 
@@ -69,6 +71,14 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
           case Failure(e) =>
             response.internalServerError(e); next()
         }
+    }
+  }
+
+  def exposureChart(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
+    positionDAO.findExposure(contestID, userID, chart) onComplete {
+      case Success(data) => response.send(data); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }
 

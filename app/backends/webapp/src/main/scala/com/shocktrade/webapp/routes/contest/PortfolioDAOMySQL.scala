@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.contest
 
+import com.shocktrade.common.models.contest.PortfolioBalance
 import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -49,9 +50,29 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
       js.Array(contestID)) map { case (rows, _) => rows }
   }
 
-  override def findParticipant(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
+  override def findPortfolio(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
     conn.queryFuture[PortfolioData](
       """|SELECT * FROM portfolios WHERE contestID = ? AND userID = ?
+         |""".stripMargin,
+      js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
+  }
+
+  override def findPortfolioBalance(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioBalance]] = {
+    conn.queryFuture[PortfolioBalance](
+      """|SELECT
+         |	  C.contestID, C.name, U.userID, U.username, U.wallet,
+         |	  SUM(P.funds) funds, SUM(SP.lastTrade * PS.quantity) equity,
+         |    SUM(CASE WHEN O.orderType = 'BUY' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalBuyOrders,
+         |    SUM(CASE WHEN O.orderType = 'SELL' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalSellOrders
+         |FROM users U
+         |INNER JOIN portfolios P ON P.userID = U.userID
+         |INNER JOIN contests C ON C.contestID = P.contestID
+         |LEFT JOIN orders O ON O.portfolioID = P.portfolioID
+         |LEFT JOIN stocks SO ON SO.symbol = O.symbol
+         |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+         |LEFT JOIN stocks SP ON SP.symbol = PS.symbol
+         |WHERE C.contestID = ? AND U.userID = ?
+         |GROUP BY C.contestID, C.name, U.userID, U.username, U.wallet
          |""".stripMargin,
       js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
   }

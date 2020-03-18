@@ -18,23 +18,28 @@ import scala.util.{Failure, Success, Try}
  */
 class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val contestDAO = ContestDAO()
+  private val orderDAO = OrderDAO()
   private val perkDAO = PerksDAO()
   private val portfolioDAO = PortfolioDAO()
   private val positionDAO = PositionDAO()
 
   // individual objects
-  app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => portfolioByUser(request, response, next))
+  app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => findPortfolioByUser(request, response, next))
   app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
-  app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => perksByID(request, response, next))
+  app.get("/api/portfolio/:portfolioID/orders", (request: Request, response: Response, next: NextFunction) => findOrdersByID(request, response, next))
+  app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => findPerksByID(request, response, next))
   app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
-  app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => positionsByID(request, response, next))
-  app.get("/api/portfolio/:portfolioID/heldSecurities", (request: Request, response: Response, next: NextFunction) => heldSecurities(request, response, next))
-  app.get("/api/portfolio/contest/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findParticipant(request, response, next))
+  app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => findPositionsByID(request, response, next))
+  app.get("/api/portfolio/:portfolioID/heldSecurities", (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
+
+  // individual objects by reference
+  app.get("/api/portfolio/contest/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfolio(request, response, next))
+  app.get("/api/portfolio/contest/:contestID/user/:userID/balance", (request: Request, response: Response, next: NextFunction) => findPortfolioBalance(request, response, next))
 
   // collections
-  app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => portfoliosByContest(request, response, next))
-  app.get("/api/portfolios/user/:userID", (request: Request, response: Response, next: NextFunction) => portfoliosByUser(request, response, next))
-  app.get("/api/portfolios/:portfolioID/totalInvestment", (request: Request, response: Response, next: NextFunction) => totalInvestment(request, response, next))
+  app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByContest(request, response, next))
+  app.get("/api/portfolios/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByUser(request, response, next))
+  app.get("/api/portfolios/:portfolioID/totalInvestment", (request: Request, response: Response, next: NextFunction) => findTotalInvestment(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -55,7 +60,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Returns the symbols for securities currently held in all active portfolios for a given player by player ID
    */
-  def heldSecurities(request: Request, response: Response, next: NextFunction): Unit = {
+  def findHeldSecurities(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findHeldSecurities(portfolioID) onComplete {
       case Success(symbols) => response.send(symbols); next()
@@ -63,11 +68,30 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def findParticipant(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestID = request.params("contestID")
-    val userID = request.params("userID")
-    portfolioDAO.findParticipant(contestID, userID) onComplete {
-      case Success(Some(participant)) => response.send(participant); next()
+  /**
+   * Retrieves all orders by portfolio ID
+   */
+  def findOrdersByID(request: Request, response: Response, next: NextFunction): Unit = {
+    val portfolioID = request.params("portfolioID")
+    orderDAO.findOrders(portfolioID) onComplete {
+      case Success(orders) => response.send(orders); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  def findPortfolio(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
+    portfolioDAO.findPortfolio(contestID, userID) onComplete {
+      case Success(Some(portfolio)) => response.send(portfolio); next()
+      case Success(None) => response.notFound(request.params); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  def findPortfolioBalance(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
+    portfolioDAO.findPortfolioBalance(contestID, userID) onComplete {
+      case Success(Some(balance)) => response.send(balance); next()
       case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.internalServerError(e); next()
     }
@@ -76,7 +100,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves the purchased perks by portfolio ID
    */
-  def perksByID(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPerksByID(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
     portfolioDAO.findPurchasedPerks(portfolioID) onComplete {
       case Success(perks) => response.send(perks); next()
@@ -104,9 +128,9 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   }
 
   /**
-   * Retrieves all positions (cash or margin accounts) by portfolio ID
+   * Retrieves all positions by portfolio ID
    */
-  def positionsByID(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPositionsByID(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
     positionDAO.findPositions(portfolioID) onComplete {
       case Success(positions) => response.send(positions); next()
@@ -117,7 +141,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a portfolio by a contest ID and user ID
    */
-  def portfolioByUser(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPortfolioByUser(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
     portfolioDAO.findOneByUser(userID) onComplete {
       case Success(Some(portfolio)) => response.send(portfolio); next()
@@ -129,7 +153,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a specific portfolio by a contest and user IDs
    */
-  def portfoliosByContest(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPortfoliosByContest(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("contestID")
     portfolioDAO.findByContest(contestID) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
@@ -140,7 +164,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a collection of portfolios by a user ID
    */
-  def portfoliosByUser(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPortfoliosByUser(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
     portfolioDAO.findByUser(userID) onComplete {
       case Success(portfolios) => response.send(portfolios); next()
@@ -151,7 +175,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves the total investment amount for a specific player
    */
-  def totalInvestment(request: Request, response: Response, next: NextFunction): Unit = {
+  def findTotalInvestment(request: Request, response: Response, next: NextFunction): Unit = {
     val portfolioID = request.params("portfolioID")
     portfolioDAO.computeTotalInvestment(portfolioID) onComplete {
       case Success(investment) => response.send(new TotalInvestment(investment)); next()

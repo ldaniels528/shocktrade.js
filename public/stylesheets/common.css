@@ -281,6 +281,14 @@ td {
 	font-weight: bold;
 }
 
+.quit_button {
+	background-color: #ff2000;
+	border-radius: 4px;
+	font-weight: bold;
+	color: white;
+	cursor: pointer;
+}
+
 /*********************************************************************************
  * 							Global Text Definitions								 *
  *********************************************************************************/
