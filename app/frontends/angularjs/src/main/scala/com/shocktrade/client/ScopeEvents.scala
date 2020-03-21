@@ -4,6 +4,7 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.common.events.RemoteEvent._
 import com.shocktrade.common.models.contest.ChatMessage
+import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Scope, angular}
@@ -26,14 +27,6 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
     //          Emitters
     /////////////////////////////////////////////////////////////////////
-
-    @inline
-    private def broadcast(action: String, entity: js.Any): Unit = {
-      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
-      $scope.$broadcast(action, entity)
-      // $scope.$emit(action, entity)
-      ()
-    }
 
     @inline
     def emit(action: String, data: js.Any) {
@@ -60,7 +53,7 @@ object ScopeEvents {
     def emitMessagesUpdated(message: ChatMessage): Unit = broadcast(ChatMessagesUpdated, message)
 
     @inline
-    def emitUserProfileChanged(profile: UserProfile): Unit = broadcast(UserProfileChanged, profile)
+    def emitPortfolioChanged(portfolio: Portfolio): Unit = broadcast(PortfolioUpdated, portfolio)
 
     @inline
     def emitUserProfileUpdated(profile: UserProfile): Unit = broadcast(UserProfileUpdated, profile)
@@ -68,9 +61,6 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
     //          Reactors
     /////////////////////////////////////////////////////////////////////
-
-    @inline
-    def emitUserStatusChanged(status: String): Unit = broadcast(UserStatusChanged, status)
 
     @inline
     def onContestCreated(callback: (Event, Contest) => Any): Unit = reactTo(ContestCreated, callback)
@@ -82,19 +72,16 @@ object ScopeEvents {
     def onContestSelected(callback: (Event, Contest) => Any): Unit = reactTo(ContestSelected, callback)
 
     @inline
-    def onContestUpdated(callback: (Event, Contest) => Any): Unit = reactTo(ContestUpdated, callback)
+    def onMessagesUpdated(callback: (Event, String) => Any): Unit = reactTo(ChatMessagesUpdated, callback)
 
     @inline
-    def onMessagesUpdated(callback: (Event, String) => Any): Unit = reactTo(ChatMessagesUpdated, callback)
+    def onNetWorthUpdated(callback: (Event, NetWorth) => Any): Unit = broadcast(NetWorthUpdated, callback)
 
     @inline
     def onOrderUpdated(callback: (Event, String) => Any): Unit = reactTo(OrderUpdated, callback)
 
     @inline
     def onPortfolioUpdated(callback: (Event, Portfolio) => Any): Unit = reactTo(PortfolioUpdated, callback)
-
-    @inline
-    def onUserProfileChanged(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileChanged, callback)
 
     @inline
     def onUserProfileUpdated(callback: (Event, UserProfile) => Any): Unit = reactTo(UserProfileUpdated, callback)
@@ -104,7 +91,12 @@ object ScopeEvents {
     /////////////////////////////////////////////////////////////////////
 
     @inline
-    def onUserStatusChanged(callback: (Event, String) => Any): Unit = reactTo(UserStatusChanged, callback)
+    private def broadcast(action: String, entity: js.Any): Unit = {
+      console.info(s"Broadcasting $action: payload => ${angular.toJson(entity)}")
+      $scope.$broadcast(action, entity)
+      // $scope.$emit(action, entity)
+      ()
+    }
 
     private def reactTo(action: String, callback: js.Function): Unit = {
       console.info(s"Listening for '$action'...")

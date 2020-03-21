@@ -1,6 +1,6 @@
 package com.shocktrade.client.models
 
-import com.shocktrade.common.models.user.{User, UserProfileLike}
+import com.shocktrade.common.models.user.UserProfileLike
 
 import scala.scalajs.js
 
@@ -9,7 +9,6 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class UserProfile(var userID: js.UndefOr[String] = js.undefined,
-                  var facebookID: js.UndefOr[String] = js.undefined,
                   var username: js.UndefOr[String] = js.undefined,
                   var description: js.UndefOr[String] = js.undefined,
                   var country: js.UndefOr[String] = js.undefined,
@@ -25,7 +24,7 @@ class UserProfile(var userID: js.UndefOr[String] = js.undefined,
                   var friends: js.UndefOr[js.Array[String]] = js.undefined,
                   var isAdmin: js.UndefOr[Boolean] = js.undefined,
                   var lastSymbol: js.UndefOr[String] = js.undefined,
-                  var lastLoginTime: js.UndefOr[js.Date] = js.undefined) extends User with UserProfileLike
+                  var lastLoginTime: js.UndefOr[js.Date] = js.undefined) extends UserProfileLike
 
 /**
  * User Profile Companion

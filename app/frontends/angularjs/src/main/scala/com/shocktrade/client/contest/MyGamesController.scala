@@ -2,6 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
+import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.{ContestFactory, GlobalLoading}
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
@@ -22,7 +23,8 @@ import scala.util.{Failure, Success}
 case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                              @injected("ContestFactory") contestFactory: ContestFactory,
                              @injected("ContestService") contestService: ContestService,
-                             @injected("NewGameDialog") newGameDialog: NewGameDialog)
+                             @injected("NewGameDialog") newGameDialog: NewGameDialog,
+                             @injected("GameStateFactory") gameState: GameStateFactory)
   extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
   private var myContests = js.Array[MyContest]()
@@ -98,7 +100,7 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
   /**
    * Listen for user profile changes
    */
-  $scope.onUserProfileChanged((_, profile) => reload())
+  $scope.onUserProfileUpdated((_, profile) => reload())
 
 }
 

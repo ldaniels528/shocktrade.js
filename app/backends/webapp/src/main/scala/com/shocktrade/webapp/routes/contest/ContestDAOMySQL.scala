@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
-import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
@@ -67,13 +67,11 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   }
 
   override def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-    conn.executeFuture(
-      s"""|INSERT INTO portfolios (contestID, userID, funds)
-          |SELECT contestID, ?, startingBalance
-          |FROM contests
-          |WHERE contestID = ?
-          |""".stripMargin,
-      js.Array(userID, contestID)) map (_.affectedRows > 0)
+    conn.executeFuture("CALL joinContest(?, ?)", js.Array(contestID, userID)).map(_.affectedRows > 0)
+  }
+
+  override def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+    conn.executeFuture("CALL quitContest(?, ?)", js.Array(contestID, userID)).map(_.affectedRows > 0)
   }
 
   override def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]] = {
@@ -88,9 +86,9 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     val userID = form.userID.getOrElse("")
     val sql =
       s"""|SELECT C.*, CS.status,
-          |	IFNULL(PC.playerCount, 0) AS playerCount,
-          |    IFNULL(PC.isParticipant, 0) isParticipant,
-          |	CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
+          |	  IFNULL(PC.playerCount, 0) AS playerCount,
+          |   IFNULL(PC.isParticipant, 0) isParticipant,
+          |	  CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
           |FROM contests C
           |LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
           |LEFT JOIN (
@@ -103,18 +101,41 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID)) map { case (rows, _) => rows }
   }
 
+  override def start(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+    conn.executeFuture(
+      s"""|UPDATE portfolios P
+          |INNER JOIN contest_statuses CS ON CS.status = 'ACTIVE'
+          |SET startTime = now(), statusID = CS.statusID
+          |WHERE contestID = ? AND hostUserID = ? AND statusID <> CS.statusID
+          |""".stripMargin,
+      js.Array(contestID, userID)) map (_.affectedRows > 0)
+  }
+
   override def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int] = {
     Future.sequence(contests.map(updateContest)).map(_.sum)
   }
 
   override def updateContest(contest: ContestData)(implicit ec: ExecutionContext): Future[Int] = {
     import contest._
+    conn.executeFuture("UPDATE contests SET name = ? WHERE contestID = ?", js.Array(name, contestID)).map(_.affectedRows)
+  }
+
+  override def addChatMessage(contestID: String, userID: String, message: String)(implicit ec: ExecutionContext): Future[Int] = {
     conn.executeFuture(
-      """|UPDATE contests
-         |SET name = ?
-         |WHERE contestID = ?
+      """|INSERT INTO contest_chats (messageID, contestID, userID, message)
+         |VALUES (uuid(), ?, ?, ?)
          |""".stripMargin,
-      js.Array(name, contestID)) map (_.affectedRows)
+      js.Array(contestID, userID, message)) map (_.affectedRows)
+  }
+
+  override def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]] = {
+    conn.queryFuture[ChatMessage](
+      """|SELECT CC.*, U.username
+         |FROM contest_chats CC
+         |INNER JOIN users U ON U.userID = CC.userID
+         |WHERE CC.contestID = ?
+         |""".stripMargin,
+      js.Array(contestID)) map { case (rows, _) => rows }
   }
 
 }

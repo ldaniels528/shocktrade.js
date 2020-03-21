@@ -10,7 +10,6 @@ import io.scalajs.nodejs.console
 import io.scalajs.npm.moment.Moment
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 

@@ -95,7 +95,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
 
   def refreshMessages(contestID: String): Future[Unit] = {
     contestCache.get(contestID) map { contest =>
-      contestService.getMessages(contestID) map { messages => contest.messages = messages.data }
+      contestService.findChatMessages(contestID) map { messages => contest.messages = messages.data }
     } getOrElse {
       Future.successful({})
     }
@@ -104,7 +104,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
   private def buildContestGraph(contestID: String): Future[Contest] = {
     for {
       contest <- contestService.findContestByID(contestID)
-      messages <- contestService.getMessages(contestID)
+      messages <- contestService.findChatMessages(contestID)
       rankings <- contestService.findRankingsByContest(contestID)
       portfolios <- portfolioService.getPortfoliosByContest(contestID)
     } yield {

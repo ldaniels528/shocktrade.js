@@ -6,14 +6,11 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.social.facebook.TaggableFriend
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.UndefOr
-import scala.util.{Failure, Success}
 
 /**
  * Home Controller
@@ -44,19 +41,6 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
   $scope.selectFriend = (friendOpt: js.UndefOr[FacebookFriend]) => friendOpt foreach { friend =>
     console.log(s"selecting friend ${angular.toJson(friend)}")
     $scope.selectedFriend = friend
-
-    asyncLoading($scope)(userService.getFacebookFriendStatus(friend)) onComplete {
-      case Success(response) =>
-        $scope.$apply { () =>
-          friend.status = response.data.status
-          friend.gamesCompleted = response.data.gamesCompleted
-          friend.gamesCreated = response.data.gamesCreated
-          friend.gamesDeleted = response.data.gamesDeleted
-          friend.lastLoginTime = response.data.lastLoginTime
-        }
-      case Failure(e) =>
-        console.error(s"Error loading profile for ${friend.name}: ${e.getMessage}")
-    }
   }
 
 }

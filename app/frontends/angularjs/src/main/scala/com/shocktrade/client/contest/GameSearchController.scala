@@ -3,22 +3,21 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
+import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.{ContestFactory, GlobalLoading, RootScope}
-import com.shocktrade.common.forms.{ContestSearchForm, PlayerInfoForm}
+import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.models.contest.ContestSearchResult._
-import com.shocktrade.common.models.user.User
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -31,6 +30,7 @@ import scala.util.{Failure, Success}
 case class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                                 @injected("ContestFactory") contestFactory: ContestFactory,
                                 @injected("ContestService") contestService: ContestService,
+                                @injected("GameStateFactory") gameState: GameStateFactory,
                                 @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                                 @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
@@ -44,7 +44,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   $scope.portfolios = js.Array()
   $scope.searchTerm = null
   $scope.searchOptions = new ContestSearchForm(
-    userID = js.undefined,
+    userID = gameState.userID,
     activeOnly = false,
     available = false,
     friendsOnly = false,
@@ -67,12 +67,12 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
 
   $scope.getSelectedContest = () => $scope.selectedContest
 
-  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI], aPlayerID: js.UndefOr[String]) => invitePlayerPopup(aContest, aPlayerID)
+  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI], aUserID: js.UndefOr[String]) => invitePlayerPopup(aContest, aUserID)
 
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
 
   private def contestSearch(searchOptions: ContestSearchForm): Unit = {
-    searchOptions.userID = $scope.userProfile.flatMap(_.userID)
+    searchOptions.userID = gameState.userID
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
         $scope.$apply(() => searchResults = contests.data.map(_.asInstanceOf[ContestSearchResultUI]))
@@ -107,10 +107,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
           toaster.error("You must join the game to use this feature")
       }
     }*/
-  }
-
-  private def isParticipant(contest: ContestSearchResultUI): Boolean = {
-    $scope.portfolios.exists(_.userID == $scope.userProfile.flatMap(_.userID))
   }
 
   private def getSearchResults(aSearchTerm: js.UndefOr[String]): js.Array[ContestSearchResultUI] = aSearchTerm.toOption match {
@@ -218,24 +214,16 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   private def joinContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     for {
       contest <- aContest
-      contestId <- contest.contestID
-      userID <- $scope.userProfile.flatMap(_.userID)
-      username <- $scope.userProfile.flatMap(_.username)
+      contestID <- contest.contestID
+      userID <- gameState.userID
     } {
       contest.joining = true
-      val form = new PlayerInfoForm(player = User(_id = userID, name = username))
-      asyncLoading($scope)(contestService.joinContest(contestId, form)) onComplete {
+      asyncLoading($scope)(contestService.joinContest(contestID, userID)) onComplete {
         case Success(response) =>
-          val joinedContest = response.data
-          console.log(s"response = ${JSON.stringify(response.data)}")
-          $scope.$apply { () =>
-            //$scope.contest = joinedContest
-            //mySession.setContest(joinedContest)
-            //mySession.deduct(contest.startingBalance)
-            //updateWithRankings(user.name, contest)
-          }
+          console.info(s"response = ${JSON.stringify(response.data)}")
+          gameState.refreshContest().refreshNetWorth()
+          $scope.$apply { () => }
           $timeout(() => contest.joining = false, 0.5.seconds)
-
         case Failure(e) =>
           toaster.error(title = "Error!", body = "Failed to join contest")
           console.error("An error occurred while joining the contest")
@@ -247,20 +235,16 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   private def quitContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     for {
       contest <- aContest
-      userId <- $scope.userProfile.flatMap(_.userID)
+      userId <- gameState.userID
       contestId <- contest.contestID
     } {
       contest.quitting = true
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
         case Success(response) =>
-          val updatedContest = response.data
-          console.log(s"response = ${JSON.stringify(response.data)}")
-          /*$scope.$apply { () =>
-            $scope.contest = updatedContest
-            mySession.setContest(updatedContest)
-          }*/
+          console.info(s"response = ${JSON.stringify(response.data)}")
+          gameState.refreshContest().refreshNetWorth()
+          $scope.$apply { () => }
           $timeout(() => contest.quitting = false, 0.5.seconds)
-
         case Failure(e) =>
           toaster.error(title = "Error!", e.displayMessage)
           console.error("An error occurred while joining the contest")
@@ -272,15 +256,13 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   private def startContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     for {
       contest <- aContest
-      contestId <- contest.contestID
+      contestID <- contest.contestID
     } {
       contest.starting = true
-      asyncLoading($scope)(contestService.startContest(contestId)) onComplete {
+      asyncLoading($scope)(contestService.startContest(contestID)) onComplete {
         case Success(response) =>
-          val theContest = response.data
-          console.log(s"response = ${JSON.stringify(response.data)}")
-          $timeout(() => theContest.starting = false, 0.5.seconds)
-
+          console.info(s"response = ${JSON.stringify(response.data)}")
+          $timeout(() => contest.starting = false, 0.5.seconds)
         case Failure(e) =>
           toaster.error("An error occurred while starting the contest")
           console.error(s"Error starting contest: ${e.getMessage}")
@@ -352,7 +334,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   /**
    * Listen for contest update events
    */
-  $scope.onContestUpdated { (_, contest) =>
+  $scope.onContestSelected { (_, contest) =>
     console.log(s"ContestSearchResultUI '${contest.name} updated")
     contest.contestID foreach { contestId =>
       // update the contest in our search results
@@ -372,7 +354,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
 @js.native
 trait GameSearchScope extends RootScope with ContestEntrySupportScope {
   // variables
-  var contest: js.UndefOr[ContestSearchResultUI] = js.native
+  //var contest: js.UndefOr[ContestSearchResultUI] = js.native
   var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
   var searchTerm: String = js.native
   var searchOptions: ContestSearchForm = js.native

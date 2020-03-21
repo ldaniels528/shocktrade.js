@@ -13,7 +13,7 @@ import scala.scalajs.js
  */
 trait PositionDAO {
 
-  def findExposure(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]]
+  def findChart(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]]
 
   def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]]
 

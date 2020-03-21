@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
-import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -24,11 +24,19 @@ trait ContestDAO {
 
   def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
 
+  def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
+
   def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]]
+
+  def start(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   def updateContest(contest: ContestData)(implicit ec: ExecutionContext): Future[Int]
 
   def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int]
+
+  def addChatMessage(contestID: String, userID: String, message: String)(implicit ec: ExecutionContext): Future[Int]
+
+  def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]]
 
 }
 

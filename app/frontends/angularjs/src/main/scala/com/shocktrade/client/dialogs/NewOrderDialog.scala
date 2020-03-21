@@ -3,12 +3,12 @@ package com.shocktrade.client.dialogs
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.QuoteService
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
 import com.shocktrade.common.Commissions
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
-import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -65,7 +65,6 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   $scope.form = new NewOrderForm(
     symbol = params.symbol,
     quantity = params.quantity,
-    accountType = params.accountType,
     emailNotify = true
   )
 
@@ -212,7 +211,6 @@ object NewOrderDialogController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   class NewOrderParams(val symbol: js.UndefOr[String] = js.undefined,
-                       val accountType: js.UndefOr[String] = js.undefined,
                        val quantity: js.UndefOr[Double] = js.undefined) extends js.Object
 
 }
@@ -228,7 +226,7 @@ trait NewOrderScope extends AutoCompletionControllerScope {
   var portfolio: js.UndefOr[Portfolio] = js.native
   var quote: OrderQuote = js.native
   var ticker: js.Any = js.native
-  var userProfile: js.UndefOr[User] = js.native
+  var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
   var init: js.Function0[Unit] = js.native

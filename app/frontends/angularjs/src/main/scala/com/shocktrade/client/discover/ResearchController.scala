@@ -1,7 +1,7 @@
 package com.shocktrade.client.discover
 
 import com.shocktrade.client.discover.ResearchController._
-import com.shocktrade.client.{GlobalLoading, MainController}
+import com.shocktrade.client.{GlobalLoading, MainController, RootScope}
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
 import io.scalajs.dom.html.browser.console
@@ -179,7 +179,7 @@ object ResearchController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait ResearchScope extends Scope {
+trait ResearchScope extends RootScope {
   // variables
   var exchangeSets: js.Dictionary[Boolean] = js.native
   var maxResultsSet: js.Array[Int] = js.native

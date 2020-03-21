@@ -8,7 +8,9 @@ import scala.scalajs.js
  */
 trait UserProfileLike extends UserLike {
 
-  var followers: js.UndefOr[js.Array[String]]
+  def userID: js.UndefOr[String]
+
+  def followers: js.UndefOr[js.Array[String]]
 
   def username: js.UndefOr[String]
 

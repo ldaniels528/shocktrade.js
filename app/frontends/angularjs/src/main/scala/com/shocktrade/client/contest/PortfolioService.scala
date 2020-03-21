@@ -98,16 +98,8 @@ class PortfolioService($http: Http) extends Service {
   //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getExposureChartData(contestID: String, userID: String, exposure: String): js.Promise[HttpResponse[js.Array[ExposureData]]] = {
-    $http.get(s"/api/charts/exposure/$exposure/$contestID/$userID")
-  }
-
-  def getChart(contestID: String, playerName: String, chartName: String): js.Promise[HttpResponse[ExposureData]] = {
-    // determine the chart type
-    val chartType = if (chartName == "gains" || chartName == "losses") "performance" else "exposure"
-
-    // load the chart representing the securities
-    $http.get(s"/api/charts/$chartType/$chartName/$contestID/$playerName")
+  def getChartData(contestID: String, userID: String, chart: String): js.Promise[HttpResponse[js.Array[ExposureData]]] = {
+    $http.get(s"/api/contest/$contestID/user/$userID/chart/$chart")
   }
 
 }

@@ -5,7 +5,8 @@ import com.shocktrade.client._
 import com.shocktrade.client.contest.PortfolioController.PortfolioTab
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.models.contest.{Order, Performance, Portfolio, Position}
+import com.shocktrade.client.models.contest.{Order, Performance, Position}
+import com.shocktrade.client.users.GameStateFactory
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -24,6 +25,7 @@ import scala.util.{Failure, Success}
  */
 case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRouteParams, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                                @injected("ContestFactory") contestFactory: ContestFactory,
+                               @injected("GameStateFactory") gameState: GameStateFactory,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("QuoteCache") quoteCache: QuoteCache,
                                @injected("PortfolioService") portfolioService: PortfolioService)
@@ -52,11 +54,10 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
     for {contestID <- $routeParams.contestID; userID <- $scope.userProfile.flatMap(_.userID)} init(contestID, userID)
   }
 
-  def init(contestID: String, userID: String): Unit = {
-    contestFactory.findPortfolio(contestID, userID) onComplete {
-      case Success(portfolio) => $scope.$apply { () => $scope.portfolio = portfolio }
-      case Failure(e) => toaster.error("Error", "Failed to load portfolio")
-    }
+  def init(contestID: String, userID: String): Unit = contestFactory.findPortfolio(contestID, userID) onComplete {
+    case Success(portfolio) =>
+      if (portfolio.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) $scope.$apply { () => gameState.portfolio = portfolio }
+    case Failure(e) => toaster.error("Error", "Failed to load portfolio")
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -81,7 +82,8 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
       orderId <- anOrderId
     } {
       asyncLoading($scope)(portfolioService.cancelOrder(portfolioId, orderId)) onComplete {
-        case Success(response) => $scope.$apply(() => $scope.portfolio = response.data)
+        case Success(portfolio) => $scope.$apply(() =>
+          if (portfolio.data.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) gameState.portfolio = portfolio.data)
         case Failure(err) =>
           toaster.error("Failed to cancel order")
           console.error(s"Failed to cancel order: ${err.displayMessage}")
@@ -91,7 +93,7 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
 
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
-  $scope.getActiveOrders = () => $scope.portfolio.flatMap(_.orders)
+  $scope.getActiveOrders = () => gameState.portfolio.flatMap(_.orders)
 
   $scope.isMarketOrder = (anOrder: js.UndefOr[Order]) => {
     anOrder.exists(order => order.priceType.exists(marketOrderTypes.contains))
@@ -99,8 +101,8 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
 
   $scope.isOrderSelected = () => $scope.getActiveOrders().nonEmpty && $scope.selectedOrder.nonEmpty
 
-  $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String], anAccountType: js.UndefOr[String]) => {
-    val promise = newOrderDialog.popup(new NewOrderParams(symbol = aSymbol, accountType = anAccountType))
+  $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String]) => {
+    val promise = newOrderDialog.popup(new NewOrderParams(symbol = aSymbol))
     promise onComplete {
       case Success(result) => console.log(s"result = ${JSON.stringify(result)}")
       case Failure(e) =>
@@ -159,11 +161,6 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
   //////////////////////////////////////////////////////////////////////
 
   $scope.onContestSelected { (_, contest) =>
-    console.log(s"[Portfolio] Contest '${contest.name}' selected")
-    $scope.initPortfolio()
-  }
-
-  $scope.onContestUpdated { (_, contest) =>
     console.log(s"[Portfolio] Contest '${contest.name}' updated")
     $scope.initPortfolio()
   }
@@ -178,7 +175,7 @@ case class PortfolioController($scope: PortfolioScope, $routeParams: DashboardRo
     $scope.initPortfolio()
   }
 
-  $scope.onUserProfileChanged { (_, profile) =>
+  $scope.onUserProfileUpdated { (_, profile) =>
     console.info(s" PortfolioController: User => ${JSON.stringify(profile)}")
     $scope.initPortfolio()
   }
@@ -213,7 +210,7 @@ trait PortfolioScope extends DashboardScope with GlobalSelectedSymbolScope {
   var selectedPosition: js.UndefOr[Position] = js.native
 
   // model variables
-  var portfolio: js.UndefOr[Portfolio] = js.native
+  //var portfolio: js.UndefOr[Portfolio] = js.native
 
   // portfolio functions
   var initPortfolio: js.Function0[Unit] = js.native
@@ -231,7 +228,7 @@ trait PortfolioScope extends DashboardScope with GlobalSelectedSymbolScope {
   var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
   var isOrderSelected: js.Function0[Boolean] = js.native
   var selectOrder: js.Function1[js.UndefOr[Order], Unit] = js.native
-  var popupNewOrderDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], js.Promise[NewOrderDialogResult]] = js.native
+  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.Promise[NewOrderDialogResult]] = js.native
   var toggleSelectedOrder: js.Function0[Unit] = js.native
 
   // performance functions

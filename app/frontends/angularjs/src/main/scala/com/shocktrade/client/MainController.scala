@@ -5,15 +5,15 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
+import com.shocktrade.client.users.{AuthenticationService, GameStateFactory, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
+import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
 import io.scalajs.npm.angularjs.uibootstrap.Modal
-import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected, _}
+import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -29,8 +29,9 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
-                     @injected("ContestFactory") contestFactory: ContestFactory,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
+                     @injected("ContestFactory") contestFactory: ContestFactory,
+                     @injected("GameStateFactory") gameState: GameStateFactory,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)
@@ -174,10 +175,10 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     outcome onComplete {
       case Success((userAccount, netWorth)) =>
         $scope.$apply { () =>
-          $scope.userProfile = userAccount
-          $scope.netWorth = netWorth.data
+          gameState.userProfile = userAccount
+          gameState.netWorth = netWorth.data
         }
-        $scope.emitUserProfileChanged(userAccount)
+        $scope.emitUserProfileUpdated(userAccount)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -185,7 +186,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.signUp = () => {
     signUpDialog.signUp() onComplete {
-      case Success(response) => $scope.userProfile = response
+      case Success(response) => gameState.userProfile = response
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -208,18 +209,14 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.switchToNewsFeed = () => $scope.switchToTab(MainTab.NewsFeed)
 
   $scope.switchToTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
-    $scope.userProfile.flatMap(_.userID).toOption match {
+    gameState.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>
-            val outcome = response.data
-            if (isDefined(outcome.error)) {
-              console.log(s"outcome = ${angular.toJson(outcome)}")
-              toaster.error(outcome.error.toString)
-            }
             performTabSwitch(tabIndex)
           case Failure(e) =>
             toaster.error(e.getMessage)
+            performTabSwitch(tabIndex)
         }
       case None =>
         performTabSwitch(tabIndex)
@@ -234,32 +231,22 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   private def logout(): Unit = {
     contestFactory.clear()
+    gameState.reset()
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
     $scope.userProfile = js.undefined
-  }
-
-  private def updateNetWorth(userID: String): Unit = {
-    userService.getNetWorth(userID) onComplete {
-      case Success(response) => $scope.$apply(() => $scope.netWorth = response.data)
-      case Failure(e) =>
-        e.printStackTrace()
-    }
   }
 
   //////////////////////////////////////////////////////////////////////
   //              Event Listeners
   //////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileChanged { (_, profile) =>
+  $scope.onUserProfileUpdated { (_, profile) =>
     console.log(s"profile = ${JSON.stringify(profile)}")
-    $scope.$apply(() => $scope.userProfile = profile)
-    profile.userID foreach updateNetWorth
   }
 
   $scope.onUserProfileUpdated { (_, profile) =>
     console.log(s"profile = ${JSON.stringify(profile)}")
-    $scope.$apply(() => $scope.userProfile = profile)
   }
 
 }
@@ -320,7 +307,7 @@ trait MainControllerScope extends RootScope with GlobalNavigation {
   var appTabs: js.Array[MainTab] = js.native
   var favoriteSymbols: js.Dictionary[String] = js.native
   var levels: js.Array[GameLevel] = js.native
-  var netWorth: js.UndefOr[NetWorth] = js.native
+  //var netWorth: js.UndefOr[NetWorth] = js.native
   var notifications: js.Array[String] = js.native
   var recentSymbols: js.Dictionary[String] = js.native
 

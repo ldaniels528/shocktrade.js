@@ -3,7 +3,7 @@ package com.shocktrade.client.directives
 import io.scalajs.npm.angularjs.Directive._
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 
-import scala.language.postfixOps
+
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.Try

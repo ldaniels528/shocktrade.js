@@ -1,7 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.ContestSearchResultUI
-import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm, PlayerInfoForm}
+import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -30,12 +30,12 @@ class ContestService($http: Http) extends Service {
     $http.delete(s"/api/contest/$contestID")
   }
 
-  def joinContest(contestID: String, playerInfo: PlayerInfoForm): js.Promise[HttpResponse[ContestSearchResultUI]] = {
-    $http.put(s"/api/contest/$contestID/portfolio", playerInfo)
+  def joinContest(contestID: String, userID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+    $http.put(s"/api/contest/$contestID/user/$userID")
   }
 
-  def quitContest(contestID: String, portfolioID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
-    $http.delete(s"/api/contest/$contestID/portfolio/$portfolioID")
+  def quitContest(contestID: String, userID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+    $http.delete(s"/api/contest/$contestID/user/$userID")
   }
 
   def startContest(contestID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
@@ -58,10 +58,6 @@ class ContestService($http: Http) extends Service {
     $http.get(s"/api/contest/user/$userID/heldSecurities")
   }
 
-  def findPortfolioByID(contestID: String, userID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
-    $http.get(s"/api/contest/$contestID/user/$userID")
-  }
-
   def findMyContests(userID: String): js.Promise[HttpResponse[js.Array[MyContest]]] = {
     $http.get(s"/api/contests/user/$userID")
   }
@@ -79,12 +75,12 @@ class ContestService($http: Http) extends Service {
   //          Contest Messages
   ///////////////////////////////////////////////////////////////
 
-  def getMessages(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
-    $http.get[js.Array[ChatMessage]](s"/api/contest/$contestID/chat")
+  def findChatMessages(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
+    $http.get(s"/api/contest/$contestID/chat")
   }
 
-  def sendChatMessage(contestID: String, userID: String, message: ChatMessage): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
-    $http.post[js.Array[ChatMessage]](s"/api/contest/$contestID/user/$userID/chat", message)
+  def sendChatMessage(contestID: String, message: ChatMessage): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
+    $http.post(s"/api/contest/$contestID/chat", message)
   }
 
 }

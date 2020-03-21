@@ -86,7 +86,6 @@ object WebServerJsApp {
     // setup all other routes
     logger.info("Setting up all other routes...")
     new AuthenticationRoutes(app)
-    new ChatRoutes(app)
     new ContestRoutes(app)
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)

@@ -5,7 +5,6 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope}
 import io.scalajs.util.JsUnderOrHelper._
 
-import scala.language.postfixOps
 import scala.scalajs.js
 
 /**

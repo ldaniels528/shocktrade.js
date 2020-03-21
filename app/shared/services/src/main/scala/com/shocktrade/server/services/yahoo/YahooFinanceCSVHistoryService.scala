@@ -5,7 +5,7 @@ import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.request.Request
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
+
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.Try

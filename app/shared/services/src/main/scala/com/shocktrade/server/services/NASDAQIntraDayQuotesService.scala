@@ -11,7 +11,7 @@ import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.language.postfixOps
+
 import scala.scalajs.js
 import scala.scalajs.js.Dictionary
 import scala.scalajs.js.JSConverters._

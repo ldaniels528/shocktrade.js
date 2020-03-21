@@ -101,7 +101,7 @@ case class MyQuotesController($scope: MyQuotesControllerScope, $location: Locati
   /**
    * Listen for changes to the player's profile
    */
-  $scope.onUserProfileChanged((_, profile) => profile.userID.foreach(refreshMySymbols))
+  $scope.onUserProfileUpdated((_, profile) => profile.userID.foreach(refreshMySymbols))
 
 }
 

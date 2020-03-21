@@ -7,7 +7,6 @@ import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 /**

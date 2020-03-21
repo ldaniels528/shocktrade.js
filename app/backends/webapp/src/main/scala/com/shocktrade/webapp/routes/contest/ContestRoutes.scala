@@ -1,12 +1,13 @@
 package com.shocktrade.webapp.routes
 package contest
 
+import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
+import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.language.postfixOps
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -20,24 +21,76 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val positionDAO = PositionDAO()
 
   // individual contests
-  app.get("/api/charts/exposure/:chart/:id/:userID", (request: Request, response: Response, next: NextFunction) => exposureChart(request, response, next))
-  app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => contestByID(request, response, next))
+  app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
   app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
 
+  // charts
+  app.get("/api/contest/:id/user/:userID/chart/:chart", (request: Request, response: Response, next: NextFunction) => findChart(request, response, next))
+
+  // chat messages
+  app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => listChatMessages(request, response, next))
+  app.post("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
+
+  // contest participation
+  app.delete("/api/contest/:id/user/:userID", (request: Request, response: Response, next: NextFunction) => quitContest(request, response, next))
+  app.put("/api/contest/:id/user/:userID", (request: Request, response: Response, next: NextFunction) => joinContest(request, response, next))
+
   // collections of contests
-  app.get("/api/contest/:contestID/rankings", (request: Request, response: Response, next: NextFunction) => rankingsByContest(request, response, next))
-  app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => availablePerks(request, response, next))
-  app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => myContests(request, response, next))
+  app.get("/api/contest/:id/rankings", (request: Request, response: Response, next: NextFunction) => listRankings(request, response, next))
+  app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => listPerks(request, response, next))
+  app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => findMyContests(request, response, next))
   app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
+  def addChatMessage(request: Request, response: Response, next: NextFunction): Unit = {
+    // get the arguments
+    val form = for {
+      contestID <- request.params.get("id")
+      chatMessage = request.bodyAs[ChatMessage]
+      userID <- chatMessage.userID.toOption
+      message <- chatMessage.message.toOption
+    } yield (contestID, userID, message)
+
+    // handle the request
+    form match {
+      case Some((contestID, userID, message)) =>
+        // asynchronously create the message
+        val outcome = for {
+          count <- contestDAO.addChatMessage(contestID, userID, message) if count > 0
+          messages <- contestDAO.findChatMessages(contestID)
+        } yield messages
+
+        outcome onComplete {
+          // HTTP/200 OK
+          case Success(messages) =>
+            response.send(messages)
+            WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
+            next()
+          // HTTP/500 ERROR
+          case Failure(e) =>
+            response.internalServerError(e); next()
+        }
+      // HTTP/404 NOT FOUND
+      case None =>
+        response.notFound(request.params); next()
+    }
+  }
+
+  def listChatMessages(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestID = request.params("id")
+    contestDAO.findChatMessages(contestID) onComplete {
+      case Success(messages) => response.send(messages); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
   /**
    * Retrieves available perks
    */
-  def availablePerks(request: Request, response: Response, next: NextFunction): Unit = {
+  def listPerks(request: Request, response: Response, next: NextFunction): Unit = {
     perksDAO.findAvailablePerks onComplete {
       case Success(perks) => response.send(perks); next()
       case Failure(e) => response.internalServerError(e); next()
@@ -47,7 +100,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves contests by portfolio
    */
-  def contestByID(request: Request, response: Response, next: NextFunction): Unit = {
+  def findContestByID(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
     contestDAO.findOneByID(contestID) onComplete {
       case Success(Some(contest)) => response.send(contest); next()
@@ -74,9 +127,25 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def exposureChart(request: Request, response: Response, next: NextFunction): Unit = {
+  def findChart(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
-    positionDAO.findExposure(contestID, userID, chart) onComplete {
+    positionDAO.findChart(contestID, userID, chart) onComplete {
+      case Success(data) => response.send(data); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+    }
+  }
+
+  def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("id"), request.params("userID"))
+    contestDAO.join(contestID, userID) onComplete {
+      case Success(data) => response.send(data); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+    }
+  }
+
+  def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("id"), request.params("userID"))
+    contestDAO.quit(contestID, userID) onComplete {
       case Success(data) => response.send(data); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
@@ -85,7 +154,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves contests by userID
    */
-  def myContests(request: Request, response: Response, next: NextFunction): Unit = {
+  def findMyContests(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
     val outcome = for {
       myContests <- contestDAO.findMyContests(userID)
@@ -101,8 +170,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a collection of rankings by contest
    */
-  def rankingsByContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val contestID = request.params("contestID")
+  def listRankings(request: Request, response: Response, next: NextFunction): Unit = {
+    val contestID = request.params("id")
     val outcome = for {
       rankings <- contestDAO.findRankings(contestID)
 
@@ -110,7 +179,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
       sortedRankings = {
         val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0.0))
         myRankings.zipWithIndex foreach { case (ranking, index) =>
-          ranking.rank = (index + 1) nth
+          ranking.rank = (index + 1).nth
         }
         js.Array(myRankings: _*)
       }

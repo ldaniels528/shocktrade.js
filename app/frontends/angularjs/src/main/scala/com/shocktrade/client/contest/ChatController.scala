@@ -102,7 +102,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
 
           // transmit the message
           val outcome = for {
-            _ <- contestService.sendChatMessage(contestID, userID, message)
+            _ <- contestService.sendChatMessage(contestID, message)
             response <- contestFactory.refreshMessages(contestID)
           } yield response
 
@@ -123,7 +123,7 @@ class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $
   //          Events
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileChanged { (_, profile) => $scope.init() }
+  $scope.onUserProfileUpdated { (_, profile) => $scope.init() }
 
 }
 

@@ -1,8 +1,7 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.PerksDialog
-import com.shocktrade.client.models.contest.Contest
+import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.{ContestFactory, GlobalNavigation, RootScope}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -10,8 +9,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
-
-import scala.language.postfixOps
+import com.shocktrade.client.ScopeEvents._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -24,7 +22,8 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
                           @injected("ContestFactory") contestFactory: ContestFactory,
                           @injected("ContestService") contestService: ContestService,
                           @injected("PerksDialog") perksDialog: PerksDialog,
-                          @injected("PortfolioService") portfolioService: PortfolioService)
+                          @injected("PortfolioService") portfolioService: PortfolioService,
+                          @injected("GameStateFactory") gameState: GameStateFactory)
   extends Controller {
 
   private var accountMode = false
@@ -39,7 +38,8 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
 
   def reload(contestID: String): Unit = {
     contestFactory.findContest(contestID) onComplete {
-      case Success(contest) => $scope.$apply { () => $scope.contest = contest }
+      case Success(contest) =>
+        if(contest.contestID != gameState.contest.flatMap(_.contestID)) $scope.$apply { () => gameState.contest = contest }
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
   }
@@ -63,9 +63,9 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   /////////////////////////////////////////////////////////////////////
 
   $scope.popupPerksDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String]) => {
-    console.info(s"popupPerksDialog: aContestID = ${(aContestID ?? $routeParams.contestID ?? $scope.contest.flatMap(_.contestID)).orNull}, aUserID = ${aUserID.orNull}")
+    console.info(s"popupPerksDialog: aContestID = ${(aContestID ?? $routeParams.contestID ?? gameState.contest.flatMap(_.contestID)).orNull}, aUserID = ${aUserID.orNull}")
     for {
-      contestID <- aContestID ?? $routeParams.contestID ?? $scope.contest.flatMap(_.contestID)
+      contestID <- aContestID ?? $routeParams.contestID ?? gameState.contest.flatMap(_.contestID)
       userID <- aUserID
     } {
       perksDialog.popup(contestID, userID) onComplete {
@@ -90,7 +90,7 @@ class DashboardController($scope: DashboardScope, $routeParams: DashboardRoutePa
   //          Events
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileChanged { (_, profile) =>
+  $scope.onUserProfileUpdated { (_, profile) =>
     for {contestID <- $routeParams.contestID} reload(contestID)
   }
 
@@ -114,7 +114,7 @@ trait DashboardScope extends RootScope with GlobalNavigation {
   var toggleRankingsShown: js.Function0[Unit] = js.native
 
   // variables
-  var contest: js.UndefOr[Contest] = js.native
+  //var contest: js.UndefOr[Contest] = js.native
   var rankingsHidden: js.UndefOr[Boolean] = js.native
 
 }

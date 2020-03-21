@@ -1,7 +1,7 @@
 package com.shocktrade.client.posts
 
 import com.shocktrade.client.GlobalLoading
-import com.shocktrade.client.users.{UserFactory, UserService}
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.post._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -17,7 +17,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -27,7 +26,6 @@ import scala.util.{Failure, Success}
 case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $location: Location, $timeout: Timeout, toaster: Toaster,
                           @injected("FileUploader") fileUploader: FileUploader,
                           @injected("PostService") postService: PostService,
-                          @injected("UserFactory") userFactory: UserFactory,
                           @injected("UserService") userService: UserService)
   extends Controller with PostingCapabilities with GlobalLoading {
 
@@ -156,12 +154,13 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
 
   private def enrichPosts(posts: js.Array[Post]): Future[js.Array[Post]] = {
     val userIds = posts.flatMap(_.userID.flat.toOption)
-    userFactory.getUsers(userIds) map { users =>
+    userService.getUsers(userIds) map { users =>
       console.log(s"users = ${angular.toJson(users)}")
+      /*
       val userMapping = Map(users.map(u => u.userID.orNull -> u): _*)
       posts foreach { post =>
         post.submitter = post.userID.flatMap(id => userMapping.get(id).orUndefined)
-      }
+      }*/
       posts
     }
   }

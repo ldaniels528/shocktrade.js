@@ -1,6 +1,6 @@
 package com.shocktrade.client
 
-import scala.language.postfixOps
+
 import scala.scalajs.js
 import scala.scalajs.js.Any._
 import scala.scalajs.js.Dynamic.{global => g}

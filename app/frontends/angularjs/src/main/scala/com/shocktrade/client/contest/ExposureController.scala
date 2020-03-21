@@ -74,7 +74,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
       exposure <- anExposure
       value <- exposure.value
     } {
-      portfolioService.getExposureChartData(contestID, userID, value) onComplete {
+      portfolioService.getChartData(contestID, userID, value) onComplete {
         case Success(response) =>
           updateChart(response.data)
           $scope.$apply(() => $scope.data = response.data)
@@ -109,7 +109,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   //          Events
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileChanged { (_, profile) => init() }
+  $scope.onUserProfileUpdated { (_, profile) => init() }
 
 }
 

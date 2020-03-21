@@ -4,7 +4,7 @@ import com.shocktrade.server.services.yahoo.YahooFinanceCSVQuotesService._
 import io.scalajs.npm.request._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.postfixOps
+
 import scala.scalajs.js
 
 /**

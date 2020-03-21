@@ -21,7 +21,6 @@ object RemoteEvent {
   val ContestCreated = "contest_created"
   val ContestDeleted = "contest_deleted"
   val ContestSelected = "contest_selected"
-  val ContestUpdated = "contest_updated"
 
   /////////////////////////////////////////////////////////////////////
   //          Contest-Participant Events
@@ -29,7 +28,7 @@ object RemoteEvent {
 
   val ChatMessagesUpdated = "chat_messages_updated"
   val OrderUpdated = "orders_updated"
-  val PortfolioUpdated = "participant_updated"
+  val PortfolioUpdated = "portfolio_updated"
   val PerksUpdated = "perks_updated"
 
   /////////////////////////////////////////////////////////////////////
@@ -37,8 +36,7 @@ object RemoteEvent {
   /////////////////////////////////////////////////////////////////////
 
   val AwardsUpdated = "awards_updated"
-  val UserProfileChanged = "user_profile_changed"
+  val NetWorthUpdated = "net_worth_updated"
   val UserProfileUpdated = "user_profile_updated"
-  val UserStatusChanged = "user_status_changed"
 
 }

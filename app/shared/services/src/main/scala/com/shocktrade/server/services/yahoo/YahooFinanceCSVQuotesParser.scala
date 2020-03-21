@@ -8,7 +8,7 @@ import io.scalajs.nodejs.console
 import io.scalajs.npm.moment.Moment
 import io.scalajs.npm.moment.timezone._
 
-import scala.language.postfixOps
+
 import scala.scalajs.js
 import scala.scalajs.js.Date
 import scala.scalajs.js.JSConverters._

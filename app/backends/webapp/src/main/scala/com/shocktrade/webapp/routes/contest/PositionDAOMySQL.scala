@@ -13,7 +13,7 @@ import scala.scalajs.js
  */
 class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with PositionDAO {
 
-  override def findExposure(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]] = {
+  override def findChart(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]] = {
     val column = chart match {
       case "exchange" => "S.exchange"
       case "industry" => "S.industry"

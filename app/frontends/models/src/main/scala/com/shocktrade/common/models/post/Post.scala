@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.post
 
-import com.shocktrade.common.models.user.User
+import com.shocktrade.common.models.user.UserProfileLike
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -12,7 +12,7 @@ import scala.scalajs.js
  */
 class Post(var postID: js.UndefOr[String] = js.undefined,
            var text: js.UndefOr[String] = js.undefined,
-           var submitter: js.UndefOr[User] = js.undefined,
+           var submitter: js.UndefOr[UserProfileLike] = js.undefined,
            var userID: js.UndefOr[String] = js.undefined,
            var summary: js.UndefOr[SharedContent] = js.undefined,
            var likes: js.UndefOr[Int] = js.undefined,
@@ -41,11 +41,11 @@ class Post(var postID: js.UndefOr[String] = js.undefined,
  */
 object Post {
 
-  def apply(user: User): Post = {
+  def apply(user: UserProfileLike): Post = {
     val post = new Post()
     post.creationTime = new js.Date()
     post.lastUpdateTime = new js.Date()
-    post.submitter = user
+    //post.submitter = user
     post.userID = user.userID
     post.text = ""
     post.likes = 0
@@ -66,7 +66,7 @@ object Post {
     @inline
     def copy(_id: js.UndefOr[String] = js.undefined,
              text: js.UndefOr[String] = js.undefined,
-             submitter: js.UndefOr[User] = js.undefined,
+             submitter: js.UndefOr[UserProfileLike] = js.undefined,
              submitterId: js.UndefOr[String] = js.undefined,
              summary: js.UndefOr[SharedContent] = js.undefined,
              likes: js.UndefOr[Int] = js.undefined,

@@ -1,9 +1,9 @@
 package com.shocktrade.client.posts
 
-import com.shocktrade.client.users.UserFactory
+import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.post.{Comment, Post, Reply}
-import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -14,8 +14,9 @@ import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.postfixOps
+
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -40,7 +41,7 @@ trait PostingCapabilities extends GlobalLoading {
 
   def toaster: Toaster
 
-  def userFactory: UserFactory
+  def userService: UserService
 
   $scope.posts = emptyArray
   $scope.tags = emptyArray
@@ -194,8 +195,8 @@ trait PostingCapabilities extends GlobalLoading {
 
     if (updatedPost.submitter.nonAssigned) {
       updatedPost.userID.flat foreach { submitterId =>
-        userFactory.getUserByID(submitterId) onComplete {
-          case Success(user) => $scope.$apply(() => updatedPost.submitter = user)
+        userService.getUserByID(submitterId) onComplete {
+          case Success(user) => $scope.$apply(() => updatedPost.submitter = user.data)
           case Failure(e) => toaster.error("Submitter retrieval", e.displayMessage)
         }
       }
@@ -415,7 +416,7 @@ trait PostingCapabilities extends GlobalLoading {
     }
   }
 
-  private def savePost(user: User, post: Post) = {
+  private def savePost(user: UserProfile, post: Post): Future[Post] = {
     val alreadySaved = post.postID.isAssigned
     console.log(s"${if (alreadySaved) s"Updating (${post.postID}) " else "Saving"} post...")
 

@@ -1,12 +1,12 @@
 package com.shocktrade.client.news
 
-import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.news.NewsController._
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
+import io.scalajs.npm.angularjs.{Controller, angular, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
@@ -164,7 +164,7 @@ object NewsController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait NewsScope extends Scope {
+trait NewsScope extends RootScope {
   // variables
   var selection: NewsFeedSelection = js.native
   var view: String = js.native

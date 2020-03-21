@@ -8,7 +8,6 @@ import io.scalajs.util.DateHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
-import scala.language.postfixOps
 import scala.scalajs.js
 import scala.util.{Failure, Success, Try}
 

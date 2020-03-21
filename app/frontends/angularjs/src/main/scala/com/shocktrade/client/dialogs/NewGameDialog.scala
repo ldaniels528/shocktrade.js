@@ -2,9 +2,9 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.NewGameDialogController._
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration, LevelCap}
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse}
-import com.shocktrade.common.models.user.User
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -13,7 +13,7 @@ import io.scalajs.util.DurationHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
+
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -161,7 +161,7 @@ trait NewGameDialogScope extends Scope {
   var form: ContestCreationForm = js.native
   var levelCaps: js.Array[LevelCap] = js.native
   var startingBalances: js.Array[GameBalance] = js.native
-  var userProfile: js.UndefOr[User] = js.native
+  var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
   var cancel: js.Function0[Unit] = js.native
