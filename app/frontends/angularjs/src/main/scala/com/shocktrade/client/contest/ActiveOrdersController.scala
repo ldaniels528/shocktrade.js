@@ -2,6 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ActiveOrdersController.ActiveOrdersControllerScope
+import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.models.contest.Order
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.{GlobalLoading, RootScope}
@@ -9,6 +10,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
+import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -42,7 +44,7 @@ class ActiveOrdersController($scope: ActiveOrdersControllerScope, $routeParams: 
 
   private def loadActiveOrders(contestID: String, userID: String): Unit = {
     portfolioService.findOrders(contestID, userID) onComplete {
-      case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data)
+      case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data.filterNot(_.closed.isTrue))
       case Failure(e) =>
         toaster.error("Failed to retrieve orders")
         console.error(s"Failed to retrieve orders: ${e.displayMessage}")

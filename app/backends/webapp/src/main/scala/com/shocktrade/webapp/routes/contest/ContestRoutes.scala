@@ -6,6 +6,7 @@ import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
 import com.shocktrade.common.models.contest.ChatMessage
 import com.shocktrade.common.util.StringHelper._
+import com.shocktrade.webapp.routes.contest.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

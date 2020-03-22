@@ -61,8 +61,8 @@ case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: 
       // attempt to authenticate the user
       val outcome = for {
         authCode <- authenticationService.getCode
-        userProfile <- authenticationService.login(form.copy(authCode = authCode.data.code))
-      } yield userProfile
+        userAccount <- authenticationService.login(form.copy(authCode = authCode.data.code))
+      } yield userAccount
 
       outcome onComplete {
         case Success(userProfile) =>

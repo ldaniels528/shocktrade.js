@@ -93,18 +93,9 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
     this
   }
 
-  def refreshMessages(contestID: String): Future[Unit] = {
-    contestCache.get(contestID) map { contest =>
-      contestService.findChatMessages(contestID) map { messages => contest.messages = messages.data }
-    } getOrElse {
-      Future.successful({})
-    }
-  }
-
   private def buildContestGraph(contestID: String): Future[Contest] = {
     for {
       contest <- contestService.findContestByID(contestID)
-      messages <- contestService.findChatMessages(contestID)
       rankings <- contestService.findRankingsByContest(contestID)
       portfolios <- portfolioService.getPortfoliosByContest(contestID)
     } yield {
@@ -115,8 +106,6 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         startTime = contest.data.startTime,
         startingBalance = contest.data.startingBalance,
         status = contest.data.status,
-        // chats
-        messages = messages.data,
         // portfolios & rankings
         portfolios = portfolios.data,
         rankings = rankings.data,
@@ -133,9 +122,8 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
     for {
       portfolio <- portfolioService.findPortfolio(contestID, userID)
       balance <- portfolioService.findPortfolioBalance(contestID, userID)
-      portfolioID = portfolio.data.portfolioID.orNull
       orders <- portfolioService.findOrders(contestID, userID)
-      positions <- portfolioService.getPositions(portfolioID)
+      positions <- portfolioService.findPositions(contestID, userID)
     } yield {
       new Portfolio(
         portfolioID = portfolio.data.portfolioID,

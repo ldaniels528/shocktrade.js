@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.contest
+package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions

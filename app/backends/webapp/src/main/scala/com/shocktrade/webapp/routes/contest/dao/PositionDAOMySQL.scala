@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.contest
+package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.common.models.ExposureData
 import com.shocktrade.server.dao.MySQLDAO
@@ -33,12 +33,13 @@ class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options
           |""".stripMargin, js.Array(contestID, userID)).map { case (rows, _) => rows }
   }
 
-  override def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]] = {
+  override def findPositions(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]] = {
     conn.queryFuture[PositionData](
-      """|SELECT * FROM positions
-         |WHERE portfolioID = ?
-         |""".stripMargin,
-      js.Array(portfolioID)) map { case (rows, _) => rows }
+      """|SELECT PS.*
+         |FROM positions PS
+         |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
+         |WHERE P.contestID = ? AND P.userID = ?
+         |""".stripMargin, js.Array(contestID, userID)) map { case (rows, _) => rows }
   }
 
 }

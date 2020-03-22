@@ -81,7 +81,7 @@ case class MyQuotesController($scope: MyQuotesControllerScope, $location: Locati
       portfolioID <- $scope.userProfile.flatMap(_.userID)
     } {
       val outcome = for {
-        symbols <- portfolioService.getHeldSecurities(portfolioID).map(_.data)
+        symbols <- portfolioService.findHeldSecurities(portfolioID).map(_.data)
         quotes <- quoteService.getBasicQuotes(symbols).map(_.data)
       } yield quotes
 

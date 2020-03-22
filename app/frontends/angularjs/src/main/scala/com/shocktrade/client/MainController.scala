@@ -94,27 +94,9 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getTabIndex = () => $scope.appTabs.indexWhere(tab => $location.path.contains(tab.url))
 
-  $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
-
-  //////////////////////////////////////////////////////////////////////
-  //              My Session Service Functions
-  //////////////////////////////////////////////////////////////////////
-
-  $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
-
-  $scope.getNetWorth = () => gameState.userProfile.flatMap(_.funds).orZero
-
-  $scope.getWallet = () => gameState.userProfile.flatMap(_.wallet).orZero
-
-  $scope.getUserID = () => gameState.userID
-
-  $scope.getUserName = () => gameState.username
-
-  $scope.getUserProfile = () => gameState.userProfile
-
-  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
-
   $scope.isAuthenticated = () => $scope.userProfile.flatMap(_.userID).isAssigned
+
+  $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
@@ -178,17 +160,21 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   private def signIn(): Unit = {
     val outcome = for {
       userAccount <- signInDialog.signIn()
+      userProfile <- userAccount.userID.toOption match {
+        case Some(userID) => userService.findUserByID(userID).toFuture
+        case None => Future.failed(js.JavaScriptException("Missing user ID"))
+      }
       netWorth <- userAccount.userID.toOption match {
         case Some(userID) => userService.getNetWorth(userID).toFuture
         case None => Future.failed(js.JavaScriptException("Missing user ID"))
       }
-    } yield (userAccount, netWorth)
+    } yield (userProfile, netWorth)
 
     outcome onComplete {
-      case Success((userAccount, netWorth)) =>
-        $scope.emitUserProfileUpdated(userAccount)
+      case Success((userProfile, netWorth)) =>
+        $scope.emitUserProfileUpdated(userProfile.data)
         $scope.$apply { () =>
-          gameState.userProfile = userAccount
+          gameState.userProfile = userProfile.data
           gameState.netWorth = netWorth.data
         }
       case Failure(e) =>
@@ -197,8 +183,16 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   private def signUp(): Unit = {
-    signUpDialog.signUp() onComplete {
-      case Success(response) => gameState.userProfile = response
+    val outcome = for {
+      userAccount <- signUpDialog.signUp()
+      userProfile <- userAccount.userID.toOption match {
+        case Some(userID) => userService.findUserByID(userID).toFuture
+        case None => Future.failed(js.JavaScriptException("Missing user ID"))
+      }
+    } yield userProfile
+
+    outcome onComplete {
+      case Success(userProfile) => gameState.userProfile = userProfile.data
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -317,14 +311,6 @@ trait MainControllerScope extends RootScope with GlobalNavigation with NetWorthS
   var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
   var getTabIndex: js.Function0[Int] = js.native
   var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
-
-  var getTotalInvestment: js.Function0[Double] = js.native
-  var getNetWorth: js.Function0[Double] = js.native
-  var getWallet: js.Function0[Double] = js.native
-  var getUserID: js.Function0[js.UndefOr[String]] = js.native
-  var getUserName: js.Function0[js.UndefOr[String]] = js.native
-  var getUserProfile: js.Function0[js.UndefOr[UserProfile]] = js.native
-  var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
   var isAuthenticated: js.Function0[Boolean] = js.native
 
   var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native

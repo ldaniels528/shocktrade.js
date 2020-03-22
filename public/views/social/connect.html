@@ -51,16 +51,16 @@
                     <i ng-click="replyAll()" class="fa fa-reply-all clickable pad-left-20" title="Reply All"></i>
                     <i ng-click="forwardMessage()" class="fa fa-mail-forward clickable pad-left-20" title="Forward"></i>
                     <i ng-click="tagMessage()" class="fa fa-tag clickable pad-left-20" title="Tag message"></i>
-                    <i ng-click="moveToTrash(getUserName())" class="fa fa-trash clickable pad-left-20" title="Move to trash"></i>
-                    <i ng-click="moveToSpam(getUserName())" class="fa fa-bitbucket clickable pad-left-20" title="Move to spam bin"></i>
-                    <i ng-click="loadMyUpdates(getUserName())" class="fa fa-refresh clickable pad-left-20" title="Search for new messages"></i>
+                    <i ng-click="moveToTrash(userProfile.userName)" class="fa fa-trash clickable pad-left-20" title="Move to trash"></i>
+                    <i ng-click="moveToSpam(userProfile.userName)" class="fa fa-bitbucket clickable pad-left-20" title="Move to spam bin"></i>
+                    <i ng-click="loadMyUpdates(userProfile.userName)" class="fa fa-refresh clickable pad-left-20" title="Search for new messages"></i>
                     <span class="pull-right">{{ getMyUpdates().length }} message(s)</span>
                 </div>
             </div>
         </div>
 
         <div class="updatesContainer">
-            <span ng-init="loadMyUpdates(getUserName())" ng-show="getMyUpdates().length === 0" class="notice">
+            <span ng-init="loadMyUpdates(userProfile.userName)" ng-show="getMyUpdates().length === 0" class="notice">
                 <i class="fa fa-lg fa-frown-o st_orange"></i>
                 <span class="st_orange">You have no messages</span>
             </span>

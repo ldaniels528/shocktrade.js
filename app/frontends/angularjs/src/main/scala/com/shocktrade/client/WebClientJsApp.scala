@@ -148,6 +148,7 @@ object WebClientJsApp {
     module.controllerOf[MyQuotesController]("MyQuotesController")
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
+    module.controllerOf[PositionsController]("PositionsController")
     module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")

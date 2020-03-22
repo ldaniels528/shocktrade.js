@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.contest
+package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.common.models.ExposureData
 import com.shocktrade.server.dao.DataAccessObjectHelper
@@ -15,7 +15,7 @@ trait PositionDAO {
 
   def findChart(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]]
 
-  def findPositions(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]]
+  def findPositions(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]]
 
 }
 

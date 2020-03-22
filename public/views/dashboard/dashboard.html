@@ -2,7 +2,7 @@
     <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
-                <div class="rank_cell" ng-repeat="p in contest.rankings | orderBy:'rank'">
+                <div ng-repeat="p in contest.rankings | orderBy:'rank'" ng-class="getRankCellClass(p.rank)">
                     <div class="pull-left" style="display: inline">
                         <avatar id="{{ p.userID }}" class="avatar-45"></avatar>
                     </div>

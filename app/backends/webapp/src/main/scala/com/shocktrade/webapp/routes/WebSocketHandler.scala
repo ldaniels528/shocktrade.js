@@ -27,7 +27,7 @@ object WebSocketHandler {
     message match {
       case "Hello" =>
         // have we received a message from this client before?
-        val client = WsClient(ip = request.ip, ws = ws)
+        val client = new WsClient(ip = request.ip, ws = ws)
         logger.log(s"Client ${client.uid} (${client.ip}) connected")
         clients.push(client)
       case unknown =>
@@ -55,7 +55,7 @@ object WebSocketHandler {
    * Represents a web-socket client
    * @param ws the given [[WebSocket web socket]]
    */
-  case class WsClient(ip: String, ws: WebSocket) {
+  class WsClient(val ip: String, val ws: WebSocket) {
     val uid: EventType = UUID.randomUUID().toString
 
     def send(action: String, data: String): js.Any = ws.send(encode(action, data))

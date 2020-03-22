@@ -1,5 +1,30 @@
 div.rank_cell {
-	background-color: #dddddd;
+	background-color: #e0e0e0;
+    border: 1px solid #4ba0ce;
+	border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div.rank_cell_1st {
+	background-color: gold;
+	border: 1px solid #4ba0ce;
+	border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div.rank_cell_2nd {
+	background-color: #eeffff;
+	border: 1px solid #4ba0ce;
+	border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div.rank_cell_3rd {
+	background-color: #eeffff;
+	border: 1px solid #4ba0ce;
 	border-radius: 5px 5px 5px 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;

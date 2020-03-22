@@ -93,7 +93,7 @@
                             <avatar ng-show="p" id="{{ p.userID }}" class="avatar-53"></avatar>
                             <img class="no_picture_gang clickable"
                                 ng-hide="p"
-                                ng-click="invitePlayerPopup(selectedContest, getUserID())"
+                                ng-click="invitePlayerPopup(selectedContest, userProfile.userID)"
                                 title="invite a friend"
                                 src="/images/play/unknown-53.jpg">
                         </span>
@@ -182,7 +182,7 @@
                 <!-- Contest Buy-In Cost -->
                 <div class="col-md-3">Buy-In Cost</div>
                 <div class="col-md-9">
-                    <span ng-class="getNetWorth() >= selectedContest.startingBalance ? 'positive' : 'negative'">
+                    <span ng-class="userProfile.wallet >= selectedContest.startingBalance ? 'positive' : 'negative'">
                         $ {{ selectedContest.startingBalance | number:2 }}
                     </span>
                 </div>

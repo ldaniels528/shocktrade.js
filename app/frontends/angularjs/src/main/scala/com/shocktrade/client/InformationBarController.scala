@@ -1,7 +1,6 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.users.GameStateFactory.{NetWorthScope, UserProfileScope}
 import com.shocktrade.client.users.{GameStateFactory, UserService}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -30,25 +29,16 @@ class InformationBarController($scope: InformationBarControllerScope, $q: Q,
   $scope.notifications = js.Array()
 
   //////////////////////////////////////////////////////////////////////
-  //              Event Listeners
+  //              Initialization Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.onUserProfileUpdated { (_, profile) =>
-    profile.userID foreach { userID =>
-      console.info(s"Retrieving Net-worth for user $userID...")
-      userService.getNetWorth(userID) onComplete {
-        case Success(netWorth) => gameState.netWorth = netWorth.data
-        case Failure(e) =>
-          console.error(s"Failed retrieving Net-worth for user $userID: ${e.getMessage}")
-      }
-    }
-  }
+  $scope.initInfoBar = () => console.log(s"${getClass.getSimpleName} is initializing...")
+
+  $scope.onUserProfileUpdated { (_, profile) =>$scope.userProfile = profile}
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
-
-  $scope.init = () => console.log(s"${getClass.getSimpleName} is initializing...")
 
   $scope.autoCompleteSearch = (aSearchTerm: js.UndefOr[String]) => aSearchTerm.map(autoCompleteSearch)
 
@@ -80,10 +70,10 @@ class InformationBarController($scope: InformationBarControllerScope, $q: Q,
   private def getWealthChange: js.UndefOr[Double] = {
     val original = 250e+3
     for {
-      netWorth <- gameState.userProfile
-      cash <- netWorth.wallet
-      funds <- netWorth.funds
-      equity <- netWorth.equity
+      userProfile <- gameState.userProfile
+      cash <- userProfile.wallet
+      funds <- userProfile.funds
+      equity <- userProfile.equity
       change = ((cash + funds + equity) - original) / original * 100.0
     } yield change
   }
@@ -109,9 +99,9 @@ class InformationBarController($scope: InformationBarControllerScope, $q: Q,
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait InformationBarControllerScope extends RootScope with NetWorthScope with UserProfileScope {
+trait InformationBarControllerScope extends RootScope {
   // functions
-  var init: js.Function0[Unit] = js.native
+  var initInfoBar: js.Function0[Unit] = js.native
   var autoCompleteSearch: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[EntitySearchResult]]]] = js.native
   var formatSearchResult: js.Function1[js.UndefOr[EntitySearchResult], js.UndefOr[String]] = js.native
   var getWealthChange: js.Function0[js.UndefOr[Double]] = js.native

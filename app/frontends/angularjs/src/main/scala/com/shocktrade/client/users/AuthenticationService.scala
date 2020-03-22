@@ -13,13 +13,10 @@ import scala.scalajs.js
  */
 class AuthenticationService($http: Http) extends Service {
 
-  def getCode: js.Promise[HttpResponse[AuthenticationCode]] =
-    $http.get[AuthenticationCode](url = "/api/auth/code")
+  def getCode: js.Promise[HttpResponse[AuthenticationCode]] = $http.get(url = "/api/auth/code")
 
-  def login(form: AuthenticationForm): js.Promise[HttpResponse[UserProfile]] =
-    $http.post[UserProfile](url = "/api/auth/login", data = form)
+  def login(form: AuthenticationForm): js.Promise[HttpResponse[UserProfile]] = $http.post(url = "/api/auth/login", data = form)
 
-  def logout(): js.Promise[HttpResponse[AuthenticationResponse]] =
-    $http.get[AuthenticationResponse](url = "/api/auth/logout")
+  def logout(): js.Promise[HttpResponse[AuthenticationResponse]] = $http.get(url = "/api/auth/logout")
 
 }

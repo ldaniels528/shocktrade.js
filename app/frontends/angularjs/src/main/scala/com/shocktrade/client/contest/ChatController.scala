@@ -1,5 +1,6 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.Filters.toDuration
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
@@ -21,8 +22,8 @@ import scala.util.{Failure, Success}
  * Chat Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ChatController($scope: ChatControllerScope, $anchorScroll: AnchorScroll, $routeParams: DashboardRouteParams,
-                     $timeout: Timeout, toaster: Toaster,
+class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
+                     $anchorScroll: AnchorScroll, $timeout: Timeout, toaster: Toaster,
                      @injected("ContestService") contestService: ContestService,
                      @injected("GameStateFactory") gameState: GameStateFactory)
   extends Controller with GlobalLoading {

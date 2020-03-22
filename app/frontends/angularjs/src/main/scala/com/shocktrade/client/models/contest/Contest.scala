@@ -1,6 +1,6 @@
 package com.shocktrade.client.models.contest
 
-import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
+import com.shocktrade.common.models.contest.ContestRanking
 
 import scala.scalajs.js
 
@@ -14,8 +14,6 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
               var startTime: js.UndefOr[js.Date] = js.undefined,
               var startingBalance: js.UndefOr[Double] = js.undefined,
               var status: js.UndefOr[String] = js.undefined,
-              // chats
-              var messages: js.UndefOr[js.Array[ChatMessage]] = js.undefined,
               // portfolios & rankings
               var portfolios: js.UndefOr[js.Array[Portfolio]] = js.undefined,
               var rankings: js.UndefOr[js.Array[ContestRanking]] = js.undefined,

@@ -4,6 +4,7 @@ import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.webapp.routes.contest.PortfolioRoutes._
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.contest.dao.OrderDAO
 import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 

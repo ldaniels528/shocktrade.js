@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.contest
+package com.shocktrade.webapp.routes.contest.dao
 
 import java.util.UUID
 

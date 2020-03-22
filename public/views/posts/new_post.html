@@ -1,8 +1,8 @@
 <div class="home_post">
     <div class="home_post_header">
         <span class="pull-left" style="color: #0088aa">
-            <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-20"></avatar>
-            <span class="home_poster">{{ getUserName() }}</span>
+            <avatar ng-show="userProfile.userID" id="{{ userProfile.userID }}" class="avatar-20"></avatar>
+            <span class="home_poster">{{ userProfile.userName }}</span>
             <img ng-show="newPost.loading" src="/images/status/loading16.gif">
         </span>
         <span class="pull-right">

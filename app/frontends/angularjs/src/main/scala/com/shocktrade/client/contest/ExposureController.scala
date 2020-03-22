@@ -2,6 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.RootScope
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.ExposureController.ExposureSelection
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.common.models.ExposureData

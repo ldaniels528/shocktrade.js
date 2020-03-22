@@ -1,10 +1,10 @@
-<div class="col-md-12 player_info_bar st_title_bar" style="margin-bottom: 20px" ng-controller="InformationBarController" ng-init="init()">
+<div class="col-md-12 player_info_bar st_title_bar" style="margin-bottom: 20px" ng-controller="InformationBarController" ng-init="initInfoBar()">
     <div class="col-md-4 pi_bar_cash pad-left-10">
         <div class="pull-left" style="display: inline">
             <div class="positive" title="Liquid cash available">
                 <img ng-src="/images/status/{{ isWebSocketConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
                      title="{{ isWebSocketConnected() ? 'Connected' : 'Not Connected' }}">
-                <i class="fa fa-money"></i> {{ netWorth.wallet || 0.0 | number: 2 }}
+                <i class="fa fa-money"></i> {{ userProfile.wallet || 0.0 | number: 2 }}
             </div>
             <div class="emphasis" title="Total investment value">
                 <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
@@ -45,7 +45,7 @@
             </span>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-            <span ng-show="isAuthenticated()"  class="title_color" ng-show="getUserName()">
+            <span ng-show="isAuthenticated()"  class="title_color" ng-show="userProfile.userName">
                 &#8212; <avatar id="userProfile.userID" class="avatar-16"></avatar> {{ userProfile.username }}</span>
         </span>
     </div>

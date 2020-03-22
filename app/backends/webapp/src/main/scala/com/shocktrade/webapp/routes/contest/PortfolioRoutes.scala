@@ -4,8 +4,10 @@ import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.{MarketValueResponse, TotalInvestment}
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.contest.dao.OrderData
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.DateHelper._
+import com.shocktrade.webapp.routes.contest.dao._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -17,7 +19,6 @@ import scala.util.{Failure, Success, Try}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val contestDAO = ContestDAO()
   private val orderDAO = OrderDAO()
   private val perkDAO = PerksDAO()
   private val portfolioDAO = PortfolioDAO()
@@ -26,17 +27,21 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   // individual objects
   app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => findPortfolioByUser(request, response, next))
   app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
-  app.get("/api/orders/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
-  app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => findPerksByID(request, response, next))
-  app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
-  app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => findPositionsByID(request, response, next))
   app.get("/api/portfolio/:portfolioID/heldSecurities", (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
 
-  // individual objects by reference
+  // perks
+  app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => findPerksByID(request, response, next))
+  app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
+
+  // positions
+  app.get("/api/positions/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findPositions(request, response, next))
+
+  // orders
+  app.get("/api/orders/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
+
+  // portfolios
   app.get("/api/portfolio/contest/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfolio(request, response, next))
   app.get("/api/portfolio/contest/:contestID/user/:userID/balance", (request: Request, response: Response, next: NextFunction) => findPortfolioBalance(request, response, next))
-
-  // collections
   app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByContest(request, response, next))
   app.get("/api/portfolios/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByUser(request, response, next))
   app.get("/api/portfolios/:portfolioID/totalInvestment", (request: Request, response: Response, next: NextFunction) => findTotalInvestment(request, response, next))
@@ -130,9 +135,9 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves all positions by portfolio ID
    */
-  def findPositionsByID(request: Request, response: Response, next: NextFunction): Unit = {
-    val portfolioID = request.params("portfolioID")
-    positionDAO.findPositions(portfolioID) onComplete {
+  def findPositions(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
+    positionDAO.findPositions(contestID, userID) onComplete {
       case Success(positions) => response.send(positions); next()
       case Failure(e) => response.internalServerError(e); next()
     }

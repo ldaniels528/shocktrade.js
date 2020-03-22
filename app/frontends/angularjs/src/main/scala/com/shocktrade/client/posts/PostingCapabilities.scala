@@ -65,7 +65,7 @@ trait PostingCapabilities extends GlobalLoading {
           case Success(response) =>
             val result = response.data
             $scope.$apply(() => post.deleteLoading = false)
-            if (result.success && removePostFromList(post)) {
+            if (result.updateCount.exists(_ > 0) && removePostFromList(post)) {
               toaster.success("Post deleted")
             }
           case Failure(e) =>
