@@ -4,6 +4,31 @@ USE shocktrade;
 -- Stocks
 -- ------------------------------------------------------------
 
+DROP TABLE IF EXISTS mock_stocks;
+CREATE TABLE mock_stocks (
+    symbol VARCHAR(12) NOT NULL,
+    `exchange` VARCHAR(12) NOT NULL,
+    `name` VARCHAR(255),
+    sector VARCHAR(80),
+    industry VARCHAR(80),
+    cikNumber VARCHAR(11),
+    prevClose DECIMAL(12,5),
+    `open` DECIMAL(12,5),
+    `close` DECIMAL(12,5),
+    spread DECIMAL(12,5),
+    high DECIMAL(12,5),
+    low DECIMAL(12,5),
+    `change` DECIMAL(12,5),
+    changePct DECIMAL(12,5),
+    lastTrade DECIMAL(12,5),
+    tradeDateTime DATETIME,
+    beta DECIMAL(12,5),
+    volume BIGINT,
+    avgVolume10Day BIGINT,
+    PRIMARY KEY(symbol, exchange)
+);
+
+
 DROP TABLE IF EXISTS stocks_eoddata;
 CREATE TABLE stocks_eoddata (
     symbol VARCHAR(12) NOT NULL,

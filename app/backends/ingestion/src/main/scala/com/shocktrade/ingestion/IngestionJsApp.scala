@@ -1,13 +1,12 @@
 package com.shocktrade.ingestion
 
 import com.shocktrade.ingestion.daemons.cqm.ContestQualificationModule
-import com.shocktrade.ingestion.daemons.eoddata.EodDataCompanyUpdateDaemon
-import com.shocktrade.ingestion.daemons.nasdaq.NASDAQCompanyListUpdateDaemon
+import com.shocktrade.ingestion.daemons.mockmarket.MockStockUpdateDaemon
 import com.shocktrade.ingestion.routes.QualificationRoutes
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import io.scalajs.nodejs.timers.Interval
-import io.scalajs.nodejs.{process, setInterval, setTimeout}
+import io.scalajs.nodejs.{process, setImmediate, setInterval, setTimeout}
 import io.scalajs.npm.bodyparser.{BodyParser, UrlEncodedBodyOptions}
 import io.scalajs.npm.express.{Application, Express}
 import io.scalajs.util.DurationHelper._
@@ -64,12 +63,17 @@ object IngestionJsApp {
     // start the listener
     app.listen(port, () => logger.log(s"Server now listening on port $port [${System.currentTimeMillis() - startTime} msec]"))
 
+    // setup stock market mock generation
+    val mockStockMarket = new MockStockUpdateDaemon()
+    setImmediate(() => mockStockMarket.run())
+    setInterval(() => mockStockMarket.run(), 1.minute)
+
     //setTimeout(() => new WikipediaCompanyLoader().run(), 1.second)
 
     // schedule the daemons
-    //schedule(name = "Contest Qualification Module")(initialDelay = 0.minutes, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))
+    schedule(name = "Contest Qualification Module")(initialDelay = 0.minutes, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))
     //schedule(name = "[SEC.gov]CIK Update")(initialDelay = 1.minute, frequency = 3.days)(() => new CikUpdateDaemon().run(tradingClock))
-    schedule(name = "EOD-Data Company Update")(initialDelay = 0.minutes, frequency = 2.days)(() => new EodDataCompanyUpdateDaemon().run(tradingClock))
+    //schedule(name = "EOD-Data Company Update")(initialDelay = 0.minutes, frequency = 2.days)(() => new EodDataCompanyUpdateDaemon().run(tradingClock))
     //schedule(name = "NASDAQ Company List Update")(initialDelay = 0.minutes, frequency = 3.days)(() => new NASDAQCompanyListUpdateDaemon().run(tradingClock))
   }
 

@@ -9,6 +9,6 @@ import io.scalajs.npm.mysql.{MySQL, MySQLConnection, MySQLConnectionOptions}
 class MySQLDAO(options: MySQLConnectionOptions) {
   protected val conn: MySQLConnection = MySQL.createConnection(options)
 
-  def close(): Unit = conn.destroy()
+  def shutdown(): Unit = conn.destroy()
 
 }

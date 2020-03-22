@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.account.dao
 
 import com.shocktrade.common.models.user.NetWorth
-import com.shocktrade.webapp.routes.SymbolData
 import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
