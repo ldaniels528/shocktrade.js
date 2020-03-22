@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.social
+package com.shocktrade.webapp.routes.social.dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions

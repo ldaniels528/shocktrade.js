@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.account
+package com.shocktrade.webapp.routes.account.dao
 
 import io.scalajs.util.JsUnderOrHelper._
 

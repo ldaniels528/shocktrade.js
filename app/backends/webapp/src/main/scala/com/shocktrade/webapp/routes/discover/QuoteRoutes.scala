@@ -4,6 +4,7 @@ package discover
 import com.shocktrade.common.models.quote.DiscoverQuote._
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, CompleteQuote, OrderQuote}
 import com.shocktrade.webapp.routes.discover.QuoteRoutes._
+import com.shocktrade.webapp.routes.discover.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.JsUnderOrHelper._
 

@@ -3,6 +3,7 @@ package com.shocktrade.webapp.routes.discover
 import com.shocktrade.common.forms.MaxResultsForm
 import com.shocktrade.webapp.routes.NextFunction
 import com.shocktrade.webapp.routes.discover.GlobalSearchRoutes._
+import com.shocktrade.webapp.routes.discover.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

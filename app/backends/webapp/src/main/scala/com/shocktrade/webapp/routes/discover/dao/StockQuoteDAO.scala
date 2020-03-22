@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.discover
+package com.shocktrade.webapp.routes.discover.dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions

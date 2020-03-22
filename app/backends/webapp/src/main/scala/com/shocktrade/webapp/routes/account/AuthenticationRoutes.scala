@@ -2,6 +2,7 @@ package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.account.dao.AuthenticationDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

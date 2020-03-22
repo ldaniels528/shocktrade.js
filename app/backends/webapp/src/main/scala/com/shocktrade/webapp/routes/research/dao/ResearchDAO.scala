@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.research
+package com.shocktrade.webapp.routes.research.dao
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote

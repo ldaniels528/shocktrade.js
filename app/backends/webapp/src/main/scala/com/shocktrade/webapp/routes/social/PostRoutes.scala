@@ -5,6 +5,7 @@ import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.MaxResultsForm
 import com.shocktrade.common.models.post.Post
 import com.shocktrade.webapp.routes.social.PostRoutes._
+import com.shocktrade.webapp.routes.social.dao.{PostData, PostTagData, _}
 import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.JsUnderOrHelper._
@@ -92,7 +93,7 @@ class PostRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success((posts, tags)) =>
         val models = posts.map(_.toModel(tags))
         console.log(s"models = ${JSON.stringify(models)}")
-        response.send(models);
+        response.send(models)
         next()
       case Failure(e) => response.internalServerError(e); next()
     }

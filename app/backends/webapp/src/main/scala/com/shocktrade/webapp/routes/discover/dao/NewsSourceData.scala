@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.discover
+package com.shocktrade.webapp.routes.discover.dao
 
 import scala.scalajs.js
 

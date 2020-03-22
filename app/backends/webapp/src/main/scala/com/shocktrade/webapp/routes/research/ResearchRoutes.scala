@@ -2,6 +2,7 @@ package com.shocktrade.webapp.routes
 package research
 
 import com.shocktrade.common.forms.ResearchOptions
+import com.shocktrade.webapp.routes.research.dao.ResearchDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

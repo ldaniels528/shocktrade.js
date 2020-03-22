@@ -17,13 +17,13 @@ class SocialRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val seoMetaParser = new SharedContentParser()
 
   // Social Content / SEO
-  app.get("/api/social/content", (request: Request, response: Response, next: NextFunction) => getSEOContent(request, response, next))
+  app.get("/api/social/content", (request: Request, response: Response, next: NextFunction) => findSEOContent(request, response, next))
 
   /**
    * Retrieves the SEO information for embedding within a post
    * @example /api/social/content?url=http://www.businessinsider.com/how-to-remember-everything-you-learn-2015-10
    */
-  def getSEOContent(request: Request, response: Response, next: NextFunction): Unit = {
+  def findSEOContent(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.queryAs[SharedContentForm]
     form.url.toOption match {
       case Some(url) =>

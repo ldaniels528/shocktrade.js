@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes.discover
 
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.discover.dao.NewsSourceDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

@@ -3,6 +3,7 @@ package com.shocktrade.webapp.routes.account
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserDAO, UserIconData}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 

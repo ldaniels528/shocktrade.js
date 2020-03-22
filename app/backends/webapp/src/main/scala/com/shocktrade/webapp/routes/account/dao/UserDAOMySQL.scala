@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.account
+package com.shocktrade.webapp.routes.account.dao
 
 import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.webapp.routes.SymbolData
