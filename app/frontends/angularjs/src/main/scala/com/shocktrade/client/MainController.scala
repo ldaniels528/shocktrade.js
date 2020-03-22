@@ -5,6 +5,7 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.users.GameStateFactory.NetWorthScope
 import com.shocktrade.client.users.{AuthenticationService, GameStateFactory, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
@@ -19,6 +20,7 @@ import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -37,15 +39,23 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
                      @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
+  implicit private val scope: MainControllerScope = $scope
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
   private var loadingIndex = 0
 
+  // public variable
   $scope.appTabs = MainTab.Tabs
   $scope.levels = GameLevel.Levels
-
   $scope.favoriteSymbols = js.Dictionary()
   $scope.recentSymbols = js.Dictionary()
-  $scope.notifications = js.Array()
+
+  //////////////////////////////////////////////////////////////////////
+  //              Event Listeners
+  //////////////////////////////////////////////////////////////////////
+
+  $scope.onUserProfileUpdated { (_, profile) =>
+    console.log(s"profile = ${JSON.stringify(profile)}")
+  }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Loading Functions
@@ -74,9 +84,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.mainInit = () => {
-    console.log(s"Initializing ${getClass.getSimpleName}...")
-  }
+  $scope.mainInit = () => console.log(s"Initializing ${getClass.getSimpleName}...")
 
   $scope.getAssetCode = (q: js.UndefOr[ClassifiedQuote]) => MainController.getAssetCode(q)
 
@@ -94,32 +102,17 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.getTotalInvestment = () => $scope.getNetWorth() - $scope.getWallet()
 
-  $scope.getNetWorth = () => $scope.userProfile.flatMap(_.netWorth).orZero
+  $scope.getNetWorth = () => gameState.userProfile.flatMap(_.funds).orZero
 
-  $scope.getWallet = () => $scope.userProfile.flatMap(_.wallet).orZero
+  $scope.getWallet = () => gameState.userProfile.flatMap(_.wallet).orZero
 
-  $scope.getWealthChange = () => {
-    val original = 250e+3
-    (for {
-      netWorth <- $scope.netWorth
-      cash <- netWorth.wallet
-      funds <- netWorth.funds
-      equity <- netWorth.equity
-      change = ((cash + funds + equity) - original) / original * 100.0
-    } yield change).orZero
-  }
+  $scope.getUserID = () => gameState.userID
 
-  $scope.getUserID = () => $scope.userProfile.flatMap(_.userID).orNull
+  $scope.getUserName = () => gameState.username
 
-  $scope.getUserName = () => $scope.userProfile.flatMap(_.username).orNull
-
-  $scope.getUserProfile = () => $scope.userProfile.orNull
-
-  $scope.hasNotifications = () => $scope.notifications.nonEmpty
+  $scope.getUserProfile = () => gameState.userProfile
 
   $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
-
-  $scope.isAdmin = () => $scope.userProfile.exists(_.isAdmin.isTrue)
 
   $scope.isAuthenticated = () => $scope.userProfile.flatMap(_.userID).isAssigned
 
@@ -127,23 +120,25 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aPlayer: js.UndefOr[UserProfile]) => aPlayer.exists { player =>
-    player.userID.exists { portfolioID =>
-      if (!onlinePlayers.contains(portfolioID)) {
-        onlinePlayers(portfolioID) = new OnlineStatus(connected = false)
-        userService.getOnlineStatus(portfolioID) onComplete {
-          case Success(response) =>
-            val newState = response.data
-            onlinePlayers(portfolioID) = newState
-          case Failure(e) =>
-            console.error(s"Error retrieving online state for user $portfolioID: ${e.getMessage}")
-        }
-      }
-      onlinePlayers.get(portfolioID).exists(_.connected)
-    }
+  $scope.isOnline = (aPlayer: js.UndefOr[UserProfile]) => aPlayer.flatMap(_.userID).exists(isOnline)
+
+  $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
+
+  $scope.logout = () => logout()
+
+  $scope.signIn = () => signIn()
+
+  $scope.signUp = () => signUp()
+
+  private def clearLoggedInItems(): Unit = {
+    contestFactory.clear()
+    gameState.reset()
+    $scope.favoriteSymbols.clear()
+    $scope.recentSymbols.clear()
+    $scope.userProfile = js.undefined
   }
 
-  $scope.getPreferenceIcon = (q: js.Dynamic) => {
+  private def getPreferenceIcon(q: js.Dynamic): String = {
     // fail-safe
     if (!isDefined(q) || !isDefined(q.symbol)) ""
     else {
@@ -156,35 +151,52 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  $scope.logout = () => {
+  private def isOnline(userID: String): Boolean = { // TODO fix async drop-out
+    if (!onlinePlayers.contains(userID)) {
+      onlinePlayers(userID) = new OnlineStatus(connected = false)
+      userService.getOnlineStatus(userID) onComplete {
+        case Success(response) =>
+          val newState = response.data
+          onlinePlayers(userID) = newState
+        case Failure(e) =>
+          console.error(s"Error retrieving online state for user $userID: ${e.getMessage}")
+      }
+    }
+    onlinePlayers.get(userID).exists(_.connected)
+  }
+
+  private def logout(): Unit = {
     authenticationService.logout() onComplete {
-      case Success(_) => logout()
+      case Success(_) => clearLoggedInItems()
       case Failure(e) =>
         toaster.error("An error occurred during logout")
-        logout()
+        clearLoggedInItems()
         e.printStackTrace()
     }
   }
 
-  $scope.signIn = () => {
+  private def signIn(): Unit = {
     val outcome = for {
-      signinResponse <- signInDialog.signIn()
-      networthResponse <- userService.getNetWorth(signinResponse.userID.orNull)
-    } yield (signinResponse, networthResponse)
+      userAccount <- signInDialog.signIn()
+      netWorth <- userAccount.userID.toOption match {
+        case Some(userID) => userService.getNetWorth(userID).toFuture
+        case None => Future.failed(js.JavaScriptException("Missing user ID"))
+      }
+    } yield (userAccount, netWorth)
 
     outcome onComplete {
       case Success((userAccount, netWorth)) =>
+        $scope.emitUserProfileUpdated(userAccount)
         $scope.$apply { () =>
           gameState.userProfile = userAccount
           gameState.netWorth = netWorth.data
         }
-        $scope.emitUserProfileUpdated(userAccount)
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
   }
 
-  $scope.signUp = () => {
+  private def signUp(): Unit = {
     signUpDialog.signUp() onComplete {
       case Success(response) => gameState.userProfile = response
       case Failure(e) =>
@@ -208,11 +220,14 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   $scope.switchToNewsFeed = () => $scope.switchToTab(MainTab.NewsFeed)
 
-  $scope.switchToTab = (index: js.UndefOr[Int]) => index foreach { tabIndex =>
+  $scope.switchToTab = (anIndex: js.UndefOr[Int]) => anIndex foreach switchToTab
+
+  private def switchToTab(tabIndex: Int): Unit = {
     gameState.userProfile.flatMap(_.userID).toOption match {
       case Some(userID) =>
         asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>
+            console.info(s"response = ${JSON.stringify(response)}")
             performTabSwitch(tabIndex)
           case Failure(e) =>
             toaster.error(e.getMessage)
@@ -227,26 +242,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     val tab = MainTab.Tabs(tabIndex)
     console.log(s"Changing location for ${$scope.userProfile.flatMap(_.username).orNull} to ${tab.url}")
     $location.url(tab.url)
-  }
-
-  private def logout(): Unit = {
-    contestFactory.clear()
-    gameState.reset()
-    $scope.favoriteSymbols.clear()
-    $scope.recentSymbols.clear()
-    $scope.userProfile = js.undefined
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  //              Event Listeners
-  //////////////////////////////////////////////////////////////////////
-
-  $scope.onUserProfileUpdated { (_, profile) =>
-    console.log(s"profile = ${JSON.stringify(profile)}")
-  }
-
-  $scope.onUserProfileUpdated { (_, profile) =>
-    console.log(s"profile = ${JSON.stringify(profile)}")
   }
 
 }
@@ -302,13 +297,12 @@ object MainController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MainControllerScope extends RootScope with GlobalNavigation {
+trait MainControllerScope extends RootScope with GlobalNavigation with NetWorthScope {
   // variables
   var appTabs: js.Array[MainTab] = js.native
   var favoriteSymbols: js.Dictionary[String] = js.native
   var levels: js.Array[GameLevel] = js.native
   //var netWorth: js.UndefOr[NetWorth] = js.native
-  var notifications: js.Array[String] = js.native
   var recentSymbols: js.Dictionary[String] = js.native
 
   // loading functions
@@ -327,13 +321,10 @@ trait MainControllerScope extends RootScope with GlobalNavigation {
   var getTotalInvestment: js.Function0[Double] = js.native
   var getNetWorth: js.Function0[Double] = js.native
   var getWallet: js.Function0[Double] = js.native
-  var getWealthChange: js.Function0[Double] = js.native
-  var getUserID: js.Function0[String] = js.native
-  var getUserName: js.Function0[String] = js.native
-  var getUserProfile: js.Function0[UserProfile] = js.native
-  var hasNotifications: js.Function0[Boolean] = js.native
+  var getUserID: js.Function0[js.UndefOr[String]] = js.native
+  var getUserName: js.Function0[js.UndefOr[String]] = js.native
+  var getUserProfile: js.Function0[js.UndefOr[UserProfile]] = js.native
   var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
-  var isAdmin: js.Function0[Boolean] = js.native
   var isAuthenticated: js.Function0[Boolean] = js.native
 
   var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native

@@ -10,7 +10,6 @@ import scala.scalajs.js
  */
 class NewOrderForm(var symbol: js.UndefOr[String] = js.undefined,
                    var exchange: js.UndefOr[String] = js.undefined,
-                   var accountType: js.UndefOr[String] = js.undefined,
                    var orderType: js.UndefOr[String] = js.undefined,
                    var orderTerm: js.UndefOr[String] = js.undefined,
                    var priceType: js.UndefOr[String] = js.undefined,
@@ -32,12 +31,6 @@ object NewOrderForm {
   implicit class NewOrderFormEnrichment(val form: NewOrderForm) extends AnyVal {
 
     @inline
-    def isCashAccount: Boolean = form.accountType.contains("CASH")
-
-    @inline
-    def isMarginAccount: Boolean = form.accountType.contains("MARGIN")
-
-    @inline
     def isMarketOrder: Boolean = form.priceType.contains("MARKET")
 
     @inline
@@ -47,7 +40,6 @@ object NewOrderForm {
     def validate: js.Array[String] = {
       val messages = js.Array[String]()
       if (form.symbol.nonAssigned) messages.append("Symbol is required")
-      if (form.accountType.nonAssigned) messages.push("Please selected the account to use (Cash or Margin)")
       if (form.orderTerm.nonAssigned) messages.push("No Order Term specified")
       if (form.orderType.nonAssigned) messages.push("No Order Type (BUY or SELL) specified")
       if (form.priceType.nonAssigned) messages.push("No Pricing Method specified")

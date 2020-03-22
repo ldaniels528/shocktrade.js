@@ -1,6 +1,7 @@
 package com.shocktrade.client.users
 
 import com.shocktrade.client.models.UserProfile
+import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.OperationResult
 import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
@@ -15,17 +16,19 @@ import scala.scalajs.js
  */
 class UserService($http: Http) extends Service {
 
+  def createAccount(form: SignUpForm): js.Promise[HttpResponse[UserProfile]] = $http.post[UserProfile]("/api/user", form)
+
   /**
    * Retrieves a user by ID
    * @param userID the given user ID
    */
-  def getUserByID(userID: String): js.Promise[HttpResponse[UserProfile]] = $http.get(s"/api/user/$userID")
+  def findUserByID(userID: String): js.Promise[HttpResponse[UserProfile]] = $http.get(s"/api/user/$userID")
 
   /**
    * Retrieves an array of users by ID
    * @param userIDs the given user IDs
    */
-  def getUsers(userIDs: js.Array[String]): js.Promise[HttpResponse[js.Array[UserProfile]]] = $http.put(s"/api/users", data = userIDs)
+  def findUsers(userIDs: js.Array[String]): js.Promise[HttpResponse[js.Array[UserProfile]]] = $http.get(s"/api/users?ids=${userIDs.mkString("+")}")
 
   //////////////////////////////////////////////////////////////////////
   //              Profile Lookup Functions

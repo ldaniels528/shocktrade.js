@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes
 package contest
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
 import com.shocktrade.common.models.contest.ChatMessage
@@ -58,15 +59,10 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
     form match {
       case Some((contestID, userID, message)) =>
         // asynchronously create the message
-        val outcome = for {
-          count <- contestDAO.addChatMessage(contestID, userID, message) if count > 0
-          messages <- contestDAO.findChatMessages(contestID)
-        } yield messages
-
-        outcome onComplete {
+        contestDAO.addChatMessage(contestID, userID, message) onComplete {
           // HTTP/200 OK
-          case Success(messages) =>
-            response.send(messages)
+          case Success(count) =>
+            response.send(Ok(count))
             WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
             next()
           // HTTP/500 ERROR

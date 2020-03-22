@@ -18,21 +18,21 @@ trait UserDAO {
    * @param id the given user ID
    * @return a promise of an option of a user
    */
-  def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserData]]
+  def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
 
   /**
    * Attempts to retrieve a user by ID
    * @param ids the given collection of user IDs
    * @return a promise of an option of a user
    */
-  def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserData]]
+  def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserProfileData]]
 
   /**
    * Attempts to retrieve a user by username
    * @param name the given username
    * @return a promise of the option of a users
    */
-  def findByUsername(name: String)(implicit ec: ExecutionContext): Future[js.Array[UserData]]
+  def findByUsername(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Icon Management
@@ -46,7 +46,7 @@ trait UserDAO {
   //    Account Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserAccountData]]
+  def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
 
   def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[NetWorth]]
 

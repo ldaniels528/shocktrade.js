@@ -9,7 +9,7 @@
             <div class="emphasis" title="Total investment value">
                 <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
                    title="{{ hasNotifications() ? 'New events available' : 'No events available' }}"></i>
-                <i class="fa fa-line-chart"></i> {{ (netWorth.funds + netWorth.equity) || 0.0 | number: 2 }}
+                <i class="fa fa-line-chart"></i> {{ (userProfile.funds + userProfile.equity) || 0.0 | number: 2 }}
                 <span class="pull-right">
                     <changearrow value="{{ getWealthChange() }}"></changearrow>
                     <span ng-class="getWealthChange() < 0 ? 'negative' : 'positive'">{{ getWealthChange() | number:2 }}%</span>
@@ -40,14 +40,13 @@
     </div>
     <div class="col-md-3">
         <span class="title_color pull-right" style="margin-right: 20px">
-            <avatar ng-show="getFacebookID()" id="{{ getFacebookID() }}" class="avatar-24"></avatar>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signIn()">
                 <i class="fa fa-lg fa-sign-in fb_icon"></i> Sign In
             </span>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
             <span ng-show="isAuthenticated()"  class="title_color" ng-show="getUserName()">
-                &#8212; <avatar id="{{ getUserID() }}" class="avatar-16""></avatar> {{ getUserName() }}</span>
+                &#8212; <avatar id="userProfile.userID" class="avatar-16"></avatar> {{ userProfile.username }}</span>
         </span>
     </div>
 </div>

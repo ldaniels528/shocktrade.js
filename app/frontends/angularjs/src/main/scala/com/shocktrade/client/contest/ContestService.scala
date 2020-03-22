@@ -1,6 +1,7 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.ContestSearchResultUI
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import io.scalajs.npm.angularjs.Service
@@ -79,7 +80,7 @@ class ContestService($http: Http) extends Service {
     $http.get(s"/api/contest/$contestID/chat")
   }
 
-  def sendChatMessage(contestID: String, message: ChatMessage): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
+  def sendChatMessage(contestID: String, message: ChatMessage): js.Promise[HttpResponse[Ok]] = {
     $http.post(s"/api/contest/$contestID/chat", message)
   }
 

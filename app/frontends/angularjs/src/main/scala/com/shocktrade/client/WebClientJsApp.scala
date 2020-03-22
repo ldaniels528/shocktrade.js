@@ -125,16 +125,17 @@ object WebClientJsApp {
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
     module.serviceOf[SocialServices]("SocialServices")
-    module.serviceOf[UserAccountService]("UserAccountService")
     module.serviceOf[UserService]("UserService")
     module.serviceOf[WebSocketService]("WebSocketService")
     ()
   }
 
   private def configureControllers(module: Module) {
+    module.controllerOf[ActiveOrdersController]("ActiveOrdersController")
     module.controllerOf[AwardsController]("AwardsController")
     module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
+    module.controllerOf[ClosedOrdersController]("ClosedOrdersController")
     module.controllerOf[DashboardController]("DashboardController")
     module.controllerOf[DiscoverController]("DiscoverController")
     module.controllerOf[ExploreController]("ExploreController")
@@ -147,7 +148,6 @@ object WebClientJsApp {
     module.controllerOf[MyQuotesController]("MyQuotesController")
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
-    module.controllerOf[PortfolioController]("PortfolioController")
     module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")
     module.controllerOf[TradingHistoryController]("TradingHistoryController")

@@ -13,27 +13,32 @@ import scala.scalajs.js
  */
 class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
   private val conn = MySQL.createConnection(options)
+  private val userByIdSQL =
+    """|SELECT U.*, SUM(P.funds) funds, IFNULL(SUM(S.lastTrade * PS.quantity),0) equity
+       |FROM users U
+       |LEFT JOIN portfolios P ON P.userID = U.userID
+       |LEFT JOIN contests C ON C.contestID = P.contestID
+       |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+       |LEFT JOIN stocks S ON S.symbol = PS.symbol
+       |""".stripMargin
 
-  override def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserData]] = {
-    conn.queryFuture[UserData](s"SELECT * FROM users WHERE name = '$id'") map { case (rows, _) =>
-      rows.headOption
-    }
+  override def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
+    conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.userID = ?", js.Array(id)) map { case (rows, _) => rows.headOption }
   }
 
-  override def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserData]] = {
-    conn.queryFuture[UserData](s"SELECT * FROM users WHERE id IN (${ids.map(id => s"'$id'").mkString(",")})") map { case (rows, _) => rows }
+  override def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserProfileData]] = {
+    conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.userID IN (${ids.map(id => s"'$id'").mkString(",")})") map { case (rows, _) => rows }
   }
 
-  override def findByUsername(name: String)(implicit ec: ExecutionContext): Future[js.Array[UserData]] = {
-    conn.queryFuture[UserData](s"SELECT * FROM users WHERE name like '$name%'")
-      .map { case (rows, _) => rows }
+  override def findByUsername(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
+    conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.name = ?", js.Array(name)) map { case (rows, _) => rows.headOption }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Account Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  override def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserAccountData]] = {
+  override def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
     import account._
     for {
       ok <- conn.executeFuture(
@@ -42,10 +47,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
            |""".stripMargin,
         js.Array(username, email, password, wallet)) if ok.affectedRows == 1
 
-      newAccount <- conn.queryFuture[UserAccountData](
-        "SELECT * FROM users WHERE username = ?",
-        js.Array(username)).map { case (rows, _) => rows.headOption }
-
+      newAccount <- findByUsername(username.orNull)
     } yield newAccount
   }
 

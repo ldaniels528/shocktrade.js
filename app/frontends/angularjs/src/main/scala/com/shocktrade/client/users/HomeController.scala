@@ -34,7 +34,7 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 
   $scope.getNextLevelXP = () => $scope.userProfile.flatMap(_.nextLevelXP)
 
-  $scope.getStars = () => (1 to $scope.userProfile.flatMap(_.rep).getOrElse(3)).toJSArray
+  $scope.getStars = () => (1 to $scope.userProfile.flatMap(_.totalXP.map(_ / 1000)).getOrElse(1)).toJSArray
 
   $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP).getOrElse(0)
 

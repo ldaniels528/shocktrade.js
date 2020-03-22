@@ -2,17 +2,16 @@ package com.shocktrade.client.users
 
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.SignInDialogController.SignInDialogResult
+import com.shocktrade.client.users.SignInDialogController.{AuthenticationFormValidation, SignInDialogResult}
 import com.shocktrade.common.auth.AuthenticationForm
 import com.shocktrade.common.util.StringHelper._
-import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
-import io.scalajs.util.ScalaJsHelper.{emptyArray, isDefined, _}
+import io.scalajs.util.ScalaJsHelper.{emptyArray, isDefined}
 
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -56,28 +55,22 @@ case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: 
   $scope.cancel = () => $uibModalInstance.dismiss("cancel")
 
   $scope.signIn = (aForm: js.UndefOr[AuthenticationForm]) => aForm foreach { form =>
-    if (isValid(form)) {
+    if (form.isValid(messages)) {
       startLoading()
 
       // attempt to authenticate the user
       val outcome = for {
-        code <- authenticationService.getCode
-        response <- authenticationService.login(form.copy(authCode = code.data.code))
-      } yield response
+        authCode <- authenticationService.getCode
+        userProfile <- authenticationService.login(form.copy(authCode = authCode.data.code))
+      } yield userProfile
 
       outcome onComplete {
-        case Success(response) =>
-          val profile = response.data
+        case Success(userProfile) =>
           stopLoading()
-          if (!isDefined(profile.dynamic.error)) $uibModalInstance.close(profile)
-          else {
-            profile.dynamic.error.asOpt[String] foreach (messages.push(_))
-          }
-
+          $uibModalInstance.close(userProfile.data)
         case Failure(e) =>
           stopLoading()
-          toaster.error(e.getMessage)
-          console.log(s"Error authenticating user: ${e.getMessage}")
+          $uibModalInstance.dismiss(e.getMessage)
       }
     }
   }
@@ -89,29 +82,6 @@ case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: 
   ///////////////////////////////////////////////////////////////////////
   //    Private Functions
   ///////////////////////////////////////////////////////////////////////
-
-  /**
-   * Validates the form
-   * @param form the given [[AuthenticationForm form]]
-   * @return {boolean}
-   */
-  private def isValid(form: AuthenticationForm): Boolean = {
-    // clear messages
-    messages.removeAll()
-
-    // validate the user name
-    if (!isDefined(form.username) || form.username.exists(_.isBlank)) {
-      messages.push("Screen Name is required")
-    }
-
-    // validate the email address
-    if (!isDefined(form.password) || form.password.exists(_.isBlank)) {
-      messages.push("Password is required")
-    }
-
-    // it"s valid is the messages are empty
-    messages.isEmpty
-  }
 
   private def startLoading(): Unit = loading = true
 
@@ -125,6 +95,34 @@ case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: 
 object SignInDialogController {
 
   type SignInDialogResult = UserProfile
+
+  /**
+   * Authentication Form Validation
+   * @param form the given [[AuthenticationForm form]]
+   */
+  final implicit class AuthenticationFormValidation(val form: AuthenticationForm) extends AnyVal {
+
+    /**
+     * Validates the form
+     * @return {boolean}
+     */
+    def isValid(messages: js.Array[String]): Boolean = {
+      // clear the old messages
+      messages.clear()
+
+      // validate the user name
+      if (!isDefined(form.username) || form.username.exists(_.isBlank)) {
+        messages.push("Screen Name is required")
+      }
+
+      // validate the email address
+      if (!isDefined(form.password) || form.password.exists(_.isBlank)) {
+        messages.push("Password is required")
+      }
+
+      messages.isEmpty
+    }
+  }
 
 }
 

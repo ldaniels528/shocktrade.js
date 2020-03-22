@@ -1,8 +1,9 @@
 package com.shocktrade.webapp.routes.contest
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.{MarketValueResponse, TotalInvestment}
-import com.shocktrade.webapp.routes.{NextFunction, Ok}
+import com.shocktrade.webapp.routes.NextFunction
 import io.scalajs.npm.express.{Application, Request, Response}
 import io.scalajs.util.DateHelper._
 
@@ -25,7 +26,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   // individual objects
   app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => findPortfolioByUser(request, response, next))
   app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
-  app.get("/api/portfolio/:portfolioID/orders", (request: Request, response: Response, next: NextFunction) => findOrdersByID(request, response, next))
+  app.get("/api/orders/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
   app.get("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => findPerksByID(request, response, next))
   app.post("/api/portfolio/:portfolioID/perks", (request: Request, response: Response, next: NextFunction) => purchasePerks(request, response, next))
   app.get("/api/portfolio/:portfolioID/positions", (request: Request, response: Response, next: NextFunction) => findPositionsByID(request, response, next))
@@ -70,9 +71,9 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves all orders by portfolio ID
    */
-  def findOrdersByID(request: Request, response: Response, next: NextFunction): Unit = {
-    val portfolioID = request.params("portfolioID")
-    orderDAO.findOrders(portfolioID) onComplete {
+  def findOrders(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
+    orderDAO.findOrders(contestID, userID) onComplete {
       case Success(orders) => response.send(orders); next()
       case Failure(e) => response.internalServerError(e); next()
     }
@@ -210,7 +211,6 @@ object PortfolioRoutes {
         orderID = js.undefined,
         symbol = form.symbol,
         exchange = form.exchange,
-        accountType = form.accountType,
         orderType = form.orderType,
         priceType = form.priceType,
         price = if (form.isLimitOrder) form.limitPrice else js.undefined,

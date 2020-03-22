@@ -8,17 +8,11 @@ import scala.scalajs.js
  * Represents a User Profile data model
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserProfileData(var userID: js.UndefOr[String],
-                      var username: js.UndefOr[String],
-                      var country: js.UndefOr[String],
-                      var level: js.UndefOr[Int],
-                      var rep: js.UndefOr[Int],
-                      var netWorth: js.UndefOr[Double],
-                      var wallet: js.UndefOr[Double],
-                      var totalXP: js.UndefOr[Int],
-                      var favoriteSymbols: js.UndefOr[js.Array[String]],
-                      var recentSymbols: js.UndefOr[js.Array[String]],
-                      var followers: js.UndefOr[js.Array[String]],
-                      var friends: js.UndefOr[js.Array[String]],
-                      var awards: js.UndefOr[js.Array[String]],
-                      var lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike with UserData
+class UserProfileData(val userID: js.UndefOr[String],
+                      val username: js.UndefOr[String],
+                      val level: js.UndefOr[Int],
+                      val equity: js.UndefOr[Double],
+                      val funds: js.UndefOr[Double],
+                      val wallet: js.UndefOr[Double],
+                      val totalXP: js.UndefOr[Int],
+                      val lastLoginTime: js.UndefOr[js.Date]) extends UserProfileLike

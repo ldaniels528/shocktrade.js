@@ -4,6 +4,7 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.client.users.GameStateFactory
+import com.shocktrade.client.users.GameStateFactory.ContestScope
 import com.shocktrade.client.{ContestFactory, GlobalLoading, RootScope}
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
@@ -35,14 +36,15 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
                                 @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
 
-  // public variables
+  // internal variables
+  implicit private val scope: GameSearchScope = $scope
   private var searchResults = js.Array[ContestSearchResultUI]()
   private var splitScreen: Boolean = false
 
-  $scope.contest = null
+  $scope.contest = js.undefined
   $scope.rankings = js.undefined
   $scope.portfolios = js.Array()
-  $scope.searchTerm = null
+  $scope.searchTerm = js.undefined
   $scope.searchOptions = new ContestSearchForm(
     userID = gameState.userID,
     activeOnly = false,
@@ -221,7 +223,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
       asyncLoading($scope)(contestService.joinContest(contestID, userID)) onComplete {
         case Success(response) =>
           console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest().refreshNetWorth()
+          gameState.refreshContest()
           $scope.$apply { () => }
           $timeout(() => contest.joining = false, 0.5.seconds)
         case Failure(e) =>
@@ -242,7 +244,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
         case Success(response) =>
           console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest().refreshNetWorth()
+          gameState.refreshContest()
           $scope.$apply { () => }
           $timeout(() => contest.quitting = false, 0.5.seconds)
         case Failure(e) =>
@@ -352,11 +354,11 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait GameSearchScope extends RootScope with ContestEntrySupportScope {
+trait GameSearchScope extends RootScope with ContestScope with ContestEntrySupportScope {
   // variables
-  //var contest: js.UndefOr[ContestSearchResultUI] = js.native
+  //var contest: js.UndefOr[Contest] = js.native
   var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
-  var searchTerm: String = js.native
+  var searchTerm: js.UndefOr[String] = js.native
   var searchOptions: ContestSearchForm = js.native
   var selectedContest: js.UndefOr[ContestSearchResultUI] = js.native
   var portfolios: js.Array[ContestRanking] = js.native

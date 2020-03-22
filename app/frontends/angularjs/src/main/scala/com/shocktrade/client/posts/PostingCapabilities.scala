@@ -4,6 +4,7 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.post.{Comment, Post, Reply}
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
@@ -16,7 +17,6 @@ import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -195,7 +195,7 @@ trait PostingCapabilities extends GlobalLoading {
 
     if (updatedPost.submitter.nonAssigned) {
       updatedPost.userID.flat foreach { submitterId =>
-        userService.getUserByID(submitterId) onComplete {
+        userService.findUserByID(submitterId) onComplete {
           case Success(user) => $scope.$apply(() => updatedPost.submitter = user.data)
           case Failure(e) => toaster.error("Submitter retrieval", e.displayMessage)
         }
@@ -302,7 +302,7 @@ trait PostingCapabilities extends GlobalLoading {
       postID <- aPostID.toOption
       commentID <- aCommentID.toOption
       reply <- aReply.toOption
-      replyID <- reply._id.toOption
+      replyID <- reply.replyID.toOption
       userID <- aUserID.toOption
     } yield (reply, postID, commentID, replyID, userID)
 
@@ -338,11 +338,10 @@ trait PostingCapabilities extends GlobalLoading {
       user <- $scope.userProfile
       text <- aText
     } {
-      val submitter = user
-      val reply = Reply(text, submitter)
-
+      val reply = new Reply(text, user.userID)
       postService.createReply(postID, commentID, reply) onComplete {
         case Success(updatedPost) =>
+          console.info(s"updatedPost = ${JSON.stringify(updatedPost)}")
           $scope.$apply { () =>
             comment.replies.foreach(_.push(reply))
             comment.newReply = false

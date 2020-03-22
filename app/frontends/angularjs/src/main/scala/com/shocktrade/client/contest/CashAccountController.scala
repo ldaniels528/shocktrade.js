@@ -5,6 +5,7 @@ import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope}
 import io.scalajs.util.JsUnderOrHelper._
 
+import scala.language.postfixOps
 import scala.scalajs.js
 
 /**
@@ -33,7 +34,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster) extends 
     val outcome = for {
       portfolio <- $scope.portfolio.toList
       positions <- portfolio.positions.toList
-      cashPositions = positions.filter(_.isCashAccount)
+      cashPositions = positions
     } yield cashPositions.map(_.netValue.orZero).sum
     outcome.sum
   }
@@ -46,7 +47,7 @@ class CashAccountController($scope: CashAccountScope, toaster: Toaster) extends 
     val outcome = for {
       portfolio <- $scope.portfolio.toList
       orders <- portfolio.orders.toList
-      cashOrders = orders.filter(o => o.orderType.contains(orderType) && o.isCashAccount)
+      cashOrders = orders.filter(o => o.orderType.contains(orderType))
     } yield cashOrders.map(_.totalCost.orZero).sum
     outcome.sum
   }

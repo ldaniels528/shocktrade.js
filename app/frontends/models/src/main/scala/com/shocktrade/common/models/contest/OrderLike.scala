@@ -18,8 +18,6 @@ trait OrderLike extends js.Object {
 
   def exchange: js.UndefOr[String]
 
-  def accountType: js.UndefOr[String]
-
   def orderType: js.UndefOr[String]
 
   def priceType: js.UndefOr[String]
@@ -43,8 +41,6 @@ trait OrderLike extends js.Object {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object OrderLike {
-  val ACCOUNT_TYPE_CASH = "CASH"
-  val ACCOUNT_TYPE_MARGIN = "MARGIN"
 
   val ORDER_TYPE_BUY = "BUY"
   val ORDER_TYPE_SELL = "SELL"
@@ -61,12 +57,6 @@ object OrderLike {
 
     @inline
     def isExpired(asOfTime: js.Date) = order.expirationTime.exists(_ < asOfTime)
-
-    @inline
-    def isCashAccount = order.accountType.contains(ACCOUNT_TYPE_CASH)
-
-    @inline
-    def isMarginAccount = order.accountType.contains(ACCOUNT_TYPE_MARGIN)
 
     @inline
     def isBuyOrder = order.orderType.contains(ORDER_TYPE_BUY)

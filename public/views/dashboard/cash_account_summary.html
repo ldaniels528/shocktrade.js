@@ -3,7 +3,7 @@
 		<div class="col-md-12">
 			<span class="alabel">Cash Available:</span>
 			<span class="afunds pull-right">
-				<span class="fundsAvailable">{{ portfolio.balance.funds | number:2 }}</span>
+				<span class="fundsAvailable">{{ portfolio.balance.funds || 0.00 | number:2 }}</span>
 			</span>
 			<span style="font-size: 9pt">
 				&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
@@ -12,13 +12,13 @@
 		<div class="col-md-12">
 			<span class="alabel">Investments:</span>
 			<span class="afunds pull-right">
-				<span class="totalInvestment">{{ portfolio.balance.equity | number:2 }}</span>
+				<span class="totalInvestment">{{ portfolio.balance.equity || 0.00 | number:2 }}</span>
 			</span>
 		</div>
 		<div class="col-md-12">
 			<span class="alabel">Total Equity:</span>
 			<span class="afunds pull-right">
-				<span class="fundsAvailable">{{ portfolio.balance.funds + portfolio.balance.equity | number:2 }}</span>
+				<span class="fundsAvailable">{{ portfolio.balance.funds + portfolio.balance.equity || 0.00 | number:2 }}</span>
 			</span>
 		</div>
 	</div>
@@ -27,7 +27,7 @@
 		<div class="col-md-12">
 			<span class="alabel">Pending Orders:</span>
 			<span class="afunds pull-right">
-                <span class="fundsAvailable">{{ portfolio.balance.totalBuyOrders + portfolio.balance.totalSellOrders | number:2 }}</span>
+                <span class="fundsAvailable">{{ portfolio.balance.totalBuyOrders + portfolio.balance.totalSellOrders || 0.00 | number:2 }}</span>
             </span>
 		</div>
 		<div class="col-md-12">
@@ -35,7 +35,7 @@
 			<span class="alabel">&nbsp; BUY Orders:</span>
 			<span class="afunds pull-right">
 				<span ng-class="portfolio.balance.totalBuyOrders > portfolio.balance.funds ? 'profitable' : 'unprofitable'">
-					{{ portfolio.balance.totalBuyOrders | number:2 }}
+					{{ portfolio.balance.totalBuyOrders || 0.00 | number:2 }}
 				</span>
 			</span>
 		</div>
@@ -43,7 +43,7 @@
 			<!-- Pending Orders (SELL) -->
 			<span class="alabel">&nbsp; SELL Orders:</span>
 			<span class="afunds pull-right">
-                <span class="fundsAvailable">{{ portfolio.balance.totalSellOrders | number:2 }}</span>
+                <span class="fundsAvailable">{{ portfolio.balance.totalSellOrders || 0.00 | number:2 }}</span>
             </span>
 		</div>
 	</div>

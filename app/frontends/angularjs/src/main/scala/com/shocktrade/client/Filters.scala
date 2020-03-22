@@ -1,5 +1,6 @@
 package com.shocktrade.client
 
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.scalajs.js
 import scala.scalajs.js.Any._
@@ -46,7 +47,7 @@ object Filters {
   /**
    * Duration: Converts a given time stamp to a more human readable expression (e.g. "5 mins ago")
    */
-  val duration: js.Function = () => { time: js.Dynamic => toDuration(time, noFuture = false) }: js.Function
+  val duration: js.Function = () => { time: js.UndefOr[js.Any] => toDuration(time, noFuture = false) }: js.Function
   /**
    * Escape: Performs an escape
    */
@@ -59,7 +60,7 @@ object Filters {
    * Quote Change: Formats the change percent property of a quote (e.g. 1.2")
    */
   val quoteChange: js.Function = () => { value: js.UndefOr[Any] =>
-    value map {
+    value.flat  map {
       case s: String if s.nonEmpty => s
       case n: Number => n.doubleValue() match {
         case num if Math.abs(num) >= 100 => f"$num%.0f"
@@ -73,7 +74,7 @@ object Filters {
    * Quote Number: Formats an amount to provide the best display accuracy (e.g. "100.20" or "0.0001")
    */
   val quoteNumber: js.Function = () => { value: js.UndefOr[Any] =>
-    value map {
+    value.flat map {
       case s: String if s.nonEmpty => s
       case n: Number => n.doubleValue() match {
         case num if Math.abs(num) < 0.0001 => f"$num%.5f"
@@ -95,7 +96,7 @@ object Filters {
    * @param aTime the given [[js.Date]] or time stamp (in milliseconds)
    * @return the duration (e.g. "10 mins ago")
    */
-  def toDuration(aTime: js.UndefOr[js.Any], noFuture: Boolean = false): js.UndefOr[String] = aTime map { time =>
+  def toDuration(aTime: js.UndefOr[js.Any], noFuture: Boolean = false): js.UndefOr[String] = aTime.flat map { time =>
     val ts = time.toString match {
       case s if s.matches("\\d+") => s.toDouble
       case s => js.Date.parse(s)

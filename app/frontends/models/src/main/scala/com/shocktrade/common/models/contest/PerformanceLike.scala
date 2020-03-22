@@ -8,7 +8,7 @@ import scala.scalajs.js
  */
 trait PerformanceLike extends js.Object {
 
-  def _id: js.UndefOr[String]
+  def performanceID: js.UndefOr[String]
 
   def symbol: js.UndefOr[String]
 
@@ -35,26 +35,26 @@ object PerformanceLike {
   implicit class PerformanceLikeEnrichment(val performance: PerformanceLike) extends AnyVal {
 
     @inline
-    def gainLoss = for {
+    def gainLoss: js.UndefOr[Double] = for {
       proceeds <- proceeds
       cost <- totalCost
     } yield (proceeds / cost) * 100d
 
     @inline
-    def proceeds = for {
+    def proceeds: js.UndefOr[Double] = for {
       soldValue <- totalSold
       totalCost <- totalCost
     } yield soldValue - totalCost
 
     @inline
-    def totalSold = for {
+    def totalSold: js.UndefOr[Double] = for {
       priceSold <- performance.priceSold
       quantity <- performance.quantity
       commission <- performance.commissions
     } yield priceSold * quantity - commission
 
     @inline
-    def totalCost = for {
+    def totalCost: js.UndefOr[Double] = for {
       pricePaid <- performance.pricePaid
       quantity <- performance.quantity
       commission <- performance.commissions

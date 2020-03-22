@@ -11,7 +11,6 @@ import scala.scalajs.js
 class Order(var orderID: js.UndefOr[String],
             var symbol: js.UndefOr[String],
             var exchange: js.UndefOr[String],
-            var accountType: js.UndefOr[String],
             var orderType: js.UndefOr[String],
             var priceType: js.UndefOr[String],
             var price: js.UndefOr[Double],

@@ -4,6 +4,7 @@ USE shocktrade;
 -- Users
 -- ------------------------------------------------------------
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'ldaniels', 125000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'fugitive528', 125000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gunst4rhero', 125000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gadget', 125000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'daisy', 125000);

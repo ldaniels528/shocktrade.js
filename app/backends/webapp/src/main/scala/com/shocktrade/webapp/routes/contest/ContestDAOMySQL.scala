@@ -134,6 +134,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
          |FROM contest_chats CC
          |INNER JOIN users U ON U.userID = CC.userID
          |WHERE CC.contestID = ?
+         |ORDER BY CC.creationTime ASC
          |""".stripMargin,
       js.Array(contestID)) map { case (rows, _) => rows }
   }

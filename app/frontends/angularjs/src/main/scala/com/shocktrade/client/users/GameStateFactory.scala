@@ -3,10 +3,11 @@ package com.shocktrade.client.users
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
+import com.shocktrade.client.users.GameStateFactory.{ContestScope, NetWorthScope, PortfolioScope, UserProfileScope}
 import com.shocktrade.client.{ContestFactory, RootScope}
 import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.dom.html.browser.console
-import io.scalajs.npm.angularjs.{Factory, injected}
+import io.scalajs.npm.angularjs.{Factory, Scope, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -20,75 +21,122 @@ class GameStateFactory($rootScope: RootScope,
                        @injected("ContestFactory") contestFactory: ContestFactory,
                        @injected("UserService") userService: UserService) extends Factory {
 
-  def contest: js.UndefOr[Contest] = $rootScope.contest
+  /////////////////////////////////////////////////////////////////////
+  //          Contest Functions
+  /////////////////////////////////////////////////////////////////////
 
-  def contest_=(contest: js.UndefOr[Contest]): Unit = {
-    $rootScope.contest = contest
+  def contest(implicit $scope: ContestScope): js.UndefOr[Contest] = $scope.contest
+
+  def contest_=(contest: js.UndefOr[Contest])(implicit $scope: ContestScope): Unit = {
+    $scope.contest = contest
     contest.foreach($rootScope.emitContestSelected)
   }
 
-  def netWorth: js.UndefOr[NetWorth] = $rootScope.netWorth
-
-  def netWorth_=(netWorth: js.UndefOr[NetWorth]): Unit = {
-    $rootScope.netWorth = netWorth
-    // netWorth.foreach($rootScope.emitNetWorthChanged)
-  }
-
-  def portfolio: js.UndefOr[Portfolio] = $rootScope.portfolio
-
-  def portfolio_=(portfolio: js.UndefOr[Portfolio]): Unit = {
-    $rootScope.portfolio = portfolio
-    // portfolio.foreach($rootScope.emitPortfolioChanged)
-  }
-
-  def userID: js.UndefOr[String] = userProfile.flatMap(_.userID)
-
-  def userProfile: js.UndefOr[UserProfile] = $rootScope.userProfile
-
-  def userProfile_=(userProfile: js.UndefOr[UserProfile]): Unit = {
-    $rootScope.userProfile = userProfile
-    userProfile.foreach($rootScope.emitUserProfileUpdated)
-    refreshNetWorth()
-    ()
-  }
-
-  def refreshContest(): GameStateFactory = {
-    $rootScope.contest.flatMap(_.contestID) foreach { contestID =>
+  def refreshContest()(implicit $scope: ContestScope): GameStateFactory = {
+    $scope.contest.flatMap(_.contestID) foreach { contestID =>
       console.info(s"Loading contest for user $contestID...")
       contestFactory.findContest(contestID) foreach { response => this.contest = response }
     }
     this
   }
 
-  def refreshNetWorth(): GameStateFactory = {
-    $rootScope.userProfile.flatMap(_.userID) foreach { userID =>
+  /////////////////////////////////////////////////////////////////////
+  //          NetWorth Functions
+  /////////////////////////////////////////////////////////////////////
+
+  def netWorth(implicit $scope: NetWorthScope): js.UndefOr[NetWorth] = $scope.netWorth
+
+  def netWorth_=(netWorth: js.UndefOr[NetWorth])(implicit $scope: NetWorthScope): Unit = {
+    $scope.netWorth = netWorth
+    // netWorth.foreach($rootScope.emitNetWorthChanged)
+  }
+
+  def refreshNetWorth()(implicit $scope: NetWorthScope with UserProfileScope): GameStateFactory = {
+    $scope.userProfile.flatMap(_.userID) foreach { userID =>
       console.info(s"Loading net-worth for user $userID...")
       userService.getNetWorth(userID) foreach { response => this.netWorth = response.data }
     }
     this
   }
 
-  def refreshPortfolio(): GameStateFactory = {
-    for (userID <- $rootScope.userProfile.flatMap(_.userID); contestID <- $rootScope.contest.flatMap(_.contestID)) {
+  /////////////////////////////////////////////////////////////////////
+  //          Portfolio Functions
+  /////////////////////////////////////////////////////////////////////
+
+  def portfolio(implicit $scope: PortfolioScope): js.UndefOr[Portfolio] = $scope.portfolio
+
+  def portfolio_=(portfolio: js.UndefOr[Portfolio])(implicit $scope: PortfolioScope): Unit = {
+    $scope.portfolio = portfolio
+    // portfolio.foreach($rootScope.emitPortfolioChanged)
+  }
+
+  def refreshPortfolio()(implicit $scope: PortfolioScope with UserProfileScope): GameStateFactory = {
+    for (userID <- $scope.userProfile.flatMap(_.userID); contestID <- $scope.portfolio.flatMap(_.contestID)) {
       console.info(s"Loading portfolio for contest $contestID, user $userID...")
       contestFactory.findPortfolio(contestID, userID) foreach { response => this.portfolio = response }
     }
     this
   }
 
-  def refreshUserProfile(): GameStateFactory = {
-    $rootScope.userProfile.flatMap(_.userID) foreach { userID =>
+  /////////////////////////////////////////////////////////////////////
+  //          User Profile Functions
+  /////////////////////////////////////////////////////////////////////
+
+  def userID(implicit $scope: UserProfileScope): js.UndefOr[String] = userProfile.flatMap(_.userID)
+
+  def username(implicit $scope: UserProfileScope): js.UndefOr[String] = userProfile.flatMap(_.username)
+
+  def userProfile(implicit $scope: UserProfileScope): js.UndefOr[UserProfile] = $scope.userProfile
+
+  def userProfile_=(userProfile: js.UndefOr[UserProfile])(implicit $scope: UserProfileScope): Unit = {
+    $scope.userProfile = userProfile
+    userProfile.foreach($rootScope.emitUserProfileUpdated)
+    ()
+  }
+
+  def refreshUserProfile()(implicit $scope: UserProfileScope): GameStateFactory = {
+    $scope.userProfile.flatMap(_.userID) foreach { userID =>
       console.info(s"Loading profile for user $userID...")
-      userService.getUserByID(userID) foreach { response => this.userProfile = response.data }
+      userService.findUserByID(userID) foreach { response => this.userProfile = response.data }
     }
     this
   }
 
-  def reset(): Unit = {
-    //$rootScope.contest = js.undefined
-    $rootScope.netWorth = js.undefined
-    $rootScope.portfolio = js.undefined
-    $rootScope.userProfile = js.undefined
+  /////////////////////////////////////////////////////////////////////
+  //          General Functions
+  /////////////////////////////////////////////////////////////////////
+
+  def reset()(implicit $scope: NetWorthScope with UserProfileScope): Unit = {
+    $scope.netWorth = js.undefined
+    $scope.userProfile = js.undefined
+  }
+
+}
+
+/**
+ * Game State Factory
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object GameStateFactory {
+
+  @js.native
+  trait ContestScope extends Scope {
+    var contest: js.UndefOr[Contest] = js.native
+  }
+
+  @js.native
+  trait NetWorthScope extends Scope {
+    var netWorth: js.UndefOr[NetWorth] = js.native
+  }
+
+  @js.native
+  trait PortfolioScope extends Scope {
+    var portfolio: js.UndefOr[Portfolio] = js.native
+  }
+
+  @js.native
+  trait UserProfileScope extends Scope {
+    var userProfile: js.UndefOr[UserProfile] = js.native
   }
 
 }

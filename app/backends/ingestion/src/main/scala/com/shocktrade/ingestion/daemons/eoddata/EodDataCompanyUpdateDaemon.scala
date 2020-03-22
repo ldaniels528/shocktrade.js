@@ -43,7 +43,7 @@ class EodDataCompanyUpdateDaemon()(implicit ec: ExecutionContext) {
         count <- securitiesDAO.updateAll(quotes.map(q =>
           new EodDataRecord(
             symbol = q.symbol,
-            exchange = q.symbol,
+            exchange = q.exchange,
             name = q.name,
             high = q.high,
             low = q.low,

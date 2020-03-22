@@ -1,8 +1,9 @@
 package com.shocktrade.webapp.routes.contest
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.webapp.routes.contest.PortfolioRoutes._
-import com.shocktrade.webapp.routes.{NextFunction, Ok}
+import com.shocktrade.webapp.routes.NextFunction
 import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
 

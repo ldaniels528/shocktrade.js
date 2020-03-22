@@ -16,7 +16,7 @@ trait OrderDAO {
 
   def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext): Future[Int]
 
-  def findOrders(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]]
+  def findOrders(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]]
 
 }
 

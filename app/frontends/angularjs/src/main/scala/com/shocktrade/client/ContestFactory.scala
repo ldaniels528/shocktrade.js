@@ -134,7 +134,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
       portfolio <- portfolioService.findPortfolio(contestID, userID)
       balance <- portfolioService.findPortfolioBalance(contestID, userID)
       portfolioID = portfolio.data.portfolioID.orNull
-      orders <- portfolioService.getOrders(portfolioID)
+      orders <- portfolioService.findOrders(contestID, userID)
       positions <- portfolioService.getPositions(portfolioID)
     } yield {
       new Portfolio(

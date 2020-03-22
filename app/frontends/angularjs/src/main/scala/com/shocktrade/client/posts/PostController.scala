@@ -70,7 +70,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
       text <- post.text
       submitterId <- post.userID
       userId <- user.flatMap(_.userID)
-    } yield text.contains("http") && (user.flatMap(_.isAdmin).contains(true) || (submitterId == userId))
+    } yield text.contains("http") && (submitterId == userId)
   }
 
   $scope.updateWebSummary = (aPost: js.UndefOr[Post]) => aPost foreach { post =>
@@ -154,7 +154,7 @@ case class PostController($scope: PostControllerScope, $compile: js.Dynamic, $lo
 
   private def enrichPosts(posts: js.Array[Post]): Future[js.Array[Post]] = {
     val userIds = posts.flatMap(_.userID.flat.toOption)
-    userService.getUsers(userIds) map { users =>
+    userService.findUsers(userIds) map { users =>
       console.log(s"users = ${angular.toJson(users)}")
       /*
       val userMapping = Map(users.map(u => u.userID.orNull -> u): _*)

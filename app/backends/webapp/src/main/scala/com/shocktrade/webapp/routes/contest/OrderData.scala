@@ -14,7 +14,6 @@ import scala.scalajs.js
 class OrderData(var orderID: js.UndefOr[String] = UUID.randomUUID().toString,
                 var symbol: js.UndefOr[String],
                 var exchange: js.UndefOr[String],
-                var accountType: js.UndefOr[String],
                 var orderType: js.UndefOr[String],
                 var priceType: js.UndefOr[String],
                 var price: js.UndefOr[Double],
@@ -35,7 +34,7 @@ object OrderData {
    * Order Data Enrichment
    * @param order the given [[OrderData order]]
    */
-  implicit class OrderEnrichment(val order: OrderData) extends AnyVal {
+  final implicit class OrderEnrichment(val order: OrderData) extends AnyVal {
 
     @inline
     def toClosedOrder(statusMessage: String, asOfDate: js.Date = new js.Date()): OrderData = order.copy(
@@ -61,7 +60,6 @@ object OrderData {
         orderID = _id ?? order.orderID,
         symbol = symbol ?? order.symbol,
         exchange = exchange ?? order.exchange,
-        accountType = accountType ?? order.accountType,
         orderType = orderType ?? order.orderType,
         priceType = priceType ?? order.priceType,
         price = price ?? order.price,

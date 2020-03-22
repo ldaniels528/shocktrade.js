@@ -1,7 +1,9 @@
 package com.shocktrade.client
 
 import io.scalajs.npm.angularjs.{Scope, Timeout}
+import io.scalajs.util.DurationHelper._
 
+import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -13,7 +15,7 @@ trait GlobalLoading {
 
   def syncLoading[T]($scope: Scope, $timeout: Timeout)(block: => T): T = {
     val promise = $scope.dynamic.startLoading()
-    try block finally $timeout(() => $scope.dynamic.stopLoading(promise), 500)
+    try block finally $timeout(() => $scope.dynamic.stopLoading(promise), 500.millis)
   }
 
   def asyncLoading[T]($scope: Scope)(task: => Future[T])(implicit ec: ExecutionContext): Future[T] = {

@@ -13,7 +13,7 @@ import io.scalajs.util.DurationHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.concurrent.duration._
-
+import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._

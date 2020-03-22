@@ -23,10 +23,10 @@ import scala.util.{Failure, Success}
  * Explore Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class ExploreController($scope: ExploreScope, $anchorScroll: AnchorScroll, $cookies: Cookies, $location: Location,
+case class ExploreController($scope: ExploreControllerScope, $anchorScroll: AnchorScroll, $cookies: Cookies, $location: Location,
                              $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
                              @injected("ExploreService") exploreService: ExploreService)
-  extends Controller with GlobalSelectedSymbol {
+  extends Controller with GlobalSelectedSymbol[ExploreControllerScope] {
 
   // initialize scope variables
   $scope.sectors = emptyArray
@@ -295,7 +295,7 @@ object ExploreController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait ExploreScope extends GlobalSelectedSymbolScope {
+trait ExploreControllerScope extends GlobalSelectedSymbolScope {
   // variables
   var q: js.UndefOr[SectorInfoQuote] = js.native
   var sectors: js.Array[Sector] = js.native

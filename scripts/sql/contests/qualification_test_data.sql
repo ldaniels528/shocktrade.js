@@ -12,7 +12,7 @@ INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, ex
 SELECT uuid(), userID, 'Winter is here', CS.statusID, 25000, DATE_ADD(now(), INTERVAL 30 DAY)
 FROM users
 LEFT JOIN contest_statuses CS ON CS.status = 'ACTIVE'
-WHERE username = 'ldaniels528';
+WHERE username = 'fugitive528';
 
 INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, expirationTime)
 SELECT uuid(), userID, 'Winter is coming', CS.statusID, 25000, DATE_ADD(now(), INTERVAL 30 DAY)
@@ -54,7 +54,7 @@ FROM portfolios P
 INNER JOIN users U ON U.userID = P.userID
 INNER JOIN stocks S ON S.symbol = 'CYDY' AND S.exchange = 'OTCBB'
 INNER JOIN (SELECT MAX(tradeDateTime) AS maxTradeDateTime FROM stocks) AS temp
-WHERE U.username = 'ldaniels528';
+WHERE U.username = 'fugitive528';
 
 INSERT INTO orders (orderID, portfolioID, orderType, symbol, `exchange`, price, priceType, quantity, creationTime)
 SELECT uuid(), P.portfolioID, 'BUY', S.symbol, S.`exchange`, S.lastTrade, 'MARKET', 1000, temp.maxTradeDateTime

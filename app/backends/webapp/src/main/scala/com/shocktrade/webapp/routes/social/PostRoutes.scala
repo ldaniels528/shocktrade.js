@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes
 package social
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.MaxResultsForm
 import com.shocktrade.common.models.post.Post
 import com.shocktrade.webapp.routes.social.PostRoutes._

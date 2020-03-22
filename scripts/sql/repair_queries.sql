@@ -24,11 +24,6 @@ alter table contests add closed BIT DEFAULT 0;
 
 alter table users add totalXP INTEGER NOT NULL DEFAULT 0;
 
-
-INSERT INTO stocks_eoddata (symbol, exchange, companyName, high, low, `close`, volume, `change`, changePct)
-SELECT symbol, exchange, name, high, low, `close`, volume, `change`, changePct
-FROM stocks;
-
 SELECT * FROM stocks
 WHERE volume >= 1000 AND lastTrade <= 30
 ORDER BY volume DESC

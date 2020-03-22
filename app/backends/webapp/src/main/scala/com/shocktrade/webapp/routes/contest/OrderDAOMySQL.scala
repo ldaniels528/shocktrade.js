@@ -25,18 +25,20 @@ class OrderDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) w
   override def createOrder(portfolioID: String, order: OrderData)(implicit ec: ExecutionContext): Future[Int] = {
     import order._
     conn.executeFuture(
-      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, accountType, orderType, priceType, price, quantity)
-         |VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?, ?)
+      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
+         |VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?)
          |""".stripMargin,
-      js.Array(portfolioID, symbol, exchange, accountType, orderType, priceType, price, quantity)) map (_.affectedRows)
+      js.Array(portfolioID, symbol, exchange, orderType, priceType, price, quantity)) map (_.affectedRows)
   }
 
-  override def findOrders(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]] = {
+  override def findOrders(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]] = {
     conn.queryFuture[OrderData](
-      """|SELECT * FROM orders
-         |WHERE portfolioID = ?
+      """|SELECT O.*
+         |FROM orders O
+         |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |WHERE P.contestID = ? AND P.userID = ?
          |""".stripMargin,
-      js.Array(portfolioID)) map { case (rows, _) => rows }
+      js.Array(contestID, userID)) map { case (rows, _) => rows }
   }
 
 }

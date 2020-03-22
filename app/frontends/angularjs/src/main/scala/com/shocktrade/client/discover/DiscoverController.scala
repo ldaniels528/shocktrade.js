@@ -34,7 +34,7 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
                               @injected("UserService") userService: UserService)
   extends AutoCompletionController($scope, $q, quoteService)
     with GlobalLoading
-    with GlobalSelectedSymbol
+    with GlobalSelectedSymbol[DiscoverControllerScope]
     with PersonalSymbolSupport[DiscoverControllerScope] {
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)

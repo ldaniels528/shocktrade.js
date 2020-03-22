@@ -1,4 +1,4 @@
-<div class="row" ng-controller="DashboardController" ng-init="init()">
+<div class="row" ng-controller="DashboardController" ng-init="initDash()">
     <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div ng-controller="PortfolioController" ng-init="initPortfolio()" ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
+        <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
             <div class="rankings_header">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
@@ -36,7 +36,11 @@
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
                 </span>
             </div>
-            <div ng-include src="'/views/dashboard/cash_account.html'"></div>
+            <div ng-controller="CashAccountController">
+                <div ng-include src="'/views/dashboard/cash_account_summary.html'" style="margin-bottom: 10px" ng-show="portfolio.balance"></div>
+                <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="userProfile.userID"></div>
+                <div ng-include src="'/views/dashboard/portfolio_tabs.html'"></div>
+            </div>
         </div>
     </div>
 </div>

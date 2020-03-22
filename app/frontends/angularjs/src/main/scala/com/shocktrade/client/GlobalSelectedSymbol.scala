@@ -11,12 +11,12 @@ import scala.scalajs.js
  * Globally Selected Symbol
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-trait GlobalSelectedSymbol {
+trait GlobalSelectedSymbol[T <: GlobalSelectedSymbolScope] {
   self: Controller =>
 
   $scope.selectedSymbol = $cookies.getOrElse("symbol", "AMD")
 
-  def $scope: GlobalSelectedSymbolScope
+  def $scope: T
 
   def $cookies: Cookies
 

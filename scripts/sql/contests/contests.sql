@@ -36,29 +36,6 @@ INSERT INTO contest_statuses (status) VALUES ('ACTIVE');
 INSERT INTO contest_statuses (status) VALUES ('CLOSED');
 
 -- ------------------------------------------------------------
--- Contest Ranking view
--- ------------------------------------------------------------
-
-DROP VIEW IF EXISTS contest_rankings;
-CREATE VIEW contest_rankings AS
-SELECT
-    C.*,
-    CS.status,
-    P.portfolioID,
-    U.userID,
-    U.username,
-    IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
-    IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
-FROM contests C
-LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
-LEFT JOIN portfolios P ON P.contestID = C.contestID
-LEFT JOIN users U ON U.userID = P.userID
-LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
-LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
-GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
-ORDER BY totalEquity DESC;
-
--- ------------------------------------------------------------
 -- Chat tables
 -- ------------------------------------------------------------
 
@@ -138,4 +115,26 @@ CREATE TABLE positions (
 );
 CREATE UNIQUE INDEX positions_xpk ON positions (orderID);
 
+-- ------------------------------------------------------------
+-- Contest Ranking view
+-- ------------------------------------------------------------
+
+DROP VIEW IF EXISTS contest_rankings;
+CREATE VIEW contest_rankings AS
+SELECT
+    C.*,
+    CS.status,
+    P.portfolioID,
+    U.userID,
+    U.username,
+    IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
+    IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
+FROM contests C
+LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
+LEFT JOIN portfolios P ON P.contestID = C.contestID
+LEFT JOIN users U ON U.userID = P.userID
+LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
+ORDER BY totalEquity DESC;
 

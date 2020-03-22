@@ -1,6 +1,5 @@
 package com.shocktrade.ingestion
 
-import com.shocktrade.ingestion.daemons.cikupdate.CikUpdateDaemon
 import com.shocktrade.ingestion.daemons.cqm.ContestQualificationModule
 import com.shocktrade.ingestion.daemons.eoddata.EodDataCompanyUpdateDaemon
 import com.shocktrade.ingestion.daemons.nasdaq.NASDAQCompanyListUpdateDaemon
@@ -68,10 +67,10 @@ object IngestionJsApp {
     //setTimeout(() => new WikipediaCompanyLoader().run(), 1.second)
 
     // schedule the daemons
-    schedule(name = "Contest Qualification Module")(initialDelay = 0.minutes, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))
-    schedule(name = "[SEC.gov]CIK Update")(initialDelay = 3.days, frequency = 3.days)(() => new CikUpdateDaemon().run(tradingClock))
-    schedule(name = "EOD-Data Company Update")(initialDelay = 2.days, frequency = 2.days)(() => new EodDataCompanyUpdateDaemon().run(tradingClock))
-    schedule(name = "NASDAQ Company List Update")(initialDelay = 4.hours, frequency = 3.days)(() => new NASDAQCompanyListUpdateDaemon().run(tradingClock))
+    //schedule(name = "Contest Qualification Module")(initialDelay = 0.minutes, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))
+    //schedule(name = "[SEC.gov]CIK Update")(initialDelay = 1.minute, frequency = 3.days)(() => new CikUpdateDaemon().run(tradingClock))
+    schedule(name = "EOD-Data Company Update")(initialDelay = 0.minutes, frequency = 2.days)(() => new EodDataCompanyUpdateDaemon().run(tradingClock))
+    //schedule(name = "NASDAQ Company List Update")(initialDelay = 0.minutes, frequency = 3.days)(() => new NASDAQCompanyListUpdateDaemon().run(tradingClock))
   }
 
   def schedule[A](name: String)(initialDelay: FiniteDuration, frequency: FiniteDuration)(process: () => Future[A])(implicit tradingClock: TradingClock): Interval = {

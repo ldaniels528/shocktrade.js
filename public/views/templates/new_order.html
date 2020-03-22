@@ -33,29 +33,21 @@
                 </select>
             </div>
         </div>
-        <div>
-            <span class="header">Symbol</span>
-            <input class="form-control symbol_input_text_field" type="text" ng-model="ticker"
-                   placeholder="Enter Symbol or Company name"
-                   typeahead="item as formatSearchResult(item) for item in autoCompleteSymbols($viewValue)"
-                   typeahead-template-url="symbol_lookup.html"
-                   typeahead-loading="loading"
-                   typeahead-on-select="onSelectedItem($item, $model, $label)"
-                   popover="Enter a Symbol or Business here"
-                   popover-trigger="focus">
-        </div>
         <div class="row">
-            <div class="col-md-4 header">Account</div>
+            <div class="col-md-4 header">Symbol</div>
             <div class="col-md-4 header">Your Price</div>
             <div class="col-md-4 header">Quantity</div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                <input id="cashAccount" type="radio" ng-model="form.accountType" value="CASH">
-                <label for="cashAccount">Cash</label>
-
-                <input id="marginAccount" type="radio" ng-model="form.accountType" value="MARGIN">
-                <label for="marginAccount">Margin</label>
+                <input class="form-control symbol_input_text_field" type="text" ng-model="ticker"
+                       placeholder="Enter Symbol or Company name"
+                       typeahead="item as formatSearchResult(item) for item in autoCompleteSymbols($viewValue)"
+                       typeahead-template-url="symbol_lookup.html"
+                       typeahead-loading="loading"
+                       typeahead-on-select="onSelectedItem($item, $model, $label)"
+                       popover="Enter a Symbol or Business here"
+                       popover-trigger="focus">
             </div>
             <div class="col-md-4">
                 <input class="form-control yellow" ng-model="form.limitPrice" type="number" placeholder="Price">

@@ -3,6 +3,7 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.RootScope
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ExposureController.ExposureSelection
+import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.common.models.ExposureData
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.amcharts.AmChart.Export
@@ -24,7 +25,11 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class ExposureController($scope: ExposureControllerScope, $routeParams: DashboardRouteParams, toaster: Toaster,
-                         @injected("PortfolioService") portfolioService: PortfolioService) extends Controller {
+                         @injected("GameStateFactory") gameState: GameStateFactory,
+                         @injected("PortfolioService") portfolioService: PortfolioService)
+  extends Controller {
+
+  implicit private val scope: ExposureControllerScope = $scope
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Variables
@@ -59,9 +64,11 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
     console.info(s"Initializing ${getClass.getSimpleName}...")
     for {
       contestID <- $routeParams.contestID
-      userID <- $scope.userProfile.flatMap(_.userID)
+      userID <- gameState.userID
     } $scope.exposureChart(contestID, userID, $scope.exposures.headOption.orUndefined)
   }
+
+  $scope.onUserProfileUpdated { (_, _) => init() }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions

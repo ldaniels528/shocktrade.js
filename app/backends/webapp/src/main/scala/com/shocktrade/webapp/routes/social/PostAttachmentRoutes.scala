@@ -1,7 +1,8 @@
 package com.shocktrade.webapp.routes.social
 
+import com.shocktrade.common.Ok
 import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.routes.{NextFunction, Ok}
+import com.shocktrade.webapp.routes.NextFunction
 import io.scalajs.npm.express.fileupload.UploadedFiles
 import io.scalajs.npm.express.{Application, Request, Response}
 

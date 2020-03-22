@@ -62,8 +62,8 @@ class PortfolioService($http: Http) extends Service {
     $http.post(s"/api/portfolio/$portfolioId/order", data = order)
   }
 
-  def getOrders(portfolioId: String): js.Promise[HttpResponse[js.Array[Order]]] = {
-    $http.get(s"/api/portfolio/$portfolioId/orders")
+  def findOrders(contestID: String, userID: String): js.Promise[HttpResponse[js.Array[Order]]] = {
+    $http.get(s"/api/orders/$contestID/user/$userID")
   }
 
   def getPositions(portfolioId: String): js.Promise[HttpResponse[js.Array[Position]]] = {

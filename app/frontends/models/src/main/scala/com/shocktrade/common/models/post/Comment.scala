@@ -1,6 +1,6 @@
 package com.shocktrade.common.models.post
 
-import com.shocktrade.common.models.user.UserLike
+import com.shocktrade.common.models.user.UserProfileLike
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -12,7 +12,7 @@ import scala.scalajs.js
 class Comment extends js.Object {
   var _id: js.UndefOr[String] = js.undefined
   var text: js.UndefOr[String] = js.undefined
-  var submitter: js.UndefOr[UserLike] = js.undefined
+  var submitter: js.UndefOr[UserProfileLike] = js.undefined
   var likes: js.UndefOr[Int] = js.undefined
   var likedBy: js.UndefOr[js.Array[String]] = js.undefined
   var replies: js.UndefOr[js.Array[Reply]] = js.undefined
@@ -30,7 +30,7 @@ class Comment extends js.Object {
  */
 object Comment {
 
-  def apply(text: String, submitter: UserLike): Comment = {
+  def apply(text: String, submitter: UserProfileLike): Comment = {
     val comment = new Comment()
     comment.text = text
     comment.submitter = submitter
