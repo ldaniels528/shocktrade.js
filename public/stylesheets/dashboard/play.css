@@ -1,3 +1,18 @@
+.dashboard_title {
+    background: #5bc0ee;
+    border: 1px solid #d4d4d4;
+    border-radius: 4px 4px 4px 4px;
+    color: #ffffff;
+    font-size: 16pt;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.desert-blue {
+    color: #5bc0ee;
+}
+
 .contest_colors {
 	border: 1px solid #d4d4d4;
 	border-radius: 4px 4px 4px 4px;

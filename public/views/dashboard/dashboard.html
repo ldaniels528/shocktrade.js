@@ -29,6 +29,7 @@
         </div>
 
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
+            <div ng-show="contest.name" class="col-md-12 dashboard_title"><i class="fa fa-atom"></i>{{ contest.name }}</div>
             <div class="rankings_header">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
