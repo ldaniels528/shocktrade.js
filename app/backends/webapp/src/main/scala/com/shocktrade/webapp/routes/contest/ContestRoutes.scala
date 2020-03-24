@@ -118,8 +118,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
         contestDAO.create(form) onComplete {
           case Success(Some(result)) => response.send(result); next()
           case Success(None) => response.badRequest(form); next()
-          case Failure(e) =>
-            response.internalServerError(e); next()
+          case Failure(e) => response.internalServerError(e); next()
         }
     }
   }

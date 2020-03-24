@@ -19,7 +19,7 @@ class RobotProcessor()(implicit ec: ExecutionContext) {
    */
   def run(): Unit = {
     val outcome = for {
-      robots <- robotDAO.findRobots
+      robots <- robotDAO.findRobots(isActive = true)
     } yield {
       robots map { robot => TradingStrategy.withName(robot.strategy.orNull).foreach(_.operate(robot)) }
     }

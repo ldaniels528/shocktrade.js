@@ -33,9 +33,10 @@ class OrderDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) w
 
   override def findOrders(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]] = {
     conn.queryFuture[OrderData](
-      """|SELECT O.*
+      """|SELECT O.*, S.lastTrade
          |FROM orders O
          |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |LEFT  JOIN stocks S ON S.symbol = O.symbol
          |WHERE P.contestID = ? AND P.userID = ?
          |""".stripMargin,
       js.Array(contestID, userID)) map { case (rows, _) => rows }

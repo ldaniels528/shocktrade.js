@@ -81,6 +81,12 @@ object WebServerJsApp {
       })
     })
 
+    setupRoutes(app)
+    setupRobots(app)
+    app
+  }
+
+  private def setupRoutes(app: Application with WsRouting): Unit = {
     // setup web socket routes
     logger.info("Setting up web socket...")
     app.ws("/websocket", (ws: WebSocket, request: Request) => ws.onMessage(WebSocketHandler.messageHandler(ws, request, _)))
@@ -104,13 +110,13 @@ object WebServerJsApp {
     new SocialRoutes(app)
     new TradingClockRoutes(app)
     new UserRoutes(app)
+  }
 
-    // start the robots
+  private def setupRobots(app: Application with WsRouting): Unit = {
     logger.info("Setting up robots...")
     val robotProcessor = new RobotProcessor()
     setTimeout(() => robotProcessor.run(), 3.seconds)
     setInterval(() => robotProcessor.run(), 15.minute)
-    app
   }
 
 }

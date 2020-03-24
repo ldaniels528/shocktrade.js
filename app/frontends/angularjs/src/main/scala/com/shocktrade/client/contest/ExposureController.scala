@@ -75,18 +75,18 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.exposureChart = (anExposure: js.UndefOr[ExposureSelection]) => {
+  $scope.exposureChart = (aChart: js.UndefOr[ExposureSelection]) => {
     for {
       contestID <- $routeParams.contestID
       userID <- gameState.userID
-      exposure <- anExposure
-      value <- exposure.value
+      chart <- aChart
+      value <- chart.value
     } {
       portfolioService.getChartData(contestID, userID, value) onComplete {
         case Success(response) => updateChartDiv(response.data)
         case Failure(e) =>
-          toaster.error(s"Error loading ${exposure.label.orNull}")
-          console.error(s"Failed to load exposure data for ${exposure.label.orNull}: ${e.displayMessage}")
+          toaster.error(s"Error loading ${chart.label.orNull}")
+          console.error(s"Failed to load exposure data for ${chart.label.orNull}: ${e.displayMessage}")
       }
     }
   }

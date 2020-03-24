@@ -15,7 +15,15 @@ trait RobotDAO {
 
   def findPendingOrderSymbols(robotUsername: String, portfolioID: String): Future[js.Array[String]]
 
+  def findRobot(username: String): Future[js.Array[RobotData]]
+
   def findRobots: Future[js.Array[RobotData]]
+
+  def findRobots(isActive: Boolean): Future[js.Array[RobotData]]
+
+  def setRobotActivity(username: String, activity: String): Future[Int]
+
+  def toggleRobot(username: String, isActive: Boolean): Future[Int]
 
 }
 

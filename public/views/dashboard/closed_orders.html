@@ -30,11 +30,11 @@
 			<div class="col-md-12 clickable" ng-repeat="o in getClosedOrders() track by $index"
 				 ng-class-even="'contest_even'"
 				 ng-class-odd="'contest_odd'"
-				 ng-class="selectedClosedOrder._id === o._id ? 'selected' : ''"
+				 ng-class="selectedClosedOrder.orderID === o.orderID ? 'selected' : ''"
 				 ng-click="selectClosedOrder(o)">
 				<div class="col-md-3">
 					<span class="clickable" ng-class="getExchangeClass(o.exchange)" ng-click="loadQuote(o.symbol, true)">
-						<span ng-class="selectedClosedOrder._id === o._id ? 'underlined' : ''">{{ o.symbol }}</span>
+						<span ng-class="selectedClosedOrder.orderID === o.orderID ? 'underlined' : ''">{{ o.symbol }}</span>
 					</span>
 				</div>
 				<div ng-hide="isClosedOrderSelected()" class="col-md-2 left">{{ o.orderType }}</div>
@@ -54,7 +54,7 @@
 		<div ng-if="isClosedOrderSelected()" class="col-md-9">
 			<div class="row">
 				<div class="col-md-5 bold">Order #</div>
-				<div class="col-md-7">{{ selectedClosedOrder._id }}</div>
+				<div class="col-md-7">{{ selectedClosedOrder.orderID }}</div>
 			</div>
 			<div class="row">
 				<div class="col-md-5 bold">Order Type</div>

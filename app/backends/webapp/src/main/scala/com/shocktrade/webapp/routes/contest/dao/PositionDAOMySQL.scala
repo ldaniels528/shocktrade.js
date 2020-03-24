@@ -11,9 +11,9 @@ import scala.scalajs.js
  * Position DAO (MySQL implementation)
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with PositionDAO {
+class PositionDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with PositionDAO {
 
-  override def findChart(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]] = {
+  override def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ExposureData]] = {
     val column = chart match {
       case "exchange" => "S.exchange"
       case "industry" => "S.industry"
@@ -30,14 +30,21 @@ class PositionDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options
           |INNER JOIN stocks S ON S.symbol = PS.symbol
           |WHERE C.contestID = ? AND U.userID = ?
           |GROUP BY $column
-          |""".stripMargin, js.Array(contestID, userID)).map { case (rows, _) => rows }
+          |     UNION
+          |SELECT 'Cash' AS name, P.funds AS value
+          |FROM users U
+          |INNER JOIN portfolios P ON P.userID = P.userID
+          |INNER JOIN contests C ON C.contestID = P.contestID
+          |WHERE C.contestID = ? AND U.userID = ?
+          |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map { case (rows, _) => rows }
   }
 
-  override def findPositions(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]] = {
+  override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
     conn.queryFuture[PositionData](
-      """|SELECT PS.*
+      """|SELECT PS.*, S.lastTrade, (PS.price - S.lastTrade)/PS.price AS gainLossPct
          |FROM positions PS
          |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
+         |LEFT  JOIN stocks S ON S.symbol = PS.symbol
          |WHERE P.contestID = ? AND P.userID = ?
          |""".stripMargin, js.Array(contestID, userID)) map { case (rows, _) => rows }
   }

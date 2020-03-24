@@ -146,7 +146,10 @@ DROP TABLE IF EXISTS robots;
 CREATE TABLE robots (
     robotID INTEGER AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(36),
-    strategy VARCHAR(20) NOT NULL
+    strategy VARCHAR(20) NOT NULL,
+    lastActivity TEXT NULL,
+    lastActiveTime DATETIME NOT NULL DEFAULT now(),
+    isActive SMALLINT NOT NULL DEFAULT 1
 );
 
 CREATE UNIQUE INDEX robots_xpk ON robots (username);

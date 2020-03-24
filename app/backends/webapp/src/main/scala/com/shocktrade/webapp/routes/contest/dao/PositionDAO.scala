@@ -13,9 +13,9 @@ import scala.scalajs.js
  */
 trait PositionDAO {
 
-  def findChart(contestID: String, userID: String, chart: String)(implicit ec: ExecutionContext): Future[js.Array[ExposureData]]
+  def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ExposureData]]
 
-  def findPositions(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[PositionData]]
+  def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]]
 
 }
 
@@ -30,6 +30,6 @@ object PositionDAO {
    * @param options the given [[MySQLConnectionOptions]]
    * @return a new [[PortfolioDAO Portfolio DAO]]
    */
-  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): PositionDAO = new PositionDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions)(implicit ec: ExecutionContext): PositionDAO = new PositionDAOMySQL(options)
 
 }

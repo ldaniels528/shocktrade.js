@@ -35,14 +35,17 @@ class PennyStockTradingStrategy()(implicit ec: ExecutionContext) extends Trading
   ///////////////////////////////////////////////////////
 
   private def buySecurities()(implicit robot: RobotData): Future[(Seq[ResearchQuote], List[OrderData], Int)] = {
+        val robotName = robot.username.orNull
     val startTime = System.currentTimeMillis()
     val outcome = for {
+      _ <- robotDAO.setRobotActivity(robotName, "Looking for stocks to buy")
       stocks <- findStocksToBuy
       orders = createBuyOrders(stocks)
+      _ <- robotDAO.setRobotActivity(robotName, s"Created ${orders.size} orders")
       counts <- persistOrders(orders)
     } yield (stocks, orders, counts)
 
-    val robotName = robot.username.orNull
+
     outcome onComplete {
       case Success((stocks, orders, counts)) =>
         if (orders.nonEmpty) logger.info(s"$robotName | ${orders.size} orders created | ${stocks.size} quotes matched | $counts records updated [${System.currentTimeMillis() - startTime} msec]")
