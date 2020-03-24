@@ -20,7 +20,7 @@ update stocks_eoddata set name = companyName;
 update stocks_nasdaq set name = companyName;
 update stocks_cik set name = companyName;
 
-alter table contests add closed BIT DEFAULT 0;
+alter table contests add closed SMALLINT DEFAULT 0;
 
 alter table users add totalXP INTEGER NOT NULL DEFAULT 0;
 

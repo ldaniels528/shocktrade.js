@@ -6,13 +6,13 @@ CREATE PROCEDURE createContest(
     a_name VARCHAR(128),
     a_creatorUserID CHAR(36),
     a_startingBalance DECIMAL(12,5),
-    a_startAutomatically BIT,
+    a_startAutomatically SMALLINT,
     a_duration INTEGER,
-    a_friendsOnly BIT,
-    a_invitationOnly BIT,
+    a_friendsOnly SMALLINT,
+    a_invitationOnly SMALLINT,
     a_levelCap INTEGER,
-    a_perksAllowed BIT,
-    a_robotsAllowed BIT
+    a_perksAllowed SMALLINT,
+    a_robotsAllowed SMALLINT
 )
 BEGIN
     DECLARE v_contestID CHAR(36);

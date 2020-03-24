@@ -6,6 +6,12 @@ TRUNCATE orders;
 TRUNCATE positions;
 
 -- ------------------------------------------------------------
+-- Robots
+-- ------------------------------------------------------------
+INSERT INTO robots (username, strategy) VALUES ('daisy', 'penny-stock');
+INSERT INTO robots (username, strategy) VALUES ('gadget', 'penny-stock');
+
+-- ------------------------------------------------------------
 -- Contests
 -- ------------------------------------------------------------
 INSERT INTO contests (contestID, hostUserID, name, statusID, startingBalance, expirationTime)
