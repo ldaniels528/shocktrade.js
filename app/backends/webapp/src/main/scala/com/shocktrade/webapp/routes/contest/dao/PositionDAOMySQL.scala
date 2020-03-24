@@ -33,7 +33,7 @@ class PositionDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCo
           |     UNION
           |SELECT 'Cash' AS name, P.funds AS value
           |FROM users U
-          |INNER JOIN portfolios P ON P.userID = P.userID
+          |INNER JOIN portfolios P ON P.userID = U.userID
           |INNER JOIN contests C ON C.contestID = P.contestID
           |WHERE C.contestID = ? AND U.userID = ?
           |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map { case (rows, _) => rows }
