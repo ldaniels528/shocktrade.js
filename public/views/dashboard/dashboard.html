@@ -29,17 +29,17 @@
         </div>
 
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
-            <div ng-show="contest.name" class="col-md-12 dashboard_title"><i class="fa fa-atom"></i>{{ contest.name }}</div>
-            <div class="rankings_header">
+            <div ng-show="contest.name" class="col-md-12 dashboard_title">
+                <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
+            </div>
+            <div class="rankings_header" class="col-md-12">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
                 </span>
-            </div>
-            <div ng-controller="CashAccountController">
-                <div ng-include src="'/views/dashboard/cash_account_summary.html'" style="margin-bottom: 10px" ng-show="portfolio.balance"></div>
-                <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="userProfile.userID"></div>
+                <div ng-include src="'/views/dashboard/portfolio_summary.html'" style="margin-bottom: 10px" ng-show="portfolio.balance"></div>
+                <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="userProfile.userID" style="width: 98%"></div>
                 <div ng-include src="'/views/dashboard/portfolio_tabs.html'"></div>
             </div>
         </div>

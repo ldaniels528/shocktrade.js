@@ -1,8 +1,8 @@
-package com.shocktrade.webapp.routes.autotrading
+package com.shocktrade.webapp.routes.robot
 
 import com.shocktrade.common.Ok
 import com.shocktrade.webapp.routes.NextFunction
-import com.shocktrade.webapp.routes.autotrading.dao.RobotDAO
+import com.shocktrade.webapp.routes.robot.dao.RobotDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext

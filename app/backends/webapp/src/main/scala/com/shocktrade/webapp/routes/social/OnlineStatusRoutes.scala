@@ -14,6 +14,7 @@ import scala.scalajs.js
 class OnlineStatusRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val statuses = js.Dictionary[OnlineStatus]()
 
+  app.get("/api/online", (request: Request, response: Response, next: NextFunction) => statusAll(request, response, next))
   app.get("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => statusByUserID(request, response, next))
   app.put("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => onlineByUserID(request, response, next))
   app.delete("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => offlineByUserID(request, response, next))
@@ -21,6 +22,11 @@ class OnlineStatusRoutes(app: Application)(implicit ec: ExecutionContext) {
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
+
+  def statusAll(request: Request, response: Response, next: NextFunction): Unit = {
+    response.send(statuses)
+    next()
+  }
 
   def statusByUserID(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")

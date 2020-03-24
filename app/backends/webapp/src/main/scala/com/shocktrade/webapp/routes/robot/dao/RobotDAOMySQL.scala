@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.autotrading.dao
+package com.shocktrade.webapp.routes.robot.dao
 
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.SymbolData

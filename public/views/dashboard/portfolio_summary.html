@@ -6,7 +6,7 @@
 				<span class="fundsAvailable">{{ portfolio.balance.funds || 0.00 | number:2 }}</span>
 			</span>
 			<span style="font-size: 9pt">
-				&nbsp; (as of {{ asOfDate() | date:'MM/dd hh:mma' }})
+				&nbsp; (as of {{ portfolio.balance.asOfDate | date:'MM/dd hh:mma' }})
 			</span>
 		</div>
 		<div class="col-md-12">

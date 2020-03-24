@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.autotrading.dao
+package com.shocktrade.webapp.routes.robot.dao
 
 import scala.scalajs.js
 

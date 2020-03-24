@@ -4,6 +4,7 @@ TRUNCATE contests;
 TRUNCATE portfolios;
 TRUNCATE orders;
 TRUNCATE positions;
+TRUNCATE robots;
 
 -- ------------------------------------------------------------
 -- Robots

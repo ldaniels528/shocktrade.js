@@ -133,7 +133,6 @@ object WebClientJsApp {
   private def configureControllers(module: Module) {
     module.controllerOf[ActiveOrdersController]("ActiveOrdersController")
     module.controllerOf[AwardsController]("AwardsController")
-    module.controllerOf[CashAccountController]("CashAccountController")
     module.controllerOf[ChatController]("ChatController")
     module.controllerOf[ClosedOrdersController]("ClosedOrdersController")
     module.controllerOf[DashboardController]("DashboardController")

@@ -5,7 +5,7 @@ import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account._
-import com.shocktrade.webapp.routes.autotrading.{RobotProcessor, RobotRoutes}
+import com.shocktrade.webapp.routes.robot.{RobotProcessor, RobotRoutes}
 import com.shocktrade.webapp.routes.contest._
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes

@@ -43,6 +43,8 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
 
   $scope.initChat = () => $routeParams.contestID foreach initChat
 
+  $scope.onMessagesUpdated { (_, _) => $scope.initChat() }
+
   $scope.onUserProfileUpdated { (_, _) => $scope.initChat() }
 
   private def initChat(contestID: String): Unit = {
@@ -72,7 +74,7 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
 
   private def getChatMessages: String = {
     val chatMessages = $scope.chatMessages
-    if ((chatMessages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 10000) cachedHtml
+    if ((chatMessages.length == lastMessageCount) && (js.Date.now() - lastUpdateTime) <= 2000) cachedHtml
     else {
       // capture the new number of lines
       lastMessageCount = chatMessages.length

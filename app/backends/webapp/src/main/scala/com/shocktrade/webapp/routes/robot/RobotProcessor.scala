@@ -1,7 +1,7 @@
-package com.shocktrade.webapp.routes.autotrading
+package com.shocktrade.webapp.routes.robot
 
 import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.routes.autotrading.dao.RobotDAO
+import com.shocktrade.webapp.routes.robot.dao.RobotDAO
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}

@@ -1,4 +1,4 @@
-package com.shocktrade.webapp.routes.autotrading
+package com.shocktrade.webapp.routes.robot
 package dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper

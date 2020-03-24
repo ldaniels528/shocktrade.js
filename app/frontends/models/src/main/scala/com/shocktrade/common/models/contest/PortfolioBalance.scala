@@ -8,6 +8,7 @@ class PortfolioBalance(val contestID: js.UndefOr[String],
                        val username: js.UndefOr[String],
                        val wallet: js.UndefOr[Double],
                        val funds: js.UndefOr[Double],
+                       val asOfDate: js.UndefOr[js.Date],
                        val totalBuyOrders: js.UndefOr[Double],
                        val totalSellOrders: js.UndefOr[Double],
                        val equity: js.UndefOr[Double]) extends js.Object

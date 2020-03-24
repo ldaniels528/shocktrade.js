@@ -131,13 +131,12 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
     }
   }
 
-  private def isOnline(userID: String): Boolean = { // TODO fix async drop-out
+  private def isOnline(userID: String): Boolean = {
     if (!onlinePlayers.contains(userID)) {
       onlinePlayers(userID) = new OnlineStatus(connected = false)
       userService.getOnlineStatus(userID) onComplete {
         case Success(response) =>
-          val newState = response.data
-          onlinePlayers(userID) = newState
+          $scope.$apply(() => onlinePlayers(userID) = response.data)
         case Failure(e) =>
           console.error(s"Error retrieving online state for user $userID: ${e.getMessage}")
       }
@@ -146,7 +145,15 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   }
 
   private def logout(): Unit = {
-    authenticationService.logout() onComplete {
+    val outcome = for {
+      _ <- authenticationService.logout()
+      _ <- gameState.userID.toOption match {
+        case Some(userID) => userService.setIsOffline(userID).toFuture
+        case None => Future.failed(js.JavaScriptException("Missing user ID"))
+      }
+    } yield ()
+
+    outcome onComplete {
       case Success(_) => clearLoggedInItems()
       case Failure(e) =>
         toaster.error("An error occurred during logout")
@@ -166,6 +173,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
         case Some(userID) => userService.getNetWorth(userID).toFuture
         case None => Future.failed(js.JavaScriptException("Missing user ID"))
       }
+      _ <- userService.setIsOnline(userAccount.userID.orNull)
     } yield (userProfile, netWorth)
 
     outcome onComplete {
