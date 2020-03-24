@@ -32,7 +32,6 @@ import scala.util.{Failure, Success}
  */
 class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
-                     @injected("ContestFactory") contestFactory: ContestFactory,
                      @injected("GameStateFactory") gameState: GameStateFactory,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
@@ -113,7 +112,6 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.signUp = () => signUp()
 
   private def clearLoggedInItems(): Unit = {
-    contestFactory.clear()
     gameState.reset()
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
