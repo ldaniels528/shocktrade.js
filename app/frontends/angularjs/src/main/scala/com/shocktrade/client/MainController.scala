@@ -11,6 +11,7 @@ import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
 import io.scalajs.npm.angularjs.uibootstrap.Modal
@@ -30,7 +31,8 @@ import scala.util.{Failure, Success}
  * Main Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MainController($scope: MainControllerScope, $http: Http, $location: Location, $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
+class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http, $location: Location,
+                     $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("GameStateFactory") gameState: GameStateFactory,
                      @injected("SignInDialog") signInDialog: SignInDialog,
@@ -83,7 +85,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.mainInit = () => console.log(s"Initializing ${getClass.getSimpleName}...")
+  $scope.mainInit = () => mainInit()
 
   $scope.getAssetCode = (q: js.UndefOr[ClassifiedQuote]) => MainController.getAssetCode(q)
 
@@ -96,6 +98,14 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
   $scope.isAuthenticated = () => $scope.userProfile.flatMap(_.userID).isAssigned
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
+
+  private def mainInit(): Unit ={
+    console.log(s"Initializing ${getClass.getSimpleName}...")
+    $cookies.getObject[AuthenticatedUser](AUTHENTICATED_USER_KEY) foreach { authenticatedUser =>
+      console.log(s"Reading session from cookie: ${JSON.stringify(authenticatedUser)}")
+      gameState.userProfile = authenticatedUser.userProfile
+    }
+  }
 
   //////////////////////////////////////////////////////////////////////
   //              Private Functions
@@ -113,6 +123,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
   private def clearLoggedInItems(): Unit = {
     gameState.reset()
+    $cookies.remove(AUTHENTICATED_USER_KEY)
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
     $scope.userProfile = js.undefined
@@ -178,7 +189,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
 
     outcome onComplete {
       case Success((userProfile, netWorth)) =>
-        $scope.emitUserProfileUpdated(userProfile.data)
+        $cookies.putObject(AUTHENTICATED_USER_KEY, new AuthenticatedUser(userProfile.data))
         $scope.$apply { () =>
           gameState.userProfile = userProfile.data
           gameState.netWorth = netWorth.data
@@ -252,6 +263,7 @@ class MainController($scope: MainControllerScope, $http: Http, $location: Locati
  */
 object MainController {
   private val DEFAULT_TIMEOUT = 15000
+  private val AUTHENTICATED_USER_KEY = "AuthenticatedUser"
 
   protected[client] def getAssetCode(q: js.UndefOr[ClassifiedQuote]): String = {
     q.flatMap(_.assetType) map {
@@ -290,39 +302,41 @@ object MainController {
     } getOrElse ""
   }
 
-}
+  /**
+   * Main Controller Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait MainControllerScope extends RootScope with GlobalNavigation with NetWorthScope {
+    // variables
+    var appTabs: js.Array[MainTab] = js.native
+    var favoriteSymbols: js.Dictionary[String] = js.native
+    var levels: js.Array[GameLevel] = js.native
+    //var netWorth: js.UndefOr[NetWorth] = js.native
+    var recentSymbols: js.Dictionary[String] = js.native
 
-/**
- * Main Controller Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait MainControllerScope extends RootScope with GlobalNavigation with NetWorthScope {
-  // variables
-  var appTabs: js.Array[MainTab] = js.native
-  var favoriteSymbols: js.Dictionary[String] = js.native
-  var levels: js.Array[GameLevel] = js.native
-  //var netWorth: js.UndefOr[NetWorth] = js.native
-  var recentSymbols: js.Dictionary[String] = js.native
+    // loading functions
+    var isLoading: js.Function0[Boolean]
+    var startLoading: js.Function1[js.UndefOr[Int], js.Promise[js.Any]] = js.native
+    var stopLoading: js.Function1[js.UndefOr[js.Promise[js.Any]], Unit] = js.native
 
-  // loading functions
-  var isLoading: js.Function0[Boolean]
-  var startLoading: js.Function1[js.UndefOr[Int], js.Promise[js.Any]] = js.native
-  var stopLoading: js.Function1[js.UndefOr[js.Promise[js.Any]], Unit] = js.native
+    // miscellaneous functions
+    var mainInit: js.Function0[Unit] = js.native
+    var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
+    var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
+    var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
+    var getTabIndex: js.Function0[Int] = js.native
+    var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
+    var isAuthenticated: js.Function0[Boolean] = js.native
 
-  // miscellaneous functions
-  var mainInit: js.Function0[Unit] = js.native
-  var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
-  var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
-  var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
-  var getTabIndex: js.Function0[Int] = js.native
-  var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
-  var isAuthenticated: js.Function0[Boolean] = js.native
+    var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
+    var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
+    var logout: js.Function0[Unit] = js.native
+    var signIn: js.Function0[Unit] = js.native
+    var signUp: js.Function0[Unit] = js.native
 
-  var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
-  var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
-  var logout: js.Function0[Unit] = js.native
-  var signIn: js.Function0[Unit] = js.native
-  var signUp: js.Function0[Unit] = js.native
+  }
+
+  class AuthenticatedUser(val userProfile: UserProfile) extends js.Object
 
 }

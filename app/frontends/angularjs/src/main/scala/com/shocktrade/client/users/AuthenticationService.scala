@@ -17,6 +17,6 @@ class AuthenticationService($http: Http) extends Service {
 
   def login(form: AuthenticationForm): js.Promise[HttpResponse[UserProfile]] = $http.post(url = "/api/auth/login", data = form)
 
-  def logout(): js.Promise[HttpResponse[AuthenticationResponse]] = $http.get(url = "/api/auth/logout")
+  def logout(): js.Promise[HttpResponse[AuthenticationResponse]] = $http.post(url = "/api/auth/logout")
 
 }

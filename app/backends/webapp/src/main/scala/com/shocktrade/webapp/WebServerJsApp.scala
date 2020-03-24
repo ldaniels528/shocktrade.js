@@ -9,7 +9,7 @@ import com.shocktrade.webapp.routes.robot.{RobotProcessor, RobotRoutes}
 import com.shocktrade.webapp.routes.contest._
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
-import com.shocktrade.webapp.routes.social.{OnlineStatusRoutes, PostAttachmentRoutes, PostRoutes, SocialRoutes}
+import com.shocktrade.webapp.routes.social.{PostAttachmentRoutes, PostRoutes, SocialRoutes}
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
 import io.scalajs.npm.express.fileupload.{ExpressFileUpload, FileUploadOptions}
@@ -99,7 +99,6 @@ object WebServerJsApp {
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)
     new NewsRoutes(app)
-    new OnlineStatusRoutes(app)
     new OrderRoutes(app)
     new PortfolioRoutes(app)
     new PostAttachmentRoutes(app)

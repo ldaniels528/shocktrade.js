@@ -1,11 +1,14 @@
 package com.shocktrade.webapp.routes.account
 
+import com.shocktrade.common.Ok
 import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
+import com.shocktrade.common.models.user.OnlineStatus
 import com.shocktrade.webapp.routes.NextFunction
 import com.shocktrade.webapp.routes.account.dao.AuthenticationDAO
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
+import scala.scalajs.js
 import scala.util.{Failure, Random, Success}
 
 /**
@@ -14,14 +17,21 @@ import scala.util.{Failure, Random, Success}
  */
 class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
   private val authenticationDAO = AuthenticationDAO()
+  private val statuses = js.Dictionary[OnlineStatus]()
 
   // authentication API
   app.get("/api/auth/code", (request: Request, response: Response, next: NextFunction) => code(request, response, next))
   app.post("/api/auth/login", (request: Request, response: Response, next: NextFunction) => login(request, response, next))
-  app.delete("/api/auth/logout", (request: Request, response: Response, next: NextFunction) => logout(request, response, next))
+  app.post("/api/auth/logout", (request: Request, response: Response, next: NextFunction) => logout(request, response, next))
+
+  // session API
+  app.get("/api/online", (request: Request, response: Response, next: NextFunction) => statusAll(request, response, next))
+  app.get("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => statusByUserID(request, response, next))
+  app.put("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => onlineByUserID(request, response, next))
+  app.delete("/api/online/:userID", (request: Request, response: Response, next: NextFunction) => offlineByUserID(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
-  //      API Methods
+  //      Authentication API Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
   def code(request: Request, response: Response, next: NextFunction): Unit = {
@@ -29,6 +39,7 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
     val random = new Random()
     val code = new String((for (_ <- 1 to 16; c = charset(random.nextInt(charset.length))) yield c).toArray)
     response.send(new AuthenticationCode(code))
+    next()
   }
 
   def login(request: Request, response: Response, next: NextFunction): Unit = {
@@ -61,7 +72,40 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
   }
 
   def logout(request: Request, response: Response, next: NextFunction): Unit = {
-    response.internalServerError("Not yet implemented")
+    response.send(Ok(updateCount = 1)); next()
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      Online Status API Methods
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  def statusAll(request: Request, response: Response, next: NextFunction): Unit = {
+    response.send(statuses)
+    next()
+  }
+
+  def statusByUserID(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    response.send(status)
+    next()
+  }
+
+  def onlineByUserID(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
+    status.connected = true
+    response.send(status)
+    next()
+  }
+
+  def offlineByUserID(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    status.connected = false
+    response.send(status)
+    next()
+  }
+
 
 }
