@@ -13,7 +13,9 @@ import scala.scalajs.js
  */
 trait RobotDAO {
 
-  def findRobots(implicit ec: ExecutionContext): Future[js.Array[RobotData]]
+  def findPendingOrderSymbols(robotUsername: String, portfolioID: String): Future[js.Array[String]]
+
+  def findRobots: Future[js.Array[RobotData]]
 
 }
 
@@ -28,17 +30,6 @@ object RobotDAO {
    * @param options the given [[MySQLConnectionOptions]]
    * @return a new [[RobotDAO robot DAO]]
    */
-  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): RobotDAO = new RobotDAOImpl()
-
-  /**
-   * Robot DAO Implementation
-   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-   */
-  class RobotDAOImpl() extends RobotDAO {
-    private val robots = js.Array[RobotData](new RobotData(name = "daisy"))
-
-    override def findRobots(implicit ec: ExecutionContext): Future[js.Array[RobotData]] = Future.successful(robots)
-
-  }
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions)(implicit ec: ExecutionContext): RobotDAO = new RobotDAOMySQL(options)
 
 }

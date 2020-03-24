@@ -2,7 +2,6 @@ package com.shocktrade.webapp.routes.research.dao
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
-import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
@@ -35,7 +34,7 @@ class ResearchDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options
           |${options.sortBy.toOption.map(field => s"ORDER BY $field ${if (options.reverse.contains(true)) "DESC" else "ASC"}").getOrElse("")}
           |LIMIT $maxResults
           |""".stripMargin
-    LoggerFactory.getLogger(getClass).info(s"query: \n$query")
+    //LoggerFactory.getLogger(getClass).info(s"query: \n$query")
 
     // perform the query
     conn.queryFuture[ResearchQuote](query, values) map { case (rows, _) => rows }

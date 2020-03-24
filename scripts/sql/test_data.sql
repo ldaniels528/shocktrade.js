@@ -10,6 +10,12 @@ INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gadget', 125000);
 INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'daisy', 125000);
 
 -- ------------------------------------------------------------
+-- Robots
+-- ------------------------------------------------------------
+INSERT INTO robots (username, strategy) VALUES ('daisy', 'penny-stock');
+INSERT INTO robots (username, strategy) VALUES ('gadget', 'penny-stock');
+
+-- ------------------------------------------------------------
 -- Posts
 -- ------------------------------------------------------------
 INSERT INTO posts (postID, userID, text, likes)

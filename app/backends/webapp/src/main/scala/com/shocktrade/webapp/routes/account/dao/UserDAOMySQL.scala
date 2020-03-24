@@ -30,7 +30,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
   }
 
   override def findByUsername(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
-    conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.name = ?", js.Array(name)) map { case (rows, _) => rows.headOption }
+    conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.username = ?", js.Array(name)) map { case (rows, _) => rows.headOption }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////

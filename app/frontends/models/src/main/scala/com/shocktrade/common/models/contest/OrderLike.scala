@@ -56,25 +56,25 @@ object OrderLike {
   implicit class OrderLikeEnrichment(val order: OrderLike) extends AnyVal {
 
     @inline
-    def isExpired(asOfTime: js.Date) = order.expirationTime.exists(_ < asOfTime)
+    def isExpired(asOfTime: js.Date): Boolean = order.expirationTime.exists(_ < asOfTime)
 
     @inline
-    def isBuyOrder = order.orderType.contains(ORDER_TYPE_BUY)
+    def isBuyOrder: Boolean = order.orderType.contains(ORDER_TYPE_BUY)
 
     @inline
-    def isSellOrder = order.orderType.contains(ORDER_TYPE_SELL)
+    def isSellOrder: Boolean = order.orderType.contains(ORDER_TYPE_SELL)
 
     @inline
-    def isLimitOrder = order.priceType.contains("LIMIT")
+    def isLimitOrder: Boolean = order.priceType.contains("LIMIT")
 
     @inline
-    def isMarketOrder = order.priceType.contains("MARKET")
+    def isMarketOrder: Boolean = order.priceType.contains("MARKET")
 
     @inline
-    def isMarketAtCloseOrder = order.priceType.contains("MARKET_AT_CLOSE")
+    def isMarketAtCloseOrder: Boolean = order.priceType.contains("MARKET_AT_CLOSE")
 
     @inline
-    def totalCost = for {
+    def totalCost: js.UndefOr[Double] = for {
       price <- order.price
       quantity <- order.quantity
     } yield price * quantity + Commissions(order)

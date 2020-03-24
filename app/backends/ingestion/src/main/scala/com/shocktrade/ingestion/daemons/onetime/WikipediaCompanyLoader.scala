@@ -5,7 +5,7 @@ import io.scalajs.nodejs.fs.Fs
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 /**
  * Wikipedia Company One-time Loader
@@ -33,6 +33,8 @@ class WikipediaCompanyLoader() {
             yearFounded = extract(values, 7)
           ))
         }
+      case Failure(e) =>
+        logger.error(s"Wikipedia Company load failure: ${e.getMessage}")
     }
   }
 

@@ -8,13 +8,13 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 /**
- * Auto-Trading Routes
+ * Robot Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AutoTradingRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private implicit val robotDAO: RobotDAO = RobotDAO()
+class RobotRoutes(app: Application)(implicit ec: ExecutionContext) {
+  private val robotDAO = RobotDAO()
 
-  // routes
+  // API routes
   app.get("/api/robots", (request: Request, response: Response, next: NextFunction) => findRobots(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////

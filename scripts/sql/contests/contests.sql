@@ -138,3 +138,16 @@ LEFT JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
 GROUP BY C.contestID, C.name, P.portfolioID, U.userID, U.username
 ORDER BY totalEquity DESC;
 
+-- ------------------------------------------------------------
+-- Robots table
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS robots;
+CREATE TABLE robots (
+    robotID INTEGER AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(36),
+    strategy VARCHAR(20) NOT NULL
+);
+
+CREATE UNIQUE INDEX robots_xpk ON robots (username);
+

@@ -5,7 +5,7 @@ import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account._
-import com.shocktrade.webapp.routes.autotrading.AutoTradingRoutes
+import com.shocktrade.webapp.routes.autotrading.{RobotProcessor, RobotRoutes}
 import com.shocktrade.webapp.routes.contest._
 import com.shocktrade.webapp.routes.discover._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
@@ -16,6 +16,7 @@ import io.scalajs.npm.express.fileupload.{ExpressFileUpload, FileUploadOptions}
 import io.scalajs.npm.express.{Application, Express, Request, Response}
 import io.scalajs.npm.expressws.{ExpressWS, WebSocket, WsInstance, WsRouterExtensions, WsRouting}
 
+import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -87,7 +88,7 @@ object WebServerJsApp {
     // setup all other routes
     logger.info("Setting up all other routes...")
     new AuthenticationRoutes(app)
-    new AutoTradingRoutes(app)
+    new RobotRoutes(app)
     new ContestRoutes(app)
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)
@@ -103,6 +104,12 @@ object WebServerJsApp {
     new SocialRoutes(app)
     new TradingClockRoutes(app)
     new UserRoutes(app)
+
+    // start the robots
+    logger.info("Setting up robots...")
+    val robotProcessor = new RobotProcessor()
+    setTimeout(() => robotProcessor.run(), 3.seconds)
+    setInterval(() => robotProcessor.run(), 15.minute)
     app
   }
 

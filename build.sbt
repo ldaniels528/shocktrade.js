@@ -4,7 +4,7 @@ import sbt.Keys._
 import sbt._
 
 val appVersion = "0.2.0"
-val appScalaVersion = "2.12.10"
+val appScalaVersion = "2.12.11"
 val scalaJsIOVersion = "0.6.0"
 
 /////////////////////////////////////////////////////////////////////////////////

@@ -43,7 +43,7 @@ object OrderData {
     )
 
     @inline
-    def copy(_id: js.UndefOr[String] = js.undefined,
+    def copy(orderID: js.UndefOr[String] = js.undefined,
              symbol: js.UndefOr[String] = js.undefined,
              exchange: js.UndefOr[String] = js.undefined,
              accountType: js.UndefOr[String] = js.undefined,
@@ -57,7 +57,7 @@ object OrderData {
              statusMessage: js.UndefOr[String] = js.undefined,
              closed: js.UndefOr[Boolean] = js.undefined): OrderData = {
       new OrderData(
-        orderID = _id ?? order.orderID,
+        orderID = orderID ?? order.orderID,
         symbol = symbol ?? order.symbol,
         exchange = exchange ?? order.exchange,
         orderType = orderType ?? order.orderType,
