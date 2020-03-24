@@ -21,7 +21,6 @@ import io.scalajs.util.PromiseHelper.Implicits._
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -39,7 +38,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   // internal variables
   implicit private val scope: GameSearchScope = $scope
   private var searchResults = js.Array[ContestSearchResultUI]()
-  private var splitScreen: Boolean = false
 
   $scope.contest = js.undefined
   $scope.rankings = js.undefined
@@ -63,13 +61,11 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
 
   $scope.getAvailableCount = () => searchResults.count(_.isActive)
 
-  $scope.getAvailableSlots = (aContest: js.UndefOr[ContestSearchResultUI], aRowIndex: js.UndefOr[Number]) => getAvailableSlots(aContest, aRowIndex)
-
   $scope.getSearchResults = (aSearchTerm: js.UndefOr[String]) => getSearchResults(aSearchTerm)
 
   $scope.getSelectedContest = () => $scope.selectedContest
 
-  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI], aUserID: js.UndefOr[String]) => invitePlayerPopup(aContest, aUserID)
+  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI]) => invitePlayerPopup(aContest)
 
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
 
@@ -84,31 +80,8 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
     }
   }
 
-  private def getAvailableSlots(aContest: js.UndefOr[ContestSearchResultUI], aRowIndex: js.UndefOr[Number]): js.UndefOr[js.Array[ContestRanking]] = aContest map { contest =>
-    val row = aRowIndex.map(_.intValue()) getOrElse 0
-    val start = row * 8
-    val end = start + 8
-
-    // generate the slots
-    js.Array((start to end).map {
-      case n if n < $scope.portfolios.length => $scope.portfolios(n)
-      case _ => null
-    }: _*)
-  }
-
-  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI], aUserID: js.UndefOr[String]): Unit = {
-    /*
-    for {
-      contest <- aContest
-      userID <- aUserID
-    } {
-      $scope.portfolio.toOption match {
-        case Some(portfolio) =>
-          invitePlayerDialog.popup(portfolio)
-        case _ =>
-          toaster.error("You must join the game to use this feature")
-      }
-    }*/
+  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
+    for (contest <- aContest) invitePlayerDialog.popup(contest)
   }
 
   private def getSearchResults(aSearchTerm: js.UndefOr[String]): js.Array[ContestSearchResultUI] = aSearchTerm.toOption match {
@@ -151,15 +124,9 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   //          Contest Selection Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.isSplitScreen = () => isSplitScreen
-
   $scope.selectContest = (aContest: js.UndefOr[ContestSearchResultUI]) => selectContest(aContest)
 
-  $scope.toggleSplitScreen = () => toggleSplitScreen()
-
   private def isContestSelected(contestId: String) = $scope.selectedContest.exists(_.contestID.contains(contestId))
-
-  private def isSplitScreen = splitScreen && $scope.selectedContest.exists(_.hostUserID.exists(_.nonEmpty))
 
   private def selectContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     $scope.selectedContest = aContest
@@ -168,7 +135,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
     for {contest <- aContest; contestID <- contest.contestID} {
       contestService.findRankingsByContest(contestID) onComplete {
         case Success(response) =>
-          splitScreen = true
           $scope.$apply { () => $scope.portfolios = response.data }
           console.log(s"Selecting contest '${contest.name}' ($contestID)")
         case Failure(e) =>
@@ -176,8 +142,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
       }
     }
   }
-
-  private def toggleSplitScreen(): Unit = splitScreen = false
 
   ///////////////////////////////////////////////////////////////////////////
   //          Contest Management Functions
@@ -333,20 +297,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
     searchResults = searchResults.filterNot(_.contestID ?== contest.contestID)
   }
 
-  /**
-   * Listen for contest update events
-   */
-  $scope.onContestSelected { (_, contest) =>
-    console.log(s"ContestSearchResultUI '${contest.name} updated")
-    contest.contestID foreach { contestId =>
-      // update the contest in our search results
-      updateContestInList(searchResults, contestId)
-
-      // make sure we"re pointing at the updated contest
-      if (isContestSelected(contestId)) $scope.selectedContest = searchResults.find(_.contestID contains contestId).orUndefined
-    }
-  }
-
 }
 
 /**
@@ -366,11 +316,8 @@ trait GameSearchScope extends RootScope with ContestScope with ContestEntrySuppo
   // general functions
   var contestStatusClass: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[String]] = js.native
   var getAvailableCount: js.Function0[Int] = js.native
-  var getAvailableSlots: js.Function2[js.UndefOr[ContestSearchResultUI], js.UndefOr[Number], js.UndefOr[js.Array[ContestRanking]]] = js.native
   var getSelectionClass: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[String]] = js.native
   var getStatusClass: js.Function1[js.UndefOr[ContestSearchResultUI], String] = js.native
-  var isSplitScreen: js.Function0[Boolean] = js.native
-  var toggleSplitScreen: js.Function0[Unit] = js.native
   var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
 
   // contest functions
@@ -378,7 +325,7 @@ trait GameSearchScope extends RootScope with ContestScope with ContestEntrySuppo
   var deleteContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResultUI]] = js.native
   var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResultUI]] = js.native
-  var invitePlayerPopup: js.Function2[js.UndefOr[ContestSearchResultUI], js.UndefOr[String], Unit] = js.native
+  var invitePlayerPopup: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var isActive: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[Boolean]] = js.native
   var joinContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var quitContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native

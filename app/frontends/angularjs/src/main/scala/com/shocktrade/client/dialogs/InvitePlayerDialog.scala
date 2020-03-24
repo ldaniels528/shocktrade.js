@@ -1,7 +1,7 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
-import com.shocktrade.client.models.contest.Portfolio
+import com.shocktrade.client.models.contest.ContestSearchResultUI
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -21,11 +21,11 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
   /**
    * Invite a player via pop-up dialog
    */
-  def popup(portfolio: Portfolio): Future[InvitePlayerDialogResult] = {
+  def popup(contest: ContestSearchResultUI): Future[InvitePlayerDialogResult] = {
     val modalInstance = $uibModal.open[InvitePlayerDialogResult](new ModalOptions(
       templateUrl = "invite_player_dialog.html",
       controller = classOf[InvitePlayerDialogController].getSimpleName,
-      resolve = js.Dictionary("portfolio" -> (() => portfolio))
+      resolve = js.Dictionary("contest" -> (() => contest))
     ))
     modalInstance.result
   }
@@ -36,7 +36,7 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class InvitePlayerDialogController($scope: InvitePlayerScope, $uibModalInstance: ModalInstance[InvitePlayerDialogResult],
-                                   @injected("portfolio") portfolio: Portfolio)
+                                   @injected("contest") contest: ContestSearchResultUI)
   extends Controller {
 
   private val myFriends = emptyArray[TaggableFriend]
@@ -61,7 +61,7 @@ class InvitePlayerDialogController($scope: InvitePlayerScope, $uibModalInstance:
   //			Private Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  private def getSelectedFriends = {
+  private def getSelectedFriends: js.Array[TaggableFriend] = {
     js.Array(
       $scope.invites.indices flatMap { n =>
         if (isDefined($scope.invites(n))) Some(myFriends(n)) else None

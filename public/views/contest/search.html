@@ -1,5 +1,5 @@
 <div class="row" ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
-    <div ng-hide="isSplitScreen()" style="margin-bottom: 20px">
+    <div style="margin-bottom: 20px">
         <!-- Game Filtering Options -->
         <div class="col-md-6" ng-include src="'/views/contest/game_filters.html'"></div>
 
@@ -21,14 +21,13 @@
     </div>
 
     <!-- Search Results -->
-    <div ng-class="{'col-md-4':(isSplitScreen()), 'col-md-12':(!isSplitScreen())}">
+    <div class="col-md-12">
         <fieldset class="contest">
             <legend class="contest">
                 Search Results ({{ getSearchResults(searchTerm).length || 0 }})
             </legend>
             <div class="row">
-                <input class="symbol_input_text_field"
-                        ng-class="{'col-md-11':(isSplitScreen()), 'col-md-4':(!isSplitScreen())}"
+                <input class="symbol_input_text_field col-md-4"
                         style="border-radius: 4px 4px 4px 4px"
                         type="text"
                         ng-model="searchTerm"
@@ -37,32 +36,32 @@
             <div class="availGamesContainer">
                 <div class="row">
                     <div class="col-md-4 header left padding-left-16">Game Title</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header center">Started</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header center">Expires</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header center">Players</div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 header right">Game Features</div>
+                    <div class="col-md-2 header center">Started</div>
+                    <div class="col-md-2 header center">Expires</div>
+                    <div class="col-md-2 header center">Players</div>
+                    <div class="col-md-2 header right">Game Features</div>
                 </div>
 
-                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="selectContest(c)">
+                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="enterGame(c)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 center">
+                    <div class="col-md-2 center">
                         <span ng-show="c.startTime" ng-class="getSelectionClass(c)">{{ c.startTime | duration }}</span>
                         <span ng-hide="c.startTime">&#8212;</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 center">
+                    <div class="col-md-2 center">
                         <span ng-show="c.status === 'ACTIVE'">
                             <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
                             <span ng-hide="c.expirationTime">&#8212;</span>
                         </span>
                         <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2 center">
+                    <div class="col-md-2 center">
                         <span ng-class="getSelectionClass(c)">{{ c.playerCount }}</span>
                     </div>
-                    <div ng-hide="isSplitScreen()" class="col-md-2">
+                    <div class="col-md-2">
                         <span class="pull-right">
                             <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
                             <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
@@ -73,153 +72,6 @@
                     </div>
                 </div>
 
-            </div>
-        </fieldset>
-    </div>
-
-    <!-- Game Lobby -->
-    <div ng-show="isSplitScreen()" class="col-md-8">
-        <fieldset class="contest" ng-show="portfolios">
-            <legend class="contest">
-                <span class="game_title clickable" ng-click="toggleSplitScreen()">
-                    <i class="fa fa-chevron-circle-left st_control" title="Return to results"></i> {{selectedContest.name}}
-                </span>
-            </legend>
-
-            <div class="row contest_lobby contest_colors">
-                <div ng-class="selectedContest.status !== 'CLOSED' ? 'col-md-12' : 'col-md-9'" class="contest_lobby_gallery">
-                    <div style="margin-left: auto; margin-right: auto" ng-repeat="row in [0,1,2]">
-                        <span ng-repeat="p in getAvailableSlots(selectedContest, row) track by $index">
-                            <avatar ng-show="p" id="{{ p.userID }}" class="avatar-53"></avatar>
-                            <img class="no_picture_gang clickable"
-                                ng-hide="p"
-                                ng-click="invitePlayerPopup(selectedContest, userProfile.userID)"
-                                title="invite a friend"
-                                src="/images/play/unknown-53.jpg">
-                        </span>
-                    </div>
-                </div>
-                <div ng-if="selectedContest.status === 'CLOSED'" class="col-md-3 contest_winners">
-                    <div class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[0].userID }}" class="avatar-53"></avatar>
-                        <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/images/{{ trophy(selectedContest.rankings.participants[0].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[0].rank">
-                            {{ selectedContest.rankings.participants[0].rank }}
-                        </span>
-                    </div>
-
-                    <div ng-if="portfolios.length > 1" class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[1].userID }}" class="avatar-53"></avatar>
-                        <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/images/{{ trophy(selectedContest.rankings.participants[1].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[1].rank">
-                            {{ selectedContest.rankings.participants[1].rank }}
-                        </span>
-                    </div>
-
-                    <div ng-if="portfolios.length > 2" class="pull-left">
-                        <avatar id="{{ selectedContest.rankings.participants[2].userID }}" class="avatar-53"></avatar>
-                        <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/images/{{ trophy(selectedContest.rankings.participants[2].rank) }}">
-                        <span ng-class="'rank_' + selectedContest.rankings.participants[2].rank">
-                            {{ selectedContest.rankings.participants[2].rank }}
-                        </span>
-                    </div>
-                </div>
-
-                <div ng-show="selectedContest.status === 'CLOSED'" class="col-md-12">&nbsp;</div>
-                <div ng-if="selectedContest.status !== 'CLOSED'">
-                    <div ng-show="selectedContest.rankings.leader" class="col-md-3">Leader</div>
-                    <div ng-show="selectedContest.rankings.leader" class="col-md-9">
-                        <img ng-if="selectedContest.status === 'CLOSED'" ng-src="/images/{{ trophy(selectedContest.rankings.leader.rank) }}">
-                        <avatar id="{{ selectedContest.rankings.leader.userID }}" class="avatar-20"></avatar>
-                        <span ng-class="'rank_' + selectedContest.rankings.leader.rank">{{ selectedContest.rankings.leader.rank }}</span>
-                        <span ng-class="selectedContest.rankings.leader.gainLoss >= 0 ? 'positive' : 'negative'">
-                            <changearrow value="{{ selectedContest.rankings.leader.gainLoss }}"></changearrow>
-                            {{ selectedContest.rankings.leader.gainLoss | number:2 }}%
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Contest Status -->
-                <div class="col-md-3">Status</div>
-                <div class="col-md-5">
-                    <span ng-class="getStatusClass(selectedContest)">{{ selectedContest.status }}</span>
-                </div>
-                <div class="col-md-4">
-                    <input id="friendsOnly" type="checkbox" ng-model="selectedContest.friendsOnly" disabled>
-                    <i class="fa fa-users"></i> <label for="friendsOnly">Friends-Only</label>
-                </div>
-
-                <!-- Contest Created -->
-                <div class="col-md-3">Created</div>
-                <div class="col-md-5">{{ selectedContest.creationTime | duration }}</div>
-                <div class="col-md-4">
-                    <input id="perksAllowed" type="checkbox" ng-model="selectedContest.perksAllowed" disabled>
-                    <i class="fa fa-gift"></i> <label for="perksAllowed">Perks Allowed</label>
-                </div>
-
-                <!-- Contest Started -->
-                <div class="col-md-3">Started</div>
-                <div class="col-md-5">
-                    <span ng-show="selectedContest.startTime">{{ selectedContest.startTime | duration }}</span>
-                    <span ng-hide="selectedContest.startTime" class="null">Not Started</span>
-                </div>
-                <div class="col-md-4">
-                    <input id="invitationOnly" type="checkbox" ng-model="selectedContest.invitationOnly" disabled>
-                    <i class="fa fa-lock"></i> <label for="invitationOnly">Invitation-Only</label>
-                </div>
-
-                <!-- Contest Ended -->
-                <div class="col-md-3">{{ selectedContest.status === 'ACTIVE' ? 'Ends' : 'Ended' }}</div>
-                <div class="col-md-5">
-                    <span ng-hide="selectedContest.expirationTime" class="null">Not Specified</span>
-                    <span ng-show="selectedContest.expirationTime">{{ selectedContest.expirationTime | duration }}</span>
-                </div>
-                <div class="col-md-4">
-                    <input id="robotsAllowed" type="checkbox" ng-model="selectedContest.robotsAllowed" disabled>
-                    <i class="fa fa-android"></i> <label for="robotsAllowed">Robots Allowed</label>
-                </div>
-
-                <!-- Contest Buy-In Cost -->
-                <div class="col-md-3">Buy-In Cost</div>
-                <div class="col-md-9">
-                    <span ng-class="userProfile.wallet >= selectedContest.startingBalance ? 'positive' : 'negative'">
-                        $ {{ selectedContest.startingBalance | number:2 }}
-                    </span>
-                </div>
-
-                <!-- Contest Level Cap -->
-                <div class="col-md-3">Level Cap</div>
-                <div class="col-md-9">
-                    {{ selectedContest.levelCap }} &#8212; {{ levels[selectedContest.levelCap].description }}
-                </div>
-            </div>
-            <div class="row" style="margin-top: 5px">
-                <div class="col-md-12">
-                    <button class="btn btn-default st_button" ng-click="enterGame(selectedContest)">
-                        <i class="fa fa-arrow-circle-right"></i>
-                        <img ng-show="selectedContest.entering" src="/images/status/loading16.gif"> Enter
-                    </button>
-
-                    <button class="btn btn-default st_button" ng-click="startContest(selectedContest)" ng-show="selectedContest.isOwner && !selectedContest.startTime">
-                        <i ng-hide="selectedContest.starting" class="fa fa-youtube-play"></i>
-                        <img ng-show="selectedContest.starting" src="/images/status/loading16.gif"> Start
-                    </button>
-
-                    <button class="btn btn-default st_button" ng-click="joinContest(selectedContest)" ng-show="userProfile.userID && !selectedContest.isParticipant">
-                        <i ng-hide="selectedContest.joining" class="fa fa-user"></i>
-                        <img ng-show="selectedContest.joining" src="/images/status/loading16.gif"> Join
-                    </button>
-
-                    <button class="btn btn-default st_button" ng-click="deleteContest(selectedContest)" ng-show="selectedContest.isOwner">
-                        <i ng-hide="selectedContest.deleting" class="fa fa-ban"></i>
-                        <img ng-show="selectedContest.deleting" src="/images/status/loading16.gif"> Delete
-                    </button>
-
-                    <button class="btn btn-default quit_button" ng-click="quitContest(selectedContest)" ng-show="!selectedContest.isOwner && selectedContest.isParticipant">
-                        <i ng-hide="selectedContest.quitting" class="fa fa-warning"></i>
-                        <img ng-show="selectedContest.quitting" src="/images/status/loading16.gif"> Quit
-                    </button>
-                </div>
             </div>
         </fieldset>
     </div>
