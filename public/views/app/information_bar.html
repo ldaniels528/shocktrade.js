@@ -46,7 +46,7 @@
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
             <span ng-show="isAuthenticated()"  class="title_color" ng-show="userProfile.userName">
-                &#8212; <avatar id="userProfile.userID" class="avatar-16"></avatar> {{ userProfile.username }}</span>
+                &#8212; <avatar id="{{ userProfile.userID }}" class="avatar-16"></avatar> {{ userProfile.username }}</span>
         </span>
     </div>
 </div>
