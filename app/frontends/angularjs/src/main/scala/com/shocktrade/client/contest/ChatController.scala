@@ -64,7 +64,7 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
 
   $scope.getChatMessages = () => getChatMessages
 
-  $scope.getEmoticons = () => Emoticons
+  $scope.getEmoticons = () => Emoticons.reverse
 
   $scope.sendChatMessage = (aMessageText: js.UndefOr[String]) => {
     aMessageText foreach sendChatMessage

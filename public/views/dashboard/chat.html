@@ -3,15 +3,11 @@
         <div ng-bind-html="getChatMessages()"></div>
     </div>
     <div>
-        <table style="width: 95%; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 5px">
-            <tr>
-                <td ng-repeat="emoticon in getEmoticons()">
-                    <a href="" ng-click="addSmiley(emoticon)" title="{{ emoticon.tooltip }}">
-                        <img class="emoticon" ng-src="/images/smilies/{{ emoticon.uri }}">
-                    </a>
-                </td>
-            </tr>
-        </table>
+    <span class="pull-right" ng-repeat="emoticon in getEmoticons()">
+        <a href="" ng-click="addSmiley(emoticon)" title="{{ emoticon.tooltip }}">
+            <img class="emoticon" ng-src="/images/smilies/{{ emoticon.uri }}" style="margin: 2px 2px 2px 2px">
+        </a>
+    </span>
     </div>
     <div class="block_full">
 		<textarea ng-model="chatMessage" class="chat_text_area"></textarea>
