@@ -1,22 +1,28 @@
 <div ng-class="getRankCellClass('join')">
-    <div class="pull-left" style="display: inline">
-        <avatar id="{{ userProfile.userID }}" class="avatar-45"></avatar>
+    <div lass="pull-left" style="display: inline">
+        <div class="pull-left" style="display: inline">
+            <avatar id="{{ userProfile.userID }}" class="avatar-45"></avatar>
+        </div>
+        <div class="pull-left" style="display: inline; width: 60%">
+            <div>
+                <img ng-src="/images/status/{{ isOnline(userProfile.userID) ? 'greenlight' : 'offlight' }}.png">
+                <span ng-class="'rank_' + rankOf(contest.rankings.length + 1)">{{ rankOf(contest.rankings.length + 1) }}</span>
+                <span class="null">&#8212;</span>
+                <span class="st_text_color" ng-click="showGamerCard(userProfile.name)">{{ userProfile.username }}</span>
+            </div>
+            <div>
+                <span class="positive">$ {{ contest.startingBalance | number: 0 }}</span>
+                <span class="positive">
+                    <changearrow value="{{ 0.00 }}"></changearrow> {{ 0.00 | number:2 }}%
+                </span>
+            </div>
+        </div>
     </div>
-    <div class="pull-left" style="display: inline">
-        <div>
-            <img ng-src="/images/status/{{ isOnline(userProfile.userID) ? 'greenlight' : 'offlight' }}.png">
-            <span ng-class="'rank_' + rankOf(contest.rankings.length + 1)">{{ rankOf(contest.rankings.length + 1) }}</span>
-            <span class="null">&#8212;</span>
-            <span class="st_text_color" ng-click="showGamerCard(userProfile.name)">{{ userProfile.username }}</span>
-        </div>
-        <div>
-            <button ng-click="joinContest(contest.contestID)" class="btn btn-default st_button" style="margin: 2px 2px 2px 2px">
-                <i ng-hide="isJoining" class="fa fa-user"></i>
-                <img ng-show="isJoining" src="/images/status/loading16.gif"> Join
-            </button>
-            <span class="null">&#8212;</span>
-            <span class="positive">$ {{ contest.startingBalance | number: 0 }} <span class="negative">buy-in cost</span></span>
-        </div>
+    <div class="pull-right" style="display: inline">
+        <button ng-click="joinContest(contest.contestID)" class="btn btn-default st_button pull-right" style="margin: 3px 3px 3px 3px">
+            <i ng-hide="isJoining" class="fa fa-user"></i>
+            <img ng-show="isJoining" src="/images/status/loading16.gif"> Join
+        </button>
     </div>
     <br style="clear: both">
 </div>
