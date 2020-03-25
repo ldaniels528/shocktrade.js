@@ -5,7 +5,7 @@ import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.ContestScope
-import com.shocktrade.client.{ContestFactory, GlobalLoading, RootScope}
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.models.contest.ContestSearchResult._
@@ -28,7 +28,6 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
-                                @injected("ContestFactory") contestFactory: ContestFactory,
                                 @injected("ContestService") contestService: ContestService,
                                 @injected("GameStateFactory") gameState: GameStateFactory,
                                 @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
@@ -125,8 +124,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.selectContest = (aContest: js.UndefOr[ContestSearchResultUI]) => selectContest(aContest)
-
-  private def isContestSelected(contestId: String) = $scope.selectedContest.exists(_.contestID.contains(contestId))
 
   private def selectContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
     $scope.selectedContest = aContest
@@ -250,19 +247,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   //////////////////////////////////////////////////////////////////////
   //              Broadcast Event Listeners
   //////////////////////////////////////////////////////////////////////
-
-  private def updateContestInList(searchResults: js.Array[ContestSearchResultUI], contestId: String) {
-    val index = searchResults.indexWhere(_.contestID.contains(contestId))
-    if (index != -1) {
-      asyncLoading($scope)(contestService.findContestByID(contestId)) onComplete {
-        case Success(loadedContest) =>
-        // $scope.$apply(() => searchResults(index) = loadedContest.data)
-        case Failure(e) =>
-          console.error(s"Error selecting feed: ${e.getMessage}")
-          toaster.error("Error loading game")
-      }
-    }
-  }
 
   private def removeContestFromList(searchResults: js.Array[_], contestId: String) {
     val index = indexOfContest(contestId)

@@ -28,10 +28,11 @@ class NewGameDialog($uibModal: Modal) extends Service {
   /**
    * Sign-up Modal Dialog
    */
-  def popup(): js.Promise[NewGameDialogResult] = {
+  def popup(userID: String): js.Promise[NewGameDialogResult] = {
     val $uibModalInstance = $uibModal.open[NewGameDialogResult](new ModalOptions(
       templateUrl = "new_game_dialog.html",
-      controller = classOf[NewGameDialogController].getSimpleName
+      controller = classOf[NewGameDialogController].getSimpleName,
+      resolve = js.Dictionary("userID" -> (() => userID))
     ))
     $uibModalInstance.result
   }
@@ -42,10 +43,11 @@ class NewGameDialog($uibModal: Modal) extends Service {
  * New Game Dialog Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toaster: Toaster,
+class NewGameDialogController($scope: NewGameDialogControllerScope, $timeout: Timeout, toaster: Toaster,
                               $uibModalInstance: ModalInstance[NewGameDialogResult],
                               @injected("ContestService") contestService: ContestService,
-                              @injected("NewGameDialog") newGameDialog: NewGameDialog)
+                              @injected("NewGameDialog") newGameDialog: NewGameDialog,
+                              @injected("userID") userID: => String)
   extends Controller {
 
   private val errors = emptyArray[String]
@@ -73,30 +75,24 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
 
   $scope.createGame = (aForm: js.UndefOr[ContestCreationForm]) => aForm foreach { form =>
     if (isValidForm(form)) {
-      $scope.userProfile.flatMap(_.userID).toOption match {
-        case Some(userId) =>
-          processing = true
-          val promise = $timeout(() => processing = false, 30.seconds)
+      processing = true
+      val promise = $timeout(() => processing = false, 30.seconds)
 
-          // add the player info
-          $scope.form.userID = userId
+      // add the player info
+      $scope.form.userID = userID
 
-          // create the new game
-          contestService.createNewGame(form).toFuture onComplete {
-            case Success(response) =>
-              $uibModalInstance.close(response.data)
-              $timeout.cancel(promise)
-              processing = false
-            case Failure(e) =>
-              console.error(s"Error creating New Game: ${e.getMessage} => form = ${angular.toJson(form)}")
-              $timeout.cancel(promise)
-              processing = false
-          }
-        case None =>
-          toaster.error("User is not authenticated")
+      // create the new game
+      contestService.createNewGame(form).toFuture onComplete {
+        case Success(response) =>
+          $uibModalInstance.close(response.data)
+          $timeout.cancel(promise)
+          processing = false
+        case Failure(e) =>
+          console.error(s"Error creating New Game: ${e.getMessage} => form = ${angular.toJson(form)}")
+          $timeout.cancel(promise)
+          processing = false
       }
     }
-
   }
 
   $scope.enforceInvitationOnly = () => $scope.form.friendsOnly = false
@@ -111,8 +107,6 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
 
   private def isValidForm(form: ContestCreationForm) = {
     errors.removeAll()
-
-    if ($scope.userProfile.flatMap(_.userID).isEmpty) errors.push("You must login to create games")
     if (!isDefined(form.name) || form.name.exists(_.isEmpty)) errors.push("Game Title is required")
     if (!isDefined(form.duration)) errors.push("Game Duration is required")
     errors.isEmpty
@@ -125,20 +119,21 @@ class NewGameDialogController($scope: NewGameDialogScope, $timeout: Timeout, toa
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object NewGameDialogController {
-
   type NewGameDialogResult = ContestCreationResponse
 
-  val GameDurations: js.Array[GameDuration] = js.Array(
+  private val GameDurations: js.Array[GameDuration] = js.Array(
     new GameDuration(label = "1 Week", value = 7),
     new GameDuration(label = "2 Weeks", value = 14),
     new GameDuration(label = "3 Weeks", value = 21),
     new GameDuration(label = "4 Weeks", value = 28),
     new GameDuration(label = "5 Weeks", value = 35),
-    new GameDuration(label = "6 Weeks", value = 42))
+    new GameDuration(label = "6 Weeks", value = 42),
+    new GameDuration(label = "7 Weeks", value = 49),
+    new GameDuration(label = "8 Weeks", value = 56))
 
-  val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
+  private val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
 
-  val StartingBalances: js.Array[GameBalance] = js.Array(
+  private val StartingBalances: js.Array[GameBalance] = js.Array(
     new GameBalance(label = "$ 1,000", value = 1000.00),
     new GameBalance(label = "$ 2,500", value = 2500.00),
     new GameBalance(label = "$ 5,000", value = 5000.00),
@@ -148,27 +143,27 @@ object NewGameDialogController {
     new GameBalance(label = "$75,000", value = 75000.00),
     new GameBalance(label = "$100,000", value = 100000.00))
 
-}
+  /**
+   * New Game Dialog Controller Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait NewGameDialogControllerScope extends Scope {
+    // variables
+    var durations: js.Array[GameDuration] = js.native
+    var form: ContestCreationForm = js.native
+    var levelCaps: js.Array[LevelCap] = js.native
+    var startingBalances: js.Array[GameBalance] = js.native
+    var userProfile: js.UndefOr[UserProfile] = js.native
 
-/**
- * New Game Dialog Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait NewGameDialogScope extends Scope {
-  // variables
-  var durations: js.Array[GameDuration] = js.native
-  var form: ContestCreationForm = js.native
-  var levelCaps: js.Array[LevelCap] = js.native
-  var startingBalances: js.Array[GameBalance] = js.native
-  var userProfile: js.UndefOr[UserProfile] = js.native
+    // functions
+    var cancel: js.Function0[Unit] = js.native
+    var createGame: js.Function1[js.UndefOr[ContestCreationForm], Unit] = js.native
+    var enforceInvitationOnly: js.Function0[Unit] = js.native
+    var getMessages: js.Function0[js.Array[String]] = js.native
+    var isProcessing: js.Function0[Boolean] = js.native
 
-  // functions
-  var cancel: js.Function0[Unit] = js.native
-  var createGame: js.Function1[js.UndefOr[ContestCreationForm], Unit] = js.native
-  var enforceInvitationOnly: js.Function0[Unit] = js.native
-  var getMessages: js.Function0[js.Array[String]] = js.native
-  var isProcessing: js.Function0[Boolean] = js.native
+  }
 
 }
 

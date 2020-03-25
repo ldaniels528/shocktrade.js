@@ -118,7 +118,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
         contestDAO.create(form) onComplete {
           case Success(Some(result)) => response.send(result); next()
           case Success(None) => response.badRequest(form); next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
         }
     }
   }
@@ -159,7 +159,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
 
     outcome onComplete {
       case Success(contests) => response.send(contests); next()
-      case Failure(e) => response.internalServerError(e); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }
 

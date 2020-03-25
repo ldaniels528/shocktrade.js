@@ -5,48 +5,27 @@
 </div>
 
 <div class="row" ng-show="getMyContests().length">
-    <div class="col-md-4 header left padding-left-16">Game Title</div>
-    <div class="col-md-3 header center">My Ranking</div>
-    <div class="col-md-3 header center">Leading Player</div>
-    <div class="col-md-2 header right">Game Features</div>
+    <div class="col-md-7 header left padding-left-16">My Standing</div>
+    <div class="col-md-5 header center">1st Place</div>
 </div>
 
 <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
     <!-- Game Title -->
-    <div class="col-md-4">
+    <div class="col-md-7">
         <img ng-show="c.loading" src="/images/status/loading16.gif">
+        <span ng-class="c.playerGainLoss >= 0 ? 'positive' : 'negative'">
+            {{ c.playerGainLoss | abs | number:2 }}%
+            <changearrow value="{{ c.playerGainLoss }}"></changearrow>
+        </span>
         <avatar ng-hide="c.loading" id="{{ c.hostUserID }}" class="avatar-16" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar> {{ c.name }}
     </div>
-    <!-- My Ranking -->
-    <div class="col-md-3 center">
-        <span ng-class="'rank_' + c.playerRank">{{ rankOf(c.playerRank) }}</span>
-        <avatar id="{{ c.playerID }}" class="avatar-16" title="{{ c.playerName }}"></avatar>
-        <span ng-class="c.playerGainLoss >= 0 ? 'positive' : 'negative'">
-            <changearrow value="{{ c.playerGainLoss }}"></changearrow>
-            {{ c.playerGainLoss | abs | number:2 }}%
-        </span>
-        <span ng-hide="c.contestID" class="null">
-            <img src="/images/status/loading16.gif"> Loading...
-        </span>
-    </div>
     <!-- Leader -->
-    <div class="col-md-3 center">
-        <span ng-class="'rank_' + c.leaderRank">{{ rankOf(c.leaderRank) }}</span>
-        <avatar id="{{ c.leaderID }}" class="avatar-16" title="{{ c.leaderName }}"></avatar>
+    <div class="col-md-5 center" ng-show="c.leaderID">
         <span ng-class="c.leaderGainLoss >= 0 ? 'positive' : 'negative'">
-            <changearrow value="{{ c.leaderGainLoss }}"></changearrow>
             {{ c.leaderGainLoss | abs | number:2 }}%
+            <changearrow value="{{ c.leaderGainLoss }}"></changearrow>
         </span>
-    </div>
-    <!-- Game Features -->
-    <div class="col-md-2 right">
-        <span class="pull-right">
-            <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
-            <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
-            <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
-            <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
-            <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
-        </span>
+        <avatar id="{{ c.leaderID }}" class="avatar-16" title="{{ c.leaderName }}"></avatar> {{ c.leaderName }}
     </div>
 </div>
 

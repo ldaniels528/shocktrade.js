@@ -1,9 +1,10 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
 import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.client.{ContestFactory, GlobalLoading}
+import com.shocktrade.client.users.GameStateFactory.UserProfileScope
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -21,19 +22,48 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
-                             @injected("ContestFactory") contestFactory: ContestFactory,
                              @injected("ContestService") contestService: ContestService,
-                             @injected("NewGameDialog") newGameDialog: NewGameDialog,
-                             @injected("GameStateFactory") gameState: GameStateFactory)
+                             @injected("GameStateFactory") gameState: GameStateFactory,
+                             @injected("NewGameDialog") newGameDialog: NewGameDialog)
   extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
+  private implicit val scope: MyGamesScope = $scope
   private var myContests = js.Array[MyContest]()
 
   ///////////////////////////////////////////////////////////////////////////
-  //          Scope Functions
+  //          Initialization Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.initMyGames = () => reload()
+  $scope.initMyGames = () => initMyGames()
+
+  /**
+   * Listen for contest creation events
+   */
+  $scope.onContestCreated((_, _) => initMyGames())
+
+  /**
+   * Listen for contest deletion events
+   */
+  $scope.onContestDeleted((_, _) => initMyGames())
+
+  /**
+   * Listen for contest selected events
+   */
+  $scope.onContestSelected((_, _) => initMyGames())
+
+  /**
+   * Listen for user profile changes
+   */
+  $scope.onUserProfileUpdated((_, _) => initMyGames())
+
+  /**
+   * Retrieves the collection of games for the authenticated user
+   */
+  private def initMyGames(): Unit = $scope.userProfile.flatMap(_.userID) foreach loadMyContests
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
 
   $scope.getMyContests = () => myContests
 
@@ -46,26 +76,23 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
   ///////////////////////////////////////////////////////////////////////////
 
   private def popupNewGameDialog(): Unit = {
-    newGameDialog.popup() onComplete {
-      case Success(_) => $scope.$apply(() => reload())
-      case Failure(e) =>
-        toaster.error("Failed to create game")
-        console.error(s"Failed to create game: ${e.displayMessage}")
+    gameState.userID foreach { userID =>
+      newGameDialog.popup(userID) onComplete {
+        case Success(_) => initMyGames()
+        case Failure(e) =>
+          toaster.error("Failed to create game")
+          console.error(s"Failed to create game: ${e.displayMessage}")
+      }
     }
   }
-
-  private def reload(): Unit = $scope.userProfile.flatMap(_.userID) foreach loadMyContests
 
   private def loadMyContests(userID: String): Unit = {
     console.log(s"Loading 'My Contests' for user '$userID'...")
     contestService.findMyContests(userID) onComplete {
-      case Success(response) if response.status == 200 =>
+      case Success(response) =>
         val contests = response.data
         console.log(s"Loaded ${contests.length} contest(s)")
         $scope.$apply(() => myContests = contests)
-      case Success(response) =>
-        toaster.error("Failed to load 'My Contests'")
-        console.error(s"Failed to load 'My Contests': ${response.statusText}")
       case Failure(e) =>
         toaster.error("Failed to load 'My Contests'")
         console.error(s"Failed to load 'My Contests': ${JSON.stringify(e.displayMessage)}")
@@ -83,25 +110,6 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
     s"$rank$suffix"
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //          Event Listeners
-  ///////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Listen for contest creation events
-   */
-  $scope.onContestCreated((_, contest) => reload())
-
-  /**
-   * Listen for contest deletion events
-   */
-  $scope.onContestDeleted((_, contest) => reload())
-
-  /**
-   * Listen for user profile changes
-   */
-  $scope.onUserProfileUpdated((_, profile) => reload())
-
 }
 
 /**
@@ -109,7 +117,7 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MyGamesScope extends GameSearchScope {
+trait MyGamesScope extends GameSearchScope with UserProfileScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native

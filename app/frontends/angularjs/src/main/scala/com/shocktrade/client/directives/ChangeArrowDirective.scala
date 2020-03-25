@@ -3,7 +3,7 @@ package com.shocktrade.client.directives
 import io.scalajs.npm.angularjs.Directive._
 import io.scalajs.npm.angularjs.{Attributes, Directive, JQLite, Scope}
 
-
+import scala.language.postfixOps
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.Try
@@ -18,10 +18,10 @@ class ChangeArrowDirective extends Directive with ElementRestriction with LinkSu
   override val transclude = true
   override val template = """<i ng-class="icon"></i>"""
 
-  override def link(scope: ChangeArrowDirectiveScope, element: JQLite, attrs: Attributes) = {
+  override def link(scope: ChangeArrowDirectiveScope, element: JQLite, attrs: Attributes): Unit = {
     scope.$watch("value", { (newValue: js.UndefOr[Any], oldValue: js.UndefOr[Any]) =>
       scope.icon = newValue.toOption flatMap getNumericValue map {
-        case v if v > 0 => "fa fa-arrow-up positive"
+        case v if v >= 0 => "fa fa-arrow-up positive"
         case v if v < 0 => "fa fa-arrow-down negative"
         case _ => "fa fa-minus null"
       } orUndefined

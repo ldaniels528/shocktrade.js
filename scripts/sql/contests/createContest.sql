@@ -57,15 +57,14 @@ BEGIN
         -- ---------------------------------------------------------------------------
         --  create a welcome message
         -- ---------------------------------------------------------------------------
-        INSERT INTO contest_chats (messageID, contestID, portfolioID, message)
-        SELECT uuid(), P.contestID, P.portfolioID, CONCAT("Welcome to ", a_name, "!")
+        INSERT INTO contest_chats (messageID, contestID, userID, message)
+        SELECT uuid(), P.contestID, P.userID, CONCAT("Welcome to ", a_name, "!")
         FROM portfolios P
         WHERE P.contestID = v_contestID;
 
         -- ---------------------------------------------------------------------------
         --  Finally, return the contest and portfolio IDs
         -- ---------------------------------------------------------------------------
-
         SELECT v_contestID, v_portfolioID;
         COMMIT;
     ELSE

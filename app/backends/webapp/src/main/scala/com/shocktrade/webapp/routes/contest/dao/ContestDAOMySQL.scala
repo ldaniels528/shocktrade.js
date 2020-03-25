@@ -38,27 +38,19 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   override def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]] = {
     conn.queryFuture[MyContest](
       """|SELECT
-         |  C.contestID, C.name, C.hostUserID, CS.status, C.*,
-         |  P.playerID, P.playerName, P.playerGainLoss,
-         |  L.leaderID, L.leaderName, L.leaderGainLoss
-         |FROM contests C
-         |LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
+         |	CR.contestID, CR.name, CR.hostUserID, CS.status,
+         |	CR.userID playerID, CR.username AS playerName, CR.gainLoss playerGainLoss,
+         |	LP.leaderID, LP.leaderName, LP.leaderGainLoss
+         |FROM contest_rankings CR
+         |INNER JOIN contest_statuses CS ON CS.statusID = CR.statusID
          |LEFT JOIN (
          |	SELECT contestID, userID AS leaderID, username AS leaderName, gainLoss AS leaderGainLoss
-         |	FROM contest_rankings D
-         |	WHERE gainLoss = (SELECT MAX(gainLoss) FROM contest_rankings WHERE contestID = D.contestID AND hostUserID = D.hostUserID)
-         |	LIMIT 1
-         |) L ON L.contestID = C.contestID
-         |LEFT JOIN (
-         |	SELECT contestID, userID AS playerID, username AS playerName, gainLoss AS playerGainLoss
-         |	FROM contest_rankings
-         |	WHERE userID = ?
-         |	LIMIT 1
-         |) P ON P.contestID = C.contestID
-         |WHERE C.hostUserID = ?
-         |AND P.playerID IS NOT NULL
-         |""".stripMargin, js.Array(userID, userID))
-      .map { case (rows, _) => rows }
+         |	FROM contest_rankings CR2
+         |	WHERE totalEquity = (SELECT MAX(totalEquity) FROM contest_rankings WHERE contestID = CR2.contestID)
+         |  LIMIT 1
+         |) LP ON LP.contestID = CR.contestID
+         |WHERE CR.userID = ?
+         |""".stripMargin, js.Array(userID, userID, userID, userID)).map(_._1)
   }
 
   override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {

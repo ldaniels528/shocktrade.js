@@ -12,7 +12,6 @@ import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.DurationHelper._
@@ -30,7 +29,7 @@ import scala.util.{Failure, Success, Try}
  * New Order Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewOrderDialog($http: Http, $uibModal: Modal) extends Service {
+class NewOrderDialog($uibModal: Modal) extends Service {
 
   /**
    * Opens a new Order Entry Pop-up Dialog
