@@ -60,7 +60,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(option
   override def findPortfolioBalance(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioBalance]] = {
     conn.queryFuture[PortfolioBalance](
       """|SELECT
-         |  C.contestID, C.name, U.userID, U.username, U.wallet, P.funds, MAX(SP.tradeDateTime) AS asOfDate, SUM(SP.lastTrade * PS.quantity) equity,
+         |  C.contestID, C.name, U.userID, U.username, U.wallet, P.funds, IFNULL(MAX(SP.tradeDateTime), NOW()) AS asOfDate, SUM(SP.lastTrade * PS.quantity) equity,
          |  SUM(CASE WHEN O.orderType = 'BUY' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalBuyOrders,
          |  SUM(CASE WHEN O.orderType = 'SELL' AND O.fulfilled = 0 THEN SO.lastTrade * O.quantity ELSE 0 END) AS totalSellOrders
          |FROM users U
