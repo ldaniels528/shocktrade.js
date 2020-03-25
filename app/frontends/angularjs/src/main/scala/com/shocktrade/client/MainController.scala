@@ -5,7 +5,6 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.GameStateFactory.NetWorthScope
 import com.shocktrade.client.users.{AuthenticationService, GameStateFactory, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
@@ -99,7 +98,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
-  private def mainInit(): Unit ={
+  private def mainInit(): Unit = {
     console.log(s"Initializing ${getClass.getSimpleName}...")
     $cookies.getObject[AuthenticatedUser](AUTHENTICATED_USER_KEY) foreach { authenticatedUser =>
       console.log(s"Reading session from cookie: ${JSON.stringify(authenticatedUser)}")
@@ -180,19 +179,14 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
         case Some(userID) => userService.findUserByID(userID).toFuture
         case None => Future.failed(js.JavaScriptException("Missing user ID"))
       }
-      netWorth <- userAccount.userID.toOption match {
-        case Some(userID) => userService.getNetWorth(userID).toFuture
-        case None => Future.failed(js.JavaScriptException("Missing user ID"))
-      }
       _ <- userService.setIsOnline(userAccount.userID.orNull)
-    } yield (userProfile, netWorth)
+    } yield userProfile
 
     outcome onComplete {
-      case Success((userProfile, netWorth)) =>
+      case Success(userProfile) =>
         $cookies.putObject(AUTHENTICATED_USER_KEY, new AuthenticatedUser(userProfile.data))
         $scope.$apply { () =>
           gameState.userProfile = userProfile.data
-          gameState.netWorth = netWorth.data
         }
       case Failure(e) =>
         toaster.error(e.getMessage)
@@ -307,12 +301,11 @@ object MainController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait MainControllerScope extends RootScope with GlobalNavigation with NetWorthScope {
+  trait MainControllerScope extends RootScope with GlobalNavigation {
     // variables
     var appTabs: js.Array[MainTab] = js.native
     var favoriteSymbols: js.Dictionary[String] = js.native
     var levels: js.Array[GameLevel] = js.native
-    //var netWorth: js.UndefOr[NetWorth] = js.native
     var recentSymbols: js.Dictionary[String] = js.native
 
     // loading functions

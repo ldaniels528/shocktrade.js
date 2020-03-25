@@ -4,7 +4,7 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.common.forms.SignUpForm
 import com.shocktrade.common.models.OperationResult
 import com.shocktrade.common.models.quote.Ticker
-import com.shocktrade.common.models.user.{NetWorth, OnlineStatus}
+import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
@@ -29,16 +29,6 @@ class UserService($http: Http) extends Service {
    * @param userIDs the given user IDs
    */
   def findUsers(userIDs: js.Array[String]): js.Promise[HttpResponse[js.Array[UserProfile]]] = $http.get(s"/api/users?ids=${userIDs.mkString("+")}")
-
-  //////////////////////////////////////////////////////////////////////
-  //              Profile Lookup Functions
-  //////////////////////////////////////////////////////////////////////
-
-  /**
-   * Updates and retrieves the user's net worth
-   * @param userID the given user ID
-   */
-  def getNetWorth(userID: String): js.Promise[HttpResponse[NetWorth]] = $http.get(s"/api/user/$userID/netWorth")
 
   //////////////////////////////////////////////////////////////////////
   //              Online Status Functions

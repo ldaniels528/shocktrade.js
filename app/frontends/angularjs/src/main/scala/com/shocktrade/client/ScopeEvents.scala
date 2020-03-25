@@ -4,7 +4,6 @@ import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.common.events.RemoteEvent._
 import com.shocktrade.common.models.contest.ChatMessage
-import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Scope, angular}
@@ -73,9 +72,6 @@ object ScopeEvents {
 
     @inline
     def onMessagesUpdated(callback: (Event, String) => Any): Unit = reactTo(ChatMessagesUpdated, callback)
-
-    @inline
-    def onNetWorthUpdated(callback: (Event, NetWorth) => Any): Unit = broadcast(NetWorthUpdated, callback)
 
     @inline
     def onOrderUpdated(callback: (Event, String) => Any): Unit = reactTo(OrderUpdated, callback)

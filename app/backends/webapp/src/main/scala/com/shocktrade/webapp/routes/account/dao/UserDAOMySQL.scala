@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.account.dao
 
-import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,19 +47,6 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
 
       newAccount <- findByUsername(username.orNull)
     } yield newAccount
-  }
-
-  override def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[NetWorth]] = {
-    conn.queryFuture[NetWorth](
-      """|SELECT U.userID, U.username, U.wallet, SUM(P.funds) funds, SUM(S.lastTrade * PS.quantity) equity
-         |FROM users U
-         |INNER JOIN contests C
-         |INNER JOIN portfolios P ON P.contestID = C.contestID AND P.userID = U.userID
-         |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
-         |INNER JOIN stocks S ON S.symbol = PS.symbol
-         |WHERE U.userID = ?
-         |""".stripMargin,
-      js.Array(userID)) map { case (rows, _) => rows.headOption }
   }
 
   override def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int] = {

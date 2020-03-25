@@ -23,7 +23,6 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createAccount(request, response, next))
   app.get("/api/user/:userID", (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
   app.get("/api/user/:userID/icon", (request: Request, response: Response, next: NextFunction) => findUserIcon(request, response, next))
-  app.get("/api/user/:userID/netWorth", (request: Request, response: Response, next: NextFunction) => computeNetWorth(request, response, next))
   app.put("/api/user/:userID/favorite/:symbol", (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
   app.put("/api/user/:userID/recent/:symbol", (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
 
@@ -112,15 +111,6 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
         }
       case None =>
         response.badRequest("The username and password are required"); next()
-    }
-  }
-
-  def computeNetWorth(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID = request.params("userID")
-    userDAO.computeNetWorth(userID) onComplete {
-      case Success(Some(netWorth)) => response.send(netWorth); next()
-      case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => response.internalServerError(e); next()
     }
   }
 

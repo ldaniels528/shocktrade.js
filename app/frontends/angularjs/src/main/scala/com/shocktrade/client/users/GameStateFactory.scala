@@ -3,9 +3,8 @@ package com.shocktrade.client.users
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
-import com.shocktrade.client.users.GameStateFactory.{ContestScope, NetWorthScope, PortfolioScope, UserProfileScope}
+import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope, UserProfileScope}
 import com.shocktrade.client.{ContestFactory, RootScope}
-import com.shocktrade.common.models.user.NetWorth
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, Scope, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -36,25 +35,6 @@ class GameStateFactory($rootScope: RootScope,
     $scope.contest.flatMap(_.contestID) foreach { contestID =>
       console.info(s"Loading contest for user $contestID...")
       contestFactory.findContest(contestID) foreach { response => this.contest = response }
-    }
-    this
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  //          NetWorth Functions
-  /////////////////////////////////////////////////////////////////////
-
-  def netWorth(implicit $scope: NetWorthScope): js.UndefOr[NetWorth] = $scope.netWorth
-
-  def netWorth_=(netWorth: js.UndefOr[NetWorth])(implicit $scope: NetWorthScope): Unit = {
-    $scope.netWorth = netWorth
-    // netWorth.foreach($rootScope.emitNetWorthChanged)
-  }
-
-  def refreshNetWorth()(implicit $scope: NetWorthScope with UserProfileScope): GameStateFactory = {
-    $scope.userProfile.flatMap(_.userID) foreach { userID =>
-      console.info(s"Loading net-worth for user $userID...")
-      userService.getNetWorth(userID) foreach { response => this.netWorth = response.data }
     }
     this
   }
@@ -106,10 +86,7 @@ class GameStateFactory($rootScope: RootScope,
   //          General Functions
   /////////////////////////////////////////////////////////////////////
 
-  def reset()(implicit $scope: NetWorthScope with UserProfileScope): Unit = {
-    $scope.netWorth = js.undefined
-    $scope.userProfile = js.undefined
-  }
+  def reset()(implicit $scope: UserProfileScope): Unit = $scope.userProfile = js.undefined
 
 }
 
@@ -122,11 +99,6 @@ object GameStateFactory {
   @js.native
   trait ContestScope extends Scope {
     var contest: js.UndefOr[Contest] = js.native
-  }
-
-  @js.native
-  trait NetWorthScope extends Scope {
-    var netWorth: js.UndefOr[NetWorth] = js.native
   }
 
   @js.native

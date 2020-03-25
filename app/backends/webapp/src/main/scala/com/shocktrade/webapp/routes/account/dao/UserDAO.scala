@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.account.dao
 
-import com.shocktrade.common.models.user.NetWorth
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -47,8 +46,6 @@ trait UserDAO {
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
-
-  def computeNetWorth(userID: String)(implicit ec: ExecutionContext): Future[Option[NetWorth]]
 
   def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int]
 

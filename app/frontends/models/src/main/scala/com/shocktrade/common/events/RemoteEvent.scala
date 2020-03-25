@@ -36,7 +36,6 @@ object RemoteEvent {
   /////////////////////////////////////////////////////////////////////
 
   val AwardsUpdated = "awards_updated"
-  val NetWorthUpdated = "net_worth_updated"
   val UserProfileUpdated = "user_profile_updated"
 
 }
