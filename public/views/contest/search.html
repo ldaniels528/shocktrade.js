@@ -11,7 +11,7 @@
                 <legend class="contest">My Games ({{ getMyContests().length }})</legend>
                 <div class="myGamesContainer" ng-include src="'/views/contest/my_contests.html'"></div>
                 <div class="pull-right">
-                    <button class="btn btn-default st_button" ng-click="popupNewGameDialog()">
+                    <button class="btn btn-default st_button" ng-click="popupNewGameDialog(userProfile.userID)">
                         <i class="fa fa-plus-circle"></i> New
                     </button>
                 </div>

@@ -1,10 +1,10 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
-import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.UserProfileScope
+import com.shocktrade.client.users.{GameStateFactory, UserService}
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -21,10 +21,11 @@ import scala.util.{Failure, Success}
  * My Games Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                              @injected("ContestService") contestService: ContestService,
                              @injected("GameStateFactory") gameState: GameStateFactory,
-                             @injected("NewGameDialog") newGameDialog: NewGameDialog)
+                             @injected("NewGameDialog") newGameDialog: NewGameDialog,
+                             @injected("UserService") userService: UserService)
   extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
   private implicit val scope: MyGamesScope = $scope
@@ -67,7 +68,7 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
 
   $scope.getMyContests = () => myContests
 
-  $scope.popupNewGameDialog = () => popupNewGameDialog()
+  $scope.popupNewGameDialog = (aUserID: js.UndefOr[String]) => aUserID.foreach(popupNewGameDialog)
 
   $scope.rankOf = (rank: js.UndefOr[Int]) => rank.map(rankOf)
 
@@ -75,14 +76,19 @@ case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def popupNewGameDialog(): Unit = {
-    gameState.userID foreach { userID =>
-      newGameDialog.popup(userID) onComplete {
-        case Success(_) => initMyGames()
-        case Failure(e) =>
-          toaster.error("Failed to create game")
-          console.error(s"Failed to create game: ${e.displayMessage}")
-      }
+  private def popupNewGameDialog(userID: String): Unit = {
+    val outcome = for {
+      response <- newGameDialog.popup(userID)
+      userProfile <- userService.findUserByID(userID)
+    } yield (response, userProfile)
+
+    outcome onComplete {
+      case Success((_, userProfile)) =>
+        initMyGames()
+        $rootScope.emitUserProfileUpdated(userProfile.data)
+      case Failure(e) =>
+        toaster.error("Failed to create game")
+        console.error(s"Failed to create game: ${e.displayMessage}")
     }
   }
 
@@ -121,7 +127,7 @@ trait MyGamesScope extends GameSearchScope with UserProfileScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native
-  var popupNewGameDialog: js.Function0[Unit] = js.native
+  var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
   var rankOf: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
 
 }

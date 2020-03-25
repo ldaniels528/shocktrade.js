@@ -34,7 +34,7 @@ class InformationBarController($scope: InformationBarControllerScope, $q: Q,
 
   $scope.initInfoBar = () => console.log(s"${getClass.getSimpleName} is initializing...")
 
-  $scope.onUserProfileUpdated { (_, profile) =>$scope.userProfile = profile}
+  $scope.onUserProfileUpdated { (_, profile) => $scope.userProfile = profile}
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions

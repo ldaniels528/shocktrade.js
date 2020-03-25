@@ -10,6 +10,7 @@ import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster._
@@ -102,7 +103,14 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     console.log(s"Initializing ${getClass.getSimpleName}...")
     $cookies.getObject[AuthenticatedUser](AUTHENTICATED_USER_KEY) foreach { authenticatedUser =>
       console.log(s"Reading session from cookie: ${JSON.stringify(authenticatedUser)}")
-      gameState.userProfile = authenticatedUser.userProfile
+      authenticatedUser.userProfile.userID foreach { userID =>
+        userService.findUserByID(userID) onComplete {
+          case Success(profile) => gameState.userProfile = profile.data
+          case Failure(e) =>
+            toaster.error("Failed to retrieve user profile")
+            console.error(s"Failed to retrieve user profile: ${e.displayMessage}")
+        }
+      }
     }
   }
 
