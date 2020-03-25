@@ -19,7 +19,7 @@
 
         <div class="pull-right" style="display: inline">
             <span ng-controller="AwardsController" ng-init="initAwards(userProfile.userID)" class="middle pull-right">
-                <img ng-repeat="award in findMyAwards().slice(0,6)"
+                <img ng-repeat="award in findMyAwards().slice(0, 6)"
                      ng-click="switchToHome()"
                      class="clickable"
                      style="padding: 2px 2px 2px 2px"
