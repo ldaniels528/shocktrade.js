@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-12" ng-controller="PerformanceController" ng-init="initPerformance()">
 	<div class="col-md-2 bold">Symbol</div>
 	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Paid</div>
 	<div class="col-md-2 bold right" ng-hide="isPerformanceSelected()">Price Sold</div>
@@ -30,7 +30,7 @@
 		<div class="col-md-12 clickable" ng-repeat="p in getPerformance() track by $index"
 			 ng-class-even="'contest_even'"
 			 ng-class-odd="'contest_odd'"
-			 ng-class="selectedPerformance._id === p._id ? 'selected' : ''"
+			 ng-class="selectedPerformance.performanceID === p.performanceID ? 'selected' : ''"
 			 ng-click="selectPerformance(p)">
 			<div class="col-md-2">
                 <span class="clickable" ng-class="getExchangeClass(p.exchange)" ng-click="loadQuote(p.symbol, true)">

@@ -5,7 +5,6 @@ import com.shocktrade.client._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog}
-import com.shocktrade.client.models.contest.{ContestSearchResultUI, Performance}
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope}
 import io.scalajs.JSON
@@ -74,7 +73,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     contestFactory.findPortfolio(contestID, userID) onComplete {
       case Success(portfolio) =>
         if (portfolio.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) $scope.$apply { () => gameState.portfolio = portfolio }
-      case Failure(e) => toaster.error("Error", "Failed to load portfolio")
+      case Failure(e) =>
+        console.warn(s"User $userID entered a contest ($contestID) without a portfolio")
     }
   }
 
@@ -82,7 +82,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI]) => invitePlayerPopup(aContest)
+  $scope.invitePlayerPopup = (aContestID: js.UndefOr[String]) => invitePlayerPopup(aContestID)
 
   $scope.popupPerksDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String]) => {
     for {
@@ -113,29 +113,9 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     promise
   }
 
-  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for (contest <- aContest) invitePlayerDialog.popup(contest)
+  private def invitePlayerPopup(aContestID: js.UndefOr[String]): Unit = {
+    for (contestID <- aContestID) invitePlayerDialog.popup(contestID)
   }
-
-  /////////////////////////////////////////////////////////////////////
-  //          Performance Functions
-  /////////////////////////////////////////////////////////////////////
-
-  $scope.getPerformance = () => $scope.portfolio.flatMap(_.performance)
-
-  $scope.isPerformanceSelected = () => $scope.getPerformance().nonEmpty && $scope.selectedPerformance.nonEmpty
-
-  $scope.selectPerformance = (performance: js.UndefOr[Performance]) => $scope.selectedPerformance = performance
-
-  $scope.toggleSelectedPerformance = () => $scope.selectedPerformance = js.undefined
-
-  $scope.cost = (aTx: js.UndefOr[Performance]) => aTx.flatMap(_.totalCost)
-
-  $scope.soldValue = (aTx: js.UndefOr[Performance]) => aTx.flatMap(_.totalSold)
-
-  $scope.proceeds = (aTx: js.UndefOr[Performance]) => aTx.flatMap(_.proceeds)
-
-  $scope.gainLoss = (aTx: js.UndefOr[Performance]) => aTx.flatMap(_.gainLoss)
 
   /////////////////////////////////////////////////////////////////////
   //          Public Functions
@@ -170,30 +150,28 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Contest Management Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.deleteContest = (aContest: js.UndefOr[ContestSearchResultUI]) => deleteContest(aContest)
+  $scope.deleteContest = (aContest: js.UndefOr[String]) => deleteContest(aContest)
 
   $scope.joinContest = (aContestID: js.UndefOr[String]) => joinContest(aContestID)
 
-  $scope.quitContest = (aContest: js.UndefOr[ContestSearchResultUI]) => quitContest(aContest)
+  $scope.quitContest = (aContestID: js.UndefOr[String]) => quitContest(aContestID)
 
-  $scope.startContest = (aContest: js.UndefOr[ContestSearchResultUI]) => startContest(aContest)
+  $scope.startContest = (aContestID: js.UndefOr[String]) => startContest(aContestID)
 
-  private def deleteContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
+  private def deleteContest(aContestID: js.UndefOr[String]): Unit = {
     for {
-      contest <- aContest
-      contestId <- contest.contestID
+      contestId <- aContestID
     } {
-      contest.deleting = true
-      console.log(s"Deleting contest ${contest.name}...")
+      $scope.isDeleting = true
       asyncLoading($scope)(contestService.deleteContest(contestId)) onComplete {
         case Success(response) =>
           console.log(s"response = ${JSON.stringify(response.data)}")
           $scope.initDash()
-          $timeout(() => contest.deleting = false, 0.5.seconds)
+          $timeout(() => $scope.isDeleting = false, 0.5.seconds)
         case Failure(e) =>
           toaster.error("Error!", "Failed to delete contest")
           console.error("An error occurred while deleting the contest")
-          $timeout(() => contest.deleting = false, 0.5.seconds)
+          $timeout(() => $scope.isDeleting = false, 0.5.seconds)
       }
     }
   }
@@ -218,41 +196,39 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     }
   }
 
-  private def quitContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
+  private def quitContest(aContestID: js.UndefOr[String]): Unit = {
     for {
-      contest <- aContest
       userId <- gameState.userID
-      contestId <- contest.contestID
+      contestId <- aContestID
     } {
-      contest.quitting = true
+      $scope.isQuiting = true
       asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
         case Success(response) =>
           console.info(s"response = ${JSON.stringify(response.data)}")
           gameState.refreshContest()
           $scope.$apply { () => }
-          $timeout(() => contest.quitting = false, 0.5.seconds)
+          $timeout(() => $scope.isQuiting = false, 0.5.seconds)
         case Failure(e) =>
           toaster.error(title = "Error!", e.displayMessage)
           console.error("An error occurred while joining the contest")
-          $timeout(() => contest.quitting = false, 0.5.seconds)
+          $timeout(() => $scope.isQuiting = false, 0.5.seconds)
       }
     }
   }
 
-  private def startContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
+  private def startContest(aContestID: js.UndefOr[String]): Unit = {
     for {
-      contest <- aContest
-      contestID <- contest.contestID
+      contestID <- aContestID
     } {
-      contest.starting = true
+      $scope.isStarting = true
       asyncLoading($scope)(contestService.startContest(contestID)) onComplete {
         case Success(response) =>
           console.info(s"response = ${JSON.stringify(response.data)}")
-          $timeout(() => contest.starting = false, 0.5.seconds)
+          $timeout(() => $scope.isStarting = false, 0.5.seconds)
         case Failure(e) =>
           toaster.error("An error occurred while starting the contest")
           console.error(s"Error starting contest: ${e.getMessage}")
-          $timeout(() => contest.starting = false, 0.5.seconds)
+          $timeout(() => $scope.isStarting = false, 0.5.seconds)
       }
     }
   }
@@ -274,7 +250,7 @@ object DashboardController {
     // functions
     var initDash: js.Function0[Unit] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-    var invitePlayerPopup: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
+    var invitePlayerPopup: js.Function1[js.UndefOr[String], Unit] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.Promise[NewOrderDialogResult]] = js.native
     var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
@@ -282,23 +258,16 @@ object DashboardController {
     var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // contest management functions
-    var deleteContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
+    var deleteContest: js.Function1[js.UndefOr[String], Unit] = js.native
     var joinContest: js.Function1[js.UndefOr[String], Unit] = js.native
-    var quitContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
-    var startContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
+    var quitContest: js.Function1[js.UndefOr[String], Unit] = js.native
+    var startContest: js.Function1[js.UndefOr[String], Unit] = js.native
 
     // contest management variables
     var isJoining: js.UndefOr[Boolean] = js.native
-    
-    // performance functions
-    var cost: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
-    var gainLoss: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
-    var getPerformance: js.Function0[js.UndefOr[js.Array[Performance]]] = js.native
-    var isPerformanceSelected: js.Function0[Boolean] = js.native
-    var proceeds: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
-    var selectPerformance: js.Function1[js.UndefOr[Performance], Unit] = js.native
-    var soldValue: js.Function1[js.UndefOr[Performance], js.UndefOr[Double]] = js.native
-    var toggleSelectedPerformance: js.Function0[Unit] = js.native
+    var isQuiting: js.UndefOr[Boolean] = js.native
+    var isStarting: js.UndefOr[Boolean] = js.native
+    var isDeleting: js.UndefOr[Boolean] = js.native
 
     // variables
     //var contest: js.UndefOr[Contest] = js.native
@@ -306,7 +275,6 @@ object DashboardController {
     //var portfolio: js.UndefOr[Portfolio] = js.native
     var portfolioTabs: js.Array[PortfolioTab] = js.native
     var rankingsHidden: js.UndefOr[Boolean] = js.native
-    var selectedPerformance: js.UndefOr[Performance] = js.native
 
   }
 
