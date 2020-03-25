@@ -40,17 +40,17 @@ div.rank_cell_join {
 
 .rank_1st, .rank_2nd, .rank_3rd {
 	font-weight: bold;
-	color: #009000;
+	color: #4ba0ce;
 }
 
 .rank_4th {
 	font-weight: bold;
-	color: #ff7f00;
+	color: #4ba0ce;
 }
 
 .rank_5th, .rank_6th, .rank_7th, .rank_8th, .rank_9th, .rank_10th, .rank_11th, .rank_12th, .rank_13th, .rank_14th,
 .rank_15th, .rank_16th, .rank_17th, .rank_18th, .rank_19th, .rank_20th, .rank_21th, .rank_22th, .rank_23th, .rank_24th {
 	font-weight: bold;
-	color: #cf0000;
+	color: #4ba0ce;
 }
 

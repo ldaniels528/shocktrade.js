@@ -13,7 +13,7 @@
             <span class="st_text_color" ng-click="showGamerCard(player.name)">{{ player.username }}</span>
         </div>
         <div>
-            <span class="positive">$ {{ player.totalEquity | number:2 }}</span>
+            <span class="positive">$ {{ player.totalEquity | number: 2 }}</span>
             <span ng-class="player.gainLoss >= 0 ? 'positive' : 'negative'">
                 <changearrow value="{{ player.gainLoss }}"></changearrow> {{ player.gainLoss | abs | number:2 }}%
             </span>

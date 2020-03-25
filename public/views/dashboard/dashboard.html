@@ -2,8 +2,8 @@
     <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
-                <div ng-repeat="player in contest.rankings | orderBy:'rank'" ng-include src="'/views/dashboard/ranking_card.html'"></div>
-                <div ng-show="userProfile.userID && !portfolio.balance" ng-include src="'/views/dashboard/join_game_card.html'"></div>
+                <div ng-repeat="player in contest.rankings | orderBy:'rank'" ng-include src="'/views/dashboard/player_card.html'"></div>
+                <div ng-show="userProfile.userID && !portfolio.balance" ng-include src="'/views/dashboard/player_card_join.html'"></div>
             </div>
         </div>
 

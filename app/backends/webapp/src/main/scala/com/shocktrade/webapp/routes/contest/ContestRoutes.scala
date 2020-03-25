@@ -4,10 +4,11 @@ package contest
 import com.shocktrade.common.Ok
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
-import com.shocktrade.common.models.contest.ChatMessage
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.webapp.routes.contest.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
+import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
@@ -167,20 +168,21 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
    * Retrieves a collection of rankings by contest
    */
   def listRankings(request: Request, response: Response, next: NextFunction): Unit = {
+    // define an accumulator for determining the rankings
+    case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
+
+    // retrieve the rankings
     val contestID = request.params("id")
-    val outcome = for {
-      rankings <- contestDAO.findRankings(contestID)
-
+    val outcome = contestDAO.findRankings(contestID) map { rankings =>
       // sort the rankings and add the position (e.g. "1st")
-      sortedRankings = {
-        val myRankings = rankings.sortBy(-_.gainLoss.getOrElse(0.0))
-        myRankings.zipWithIndex foreach { case (ranking, index) =>
-          ranking.rank = (index + 1).nth
-        }
-        js.Array(myRankings: _*)
+      val results = rankings.sortBy(-_.gainLoss.orZero).foldLeft[Accumulator](Accumulator()) {
+        case (acc@Accumulator(list, lastRanking, index), ranking) =>
+          val newIndex = if (lastRanking.exists(_.totalEquity.exists(_ > ranking.totalEquity.orZero))) index + 1 else index
+          ranking.rank = newIndex.nth
+          acc.copy(rankings = ranking :: list, lastRanking = Some(ranking), index = newIndex)
       }
-
-    } yield sortedRankings
+      js.Array(results.rankings: _*)
+    }
 
     outcome onComplete {
       case Success(rankings) => response.send(rankings); next()
