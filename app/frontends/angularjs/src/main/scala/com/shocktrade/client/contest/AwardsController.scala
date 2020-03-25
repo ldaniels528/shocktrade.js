@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
                        @injected("UserService") userService: UserService) extends Controller {
 
-  var myAwards: js.Array[Award] = js.Array()
+  $scope.myAwards = js.Array()
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -39,8 +39,6 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
 
   $scope.findAwardImage = (aCode: js.UndefOr[String]) => aCode flatMap findAwardImage
 
-  $scope.findMyAwards = () => myAwards
-
   ///////////////////////////////////////////////////////////////////////////
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
@@ -48,7 +46,7 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
   private def initAwards(userID: String): Unit = {
     userService.findMyAwards(userID).toFuture onComplete {
       case Success(myAwardCodes) =>
-        $scope.$apply(() => $scope.$apply(myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code))))
+        $scope.$apply(() => $scope.myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code)))
       case Failure(e) =>
         toaster.error("Failed to retrieve orders")
         console.error(s"Failed to retrieve orders: ${e.displayMessage}")
@@ -76,7 +74,9 @@ object AwardsController {
     var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
     var findAwards: js.Function0[js.Array[Award]] = js.native
     var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-    var findMyAwards: js.Function0[js.Array[Award]] = js.native
+
+    // variables
+    var myAwards: js.Array[Award] = js.native
   }
 
 }
