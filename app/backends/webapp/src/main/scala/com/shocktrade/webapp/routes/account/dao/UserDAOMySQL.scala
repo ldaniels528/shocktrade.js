@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.account.dao
 
+import com.shocktrade.webapp.routes.account.dao.UserDAOMySQL.UserAwardData
 import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,22 +50,13 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
     } yield newAccount
   }
 
-  override def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE users
-         |SET wallet = wallet - ?
-         |WHERE userID = ?
-         |""".stripMargin,
-      js.Array(amount, userID)) map (_.affectedRows)
-  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Awards
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  override def depositFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int] = {
-    conn.executeFuture(
-      """|UPDATE users
-         |SET wallet = wallet + ?
-         |WHERE userID = ?
-         |""".stripMargin,
-      js.Array(amount, userID)) map (_.affectedRows)
+  override def findMyAwards(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]] = {
+    conn.queryFuture[UserAwardData]("SELECT awardCode FROM user_awards WHERE userID = ?",
+      js.Array(userID)).map(_._1.flatMap(_.awardCode.toOption))
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,3 +110,12 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
 
 }
 
+/**
+ * UserDAOMySQL Companion
+ * @author lawrence.daniels@gmail.com
+ */
+object UserDAOMySQL {
+
+  class UserAwardData(val awardCode: js.UndefOr[String]) extends js.Object
+
+}

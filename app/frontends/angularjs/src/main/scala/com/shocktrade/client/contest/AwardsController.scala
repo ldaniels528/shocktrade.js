@@ -1,10 +1,14 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.AwardsController._
+import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs.{Scope, _}
+import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.toaster.Toaster
 
+import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -14,75 +18,65 @@ import scala.util.{Failure, Success}
  * Awards Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AwardsController($scope: AwardsControllerScope,
-                       @injected("AwardService") awardService: AwardService) extends Controller {
+class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
+                       @injected("UserService") userService: UserService) extends Controller {
 
-  $scope.awards = js.Array()
+  var myAwards: js.Array[Award] = js.Array()
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.initAwards = (aUserID: js.UndefOr[String]) => aUserID foreach initAwards
+
+  $scope.onUserProfileUpdated { (_, userProfile) => $scope.initAwards(userProfile.userID) }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.getAwards = () => $scope.awards
+  $scope.findAwards = () => Award.availableAwards
 
-  $scope.getAwardImage = (aCode: js.UndefOr[String]) => getAwardImage(aCode)
+  $scope.findAwardImage = (aCode: js.UndefOr[String]) => aCode flatMap findAwardImage
 
-  $scope.getMyAwards = () => getMyAwards
+  $scope.findMyAwards = () => myAwards
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
 
-  private def loadAwards(userID: String): Unit = {
-    awardService.findByUser(userID).toFuture onComplete {
-      case Success(awards) => $scope.awards = awards.data
-      case Failure(e) => console.error(e.displayMessage)
+  private def initAwards(userID: String): Unit = {
+    userService.findMyAwards(userID).toFuture onComplete {
+      case Success(myAwardCodes) =>
+        $scope.$apply(() => $scope.$apply(myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code))))
+      case Failure(e) =>
+        toaster.error("Failed to retrieve orders")
+        console.error(s"Failed to retrieve orders: ${e.displayMessage}")
     }
   }
 
-  private def getMyAwards: js.Array[MyAward] = {
-    Award.availableAwards map { award =>
-      val myAward = award.asInstanceOf[MyAward]
-      myAward.owned = false //mySession.getMyAwards.contains(award.code)
-      myAward
-    } sortBy (_.owned) reverse
-  }
-
-  private def getAwardImage(aCode: js.UndefOr[String]): js.UndefOr[String] = {
-    aCode.toOption.flatMap(AwardIconsByCode.get).orUndefined
-  }
+  private def findAwardImage(code: String): js.UndefOr[String] = awardIconsByCode.get(code).orUndefined
 
 }
 
 /**
  * Awards Controller Singleton
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object AwardsController {
-  private val AwardsByCode: js.Dictionary[Award] = js.Dictionary(Award.availableAwards.map(award => award.code -> award): _*)
-  private val AwardIconsByCode: js.Dictionary[String] = js.Dictionary(Award.availableAwards.map(award => award.code -> award.icon): _*)
+  private val awardIconsByCode: js.Dictionary[String] = js.Dictionary(Award.availableAwards.map(award => award.code -> award.icon): _*)
 
-}
+  /**
+   * Awards Controller Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait AwardsControllerScope extends Scope {
+    // functions
+    var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
+    var findAwards: js.Function0[js.Array[Award]] = js.native
+    var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+    var findMyAwards: js.Function0[js.Array[Award]] = js.native
+  }
 
-/**
- * Awards Controller Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait AwardsControllerScope extends Scope {
-  // variables
-  var awards: js.Array[Award] = js.native
-
-  // functions
-  var getAwards: js.Function0[js.Array[Award]] = js.native
-  var getAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-  var getMyAwards: js.Function0[js.Array[MyAward]] = js.native
-}
-
-/**
- * Award with owned information
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait MyAward extends Award {
-  var owned: Boolean = js.native
 }

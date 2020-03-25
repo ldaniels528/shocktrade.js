@@ -18,6 +18,19 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX users_xpk_name ON users (username);
 
 -- ------------------------------------------------------------
+-- User Awards
+-- ------------------------------------------------------------
+
+DROP TABLE IF EXISTS user_awards;
+CREATE TABLE user_awards (
+    userAwardID CHAR(36) NOT NULL PRIMARY KEY,
+    userID CHAR(36) NOT NULL,
+    awardCode VARCHAR(40) NOT NULL,
+    awardedTime DATETIME NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX user_awards_xp ON user_awards (userID, awardCode);
+
+-- ------------------------------------------------------------
 -- User Icons
 -- ------------------------------------------------------------
 

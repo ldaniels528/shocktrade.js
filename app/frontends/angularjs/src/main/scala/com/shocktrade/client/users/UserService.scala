@@ -16,7 +16,18 @@ import scala.scalajs.js
  */
 class UserService($http: Http) extends Service {
 
+  /**
+   * Creates a new user account
+   * @param form the given [[SignUpForm]]
+   * @return the promise of a user profile
+   */
   def createAccount(form: SignUpForm): js.Promise[HttpResponse[UserProfile]] = $http.post[UserProfile]("/api/user", form)
+
+  /**
+   * Retrieves the collection of awards by ID
+   * @param userID the given user ID
+   */
+  def findMyAwards(userID: String): js.Promise[HttpResponse[js.Array[String]]] = $http.get(s"/api/user/$userID/awards")
 
   /**
    * Retrieves a user by ID

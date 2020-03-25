@@ -28,8 +28,9 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
 
   // collections
   app.get("/api/users", (request: Request, response: Response, next: NextFunction) => findUsersByIDs(request, response, next))
-  app.get("/api/user/:userID/favorites", (request: Request, response: Response, next: NextFunction) => listFavoriteSymbols(request, response, next))
-  app.get("/api/user/:userID/recents", (request: Request, response: Response, next: NextFunction) => listRecentSymbols(request, response, next))
+  app.get("/api/user/:userID/awards", (request: Request, response: Response, next: NextFunction) => findMyAwards(request, response, next))
+  app.get("/api/user/:userID/favorites", (request: Request, response: Response, next: NextFunction) => findFavoriteSymbols(request, response, next))
+  app.get("/api/user/:userID/recents", (request: Request, response: Response, next: NextFunction) => findRecentSymbols(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -51,15 +52,23 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   def addFavoriteSymbol(request: Request, response: Response, next: NextFunction): Unit = {
     val (userID, symbol) = (request.params("userID"), request.params("symbol"))
     userDAO.addFavoriteSymbol(userID, symbol) onComplete {
-      case Success(result)  => response.send(new Ok(result)); next()
+      case Success(result) => response.send(new Ok(result)); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }
 
-  def listFavoriteSymbols(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID= request.params("userID")
+  def findMyAwards(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    userDAO.findMyAwards(userID) onComplete {
+      case Success(results) => response.send(results); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  def findFavoriteSymbols(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
     userDAO.findFavoriteSymbols(userID) onComplete {
-      case Success(results)  => response.send(results); next()
+      case Success(results) => response.send(results); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }
@@ -76,7 +85,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def listRecentSymbols(request: Request, response: Response, next: NextFunction): Unit = {
+  def findRecentSymbols(request: Request, response: Response, next: NextFunction): Unit = {
     val userID= request.params("userID")
     userDAO.findRecentSymbols(userID) onComplete {
       case Success(results)  => response.send(results); next()

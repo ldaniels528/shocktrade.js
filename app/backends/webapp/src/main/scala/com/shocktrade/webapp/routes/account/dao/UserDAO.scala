@@ -47,9 +47,11 @@ trait UserDAO {
 
   def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
 
-  def deductFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int]
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  //    Awards
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  def depositFunds(userID: String, amount: Double)(implicit ec: ExecutionContext): Future[Int]
+  def findMyAwards(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]]
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Favorite Symbols
