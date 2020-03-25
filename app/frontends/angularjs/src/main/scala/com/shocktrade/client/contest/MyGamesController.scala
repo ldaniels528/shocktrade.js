@@ -70,8 +70,6 @@ case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $locat
 
   $scope.popupNewGameDialog = (aUserID: js.UndefOr[String]) => aUserID.foreach(popupNewGameDialog)
 
-  $scope.rankOf = (rank: js.UndefOr[Int]) => rank.map(rankOf)
-
   ///////////////////////////////////////////////////////////////////////////
   //          Private Methods
   ///////////////////////////////////////////////////////////////////////////
@@ -105,17 +103,6 @@ case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $locat
     }
   }
 
-  private def rankOf(rank: Int): String = {
-    val suffix = rank.toString match {
-      case n if n.endsWith("11") | n.endsWith("12") | n.endsWith("13") => "th"
-      case n if n.endsWith("1") => "st"
-      case n if n.endsWith("2") => "nd"
-      case n if n.endsWith("3") => "rd"
-      case _ => "th"
-    }
-    s"$rank$suffix"
-  }
-
 }
 
 /**
@@ -128,6 +115,5 @@ trait MyGamesScope extends GameSearchScope with UserProfileScope {
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native
   var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
-  var rankOf: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
 
 }

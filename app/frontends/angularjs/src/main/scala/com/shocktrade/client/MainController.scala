@@ -118,7 +118,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aPlayer: js.UndefOr[UserProfile]) => aPlayer.flatMap(_.userID).exists(isOnline)
+  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.exists(isOnline)
 
   $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
 
@@ -330,7 +330,7 @@ object MainController {
     var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
     var isAuthenticated: js.Function0[Boolean] = js.native
 
-    var isOnline: js.Function1[js.UndefOr[UserProfile], Boolean] = js.native
+    var isOnline: js.Function1[js.UndefOr[String], Boolean] = js.native
     var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
     var logout: js.Function0[Unit] = js.native
     var signIn: js.Function0[Unit] = js.native

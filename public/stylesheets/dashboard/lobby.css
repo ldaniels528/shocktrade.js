@@ -30,6 +30,14 @@ div.rank_cell_3rd {
 	margin-bottom: 5px;
 }
 
+div.rank_cell_join {
+	background-color: #eeffff;
+	border: 1px solid #c0c0c0;
+	border-radius: 5px 5px 5px 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 .rank_1st, .rank_2nd, .rank_3rd {
 	font-weight: bold;
 	color: #009000;

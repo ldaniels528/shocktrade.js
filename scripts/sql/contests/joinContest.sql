@@ -9,10 +9,9 @@ BEGIN
     START TRANSACTION;
 
     -- insert the player into the game
-    INSERT INTO portfolios (contestID, userID, funds)
-    SELECT C.contestID, U.userID, C.startingBalance
-    FROM contests C
-    INNER JOIN users U ON U.userID = C.userID
+    INSERT INTO portfolios (portfolioID, contestID, userID, funds)
+    SELECT uuid(), C.contestID, U.userID, C.startingBalance
+    FROM users U, contests C
     WHERE C.contestID = a_contestID
     AND U.userID = a_userID;
 
@@ -21,7 +20,7 @@ BEGIN
 
         -- deduct the entry fee
         UPDATE users U
-        INNER JOIN contests C ON C.userID = U.userID
+        INNER JOIN contests C ON C.userID = a_contestID
         SET funds = funds - C.startingBalance
         WHERE U.userID = a_userID;
 

@@ -1,7 +1,6 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.dialogs.InvitePlayerDialog
 import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.ContestScope
@@ -9,16 +8,13 @@ import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.models.contest.ContestSearchResult._
-import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
-import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
@@ -30,7 +26,6 @@ import scala.util.{Failure, Success}
 case class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                                 @injected("ContestService") contestService: ContestService,
                                 @injected("GameStateFactory") gameState: GameStateFactory,
-                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                                 @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
 
@@ -64,8 +59,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
 
   $scope.getSelectedContest = () => $scope.selectedContest
 
-  $scope.invitePlayerPopup = (aContest: js.UndefOr[ContestSearchResultUI]) => invitePlayerPopup(aContest)
-
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
 
   private def contestSearch(searchOptions: ContestSearchForm): Unit = {
@@ -77,10 +70,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
         toaster.error("Failed to execute Contest Search")
         console.error(s"Failed: searchOptions = ${angular.toJson(searchOptions)}")
     }
-  }
-
-  private def invitePlayerPopup(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for (contest <- aContest) invitePlayerDialog.popup(contest)
   }
 
   private def getSearchResults(aSearchTerm: js.UndefOr[String]): js.Array[ContestSearchResultUI] = aSearchTerm.toOption match {
@@ -146,94 +135,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
 
   $scope.isActive = (aContest: js.UndefOr[ContestSearchResultUI]) => aContest.map(_.isActive)
 
-  $scope.deleteContest = (aContest: js.UndefOr[ContestSearchResultUI]) => deleteContest(aContest)
-
-  $scope.joinContest = (aContest: js.UndefOr[ContestSearchResultUI]) => joinContest(aContest)
-
-  $scope.quitContest = (aContest: js.UndefOr[ContestSearchResultUI]) => quitContest(aContest)
-
-  $scope.startContest = (aContest: js.UndefOr[ContestSearchResultUI]) => startContest(aContest)
-
-  private def deleteContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for {
-      contest <- aContest
-      contestId <- contest.contestID
-    } {
-      contest.deleting = true
-      console.log(s"Deleting contest ${contest.name}...")
-      asyncLoading($scope)(contestService.deleteContest(contestId)) onComplete {
-        case Success(response) =>
-          console.log(s"response = ${JSON.stringify(response.data)}")
-          $scope.$apply(() => removeContestFromList(searchResults, contestId))
-          $timeout(() => contest.deleting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error("Error!", "Failed to delete contest")
-          console.error("An error occurred while deleting the contest")
-          $timeout(() => contest.deleting = false, 0.5.seconds)
-      }
-    }
-  }
-
-  private def joinContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for {
-      contest <- aContest
-      contestID <- contest.contestID
-      userID <- gameState.userID
-    } {
-      contest.joining = true
-      asyncLoading($scope)(contestService.joinContest(contestID, userID)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest()
-          $scope.$apply { () => }
-          $timeout(() => contest.joining = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error(title = "Error!", body = "Failed to join contest")
-          console.error("An error occurred while joining the contest")
-          $timeout(() => contest.joining = false, 0.5.seconds)
-      }
-    }
-  }
-
-  private def quitContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for {
-      contest <- aContest
-      userId <- gameState.userID
-      contestId <- contest.contestID
-    } {
-      contest.quitting = true
-      asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest()
-          $scope.$apply { () => }
-          $timeout(() => contest.quitting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error(title = "Error!", e.displayMessage)
-          console.error("An error occurred while joining the contest")
-          $timeout(() => contest.quitting = false, 0.5.seconds)
-      }
-    }
-  }
-
-  private def startContest(aContest: js.UndefOr[ContestSearchResultUI]): Unit = {
-    for {
-      contest <- aContest
-      contestID <- contest.contestID
-    } {
-      contest.starting = true
-      asyncLoading($scope)(contestService.startContest(contestID)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          $timeout(() => contest.starting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error("An error occurred while starting the contest")
-          console.error(s"Error starting contest: ${e.getMessage}")
-          $timeout(() => contest.starting = false, 0.5.seconds)
-      }
-    }
-  }
-
   //////////////////////////////////////////////////////////////////////
   //              Style/CSS Functions
   //////////////////////////////////////////////////////////////////////
@@ -243,22 +144,6 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
     else if (c.isActive) ""
     else "null"
   }
-
-  //////////////////////////////////////////////////////////////////////
-  //              Broadcast Event Listeners
-  //////////////////////////////////////////////////////////////////////
-
-  private def removeContestFromList(searchResults: js.Array[_], contestId: String) {
-    val index = indexOfContest(contestId)
-    if (index != -1) {
-      console.log(s"Removed contest $contestId from the list...")
-      searchResults.splice(index, 1)
-    }
-
-    if ($scope.selectedContest.exists(_.contestID ?== contestId)) $scope.selectedContest = js.undefined
-  }
-
-  private def indexOfContest(contestId: String) = searchResults.indexWhere(_.contestID.contains(contestId))
 
   ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners
@@ -306,15 +191,10 @@ trait GameSearchScope extends RootScope with ContestScope with ContestEntrySuppo
 
   // contest functions
   var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], Unit] = js.native
-  var deleteContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResultUI]] = js.native
   var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResultUI]] = js.native
-  var invitePlayerPopup: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var isActive: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[Boolean]] = js.native
-  var joinContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
-  var quitContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
   var selectContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
-  var startContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
 
 }
 
