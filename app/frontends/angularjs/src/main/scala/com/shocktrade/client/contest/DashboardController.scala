@@ -53,13 +53,17 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
+    initDash()
+  }
+
+  $scope.onUserProfileUpdated { (_, _) => initDash() }
+
+  private def initDash(): Unit = {
     for (contestID <- $routeParams.contestID) {
       loadContest(contestID)
       gameState.userID.foreach(loadPortfolio(contestID, _))
     }
   }
-
-  $scope.onUserProfileUpdated { (_, _) => $scope.initDash() }
 
   private def loadContest(contestID: String): Unit = {
     contestFactory.findContest(contestID) onComplete {
