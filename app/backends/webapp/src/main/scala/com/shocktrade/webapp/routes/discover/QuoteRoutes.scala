@@ -101,6 +101,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext) {
   def tradingHistory(request: Request, response: Response, next: NextFunction): Unit = {
     val symbol = request.getSymbol
     response.send(new js.Object())
+    next()
   }
 
   /**

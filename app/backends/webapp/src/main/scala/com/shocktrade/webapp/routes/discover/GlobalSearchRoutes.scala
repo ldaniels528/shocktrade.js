@@ -31,8 +31,7 @@ class GlobalSearchRoutes(app: Application)(implicit ec: ExecutionContext) {
           case Success(results) =>
             response.send(results); next()
           case Failure(e) =>
-            response.internalServerError(e.getMessage)
-            e.printStackTrace()
+            e.printStackTrace(); response.internalServerError(e.getMessage); next()
         }
       case None =>
         response.badRequest(form); next()

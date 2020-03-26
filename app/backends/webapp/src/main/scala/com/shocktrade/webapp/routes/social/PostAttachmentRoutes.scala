@@ -32,7 +32,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success(downloadStream) => downloadStream.onEnd(() => next())
       case Failure(e) => response.internalServerError(e); next()
     }*/
-    response.internalServerError("Not yet implemented")
+    response.internalServerError("Not yet implemented"); next()
   }
 
   /**
@@ -46,7 +46,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success(attachments) => response.send(attachments); next()
       case Failure(e) => response.internalServerError(e); next()
     }*/
-    response.internalServerError("Not yet implemented")
+    response.internalServerError("Not yet implemented"); next()
   }
 
   /**
@@ -72,7 +72,7 @@ class PostAttachmentRoutes(app: Application)(implicit ec: ExecutionContext) {
         case Failure(e) => response.internalServerError(e); next()
       }*/
     }
-    response.send(new Ok())
+    response.send(new Ok()); next()
   }
 
 }
