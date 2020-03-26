@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.common.models.contest.ContestSearchResult
 import io.scalajs.npm.angularjs.{Controller, Location, Scope}
 
 import scala.scalajs.js
@@ -20,12 +19,7 @@ trait ContestEntrySupport[A <: ContestEntrySupportScope] {
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.enterGame = (aContest: js.UndefOr[ContestSearchResult]) => {
-    for {
-      contest <- aContest
-      contestID <- contest.contestID
-    } enterGame(contestID)
-  }
+  $scope.enterGame = (aContestID: js.UndefOr[String]) => aContestID foreach enterGame
 
   ///////////////////////////////////////////////////////////////////////////
   //          Private Functions
@@ -44,6 +38,6 @@ trait ContestEntrySupportScope extends Scope {
   ref: Scope =>
 
   // functions
-  var enterGame: js.Function1[js.UndefOr[ContestSearchResult], Unit] = js.native
+  var enterGame: js.Function1[js.UndefOr[String], Unit] = js.native
 
 }

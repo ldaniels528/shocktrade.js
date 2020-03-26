@@ -42,7 +42,7 @@
                     <div class="col-md-2 header right">Game Features</div>
                 </div>
 
-                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="enterGame(c)">
+                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="enterGame(c.contestID)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>

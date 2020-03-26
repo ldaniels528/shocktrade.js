@@ -9,7 +9,7 @@
     <div class="col-md-5 header center">1st Place</div>
 </div>
 
-<div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
+<div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c.contestID)">
     <!-- Game Title -->
     <div class="col-md-7">
         <img ng-show="c.loading" src="/images/status/loading16.gif">

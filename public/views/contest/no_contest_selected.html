@@ -14,9 +14,9 @@
         <div class="col-md-3 header right">Game Features</div>
     </div>
 
-    <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c)">
+    <div class="row clickable" ng-repeat="c in getMyContests() track by $index" ng-click="enterGame(c.contestID)">
         <div class="col-md-7">
-            <avatar id="{{ c.participants[0].facebookID }}" class="avatar-20"></avatar>{{ c.name }}
+            <avatar id="{{ c.userID }}" class="avatar-20"></avatar>{{ c.name }}
         </div>
         <div class="col-md-2 center">
             <span ng-class="isActive(c) ? '' : 'null'">{{ c.participants.length || 0 }}</span>
