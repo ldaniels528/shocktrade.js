@@ -46,6 +46,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   // public variable
   $scope.appTabs = MainTab.Tabs
+  $scope.isLoggingOut = false
   $scope.levels = GameLevel.Levels
   $scope.favoriteSymbols = js.Dictionary()
   $scope.recentSymbols = js.Dictionary()
@@ -163,6 +164,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   }
 
   private def logout(): Unit = {
+    $scope.isLoggingOut = true
     val outcome = for {
       _ <- authenticationService.logout()
       _ <- gameState.userID.toOption match {
@@ -172,8 +174,11 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     } yield ()
 
     outcome onComplete {
-      case Success(_) => clearLoggedInItems()
+      case Success(_) =>
+        $timeout(() => $scope.isLoggingOut = false, 500.millis)
+        clearLoggedInItems()
       case Failure(e) =>
+        $timeout(() => $scope.isLoggingOut = false, 500.millis)
         toaster.error("An error occurred during logout")
         clearLoggedInItems()
         e.printStackTrace()
@@ -313,6 +318,7 @@ object MainController {
     // variables
     var appTabs: js.Array[MainTab] = js.native
     var favoriteSymbols: js.Dictionary[String] = js.native
+    var isLoggingOut: js.UndefOr[Boolean] = js.native
     var levels: js.Array[GameLevel] = js.native
     var recentSymbols: js.Dictionary[String] = js.native
 

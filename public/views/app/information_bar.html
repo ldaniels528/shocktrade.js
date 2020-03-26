@@ -44,6 +44,7 @@
                 <i class="fa fa-lg fa-sign-in fb_icon"></i> Sign In
             </span>
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
+            <img ng-show="isLoggingOut" src="/images/status/loading16.gif">
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
             <span ng-show="isAuthenticated()"  class="title_color" ng-show="userProfile.userName">
                 &#8212; <avatar id="{{ userProfile.userID }}" class="avatar-16"></avatar> {{ userProfile.username }}</span>
