@@ -19,8 +19,8 @@ class MainTab(val name: String,
  */
 object MainTab {
   val Search = 0
-  val Discover = 1
-  val Research = 2
+  val Research = 1
+  val Discover = 2
   val Dashboard = 3
   val About = 4
   val NewsFeed = 5
@@ -28,8 +28,8 @@ object MainTab {
 
   val Tabs: js.Array[MainTab] = js.Array(
     new MainTab(name = "Search", icon_class = "fa-home", tool_tip = "Search for games", url = "/search"),
-    new MainTab(name = "Discover", icon_class = "fa-globe", tool_tip = "Stock News and Quotes", url = "/discover"),
     new MainTab(name = "Research", icon_class = "fa-search", tool_tip = "Stock Research", url = "/research"),
+    new MainTab(name = "Discover", icon_class = "fa-globe", tool_tip = "Stock News and Quotes", url = "/discover"),
     //new MainTab(name = "Home", icon_class = "fa-home", tool_tip = "My Home page", url = "/home", authenticationRequired = true),
     //new MainTab(name = "About", icon_class = "fa-info-circle", tool_tip = "About ShockTrade", url = "/about/us"),
     //new MainTab(name = "NewsFeed", icon_class = "fa-home", tool_tip = "My Newsfeed", url = "/posts"),

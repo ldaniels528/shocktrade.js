@@ -8,6 +8,13 @@
         </div>
 
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
+            <div class="col-md-12 pull-right">
+                <!-- US Markets Open/Closed -->
+                <span class="pull-right" ng-class="isUSMarketsOpen() === null ? 'mks_loading' : (isUSMarketsOpen() ? 'mks_open' : 'mks_closed')">
+                    <img ng-show="isUSMarketsOpen() === null" src="/images/status/loading16.gif">
+                    {{ isUSMarketsOpen() === null ? 'US Markets ....' : (isUSMarketsOpen() ? 'US Markets Open' : 'US Markets Closed') }}
+                </span>
+            </div>
             <div ng-show="contest.name" class="col-md-12 dashboard_title">
                 <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
             </div>
