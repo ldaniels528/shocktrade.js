@@ -20,14 +20,14 @@ BEGIN
 
         -- deduct the entry fee
         UPDATE users U
-        INNER JOIN contests C ON C.userID = a_contestID
-        SET funds = funds - C.startingBalance
+        INNER JOIN contests C ON C.contestID = a_contestID
+        SET wallet = wallet - C.startingBalance
         WHERE U.userID = a_userID;
 
     END IF;
 
 	-- commit and re-enable auto-commit
     SET autocommit = ON;
-
+    COMMIT;
 END //
 DELIMITER ;
