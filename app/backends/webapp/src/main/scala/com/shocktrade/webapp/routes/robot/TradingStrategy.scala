@@ -2,6 +2,7 @@ package com.shocktrade.webapp.routes.robot
 
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
+import com.shocktrade.webapp.routes.contest.PriceTypes.PriceType
 import com.shocktrade.webapp.routes.contest.dao.{ContestDAO, OrderDAO, OrderData}
 import com.shocktrade.webapp.routes.contest.{OrderTypes, PriceTypes}
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
@@ -9,7 +10,7 @@ import com.shocktrade.webapp.routes.robot.TradingStrategy._
 import com.shocktrade.webapp.routes.robot.dao.{RobotDAO, RobotData}
 import io.scalajs.util.JsUnderOrHelper._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 
@@ -36,13 +37,21 @@ trait TradingStrategy {
     }
   }
 
-  protected def makeBuyOrders(stocks: Seq[ResearchQuote])(implicit robot: RobotData): List[OrderData] = {
-    val results = stocks.map(_.toOrder(quantity = 1000)).foldLeft[(List[OrderData], Double)](Nil -> robot.funds.orZero) {
-      case ((orders, budget), order) if order.totalCost.exists(_ <= budget) => (order :: orders, budget - order.totalCost.orZero)
-      case ((orders, budget), _) => (orders, budget)
+  protected def makeBuyOrders(stocks: Seq[ResearchQuote], priceType: PriceType, costTarget: Double)
+                             (implicit robot: RobotData): List[OrderData] = {
+    case class Accumulator(orders: List[OrderData] = Nil, budget: Double)
+    val candidateOrders = for {
+      stock <- stocks
+      quantity <- stock.lastTrade.map(costTarget / _).toOption
+      order = stock.toOrder(quantity = quantity, priceType = priceType)
+    } yield order
+
+    val results = candidateOrders.foldLeft[Accumulator](Accumulator(budget = robot.funds.orZero)) {
+      case (acc@Accumulator(orders, budget), order) if order.totalCost.exists(tc => tc > 0.0 && tc <= budget) =>
+        acc.copy(orders = order :: orders, budget = budget - order.totalCost.orZero)
+      case (acc, _) => acc
     }
-    val orders = results._1
-    orders
+    results.orders
   }
 
   protected def saveOrders(orders: Seq[OrderData])(implicit robot: RobotData, orderDAO: OrderDAO): Future[Int] = {
@@ -70,12 +79,6 @@ trait TradingStrategy {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object TradingStrategy {
-  val PENNY_STOCK = "penny-stock"
-
-  def withName(strategyName: String)(implicit ec: ExecutionContext): Option[TradingStrategy] = strategyName match {
-    case "penny-stock" => Some(new PennyStockTradingStrategy())
-    case _ => None
-  }
 
   /**
    * Research Quote Enrichment
@@ -83,18 +86,19 @@ object TradingStrategy {
    */
   final implicit class ResearchQuoteEnrichment(val quote: ResearchQuote) extends AnyVal {
 
-    def toOrder(quantity: Double) = new OrderData(
-      symbol = quote.symbol,
-      exchange = quote.symbol,
-      orderType = OrderTypes.Buy,
-      priceType = PriceTypes.Market,
-      price = quote.lastTrade,
-      quantity = quantity,
-      creationTime = new js.Date(),
-      expirationTime = js.undefined,
-      processedTime = js.undefined,
-      statusMessage = js.undefined,
-      closed = false
-    )
+    def toOrder(quantity: Double, priceType: PriceType, price: js.UndefOr[Double] = js.undefined): OrderData = {
+      new OrderData(
+        symbol = quote.symbol,
+        exchange = quote.symbol,
+        orderType = OrderTypes.Buy,
+        priceType = priceType,
+        price = price ?? quote.lastTrade,
+        quantity = quantity,
+        creationTime = new js.Date(),
+        expirationTime = js.undefined,
+        processedTime = js.undefined,
+        statusMessage = js.undefined,
+        closed = false)
+    }
   }
 }

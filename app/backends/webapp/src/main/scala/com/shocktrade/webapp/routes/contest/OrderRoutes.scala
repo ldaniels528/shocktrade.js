@@ -2,8 +2,8 @@ package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.webapp.routes.contest.PortfolioRoutes._
 import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao.OrderDAO
 import io.scalajs.nodejs.console
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -15,9 +15,8 @@ import scala.util.{Failure, Success}
  * Order Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class OrderRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val orderDAO = OrderDAO()
-
+class OrderRoutes(app: Application)(implicit ec: ExecutionContext, orderDAO: OrderDAO) {
+  // API routes
   app.delete("/api/order/:orderID", (request: Request, response: Response, next: NextFunction) => cancelOrder(request, response, next))
   app.post("/api/order/:portfolioID", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
 
@@ -31,7 +30,7 @@ class OrderRoutes(app: Application)(implicit ec: ExecutionContext) {
   def cancelOrder(request: Request, response: Response, next: NextFunction): Unit = {
     val orderID = request.params("orderID")
     orderDAO.cancelOrder(orderID) onComplete {
-      case Success(count) if count == 1 => response.send(new Ok(count)); next()
+      case Success(count) if count == 1 => response.send(Ok(count)); next()
       case Success(count) =>
         console.error(s"update result = $count")
         response.notFound(request.params)

@@ -73,7 +73,7 @@ CREATE TABLE orders (
      symbol VARCHAR(12) NOT NULL,
      exchange VARCHAR(12) NOT NULL,
      orderType VARCHAR(10) NOT NULL,
-     price DECIMAL(12,5) NOT NULL,
+     price DECIMAL(12,5) NULL,
      priceType VARCHAR(36) NOT NULL,
      quantity INTEGER NOT NULL,
      creationTime DATETIME NOT NULL DEFAULT now(),

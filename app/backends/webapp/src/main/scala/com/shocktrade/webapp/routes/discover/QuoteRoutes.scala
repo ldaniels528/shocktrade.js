@@ -17,10 +17,7 @@ import scala.util.{Failure, Success}
  * Quote Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class QuoteRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val autoCompleteDAO = AutoCompleteDAO()
-  private val stockQuoteDAO = StockQuoteDAO()
-
+class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteDAO: AutoCompleteDAO, stockQuoteDAO: StockQuoteDAO) {
   // collections of quotes
   app.post("/api/quotes/list", (request: Request, response: Response, next: NextFunction) => quotesList(request, response, next))
   app.get("/api/quotes/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
@@ -71,7 +68,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext) {
 
   def orderQuote(request: Request, response: Response, next: NextFunction): Unit = {
     val symbol = request.getSymbol
-    stockQuoteDAO.findQuote(symbol) onComplete {
+    stockQuoteDAO.findQuote[OrderQuote](symbol) onComplete {
       case Success(Some(quote)) => response.send(quote); next()
       case Success(None) => response.notFound(); next()
       case Failure(e) => response.internalServerError(e); next()
@@ -94,7 +91,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext) {
       case Success(None) => response.notFound(); next()
       case Failure(e) => response.internalServerError(e); next()
     }*/
-    response.internalServerError("Not implemented");
+    response.internalServerError("Not implemented")
     next()
   }
 

@@ -15,8 +15,7 @@ import scala.util.{Failure, Random, Success}
  * Authentication Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val authenticationDAO = AuthenticationDAO()
+class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO) {
   private val statuses = js.Dictionary[OnlineStatus]()
 
   // authentication API
@@ -106,6 +105,5 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext) {
     response.send(status)
     next()
   }
-
 
 }

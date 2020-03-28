@@ -3,11 +3,12 @@ USE shocktrade;
 -- ------------------------------------------------------------
 -- Users
 -- ------------------------------------------------------------
-INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'ldaniels', 125000);
-INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'fugitive528', 125000);
-INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gunst4rhero', 125000);
-INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gadget', 125000);
-INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'daisy', 125000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'ldaniels', 250000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'fugitive528', 250000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gunst4rhero', 250000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'gadget', 250000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'daisy', 250000);
+INSERT INTO users (userID, username, wallet) VALUES (uuid(), 'natech', 250000);
 
 INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'MADMONEY' FROM users U WHERE username = 'fugitive528';
 INSERT INTO user_awards (userAwardID, userID, awardCode) SELECT uuid(), U.userID, 'CHKDFLAG' FROM users U WHERE username = 'fugitive528';

@@ -19,9 +19,7 @@ import scala.util.{Failure, Success}
  * Post Routes
  * @author lawrence.daniels@gmail.com
  */
-class PostRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val postDAO = PostDAO()
-
+class PostRoutes(app: Application)(implicit ec: ExecutionContext, postDAO: PostDAO) {
   // Post CRUD
   app.post("/api/post", (request: Request, response: Response, next: NextFunction) => createPost(request, response, next))
   app.put("/api/post", (request: Request, response: Response, next: NextFunction) => updatePost(request, response, next))

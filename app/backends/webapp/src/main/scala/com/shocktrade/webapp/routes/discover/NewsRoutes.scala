@@ -12,8 +12,7 @@ import scala.util.{Failure, Success}
  * News Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class NewsRoutes(app: Application)(implicit ec: ExecutionContext) {
-  implicit val newsDAO: NewsSourceDAO = NewsSourceDAO()
+class NewsRoutes(app: Application)(implicit ec: ExecutionContext, newsDAO: NewsSourceDAO ) {
   implicit val rss: RSSFeedParser = new RSSFeedParser()
 
   app.get("/api/news/feed/:id", (request: Request, response: Response, next: NextFunction) => feedsByID(request, response, next))

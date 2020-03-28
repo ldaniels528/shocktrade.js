@@ -6,7 +6,7 @@ import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
-import com.shocktrade.common.Commissions
+import com.shocktrade.common.{Commissions, Ok}
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
 import io.scalajs.dom.html.browser.console
@@ -67,16 +67,32 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
     emailNotify = true
   )
 
-  $scope.quote = $scope.form.symbol.toOption match {
-    case Some(symbol) => OrderQuote(symbol = symbol)
-    case None => OrderQuote()
+  $scope.quote = $scope.form.symbol.map(symbol => OrderQuote(symbol = symbol)).getOrElse(OrderQuote())
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.init = () => {
+    $scope.form.symbol.flat foreach lookupSymbolQuote
+    loadPerks()
+  }
+
+  private def loadPerks(): Unit = {
+    $scope.portfolio.flatMap(_.portfolioID) foreach { portfolioId =>
+      // load the player"s perks
+      perksDialog.getMyPerkCodes(portfolioId) onComplete {
+        case Success(contest) => $scope.form.perks = contest.data.perkCodes
+        case Failure(e) =>
+          toaster.error("Error retrieving perks")
+          e.printStackTrace()
+      }
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
-
-  $scope.init = () => $scope.form.symbol foreach lookupSymbolQuote
 
   $scope.cancel = () => $uibModalInstance.dismiss("cancel")
 
@@ -84,32 +100,28 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
 
   $scope.isProcessing = () => processing
 
-  $scope.ok = (aForm: js.UndefOr[NewOrderForm]) => aForm foreach { form =>
+  $scope.placeOrder = (aForm: js.UndefOr[NewOrderForm]) => {
     messages.removeAll()
-    val inputs = for {
-      userID <- $scope.userProfile.flatMap(_.userID).toOption
-      portfolioID <- $scope.portfolio.flatMap(_.portfolioID).toOption
-    } yield (userID, portfolioID)
-
+    val inputs = (for {form <- aForm} yield (form, params.contestID, params.userID)).toOption
     inputs match {
-      case Some((userID, portfolioID)) =>
+      case Some((form, contestID, userID)) =>
         processing = true
         val outcome = for {
           messages <- validate(form)
-          portfolio_? <- if (messages.isEmpty) portfolioService.createOrder(userID, $scope.form).map(_.data).map(Option(_)) else Future.successful(None)
-        } yield (messages, portfolio_?)
+          portfolio <- portfolioService.createOrder(contestID, userID, $scope.form)
+        } yield (messages, portfolio)
 
         outcome onComplete {
-          case Success((_, Some(portfolio))) =>
+          case Success((_, portfolio)) =>
             $timeout(() => processing = false, 0.5.seconds)
-            $uibModalInstance.close(portfolio)
+            $uibModalInstance.close(portfolio.data)
           case Success((errors, _)) =>
             $timeout(() => processing = false, 0.5.seconds)
             messages.push(errors: _*)
           case Failure(e) =>
             $timeout(() => processing = false, 0.5.seconds)
             messages.push(s"The order could not be processed")
-            console.error(s"order processing error: portfolioId = $userID, portfolioID = $portfolioID, form = ${angular.toJson(form)}")
+            console.error(s"order processing error: userID = $userID, contestID = $contestID, form = ${angular.toJson(form)}")
             e.printStackTrace()
         }
       case None =>
@@ -159,10 +171,12 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
     quoteService.getOrderQuote(symbol) onComplete {
       case Success(response) =>
         val quote = response.data
-        $scope.quote = quote
-        $scope.form.symbol = quote.symbol
-        $scope.form.limitPrice = quote.lastTrade
-        $scope.form.exchange = quote.exchange
+        $scope.$apply { () =>
+          $scope.quote = quote
+          $scope.form.symbol = quote.symbol
+          $scope.form.limitPrice = quote.lastTrade
+          $scope.form.exchange = quote.exchange
+        }
       case Failure(e) =>
         messages.push(s"The order could not be processed (error code ${e.getMessage})")
     }
@@ -182,19 +196,6 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
     else Future.successful(messages)
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  //          Initialization
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.portfolio.flatMap(_.portfolioID) foreach { portfolioId =>
-    // load the player"s perks
-    perksDialog.getMyPerkCodes(portfolioId) onComplete {
-      case Success(contest) => $scope.form.perks = contest.data.perkCodes
-      case Failure(e) =>
-        toaster.error("Error retrieving perks")
-    }
-  }
-
 }
 
 /**
@@ -203,13 +204,15 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
  */
 object NewOrderDialogController {
 
-  type NewOrderDialogResult = Portfolio
+  type NewOrderDialogResult = Ok
 
   /**
    * New Order Dialog Parameters
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class NewOrderParams(val symbol: js.UndefOr[String] = js.undefined,
+  class NewOrderParams(val contestID: String,
+                       val userID: String,
+                       val symbol: js.UndefOr[String] = js.undefined,
                        val quantity: js.UndefOr[Double] = js.undefined) extends js.Object
 
 }
@@ -232,7 +235,7 @@ trait NewOrderScope extends AutoCompletionControllerScope {
   var cancel: js.Function0[Unit] = js.native
   var getMessages: js.Function0[js.Array[String]] = js.native
   var isProcessing: js.Function0[Boolean] = js.native
-  var ok: js.Function1[js.UndefOr[NewOrderForm], Unit] = js.native
+  var placeOrder: js.Function1[js.UndefOr[NewOrderForm], Unit] = js.native
   var onSelectedItem: js.Function3[js.UndefOr[AutoCompleteQuote], js.UndefOr[AutoCompleteQuote], js.UndefOr[String], Unit] = js.native
   var orderQuote: js.Function1[js.Dynamic, Unit] = js.native
   var getTotal: js.Function1[js.UndefOr[NewOrderForm], js.UndefOr[Double]] = js.native

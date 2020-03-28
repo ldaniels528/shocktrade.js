@@ -12,10 +12,7 @@ import scala.scalajs.js
  * Trading Clock Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class TradingClockRoutes(app: Application)(implicit ec: ExecutionContext) {
-  // create the trading clock instance
-  private val tradingClock = new TradingClock()
-
+class TradingClockRoutes(app: Application)(implicit ec: ExecutionContext, tradingClock: TradingClock) {
   // define the routes
   app.get("/api/tradingClock/status/:lastUpdate", (request: Request, response: Response, next: NextFunction) => status(request, response, next))
   app.get("/api/tradingClock/delayUntilStart", (request: Request, response: Response, next: NextFunction) => delayUntilTradingStart(request, response, next))

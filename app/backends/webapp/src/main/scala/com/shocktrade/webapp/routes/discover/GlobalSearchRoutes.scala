@@ -14,9 +14,7 @@ import scala.util.{Failure, Success}
  * Global Search Routes
  * @author lawrence.daniels@gmail.com
  */
-class GlobalSearchRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val globalSearchDAO = GlobalSearchDAO()
-
+class GlobalSearchRoutes(app: Application)(implicit ec: ExecutionContext, globalSearchDAO: GlobalSearchDAO) {
   app.get("/api/search", (request: Request, response: Response, next: NextFunction) => searchResults(request, response, next))
 
   /**

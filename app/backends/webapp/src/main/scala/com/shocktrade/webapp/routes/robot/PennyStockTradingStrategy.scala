@@ -3,6 +3,7 @@ package com.shocktrade.webapp.routes.robot
 import com.shocktrade.common.forms.ResearchOptions
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.server.common.LoggerFactory
+import com.shocktrade.webapp.routes.contest.PriceTypes
 import com.shocktrade.webapp.routes.contest.dao.{ContestDAO, OrderDAO, OrderData}
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
 import com.shocktrade.webapp.routes.robot.dao.{RobotDAO, RobotData}
@@ -14,31 +15,33 @@ import scala.util.{Failure, Random, Success}
  * Penny Stock Trading Strategy
  * @param ec the implicit [[ExecutionContext]]
  */
-class PennyStockTradingStrategy()(implicit ec: ExecutionContext) extends TradingStrategy {
+class PennyStockTradingStrategy()(implicit ec: ExecutionContext, contestDAO: ContestDAO, orderDAO: OrderDAO, researchDAO: ResearchDAO, robotDAO: RobotDAO)
+  extends TradingStrategy {
   private val logger = LoggerFactory.getLogger(getClass)
   private val random = new Random()
 
-  private implicit val contestDAO: ContestDAO = ContestDAO()
-  private implicit val orderDAO: OrderDAO = OrderDAO()
-  private implicit val researchDAO: ResearchDAO = ResearchDAO()
-  private implicit val robotDAO: RobotDAO = RobotDAO()
-
   override def operate(robot: RobotData): Unit = {
-    buySecurities()(robot)
-    sellSecurities()(robot)
+    implicit val _robot: RobotData = robot
+    findContestsToJoin()
+    buySecurities()
+    sellSecurities()
+  }
+
+  private def findContestsToJoin()(implicit contestDAO: ContestDAO, robot: RobotData) = {
+
   }
 
   ///////////////////////////////////////////////////////
   //    Buying Securities
   ///////////////////////////////////////////////////////
 
-  private def buySecurities()(implicit robot: RobotData): Future[(Seq[ResearchQuote], List[OrderData], Int)] = {
+  private def buySecurities()(implicit robot: RobotData, contestDAO: ContestDAO, orderDAO: OrderDAO, robotDAO: RobotDAO, researchDAO: ResearchDAO): Future[(Seq[ResearchQuote], List[OrderData], Int)] = {
     val robotName = robot.username.orNull
     val startTime = System.currentTimeMillis()
     val outcome = for {
       _ <- setRobotActivity("Looking for stocks to buy")
       stocks <- findStocksToBuy(new ResearchOptions(priceMax = 1.0, changeMax = 0.0, spreadMin = 50.0, volumeMin = 1e+6, maxResults = 50))
-      orders = makeBuyOrders(stocks)
+      orders = makeBuyOrders(stocks, priceType = PriceTypes.Limit, costTarget = 2500.0)
       _ <- makeOrdersMessage(orders).map(sendChat).getOrElse(Future.successful(0))
       counts <- saveOrders(orders)
     } yield (stocks, orders, counts)

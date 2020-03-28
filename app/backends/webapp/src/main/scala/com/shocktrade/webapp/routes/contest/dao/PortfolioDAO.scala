@@ -13,10 +13,6 @@ import scala.scalajs.js
  */
 trait PortfolioDAO {
 
-  def computeTotalInvestment(portfolioID: String)(implicit ec: ExecutionContext): Future[Double] = ???
-
-  def computeMarketValue(portfolioID: String)(implicit ec: ExecutionContext): Future[Double] = ???
-
   def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
 
   def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]

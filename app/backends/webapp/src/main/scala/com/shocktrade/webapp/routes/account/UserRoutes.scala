@@ -16,9 +16,7 @@ import scala.util.{Failure, Success}
  * User Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val userDAO = UserDAO()
-
+class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserDAO) {
   // individual item
   app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createAccount(request, response, next))
   app.get("/api/user/:userID", (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
@@ -35,19 +33,6 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
-
-  /*
-  Seq(
-    ("a1ae1950-6b49-11ea-83ac-857ee918b853", "ldaniels", "./public/images/avatars/gears.jpg"),
-    ("a1affa54-6b49-11ea-83ac-857ee918b853", "gunst4rhero", "./public/images/avatars/gunstar-heroes.jpg"),
-    ("a1b2acea-6b49-11ea-83ac-857ee918b853", "gadget", "./public/images/avatars/dcu.png"),
-    ("a1b550b2-6b49-11ea-83ac-857ee918b853", "daisy", "./public/images/avatars/daisy.jpg"),
-    ("19522944-6b4d-11ea-83ac-857ee918b853", "fugitive528", "./public/images/avatars/fugitive528.jpg")) foreach { case (uid, name, path) =>
-    writeImage(userID = uid, name = name, path = path) onComplete {
-      case Success(value) => println(s"$name ~> $path: count = $value")
-      case Failure(e) => e.printStackTrace()
-    }
-  }*/
 
   def addFavoriteSymbol(request: Request, response: Response, next: NextFunction): Unit = {
     val (userID, symbol) = (request.params("userID"), request.params("symbol"))
@@ -86,9 +71,9 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
   }
 
   def findRecentSymbols(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID= request.params("userID")
+    val userID = request.params("userID")
     userDAO.findRecentSymbols(userID) onComplete {
-      case Success(results)  => response.send(results); next()
+      case Success(results) => response.send(results); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }
@@ -160,7 +145,15 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def writeImage(userID: String, name: String, path: String): Future[Int] = {
+}
+
+/**
+ * User Routes
+ * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+ */
+object UserRoutes {
+
+  def writeImage(name: String, path: String)(implicit userDAO: UserDAO): Future[Int] = {
     val suffix = path.lastIndexOf(".") match {
       case -1 => None
       case index => Some(path.substring(index + 1).toLowerCase())
@@ -172,7 +165,8 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
     for {
       data <- Fs.readFileFuture(path)
-      w <- userDAO.createIcon(new UserIconData(userID = userID, name = name, mime = mime, image = data))
+      Some(user) <- userDAO.findByUsername(name)
+      w <- userDAO.createIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data))
     } yield w
   }
 

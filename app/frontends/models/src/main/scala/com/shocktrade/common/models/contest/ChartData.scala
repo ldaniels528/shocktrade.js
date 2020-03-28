@@ -3,7 +3,7 @@ package com.shocktrade.common.models.contest
 import scala.scalajs.js
 
 /**
- * Market Value Response
+ * Chart Data model
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class MarketValueResponse(val marketValue: Double) extends js.Object
+class ChartData(val name: String, val value: Double) extends js.Object

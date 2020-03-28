@@ -63,9 +63,11 @@ class PositionsController($scope: PositionsControllerScope, $routeParams: Dashbo
 
   $scope.sellPosition = (aSymbol: js.UndefOr[String], aQuantity: js.UndefOr[Double]) => {
     for {
+      contestID <- $routeParams.contestID
+      userID <- gameState.userID
       symbol <- aSymbol
       quantity <- aQuantity
-    } yield newOrderDialog.popup(new NewOrderParams(symbol = symbol, quantity = quantity))
+    } yield newOrderDialog.popup(new NewOrderParams(contestID, userID, symbol = symbol, quantity = quantity))
   }
 
   $scope.toggleSelectedPosition = () => $scope.selectedPosition = js.undefined

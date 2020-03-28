@@ -1,9 +1,9 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.models.contest.{Order, Portfolio, Position}
-import com.shocktrade.common.forms.{FundsTransferRequest, NewOrderForm}
-import com.shocktrade.common.models.ExposureData
-import com.shocktrade.common.models.contest._
+import com.shocktrade.common.Ok
+import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.models.contest.{ChartData, _}
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
@@ -58,8 +58,8 @@ class PortfolioService($http: Http) extends Service {
     $http.delete(s"/api/portfolio/$portfolioId/order/$orderId")
   }
 
-  def createOrder(portfolioId: String, order: NewOrderForm): js.Promise[HttpResponse[Portfolio]] = {
-    $http.post(s"/api/portfolio/$portfolioId/order", data = order)
+  def createOrder(contestID: String, userID: String, order: NewOrderForm): js.Promise[HttpResponse[Ok]] = {
+    $http.post(s"/api/order/$contestID/user/$userID", data = order)
   }
 
   def findOrders(contestID: String, userID: String): js.Promise[HttpResponse[js.Array[Order]]] = {
@@ -75,30 +75,10 @@ class PortfolioService($http: Http) extends Service {
   }
 
   /////////////////////////////////////////////////////////////////////////////
-  //			Cash & Margin Accounts
-  /////////////////////////////////////////////////////////////////////////////
-
-  def getCashAccountMarketValue(portfolioId: String): js.Promise[HttpResponse[MarketValueResponse]] = {
-    $http.get(s"/api/portfolio/$portfolioId/marketValue?accountType=cash")
-  }
-
-  def getMarginAccountMarketValue(portfolioId: String): js.Promise[HttpResponse[MarketValueResponse]] = {
-    $http.get(s"/api/portfolio/$portfolioId/marketValue?accountType=margin")
-  }
-
-  def getTotalInvestment(portfolioID: String): js.Promise[HttpResponse[TotalInvestment]] = {
-    $http.get(s"/api/portfolios/$portfolioID/totalInvestment")
-  }
-
-  def transferFunds(portfolioId: String, form: FundsTransferRequest): js.Promise[HttpResponse[Portfolio]] = {
-    $http.post(s"/api/portfolio/$portfolioId/transferFunds", form)
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
   //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getChartData(contestID: String, userID: String, chart: String): js.Promise[HttpResponse[js.Array[ExposureData]]] = {
+  def getChartData(contestID: String, userID: String, chart: String): js.Promise[HttpResponse[js.Array[ChartData]]] = {
     $http.get(s"/api/contest/$contestID/user/$userID/chart/$chart")
   }
 

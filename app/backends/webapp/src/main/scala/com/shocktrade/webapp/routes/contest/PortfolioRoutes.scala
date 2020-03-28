@@ -2,31 +2,22 @@ package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.common.models.contest.{MarketValueResponse, TotalInvestment}
 import com.shocktrade.webapp.routes.NextFunction
-import com.shocktrade.webapp.routes.contest.dao.OrderData
-import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.util.DateHelper._
+import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
+import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * Portfolio Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val orderDAO = OrderDAO()
-  private val perkDAO = PerksDAO()
-  private val portfolioDAO = PortfolioDAO()
-  private val positionDAO = PositionDAO()
-
+class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, orderDAO: OrderDAO, perkDAO: PerksDAO, portfolioDAO: PortfolioDAO, positionDAO: PositionDAO) {
   // individual objects
   app.get("/api/portfolio/:portfolioID", (request: Request, response: Response, next: NextFunction) => findPortfolioByUser(request, response, next))
-  app.get("/api/portfolio/:portfolioID/marketValue", (request: Request, response: Response, next: NextFunction) => computeMarketValue(request, response, next))
   app.get("/api/portfolio/:portfolioID/heldSecurities", (request: Request, response: Response, next: NextFunction) => findHeldSecurities(request, response, next))
 
   // perks
@@ -38,29 +29,17 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
 
   // orders
   app.get("/api/orders/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findOrders(request, response, next))
+  app.post("/api/order/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => createOrder(request, response, next))
 
   // portfolios
   app.get("/api/portfolio/contest/:contestID/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfolio(request, response, next))
   app.get("/api/portfolio/contest/:contestID/user/:userID/balance", (request: Request, response: Response, next: NextFunction) => findPortfolioBalance(request, response, next))
   app.get("/api/portfolios/contest/:contestID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByContest(request, response, next))
   app.get("/api/portfolios/user/:userID", (request: Request, response: Response, next: NextFunction) => findPortfoliosByUser(request, response, next))
-  app.get("/api/portfolios/:portfolioID/totalInvestment", (request: Request, response: Response, next: NextFunction) => findTotalInvestment(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Computes the market value of an account by account type and portfolio ID
-   */
-  def computeMarketValue(request: Request, response: Response, next: NextFunction): Unit = {
-    val portfolioID = request.params("portfolioID")
-    portfolioDAO.computeMarketValue(portfolioID) onComplete {
-      case Success(marketValue) => response.send(new MarketValueResponse(marketValue)); next()
-      case Failure(e: IllegalStateException) => response.badRequest(e.getMessage); next()
-      case Failure(e) => response.internalServerError(e); next()
-    }
-  }
 
   /**
    * Returns the symbols for securities currently held in all active portfolios for a given player by player ID
@@ -70,6 +49,19 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
     portfolioDAO.findHeldSecurities(portfolioID) onComplete {
       case Success(symbols) => response.send(symbols); next()
       case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  def createOrder(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("contestID"), request.params("userID"))
+    val form = request.bodyAs[NewOrderForm]
+    form.validate match {
+      case messages if messages.nonEmpty => response.badRequest(messages)
+      case _ =>
+        orderDAO.createOrder(contestID, userID, order = form.toOrder) onComplete {
+          case Success(count) => response.send(Ok(count)); next()
+          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+        }
     }
   }
 
@@ -177,17 +169,6 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  /**
-   * Retrieves the total investment amount for a specific player
-   */
-  def findTotalInvestment(request: Request, response: Response, next: NextFunction): Unit = {
-    val portfolioID = request.params("portfolioID")
-    portfolioDAO.computeTotalInvestment(portfolioID) onComplete {
-      case Success(investment) => response.send(new TotalInvestment(investment)); next()
-      case Failure(e) => response.internalServerError(e); next()
-    }
-  }
-
 }
 
 /**
@@ -203,28 +184,5 @@ object PortfolioRoutes {
    * @param pricePaid the price paid per share
    */
   case class PricingData(symbol: String, quantity: Double, pricePaid: Double)
-
-  /**
-   * New Order Form Extensions
-   * @param form the given [[NewOrderForm form]]
-   */
-  implicit class NewOrderFormExtensions(val form: NewOrderForm) extends AnyVal {
-
-    @inline
-    def toOrder: OrderData = {
-      new OrderData(
-        orderID = js.undefined,
-        symbol = form.symbol,
-        exchange = form.exchange,
-        orderType = form.orderType,
-        priceType = form.priceType,
-        price = if (form.isLimitOrder) form.limitPrice else js.undefined,
-        quantity = form.quantity,
-        creationTime = new js.Date() - 1.day, // TODO remove after testing
-        expirationTime = form.orderTerm.map(s => new js.Date() + Try(s.toInt).getOrElse(3).days),
-        processedTime = js.undefined,
-        statusMessage = js.undefined)
-    }
-  }
 
 }

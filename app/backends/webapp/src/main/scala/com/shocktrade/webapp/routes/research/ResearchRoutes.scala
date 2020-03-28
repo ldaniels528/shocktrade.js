@@ -13,9 +13,8 @@ import scala.util.{Failure, Success}
  * Research Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ResearchRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private implicit val researchDAO: ResearchDAO = ResearchDAO()
-
+class ResearchRoutes(app: Application)(implicit ec: ExecutionContext, researchDAO: ResearchDAO) {
+  // API routes
   app.get("/api/research/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.models.ExposureData
+import com.shocktrade.common.models.contest.ChartData
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -13,7 +13,7 @@ import scala.scalajs.js
  */
 trait PositionDAO {
 
-  def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ExposureData]]
+  def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]]
 
   def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]]
 

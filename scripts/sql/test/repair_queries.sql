@@ -7,22 +7,9 @@ update stocks_eoddata set spread = 100.0 * (high - low)/high;
 update stocks_eoddata set lastTrade = (high + low) / 2, tradeDateTime = '2020-02-21 16:59:59' where lastTrade is null;
 update stocks_eoddata set `open` = prevClose - `change` where open is null;
 
-alter table stocks_eoddata drop column avgVolume10Day;
-alter table stocks_eoddata drop column beta;
-alter table stocks_eoddata drop column spread;
-alter table stocks_eoddata drop column `active`;
-
-alter table stocks_eoddata drop column companyName;
-alter table stocks_cik drop column companyName;
-alter table stocks_nasdaq drop column companyName;
-
-update stocks_eoddata set name = companyName;
-update stocks_nasdaq set name = companyName;
-update stocks_cik set name = companyName;
-
-alter table contests add closed SMALLINT DEFAULT 0;
-
-alter table users add totalXP INTEGER NOT NULL DEFAULT 0;
+update mock_stocks MS
+inner join stocks_eoddata S ON S.symbol = MS.symbol
+set MS.lastTrade = S.lastTrade;
 
 SELECT * FROM stocks
 WHERE volume >= 1000 AND lastTrade <= 30

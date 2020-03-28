@@ -12,10 +12,7 @@ import scala.util.{Failure, Success}
  * Explore Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ExploreRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val stockQuoteDAO = StockQuoteDAO()
-  private val exploreDAO = ExploreDAO()
-
+class ExploreRoutes(app: Application)(implicit ec: ExecutionContext, exploreDAO: ExploreDAO, stockQuoteDAO: StockQuoteDAO) {
   app.get("/api/explore/industries", (request: Request, response: Response, next: NextFunction) => industries(request, response, next))
   app.get("/api/explore/quotes", (request: Request, response: Response, next: NextFunction) => industryQuotes(request, response, next))
   app.get("/api/explore/sectors", (request: Request, response: Response, next: NextFunction) => sectors(request, response, next))

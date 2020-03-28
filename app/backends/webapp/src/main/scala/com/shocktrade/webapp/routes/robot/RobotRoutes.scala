@@ -12,9 +12,7 @@ import scala.util.{Failure, Success}
  * Robot Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class RobotRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val robotDAO = RobotDAO()
-
+class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: RobotDAO) {
   // API routes
   app.get("/api/robot/:name", (request: Request, response: Response, next: NextFunction) => findRobot(request, response, next))
   app.get("/api/robot/:name/off", (request: Request, response: Response, next: NextFunction) => toggleRobot(request, response, next, isActive = false))

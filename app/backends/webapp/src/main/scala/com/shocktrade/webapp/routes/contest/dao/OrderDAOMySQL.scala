@@ -31,6 +31,17 @@ class OrderDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) w
       js.Array(portfolioID, symbol, exchange, orderType, priceType, price, quantity)) map (_.affectedRows)
   }
 
+  override def createOrder(contestID: String, userID: String, order: OrderData)(implicit ec: ExecutionContext): Future[Int] = {
+    import order._
+    conn.executeFuture(
+      """|INSERT INTO orders (orderID, portfolioID, symbol, exchange, orderType, priceType, price, quantity)
+         |SELECT uuid(), portfolioID, ?, ?, ?, ?, ?, ?
+         |FROM portfolios
+         |WHERE contestID = ? AND userID = ?
+         |""".stripMargin,
+      js.Array(symbol, exchange, orderType, priceType, price, quantity, contestID, userID)) map (_.affectedRows)
+  }
+
   override def findOrders(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[js.Array[OrderData]] = {
     conn.queryFuture[OrderData](
       """|SELECT O.*, S.lastTrade

@@ -18,7 +18,6 @@ import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -35,9 +34,8 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
   extends AutoCompletionController($scope, $q, quoteService)
     with GlobalLoading
     with GlobalSelectedSymbol[DiscoverControllerScope]
-    with PersonalSymbolSupport[DiscoverControllerScope] {
-
-  private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
+    with PersonalSymbolSupport[DiscoverControllerScope]
+    with USMarketsStatusSupport[DiscoverControllerScope] {
 
   // setup the public variables
   $scope.ticker = $routeParams.symbol.orNull
@@ -85,8 +83,12 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
     module.expanded = !module.expanded
   }
 
-  $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String]) => aSymbol map { symbol =>
-    newOrderDialog.popup(new NewOrderParams(symbol = symbol))
+  $scope.popupNewOrderDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String], aSymbol: js.UndefOr[String]) => {
+    for {
+      contestID <- aContestID
+      userID <- aUserID
+      symbol <- aSymbol
+    } yield newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = symbol))
   }
 
   $scope.loadQuote = (aValue: js.UndefOr[Any]) => aValue foreach {
@@ -151,36 +153,6 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
     case "High" => "Not recommended for investment"
     case "Unknown" => "The risk level could not be determined"
     case _ => "The risk level could not be determined"
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Market Status Functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.isUSMarketsOpen = () => {
-    usMarketStatus match {
-      case Left(status) => Option(status.active).orUndefined
-      case Right(loading) =>
-        if (!loading) {
-          usMarketStatus = Right(true)
-          console.log("Retrieving market status...")
-          marketStatusService.getMarketStatus onComplete {
-            case Success(response) =>
-              val status = response.data
-
-              // capture the current status
-              $scope.$apply(() => usMarketStatus = Left(status))
-
-              // update the status after delay
-              $timeout(() => usMarketStatus = Right(false), status.delay.toInt)
-
-            case Failure(e) =>
-              toaster.error("Failed to retrieve market status")
-              console.error(s"Failed to retrieve market status: ${e.getMessage}")
-          }
-        }
-        js.undefined
-    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -315,7 +287,12 @@ object DiscoverController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait DiscoverControllerScope extends RootScope with AutoCompletionControllerScope with GlobalSelectedSymbolScope with PersonalSymbolSupportScope {
+trait DiscoverControllerScope extends RootScope
+  with AutoCompletionControllerScope
+  with GlobalSelectedSymbolScope
+  with PersonalSymbolSupportScope
+  with USMarketsStatusSupportScope {
+
   // variables
   var expanders: js.Array[ModuleExpander] = js.native
   var options: DiscoverOptions = js.native
@@ -325,9 +302,8 @@ trait DiscoverControllerScope extends RootScope with AutoCompletionControllerSco
 
   // functions
   var expandSection: js.Function1[js.UndefOr[ModuleExpander], Unit] = js.native
-  var isUSMarketsOpen: js.Function0[js.UndefOr[Boolean]] = js.native
   var loadQuote: js.Function1[js.UndefOr[Any], Unit] = js.native
-  var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
+  var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
 
   // type-ahead functions
   var formatSearchResult: js.Function1[js.UndefOr[AutoCompleteQuote], js.UndefOr[String]] = js.native

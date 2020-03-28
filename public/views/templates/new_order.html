@@ -40,7 +40,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <input class="form-control symbol_input_text_field" type="text" ng-model="ticker"
+                <input class="form-control symbol_input_text_field" type="text" ng-model="form.symbol"
                        placeholder="Enter Symbol or Company name"
                        typeahead="item as formatSearchResult(item) for item in autoCompleteSymbols($viewValue)"
                        typeahead-template-url="symbol_lookup.html"
@@ -66,8 +66,7 @@
                 <span ng-show="quote.changePct" ng-class="quote.changePct < 0 ? 'negative' : ''" style="margin-left: 5px">{{ quote.changePct | number:2 }}%</span>
                 <changearrow ng-show="quote.changePct" value="{{ quote.changePct }}" style="vertical-align: bottom" />
 
-
-                <button class="btn st_button pull-right" ng-click="orderQuote(ticker)">
+                <button class="btn st_button pull-right" ng-click="orderQuote(form.symbol)">
                     <img src="/images/status/loading16.gif" ng-show="loading">
                     <i class="fa fa-search clickable"  ng-hide="loading"></i> Quote
                 </button>
@@ -155,7 +154,7 @@
     </div>
     <div class="modal-footer st_modal_footer">
         <div class="col-md-12">
-            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="ok(form)">
+            <button class="btn btn-primary pull-left" ng-disabled="processing" ng-click="placeOrder(form)">
                 <img ng-show="processing" src="/images/status/loading16.gif"> Place Order
             </button>
             <button class="btn btn-warning pull-right" ng-disabled="processing" ng-click="cancel()">

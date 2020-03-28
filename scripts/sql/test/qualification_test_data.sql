@@ -11,6 +11,7 @@ TRUNCATE robots;
 -- ------------------------------------------------------------
 INSERT INTO robots (username, strategy) VALUES ('daisy', 'penny-stock');
 INSERT INTO robots (username, strategy) VALUES ('gadget', 'penny-stock');
+INSERT INTO robots (username, strategy) VALUES ('natech', 'penny-stock');
 
 -- ------------------------------------------------------------
 -- Contests

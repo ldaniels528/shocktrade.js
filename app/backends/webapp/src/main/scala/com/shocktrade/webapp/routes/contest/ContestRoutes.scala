@@ -18,11 +18,7 @@ import scala.util.{Failure, Success}
  * Contest Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
-  private val contestDAO = ContestDAO()
-  private val perksDAO = PerksDAO()
-  private val positionDAO = PositionDAO()
-
+class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, perksDAO: PerksDAO, positionDAO: PositionDAO) {
   // individual contests
   app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
   app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
@@ -31,7 +27,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.get("/api/contest/:id/user/:userID/chart/:chart", (request: Request, response: Response, next: NextFunction) => findChart(request, response, next))
 
   // chat messages
-  app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => listChatMessages(request, response, next))
+  app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => findChatMessages(request, response, next))
   app.post("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
 
   // contest participation
@@ -39,8 +35,8 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   app.put("/api/contest/:id/user/:userID", (request: Request, response: Response, next: NextFunction) => joinContest(request, response, next))
 
   // collections of contests
-  app.get("/api/contest/:id/rankings", (request: Request, response: Response, next: NextFunction) => listRankings(request, response, next))
-  app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => listPerks(request, response, next))
+  app.get("/api/contest/:id/rankings", (request: Request, response: Response, next: NextFunction) => findRankings(request, response, next))
+  app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => findPerks(request, response, next))
   app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => findMyContests(request, response, next))
   app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
@@ -77,7 +73,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
     }
   }
 
-  def listChatMessages(request: Request, response: Response, next: NextFunction): Unit = {
+  def findChatMessages(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
     contestDAO.findChatMessages(contestID) onComplete {
       case Success(messages) => response.send(messages); next()
@@ -88,7 +84,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves available perks
    */
-  def listPerks(request: Request, response: Response, next: NextFunction): Unit = {
+  def findPerks(request: Request, response: Response, next: NextFunction): Unit = {
     perksDAO.findAvailablePerks onComplete {
       case Success(perks) => response.send(perks); next()
       case Failure(e) => response.internalServerError(e); next()
@@ -167,7 +163,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
   /**
    * Retrieves a collection of rankings by contest
    */
-  def listRankings(request: Request, response: Response, next: NextFunction): Unit = {
+  def findRankings(request: Request, response: Response, next: NextFunction): Unit = {
     // define an accumulator for determining the rankings
     case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
 
@@ -176,10 +172,10 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext) {
     val outcome = contestDAO.findRankings(contestID) map { rankings =>
       // sort the rankings and add the position (e.g. "1st")
       val results = rankings.sortBy(-_.gainLoss.orZero).foldLeft[Accumulator](Accumulator()) {
-        case (acc@Accumulator(list, lastRanking, index), ranking) =>
+        case (acc@Accumulator(rankings, lastRanking, index), ranking) =>
           val newIndex = if (lastRanking.exists(_.totalEquity.exists(_ > ranking.totalEquity.orZero))) index + 1 else index
-          ranking.rank = newIndex.nth
-          acc.copy(rankings = ranking :: list, lastRanking = Some(ranking), index = newIndex)
+          val newRanking = ranking.copy(rank = newIndex.nth, rankNum = newIndex)
+          acc.copy(rankings = newRanking :: rankings, lastRanking = Some(ranking), index = newIndex)
       }
       js.Array(results.rankings: _*)
     }

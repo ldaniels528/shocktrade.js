@@ -42,7 +42,7 @@ class TradingClock() {
    * however, if the current day of week is Saturday or Sunday, it will return the previous Friday.
    * @return the stock market opening [[js.Date time]]
    */
-  private def getLastTradeDay = {
+  private def getLastTradeDay: Moment = {
     val theMoment = Moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
       case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0

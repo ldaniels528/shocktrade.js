@@ -1,7 +1,7 @@
 <div class="col-md-12 portfolio_button_panel">
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold"
-                ng-click="popupNewOrderDialog(selectedSymbol)"
+                ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)"
                 ng-hide="contest.status === 'CLOSED'"
                 title="Create a new order">
             <i class="fa fa-cart-plus"></i> Order
@@ -9,7 +9,7 @@
     </div>
     <div class="col-md-4">
         <button class="btn btn-default sell_button bold pull-right"
-                ng-click="popupTransferFundsDialog()"
+                ng-click="popupTransferFundsDialog(contest.contestID, userProfile.userID)"
                 ng-hide="contest.status === 'CLOSED' || !hasPerk('MARGIN')"
                 title="Use your margin account">
             <i class="fa fa-sign-out"></i> Transfers

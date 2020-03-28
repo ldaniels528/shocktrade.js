@@ -1,12 +1,13 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client._
 import com.shocktrade.client.contest.DashboardController._
-import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
+import com.shocktrade.client.dialogs.NewOrderDialogController.NewOrderParams
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog}
+import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope}
+import com.shocktrade.client.{USMarketsStatusSupportScope, _}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -27,15 +28,19 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class DashboardController($scope: DashboardControllerScope, $routeParams: DashboardRouteParams,
-                               $cookies: Cookies,  $timeout: Timeout, toaster: Toaster,
+                               $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                                @injected("ContestFactory") contestFactory: ContestFactory,
                                @injected("ContestService") contestService: ContestService,
                                @injected("GameStateFactory") gameState: GameStateFactory,
                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
+                               @injected("MarketStatusService") marketStatusService: MarketStatusService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService)
-  extends Controller with GlobalLoading with GlobalSelectedSymbol[DashboardControllerScope] {
+  extends Controller
+    with GlobalLoading
+    with GlobalSelectedSymbol[DashboardControllerScope]
+    with USMarketsStatusSupport[DashboardControllerScope] {
 
   implicit private val scope: DashboardControllerScope = $scope
 
@@ -86,7 +91,18 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.invitePlayerPopup = (aContestID: js.UndefOr[String]) => invitePlayerPopup(aContestID)
+  $scope.invitePlayerPopup = (aContestID: js.UndefOr[String]) => {
+    for (contestID <- aContestID) {
+      invitePlayerDialog.popup(contestID) onComplete {
+        case Success(_) => loadContest(contestID)
+        case Failure(e) =>
+          if (e.getMessage != "cancel") {
+            toaster.error("invite Player", e.displayMessage)
+            e.printStackTrace()
+          }
+      }
+    }
+  }
 
   $scope.popupPerksDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String]) => {
     for {
@@ -104,21 +120,22 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     }
   }
 
-  $scope.popupNewOrderDialog = (aSymbol: js.UndefOr[String]) => {
-    val promise = newOrderDialog.popup(new NewOrderParams(symbol = aSymbol))
-    promise onComplete {
-      case Success(result) => console.log(s"result = ${JSON.stringify(result)}")
-      case Failure(e) =>
-        if (e.getMessage != "cancel") {
-          toaster.error("New Order", e.displayMessage)
-          e.printStackTrace()
-        }
+  $scope.popupNewOrderDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String], aSymbol: js.UndefOr[String]) => {
+    for {
+      contestID <- aContestID
+      userID <- aUserID
+    } {
+      newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = aSymbol)) onComplete {
+        case Success(result) =>
+          console.log(s"result = ${JSON.stringify(result)}")
+          loadContest(contestID)
+        case Failure(e) =>
+          if (e.getMessage != "cancel") {
+            toaster.error("Order Management", e.displayMessage)
+            e.printStackTrace()
+          }
+      }
     }
-    promise
-  }
-
-  private def invitePlayerPopup(aContestID: js.UndefOr[String]): Unit = {
-    for (contestID <- aContestID) invitePlayerDialog.popup(contestID)
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -250,13 +267,19 @@ object DashboardController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait DashboardControllerScope extends RootScope with ContestScope with GlobalNavigation with GlobalSelectedSymbolScope with PortfolioScope {
+  trait DashboardControllerScope extends RootScope
+    with ContestScope
+    with GlobalNavigation
+    with GlobalSelectedSymbolScope
+    with PortfolioScope
+    with USMarketsStatusSupportScope {
+
     // functions
     var initDash: js.Function0[Unit] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var invitePlayerPopup: js.Function1[js.UndefOr[String], Unit] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
-    var popupNewOrderDialog: js.Function1[js.UndefOr[String], js.Promise[NewOrderDialogResult]] = js.native
+    var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
     var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
     var rankOf: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
     var toggleRankingsShown: js.Function0[Unit] = js.native

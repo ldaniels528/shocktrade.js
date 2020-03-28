@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.models.ExposureData
+import com.shocktrade.common.models.contest.ChartData
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -13,7 +13,7 @@ import scala.scalajs.js
  */
 class PositionDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with PositionDAO {
 
-  override def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ExposureData]] = {
+  override def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]] = {
     val column = chart match {
       case "exchange" => "S.exchange"
       case "industry" => "S.industry"
@@ -21,7 +21,7 @@ class PositionDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionCo
       case "securities" => "S.symbol"
       case unknown => Future.failed(js.JavaScriptException(s"Chart type '$unknown' is unrecognized"))
     }
-    conn.queryFuture[ExposureData](
+    conn.queryFuture[ChartData](
       s"""|SELECT IFNULL($column, 'Unclassified') AS name, SUM(S.lastTrade * PS.quantity) AS value
           |FROM users U
           |INNER JOIN portfolios P ON P.userID = P.userID

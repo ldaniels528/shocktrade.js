@@ -13,7 +13,8 @@ BEGIN
     SELECT uuid(), C.contestID, U.userID, C.startingBalance
     FROM users U, contests C
     WHERE C.contestID = a_contestID
-    AND U.userID = a_userID;
+    AND U.userID = a_userID
+    LIMIT 1;
 
     -- if the player was removed ...
     IF ROW_COUNT() > 0 THEN

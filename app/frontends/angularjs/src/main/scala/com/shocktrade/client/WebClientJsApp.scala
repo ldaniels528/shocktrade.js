@@ -6,7 +6,6 @@ import com.shocktrade.client.directives._
 import com.shocktrade.client.discover._
 import com.shocktrade.client.news._
 import com.shocktrade.client.posts._
-import com.shocktrade.client.social._
 import com.shocktrade.client.users._
 import io.scalajs.npm.angularjs.uirouter.{RouteProvider, RouteTo}
 import io.scalajs.npm.angularjs.{Module, QProvider, angular}
@@ -124,7 +123,6 @@ object WebClientJsApp {
     module.serviceOf[QuoteCache]("QuoteCache")
     module.serviceOf[QuoteService]("QuoteService")
     module.serviceOf[ResearchService]("ResearchService")
-    module.serviceOf[SocialServices]("SocialServices")
     module.serviceOf[UserService]("UserService")
     module.serviceOf[WebSocketService]("WebSocketService")
     ()

@@ -6,7 +6,7 @@ import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.ExposureController._
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.common.models.ExposureData
+import com.shocktrade.common.models.contest.ChartData
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.amcharts.AmChart.Export
@@ -51,8 +51,8 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
       height = 400,
       donut = true,
       donutRatio = 0.25,
-      x = (d: ExposureData) => d.name,
-      y = (d: ExposureData) => d.value,
+      x = (d: ChartData) => d.name,
+      y = (d: ChartData) => d.value,
       labelThreshold = 0.01,
       showLabels = false,
       showLegend = true
@@ -91,7 +91,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
     }
   }
 
-  private def updateChartDiv(datums: js.Array[ExposureData]): Unit = {
+  private def updateChartDiv(datums: js.Array[ChartData]): Unit = {
     AmCharts.makeChart(container = "chart_div", AmPieChart(
       dataProvider = datums,
       titleField = "name",
