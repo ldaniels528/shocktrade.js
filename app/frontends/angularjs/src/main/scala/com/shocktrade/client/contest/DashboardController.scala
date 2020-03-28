@@ -13,7 +13,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Interval, Timeout, injected}
 import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -28,7 +28,7 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 case class DashboardController($scope: DashboardControllerScope, $routeParams: DashboardRouteParams,
-                               $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                               $cookies: Cookies, $interval: Interval, $timeout: Timeout, toaster: Toaster,
                                @injected("ContestFactory") contestFactory: ContestFactory,
                                @injected("ContestService") contestService: ContestService,
                                @injected("GameStateFactory") gameState: GameStateFactory,
@@ -55,6 +55,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
+
+  $interval(() => $scope.clock = new js.Date(), 1.second)
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
@@ -277,6 +279,7 @@ object DashboardController {
     // functions
     var initDash: js.Function0[Unit] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+    var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
     var invitePlayerPopup: js.Function1[js.UndefOr[String], Unit] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
@@ -297,8 +300,8 @@ object DashboardController {
     var isDeleting: js.UndefOr[Boolean] = js.native
 
     // variables
+    var clock: js.UndefOr[js.Date] = js.native
     //var contest: js.UndefOr[Contest] = js.native
-    var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
     //var portfolio: js.UndefOr[Portfolio] = js.native
     var portfolioTabs: js.Array[PortfolioTab] = js.native
     var rankingsHidden: js.UndefOr[Boolean] = js.native

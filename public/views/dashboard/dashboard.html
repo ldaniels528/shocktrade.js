@@ -17,6 +17,7 @@
             </div>
             <div ng-show="contest.name" class="col-md-12 dashboard_title">
                 <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
+                <span ng-show="clock" class="pull-right" style="font-size: 10pt; vertical-align: bottom">{{ clock | date: 'EEE MM/dd hh:mm:ss a' }}</span>
             </div>
             <div class="rankings_header" class="col-md-12">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
