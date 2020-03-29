@@ -78,7 +78,7 @@ trait PersonalSymbolSupport[A <: PersonalSymbolSupportScope] {
     contestService.findHeldSecurities(userID) onComplete {
       case Success(tickers) =>
         console.info(s"heldSymbols = ${JSON.stringify($scope.heldSymbols)}")
-        $scope.heldSymbols = tickers.data
+        $scope.heldSymbols = tickers.data.flatMap(_.symbol.toOption)
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
 

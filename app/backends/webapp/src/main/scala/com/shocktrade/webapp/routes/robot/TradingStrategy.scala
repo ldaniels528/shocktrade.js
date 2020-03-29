@@ -1,7 +1,6 @@
 package com.shocktrade.webapp.routes.robot
 
 import com.shocktrade.common.forms.ResearchOptions
-import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.common.models.quote.ResearchQuote
 import com.shocktrade.webapp.routes.contest.OrderTypes.OrderType
 import com.shocktrade.webapp.routes.contest.PriceTypes.PriceType
@@ -71,10 +70,10 @@ trait TradingStrategy {
     for {
       RobotRef(_, robotName, _, portfolioID) <- findRobotRef
       stocks <- researchDAO.research(options)
-      pendingOrderedSymbols <- robotDAO.findPendingOrderSymbols(robotName, portfolioID)
+      pendingOrderedSymbols <- robotDAO.findPendingOrderTickers(robotName, portfolioID)
     } yield {
       stocks
-        .filterNot(s => pendingOrderedSymbols.contains(s.symbol.orNull))
+        .filterNot(s => pendingOrderedSymbols.flatMap(_.symbol.toOption).contains(s.symbol.orNull))
         .sortBy(r => (-r.spread.orZero, r.lastTrade.orZero, -r.volume.orZero))
     }
   }
@@ -87,7 +86,7 @@ trait TradingStrategy {
   def saveOrders(orders: Seq[OrderData])(implicit robot: RobotData): Future[Int] = {
     for {
       RobotRef(_, _, _, portfolioID) <- findRobotRef
-      counts <- Future.sequence(orders.map(o => orderDAO.createOrder(portfolioID, o))).map(_.sum)
+      counts <- Future.sequence(orders.map(o => portfolioDAO.createOrder(portfolioID, o))).map(_.sum)
     } yield counts
   }
 

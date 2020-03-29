@@ -1,7 +1,9 @@
 package com.shocktrade.webapp.routes.account.dao
 
+import com.shocktrade.common.models.quote.Ticker
+import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.UserDAOMySQL.UserAwardData
-import io.scalajs.npm.mysql.{MySQL, MySQLConnectionOptions}
+import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -10,8 +12,7 @@ import scala.scalajs.js
  * User DAO (MySQL implementation)
  * @author lawrence.daniels@gmail.com
  */
-class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
-  private val conn = MySQL.createConnection(options)
+class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with UserDAO {
   private val userByIdSQL =
     """|SELECT U.*, SUM(P.funds) funds, IFNULL(SUM(S.lastTrade * PS.quantity),0) equity
        |FROM users U
@@ -21,11 +22,11 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
        |LEFT JOIN stocks S ON S.symbol = PS.symbol
        |""".stripMargin
 
-  override def findByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
+  override def findUserByID(id: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
     conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.userID = ?", js.Array(id)) map { case (rows, _) => rows.headOption }
   }
 
-  override def findByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserProfileData]] = {
+  override def findUsersByIDs(ids: Seq[String])(implicit ec: ExecutionContext): Future[js.Array[UserProfileData]] = {
     conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.userID IN (${ids.map(id => s"'$id'").mkString(",")})") map { case (rows, _) => rows }
   }
 
@@ -37,7 +38,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
   //    Account Management
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  override def createAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
+  override def createUserAccount(account: UserAccountData)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
     import account._
     for {
       ok <- conn.executeFuture(
@@ -69,7 +70,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
       .map(_.affectedRows)
   }
 
-  override def findIcon(userID: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]] = {
+  override def findUserIcon(userID: String)(implicit ec: ExecutionContext): Future[Option[UserIconData]] = {
     conn.queryFuture[UserIconData]("SELECT * FROM user_icons WHERE userID = ?", js.Array(userID))
       .map { case (rows, _) => rows.headOption }
   }
@@ -82,9 +83,8 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
     conn.executeFuture("REPLACE INTO favorite_symbols (userID, symbol) VALUES (?, ?)", js.Array(userID, symbol)) map (_.affectedRows)
   }
 
-  override def findFavoriteSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]] = {
-    conn.queryFuture[SymbolData]("SELECT symbol FROM favorite_symbols WHERE userID = ?", js.Array(userID))
-      .map { case (rows, _) => rows.flatMap(_.symbol.toOption) }
+  override def findFavoriteSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]] = {
+    conn.queryFuture[Ticker]("SELECT symbol FROM favorite_symbols WHERE userID = ?", js.Array(userID)).map(_._1)
   }
 
   override def removeFavoriteSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {
@@ -99,9 +99,8 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends UserDAO {
     conn.executeFuture("REPLACE INTO recent_symbols (userID, symbol) VALUES (?, ?)", js.Array(userID, symbol)) map (_.affectedRows)
   }
 
-  override def findRecentSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[String]] = {
-    conn.queryFuture[SymbolData]("SELECT symbol FROM recent_symbols WHERE userID = ?", js.Array(userID))
-      .map { case (rows, _) => rows.flatMap(_.symbol.toOption) }
+  override def findRecentSymbols(userID: String)(implicit ec: ExecutionContext): Future[js.Array[Ticker]] = {
+    conn.queryFuture[Ticker]("SELECT symbol FROM recent_symbols WHERE userID = ?", js.Array(userID)).map(_._1)
   }
 
   override def removeRecentSymbol(userID: String, symbol: String)(implicit ec: ExecutionContext): Future[Int] = {

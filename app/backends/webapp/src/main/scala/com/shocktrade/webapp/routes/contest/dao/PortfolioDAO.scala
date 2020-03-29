@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.models.contest.PortfolioBalance
+import com.shocktrade.common.models.contest.{ChartData, PortfolioBalance}
+import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -13,23 +14,61 @@ import scala.scalajs.js
  */
 trait PortfolioDAO {
 
-  def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
+  ///////////////////////////////////////////////////////////////////////
+  //  Order Management
+  ///////////////////////////////////////////////////////////////////////
 
-  def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
+  def cancelOrder(orderID: String): Future[Int]
 
-  def findByContest(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[PortfolioData]]
+  def createOrder(portfolioID: String, order: OrderData): Future[Int]
 
-  def findByUser(userID: String)(implicit ec: ExecutionContext): Future[js.Array[PortfolioData]]
+  def createOrder(contestID: String, userID: String, order: OrderData): Future[Int]
 
-  def findHeldSecurities(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[String]]
+  def findOrders(contestID: String, userID: String): Future[js.Array[OrderData]]
 
-  def findPurchasedPerks(portfolioID: String)(implicit ec: ExecutionContext): Future[js.Array[PerkData]] = ???
+  ///////////////////////////////////////////////////////////////////////
+  //  Perks Management
+  ///////////////////////////////////////////////////////////////////////
 
-  def findPortfolio(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
+  /**
+   * Retrieves the collection of available perks
+   * @return the collection of available [[PerkData perks]]
+   */
+  def findAvailablePerks: Future[js.Array[PerkData]]
 
-  def findPortfolioBalance(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioBalance]]
+  /**
+   * Retrieves the collection of perks
+   * @return the collection of available [[PerkData perks]]
+   */
+  def findPerks: Future[js.Array[PerkData]]
 
-  def purchasePerks(portfolioID: String, purchasePerkCodes: Seq[String], perksCost: Double)(implicit ec: ExecutionContext): Future[Int] = ???
+  def findPurchasedPerks(portfolioID: String): Future[js.Array[PerkData]] = ???
+
+  def purchasePerks(portfolioID: String, purchasePerkCodes: Seq[String], perksCost: Double): Future[Int] = ???
+
+  ///////////////////////////////////////////////////////////////////////
+  //  Portfolio Management
+  ///////////////////////////////////////////////////////////////////////
+
+  def findPortfolioBalance(contestID: String, userID: String): Future[Option[PortfolioBalance]]
+
+  def findPortfolioByID(portfolioID: String): Future[Option[PortfolioData]]
+
+  def findPortfolioByUser(contestID: String, userID: String): Future[Option[PortfolioData]]
+
+  def findPortfoliosByContest(contestID: String): Future[js.Array[PortfolioData]]
+
+  def findPortfoliosByUser(userID: String): Future[js.Array[PortfolioData]]
+
+  ///////////////////////////////////////////////////////////////////////
+  //  Position Management
+  ///////////////////////////////////////////////////////////////////////
+
+  def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]]
+
+  def findHeldSecurities(portfolioID: String): Future[js.Array[Ticker]]
+
+  def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]]
 
 }
 
@@ -44,6 +83,8 @@ object PortfolioDAO {
    * @param options the given [[MySQLConnectionOptions]]
    * @return a new [[PortfolioDAO Portfolio DAO]]
    */
-  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): PortfolioDAO = new PortfolioDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions)(implicit ec: ExecutionContext): PortfolioDAO = {
+    new PortfolioDAOMySQL(options)
+  }
 
 }

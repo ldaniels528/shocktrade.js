@@ -61,17 +61,21 @@ CREATE TABLE user_sessions (
 
 DROP TABLE IF EXISTS favorite_symbols;
 CREATE TABLE favorite_symbols (
+    uid INTEGER AUTO_INCREMENT PRIMARY KEY,
     userID CHAR(36) NOT NULL,
     symbol VARCHAR(12) NOT NULL,
+    `exchange` VARCHAR(12) NULL,
     creationTime DATETIME NOT NULL DEFAULT now(),
-    PRIMARY KEY(userID, symbol)
+    KEY(userID, symbol, `exchange`)
 );
 
 DROP TABLE IF EXISTS recent_symbols;
 CREATE TABLE recent_symbols (
+    uid INTEGER AUTO_INCREMENT PRIMARY KEY,
     userID CHAR(36) NOT NULL,
     symbol VARCHAR(12) NOT NULL,
+    `exchange` VARCHAR(12) NULL,
     creationTime DATETIME NOT NULL DEFAULT now(),
-    PRIMARY KEY(userID, symbol)
+    KEY(userID, symbol, `exchange`)
 );
 

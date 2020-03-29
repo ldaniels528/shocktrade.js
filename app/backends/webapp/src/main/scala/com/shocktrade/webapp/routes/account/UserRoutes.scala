@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
  */
 class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserDAO) {
   // individual item
-  app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createAccount(request, response, next))
+  app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createUserAccount(request, response, next))
   app.get("/api/user/:userID", (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
   app.get("/api/user/:userID/icon", (request: Request, response: Response, next: NextFunction) => findUserIcon(request, response, next))
   app.put("/api/user/:userID/favorite/:symbol", (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
@@ -78,7 +78,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     }
   }
 
-  def createAccount(request: Request, response: Response, next: NextFunction): Unit = {
+  def createUserAccount(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.bodyAs[SignUpForm]
     val args = (for {
       username <- form.username
@@ -90,7 +90,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     args match {
       case Some((username, email, password, passwordConfirm)) =>
         val outcome = for {
-          account_? <- userDAO.createAccount(new UserAccountData(
+          account_? <- userDAO.createUserAccount(new UserAccountData(
             username = username,
             email = email,
             password = password,
@@ -110,7 +110,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
 
   def findUserByID(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    userDAO.findByID(userID) onComplete {
+    userDAO.findUserByID(userID) onComplete {
       case Success(Some(user)) => response.send(user); next()
       case Success(None) => response.notFound(request.params); next()
       case Failure(e) => response.internalServerError(e); next()
@@ -119,7 +119,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
 
   def findUsersByIDs(request: Request, response: Response, next: NextFunction): Unit = {
     val userIDs = request.query.get("ids").toList.flatMap(_.split("[+]"))
-    userDAO.findByIDs(userIDs) onComplete {
+    userDAO.findUsersByIDs(userIDs) onComplete {
       case Success(users) => response.send(users); next()
       case Failure(e) => response.internalServerError(e); next()
     }
@@ -128,7 +128,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
   def findUserIcon(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
     val outcome = for {
-      icon_? <- userDAO.findIcon(userID)
+      icon_? <- userDAO.findUserIcon(userID)
       (mime, image) <- icon_? match {
         case Some(icon) => Future.successful((icon.mime, icon.image))
         case None => Fs.readFileFuture("./public/images/avatars/avatar100.png").map(image => ("image/png": js.UndefOr[String], image))

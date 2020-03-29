@@ -1,8 +1,8 @@
 package com.shocktrade.webapp.routes.robot.dao
 
 import com.shocktrade.common.models.contest.ContestRef
+import com.shocktrade.common.models.quote.Ticker
 import com.shocktrade.server.dao.MySQLDAO
-import com.shocktrade.webapp.routes.account.dao.SymbolData
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,15 +31,15 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |""".stripMargin, js.Array(username, limit)).map(_._1)
   }
 
-  override def findPendingOrderSymbols(username: String, portfolioID: String): Future[js.Array[String]] = {
-    conn.queryFuture[SymbolData](
-      """|SELECT O.symbol
+  override def findPendingOrderTickers(username: String, portfolioID: String): Future[js.Array[Ticker]] = {
+    conn.queryFuture[Ticker](
+      """|SELECT O.symbol, O.exchange
          |FROM robots R
          |INNER JOIN users U ON R.username = U.username
          |INNER JOIN portfolios P ON P.userID = U.userID
          |INNER JOIN orders O ON O.portfolioID = P.portfolioID
          |WHERE R.username = ? AND P.portfolioID = ?
-         |""".stripMargin, js.Array(username, portfolioID)) map (_._1.flatMap(_.symbol.toOption))
+         |""".stripMargin, js.Array(username, portfolioID)) map (_._1)
   }
 
   override def findRobot(username: String): Future[js.Array[RobotData]] = {

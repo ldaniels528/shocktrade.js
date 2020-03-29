@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
  * Contest Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, perksDAO: PerksDAO, positionDAO: PositionDAO) {
+class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, portfolioDAO: PortfolioDAO) {
   // individual contests
   app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
   app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
@@ -85,7 +85,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
    * Retrieves available perks
    */
   def findPerks(request: Request, response: Response, next: NextFunction): Unit = {
-    perksDAO.findAvailablePerks onComplete {
+    portfolioDAO.findAvailablePerks onComplete {
       case Success(perks) => response.send(perks); next()
       case Failure(e) => response.internalServerError(e); next()
     }
@@ -122,7 +122,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
   def findChart(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
-    positionDAO.findChart(contestID, userID, chart) onComplete {
+    portfolioDAO.findChart(contestID, userID, chart) onComplete {
       case Success(data) => response.send(data); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }

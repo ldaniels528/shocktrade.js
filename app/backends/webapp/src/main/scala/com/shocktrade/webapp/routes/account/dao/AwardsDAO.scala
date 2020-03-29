@@ -1,6 +1,7 @@
-package com.shocktrade.webapp.routes.contest.dao
+package com.shocktrade.webapp.routes.account.dao
 
 import com.shocktrade.server.dao.DataAccessObjectHelper
+import com.shocktrade.webapp.routes.contest.dao.AwardsDAOMySQL
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
 import scala.concurrent.{ExecutionContext, Future}
