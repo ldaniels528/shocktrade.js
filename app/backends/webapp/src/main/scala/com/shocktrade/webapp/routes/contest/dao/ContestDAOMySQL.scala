@@ -1,5 +1,7 @@
 package com.shocktrade.webapp.routes.contest.dao
 
+import java.util.UUID
+
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import com.shocktrade.server.dao.MySQLDAO
@@ -23,6 +25,14 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
         friendsOnly ?? false, invitationOnly ?? false, levelCap.flatMap(_.value) ?? 0, perksAllowed ?? true, robotsAllowed ?? true
       ).map(_.orNull)
     ) map { case (rows, _) => rows.headOption }
+  }
+
+  override def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int] = {
+    import portfolio._
+    conn.executeFuture(
+      """|INSERT INTO portfolios (portfolioID, contestID, userID, funds) VALUES (?, ?, ?, ?)
+         |""".stripMargin,
+      js.Array(portfolioID.getOrElse(UUID.randomUUID().toString), contestID, userID, funds)) map (_.affectedRows)
   }
 
   override def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]] = {
@@ -56,14 +66,6 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {
     conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
       .map { case (rows, _) => rows }
-  }
-
-  override def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-    conn.executeFuture("CALL joinContest(?, ?)", js.Array(contestID, userID)).map(_.affectedRows > 0)
-  }
-
-  override def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-    conn.executeFuture("CALL quitContest(?, ?)", js.Array(contestID, userID)).map(_.affectedRows > 0)
   }
 
   override def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]] = {
@@ -129,6 +131,24 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
          |ORDER BY CC.creationTime ASC
          |""".stripMargin,
       js.Array(contestID)) map { case (rows, _) => rows }
+  }
+
+  override def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int] = {
+
+    def deductFee(userID: String, startingBalance: js.UndefOr[Double]): Future[Int] = {
+      conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ? AND wallet >= ?",
+        js.Array(startingBalance, userID, startingBalance)).map(_.affectedRows)
+    }
+
+    for {
+      Some(contest) <- findOneByID(contestID)
+      w1 <- deductFee(userID, contest.startingBalance) if w1 == 1
+      w0 <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance)) if w0 == 1
+    } yield w0
+  }
+
+  override def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int] = {
+    conn.executeFuture("CALL quitContest(?, ?)", js.Array(contestID, userID)).map(_.affectedRows)
   }
 
 }

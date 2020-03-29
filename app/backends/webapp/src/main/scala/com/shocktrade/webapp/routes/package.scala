@@ -1,7 +1,15 @@
 package com.shocktrade.webapp
 
+import com.shocktrade.server.common.TradingClock
+import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserDAO}
+import com.shocktrade.webapp.routes.contest.dao._
+import com.shocktrade.webapp.routes.discover.dao._
+import com.shocktrade.webapp.routes.research.dao.ResearchDAO
+import com.shocktrade.webapp.routes.robot.dao.RobotDAO
+import com.shocktrade.webapp.routes.social.dao.PostDAO
 import io.scalajs.npm.express.{Request, Response}
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 
 /**
@@ -11,6 +19,27 @@ import scala.scalajs.js
 package object routes {
 
   type NextFunction = js.Function0[Unit]
+
+  object dao {
+
+    implicit val authenticationDAO: AuthenticationDAO = AuthenticationDAO()
+    implicit val autoCompleteDAO: AutoCompleteDAO = AutoCompleteDAO()
+    implicit val contestDAO: ContestDAO = ContestDAO()
+    implicit val exploreDAO: ExploreDAO = ExploreDAO()
+    implicit val globalSearchDAO: GlobalSearchDAO = GlobalSearchDAO()
+    implicit val newsDAO: NewsSourceDAO = NewsSourceDAO()
+    implicit val orderDAO: OrderDAO = OrderDAO()
+    implicit val perksDAO: PerksDAO = PerksDAO()
+    implicit val portfolioDAO: PortfolioDAO = PortfolioDAO()
+    implicit val positionDAO: PositionDAO = PositionDAO()
+    implicit val postDAO: PostDAO = PostDAO()
+    implicit val researchDAO: ResearchDAO = ResearchDAO()
+    implicit val robotDAO: RobotDAO = RobotDAO()
+    implicit val stockQuoteDAO: StockQuoteDAO = StockQuoteDAO()
+    implicit val tradingClock: TradingClock = new TradingClock()
+    implicit val userDAO: UserDAO = UserDAO()
+
+  }
 
   /**
    * Request Extensions

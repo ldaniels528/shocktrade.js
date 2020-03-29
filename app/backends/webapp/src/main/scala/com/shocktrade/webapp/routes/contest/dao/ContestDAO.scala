@@ -16,15 +16,13 @@ trait ContestDAO {
 
   def create(form: ContestCreationForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]]
 
+  def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
+
   def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]]
 
   def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]]
 
   def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]]
-
-  def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
-
-  def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]]
 
@@ -37,6 +35,10 @@ trait ContestDAO {
   def addChatMessage(contestID: String, userID: String, message: String)(implicit ec: ExecutionContext): Future[Int]
 
   def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]]
+
+  def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int]
+
+  def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int]
 
 }
 

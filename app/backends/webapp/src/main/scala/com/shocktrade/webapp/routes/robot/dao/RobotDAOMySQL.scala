@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.robot.dao
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.account.dao.SymbolData
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -12,6 +13,23 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with RobotDAO {
+
+  override def findContestsToJoin(username: String, limit: Int): Future[js.Array[ContestRef]] = {
+    conn.queryFuture[ContestRef](
+      """|SELECT contestID, name
+         |FROM contests
+         |WHERE contestID NOT IN (
+         |	SELECT C.contestID
+         |	FROM users U
+         |	INNER JOIN portfolios P ON U.userID = P.userID
+         |	INNER JOIN contests C ON P.contestID = C.contestID
+         |  INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
+         |	WHERE U.username = ?
+         |  AND CS.status = 'ACTIVE'
+         |)
+         |LIMIT ?
+         |""".stripMargin, js.Array(username, limit)).map(_._1)
+  }
 
   override def findPendingOrderSymbols(username: String, portfolioID: String): Future[js.Array[String]] = {
     conn.queryFuture[SymbolData](

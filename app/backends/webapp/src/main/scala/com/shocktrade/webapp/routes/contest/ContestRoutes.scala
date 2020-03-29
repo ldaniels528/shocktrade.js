@@ -131,7 +131,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     contestDAO.join(contestID, userID) onComplete {
-      case Success(data) => response.send(data); next()
+      case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }
@@ -139,7 +139,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     contestDAO.quit(contestID, userID) onComplete {
-      case Success(data) => response.send(data); next()
+      case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }

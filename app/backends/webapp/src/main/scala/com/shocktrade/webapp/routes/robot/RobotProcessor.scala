@@ -1,12 +1,12 @@
 package com.shocktrade.webapp.routes.robot
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.LoggerFactory
-import com.shocktrade.webapp.routes.contest.dao.{ContestDAO, OrderDAO}
-import com.shocktrade.webapp.routes.research.dao.ResearchDAO
+import com.shocktrade.webapp.routes.dao._
 import com.shocktrade.webapp.routes.robot.RobotProcessor._
-import com.shocktrade.webapp.routes.robot.dao.RobotDAO
+import com.shocktrade.webapp.routes.robot.dao.RobotData
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
@@ -14,7 +14,7 @@ import scala.util.{Failure, Success}
  * Robot Processor
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class RobotProcessor()(implicit ec: ExecutionContext, contestDAO: ContestDAO, orderDAO: OrderDAO, researchDAO: ResearchDAO, robotDAO: RobotDAO) {
+class RobotProcessor()(implicit ec: ExecutionContext) {
   private val logger = LoggerFactory.getLogger(getClass)
   private val strategies = js.Dictionary[TradingStrategy](
     PENNY_STOCK -> new PennyStockTradingStrategy()
@@ -24,18 +24,44 @@ class RobotProcessor()(implicit ec: ExecutionContext, contestDAO: ContestDAO, or
    * Allows all robots an opportunity to invest
    */
   def run(): Unit = {
-    val outcome = robotDAO.findRobots(isActive = true) map { robots =>
+    val outcome = robotDAO.findRobots(isActive = true).flatMap(execute)
+    outcome onComplete {
+      case Success(responses) =>
+        responses foreach { response =>
+          if (response.counts > 0) logger.info(s"response: $response")
+        }
+      case Failure(e) =>
+        logger.error("Robot failure", e)
+    }
+  }
+
+  private def execute(robots: js.Array[RobotData]): Future[List[RobotActivity]] = {
+    for {
+      activitiesA <- findContestsToJoin(robots)
+      activitiesB <- managePortfolios(robots)
+    } yield activitiesA ::: activitiesB
+  }
+
+  private def findContestsToJoin(robots: js.Array[RobotData]): Future[List[RobotActivity]] = {
+    val robotRefs = robots.groupBy(_.userID).flatMap { case (_, list) => list.headOption }.map(RobotRef.apply).toList
+    Future.sequence(robotRefs map { case robotRef@RobotRef(robotUserID, robotName, _, _) =>
+      for {
+        contestRefs <- robotDAO.findContestsToJoin(robotName, limit = 1)
+        counts <- Future.sequence(contestRefs.toSeq map {
+          case ContestRef(contestID, _) => contestDAO.join(contestID, robotUserID)
+        }).map(_.sum)
+      } yield JoinedContestActivity(robotRef, contestRefs, counts)
+    })
+  }
+
+  private def managePortfolios(robots: js.Array[RobotData]): Future[List[RobotActivity]] = {
+    Future.sequence {
       for {
         robot <- robots.toList
         strategyName <- robot.strategy.toList
         strategy <- strategies.get(strategyName).toList
       } yield strategy.operate(robot)
-    }
-
-    outcome onComplete {
-      case Success(_) =>
-      case Failure(e) => logger.error("Robot failure", e)
-    }
+    } map (_.flatten)
   }
 
 }

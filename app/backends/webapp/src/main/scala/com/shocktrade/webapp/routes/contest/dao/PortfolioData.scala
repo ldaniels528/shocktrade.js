@@ -1,21 +1,15 @@
 package com.shocktrade.webapp.routes.contest.dao
 
+import java.util.UUID
+
 import scala.scalajs.js
 
 /**
  * Portfolio Data model for the Qualification Engine
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PortfolioData(var portfolioID: js.UndefOr[String] = js.undefined,
-                    var contestID: js.UndefOr[String] = js.undefined,
-                    var userID: js.UndefOr[String] = js.undefined,
-
-                    // common fields
-                    var funds: js.UndefOr[Double] = js.undefined,
-                    var asOfDate: js.UndefOr[js.Date] = js.undefined,
-                    var active: js.UndefOr[Boolean] = js.undefined,
-
-                    // administrative fields
-                    var lastUpdate: js.UndefOr[js.Date] = js.undefined,
-                    var nextUpdate: js.UndefOr[js.Date] = js.undefined,
-                    var processingHost: js.UndefOr[String] = js.undefined) extends js.Object
+class PortfolioData(val portfolioID: js.UndefOr[String] = UUID.randomUUID().toString,
+                    val contestID: js.UndefOr[String] = js.undefined,
+                    val userID: js.UndefOr[String] = js.undefined,
+                    val funds: js.UndefOr[Double] = js.undefined,
+                    val joinTime: js.UndefOr[js.Date] = js.undefined) extends js.Object

@@ -1,6 +1,7 @@
 package com.shocktrade.webapp.routes.robot
 package dao
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -12,6 +13,8 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 trait RobotDAO {
+
+  def findContestsToJoin(robotUsername: String, limit: Int): Future[js.Array[ContestRef]]
 
   def findPendingOrderSymbols(robotUsername: String, portfolioID: String): Future[js.Array[String]]
 

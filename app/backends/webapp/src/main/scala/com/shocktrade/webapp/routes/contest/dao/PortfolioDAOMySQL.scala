@@ -14,15 +14,6 @@ import scala.scalajs.js
  */
 class PortfolioDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) with PortfolioDAO {
 
-  override def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int] = {
-    import portfolio._
-    conn.executeFuture(
-      """|INSERT INTO portfolios (portfolioID, contestID, userID, funds, asOfDate, active)
-         |VALUES (uuid(), ?, ?, ?, ?, ?)
-         |""".stripMargin,
-      js.Array(contestID, userID, funds, asOfDate, active)) map (_.affectedRows)
-  }
-
   override def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]] = {
     conn.queryFuture[PortfolioData](
       """|SELECT *

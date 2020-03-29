@@ -1,20 +1,15 @@
 package com.shocktrade.webapp
 
 import com.shocktrade.common.util.StringHelper._
+import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.server.common.ProcessHelper._
-import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.account._
 import com.shocktrade.webapp.routes.account.dao._
 import com.shocktrade.webapp.routes.contest._
-import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.routes.discover._
-import com.shocktrade.webapp.routes.discover.dao._
 import com.shocktrade.webapp.routes.research.ResearchRoutes
-import com.shocktrade.webapp.routes.research.dao.ResearchDAO
-import com.shocktrade.webapp.routes.robot.dao.RobotDAO
 import com.shocktrade.webapp.routes.robot.{RobotProcessor, RobotRoutes}
-import com.shocktrade.webapp.routes.social.dao.PostDAO
 import com.shocktrade.webapp.routes.social.{PostAttachmentRoutes, PostRoutes, SocialRoutes}
 import io.scalajs.nodejs._
 import io.scalajs.npm.bodyparser._
@@ -94,23 +89,7 @@ object WebServerJsApp {
   }
 
   private def setupRoutes(app: Application with WsRouting): Unit = {
-    // declare the DAOs
-    implicit val authenticationDAO: AuthenticationDAO = AuthenticationDAO()
-    implicit val autoCompleteDAO: AutoCompleteDAO = AutoCompleteDAO()
-    implicit val contestDAO: ContestDAO = ContestDAO()
-    implicit val exploreDAO: ExploreDAO = ExploreDAO()
-    implicit val globalSearchDAO: GlobalSearchDAO = GlobalSearchDAO()
-    implicit val newsDAO: NewsSourceDAO = NewsSourceDAO()
-    implicit val orderDAO: OrderDAO = OrderDAO()
-    implicit val perksDAO: PerksDAO = PerksDAO()
-    implicit val portfolioDAO: PortfolioDAO = PortfolioDAO()
-    implicit val positionDAO: PositionDAO = PositionDAO()
-    implicit val postDAO: PostDAO = PostDAO()
-    implicit val researchDAO: ResearchDAO = ResearchDAO()
-    implicit val robotDAO: RobotDAO = RobotDAO()
-    implicit val stockQuoteDAO: StockQuoteDAO = StockQuoteDAO()
-    implicit val tradingClock: TradingClock = new TradingClock()
-    implicit val userDAO: UserDAO = UserDAO()
+    import routes.dao._
 
     // setup web socket routes
     logger.info("Setting up web socket...")

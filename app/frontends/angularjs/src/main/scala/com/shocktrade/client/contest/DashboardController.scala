@@ -8,10 +8,12 @@ import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope}
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
+import com.shocktrade.common.Ok
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Interval, Timeout, injected}
 import io.scalajs.util.DurationHelper._
@@ -173,87 +175,81 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Contest Management Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.deleteContest = (aContest: js.UndefOr[String]) => deleteContest(aContest)
+  $scope.deleteContest = (aContestID: js.UndefOr[String]) => aContestID.map(deleteContest)
 
-  $scope.joinContest = (aContestID: js.UndefOr[String]) => joinContest(aContestID)
+  $scope.joinContest = (aContestID: js.UndefOr[String]) => {
+    for {contestID <- aContestID; userID <- gameState.userID} yield joinContest(contestID, userID)
+  }
 
-  $scope.quitContest = (aContestID: js.UndefOr[String]) => quitContest(aContestID)
+  $scope.quitContest = (aContestID: js.UndefOr[String]) => {
+    for {contestID <- aContestID; userID <- gameState.userID} yield quitContest(contestID, userID)
+  }
 
-  $scope.startContest = (aContestID: js.UndefOr[String]) => startContest(aContestID)
+  $scope.startContest = (aContestID: js.UndefOr[String]) => aContestID.map(startContest)
 
-  private def deleteContest(aContestID: js.UndefOr[String]): Unit = {
-    for {
-      contestId <- aContestID
-    } {
-      $scope.isDeleting = true
-      asyncLoading($scope)(contestService.deleteContest(contestId)) onComplete {
-        case Success(response) =>
-          console.log(s"response = ${JSON.stringify(response.data)}")
-          $scope.initDash()
+  private def deleteContest(contestID: String): js.Promise[HttpResponse[Ok]] = {
+    $scope.isDeleting = true
+    val outcome = contestService.deleteContest(contestID)
+    outcome onComplete {
+      case Success(response) =>
+        console.log(s"response = ${JSON.stringify(response.data)}")
+        $scope.initDash()
+        $timeout(() => $scope.isDeleting = false, 0.5.seconds)
+      case Failure(e) =>
+        toaster.error("Error!", "Failed to delete contest")
+        console.error("An error occurred while deleting the contest")
           $timeout(() => $scope.isDeleting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error("Error!", "Failed to delete contest")
-          console.error("An error occurred while deleting the contest")
-          $timeout(() => $scope.isDeleting = false, 0.5.seconds)
       }
-    }
+      outcome
   }
 
-  private def joinContest(aContestID: js.UndefOr[String]): Unit = {
-    for {
-      contestID <- aContestID
-      userID <- gameState.userID
-    } {
-      $scope.isJoining = true
-      asyncLoading($scope)(contestService.joinContest(contestID, userID)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest()
-          $scope.$apply { () => }
-          $timeout(() => $scope.isJoining = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error(title = "Error!", body = "Failed to join contest")
-          console.error("An error occurred while joining the contest")
-          $timeout(() => $scope.isJoining = false, 0.5.seconds)
-      }
+  private def joinContest(contestID: String, userID: String): js.Promise[HttpResponse[Ok]] = {
+    $scope.isJoining = true
+    val outcome = contestService.joinContest(contestID, userID)
+    outcome onComplete {
+      case Success(response) =>
+        console.info(s"response = ${JSON.stringify(response.data)}")
+        gameState.refreshContest()
+        $scope.$apply { () => }
+        $timeout(() => $scope.isJoining = false, 0.5.seconds)
+      case Failure(e) =>
+        toaster.error(title = "Error!", body = "Failed to join contest")
+        console.error("An error occurred while joining the contest")
+        $timeout(() => $scope.isJoining = false, 0.5.seconds)
     }
+    outcome
   }
 
-  private def quitContest(aContestID: js.UndefOr[String]): Unit = {
-    for {
-      userId <- gameState.userID
-      contestId <- aContestID
-    } {
-      $scope.isQuiting = true
-      asyncLoading($scope)(contestService.quitContest(contestId, userId)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          gameState.refreshContest()
-          $scope.$apply { () => }
-          $timeout(() => $scope.isQuiting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error(title = "Error!", e.displayMessage)
-          console.error("An error occurred while joining the contest")
-          $timeout(() => $scope.isQuiting = false, 0.5.seconds)
-      }
+  private def quitContest(contestId: String, userId: String): js.Promise[HttpResponse[Ok]] = {
+    $scope.isQuiting = true
+    val outcome = contestService.quitContest(contestId, userId)
+    outcome onComplete {
+      case Success(response) =>
+        console.info(s"response = ${JSON.stringify(response.data)}")
+        gameState.refreshContest()
+        $scope.$apply { () => }
+        $timeout(() => $scope.isQuiting = false, 0.5.seconds)
+      case Failure(e) =>
+        toaster.error(title = "Error!", e.displayMessage)
+        console.error("An error occurred while joining the contest")
+        $timeout(() => $scope.isQuiting = false, 0.5.seconds)
     }
+    outcome
   }
 
-  private def startContest(aContestID: js.UndefOr[String]): Unit = {
-    for {
-      contestID <- aContestID
-    } {
-      $scope.isStarting = true
-      asyncLoading($scope)(contestService.startContest(contestID)) onComplete {
-        case Success(response) =>
-          console.info(s"response = ${JSON.stringify(response.data)}")
-          $timeout(() => $scope.isStarting = false, 0.5.seconds)
-        case Failure(e) =>
-          toaster.error("An error occurred while starting the contest")
-          console.error(s"Error starting contest: ${e.getMessage}")
-          $timeout(() => $scope.isStarting = false, 0.5.seconds)
-      }
+  private def startContest(contestID: String): js.Promise[HttpResponse[Ok]] = {
+    $scope.isStarting = true
+    val outcome = contestService.startContest(contestID)
+    outcome onComplete {
+      case Success(response) =>
+        console.info(s"response = ${JSON.stringify(response.data)}")
+        $timeout(() => $scope.isStarting = false, 0.5.seconds)
+      case Failure(e) =>
+        toaster.error("An error occurred while starting the contest")
+        console.error(s"Error starting contest: ${e.getMessage}")
+        $timeout(() => $scope.isStarting = false, 0.5.seconds)
     }
+    outcome
   }
 
 }
@@ -288,10 +284,10 @@ object DashboardController {
     var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // contest management functions
-    var deleteContest: js.Function1[js.UndefOr[String], Unit] = js.native
-    var joinContest: js.Function1[js.UndefOr[String], Unit] = js.native
-    var quitContest: js.Function1[js.UndefOr[String], Unit] = js.native
-    var startContest: js.Function1[js.UndefOr[String], Unit] = js.native
+    var deleteContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
+    var joinContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
+    var quitContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
+    var startContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
 
     // contest management variables
     var isJoining: js.UndefOr[Boolean] = js.native

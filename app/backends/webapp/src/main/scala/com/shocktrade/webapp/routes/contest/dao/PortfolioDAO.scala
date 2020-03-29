@@ -13,8 +13,6 @@ import scala.scalajs.js
  */
 trait PortfolioDAO {
 
-  def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
-
   def findOneByUser(userID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]
 
   def findOneByID(portfolioID: String)(implicit ec: ExecutionContext): Future[Option[PortfolioData]]

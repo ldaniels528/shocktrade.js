@@ -27,19 +27,19 @@ class ContestService($http: Http) extends Service {
     $http.post("/api/contest", form)
   }
 
-  def deleteContest(contestID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+  def deleteContest(contestID: String): js.Promise[HttpResponse[Ok]] = {
     $http.delete(s"/api/contest/$contestID")
   }
 
-  def joinContest(contestID: String, userID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+  def joinContest(contestID: String, userID: String): js.Promise[HttpResponse[Ok]] = {
     $http.put(s"/api/contest/$contestID/user/$userID")
   }
 
-  def quitContest(contestID: String, userID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+  def quitContest(contestID: String, userID: String): js.Promise[HttpResponse[Ok]] = {
     $http.delete(s"/api/contest/$contestID/user/$userID")
   }
 
-  def startContest(contestID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+  def startContest(contestID: String): js.Promise[HttpResponse[Ok]] = {
     $http.get(s"/api/contest/$contestID/start")
   }
 

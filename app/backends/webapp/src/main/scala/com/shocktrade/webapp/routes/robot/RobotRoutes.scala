@@ -15,6 +15,7 @@ import scala.util.{Failure, Success}
 class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: RobotDAO) {
   // API routes
   app.get("/api/robot/:name", (request: Request, response: Response, next: NextFunction) => findRobot(request, response, next))
+  app.get("/api/robot/:name/fomo", (request: Request, response: Response, next: NextFunction) => findContestsToJoin(request, response, next))
   app.get("/api/robot/:name/off", (request: Request, response: Response, next: NextFunction) => toggleRobot(request, response, next, isActive = false))
   app.get("/api/robot/:name/on", (request: Request, response: Response, next: NextFunction) => toggleRobot(request, response, next, isActive = true))
   app.get("/api/robots", (request: Request, response: Response, next: NextFunction) => findRobots(request, response, next))
@@ -22,6 +23,14 @@ class RobotRoutes(app: Application)(implicit ec: ExecutionContext, robotDAO: Rob
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
+
+  def findContestsToJoin(request: Request, response: Response, next: NextFunction): Unit = {
+    val username = request.params("name")
+    robotDAO.findContestsToJoin(username, limit = 20) onComplete {
+      case Success(contestRefs) => response.send(contestRefs); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
 
   def findRobot(request: Request, response: Response, next: NextFunction): Unit = {
     val username = request.params("name")
