@@ -11,6 +11,7 @@ CREATE TABLE contests (
      hostUserID CHAR(36) NOT NULL,
      statusID INTEGER NOT NULL DEFAULT 2,
      startingBalance DECIMAL(12,5) NOT NULL,
+     timeOffset BIGINT NOT NULL DEFAULT 0,
      friendsOnly SMALLINT NOT NULL DEFAULT 0,
      invitationOnly SMALLINT NOT NULL DEFAULT 0,
      levelCap INTEGER NOT NULL DEFAULT 0,

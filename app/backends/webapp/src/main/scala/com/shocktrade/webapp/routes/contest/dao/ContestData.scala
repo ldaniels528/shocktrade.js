@@ -13,6 +13,7 @@ class ContestData(var contestID: js.UndefOr[String],
                   var expirationTime: js.UndefOr[js.Date],
                   var startingBalance: js.UndefOr[Double],
                   var status: js.UndefOr[String],
+                  var timeOffset: js.UndefOr[Double] = js.undefined,
                   // indicators
                   var friendsOnly: js.UndefOr[Boolean],
                   var invitationOnly: js.UndefOr[Boolean],

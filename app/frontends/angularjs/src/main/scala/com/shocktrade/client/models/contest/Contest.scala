@@ -14,6 +14,7 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
               var startTime: js.UndefOr[js.Date] = js.undefined,
               var startingBalance: js.UndefOr[Double] = js.undefined,
               var status: js.UndefOr[String] = js.undefined,
+              var timeOffset: js.UndefOr[Double] = js.undefined,
               // portfolios & rankings
               var portfolios: js.UndefOr[js.Array[Portfolio]] = js.undefined,
               var rankings: js.UndefOr[js.Array[ContestRanking]] = js.undefined,
@@ -22,25 +23,14 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
               var invitationOnly: js.UndefOr[Boolean] = js.undefined,
               var levelCap: js.UndefOr[Int] = js.undefined,
               var perksAllowed: js.UndefOr[Boolean] = js.undefined,
-              var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends js.Object {
-
-  // administrative fields
-  var error: js.UndefOr[String] = js.undefined
-  var loading: js.UndefOr[Boolean] = js.undefined
-  var rankingsHidden: js.UndefOr[Boolean] = js.undefined
-  var deleting: Boolean = false
-  var joining: Boolean = false
-  var quitting: Boolean = false
-  var starting: Boolean = false
-
-}
+              var robotsAllowed: js.UndefOr[Boolean] = js.undefined) extends js.Object
 
 /**
  * Contest Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object Contest {
-  val MaxPlayers = 24
+  val MaxPlayers = 10
 
   // status constants
   val StatusActive = "ACTIVE"
@@ -48,7 +38,7 @@ object Contest {
 
   /**
    * Contest Enrichment
-   * @param contest the given [[ContestLike contest]]
+   * @param contest the given [[Contest]]
    */
   implicit class ContestEnrichment(val contest: Contest) extends AnyVal {
 

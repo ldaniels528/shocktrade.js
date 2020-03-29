@@ -58,7 +58,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $interval(() => $scope.clock = new js.Date(), 1.second)
+  $interval(() => $scope.clock = clock, 1.second)
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
@@ -68,10 +68,16 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.onUserProfileUpdated { (_, _) => initDash() }
 
   private def initDash(): Unit = {
+    $scope.resetMarketStatus($routeParams.contestID)
     for (contestID <- $routeParams.contestID) {
       loadContest(contestID)
       gameState.userID.foreach(loadPortfolio(contestID, _))
     }
+  }
+
+  private def clock: js.Date = {
+    val timeOffset = gameState.contest.flatMap(_.timeOffset).orZero
+    new js.Date(js.Date.now() - timeOffset)
   }
 
   private def loadContest(contestID: String): Unit = {

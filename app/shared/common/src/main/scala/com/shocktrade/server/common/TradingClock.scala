@@ -68,7 +68,7 @@ class TradingClock() {
   @inline
   def getNextTradeStopTime: js.Date = getNextTradingDay.hour(16).minute(0).toDate()
 
-  private def getNextTradingDay = {
+  private def getNextTradingDay: Moment = {
     val theMoment = Moment().tz(NEW_YORK_TZ)
     val delta = theMoment.day() match {
       case SUNDAY | MONDAY | TUESDAY | WEDNESDAY | THURSDAY => 1
@@ -86,7 +86,7 @@ class TradingClock() {
   @inline
   def getTradeStartTime: js.Date = getTradingDay.hour(9).minute(30).toDate()
 
-  private def getTradingDay = {
+  private def getTradingDay: Moment = {
     val delta = Moment().tz(NEW_YORK_TZ).day() match {
       case MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY => 0
       case SATURDAY => 2

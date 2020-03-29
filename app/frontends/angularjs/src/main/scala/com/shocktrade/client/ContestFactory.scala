@@ -106,6 +106,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         startTime = contest.data.startTime,
         startingBalance = contest.data.startingBalance,
         status = contest.data.status,
+        timeOffset = contest.data.timeOffset,
         // portfolios & rankings
         portfolios = portfolios.data,
         rankings = rankings.data,

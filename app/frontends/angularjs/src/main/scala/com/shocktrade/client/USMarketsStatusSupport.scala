@@ -1,9 +1,11 @@
 package com.shocktrade.client
 
 import com.shocktrade.client.discover.{MarketStatus, MarketStatusService}
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout}
+import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -19,6 +21,7 @@ trait USMarketsStatusSupport[T <: USMarketsStatusSupportScope] {
   ref: Controller =>
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
+  private var lastContestID: js.UndefOr[String] = js.undefined
 
   def $scope: T
 
@@ -28,16 +31,19 @@ trait USMarketsStatusSupport[T <: USMarketsStatusSupportScope] {
 
   def toaster: Toaster
 
-  $scope.isUSMarketsOpen = () => {
+  $scope.isUSMarketsOpen = (aContestID: js.UndefOr[String]) => {
+    val contestID = aContestID ?? lastContestID
     usMarketStatus match {
       case Left(status) => Option(status.active).orUndefined
       case Right(loading) =>
         if (!loading) {
           usMarketStatus = Right(true)
-          console.log("Retrieving market status...")
-          marketStatusService.getMarketStatus onComplete {
+          console.log(s"Retrieving market status${contestID.map(id => s" for contest $id") getOrElse ""}...")
+          val outcome = contestID.map(marketStatusService.getMarketStatus(_)) getOrElse marketStatusService.getMarketStatus
+          outcome onComplete {
             case Success(response) =>
               val status = response.data
+              console.info(JSON.stringify(status))
 
               // capture the current status
               $scope.$apply(() => usMarketStatus = Left(status))
@@ -54,6 +60,12 @@ trait USMarketsStatusSupport[T <: USMarketsStatusSupportScope] {
     }
   }
 
+  $scope.resetMarketStatus = (contestID: js.UndefOr[String]) => {
+    console.log(s"Resetting market status${contestID.map(id => s" for contest $id") getOrElse ""}...")
+    lastContestID = contestID
+    usMarketStatus = Right(false)
+  }
+
 }
 
 /**
@@ -62,6 +74,7 @@ trait USMarketsStatusSupport[T <: USMarketsStatusSupportScope] {
  */
 @js.native
 trait USMarketsStatusSupportScope extends Scope {
-  var isUSMarketsOpen: js.Function0[js.UndefOr[Boolean]] = js.native
+  var isUSMarketsOpen: js.Function1[js.UndefOr[String], js.UndefOr[Boolean]] = js.native
+  var resetMarketStatus: js.Function1[js.UndefOr[String], Unit] = js.native
 
 }

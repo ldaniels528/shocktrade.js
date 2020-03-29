@@ -1,7 +1,7 @@
 package com.shocktrade.client.discover
 
 import io.scalajs.npm.angularjs.Service
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 
 import scala.scalajs.js
 
@@ -15,9 +15,14 @@ class MarketStatusService($http: Http) extends Service {
    * Retrieves the current stock market status
    * @return the current U.S. Stock [[MarketStatus market status]]
    */
-  def getMarketStatus = {
-    $http.get[MarketStatus]("/api/tradingClock/status/0")
-  }
+  def getMarketStatus: js.Promise[HttpResponse[MarketStatus]] = $http.get("/api/tradingClock/status/0")
+
+  /**
+   * Retrieves the current stock market status
+   * @param contestID the given contest ID
+   * @return the current U.S. Stock [[MarketStatus market status]]
+   */
+  def getMarketStatus(contestID: String): js.Promise[HttpResponse[MarketStatus]] = $http.get(s"/api/tradingClock/$contestID/status/0")
 
 }
 

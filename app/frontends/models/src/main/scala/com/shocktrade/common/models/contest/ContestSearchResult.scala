@@ -11,6 +11,7 @@ import scala.scalajs.js
  * @param startTime       the contest start time
  * @param expirationTime  the contest expiration time
  * @param startingBalance the contest starting balance
+ * @param timeOffset      the contest trading time offset
  * @param playerCount     the contest player count
  * @param friendsOnly     the contest friends-only indicator
  * @param invitationOnly  the contest invitation-only indicator
@@ -29,6 +30,7 @@ class ContestSearchResult(val contestID: js.UndefOr[String],
                           val startTime: js.UndefOr[js.Date],
                           val expirationTime: js.UndefOr[js.Date],
                           val startingBalance: js.UndefOr[Double],
+                          val timeOffset: js.UndefOr[Double],
                           val playerCount: js.UndefOr[Int],
                           val closed: js.UndefOr[Boolean],
                           // options
