@@ -4,7 +4,7 @@ import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.LoggerFactory
 import com.shocktrade.webapp.routes.dao._
 import com.shocktrade.webapp.routes.robot.RobotProcessor._
-import com.shocktrade.webapp.routes.robot.dao.RobotData
+import com.shocktrade.webapp.routes.robot.dao.{RobotDAO, RobotData}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js
@@ -14,7 +14,7 @@ import scala.util.{Failure, Success}
  * Robot Processor
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class RobotProcessor()(implicit ec: ExecutionContext) {
+class RobotProcessor()(implicit ec: ExecutionContext, robotDAO: RobotDAO) {
   private val logger = LoggerFactory.getLogger(getClass)
   private val strategies = js.Dictionary[TradingStrategy](
     PENNY_STOCK -> new PennyStockTradingStrategy()

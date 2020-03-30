@@ -26,7 +26,9 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |  INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
          |	WHERE U.username = ?
          |  AND CS.status = 'ACTIVE'
+         |  AND C.robotsAllowed = 1
          |)
+         |AND robotsAllowed = 1
          |LIMIT ?
          |""".stripMargin, js.Array(username, limit)).map(_._1)
   }

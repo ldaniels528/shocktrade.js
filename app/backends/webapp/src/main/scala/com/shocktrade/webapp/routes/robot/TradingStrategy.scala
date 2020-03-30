@@ -6,7 +6,7 @@ import com.shocktrade.webapp.routes.contest.OrderTypes.OrderType
 import com.shocktrade.webapp.routes.contest.PriceTypes.PriceType
 import com.shocktrade.webapp.routes.contest.dao.OrderData
 import com.shocktrade.webapp.routes.dao._
-import com.shocktrade.webapp.routes.robot.dao.RobotData
+import com.shocktrade.webapp.routes.robot.dao.{RobotDAO, RobotData}
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.Future
@@ -66,7 +66,7 @@ trait TradingStrategy {
 
   def findRobotRef(implicit robot: RobotData): Future[RobotRef] = Future.successful(RobotRef(robot))
 
-  def findStocksToBuy(options: ResearchOptions)(implicit robot: RobotData): Future[js.Array[ResearchQuote]] = {
+  def findStocksToBuy(options: ResearchOptions)(implicit robot: RobotData, robotDAO: RobotDAO): Future[js.Array[ResearchQuote]] = {
     for {
       RobotRef(_, robotName, _, portfolioID) <- findRobotRef
       stocks <- researchDAO.research(options)
@@ -127,7 +127,7 @@ object TradingStrategy {
         creationTime = new js.Date(),
         expirationTime = js.undefined,
         processedTime = js.undefined,
-        statusMessage = js.undefined,
+        message = js.undefined,
         closed = false)
     }
   }

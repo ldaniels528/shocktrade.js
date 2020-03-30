@@ -32,7 +32,7 @@ trait OrderLike extends js.Object {
 
   def processedTime: js.UndefOr[js.Date]
 
-  def statusMessage: js.UndefOr[String]
+  def message: js.UndefOr[String]
 
 }
 

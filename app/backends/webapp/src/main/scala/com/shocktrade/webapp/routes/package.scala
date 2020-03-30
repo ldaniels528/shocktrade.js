@@ -5,7 +5,6 @@ import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserDAO}
 import com.shocktrade.webapp.routes.contest.dao._
 import com.shocktrade.webapp.routes.discover.dao._
 import com.shocktrade.webapp.routes.research.dao.ResearchDAO
-import com.shocktrade.webapp.routes.robot.dao.RobotDAO
 import com.shocktrade.webapp.routes.social.dao.PostDAO
 import io.scalajs.npm.express.{Request, Response}
 
@@ -31,7 +30,6 @@ package object routes {
     implicit val portfolioDAO: PortfolioDAO = PortfolioDAO()
     implicit val postDAO: PostDAO = PostDAO()
     implicit val researchDAO: ResearchDAO = ResearchDAO()
-    implicit val robotDAO: RobotDAO = RobotDAO()
     implicit val stockQuoteDAO: StockQuoteDAO = StockQuoteDAO()
     implicit val tradingClock: TradingClock = new TradingClock()
     implicit val userDAO: UserDAO = UserDAO()

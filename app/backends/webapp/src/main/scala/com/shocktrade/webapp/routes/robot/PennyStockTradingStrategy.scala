@@ -7,7 +7,7 @@ import com.shocktrade.webapp.routes.contest.PriceTypes.PriceType
 import com.shocktrade.webapp.routes.contest.dao.OrderData
 import com.shocktrade.webapp.routes.contest.{OrderTypes, PriceTypes}
 import com.shocktrade.webapp.routes.robot.TradingStrategy._
-import com.shocktrade.webapp.routes.robot.dao.RobotData
+import com.shocktrade.webapp.routes.robot.dao.{RobotDAO, RobotData}
 import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,7 +18,7 @@ import scala.scalajs.js.JSConverters._
  * Penny Stock Trading Strategy
  * @param ec the implicit [[ExecutionContext]]
  */
-class PennyStockTradingStrategy()(implicit ec: ExecutionContext) extends TradingStrategy {
+class PennyStockTradingStrategy()(implicit ec: ExecutionContext, robotDAO: RobotDAO) extends TradingStrategy {
 
   override def buySecurities()(implicit robot: RobotData): Future[OrderBuyActivity] = {
     for {

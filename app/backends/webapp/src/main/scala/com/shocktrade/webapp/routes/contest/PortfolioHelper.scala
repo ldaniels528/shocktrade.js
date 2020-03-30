@@ -29,7 +29,7 @@ object PortfolioHelper {
         creationTime = new js.Date(),
         expirationTime = form.orderTerm.map(s => new js.Date() + Try(s.toInt).getOrElse(3).days),
         processedTime = js.undefined,
-        statusMessage = js.undefined)
+        message = js.undefined)
     }
   }
 

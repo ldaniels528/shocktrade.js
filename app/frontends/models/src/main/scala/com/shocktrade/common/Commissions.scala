@@ -3,6 +3,8 @@ package com.shocktrade.common
 import com.shocktrade.common.forms.NewOrderForm
 import com.shocktrade.common.models.contest.OrderLike
 
+import scala.scalajs.js
+
 /**
  * Commissions Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
@@ -22,6 +24,15 @@ object Commissions {
     if (order.isLimitOrder) LIMIT_COST
     else if (order.isMarketAtCloseOrder) MARKET_AT_CLOSE_COST
     else MARKET_COST
+  }
+
+  def getCommission(priceType: js.UndefOr[String]): Double = {
+    priceType map {
+      case "LIMIT" => LIMIT_COST
+      case "MARKET" => MARKET_COST
+      case "MARKET AT CLOSE" => MARKET_AT_CLOSE_COST
+      case _ => LIMIT_COST
+    } getOrElse LIMIT_COST
   }
 
 }

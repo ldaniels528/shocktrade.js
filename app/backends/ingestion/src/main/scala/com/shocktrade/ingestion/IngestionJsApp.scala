@@ -1,8 +1,6 @@
 package com.shocktrade.ingestion
 
-import com.shocktrade.ingestion.daemons.cqm.ContestQualificationModule
 import com.shocktrade.ingestion.daemons.mockmarket.MockStockUpdateDaemon
-import com.shocktrade.ingestion.routes.QualificationRoutes
 import com.shocktrade.server.common.ProcessHelper._
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import io.scalajs.nodejs.timers.Interval
@@ -54,12 +52,6 @@ object IngestionJsApp {
     // disable caching
     app.disable("etag")
 
-    // create the CQM instance
-    val cqm = new ContestQualificationModule()
-
-    // attach the routes
-    new QualificationRoutes(app, cqm)
-
     // start the listener
     app.listen(port, () => logger.log(s"Server now listening on port $port [${System.currentTimeMillis() - startTime} msec]"))
 
@@ -71,7 +63,6 @@ object IngestionJsApp {
     //setTimeout(() => new WikipediaCompanyLoader().run(), 1.second)
 
     // schedule the daemons
-    schedule(name = "Contest Qualification Module")(initialDelay = 0.minutes, frequency = 5.minutes)(() => cqm.execute(tradingClock.isTradingActive))
     //schedule(name = "[SEC.gov]CIK Update")(initialDelay = 1.minute, frequency = 3.days)(() => new CikUpdateDaemon().run(tradingClock))
     //schedule(name = "EOD-Data Company Update")(initialDelay = 0.minutes, frequency = 2.days)(() => new EodDataCompanyUpdateDaemon().run(tradingClock))
     //schedule(name = "NASDAQ Company List Update")(initialDelay = 0.minutes, frequency = 3.days)(() => new NASDAQCompanyListUpdateDaemon().run(tradingClock))

@@ -18,7 +18,7 @@ class Order(var orderID: js.UndefOr[String],
             var creationTime: js.UndefOr[js.Date],
             var expirationTime: js.UndefOr[js.Date],
             var processedTime: js.UndefOr[js.Date],
-            var statusMessage: js.UndefOr[String],
+            var message: js.UndefOr[String],
             var closed: js.UndefOr[Boolean]) extends OrderLike {
 
   // UI-specific fields
