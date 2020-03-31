@@ -4,7 +4,6 @@ import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.models.contest._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, injected}
-import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
@@ -134,9 +133,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         funds = portfolio.data.funds,
         balance = balance.data,
         perks = portfolio.data.perks,
-        orders = orders.data.filterNot(_.closed.isTrue),
-        closedOrders = orders.data.filter(_.closed.isTrue),
-        performance = js.undefined, // TODO get this collection
+        orders = orders.data,
         positions = positions.data)
     }
   }

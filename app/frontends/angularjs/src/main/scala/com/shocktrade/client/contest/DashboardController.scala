@@ -51,12 +51,13 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.maxPlayers = AppConstants.MaxPlayers
 
   $scope.portfolioTabs = js.Array(
-    new PortfolioTab(name = "Charts", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", active = true),
-    new PortfolioTab(name = "Chat", icon = "fa-comment-o", path = "/views/dashboard/chat.html", active = false),
-    new PortfolioTab(name = "Positions", icon = "fa-list-alt", path = "/views/dashboard/positions.html", active = false),
-    new PortfolioTab(name = "Open Orders", icon = "fa-folder-open-o", path = "/views/dashboard/active_orders.html", active = false),
-    new PortfolioTab(name = "Closed Orders", icon = "fa-folder-o", path = "/views/dashboard/closed_orders.html", active = false),
-    new PortfolioTab(name = "Performance", icon = "fa-bar-chart-o", path = "/views/dashboard/performance.html", active = false))
+    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", active = false),
+    new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html", active = false),
+    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", active = false),
+    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", active = false))
+
+  // set the active tab
+  $scope.portfolioTabs.headOption.foreach(_.active = true)
 
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions

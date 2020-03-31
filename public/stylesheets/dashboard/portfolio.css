@@ -78,6 +78,16 @@ button.sell_button {
 	text-decoration: underline
 }
 
+div.order_states {
+    background: #20cc80;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+span.order_states {
+    margin-right: 20px
+}
+
 div.ordersContainer {
 	clear: both;
 	overflow: auto;	

@@ -1,8 +1,8 @@
 package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.contest.ActiveOrdersController.ActiveOrdersControllerScope
 import com.shocktrade.client.contest.DashboardController._
+import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
 import com.shocktrade.client.models.contest.Order
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.{GlobalLoading, RootScope}
@@ -18,17 +18,19 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 
 /**
- * Active Orders Controller
+ * Orders Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ActiveOrdersController($scope: ActiveOrdersControllerScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
-                             @injected("GameStateFactory") gameState: GameStateFactory,
-                             @injected("PortfolioService") portfolioService: PortfolioService)
+class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
+                       @injected("GameStateFactory") gameState: GameStateFactory,
+                       @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller with GlobalLoading {
 
-  implicit private val scope: ActiveOrdersControllerScope = $scope
+  implicit private val scope: OrdersControllerScope = $scope
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
+  $scope.showOpenOrders = true
+  $scope.showClosedOrders = false
   $scope.selectedOrder = js.undefined
   $scope.activeOrders = js.undefined
 
@@ -36,15 +38,15 @@ class ActiveOrdersController($scope: ActiveOrdersControllerScope, $routeParams: 
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.initActiveOrders = () => for (contestID <- $routeParams.contestID; userID <- gameState.userID) {
-    loadActiveOrders(contestID, userID)
+  $scope.initOrders = () => for (contestID <- $routeParams.contestID; userID <- gameState.userID) {
+    loadOrders(contestID, userID)
   }
 
-  $scope.onUserProfileUpdated { (_, _) => $scope.initActiveOrders() }
+  $scope.onUserProfileUpdated { (_, _) => $scope.initOrders() }
 
-  private def loadActiveOrders(contestID: String, userID: String): Unit = {
+  private def loadOrders(contestID: String, userID: String): Unit = {
     portfolioService.findOrders(contestID, userID) onComplete {
-      case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data.filterNot(_.closed.isTrue))
+      case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data)
       case Failure(e) =>
         toaster.error("Failed to retrieve orders")
         console.error(s"Failed to retrieve orders: ${e.displayMessage}")
@@ -71,7 +73,12 @@ class ActiveOrdersController($scope: ActiveOrdersControllerScope, $routeParams: 
 
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
 
-  $scope.getActiveOrders = () => $scope.activeOrders
+  $scope.getActiveOrders = () => ($scope.showOpenOrders.isTrue, $scope.showClosedOrders.isTrue) match {
+    case (true, true) => $scope.activeOrders
+    case (true, false) => $scope.activeOrders.map(_.filter(_.closed.isTrue))
+    case (false, true) => $scope.activeOrders.map(_.filterNot(_.closed.isTrue))
+    case (false, false) => js.Array[Order]()
+  }
 
   $scope.isMarketOrder = (anOrder: js.UndefOr[Order]) => {
     anOrder.exists(order => order.priceType.exists(marketOrderTypes.contains))
@@ -86,19 +93,19 @@ class ActiveOrdersController($scope: ActiveOrdersControllerScope, $routeParams: 
 }
 
 /**
- * Active Orders Controller Companion
+ * Orders Controller Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-object ActiveOrdersController {
+object OrdersController {
 
   /**
-   * Active Orders Controller Scope
+   * Orders Controller Scope
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait ActiveOrdersControllerScope extends RootScope {
+  trait OrdersControllerScope extends RootScope {
     // functions
-    var initActiveOrders: js.Function0[Unit] = js.native
+    var initOrders: js.Function0[Unit] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
     var cancelOrder: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
     var getActiveOrders: js.Function0[js.UndefOr[js.Array[Order]]] = js.native
@@ -110,6 +117,8 @@ object ActiveOrdersController {
     // variables
     var activeOrders: js.UndefOr[js.Array[Order]] = js.native
     var selectedOrder: js.UndefOr[Order] = js.native
+    var showClosedOrders: js.UndefOr[Boolean] = js.native
+    var showOpenOrders: js.UndefOr[Boolean] = js.native
   }
 
 }
