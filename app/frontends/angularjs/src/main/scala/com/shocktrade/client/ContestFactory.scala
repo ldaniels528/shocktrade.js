@@ -88,8 +88,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
   }
 
   def markPortfolioAsDirty(contestID: String, userID: String): this.type = {
-    val key = s"$contestID.$userID"
-    portfolioCache.remove(key)
+    portfolioCache.remove(key = s"$contestID.$userID")
     this
   }
 

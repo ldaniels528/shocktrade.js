@@ -9,15 +9,15 @@ object StringHelper {
   implicit class NthExtensions(val number: Int) extends AnyVal {
 
     @inline
-    def nth = {
-      val ending = number.toString match {
-        case s if s.endsWith("11") => "th"
-        case s if s.endsWith("1") => "st"
-        case s if s.endsWith("2") => "nd"
-        case s if s.endsWith("3") => "rd"
+    def nth: String = {
+      val suffix = number.toString match {
+        case n if n.endsWith("11") | n.endsWith("12") | n.endsWith("13") => "th"
+        case n if n.endsWith("1") => "st"
+        case n if n.endsWith("2") => "nd"
+        case n if n.endsWith("3") => "rd"
         case _ => "th"
       }
-      s"$number$ending"
+      s"$number$suffix"
     }
 
   }

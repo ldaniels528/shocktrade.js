@@ -59,7 +59,7 @@
                         <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
                     </div>
                     <div class="col-md-2 center">
-                        <span ng-class="getSelectionClass(c)">{{ c.playerCount }}</span>
+                        <span ng-class="getSelectionClass(c)">{{ c.playerCount }} / {{ maxPlayers }}</span>
                     </div>
                     <div class="col-md-2">
                         <span class="pull-right">

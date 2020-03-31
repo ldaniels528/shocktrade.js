@@ -136,21 +136,38 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
   //  Position Management
   ///////////////////////////////////////////////////////////////////////
 
-  override def findChart(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]] = {
-    val column = chart match {
-      case "exchange" => "S.exchange"
-      case "industry" => "S.industry"
-      case "sector" => "S.sector"
-      case "securities" => "S.symbol"
-      case unknown => Future.failed(js.JavaScriptException(s"Chart type '$unknown' is unrecognized"))
+  override def findChartData(contestID: String, userID: String, chart: String): Future[js.Array[ChartData]] = {
+    chart match {
+      case "contest" => findContestChart(contestID)
+      case "exchange" => findExposureChartData(contestID, userID, column = "S.exchange")
+      case "industry" => findExposureChartData(contestID, userID, column = "S.industry")
+      case "sector" => findExposureChartData(contestID, userID, column = "S.sector")
+      case "securities" => findExposureChartData(contestID, userID, column = "S.symbol")
+      case unknown => Future.failed(throw js.JavaScriptException(s"Chart type '$unknown' is unrecognized"))
     }
+  }
+
+  private def findContestChart(contestID: String): Future[js.Array[ChartData]] = {
+    conn.queryFuture[ChartData](
+      s"""|SELECT U.username AS name, P.funds + SUM(IFNULL(s.lastTrade,0) * IFNULL(PS.quantity,0)) AS value
+          |FROM contests C
+          |LEFT JOIN portfolios P ON P.contestID = C.contestID
+          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
+          |LEFT JOIN stocks S ON S.symbol = PS.symbol
+          |LEFT JOIN users U ON U.userID = P.userID
+          |WHERE C.contestID = ?
+          |GROUP BY U.username, P.funds
+          |""".stripMargin, js.Array(contestID)).map { case (rows, _) => rows }
+  }
+
+  private def findExposureChartData(contestID: String, userID: String, column: String): Future[js.Array[ChartData]] = {
     conn.queryFuture[ChartData](
       s"""|SELECT IFNULL($column, 'Unclassified') AS name, SUM(S.lastTrade * PS.quantity) AS value
           |FROM users U
           |INNER JOIN portfolios P ON P.userID = P.userID
-          |INNER JOIN contests C ON C.contestID = P.contestID
           |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
           |INNER JOIN stocks S ON S.symbol = PS.symbol
+          |INNER JOIN contests C ON C.contestID = P.contestID
           |WHERE C.contestID = ? AND U.userID = ?
           |GROUP BY $column
           |     UNION
@@ -175,7 +192,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
 
   override def findPositions(contestID: String, userID: String): Future[js.Array[PositionData]] = {
     conn.queryFuture[PositionData](
-      """|SELECT PS.*, S.lastTrade, (PS.price - S.lastTrade)/PS.price AS gainLossPct
+      """|SELECT PS.*, S.lastTrade, (S.lastTrade - PS.price)/PS.price AS gainLossPct
          |FROM positions PS
          |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
          |LEFT  JOIN stocks S ON S.symbol = PS.symbol

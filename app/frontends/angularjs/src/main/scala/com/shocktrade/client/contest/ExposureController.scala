@@ -39,10 +39,11 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.exposures = js.Array(
-    new ExposureSelection(value = "securities", label = "Securities Exposure"),
-    new ExposureSelection(value = "exchange", label = "Exchange Exposure"),
-    new ExposureSelection(value = "industry", label = "Industry Exposure"),
-    new ExposureSelection(value = "sector", label = "Sector Exposure"))
+    new ChartSelection(value = "contest", label = "Distribution of Wealth"),
+    new ChartSelection(value = "securities", label = "Securities Exposure"),
+    new ChartSelection(value = "exchange", label = "Exchange Exposure"),
+    new ChartSelection(value = "industry", label = "Industry Exposure"),
+    new ChartSelection(value = "sector", label = "Sector Exposure"))
 
   $scope.selectedExposure = $scope.exposures.headOption.orUndefined
   $scope.options = new ChartOptions(
@@ -66,7 +67,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
 
   def initChart(): Unit = {
     console.info(s"Initializing ${getClass.getSimpleName}...")
-    $scope.exposureChart($scope.selectedExposure)
+    $scope.showChart($scope.selectedExposure)
   }
 
   $scope.onUserProfileUpdated { (_: Event, _: UserProfile) => initChart() }
@@ -75,14 +76,14 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.exposureChart = (aChart: js.UndefOr[ExposureSelection]) => {
+  $scope.showChart = (aChart: js.UndefOr[ChartSelection]) => {
     for {
       contestID <- $routeParams.contestID
       userID <- gameState.userID
       chart <- aChart
       value <- chart.value
     } {
-      portfolioService.getChartData(contestID, userID, value) onComplete {
+      portfolioService.findChartData(contestID, userID, value) onComplete {
         case Success(response) => updateChartDiv(response.data)
         case Failure(e) =>
           toaster.error(s"Error loading ${chart.label.orNull}")
@@ -126,13 +127,13 @@ object ExposureController {
   @js.native
   trait ExposureControllerScope extends RootScope {
     // variables
-    var exposures: js.Array[ExposureSelection] = js.native
+    var exposures: js.Array[ChartSelection] = js.native
     var options: ChartOptions = js.native
-    var selectedExposure: js.UndefOr[ExposureSelection] = js.native
+    var selectedExposure: js.UndefOr[ChartSelection] = js.native
 
     // functions
     var initChart: js.Function0[Unit] = js.native
-    var exposureChart: js.Function1[js.UndefOr[ExposureSelection], Unit] = js.native
+    var showChart: js.Function1[js.UndefOr[ChartSelection], Unit] = js.native
 
   }
 
@@ -140,6 +141,6 @@ object ExposureController {
    * Exposure Selection Model
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class ExposureSelection(val label: js.UndefOr[String], val value: js.UndefOr[String]) extends js.Object
+  class ChartSelection(val label: js.UndefOr[String], val value: js.UndefOr[String]) extends js.Object
 
 }

@@ -5,6 +5,7 @@ import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.ContestScope
 import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.models.contest.ContestSearchResult._
@@ -33,6 +34,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   implicit private val scope: GameSearchScope = $scope
   private var searchResults = js.Array[ContestSearchResultUI]()
 
+  $scope.maxPlayers = AppConstants.MaxPlayers
   $scope.contest = js.undefined
   $scope.rankings = js.undefined
   $scope.portfolios = js.Array()
@@ -194,6 +196,7 @@ trait GameSearchScope extends RootScope with ContestScope with ContestEntrySuppo
   var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResultUI]] = js.native
   var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResultUI]] = js.native
   var isActive: js.Function1[js.UndefOr[ContestSearchResultUI], js.UndefOr[Boolean]] = js.native
+  var maxPlayers: js.UndefOr[Int] = js.native
   var selectContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
 
 }

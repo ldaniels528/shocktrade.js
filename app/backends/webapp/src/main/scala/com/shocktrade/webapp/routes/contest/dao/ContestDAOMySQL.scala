@@ -141,10 +141,12 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     }
 
     for {
+      _ <- conn.beginTransactionFuture()
       Some(contest) <- findOneByID(contestID)
       w1 <- deductFee(userID, contest.startingBalance) if w1 == 1
-      w0 <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance)) if w0 == 1
-    } yield w0
+      w2 <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance)) if w2 == 1
+      _ <- conn.commitFuture()
+    } yield w2
   }
 
   override def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int] = {

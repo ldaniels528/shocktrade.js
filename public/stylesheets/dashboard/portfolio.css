@@ -82,18 +82,18 @@ div.ordersContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 330px;
+	height: 400px;
 }
 
 div.positionsContainer {
 	clear: both;
 	overflow: auto;
-	height: 330px;
+	height: 400px;
 }
 
 div.performanceContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 330px;
+	height: 400px;
 }

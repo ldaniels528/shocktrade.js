@@ -12,11 +12,11 @@ CREATE TABLE contests (
      statusID INTEGER NOT NULL DEFAULT 2,
      startingBalance DECIMAL(12,5) NOT NULL,
      timeOffset BIGINT NOT NULL DEFAULT 0,
-     friendsOnly SMALLINT NOT NULL DEFAULT 0,
-     invitationOnly SMALLINT NOT NULL DEFAULT 0,
+     friendsOnly TINYINT NOT NULL DEFAULT 0,
+     invitationOnly TINYINT NOT NULL DEFAULT 0,
      levelCap INTEGER NOT NULL DEFAULT 0,
-     perksAllowed SMALLINT NOT NULL DEFAULT 1,
-     robotsAllowed SMALLINT NOT NULL DEFAULT 1,
+     perksAllowed TINYINT NOT NULL DEFAULT 1,
+     robotsAllowed TINYINT NOT NULL DEFAULT 1,
      creationTime DATETIME NOT NULL DEFAULT now(),
      startTime DATETIME NOT NULL DEFAULT now(),
      expirationTime DATETIME NULL
@@ -80,8 +80,8 @@ CREATE TABLE orders (
      creationTime DATETIME NOT NULL DEFAULT now(),
      expirationTime DATETIME NULL,
      processedTime DATETIME NULL,
-     closed SMALLINT NOT NULL DEFAULT 0,
-     fulfilled SMALLINT NOT NULL DEFAULT 0,
+     closed TINYINT NOT NULL DEFAULT 0,
+     fulfilled TINYINT NOT NULL DEFAULT 0,
      message TEXT NULL
 );
 
@@ -89,14 +89,14 @@ DROP TABLE IF EXISTS order_price_types;
 CREATE TABLE order_price_types (
     priceTypeID CHAR(36) PRIMARY KEY,
     name VARCHAR(32) NOT NULL,
-    comission DECIMAL(4, 2) NOT NULL
+    commission DECIMAL(4, 2) NOT NULL
 );
 
 CREATE UNIQUE INDEX order_price_types_xpk_name ON order_price_types (name);
 
-INSERT INTO order_price_types ( priceTypeID, name, comission ) VALUES (uuid(), 'LIMIT', 14.99 );
-INSERT INTO order_price_types ( priceTypeID, name, comission ) VALUES (uuid(), 'MARKET', 9.99);
-INSERT INTO order_price_types ( priceTypeID, name, comission ) VALUES (uuid(), 'MARKET_AT_CLOSE', 6.99);
+INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'LIMIT', 14.99);
+INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET', 9.99);
+INSERT INTO order_price_types ( priceTypeID, name, commission ) VALUES (uuid(), 'MARKET_AT_CLOSE', 6.99);
 
 -- ------------------------------------------------------------
 -- Positions
@@ -112,6 +112,7 @@ CREATE TABLE positions (
      price DECIMAL(12,5) NOT NULL,
      quantity INTEGER NOT NULL,
      commission DECIMAL(5,2) NOT NULL,
+     netValue DECIMAL(12,5) NOT NULL,
      cost DECIMAL(12,5) NOT NULL,
      tradeDateTime DATETIME NOT NULL,
      processedTime DATETIME NULL,
@@ -153,7 +154,7 @@ CREATE TABLE robots (
     strategy VARCHAR(20) NOT NULL,
     lastActivity TEXT NULL,
     lastActiveTime DATETIME NOT NULL DEFAULT now(),
-    isActive SMALLINT NOT NULL DEFAULT 1
+    isActive TINYINT NOT NULL DEFAULT 1
 );
 
 CREATE UNIQUE INDEX robots_xpk ON robots (username);

@@ -3,7 +3,7 @@
         <select class="form-control symbol_input_text_field"
                 ng-model="selectedExposure"
                 ng-options="e.label for e in exposures"
-                ng-change="exposureChart(selectedExposure)">
+                ng-change="showChart(selectedExposure)">
             <option value="">-- Select an Exposure --</option>
         </select>
     </div>

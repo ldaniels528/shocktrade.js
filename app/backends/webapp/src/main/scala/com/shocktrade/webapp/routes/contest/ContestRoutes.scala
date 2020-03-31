@@ -5,13 +5,11 @@ import com.shocktrade.common.Ok
 import com.shocktrade.common.events.RemoteEvent
 import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
-import com.shocktrade.common.util.StringHelper._
 import com.shocktrade.webapp.routes.contest.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
-import io.scalajs.util.JsUnderOrHelper._
 
 import scala.concurrent.ExecutionContext
-import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -122,7 +120,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
   def findChart(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
-    portfolioDAO.findChart(contestID, userID, chart) onComplete {
+    portfolioDAO.findChartData(contestID, userID, chart) onComplete {
       case Success(data) => response.send(data); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
@@ -164,26 +162,11 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
    * Retrieves a collection of rankings by contest
    */
   def findRankings(request: Request, response: Response, next: NextFunction): Unit = {
-    // define an accumulator for determining the rankings
-    case class Accumulator(rankings: List[ContestRanking] = Nil, lastRanking: Option[ContestRanking] = None, index: Int = 1)
-
-    // retrieve the rankings
     val contestID = request.params("id")
-    val outcome = contestDAO.findRankings(contestID) map { rankings =>
-      // sort the rankings and add the position (e.g. "1st")
-      val results = rankings.sortBy(-_.gainLoss.orZero).foldLeft[Accumulator](Accumulator()) {
-        case (acc@Accumulator(rankings, lastRanking, index), ranking) =>
-          val newIndex = if (lastRanking.exists(_.totalEquity.exists(_ > ranking.totalEquity.orZero))) index + 1 else index
-          val newRanking = ranking.copy(rank = newIndex.nth, rankNum = newIndex)
-          acc.copy(rankings = newRanking :: rankings, lastRanking = Some(ranking), index = newIndex)
-      }
-      js.Array(results.rankings: _*)
-    }
-
+    val outcome = contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq))
     outcome onComplete {
-      case Success(rankings) => response.send(rankings); next()
-      case Failure(e) =>
-        response.internalServerError(e); next()
+      case Success(rankings) => response.send(rankings.toJSArray); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }
 

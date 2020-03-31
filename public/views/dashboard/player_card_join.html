@@ -1,4 +1,4 @@
-<div ng-class="getRankCellClass('join')">
+<div ng-class="getRankCellClass('join')" ng-show="userProfile.userID">
     <div lass="pull-left" style="display: inline">
         <div class="pull-left" style="display: inline">
             <avatar id="{{ userProfile.userID }}" class="avatar-45"></avatar>
@@ -6,7 +6,7 @@
         <div class="pull-left" style="display: inline; width: 60%">
             <div>
                 <img ng-src="/images/status/{{ isOnline(userProfile.userID) ? 'greenlight' : 'offlight' }}.png">
-                <span ng-class="'rank_' + rankOf(contest.rankings.length + 1)">{{ rankOf(contest.rankings.length + 1) }}</span>
+                <span ng-class="'rank_' + getJoiningPlayerRank(userProfile.username, contest.startingBalance)">{{ getJoiningPlayerRank(userProfile.username, contest.startingBalance) }}</span>
                 <span class="null">&#8212;</span>
                 <span class="st_text_color" ng-click="showGamerCard(userProfile.name)">{{ userProfile.username }}</span>
             </div>

@@ -8,6 +8,7 @@ TRUNCATE positions;
 -- TRUNCATE post_tags;
 TRUNCATE robots;
 TRUNCATE users;
+TRUNCATE user_icons;
 
 -- ------------------------------------------------------------
 -- Users

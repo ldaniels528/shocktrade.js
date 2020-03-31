@@ -63,26 +63,35 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
    */
   def start(marketClosed: Boolean): Future[(List[PositionData], List[OrderData], Int, Int)] = {
     for {
-      qualifiedOrders <- qualificationDAO.findQualifiedOrders(limit = 100)
-      processedOrders = processOrders(qualifiedOrders)
-      newPositions = processedOrders collect { case Left(position) => position }
-      updatedOrders = processedOrders collect { case Right(order) => order }
-      positionCount <- Future.sequence(newPositions.map(qualificationDAO.createPosition)).map(_.sum)
-      rejectedCount <- Future.sequence(updatedOrders.map(qualificationDAO.updateOrder)).map(_.sum)
-    } yield (newPositions, updatedOrders, positionCount, rejectedCount)
+      (buyPositions, buyOrders, buyPositionCount, buyOrderCount) <- processBuyFlow()
+      (sellPositions, sellOrders, sellPositionCount, sellOrderCount) <- processSellFlow()
+    } yield (buyPositions ::: sellPositions, buyOrders ::: sellOrders, buyPositionCount + sellPositionCount, buyOrderCount + sellOrderCount)
   }
 
-  private def processOrders(qualifiedOrders: js.Array[QualifiedOrderData]): List[Either[PositionData, OrderData]] = {
-    val processedTime = new js.Date()
+  ///////////////////////////////////////////////////////////////////////
+  //  Order BUY Flow
+  ///////////////////////////////////////////////////////////////////////
 
-    // process the orders
+  private def processBuyFlow(): Future[(List[PositionData], List[OrderData], Int, Int)] = {
+    for {
+      qualifiedOrders <- qualificationDAO.findQualifiedBuyOrders(limit = 1000)
+      preparedOrders = prepareBuyOrders(qualifiedOrders)
+      newPositions = preparedOrders collect { case Left(position) => position }
+      updatedOrders = preparedOrders collect { case Right(order) => order }
+      positionCount <- Future.sequence(newPositions.map(qualificationDAO.createPosition)).map(_.sum)
+      updatedOrdersCount <- Future.sequence(updatedOrders.map(qualificationDAO.updateOrder)).map(_.sum)
+    } yield (newPositions, updatedOrders, positionCount, updatedOrdersCount)
+  }
+
+  private def prepareBuyOrders(qualifiedOrders: js.Array[QualifiedOrderData]): List[Either[PositionData, OrderData]] = {
+    val processedTime = new js.Date()
     case class Accumulator(budget: Double, positions: List[PositionData] = Nil, updatedOrders: List[OrderData] = Nil)
     val results = qualifiedOrders.groupBy(_.userID) flatMap { case (userID_?, orders) =>
       for {
         userID <- userID_?.toOption
         funds <- orders.headOption.flatMap(_.funds.toOption) if funds > 0.0
       } yield {
-        orders.foldLeft[Accumulator](Accumulator(budget = funds)) {
+        orders.foldLeft(Accumulator(budget = funds)) {
           case (acc@Accumulator(budget, positions, updatedOrders), order) if order.cost.exists(cost => budget >= cost && cost > 0) =>
             acc.copy(
               budget = budget - order.cost.orZero,
@@ -97,6 +106,27 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
 
     // return a collection containing either a position or a failed order
     results.flatMap(_.positions.map(Left.apply)) ::: results.flatMap(_.updatedOrders.map(Right.apply))
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+  //  Order SELL Flow
+  ///////////////////////////////////////////////////////////////////////
+
+  private def processSellFlow(): Future[(List[PositionData], List[OrderData], Int, Int)] = {
+    for {
+      qualifiedOrders <- qualificationDAO.findQualifiedSellOrders(limit = 1000)
+      preparedOrders = prepareBuyOrders(qualifiedOrders)
+      updatedPositions = preparedOrders collect { case Left(position) => position }
+      updatedOrders = preparedOrders collect { case Right(order) => order }
+      updatedPositionCount = 0
+      updatedOrdersCount = 0
+    } yield (updatedPositions, updatedOrders, updatedPositionCount, updatedOrdersCount)
+  }
+
+  private def prepareSellOrders(qualifiedOrders: js.Array[QualifiedOrderData]): List[Either[PositionData, OrderData]] = {
+    val processedTime = new js.Date()
+
+    Nil
   }
 
 }
@@ -120,7 +150,7 @@ object ContestQualificationModule {
         exchange = order.exchange,
         orderType = order.orderType,
         priceType = order.priceType,
-        price = order.price,
+        price = order.lastTrade,
         quantity = order.quantity,
         creationTime = order.creationTime,
         expirationTime = order.expirationTime,
@@ -158,8 +188,8 @@ object ContestQualificationModule {
         price = order.lastTrade,
         quantity = order.quantity,
         tradeDateTime = order.tradeDateTime,
-        cost = for {price <- order.price; quantity <- order.quantity} yield price * quantity + commission,
-        netValue = for {price <- order.price; quantity <- order.quantity} yield price * quantity,
+        cost = for {price <- order.lastTrade; quantity <- order.quantity} yield price * quantity + commission,
+        netValue = for {price <- order.lastTrade; quantity <- order.quantity} yield price * quantity,
         commission = commission,
         processedTime = processedTime)
     }

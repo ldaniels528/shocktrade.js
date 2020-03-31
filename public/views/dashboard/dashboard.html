@@ -2,19 +2,12 @@
     <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
             <div class="rankings_container">
-                <div ng-repeat="player in contest.rankings | orderBy:'rank'" ng-include src="'/views/dashboard/player_card.html'"></div>
-                <div ng-show="userProfile.userID && !portfolio.balance" ng-include src="'/views/dashboard/player_card_join.html'"></div>
+                <div ng-include src="'/views/dashboard/player_card_join.html'" ng-show="userProfile.userID && contest.rankings && !portfolio.balance" ></div>
+                <div ng-repeat="player in playerRankingOnTop(userProfile.userID, contest.rankings)" ng-include src="'/views/dashboard/player_card.html'"></div>
             </div>
         </div>
 
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
-            <div class="col-md-12 pull-right">
-                <!-- US Markets Open/Closed -->
-                <span class="pull-right" ng-class="isUSMarketsOpen(contest.contestID) === undefined ? 'mks_loading' : (isUSMarketsOpen(contest.contestID) ? 'mks_open' : 'mks_closed')">
-                    <img ng-show="isUSMarketsOpen(contest.contestID) === null" src="/images/status/loading16.gif">
-                    {{ isUSMarketsOpen(contest.contestID) === undefined ? 'US Markets ....' : (isUSMarketsOpen(contest.contestID) ? 'US Markets Open' : 'US Markets Closed') }}
-                </span>
-            </div>
             <div ng-show="contest.name" class="col-md-12 dashboard_title">
                 <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
                 <span ng-show="clock" class="pull-right" style="font-size: 10pt; vertical-align: bottom">{{ clock | date: 'EEE MM/dd hh:mm:ss a' }}</span>
@@ -24,6 +17,11 @@
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
+                </span>
+                <!-- US Markets Open/Closed -->
+                <span class="pull-right" ng-class="isUSMarketsOpen(contest.contestID) === undefined ? 'mks_loading' : (isUSMarketsOpen(contest.contestID) ? 'mks_open' : 'mks_closed')">
+                    <img ng-show="isUSMarketsOpen(contest.contestID) === null" src="/images/status/loading16.gif">
+                    {{ isUSMarketsOpen(contest.contestID) === undefined ? 'US Markets ....' : (isUSMarketsOpen(contest.contestID) ? 'US Markets Open' : 'US Markets Closed') }}
                 </span>
                 <div ng-include src="'/views/dashboard/portfolio_summary.html'" style="margin-bottom: 10px" ng-show="portfolio.balance"></div>
                 <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="portfolio.balance" style="width: 98%"></div>

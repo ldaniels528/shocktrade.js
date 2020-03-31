@@ -211,8 +211,6 @@ div.gamesSearchContainer {
 
 div.play_container {
 	background-color: #f0f0f0;
-	border-radius: 4px;
-	padding: 4px;
 	clear: both;
 	overflow: auto;
 	width: auto;
@@ -225,10 +223,13 @@ div.play_container {
 }
 
 div.rankings_container {
+    background-color: #dcdcdc;
+    border-radius: 4px;
 	clear: both;
 	overflow: auto;
 	width: 100%;
-	height: 640px;
+	height: 700px;
+	padding: 2px 2px 2px 2px;
 }
 
 div.gamesQuickSearchContainer {

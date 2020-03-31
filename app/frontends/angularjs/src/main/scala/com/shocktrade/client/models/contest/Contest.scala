@@ -1,5 +1,6 @@
 package com.shocktrade.client.models.contest
 
+import com.shocktrade.common.AppConstants
 import com.shocktrade.common.models.contest.ContestRanking
 
 import scala.scalajs.js
@@ -30,8 +31,6 @@ class Contest(var contestID: js.UndefOr[String] = js.undefined,
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object Contest {
-  val MaxPlayers = 10
-
   // status constants
   val StatusActive = "ACTIVE"
   val StatusClosed = "CLOSED"
@@ -52,10 +51,10 @@ object Contest {
     def isEmpty: Boolean = contest.portfolios.exists(_.isEmpty)
 
     @inline
-    def isFull: Boolean = contest.portfolios.exists(_.length >= MaxPlayers)
+    def isFull: Boolean = contest.portfolios.exists(_.length >= AppConstants.MaxPlayers)
 
     @inline
-    def isAlmostFull: Boolean = contest.portfolios.exists(_.length + 1 >= MaxPlayers)
+    def isAlmostFull: Boolean = contest.portfolios.exists(_.length + 1 >= AppConstants.MaxPlayers)
 
   }
 

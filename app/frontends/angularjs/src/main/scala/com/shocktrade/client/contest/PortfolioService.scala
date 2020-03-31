@@ -78,7 +78,7 @@ class PortfolioService($http: Http) extends Service {
   //			Charts
   /////////////////////////////////////////////////////////////////////////////
 
-  def getChartData(contestID: String, userID: String, chart: String): js.Promise[HttpResponse[js.Array[ChartData]]] = {
+  def findChartData(contestID: String, userID: String, chart: String): js.Promise[HttpResponse[js.Array[ChartData]]] = {
     $http.get(s"/api/contest/$contestID/user/$userID/chart/$chart")
   }
 

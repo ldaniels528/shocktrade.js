@@ -8,7 +8,8 @@ import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.users.GameStateFactory
 import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope}
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
-import com.shocktrade.common.Ok
+import com.shocktrade.common.models.contest.ContestRanking
+import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -23,6 +24,7 @@ import io.scalajs.util.PromiseHelper.Implicits._
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -46,13 +48,15 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   implicit private val scope: DashboardControllerScope = $scope
 
+  $scope.maxPlayers = AppConstants.MaxPlayers
+
   $scope.portfolioTabs = js.Array(
-    new PortfolioTab(name = "Chat", icon = "fa-comment-o", path = "/views/dashboard/chat.html", active = true),
+    new PortfolioTab(name = "Charts", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", active = true),
+    new PortfolioTab(name = "Chat", icon = "fa-comment-o", path = "/views/dashboard/chat.html", active = false),
     new PortfolioTab(name = "Positions", icon = "fa-list-alt", path = "/views/dashboard/positions.html", active = false),
     new PortfolioTab(name = "Open Orders", icon = "fa-folder-open-o", path = "/views/dashboard/active_orders.html", active = false),
     new PortfolioTab(name = "Closed Orders", icon = "fa-folder-o", path = "/views/dashboard/closed_orders.html", active = false),
-    new PortfolioTab(name = "Performance", icon = "fa-bar-chart-o", path = "/views/dashboard/performance.html", active = false),
-    new PortfolioTab(name = "Exposure", icon = "fa-pie-chart", path = "/views/dashboard/exposure.html", active = false))
+    new PortfolioTab(name = "Performance", icon = "fa-bar-chart-o", path = "/views/dashboard/performance.html", active = false))
 
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -149,10 +153,23 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   }
 
   /////////////////////////////////////////////////////////////////////
-  //          Public Functions
+  //          Perk Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.rankOf = (rank: js.UndefOr[Int]) => rank.map(rankOf)
+  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
+
+  /////////////////////////////////////////////////////////////////////
+  //          Contest Ranking Functions
+  /////////////////////////////////////////////////////////////////////
+
+  $scope.getJoiningPlayerRank = (aPlayerName: js.UndefOr[String], aTotalEquity: js.UndefOr[Double]) => {
+    for {
+      playerName <- aPlayerName
+      totalEquity <- aTotalEquity
+      rankings <- $scope.contest.flatMap(_.rankings)
+      joiningRank <- getJoiningPlayerRank(playerName, totalEquity, rankings)
+    } yield joiningRank
+  }
 
   $scope.getRankCellClass = (aRanking: js.UndefOr[String]) => aRanking map {
     case rank if Set("1st", "2nd", "3rd").contains(rank) => s"rank_cell_$rank"
@@ -160,21 +177,25 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     case _ => "rank_cell"
   }
 
-  $scope.hasPerk = (aPerkCode: js.UndefOr[String]) => false // aPerkCode.exists(???)
-
   $scope.isRankingsShown = () => !$scope.rankingsHidden.isTrue
+
+  $scope.playerRankingOnTop = (aUserID: js.UndefOr[String], aRankings: js.UndefOr[js.Array[ContestRanking]]) => {
+    val reorderedRankings = for {userID <- aUserID; rankings <- aRankings.map(playerRankingOnTop(userID, _))} yield rankings
+    reorderedRankings ?? aRankings
+  }
 
   $scope.toggleRankingsShown = () => $scope.rankingsHidden = !$scope.rankingsHidden.isTrue
 
-  private def rankOf(rank: Int): String = {
-    val suffix = rank.toString match {
-      case n if n.endsWith("11") | n.endsWith("12") | n.endsWith("13") => "th"
-      case n if n.endsWith("1") => "st"
-      case n if n.endsWith("2") => "nd"
-      case n if n.endsWith("3") => "rd"
-      case _ => "th"
-    }
-    s"$rank$suffix"
+  private def getJoiningPlayerRank(playerName: String, totalEquity: Double, rankings: js.Array[ContestRanking]): js.UndefOr[String] = {
+    val tempRankings = ContestRanking(username = playerName, totalEquity = totalEquity) :: rankings.toList
+    ContestRanking.computeRankings(tempRankings)
+      .find(_.username.contains(playerName)).orUndefined
+      .flatMap(_.rank)
+  }
+
+  private def playerRankingOnTop(userID: String, rankings: js.Array[ContestRanking]): js.Array[ContestRanking] = {
+    val list = rankings.toList.sortBy(_.rankNum.getOrElse(Int.MaxValue))
+    (list.filter(_.userID.contains(userID)) ::: list.filterNot(_.userID.contains(userID))).toJSArray
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -215,8 +236,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     outcome onComplete {
       case Success(response) =>
         console.info(s"response = ${JSON.stringify(response.data)}")
-        gameState.refreshContest()
-        $scope.$apply { () => }
+        $scope.initDash()
         $timeout(() => $scope.isJoining = false, 0.5.seconds)
       case Failure(e) =>
         toaster.error(title = "Error!", body = "Failed to join contest")
@@ -226,14 +246,13 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     outcome
   }
 
-  private def quitContest(contestId: String, userId: String): js.Promise[HttpResponse[Ok]] = {
+  private def quitContest(contestID: String, userID: String): js.Promise[HttpResponse[Ok]] = {
     $scope.isQuiting = true
-    val outcome = contestService.quitContest(contestId, userId)
+    val outcome = contestService.quitContest(contestID, userID)
     outcome onComplete {
       case Success(response) =>
         console.info(s"response = ${JSON.stringify(response.data)}")
-        gameState.refreshContest()
-        $scope.$apply { () => }
+        $scope.initDash()
         $timeout(() => $scope.isQuiting = false, 0.5.seconds)
       case Failure(e) =>
         toaster.error(title = "Error!", e.displayMessage)
@@ -249,6 +268,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     outcome onComplete {
       case Success(response) =>
         console.info(s"response = ${JSON.stringify(response.data)}")
+        $scope.initDash()
         $timeout(() => $scope.isStarting = false, 0.5.seconds)
       case Failure(e) =>
         toaster.error("An error occurred while starting the contest")
@@ -280,13 +300,14 @@ object DashboardController {
 
     // functions
     var initDash: js.Function0[Unit] = js.native
+    var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
     var invitePlayerPopup: js.Function1[js.UndefOr[String], Unit] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
+    var playerRankingOnTop: js.Function2[js.UndefOr[String], js.UndefOr[js.Array[ContestRanking]], js.UndefOr[js.Array[ContestRanking]]] = js.native
     var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
     var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
-    var rankOf: js.Function1[js.UndefOr[Int], js.UndefOr[String]] = js.native
     var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // contest management functions
@@ -305,6 +326,7 @@ object DashboardController {
     var clock: js.UndefOr[js.Date] = js.native
     //var contest: js.UndefOr[Contest] = js.native
     //var portfolio: js.UndefOr[Portfolio] = js.native
+    var maxPlayers: js.UndefOr[Int] = js.native
     var portfolioTabs: js.Array[PortfolioTab] = js.native
     var rankingsHidden: js.UndefOr[Boolean] = js.native
 
