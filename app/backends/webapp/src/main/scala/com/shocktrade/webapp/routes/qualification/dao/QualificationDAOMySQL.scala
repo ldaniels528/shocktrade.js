@@ -14,25 +14,64 @@ import scala.scalajs.js
 class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with QualificationDAO {
 
   override def createPosition(position: PositionData): Future[Int] = {
-    import position._
     for {
-      w1 <- conn.executeFuture(
-        """|UPDATE portfolios SET funds = funds - ?
-           |WHERE portfolioID = ? AND funds >= ?
-           |""".stripMargin, js.Array(cost, portfolioID, cost)).map(_.affectedRows) if w1 == 1
-
-      w2 <- conn.executeFuture(
-        """|INSERT INTO positions (
-           |    positionID, portfolioID, orderID, symbol, exchange, price, quantity, cost, commission, tradeDateTime, processedTime
-           |) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-           |""".stripMargin, js.Array(portfolioID, orderID, symbol, exchange, price, quantity, cost, commission, tradeDateTime, processedTime)).map(_.affectedRows)
+      w1 <- deductEntryFee(position) if w1 == 1
+      w2 <- insertPosition(position)
     } yield w2
   }
 
-  override def findQualifiedOrders(limit: Int): Future[js.Array[QualifiedOrderData]] = {
+  override def findQualifiedBuyOrders(limit: Int): Future[js.Array[QualifiedOrderData]] = {
     conn.queryFuture[QualifiedOrderData](
-      """|SELECT * FROM qualifications
-         |ORDER BY creationTime ASC
+      """|SELECT
+         |	  P.contestID, P.userID, O.portfolioID, O.orderID,
+         |	  S.symbol, S.`exchange`, S.volume, O.orderType, O.priceType,
+         |    S.tradeDateTime, P.funds, O.quantity, S.lastTrade,
+         |    S.lastTrade AS price,
+         |    S.lastTrade * O.quantity + OPT.commission AS cost,
+         |    O.creationTime,
+         |    IFNULL(O.expirationTime, NOW()) AS expirationTime,
+         |    OPT.commission
+         |FROM orders O
+         |INNER JOIN order_price_types OPT ON OPT.name = O.priceType
+         |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |INNER JOIN stocks S ON S.symbol = O.symbol AND S.`exchange` = O.`exchange`
+         |WHERE O.closed = O.fulfilled AND O.closed = 0
+         |AND O.orderType = 'BUY'
+         |AND S.tradeDateTime BETWEEN O.creationTime AND IFNULL(O.expirationTime, NOW())
+         |AND S.volume > O.quantity
+         |AND (
+         |	(O.priceType = 'MARKET')
+         |  OR (O.priceType = 'LIMIT' AND O.price >= S.lastTrade)
+         |)
+         |ORDER BY O.creationTime ASC
+         |LIMIT ?
+         |""".stripMargin, js.Array(limit)).map(_._1)
+  }
+
+  override def findQualifiedSellOrders(limit: Int): Future[js.Array[QualifiedOrderData]] = {
+    conn.queryFuture[QualifiedOrderData](
+      """|SELECT
+         |	  P.contestID, P.userID, O.portfolioID, O.orderID,
+         |	  S.symbol, S.`exchange`, S.volume, O.orderType, O.priceType,
+         |    S.tradeDateTime, P.funds, O.quantity, S.lastTrade,
+         |    S.lastTrade AS price,
+         |    S.lastTrade * O.quantity + OPT.commission AS cost,
+         |    O.creationTime,
+         |    IFNULL(O.expirationTime, NOW()) AS expirationTime,
+         |    OPT.commission
+         |FROM orders O
+         |INNER JOIN order_price_types OPT ON OPT.name = O.priceType
+         |INNER JOIN portfolios P ON P.portfolioID = O.portfolioID
+         |INNER JOIN stocks S ON S.symbol = O.symbol AND S.`exchange` = O.`exchange`
+         |WHERE O.closed = O.fulfilled AND O.closed = 0
+         |AND O.orderType = 'SELL'
+         |AND S.tradeDateTime BETWEEN O.creationTime AND IFNULL(O.expirationTime, NOW())
+         |AND S.volume > O.quantity
+         |AND (
+         |	(O.priceType = 'MARKET')
+         |  OR (O.priceType = 'LIMIT' AND O.price <= S.lastTrade)
+         |)
+         |ORDER BY O.creationTime ASC
          |LIMIT ?
          |""".stripMargin, js.Array(limit)).map(_._1)
   }
@@ -48,6 +87,23 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
          |  processedTime = ?
          |WHERE orderID = ?
          |""".stripMargin, js.Array(closed, fulfilled, message, processedTime, orderID)).map(_.affectedRows)
+  }
+
+  private def deductEntryFee(position: PositionData): Future[Int] = {
+    import position._
+    conn.executeFuture(
+      """|UPDATE portfolios SET funds = funds - ?
+         |WHERE portfolioID = ? AND funds >= ?
+         |""".stripMargin, js.Array(cost, portfolioID, cost)).map(_.affectedRows)
+  }
+
+  private def insertPosition(position: PositionData): Future[Int] = {
+    import position._
+    conn.executeFuture(
+      """|INSERT INTO positions (
+         |    positionID, portfolioID, orderID, symbol, exchange, price, quantity, netValue, cost, commission, tradeDateTime, processedTime
+         |) VALUES (uuid(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         |""".stripMargin, js.Array(portfolioID, orderID, symbol, exchange, price, quantity, netValue, cost, commission, tradeDateTime, processedTime)).map(_.affectedRows)
   }
 
 }

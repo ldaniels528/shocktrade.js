@@ -23,7 +23,7 @@ class RobotDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionConte
          |	FROM users U
          |	INNER JOIN portfolios P ON U.userID = P.userID
          |	INNER JOIN contests C ON P.contestID = C.contestID
-         |  INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
+         |	INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
          |	WHERE U.username = ?
          |  AND CS.status = 'ACTIVE'
          |  AND C.robotsAllowed = 1

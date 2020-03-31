@@ -16,7 +16,8 @@ import scala.scalajs.js.JSConverters._
 
 /**
  * Penny Stock Trading Strategy
- * @param ec the implicit [[ExecutionContext]]
+ * @param ec       the implicit [[ExecutionContext]]
+ * @param robotDAO the implicit [[RobotDAO]]
  */
 class PennyStockTradingStrategy()(implicit ec: ExecutionContext, robotDAO: RobotDAO) extends TradingStrategy {
 
@@ -24,7 +25,7 @@ class PennyStockTradingStrategy()(implicit ec: ExecutionContext, robotDAO: Robot
     for {
       robotRef <- findRobotRef
       stocks <- findStocksToBuy(new ResearchOptions(priceMax = 1.0, changeMax = 0.0, spreadMin = 50.0, volumeMin = 1e+6, maxResults = 50))
-      orders = makeOrders(orderType = OrderTypes.Buy, stocks = stocks, priceType = PriceTypes.Limit, costTarget = 2500.0)
+      orders = makeOrders(orderType = OrderTypes.Buy, stocks = stocks, priceType = PriceTypes.Market, costTarget = 25000.0 / stocks.length)
       counts <- saveOrders(orders)
     } yield OrderBuyActivity(robotRef, stocks, orders, counts)
   }
@@ -33,7 +34,7 @@ class PennyStockTradingStrategy()(implicit ec: ExecutionContext, robotDAO: Robot
     for {
       robotRef <- findRobotRef
       stocks <- findStocksToSell(new ResearchOptions(priceMax = 1.0, changeMax = 0.0, spreadMin = 50.0, volumeMin = 1e+6, maxResults = 50))
-      orders = makeOrders(orderType = OrderTypes.Sell, stocks = stocks, priceType = PriceTypes.Limit, costTarget = 2500.0)
+      orders = makeOrders(orderType = OrderTypes.Sell, stocks = stocks, priceType = PriceTypes.Market, costTarget = 2500.0)
       counts <- saveOrders(orders)
     } yield OrderSellActivity(robotRef, stocks, orders, counts)
   }
@@ -49,7 +50,7 @@ class PennyStockTradingStrategy()(implicit ec: ExecutionContext, robotDAO: Robot
       order = stock.toOrder(orderType = orderType, quantity = quantity, priceType = priceType)
     } yield order
 
-    val results = candidateOrders.foldLeft[Accumulator](Accumulator(budget = robot.funds.orZero)) {
+    val results = candidateOrders.foldLeft(Accumulator(budget = robot.funds.orZero)) {
       case (acc@Accumulator(orders, budget), order) if order.totalCost.exists(tc => tc > 0.0 && tc <= budget) =>
         acc.copy(orders = order :: orders, budget = budget - order.totalCost.orZero)
       case (acc, _) => acc

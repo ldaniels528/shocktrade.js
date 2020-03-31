@@ -15,7 +15,9 @@ trait QualificationDAO {
 
   def createPosition(position: PositionData): Future[Int]
 
-  def findQualifiedOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
+  def findQualifiedBuyOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
+
+  def findQualifiedSellOrders(limit: Int): Future[js.Array[QualifiedOrderData]]
 
   def updateOrder(order: OrderData): Future[Int]
 
