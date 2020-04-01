@@ -123,7 +123,7 @@ object Award {
       name = "Gold Trophy",
       code = GLDTRPHY,
       icon = "/images/awards/gold_trophy.png",
-      description = "Came in first place! (out of 14 players)"
+      description = "Came in first place! (out of 10 players)"
     ))
 
 }

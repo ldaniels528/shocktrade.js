@@ -9,6 +9,11 @@
     width: 100%;
 }
 
+.ds_heading {
+    color: #2060bb;
+    bold;
+}
+
 .desert-blue {
     color: #5bc0ee;
 }

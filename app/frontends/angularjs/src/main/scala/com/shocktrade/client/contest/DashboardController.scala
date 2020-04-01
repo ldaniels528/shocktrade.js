@@ -21,6 +21,7 @@ import io.scalajs.util.DurationHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -51,10 +52,11 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.maxPlayers = AppConstants.MaxPlayers
 
   $scope.portfolioTabs = js.Array(
-    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", active = false),
-    new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html", active = false),
-    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", active = false),
-    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", active = false))
+    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html"),
+    new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),
+    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html"),
+    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html"),
+    new PortfolioTab(name = "My Awards", icon = "fa-gift", path = "/views/dashboard/awards.html"))
 
   // set the active tab
   $scope.portfolioTabs.headOption.foreach(_.active = true)
@@ -74,10 +76,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def initDash(): Unit = {
     $scope.resetMarketStatus($routeParams.contestID)
-    for (contestID <- $routeParams.contestID) {
-      loadContest(contestID)
-      gameState.userID.foreach(loadPortfolio(contestID, _))
-    }
+    for (contestID <- $routeParams.contestID) refreshView(contestID, gameState.userID)
   }
 
   private def clock: js.Date = {
@@ -85,20 +84,24 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     new js.Date(js.Date.now() - timeOffset)
   }
 
-  private def loadContest(contestID: String): Unit = {
-    contestFactory.findContest(contestID) onComplete {
-      case Success(contest) =>
-        if (contest.contestID != gameState.contest.flatMap(_.contestID)) $scope.$apply { () => gameState.contest = contest }
-      case Failure(e) => toaster.error("Error", e.displayMessage)
-    }
-  }
+  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): Unit = {
+    $timeout(() => $scope.isRefreshing = true, 0.millis)
+    val outcome = for {
+      contest <- contestFactory.findContest(contestID)
+      portfolio_? <- aUserID.toOption match {
+        case Some(userID) => contestFactory.findPortfolio(contestID, userID).map(c => Some(c))
+        case None => Future.successful(None)
+      }
+    } yield (contest, portfolio_?)
 
-  private def loadPortfolio(contestID: String, userID: String): Unit = {
-    contestFactory.findPortfolio(contestID, userID) onComplete {
-      case Success(portfolio) =>
-        if (portfolio.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) $scope.$apply { () => gameState.portfolio = portfolio }
-      case Failure(e) =>
-        console.warn(s"User $userID entered a contest ($contestID) without a portfolio")
+    outcome onComplete { _ => $timeout(() => $scope.isRefreshing = false, 500.millis) }
+    outcome onComplete {
+      case Success((contest, portfolio_?)) =>
+          if (contest.contestID != gameState.contest.flatMap(_.contestID)) gameState.contest = contest
+          portfolio_? foreach { portfolio =>
+            if (portfolio.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) gameState.portfolio = portfolio
+          }
+      case Failure(e) => toaster.error("Error", e.displayMessage)
     }
   }
 
@@ -106,10 +109,10 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   //          Pop-up Dialog Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.invitePlayerPopup = (aContestID: js.UndefOr[String]) => {
-    for (contestID <- aContestID) {
+  $scope.popupInvitePlayer = (aContestID: js.UndefOr[String]) => {
+    for (contestID <- aContestID ?? $routeParams.contestID) {
       invitePlayerDialog.popup(contestID) onComplete {
-        case Success(_) => loadContest(contestID)
+        case Success(_) => refreshView(contestID, gameState.userID)
         case Failure(e) =>
           if (e.getMessage != "cancel") {
             toaster.error("invite Player", e.displayMessage)
@@ -125,7 +128,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
       userID <- aUserID
     } {
       perksDialog.popup(contestID, userID) onComplete {
-        case Success(_) => loadContest(contestID)
+        case Success(_) => refreshView(contestID, userID)
         case Failure(e) =>
           if (e.getMessage != "cancel") {
             toaster.error("Perk Management", e.displayMessage)
@@ -137,13 +140,13 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.popupNewOrderDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String], aSymbol: js.UndefOr[String]) => {
     for {
-      contestID <- aContestID
+      contestID <- aContestID ?? $routeParams.contestID
       userID <- aUserID
     } {
       newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = aSymbol)) onComplete {
         case Success(result) =>
           console.log(s"result = ${JSON.stringify(result)}")
-          loadContest(contestID)
+          refreshView(contestID, userID)
         case Failure(e) =>
           if (e.getMessage != "cancel") {
             toaster.error("Order Management", e.displayMessage)
@@ -304,12 +307,14 @@ object DashboardController {
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
-    var invitePlayerPopup: js.Function1[js.UndefOr[String], Unit] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var playerRankingOnTop: js.Function2[js.UndefOr[String], js.UndefOr[js.Array[ContestRanking]], js.UndefOr[js.Array[ContestRanking]]] = js.native
+    var toggleRankingsShown: js.Function0[Unit] = js.native
+
+    // popup dialog functions
+    var popupInvitePlayer: js.Function1[js.UndefOr[String], Unit] = js.native
     var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
     var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
-    var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // contest management functions
     var deleteContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native
@@ -320,6 +325,7 @@ object DashboardController {
     // contest management variables
     var isJoining: js.UndefOr[Boolean] = js.native
     var isQuiting: js.UndefOr[Boolean] = js.native
+    var isRefreshing: js.UndefOr[Boolean] = js.native
     var isStarting: js.UndefOr[Boolean] = js.native
     var isDeleting: js.UndefOr[Boolean] = js.native
 

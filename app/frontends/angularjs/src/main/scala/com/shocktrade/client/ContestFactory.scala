@@ -103,6 +103,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         hostUserID = contest.data.hostUserID,
         startTime = contest.data.startTime,
         startingBalance = contest.data.startingBalance,
+        expirationTime = contest.data.expirationTime,
         status = contest.data.status,
         timeOffset = contest.data.timeOffset,
         // portfolios & rankings

@@ -1,0 +1,57 @@
+<div>
+    <div class="row">
+        <span class="col-md-2">Started:</span>
+        <span class="col-md-2">
+            <span class="ds_heading" ng-show="contest.startTime">{{ contest.startTime | duration }}</span>
+            <span class="ds_heading" ng-hide="contest.startTime">Not Started</span>
+        </span>
+
+        <span class="col-md-2">Status:</span>
+        <span class="col-md-2">
+            <span class="positive" ng-show="contest.status === 'ACTIVE'">Active</span>
+            <span class="positive" ng-show="contest.status === 'QUEUED'">Queued</span>
+            <span class="negative" ng-show="contest.status === 'CLOSED'">Closed</span>
+        </span>
+
+        <span class="col-md-2">Robots Allowed:</span>
+        <span class="col-md-2">
+            <span class="ds_heading">{{ contest.robotsAllowed ? 'Yes' : 'No' }}</span>
+        </span>
+    </div>
+
+    <div class="row">
+        <span class="col-md-2">Ends:</span>
+        <span class="col-md-2">
+            <span class="ds_heading" ng-hide="contest.status === 'CLOSED'">{{ contest.expirationTime | duration }}</span>
+            <span class="ds_heading" ng-show="contest.status === 'CLOSED'">{{ contest.expirationTime | date:'MM-dd-yyyy' }}</span>
+        </span>
+
+        <span class="col-md-2">Starting Balance:</span>
+        <span class="col-md-2">
+            <span class="positive">$ {{ contest.startingBalance || 0 | number:2 }}</span>
+        </span>
+
+        <span class="col-md-2">Invitation Only:</span>
+        <span class="col-md-2">
+            <span class="ds_heading">{{ contest.invitationOnly ? 'Yes' : 'No' }}</span>
+        </span>
+    </div>
+
+    <div class="row">
+        <span class="col-md-2">Players:</span>
+        <span class="col-md-2">
+            <span class="ds_heading">{{ contest.rankings.length || 1 }} / {{ maxPlayers }}</span>
+        </span>
+
+        <span class="col-md-2">Level Cap:</span>
+        <span class="col-md-2">
+            <span class="ds_heading" ng-show="contest.levelCap">Level {{ contest.levelCap }}</span>
+            <span class="positive" ng-hide="contest.levelCap">None</span>
+        </span>
+
+        <span class="col-md-2">Perks Allowed:</span>
+        <span class="col-md-2">
+            <span class="ds_heading">{{ contest.perksAllowed ? 'Yes' : 'No' }}</span>
+        </span>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 <div ng-controller="PositionsController" ng-init="initPositions()">
-    <div class="col-md-12">
+    <div ng-include src="'/views/dashboard/portfolio_summary.html'" ng-show="portfolio.balance"></div>
+    <div class="col-md-12" style="border-top: 1px solid #cccccc; margin-top: 15px">
         <div class="col-md-2 bold left">Symbol</div>
         <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Price Paid</div>
         <div class="col-md-3 bold right" ng-hide="isPositionSelected()">Market Price</div>

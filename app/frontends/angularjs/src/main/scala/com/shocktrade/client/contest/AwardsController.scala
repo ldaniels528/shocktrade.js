@@ -31,29 +31,37 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
 
   $scope.onUserProfileUpdated { (_, userProfile) => $scope.initAwards(userProfile.userID) }
 
+  private def initAwards(userID: String): Unit = {
+    userService.findMyAwards(userID).toFuture onComplete {
+      case Success(myAwardCodes) =>
+        $scope.$apply { () =>
+          $scope.myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code))
+          $scope.myAwardCodes = myAwardCodes.data
+        }
+      case Failure(e) =>
+        toaster.error("Failed to retrieve awards")
+        console.error(s"Failed to retrieve awards: ${e.displayMessage}")
+    }
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.findAwards = () => Award.availableAwards
-
-  $scope.findAwardImage = (aCode: js.UndefOr[String]) => aCode flatMap findAwardImage
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Private Methods
-  ///////////////////////////////////////////////////////////////////////////
-
-  private def initAwards(userID: String): Unit = {
-    userService.findMyAwards(userID).toFuture onComplete {
-      case Success(myAwardCodes) =>
-        $scope.$apply(() => $scope.myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code)))
-      case Failure(e) =>
-        toaster.error("Failed to retrieve orders")
-        console.error(s"Failed to retrieve orders: ${e.displayMessage}")
+  $scope.getAwards = () => {
+    if ($scope.myAwardCodes.isEmpty) Award.availableAwards else {
+      val awards = Award.availableAwards.toList
+      (awards.filter(isEarned) ::: awards.filterNot(isEarned)).toJSArray
     }
   }
 
+  $scope.findAwardImage = (aCode: js.UndefOr[String]) => aCode flatMap findAwardImage
+
+  $scope.isEarned = (anAward: js.UndefOr[Award]) => anAward.exists(isEarned)
+
   private def findAwardImage(code: String): js.UndefOr[String] = awardIconsByCode.get(code).orUndefined
+
+  private def isEarned(award: Award): Boolean = $scope.myAwardCodes.contains(award.code)
 
 }
 
@@ -72,11 +80,13 @@ object AwardsController {
   trait AwardsControllerScope extends Scope {
     // functions
     var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
-    var findAwards: js.Function0[js.Array[Award]] = js.native
+    var getAwards: js.Function0[js.Array[Award]] = js.native
     var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+    var isEarned: js.Function1[js.UndefOr[Award], Boolean] = js.native
 
     // variables
     var myAwards: js.Array[Award] = js.native
+    var myAwardCodes: js.Array[String] = js.native
   }
 
 }

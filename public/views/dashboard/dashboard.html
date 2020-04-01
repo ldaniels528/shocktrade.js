@@ -23,8 +23,9 @@
                     <img ng-show="isUSMarketsOpen(contest.contestID) === null" src="/images/status/loading16.gif">
                     {{ isUSMarketsOpen(contest.contestID) === undefined ? 'US Markets ....' : (isUSMarketsOpen(contest.contestID) ? 'US Markets Open' : 'US Markets Closed') }}
                 </span>
-                <div ng-include src="'/views/dashboard/portfolio_summary.html'" style="margin-bottom: 10px" ng-show="portfolio.balance"></div>
-                <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="portfolio.balance" style="width: 98%"></div>
+
+                <div ng-include src="'/views/dashboard/contest_summary.html'" ng-show="portfolio.balance"></div>
+                <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="portfolio.balance"></div>
                 <div ng-include src="'/views/dashboard/portfolio_tabs.html'"></div>
             </div>
         </div>

@@ -1,0 +1,33 @@
+.awards_container {
+	clear: both;
+	overflow: auto;
+	width: auto;
+	height: 425px;
+}
+
+.awards-heading {
+    background: #999999;
+    color: white;
+    font-weight: bold;
+}
+
+.award-earned-desc {
+    color: #000000;
+}
+
+.award-earned-name {
+    color: #002288;
+    font-weight: bold;
+}
+
+.award-unearned {
+    color: #aaaaaa;
+}
+
+img.award-earned {
+
+}
+
+img.award-unearned {
+    opacity: 0.30;
+}
