@@ -8,7 +8,6 @@ import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.toaster.Toaster
 
-import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -21,7 +20,9 @@ import scala.util.{Failure, Success}
 class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
                        @injected("UserService") userService: UserService) extends Controller {
 
-  $scope.myAwards = js.Array()
+  private val availableAwards: js.Array[Award] = js.Array(Award.availableAwards: _*)
+
+  $scope.myAwards = js.undefined
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -35,7 +36,7 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
     userService.findMyAwards(userID).toFuture onComplete {
       case Success(myAwardCodes) =>
         $scope.$apply { () =>
-          $scope.myAwards = Award.availableAwards.filter(a => myAwardCodes.data.contains(a.code))
+          $scope.myAwards = availableAwards.filter(a => myAwardCodes.data.contains(a.code))
           $scope.myAwardCodes = myAwardCodes.data
         }
       case Failure(e) =>
@@ -49,8 +50,8 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.getAwards = () => {
-    if ($scope.myAwardCodes.isEmpty) Award.availableAwards else {
-      val awards = Award.availableAwards.toList
+    if ($scope.myAwardCodes.isEmpty) js.Array(availableAwards: _*) else {
+      val awards = availableAwards.toList
       (awards.filter(isEarned) ::: awards.filterNot(isEarned)).toJSArray
     }
   }
@@ -80,13 +81,13 @@ object AwardsController {
   trait AwardsControllerScope extends Scope {
     // functions
     var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
-    var getAwards: js.Function0[js.Array[Award]] = js.native
+    var getAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
     var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var isEarned: js.Function1[js.UndefOr[Award], Boolean] = js.native
 
     // variables
-    var myAwards: js.Array[Award] = js.native
-    var myAwardCodes: js.Array[String] = js.native
+    var myAwards: js.UndefOr[js.Array[Award]] = js.native
+    var myAwardCodes: js.UndefOr[js.Array[String]] = js.native
   }
 
 }

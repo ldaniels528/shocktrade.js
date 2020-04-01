@@ -24,7 +24,7 @@
                     {{ isUSMarketsOpen(contest.contestID) === undefined ? 'US Markets ....' : (isUSMarketsOpen(contest.contestID) ? 'US Markets Open' : 'US Markets Closed') }}
                 </span>
 
-                <div ng-include src="'/views/dashboard/contest_summary.html'" ng-show="portfolio.balance"></div>
+                <div ng-include src="'/views/dashboard/contest_summary.html'"></div>
                 <div ng-include src="'/views/dashboard/portfolio_button_panel.html'" ng-show="portfolio.balance"></div>
                 <div ng-include src="'/views/dashboard/portfolio_tabs.html'"></div>
             </div>

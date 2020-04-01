@@ -89,7 +89,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     val outcome = for {
       contest <- contestFactory.findContest(contestID)
       portfolio_? <- aUserID.toOption match {
-        case Some(userID) => contestFactory.findPortfolio(contestID, userID).map(c => Some(c))
+        case Some(userID) => contestFactory.findPortfolio(contestID, userID).map(c => Some(c)).recover { case _: Throwable => None }
         case None => Future.successful(None)
       }
     } yield (contest, portfolio_?)
