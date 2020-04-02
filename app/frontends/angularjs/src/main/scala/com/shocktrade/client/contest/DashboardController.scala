@@ -51,17 +51,16 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.maxPlayers = AppConstants.MaxPlayers
 
   private val portfolioTabs = js.Array(
-    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", isAuthRequired = true),
     new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),
+    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", isAuthRequired = true),
     new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", isAuthRequired = true),
     new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", isAuthRequired = true),
     new PortfolioTab(name = "My Awards", icon = "fa-gift", path = "/views/dashboard/awards.html", isAuthRequired = true))
 
-  $scope.getPortfolioTabs = () => {
-    val tabs = portfolioTabs.filter(tab => !tab.isAuthRequired || $scope.isParticipant())
-    tabs.zipWithIndex foreach { case (tab, index) => tab.active = index == 0 }
-    tabs
-  }
+  // select the first tab
+  portfolioTabs.zipWithIndex foreach { case (tab, index) => tab.active = index == 0 }
+
+  $scope.getPortfolioTabs = () => portfolioTabs//.filter(tab => !tab.isAuthRequired || $scope.isParticipant())
 
   $scope.isParticipant = () => $scope.portfolio.flatMap(_.portfolioID).nonEmpty
 

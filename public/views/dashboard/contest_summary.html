@@ -6,16 +6,16 @@
             <span class="ds_heading" ng-hide="contest.startTime">Not Started</span>
         </span>
 
-        <span class="col-md-2">Status:</span>
+        <span class="col-md-2">Players:</span>
         <span class="col-md-2">
-            <span class="positive" ng-show="contest.status === 'ACTIVE'">Active</span>
-            <span class="positive" ng-show="contest.status === 'QUEUED'">Queued</span>
-            <span class="negative" ng-show="contest.status === 'CLOSED'">Closed</span>
+            <span class="ds_heading">{{ contest.rankings.length || 1 }} / {{ maxPlayers }}</span>
         </span>
 
-        <span class="col-md-2">Robots Allowed:</span>
         <span class="col-md-2">
-            <span class="ds_heading">{{ contest.robotsAllowed ? 'Yes' : 'No' }}</span>
+            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.continuousMode ? 'on' : 'off')"></i> Continuous Market</span>
+        </span>
+        <span class="col-md-2">
+            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.startTime ? 'on' : 'off')"></i> Start</span>
         </span>
     </div>
 
@@ -26,32 +26,38 @@
             <span class="ds_heading" ng-show="contest.status === 'CLOSED'">{{ contest.expirationTime | date:'MM-dd-yyyy' }}</span>
         </span>
 
-        <span class="col-md-2">Starting Balance:</span>
+        <span class="col-md-2">Buy-in:</span>
         <span class="col-md-2">
-            <span class="positive">$ {{ contest.startingBalance || 0 | number:2 }}</span>
+            <span class="ds_heading">$ {{ contest.startingBalance || 0 | number:0 }}</span>
         </span>
 
-        <span class="col-md-2">Invitation Only:</span>
         <span class="col-md-2">
-            <span class="ds_heading">{{ contest.invitationOnly ? 'Yes' : 'No' }}</span>
+            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.friendsOnly ? 'on' : 'off')"></i> Friends-Only</span>
+        </span>
+        <span class="col-md-2">
+            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.perksAllowed ? 'on' : 'off')"></i> Perks Allowed</span>
         </span>
     </div>
 
     <div class="row">
-        <span class="col-md-2">Players:</span>
+        <span class="col-md-2">Status:</span>
         <span class="col-md-2">
-            <span class="ds_heading">{{ contest.rankings.length || 1 }} / {{ maxPlayers }}</span>
+            <span class="positive" ng-show="contest.status === 'ACTIVE'">Active</span>
+            <span class="positive" ng-show="contest.status === 'QUEUED'">Queued</span>
+            <span class="negative" ng-show="contest.status === 'CLOSED'">Closed</span>
         </span>
 
         <span class="col-md-2">Level Cap:</span>
         <span class="col-md-2">
             <span class="ds_heading" ng-show="contest.levelCap">Level {{ contest.levelCap }}</span>
-            <span class="positive" ng-hide="contest.levelCap">None</span>
+            <span class="ds_heading" ng-hide="contest.levelCap">None</span>
         </span>
 
-        <span class="col-md-2">Perks Allowed:</span>
         <span class="col-md-2">
-            <span class="ds_heading">{{ contest.perksAllowed ? 'Yes' : 'No' }}</span>
+            <span class="ds_premium"><i ng-class="'fa fa-toggle-' + (contest.invitationOnly ? 'on' : 'off')"></i> Invitation-Only</span>
+        </span>
+        <span class="col-md-2">
+            <span class="ds_heading"><i ng-class="'fa fa-toggle-' + (contest.robotsAllowed ? 'on' : 'off')"></i> Robots Allowed</span>
         </span>
     </div>
 </div>

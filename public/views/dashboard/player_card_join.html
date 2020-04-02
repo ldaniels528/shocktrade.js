@@ -8,7 +8,7 @@
                 <img ng-src="/images/status/{{ isOnline(userProfile.userID) ? 'greenlight' : 'offlight' }}.png">
                 <span ng-class="'rank_' + getJoiningPlayerRank(userProfile.username, contest.startingBalance)">{{ getJoiningPlayerRank(userProfile.username, contest.startingBalance) }}</span>
                 <span class="null">&#8212;</span>
-                <span class="st_text_color" ng-click="showGamerCard(userProfile.name)">{{ userProfile.username }} (lvl {{ userProfile.level || 0 }})</span>
+                <span class="st_text_color" ng-click="showGamerCard(userProfile.name)">{{ userProfile.username }} (<span style="color: #204088">LVL {{ userProfile.level || 0 }}</span>)</span>
             </div>
             <div>
                 <span class="positive">$ {{ contest.startingBalance | number: 2 }}</span>

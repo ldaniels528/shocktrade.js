@@ -117,7 +117,7 @@ object Filters {
     val unitName = timeUnits(unit) + (if (age.toInt != 1) "s" else "")
     if (unit == 0 && (age >= 0 && age < 1)) "just now"
     else if (elapsed < 0) {
-      if (noFuture) "moments ago" else f"$age%.0f $unitName from now"
+      if (noFuture) "moments ago" else f"in $age%.0f $unitName"
     }
     else f"$age%.0f $unitName ago"
   }

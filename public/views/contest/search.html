@@ -45,6 +45,9 @@
                 <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="enterGame(c.contestID)">
                     <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
                         <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
+                        <i ng-show="c.status == 'QUEUED'" class="fa fa-battery-4" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                        <i ng-show="c.status == 'ACTIVE'" class="fa fa-battery-3" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                        <i ng-show="c.status == 'CLOSED'" class="fa fa-battery-0" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
                         <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
                     </div>
                     <div class="col-md-2 center">
@@ -53,7 +56,7 @@
                     </div>
                     <div class="col-md-2 center">
                         <span ng-show="c.status === 'ACTIVE'">
-                            <span ng-show="c.expirationTime">{{ c.expirationTime | date:'MM-dd-yyyy' }}</span>
+                            <span ng-show="c.expirationTime">{{ c.expirationTime | duration }}</span>
                             <span ng-hide="c.expirationTime">&#8212;</span>
                         </span>
                         <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
