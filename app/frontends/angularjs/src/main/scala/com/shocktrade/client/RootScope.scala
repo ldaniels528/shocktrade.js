@@ -1,6 +1,6 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.users.GameStateFactory.UserProfileScope
+import com.shocktrade.client.models.UserProfile
 import io.scalajs.npm.angularjs.Scope
 
 import scala.scalajs.js
@@ -10,4 +10,7 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait RootScope extends Scope with UserProfileScope
+trait RootScope extends Scope {
+  var userProfile: js.UndefOr[UserProfile] = js.native
+
+}

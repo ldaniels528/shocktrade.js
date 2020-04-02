@@ -1,21 +1,22 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.RootScope
+import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.ExposureController._
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.GameStateFactory
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.contest.ChartData
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.amcharts.AmChart.Export
 import io.scalajs.npm.amcharts.{AmCharts, AmPieChart}
 import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.nvd3._
 import io.scalajs.npm.angularjs.nvd3.chart._
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, angular, injected}
+import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -27,12 +28,13 @@ import scala.util.{Failure, Success}
  * Exposure Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ExposureController($scope: ExposureControllerScope, $routeParams: DashboardRouteParams, toaster: Toaster,
-                         @injected("GameStateFactory") gameState: GameStateFactory,
-                         @injected("PortfolioService") portfolioService: PortfolioService)
+class ExposureController($scope: ExposureControllerScope, $routeParams: DashboardRouteParams,
+                         $cookies: Cookies, toaster: Toaster,
+                         @injected("PortfolioService") portfolioService: PortfolioService,
+                         @injected("UserService") userService: UserService)
   extends Controller {
 
-  implicit private val scope: ExposureControllerScope = $scope
+  implicit val cookies: Cookies = $cookies
 
   ///////////////////////////////////////////////////////////////////////////
   //          Public Variables
@@ -46,6 +48,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
     new ChartSelection(value = "sector", label = "Sector Exposure"))
 
   $scope.selectedExposure = $scope.exposures.headOption.orUndefined
+
   $scope.options = new ChartOptions(
     new PieChart(
       width = 800,
@@ -68,6 +71,14 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   def initChart(): Unit = {
     console.info(s"Initializing ${getClass.getSimpleName}...")
     $scope.showChart($scope.selectedExposure)
+
+    // attempt to load the user profile
+    $cookies.getGameState.userID foreach { userID =>
+      userService.findUserByID(userID) onComplete {
+        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
+        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
+      }
+    }
   }
 
   $scope.onUserProfileUpdated { (_: Event, _: UserProfile) => initChart() }
@@ -79,7 +90,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   $scope.showChart = (aChart: js.UndefOr[ChartSelection]) => {
     for {
       contestID <- $routeParams.contestID
-      userID <- gameState.userID
+      userID <- $cookies.getGameState.userID
       chart <- aChart
       value <- chart.value
     } {
@@ -125,7 +136,7 @@ object ExposureController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait ExposureControllerScope extends RootScope {
+  trait ExposureControllerScope extends Scope {
     // variables
     var exposures: js.Array[ChartSelection] = js.native
     var options: ChartOptions = js.native
@@ -134,7 +145,7 @@ object ExposureController {
     // functions
     var initChart: js.Function0[Unit] = js.native
     var showChart: js.Function1[js.UndefOr[ChartSelection], Unit] = js.native
-
+    var userProfile: js.UndefOr[UserProfile] = js.native
   }
 
   /**

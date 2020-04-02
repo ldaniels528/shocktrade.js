@@ -1,17 +1,20 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.Filters.toDuration
+import com.shocktrade.client.GameState._
+import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
-import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.client.contest.DashboardController._
+import com.shocktrade.client.models.UserProfile
+import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.contest.ChatMessage
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -23,12 +26,13 @@ import scala.util.{Failure, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
-                     $anchorScroll: AnchorScroll, $timeout: Timeout, toaster: Toaster,
+                     $anchorScroll: AnchorScroll, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
                      @injected("ContestService") contestService: ContestService,
-                     @injected("GameStateFactory") gameState: GameStateFactory)
+                     @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
-  implicit private val scope: ChatControllerScope = $scope
+  implicit val cookies: Cookies = $cookies
+
   private val colorMap = js.Dictionary[String]()
   private var lastUpdateTime = 0d
   private var lastMessageCount = -1
@@ -36,6 +40,7 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
 
   $scope.chatMessage = ""
   $scope.chatMessages = js.Array()
+  $scope.userProfile = js.undefined
 
   /////////////////////////////////////////////////////////////////
   //    Initialization Functions
@@ -48,11 +53,18 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
   $scope.onUserProfileUpdated { (_, _) => $scope.initChat() }
 
   private def initChat(contestID: String): Unit = {
+    // attempt to load the user profile
+    $cookies.getGameState.userID foreach { userID =>
+      userService.findUserByID(userID) onComplete {
+        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
+        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
+      }
+    }
+
+    // attempt to load the chat messages
     contestService.findChatMessages(contestID) onComplete {
       case Success(messages) => $scope.$apply(() => $scope.chatMessages = messages.data)
-      case Failure(e) =>
-        toaster.error("Failed to retrieve chat messages")
-        console.error(s"Failed to retrieve chat messages: ${e.displayMessage}")
+      case Failure(e) => console.error(s"Failed to retrieve chat messages: ${e.displayMessage}")
     }
   }
 
@@ -114,7 +126,7 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
    */
   private def sendChatMessage(messageText: String): Unit = {
     val outcome = for {
-      userID <- gameState.userID.toOption
+      userID <- $cookies.getGameState.userID.toOption
       contestID <- $routeParams.contestID.toOption
     } yield (userID, contestID)
 
@@ -123,7 +135,7 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
         if (messageText.trim.nonEmpty) {
           // make the service calls
           val outcome = for {
-            _ <- contestService.sendChatMessage(contestID, new ChatMessage(userID = userID, username = gameState.username, message = messageText))
+            _ <- contestService.sendChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
             messages <- contestService.findChatMessages(contestID)
           } yield messages
 
@@ -182,10 +194,11 @@ object ChatController {
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait ChatControllerScope extends RootScope {
+trait ChatControllerScope extends Scope {
   // variables
   var chatMessage: String = js.native
   var chatMessages: js.Array[ChatMessage] = js.native
+  var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
   var initChat: js.Function0[Unit] = js.native

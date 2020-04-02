@@ -1,10 +1,9 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.models.contest.ContestSearchResultUI
-import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.client.users.GameStateFactory.ContestScope
+import com.shocktrade.client.GameState._
 import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.models.contest.{Contest, ContestSearchResultUI}
 import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestSearchForm
 import com.shocktrade.common.models.contest.ContestRanking
@@ -12,6 +11,7 @@ import com.shocktrade.common.models.contest.ContestSearchResult._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -24,14 +24,13 @@ import scala.util.{Failure, Success}
  * Game Search Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class GameSearchController($scope: GameSearchScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $location: Location, $timeout: Timeout, toaster: Toaster,
                                 @injected("ContestService") contestService: ContestService,
-                                @injected("GameStateFactory") gameState: GameStateFactory,
                                 @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
 
   // internal variables
-  implicit private val scope: GameSearchScope = $scope
+  implicit private val cookies: Cookies = $cookies
   private var searchResults = js.Array[ContestSearchResultUI]()
 
   $scope.maxPlayers = AppConstants.MaxPlayers
@@ -40,7 +39,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   $scope.portfolios = js.Array()
   $scope.searchTerm = js.undefined
   $scope.searchOptions = new ContestSearchForm(
-    userID = gameState.userID,
+    userID = $cookies.getGameState.userID,
     activeOnly = false,
     available = false,
     friendsOnly = false,
@@ -64,7 +63,7 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
 
   private def contestSearch(searchOptions: ContestSearchForm): Unit = {
-    searchOptions.userID = gameState.userID
+    searchOptions.userID = $cookies.getGameState.userID
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
         $scope.$apply(() => searchResults = contests.data.map(_.asInstanceOf[ContestSearchResultUI]))
@@ -175,9 +174,9 @@ case class GameSearchController($scope: GameSearchScope, $location: Location, $t
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait GameSearchScope extends RootScope with ContestScope with ContestEntrySupportScope {
+trait GameSearchScope extends RootScope with ContestEntrySupportScope {
   // variables
-  //var contest: js.UndefOr[Contest] = js.native
+  var contest: js.UndefOr[Contest] = js.native
   var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
   var searchTerm: js.UndefOr[String] = js.native
   var searchOptions: ContestSearchForm = js.native

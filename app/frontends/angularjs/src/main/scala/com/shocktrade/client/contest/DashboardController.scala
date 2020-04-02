@@ -1,12 +1,12 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.dialogs.NewOrderDialogController.NewOrderParams
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog}
 import com.shocktrade.client.discover.MarketStatusService
-import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.client.users.GameStateFactory.{ContestScope, PortfolioScope}
+import com.shocktrade.client.models.contest.{Contest, Portfolio}
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.{AppConstants, Ok}
@@ -36,7 +36,6 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
                                $cookies: Cookies, $interval: Interval, $timeout: Timeout, toaster: Toaster,
                                @injected("ContestFactory") contestFactory: ContestFactory,
                                @injected("ContestService") contestService: ContestService,
-                               @injected("GameStateFactory") gameState: GameStateFactory,
                                @injected("InvitePlayerDialog") invitePlayerDialog: InvitePlayerDialog,
                                @injected("MarketStatusService") marketStatusService: MarketStatusService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
@@ -47,19 +46,24 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     with GlobalSelectedSymbol[DashboardControllerScope]
     with USMarketsStatusSupport[DashboardControllerScope] {
 
-  implicit private val scope: DashboardControllerScope = $scope
+  implicit val cookies: Cookies = $cookies
 
   $scope.maxPlayers = AppConstants.MaxPlayers
 
-  $scope.portfolioTabs = js.Array(
-    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html"),
+  private val portfolioTabs = js.Array(
+    new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", isAuthRequired = true),
     new PortfolioTab(name = "Socialize", icon = "fa-comment-o", path = "/views/dashboard/chat.html"),
-    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html"),
-    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html"),
-    new PortfolioTab(name = "My Awards", icon = "fa-gift", path = "/views/dashboard/awards.html"))
+    new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", isAuthRequired = true),
+    new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", isAuthRequired = true),
+    new PortfolioTab(name = "My Awards", icon = "fa-gift", path = "/views/dashboard/awards.html", isAuthRequired = true))
 
-  // set the active tab
-  $scope.portfolioTabs.headOption.foreach(_.active = true)
+  $scope.getPortfolioTabs = () => {
+    val tabs = portfolioTabs.filter(tab => !tab.isAuthRequired || $scope.isParticipant())
+    tabs.zipWithIndex foreach { case (tab, index) => tab.active = index == 0 }
+    tabs
+  }
+
+  $scope.isParticipant = () => $scope.portfolio.flatMap(_.portfolioID).nonEmpty
 
   /////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -69,6 +73,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.initDash = () => {
     console.info(s"${getClass.getSimpleName} initializing...")
+    portfolioTabs.zipWithIndex.foreach { case (tab, index) => tab.active = index == 0 }
     initDash()
   }
 
@@ -76,11 +81,11 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def initDash(): Unit = {
     $scope.resetMarketStatus($routeParams.contestID)
-    for (contestID <- $routeParams.contestID) refreshView(contestID, gameState.userID)
+    for (contestID <- $routeParams.contestID) refreshView(contestID, $cookies.getGameState.userID)
   }
 
   private def clock: js.Date = {
-    val timeOffset = gameState.contest.flatMap(_.timeOffset).orZero
+    val timeOffset = $scope.contest.flatMap(_.timeOffset).orZero
     new js.Date(js.Date.now() - timeOffset)
   }
 
@@ -97,10 +102,10 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     outcome onComplete { _ => $timeout(() => $scope.isRefreshing = false, 500.millis) }
     outcome onComplete {
       case Success((contest, portfolio_?)) =>
-          if (contest.contestID != gameState.contest.flatMap(_.contestID)) gameState.contest = contest
-          portfolio_? foreach { portfolio =>
-            if (portfolio.portfolioID != gameState.portfolio.flatMap(_.portfolioID)) gameState.portfolio = portfolio
-          }
+        $scope.$apply { () =>
+          $scope.contest = contest
+          $scope.portfolio = portfolio_?.orUndefined
+        }
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
   }
@@ -112,7 +117,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.popupInvitePlayer = (aContestID: js.UndefOr[String]) => {
     for (contestID <- aContestID ?? $routeParams.contestID) {
       invitePlayerDialog.popup(contestID) onComplete {
-        case Success(_) => refreshView(contestID, gameState.userID)
+        case Success(_) => refreshView(contestID, $cookies.getGameState.userID)
         case Failure(e) =>
           if (e.getMessage != "cancel") {
             toaster.error("invite Player", e.displayMessage)
@@ -176,9 +181,18 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   }
 
   $scope.getRankCellClass = (aRanking: js.UndefOr[String]) => aRanking map {
+    case rank if rank == "1st" & isTiedForLead => "rank_cell_2nd"
     case rank if Set("1st", "2nd", "3rd").contains(rank) => s"rank_cell_$rank"
     case rank if rank == "join" => "rank_cell_join"
     case _ => "rank_cell"
+  }
+
+  private def isTiedForLead: Boolean = {
+    (for {
+      rankings <- $scope.contest.flatMap(_.rankings).toOption
+      _1st <- rankings.headOption
+      _2nd <- rankings.drop(1).headOption
+    } yield _1st.rankNum == _2nd.rankNum).contains(true)
   }
 
   $scope.isRankingsShown = () => !$scope.rankingsHidden.isTrue
@@ -209,11 +223,11 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   $scope.deleteContest = (aContestID: js.UndefOr[String]) => aContestID.map(deleteContest)
 
   $scope.joinContest = (aContestID: js.UndefOr[String]) => {
-    for {contestID <- aContestID; userID <- gameState.userID} yield joinContest(contestID, userID)
+    for {contestID <- aContestID; userID <- $cookies.getGameState.userID} yield joinContest(contestID, userID)
   }
 
   $scope.quitContest = (aContestID: js.UndefOr[String]) => {
-    for {contestID <- aContestID; userID <- gameState.userID} yield quitContest(contestID, userID)
+    for {contestID <- aContestID; userID <- $cookies.getGameState.userID} yield quitContest(contestID, userID)
   }
 
   $scope.startContest = (aContestID: js.UndefOr[String]) => aContestID.map(startContest)
@@ -295,18 +309,15 @@ object DashboardController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait DashboardControllerScope extends RootScope
-    with ContestScope
-    with GlobalNavigation
-    with GlobalSelectedSymbolScope
-    with PortfolioScope
-    with USMarketsStatusSupportScope {
+  trait DashboardControllerScope extends RootScope with GlobalNavigation with GlobalSelectedSymbolScope with USMarketsStatusSupportScope {
 
     // functions
     var initDash: js.Function0[Unit] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
+    var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
+    var isParticipant: js.Function0[Boolean] = js.native
     var isRankingsShown: js.Function0[Boolean] = js.native
     var playerRankingOnTop: js.Function2[js.UndefOr[String], js.UndefOr[js.Array[ContestRanking]], js.UndefOr[js.Array[ContestRanking]]] = js.native
     var toggleRankingsShown: js.Function0[Unit] = js.native
@@ -331,10 +342,9 @@ object DashboardController {
 
     // variables
     var clock: js.UndefOr[js.Date] = js.native
-    //var contest: js.UndefOr[Contest] = js.native
-    //var portfolio: js.UndefOr[Portfolio] = js.native
+    var contest: js.UndefOr[Contest] = js.native
+    var portfolio: js.UndefOr[Portfolio] = js.native
     var maxPlayers: js.UndefOr[Int] = js.native
-    var portfolioTabs: js.Array[PortfolioTab] = js.native
     var rankingsHidden: js.UndefOr[Boolean] = js.native
 
   }
@@ -353,6 +363,10 @@ object DashboardController {
    * Portfolio Tab
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class PortfolioTab(val name: String, val icon: String, val path: String, var active: Boolean = false) extends js.Object
+  class PortfolioTab(val name: String,
+                     val icon: String,
+                     val path: String,
+                     val isAuthRequired: Boolean = false,
+                     var active: Boolean = false) extends js.Object
 
 }

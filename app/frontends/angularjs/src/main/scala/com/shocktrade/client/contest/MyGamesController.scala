@@ -2,8 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
-import com.shocktrade.client.users.GameStateFactory.UserProfileScope
-import com.shocktrade.client.users.{GameStateFactory, UserService}
+import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
@@ -23,12 +22,10 @@ import scala.util.{Failure, Success}
  */
 case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                              @injected("ContestService") contestService: ContestService,
-                             @injected("GameStateFactory") gameState: GameStateFactory,
                              @injected("NewGameDialog") newGameDialog: NewGameDialog,
                              @injected("UserService") userService: UserService)
   extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
-  private implicit val scope: MyGamesScope = $scope
   private var myContests = js.Array[MyContest]()
 
   ///////////////////////////////////////////////////////////////////////////
@@ -110,7 +107,7 @@ case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $locat
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MyGamesScope extends GameSearchScope with UserProfileScope {
+trait MyGamesScope extends GameSearchScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native

@@ -106,7 +106,6 @@ object WebClientJsApp {
 
   private def configureFactories(module: Module): Unit = {
     module.factoryOf[ContestFactory]("ContestFactory")
-    module.factoryOf[GameStateFactory]("GameStateFactory")
     ()
   }
 

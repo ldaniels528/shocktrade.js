@@ -132,6 +132,7 @@ SELECT
     P.portfolioID,
     U.userID,
     U.username,
+    U.level,
     IFNULL(P.funds + SUM(S.lastTrade * PS.quantity), P.funds) AS totalEquity,
     IFNULL((100 * ((P.funds + SUM(S.lastTrade * PS.quantity)) / C.startingBalance)) - 100, 0.0) AS gainLoss
 FROM contests C

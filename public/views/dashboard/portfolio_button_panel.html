@@ -1,5 +1,6 @@
 <div class="col-md-12 portfolio_button_panel">
-    <div class="col-md-3">
+    <span ng-hide="portfolio.balance">&nbsp;</span>
+    <div class="col-md-3" ng-show="portfolio.balance">
         <button class="btn btn-default refresh_button"
                 ng-click="initDash()"
                 title="Refresh the dashboard">
@@ -8,7 +9,7 @@
         </button>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-9" ng-show="portfolio.balance">
         <div class=" pull-right">
             <button class="btn btn-default new_order_button indent"
                     ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)"

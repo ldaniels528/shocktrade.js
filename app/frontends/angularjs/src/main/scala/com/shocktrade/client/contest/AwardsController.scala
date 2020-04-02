@@ -1,11 +1,13 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.AwardsController._
 import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -17,10 +19,12 @@ import scala.util.{Failure, Success}
  * Awards Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
+class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster: Toaster,
                        @injected("UserService") userService: UserService) extends Controller {
 
-  private val availableAwards: js.Array[Award] = js.Array(Award.availableAwards: _*)
+  implicit private val cookies: Cookies = $cookies
+
+  private val availableAwards: js.Array[Award] = Award.availableAwards
 
   $scope.myAwards = js.undefined
 
@@ -28,7 +32,12 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
   //          Initialization Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.initAwards = (aUserID: js.UndefOr[String]) => aUserID foreach initAwards
+  $scope.initAwards = (aUserID: js.UndefOr[String]) => {
+    console.info(s"Initializing ${getClass.getSimpleName}...")
+    aUserID foreach initAwards
+  }
+
+  $scope.onContestSelected { (_, _) => $scope.initAwards($cookies.getGameState.userID) }
 
   $scope.onUserProfileUpdated { (_, userProfile) => $scope.initAwards(userProfile.userID) }
 
@@ -50,7 +59,7 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
   ///////////////////////////////////////////////////////////////////////////
 
   $scope.getAwards = () => {
-    if ($scope.myAwardCodes.isEmpty) js.Array(availableAwards: _*) else {
+    if ($scope.myAwardCodes.isEmpty) availableAwards else {
       val awards = availableAwards.toList
       (awards.filter(isEarned) ::: awards.filterNot(isEarned)).toJSArray
     }
@@ -62,7 +71,7 @@ class AwardsController($scope: AwardsControllerScope, toaster: Toaster,
 
   private def findAwardImage(code: String): js.UndefOr[String] = awardIconsByCode.get(code).orUndefined
 
-  private def isEarned(award: Award): Boolean = $scope.myAwardCodes.contains(award.code)
+  private def isEarned(award: Award): Boolean = $scope.myAwardCodes.exists(_.contains(award.code))
 
 }
 

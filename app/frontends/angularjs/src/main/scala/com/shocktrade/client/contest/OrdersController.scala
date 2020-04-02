@@ -1,15 +1,18 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.GameState._
+import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Order
-import com.shocktrade.client.users.GameStateFactory
-import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.toaster.Toaster
-import io.scalajs.npm.angularjs.{Controller, Timeout, injected}
+import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
@@ -21,12 +24,13 @@ import scala.util.{Failure, Success}
  * Orders Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams, $timeout: Timeout, toaster: Toaster,
-                       @injected("GameStateFactory") gameState: GameStateFactory,
-                       @injected("PortfolioService") portfolioService: PortfolioService)
+class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRouteParams,
+                       $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                       @injected("PortfolioService") portfolioService: PortfolioService,
+                       @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
-  implicit private val scope: OrdersControllerScope = $scope
+  implicit val cookies: Cookies = $cookies
   private val marketOrderTypes = js.Array("MARKET", "MARKET_ON_CLOSE")
 
   $scope.showOpenOrders = true
@@ -38,13 +42,22 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.initOrders = () => for (contestID <- $routeParams.contestID; userID <- gameState.userID) {
-    loadOrders(contestID, userID)
+  $scope.initOrders = () => for (contestID <- $routeParams.contestID; userID <- $cookies.getGameState.userID) {
+    initOrders(contestID, userID)
   }
 
   $scope.onUserProfileUpdated { (_, _) => $scope.initOrders() }
 
-  private def loadOrders(contestID: String, userID: String): Unit = {
+  private def initOrders(contestID: String, userID: String): Unit = {
+    // attempt to load the user profile
+    $cookies.getGameState.userID foreach { userID =>
+      userService.findUserByID(userID) onComplete {
+        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
+        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
+      }
+    }
+
+    // attempt to load the orders
     portfolioService.findOrders(contestID, userID) onComplete {
       case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data)
       case Failure(e) =>
@@ -103,7 +116,7 @@ object OrdersController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait OrdersControllerScope extends RootScope {
+  trait OrdersControllerScope extends Scope {
     // functions
     var initOrders: js.Function0[Unit] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
@@ -119,6 +132,7 @@ object OrdersController {
     var selectedOrder: js.UndefOr[Order] = js.native
     var showClosedOrders: js.UndefOr[Boolean] = js.native
     var showOpenOrders: js.UndefOr[Boolean] = js.native
+    var userProfile: js.UndefOr[UserProfile] = js.native
   }
 
 }

@@ -136,6 +136,7 @@ object MyQuotesController {
 trait MyQuotesControllerScope extends RootScope with PersonalSymbolSupportScope {
   // variables
   var selectedQuote: js.UndefOr[ResearchQuote] = js.native
+  //var userProfile: js.UndefOr[UserProfile] = js.native
 
   // quote-related functions
   var expandList: js.Function1[js.UndefOr[String], Unit] = js.native

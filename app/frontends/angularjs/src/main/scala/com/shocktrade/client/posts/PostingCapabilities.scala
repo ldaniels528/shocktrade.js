@@ -493,6 +493,7 @@ trait PostingCapabilitiesScope extends RootScope {
   var postsLoading: js.UndefOr[Boolean] = js.native
   var tags: js.Array[String] = js.native
   var uploader: FileUploader = js.native
+  //var userProfile: js.UndefOr[UserProfile] = js.native
 
   // posts
   var deletePost: js.Function1[js.UndefOr[Post], Unit] = js.native

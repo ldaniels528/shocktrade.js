@@ -299,6 +299,7 @@ trait DiscoverControllerScope extends RootScope
   var q: CompleteQuote = js.native
   var ticker: String = js.native
   var tradingHistory: js.Array[js.Object] = js.native
+  //var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
   var expandSection: js.Function1[js.UndefOr[ModuleExpander], Unit] = js.native

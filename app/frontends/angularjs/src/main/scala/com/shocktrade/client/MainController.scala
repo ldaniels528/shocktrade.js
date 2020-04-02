@@ -1,11 +1,12 @@
 package com.shocktrade.client
 
+import com.shocktrade.client.GameState._
 import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.{AuthenticationService, GameStateFactory, SignInDialog, UserService}
+import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
 import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
@@ -34,13 +35,14 @@ import scala.util.{Failure, Success}
 class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http, $location: Location,
                      $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
                      @injected("AuthenticationService") authenticationService: AuthenticationService,
-                     @injected("GameStateFactory") gameState: GameStateFactory,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
   implicit private val scope: MainControllerScope = $scope
+  implicit private val cookies: Cookies = $cookies
+
   private val onlinePlayers = js.Dictionary[OnlineStatus]()
   private var loadingIndex = 0
 
@@ -102,15 +104,14 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   private def mainInit(): Unit = {
     console.log(s"Initializing ${getClass.getSimpleName}...")
-    $cookies.getObject[AuthenticatedUser](AUTHENTICATED_USER_KEY) foreach { authenticatedUser =>
-      console.log(s"Reading session from cookie: ${JSON.stringify(authenticatedUser)}")
-      authenticatedUser.userProfile.userID foreach { userID =>
-        userService.findUserByID(userID) onComplete {
-          case Success(profile) => gameState.userProfile = profile.data
-          case Failure(e) =>
-            toaster.error("Failed to retrieve user profile")
-            console.error(s"Failed to retrieve user profile: ${e.displayMessage}")
-        }
+    $cookies.getGameState.userID foreach { userID =>
+      userService.findUserByID(userID) onComplete {
+        case Success(profile) =>
+          $cookies.getGameState.setUser(profile.data.userID)
+          $scope.userProfile = profile.data
+        case Failure(e) =>
+          toaster.error("Failed to retrieve user profile")
+          console.error(s"Failed to retrieve user profile: ${e.displayMessage}")
       }
     }
   }
@@ -130,7 +131,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   $scope.signUp = () => signUp()
 
   private def clearLoggedInItems(): Unit = {
-    gameState.reset()
+    $cookies.removeGameState()
     $cookies.remove(AUTHENTICATED_USER_KEY)
     $scope.favoriteSymbols.clear()
     $scope.recentSymbols.clear()
@@ -164,23 +165,21 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   }
 
   private def logout(): Unit = {
+
     $scope.isLoggingOut = true
     val outcome = for {
       _ <- authenticationService.logout()
-      _ <- gameState.userID.toOption match {
-        case Some(userID) => userService.setIsOffline(userID).toFuture
-        case None => Future.failed(js.JavaScriptException("Missing user ID"))
-      }
+      _ <- $cookies.getGameState.userID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
     } yield ()
 
+    outcome onComplete { _ =>
+      clearLoggedInItems()
+      $timeout(() => $scope.isLoggingOut = false, 500.millis)
+    }
     outcome onComplete {
       case Success(_) =>
-        $timeout(() => $scope.isLoggingOut = false, 500.millis)
-        clearLoggedInItems()
       case Failure(e) =>
-        $timeout(() => $scope.isLoggingOut = false, 500.millis)
         toaster.error("An error occurred during logout")
-        clearLoggedInItems()
         e.printStackTrace()
     }
   }
@@ -188,18 +187,15 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   private def signIn(): Unit = {
     val outcome = for {
       userAccount <- signInDialog.signIn()
-      userProfile <- userAccount.userID.toOption match {
-        case Some(userID) => userService.findUserByID(userID).toFuture
-        case None => Future.failed(js.JavaScriptException("Missing user ID"))
-      }
+      userProfile <- userAccount.userID.map(userService.findUserByID).getOrElse(js.Promise.reject("Missing user ID"))
       _ <- userService.setIsOnline(userAccount.userID.orNull)
     } yield userProfile
 
     outcome onComplete {
       case Success(userProfile) =>
-        $cookies.putObject(AUTHENTICATED_USER_KEY, new AuthenticatedUser(userProfile.data))
+        $cookies.getGameState.setUser(userProfile.data.userID)
         $scope.$apply { () =>
-          gameState.userProfile = userProfile.data
+          $scope.userProfile = userProfile.data
         }
       case Failure(e) =>
         toaster.error(e.getMessage)
@@ -216,7 +212,9 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     } yield userProfile
 
     outcome onComplete {
-      case Success(userProfile) => gameState.userProfile = userProfile.data
+      case Success(userProfile) =>
+        $cookies.getGameState.setUser(userProfile.data.userID)
+        $scope.userProfile = userProfile.data
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
@@ -241,7 +239,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   $scope.switchToTab = (anIndex: js.UndefOr[Int]) => anIndex foreach switchToTab
 
   private def switchToTab(tabIndex: Int): Unit = {
-    gameState.userProfile.flatMap(_.userID).toOption match {
+    $cookies.getGameState.userID.toOption match {
       case Some(userID) =>
         asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>
@@ -321,6 +319,7 @@ object MainController {
     var isLoggingOut: js.UndefOr[Boolean] = js.native
     var levels: js.Array[GameLevel] = js.native
     var recentSymbols: js.Dictionary[String] = js.native
+    //var userProfile: js.UndefOr[UserProfile] = js.native
 
     // loading functions
     var isLoading: js.Function0[Boolean]
