@@ -1,0 +1,64 @@
+<div ng-controller="MyGamesController" ng-init="initMyGames()">
+    <!-- Search Results -->
+    <div class="col-md-12">
+        <div class="availGamesContainer">
+            <div class="row">
+                <div class="col-md-4 header left padding-left-16">Game Title</div>
+                <div class="col-md-2 header center">Leader</div>
+                <div class="col-md-2 header center">Expires</div>
+                <div class="col-md-2 header center">Players</div>
+                <div class="col-md-2 header right">Game Features</div>
+            </div>
+
+            <div ng-repeat="c in getMyContests() track by $index" class="row clickable" ng-click="enterGame(c.contestID)">
+                <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
+                    <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
+                    <i ng-show="c.status == 'QUEUED'" class="fa fa-battery-4" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                    <i ng-show="c.status == 'ACTIVE'" class="fa fa-battery-3" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                    <i ng-show="c.status == 'CLOSED'" class="fa fa-battery-0" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
+                    <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
+
+                    <span ng-class="c.playerGainLoss >= 0 ? 'positive' : 'negative'">
+                        <changearrow value="{{ c.playerGainLoss }}"></changearrow>
+                        {{ c.playerGainLoss | abs | number:2 }}%
+                    </span>
+                </div>
+                <div class="col-md-2 center">
+                    <span ng-show="c.leaderID">
+                        <avatar id="{{ c.leaderID }}" class="avatar-16" title="{{ c.leaderName }}"></avatar> {{ c.leaderName }}
+                        <span ng-class="c.leaderGainLoss >= 0 ? 'positive' : 'negative'">
+                            <changearrow value="{{ c.leaderGainLoss }}"></changearrow>
+                            {{ c.leaderGainLoss | abs | number:2 }}%
+                        </span>
+                    </span>
+                    <span ng-hide="c.leaderID" class="opaque">Unclear</span>
+                </div>
+                <div class="col-md-2 center">
+                    <span ng-show="c.status === 'ACTIVE'">
+                        <span ng-show="c.expirationTime">{{ c.expirationTime | duration }}</span>
+                        <span ng-hide="c.expirationTime">&#8212;</span>
+                    </span>
+                    <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
+                </div>
+                <div class="col-md-2 center">
+                    <span ng-class="getSelectionClass(c)">{{ c.playerCount }} / {{ maxPlayers }}</span>
+                </div>
+                <div class="col-md-2">
+                    <span class="pull-right">
+                        <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
+                        <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
+                        <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
+                        <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
+                        <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pull-right">
+            <button class="btn btn-default st_button" ng-click="popupNewGameDialog(userProfile.userID)">
+                <i class="fa fa-plus-circle"></i> Create
+            </button>
+        </div>
+    </div>
+</div>

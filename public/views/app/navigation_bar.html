@@ -1,7 +1,8 @@
 <div class="pull-left st_nav_bar contest_colors" ng-controller="NavigationController" ng-init="init()">
     <ul class="nav nav-tabs nav-stacked">
         <li class="st_nav_bar" ng-repeat="tab in appTabs">
-            <i ng-show="isVisibleTab(tab)" ng-class="'fa ' + tab.icon_class + ' nav_icon clickable' + (tab.hover ? ' st_control' : (getTabIndex() === $index ? ' st_nav_selected' : ''))"
+            <i ng-show="isVisibleTab(tab)"
+               ng-class="'fa ' + tab.icon_class + ' nav_icon clickable' + (tab.hover ? ' st_control' : (getTabIndex() === $index ? ' st_nav_selected' : ''))"
                title="{{ tab.tool_tip }}"
                ng-click="switchToTab($index)"
                ng-mouseenter="tab.hover = true"

@@ -1,33 +1,10 @@
 <div class="col-md-12 player_info_bar st_title_bar" style="margin-bottom: 16px" ng-controller="InformationBarController" ng-init="initInfoBar()">
     <div class="col-md-4 pi_bar_cash pad-left-10">
-        <div class="pull-left" style="display: inline">
-            <div class="positive" title="Liquid cash available">
-                <img ng-src="/images/status/{{ isWebSocketConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
-                     title="{{ isWebSocketConnected() ? 'Connected' : 'Not Connected' }}">
-                <i class="fa fa-money"></i> {{ userProfile.wallet || 0.0 | number: 2 }}
-            </div>
-            <div class="emphasis" title="Total investment value">
-                <i ng-class="hasNotifications() ? 'fa-bell' : 'fa-bell-o'" class="fa st_control"
-                   title="{{ hasNotifications() ? 'New events available' : 'No events available' }}"></i>
-                <i class="fa fa-line-chart"></i> {{ (userProfile.funds + userProfile.equity) || 0.0 | number: 2 }}
-                <span class="pull-right">
-                    <changearrow value="{{ getWealthChange() }}"></changearrow>
-                    <span ng-class="getWealthChange() < 0 ? 'negative' : 'positive'">{{ getWealthChange() | number:2 }}%</span>
-                </span>
-            </div>
-        </div>
-
-        <div class="pull-right" style="display: inline">
-            <span ng-controller="AwardsController" ng-init="initAwards(userProfile.userID)" class="middle pull-right">
-                <img ng-repeat="award in myAwards.slice(0, 6)"
-                     ng-click="switchToHome()"
-                     class="clickable"
-                     style="padding: 2px 2px 2px 2px"
-                     title="{{ award.name }}"
-                     ng-src="{{ award.icon }}">
-            </span>
-        </div>
-        <br style="clear: both">
+        <span ng-show="isAuthenticated()"  class="title_color" ng-show="userProfile.userID">
+            <avatar id="{{ userProfile.userID }}" class="avatar-32"></avatar>
+            <img ng-src="/images/status/{{ isWebSocketConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
+                 title="{{ isWebSocketConnected() ? 'Connected' : 'Not Connected' }}">
+        </span>
     </div>
     <div class="col-md-5">
         <input class="form-control media-middle" ng-model="searchTerm" type="text"
@@ -46,8 +23,6 @@
             <span ng-hide="isAuthenticated()" class="clickable" ng-click="signUp()"> / Sign Up</span>
             <img ng-show="isLoggingOut" src="/images/status/loading16.gif">
             <span ng-show="isAuthenticated()" class="title_color clickable" ng-click="logout()">Sign Out</span>
-            <span ng-show="isAuthenticated()"  class="title_color" ng-show="userProfile.userName">
-                &#8212; <avatar id="{{ userProfile.userID }}" class="avatar-16"></avatar> {{ userProfile.username }}</span>
         </span>
     </div>
 </div>

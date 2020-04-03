@@ -16,7 +16,6 @@ trait GlobalNavigation extends js.Object {
   var switchToDiscover: js.Function0[Unit] = js.native
   var switchToGameSearch: js.Function0[Unit] = js.native
   var switchToHome: js.Function0[Unit] = js.native
-  var switchToNewsFeed: js.Function0[Unit] = js.native
   var switchToTab: js.Function1[js.UndefOr[Int], Unit] = js.native
 
 }

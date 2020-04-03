@@ -37,7 +37,7 @@
         </div>
         <br style="clear: both">
     </div>
-    <div class="col-md-4" ng-controller="AwardsController" ng-init="setupAwards()">
+    <div class="col-md-4" ng-controller="AwardsController" ng-init="initAwards(userProfile.userID)">
         <fieldset>
             <legend>Recent Awards ({{ getMyAwards().length }})</legend>
         </fieldset>

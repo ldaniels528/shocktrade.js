@@ -7,7 +7,14 @@
 }	  	
 
 .info {
-	font-size: 10pt; padding-bottom: 2px;
+	font-size: 10pt;
+	 padding-bottom: 2px;
+}
+
+.contest_rankings_button_panel {
+	background: #5bc0ee;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
 }
 
 .portfolio_button_panel {
@@ -28,30 +35,9 @@
 	padding: 5px;
 }
 
-button.indent {
-    margin-left: 30px;
-}
-
-button.awards_button {
-	border: solid 1px #00dddd;
-    background-color: #00ffff;
-    font-size: 11pt;
-    font-weight: bold;
-    border-radius: 4px;
-}
-
-button.manage_button {
-	border: solid 1px #dd6600;
-    background-color: #ff8800;
-    font-size: 11pt;
-    font-weight: bold;
-    border-radius: 4px;
-}
-
 button.new_order_button {
-	border: solid 1px #dddd00;
-    background-color: gold;
-    font-size: 11pt;
+	border: solid 1px #cc6600;
+    background-color: #ff8800;
     font-weight: bold;
     border-radius: 4px;
 }
@@ -59,7 +45,6 @@ button.new_order_button {
 button.perks_button {
 	border: solid 1px #cc6600;
     background-color: #ff8800;
-    font-size: 11pt;
     font-weight: bold;
     border-radius: 4px;
 }
@@ -67,9 +52,13 @@ button.perks_button {
 button.refresh_button {
 	border: solid 1px #20aa20;
     background-color: #40cc40;
-    font-size: 11pt;
     font-weight: bold;
     border-radius: 4px;
+}
+
+i.refresh_button {
+    color: #008800;
+    font-weight: bold;
 }
 
 button.sell_button {
@@ -128,7 +117,7 @@ div.ordersContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 400px;
+	height: 367px;
 }
 
 div.positionsContainer {

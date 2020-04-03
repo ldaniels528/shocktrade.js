@@ -71,6 +71,23 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     }
   }
 
+  /**
+   * Creates a new contest
+   */
+  def createContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val form = request.bodyAs[ContestCreationForm]
+    form.validate match {
+      case messages if messages.nonEmpty =>
+        response.badRequest(new ValidationErrors(messages)); next()
+      case _ =>
+        contestDAO.create(form) onComplete {
+          case Success(Some(result)) => response.send(result); next()
+          case Success(None) => response.badRequest(form); next()
+          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+        }
+    }
+  }
+
   def findChatMessages(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
     contestDAO.findChatMessages(contestID) onComplete {
@@ -101,43 +118,10 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     }
   }
 
-  /**
-   * Creates a new contest
-   */
-  def createContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestCreationForm]
-    form.validate match {
-      case messages if messages.nonEmpty =>
-        response.badRequest(new ValidationErrors(messages)); next()
-      case _ =>
-        contestDAO.create(form) onComplete {
-          case Success(Some(result)) => response.send(result); next()
-          case Success(None) => response.badRequest(form); next()
-          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
-        }
-    }
-  }
-
   def findChart(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
     portfolioDAO.findChartData(contestID, userID, chart) onComplete {
       case Success(data) => response.send(data); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
-    }
-  }
-
-  def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val (contestID, userID) = (request.params("id"), request.params("userID"))
-    contestDAO.join(contestID, userID) onComplete {
-      case Success(data) => response.send(Ok(data)); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
-    }
-  }
-
-  def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val (contestID, userID) = (request.params("id"), request.params("userID"))
-    contestDAO.quit(contestID, userID) onComplete {
-      case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }
@@ -166,6 +150,22 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val outcome = contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq))
     outcome onComplete {
       case Success(rankings) => response.send(rankings.toJSArray); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+    }
+  }
+
+  def joinContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("id"), request.params("userID"))
+    contestDAO.join(contestID, userID) onComplete {
+      case Success(data) => response.send(Ok(data)); next()
+      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+    }
+  }
+
+  def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
+    val (contestID, userID) = (request.params("id"), request.params("userID"))
+    contestDAO.quit(contestID, userID) onComplete {
+      case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
     }
   }

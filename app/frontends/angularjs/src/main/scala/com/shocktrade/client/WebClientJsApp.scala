@@ -69,7 +69,7 @@ object WebClientJsApp {
         .when("/posts", new RouteTo(templateUrl = "/views/posts/index.html", controller = classOf[PostController].getSimpleName))
         .when("/research", new RouteTo(templateUrl = "/views/research/research.html", controller = classOf[ResearchController].getSimpleName))
         .when("/search", new RouteTo(templateUrl = "/views/contest/search.html", controller = classOf[GameSearchController].getSimpleName))
-        .otherwise(new RouteTo(redirectTo = "/discover"))
+        .otherwise(new RouteTo(redirectTo = "/home"))
       ()
     }
 
@@ -143,6 +143,7 @@ object WebClientJsApp {
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")
     module.controllerOf[OrdersController]("OrdersController")
+    module.controllerOf[PerksController]("PerksController")
     module.controllerOf[PositionsController]("PositionsController")
     module.controllerOf[PostController]("PostController")
     module.controllerOf[ResearchController]("ResearchController")

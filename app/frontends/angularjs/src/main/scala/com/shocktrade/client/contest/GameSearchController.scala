@@ -199,4 +199,3 @@ trait GameSearchScope extends RootScope with ContestEntrySupportScope {
   var selectContest: js.Function1[js.UndefOr[ContestSearchResultUI], Unit] = js.native
 
 }
-

@@ -1,37 +1,21 @@
-<div class="row" ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
-    <div style="margin-bottom: 20px">
-        <!-- Game Filtering Options -->
-        <div class="col-md-6" ng-include src="'/views/contest/game_filters.html'"></div>
-
-        <!-- My Games -->
-        <div class="col-md-6 contest_colors" style="padding-bottom: 4px"
-             ng-controller="MyGamesController"
-             ng-init="initMyGames()">
-            <fieldset class="contest">
-                <legend class="contest">My Games ({{ getMyContests().length }})</legend>
-                <div class="myGamesContainer" ng-include src="'/views/contest/my_contests.html'"></div>
-                <div class="pull-right">
-                    <button class="btn btn-default st_button" ng-click="popupNewGameDialog(userProfile.userID)">
-                        <i class="fa fa-plus-circle"></i> New
-                    </button>
-                </div>
-                <br style="clear: both">
-            </fieldset>
-        </div>
-    </div>
-
+<div ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
     <!-- Search Results -->
-    <div class="col-md-12" style="border-bottom: 1px solid #888888;">
+    <div class="col-md-12">
         <fieldset class="contest">
             <legend class="contest">
                 Search Results ({{ getSearchResults(searchTerm).length || 0 }})
             </legend>
+            <span class="pull-right">
+                <button class="btn btn-default st_button" ng-click="contestSearch(searchOptions)">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </span>
             <div class="row">
                 <input class="symbol_input_text_field col-md-4"
-                        style="border-radius: 4px 4px 4px 4px"
-                        type="text"
-                        ng-model="searchTerm"
-                        placeholder="&#xf002; Filter by Game Title">
+                       style="border-radius: 4px 4px 4px 4px"
+                       type="text"
+                       ng-model="searchTerm"
+                       placeholder="&#xf002; Filter by Game Title">
             </div>
             <div class="availGamesContainer">
                 <div class="row">

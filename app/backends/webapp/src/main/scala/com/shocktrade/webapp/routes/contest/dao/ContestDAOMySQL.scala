@@ -48,11 +48,15 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   override def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]] = {
     conn.queryFuture[MyContest](
       """|SELECT
-         |	CR.contestID, CR.name, CR.hostUserID, CS.status,
+         |	CR.contestID, CR.name, CR.hostUserID, CR.`status`,
          |	CR.userID playerID, CR.username AS playerName, CR.gainLoss playerGainLoss,
-         |	LP.leaderID, LP.leaderName, LP.leaderGainLoss
+         |	LP.leaderID, LP.leaderName, LP.leaderGainLoss,
+         |  CR.`playerCount`, CR.`timeOffset`, CR.`friendsOnly`,
+         |  CR.`invitationOnly`, CR.`levelCap`,
+         |  CR.`perksAllowed`, CR.`robotsAllowed`,
+         |  CR.`creationTime`, CR.`startTime`, CR.`expirationTime`,
+         |  CR.`portfolioID`, CR.`level`, CR.`totalEquity`
          |FROM contest_rankings CR
-         |INNER JOIN contest_statuses CS ON CS.statusID = CR.statusID
          |LEFT JOIN (
          |	SELECT contestID, userID AS leaderID, username AS leaderName, gainLoss AS leaderGainLoss
          |	FROM contest_rankings CR2
@@ -60,7 +64,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
          |  LIMIT 1
          |) LP ON LP.contestID = CR.contestID
          |WHERE CR.userID = ?
-         |""".stripMargin, js.Array(userID, userID, userID, userID)).map(_._1)
+         |""".stripMargin, js.Array(userID)).map(_._1)
   }
 
   override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {

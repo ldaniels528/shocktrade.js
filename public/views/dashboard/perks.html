@@ -1,0 +1,24 @@
+<div ng-controller="PerksController" ng-init="initPerks()">
+    <div class="awards-heading">
+        <span style="margin: 10px">
+            <i class="fa fa-gift"></i> You have purchased {{ myPerkCodes.length || 0 }} perks
+        </span>
+    </div>
+    <div class="perks_container">
+        <span ng-hide="availablePerks.length">
+            <img src="/images/status/loading16.gif"> Loading Perks ...
+        </span>
+        <div class="perk_padding" ng-repeat="perk in availablePerks track by $index" ng-class="perk.owned ? '' : 'opaque'">
+            <img ng-src="/images/contests/{{ perk.owned ? 'gift-open-icon.png' : 'gift-icon.png' }}" style="vertical-align: middle">
+            <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
+            <span ng-class="getPerkDescClass(perk)">{{ perk.description }}</span>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-default perks_button"
+                ng-click="popupPerksDialog(contest.contestID, userProfile.userID)"
+                title="Purchase new perks">
+            <i class="fa fa-gift"></i> Buy Perk(s)
+        </button>
+    </div>
+</div>

@@ -4,8 +4,8 @@
  
 .mks_loading {
 	float: right; 
-	color: #666666;
-	font-size: 11pt;
+	color: white;
+	font-size: 12pt;
 	font-weight: bold;
 	padding-right: 10px;
     vertical-align: bottom
@@ -13,8 +13,8 @@
 
 .mks_open {
 	float: right; 
-	color: #20bb80;
-	font-size: 11pt;
+	color: white;
+	font-size: 12pt;
 	font-weight: bold; 
 	padding-right: 10px;
 	vertical-align: bottom
@@ -22,8 +22,8 @@
 
 .mks_closed {
 	float: right; 
-	color: #ff8000;
-	font-size: 11pt;
+	color: #ffff00;
+	font-size: 12pt;
 	font-weight: bold; 
 	padding-right: 10px;
 	vertical-align: bottom

@@ -108,7 +108,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         timeOffset = contest.data.timeOffset,
         // portfolios & rankings
         portfolios = portfolios.data,
-        rankings = rankings.data,
+        rankings = rankings.data.sortBy(_.rankNum.getOrElse(Int.MaxValue)),
         // indicators
         friendsOnly = contest.data.friendsOnly,
         invitationOnly = contest.data.invitationOnly,

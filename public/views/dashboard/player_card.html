@@ -10,7 +10,7 @@
             <img ng-if="contest.status === 'CLOSED' && player.rank === '2nd'" src="/images/contests/silver.png">
             <img ng-if="contest.status === 'CLOSED' && player.rank === '3rd'" src="/images/contests/bronze.png">
             <span class="null">&#8212;</span>
-            <span class="st_text_color">{{ player.username }} (<span style="color: #204088">LVL {{ player.level || 0 }}</span>)</span>
+            <span class="st_text_color">{{ player.username }}</span>
         </div>
         <div>
             <span class="positive">$ {{ player.totalEquity | number: 2 }}</span>

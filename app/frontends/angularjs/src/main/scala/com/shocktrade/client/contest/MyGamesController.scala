@@ -1,9 +1,10 @@
 package com.shocktrade.client.contest
 
+import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.dialogs.NewGameDialog
 import com.shocktrade.client.users.UserService
-import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.common.AppConstants
 import com.shocktrade.common.models.contest.MyContest
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
@@ -20,13 +21,15 @@ import scala.util.{Failure, Success}
  * My Games Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
+case class MyGamesController($scope: MyGamesScope, $location: Location, $timeout: Timeout, toaster: Toaster,
                              @injected("ContestService") contestService: ContestService,
                              @injected("NewGameDialog") newGameDialog: NewGameDialog,
                              @injected("UserService") userService: UserService)
   extends Controller with ContestEntrySupport[MyGamesScope] with GlobalLoading {
 
   private var myContests = js.Array[MyContest]()
+
+  $scope.maxPlayers = AppConstants.MaxPlayers
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -80,7 +83,7 @@ case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $locat
     outcome onComplete {
       case Success((_, userProfile)) =>
         initMyGames()
-        $rootScope.emitUserProfileUpdated(userProfile.data)
+        $scope.emitUserProfileUpdated(userProfile.data)
       case Failure(e) =>
         toaster.error("Failed to create game")
         console.error(s"Failed to create game: ${e.displayMessage}")
@@ -107,10 +110,13 @@ case class MyGamesController($rootScope: RootScope, $scope: MyGamesScope, $locat
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait MyGamesScope extends GameSearchScope {
+trait MyGamesScope extends RootScope with ContestEntrySupportScope {
   // functions
   var initMyGames: js.Function0[Unit] = js.native
   var getMyContests: js.Function0[js.Array[MyContest]] = js.native
   var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
+
+  // variables
+  var maxPlayers: js.UndefOr[Int] = js.native
 
 }

@@ -1,27 +1,25 @@
 <div class="row" ng-controller="DashboardController" ng-init="initDash()">
     <div class="play_container">
         <div ng-show="isRankingsShown()" class="col-md-3">
+            <div ng-include src="'/views/dashboard/contest_rankings_button_panel.html'"></div>
             <div class="rankings_container">
                 <div ng-include src="'/views/dashboard/player_card_join.html'" ng-show="userProfile.userID && contest.rankings && !portfolio.balance" ></div>
+                <div ng-repeat="player in getPlayerRankings()" ng-include src="'/views/dashboard/player_card.html'"></div>
+                <!--
                 <div ng-repeat="player in playerRankingOnTop(userProfile.userID, contest.rankings)" ng-include src="'/views/dashboard/player_card.html'"></div>
+                -->
             </div>
         </div>
 
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
             <div ng-show="contest.name" class="col-md-12 dashboard_title">
                 <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
-                <span ng-show="clock" class="pull-right" style="font-size: 10pt; vertical-align: bottom">{{ clock | date: 'EEE MM/dd hh:mm:ss a' }}</span>
             </div>
             <div class="rankings_header" class="col-md-12">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <i ng-hide="isRankingsShown()" class="fa fa-chevron-circle-right st_control clickable" ng-click="toggleRankingsShown()"></i>
                 <span class="st_bkg_color bold clickable" ng-click="toggleRankingsShown()">
                     {{ isRankingsShown() ? 'Hide' : 'Show'}} Player Rankings
-                </span>
-                <!-- US Markets Open/Closed -->
-                <span class="pull-right" ng-class="isUSMarketsOpen(contest.contestID) === undefined ? 'mks_loading' : (isUSMarketsOpen(contest.contestID) ? 'mks_open' : 'mks_closed')">
-                    <img ng-show="isUSMarketsOpen(contest.contestID) === null" src="/images/status/loading16.gif">
-                    {{ isUSMarketsOpen(contest.contestID) === undefined ? 'US Markets ....' : (isUSMarketsOpen(contest.contestID) ? 'US Markets Open' : 'US Markets Closed') }}
                 </span>
 
                 <div ng-include src="'/views/dashboard/contest_summary.html'"></div>

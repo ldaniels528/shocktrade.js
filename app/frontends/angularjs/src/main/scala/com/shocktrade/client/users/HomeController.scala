@@ -5,6 +5,7 @@ import com.shocktrade.client.{GlobalLoading, GlobalNavigation, RootScope}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Timeout, _}
 import io.scalajs.social.facebook.TaggableFriend
+import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
@@ -32,7 +33,7 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
 
   $scope.getNextLevelXP = () => $scope.userProfile.flatMap(_.nextLevelXP)
 
-  $scope.getStars = () => (1 to $scope.userProfile.flatMap(_.totalXP.map(_ / 1000)).getOrElse(1)).toJSArray
+  $scope.getStars = () => (1 to Math.max(1, $scope.userProfile.flatMap(_.totalXP.map(_ / 1000)).orZero)).toJSArray
 
   $scope.getTotalXP = () => $scope.userProfile.flatMap(_.totalXP).getOrElse(0)
 

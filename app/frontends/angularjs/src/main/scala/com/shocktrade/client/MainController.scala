@@ -165,7 +165,6 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   }
 
   private def logout(): Unit = {
-
     $scope.isLoggingOut = true
     val outcome = for {
       _ <- authenticationService.logout()
@@ -233,8 +232,6 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   $scope.switchToGameSearch = () => $scope.switchToTab(MainTab.Search)
 
   $scope.switchToHome = () => $scope.switchToTab(MainTab.Home)
-
-  $scope.switchToNewsFeed = () => $scope.switchToTab(MainTab.NewsFeed)
 
   $scope.switchToTab = (anIndex: js.UndefOr[Int]) => anIndex foreach switchToTab
 

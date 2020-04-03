@@ -65,6 +65,8 @@ class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster
     }
   }
 
+  $scope.getMyAwards = () => $scope.myAwards
+
   $scope.findAwardImage = (aCode: js.UndefOr[String]) => aCode flatMap findAwardImage
 
   $scope.isEarned = (anAward: js.UndefOr[Award]) => anAward.exists(isEarned)
@@ -91,6 +93,7 @@ object AwardsController {
     // functions
     var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
     var getAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
+    var getMyAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
     var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var isEarned: js.Function1[js.UndefOr[Award], Boolean] = js.native
 

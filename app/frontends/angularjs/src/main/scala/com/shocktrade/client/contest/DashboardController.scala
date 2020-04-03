@@ -55,7 +55,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     new PortfolioTab(name = "Analyze", icon = "fa-pie-chart", path = "/views/dashboard/charts.html", isAuthRequired = true),
     new PortfolioTab(name = "My Orders", icon = "fa-ravelry", path = "/views/dashboard/orders.html", isAuthRequired = true),
     new PortfolioTab(name = "My Portfolio", icon = "fa-list-alt", path = "/views/dashboard/positions.html", isAuthRequired = true),
-    new PortfolioTab(name = "My Awards", icon = "fa-gift", path = "/views/dashboard/awards.html", isAuthRequired = true))
+    new PortfolioTab(name = "My Awards", icon = "fa-trophy", path = "/views/dashboard/awards.html", isAuthRequired = true),
+    new PortfolioTab(name = "My Perks", icon = "fa-gift", path = "/views/dashboard/perks.html", isAuthRequired = true))
 
   // select the first tab
   portfolioTabs.zipWithIndex foreach { case (tab, index) => tab.active = index == 0 }
@@ -179,6 +180,8 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     } yield joiningRank
   }
 
+  $scope.getPlayerRankings = () => $scope.contest.flatMap(_.rankings)
+
   $scope.getRankCellClass = (aRanking: js.UndefOr[String]) => aRanking map {
     case rank if rank == "1st" & isTiedForLead => "rank_cell_2nd"
     case rank if Set("1st", "2nd", "3rd").contains(rank) => s"rank_cell_$rank"
@@ -188,10 +191,12 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def isTiedForLead: Boolean = {
     (for {
-      rankings <- $scope.contest.flatMap(_.rankings).toOption
-      _1st <- rankings.headOption
-      _2nd <- rankings.drop(1).headOption
-    } yield _1st.rankNum == _2nd.rankNum).contains(true)
+      rankings <- $scope.contest.flatMap(_.rankings)
+      _1st <- rankings.headOption.orUndefined
+      _2nd <- rankings.drop(1).headOption.orUndefined
+      _1stRank <- _1st.rankNum
+      _2ndRank <- _2nd.rankNum
+    } yield _1stRank == _2ndRank).toOption.contains(true)
   }
 
   $scope.isRankingsShown = () => !$scope.rankingsHidden.isTrue
@@ -313,6 +318,7 @@ object DashboardController {
     // functions
     var initDash: js.Function0[Unit] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
+    var getPlayerRankings: js.Function0[js.UndefOr[js.Array[ContestRanking]]] = js.native
     var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
     var getRankCellClass: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
     var hasPerk: js.Function1[js.UndefOr[String], Boolean] = js.native
