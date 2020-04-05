@@ -129,6 +129,7 @@ CREATE VIEW contest_rankings AS
 SELECT
     C.*,
     CS.status,
+    DATEDIFF(C.expirationTime, C.startTime) AS duration,
     P.portfolioID,
     U.userID,
     U.username,

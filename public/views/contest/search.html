@@ -1,81 +1,17 @@
-<div class="row" ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
-    <div style="margin-bottom: 20px">
-        <!-- Game Filtering Options -->
-        <div class="col-md-6" ng-include src="'/views/contest/game_filters.html'"></div>
-
-        <!-- My Games -->
-        <div class="col-md-6 contest_colors" style="padding-bottom: 4px"
-             ng-controller="MyGamesController"
-             ng-init="initMyGames()">
-            <fieldset class="contest">
-                <legend class="contest">My Games ({{ getMyContests().length }})</legend>
-                <div class="myGamesContainer" ng-include src="'/views/contest/my_contests.html'"></div>
-                <div class="pull-right">
-                    <button class="btn btn-default st_button" ng-click="popupNewGameDialog(userProfile.userID)">
-                        <i class="fa fa-plus-circle"></i> New
-                    </button>
-                </div>
-                <br style="clear: both">
-            </fieldset>
+<div ng-controller="GameSearchController" ng-init="searchTerm = ''; contestSearch(searchOptions)">
+    <div style="border-bottom: 1px solid #888888;">
+        <div>
+            <div ng-include src="'/views/contest/search_options.html'"></div>
         </div>
-    </div>
-
-    <!-- Search Results -->
-    <div class="col-md-12" style="border-bottom: 1px solid #888888;">
-        <fieldset class="contest">
-            <legend class="contest">
-                Search Results ({{ getSearchResults(searchTerm).length || 0 }})
-            </legend>
-            <div class="row">
-                <input class="symbol_input_text_field col-md-4"
-                        style="border-radius: 4px 4px 4px 4px"
-                        type="text"
-                        ng-model="searchTerm"
-                        placeholder="&#xf002; Filter by Game Title">
-            </div>
-            <div class="availGamesContainer">
-                <div class="row">
-                    <div class="col-md-4 header left padding-left-16">Game Title</div>
-                    <div class="col-md-2 header center">Started</div>
-                    <div class="col-md-2 header center">Expires</div>
-                    <div class="col-md-2 header center">Players</div>
-                    <div class="col-md-2 header right">Game Features</div>
-                </div>
-
-                <div ng-repeat="c in getSearchResults(searchTerm) track by $index" class="row clickable" ng-click="enterGame(c.contestID)">
-                    <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                        <avatar id="{{ c.hostUserID }}" class="avatar-20" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></avatar>
-                        <i ng-show="c.status == 'QUEUED'" class="fa fa-battery-4" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
-                        <i ng-show="c.status == 'ACTIVE'" class="fa fa-battery-3" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
-                        <i ng-show="c.status == 'CLOSED'" class="fa fa-battery-0" ng-class="c.status != 'ACTIVE' ? 'opaque' : ''"></i>
-                        <span ng-class="getSelectionClass(c)">{{ c.name }}</span>
-                    </div>
-                    <div class="col-md-2 center">
-                        <span ng-show="c.startTime" ng-class="getSelectionClass(c)">{{ c.startTime | duration }}</span>
-                        <span ng-hide="c.startTime">&#8212;</span>
-                    </div>
-                    <div class="col-md-2 center">
-                        <span ng-show="c.status === 'ACTIVE'">
-                            <span ng-show="c.expirationTime">{{ c.expirationTime | duration }}</span>
-                            <span ng-hide="c.expirationTime">&#8212;</span>
-                        </span>
-                        <span ng-class="getSelectionClass(c)" ng-hide="c.status === 'ACTIVE'">CLOSED</span>
-                    </div>
-                    <div class="col-md-2 center">
-                        <span ng-class="getSelectionClass(c)">{{ c.playerCount }} / {{ maxPlayers }}</span>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="pull-right">
-                            <i ng-class="c.invitationOnly ? '' : 'null'" class="fa fa-lock" title="{{ c.invitationOnly ? 'private' : 'public' }} game"></i>
-                            <i ng-class="c.friendsOnly ? '' : 'null'" class="fa fa-users" title="{{ c.friendsOnly ? 'friends-only' : 'everyone is' }} allowed"></i>
-                            <i ng-class="c.levelCap ? '' : 'null'" class="fa fa-user-times" title="{{ c.levelCap ? 'Level ' + c.levelCap + 'and under' : 'No level cap' }}"></i>
-                            <i ng-class="c.perksAllowed ? '' : 'null'" class="fa fa-gift" title="perks are {{ c.perksAllowed ? '' : 'NOT' }} allowed"></i>
-                            <i ng-class="c.robotsAllowed ? '' : 'null'" class="fa fa-android" title="robots are {{ c.robotsAllowed ? '' : 'NOT' }} allowed"></i>
-                        </span>
-                    </div>
-                </div>
-
-            </div>
-        </fieldset>
+        <div class="col-md-12 cs_search_divider cs_upper_lower_15px">
+            <i class="fa fa-gamepad"></i> {{ getSearchResults(searchTerm).length || 0 }} games matched.
+            <span ng-click="popupNewGameDialog(userProfile.userID)" class="clickable pull-right" style="padding-right: 16px">
+                <i class="fa fa-plus-circle"></i> Create a new game.
+            </span>
+        </div>
+        <div ng-include src="'/views/contest/search_header.html'"></div>
+        <div class="availGamesContainer">
+            <div ng-include src="'/views/contest/search_results.html'"></div>
+        </div>
     </div>
 </div>

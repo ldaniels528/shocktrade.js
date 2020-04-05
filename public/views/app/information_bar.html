@@ -4,6 +4,7 @@
             <avatar id="{{ userProfile.userID }}" class="avatar-32"></avatar>
             <img ng-src="/images/status/{{ isWebSocketConnected() ? 'greenlight' : 'offlight' }}.png" style="vertical-align: top"
                  title="{{ isWebSocketConnected() ? 'Connected' : 'Not Connected' }}">
+            {{ userProfile.username }}
         </span>
     </div>
     <div class="col-md-5">

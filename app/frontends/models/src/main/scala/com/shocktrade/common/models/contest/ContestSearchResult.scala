@@ -7,6 +7,7 @@ import scala.scalajs.js
  * @param contestID       the contest ID
  * @param name            the contest name
  * @param hostUserID      the contest host user ID
+ * @param hostUsername    the contest host username
  * @param status          the contest status (e.g. "ACTIVE")
  * @param startTime       the contest start time
  * @param expirationTime  the contest expiration time
@@ -26,12 +27,14 @@ import scala.scalajs.js
 class ContestSearchResult(val contestID: js.UndefOr[String],
                           val name: js.UndefOr[String],
                           val hostUserID: js.UndefOr[String],
+                          val hostUsername: js.UndefOr[String],
                           val status: js.UndefOr[String],
                           val startTime: js.UndefOr[js.Date],
                           val expirationTime: js.UndefOr[js.Date],
                           val startingBalance: js.UndefOr[Double],
                           val timeOffset: js.UndefOr[Double],
                           val playerCount: js.UndefOr[Int],
+                          val duration: js.UndefOr[Int],
                           val closed: js.UndefOr[Boolean],
                           // options
                           val friendsOnly: js.UndefOr[Boolean],
@@ -41,7 +44,11 @@ class ContestSearchResult(val contestID: js.UndefOr[String],
                           val robotsAllowed: js.UndefOr[Boolean],
                           // indicators
                           val isOwner: js.UndefOr[Boolean],
-                          val isParticipant: js.UndefOr[Boolean]) extends js.Object
+                          val isParticipant: js.UndefOr[Boolean],
+                          // UI-related fields
+                          var isExpanded: js.UndefOr[Boolean],
+                          var isLoading: js.UndefOr[Boolean],
+                          var rankings: js.UndefOr[js.Array[ContestRanking]]) extends js.Object
 
 /**
  * ContestSearchResult Companion

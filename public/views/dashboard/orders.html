@@ -6,6 +6,9 @@
         <span class="order_states clickable" ng-click="showClosedOrders = !showClosedOrders">
             Closed Orders <i ng-class="showClosedOrders ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
         </span>
+        <span ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)" class="clickable pull-right" style="padding-right: 16px">
+            <i class="fa fa-plus-circle"></i> Create a new order.
+        </span>
     </div>
     <div class="col-md-12">
         <div class="col-md-3 bold left">Symbol</div>
@@ -121,13 +124,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div>
-        <button class="btn btn-default new_order_button"
-                ng-click="popupNewOrderDialog(contest.contestID, userProfile.userID, selectedSymbol)"
-                title="Create a new order">
-            <i class="fa fa-cart-plus"></i> Create
-        </button>
     </div>
 </div>

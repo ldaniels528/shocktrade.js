@@ -3,6 +3,9 @@
         <span style="margin: 10px">
             <i class="fa fa-gift"></i> You have purchased {{ myPerkCodes.length || 0 }} perks
         </span>
+        <span ng-click="popupPerksDialog(contest.contestID, userProfile.userID)" class="clickable pull-right" style="padding-right: 16px">
+            <i class="fa fa-plus-circle"></i> Purchase new perks.
+        </span>
     </div>
     <div class="perks_container">
         <span ng-hide="availablePerks.length">
@@ -13,12 +16,5 @@
             <span ng-class="getPerkNameClass(perk)" class="bold">{{ perk.name }}</span> &#8212;
             <span ng-class="getPerkDescClass(perk)">{{ perk.description }}</span>
         </div>
-    </div>
-    <div>
-        <button class="btn btn-default perks_button"
-                ng-click="popupPerksDialog(contest.contestID, userProfile.userID)"
-                title="Purchase new perks">
-            <i class="fa fa-gift"></i> Buy Perk(s)
-        </button>
     </div>
 </div>

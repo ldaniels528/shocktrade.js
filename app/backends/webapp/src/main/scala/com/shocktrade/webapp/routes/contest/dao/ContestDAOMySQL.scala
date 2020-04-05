@@ -48,14 +48,10 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   override def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]] = {
     conn.queryFuture[MyContest](
       """|SELECT
-         |	CR.contestID, CR.name, CR.hostUserID, CR.`status`,
+         |	CR.contestID, CR.name, CR.hostUserID, CR.status,
          |	CR.userID playerID, CR.username AS playerName, CR.gainLoss playerGainLoss,
          |	LP.leaderID, LP.leaderName, LP.leaderGainLoss,
-         |  CR.`playerCount`, CR.`timeOffset`, CR.`friendsOnly`,
-         |  CR.`invitationOnly`, CR.`levelCap`,
-         |  CR.`perksAllowed`, CR.`robotsAllowed`,
-         |  CR.`creationTime`, CR.`startTime`, CR.`expirationTime`,
-         |  CR.`portfolioID`, CR.`level`, CR.`totalEquity`
+         |  CR.*
          |FROM contest_rankings CR
          |LEFT JOIN (
          |	SELECT contestID, userID AS leaderID, username AS leaderName, gainLoss AS leaderGainLoss
@@ -83,12 +79,14 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
     val userID = form.userID.getOrElse("")
     val sql =
-      s"""|SELECT C.*, CS.status,
+      s"""|SELECT C.*, CS.status, HU.username AS hostUsername,
+          |   DATEDIFF(C.expirationTime, C.startTime) AS duration,
           |	  IFNULL(PC.playerCount, 0) AS playerCount,
           |   IFNULL(PC.isParticipant, 0) isParticipant,
           |	  CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
           |FROM contests C
-          |LEFT JOIN contest_statuses CS ON CS.statusID = C.statusID
+          |INNER JOIN users HU ON HU.userID = C.hostUserID
+          |INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
           |LEFT JOIN (
           |   SELECT contestID, COUNT(*) AS playerCount,
           |	  SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant

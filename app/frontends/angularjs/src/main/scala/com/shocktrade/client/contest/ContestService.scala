@@ -1,6 +1,5 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.models.contest.ContestSearchResultUI
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
@@ -52,7 +51,7 @@ class ContestService($http: Http) extends Service {
     $http.post("/api/contests/search", searchOptions)
   }
 
-  def findContestByID(contestID: String): js.Promise[HttpResponse[ContestSearchResultUI]] = {
+  def findContestByID(contestID: String): js.Promise[HttpResponse[ContestSearchResult]] = {
     $http.get(s"/api/contest/$contestID")
   }
 

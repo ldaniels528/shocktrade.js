@@ -138,7 +138,6 @@ object WebClientJsApp {
     module.controllerOf[HomeController]("HomeController")
     module.controllerOf[InformationBarController]("InformationBarController")
     module.controllerOf[MainController]("MainController")
-    module.controllerOf[MyGamesController]("MyGamesController")
     module.controllerOf[MyQuotesController]("MyQuotesController")
     module.controllerOf[NavigationController]("NavigationController")
     module.controllerOf[NewsController]("NewsController")

@@ -1,217 +1,213 @@
 <div ng-init="research(searchOptions)">
     <!-- Filtering Options -->
     <div class="col-md-12">
-        <fieldset>
-            <legend>Stock Screener</legend>
+        <form class="form-horizontal">
+            <!-- Exchanges -->
+            <div class="col-md-12 rs_exchange_block">
+                <span ng-repeat="(exchange, selected) in exchangeSets" style="margin-right: 15px">
+                    <nobr>
+                        <input id="xchg_selected" type="checkbox" ng-model="exchangeSets[exchange]" ng-click="filterExchanges()">
+                        <label ng-class="exchange" for="xchg_selected">{{ exchange }}</label>
+                        ({{ getExchangeCount(exchange) }})
+                    </nobr>
+                </span>
+            </div>
 
-            <form class="form-horizontal">
-                <!-- Exchanges -->
-                <div class="col-md-12 rs_exchange_block">
-                    <span ng-repeat="(exchange, selected) in exchangeSets" style="margin-right: 15px">
-                        <nobr>
-                            <input id="xchg_selected" type="checkbox" ng-model="exchangeSets[exchange]" ng-click="filterExchanges()">
-                            <label ng-class="exchange" for="xchg_selected">{{ exchange }}</label>
-                            ({{ getExchangeCount(exchange) }})
-                        </nobr>
-                    </span>
+            <!-- Share Price -->
+            <div class="col-md-6 form-group">
+                <div class="col-md-4 rs_label"><span class="pull-right">Share Price</span></div>
+                <div class="col-md-4">
+                    <select id="priceMin" class="form-control" ng-model="searchOptions.priceMin" ng-options="'$' + p for p in priceRanges">
+                        <option value="">No Minimum</option>
+                    </select>
                 </div>
-
-                <!-- Share Price -->
-                <div class="col-md-6 form-group">
-                    <div class="col-md-4 rs_label"><span class="pull-right">Share Price</span></div>
-                    <div class="col-md-4">
-                        <select id="priceMin" class="form-control" ng-model="searchOptions.priceMin" ng-options="'$' + p for p in priceRanges">
-                            <option value="">No Minimum</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="priceMax" class="form-control" ng-model="searchOptions.priceMax" ng-options="'$' + p for p in priceRanges.slice(1, priceRanges.length)">
-                            <option value="">No Maximum</option>
-                        </select>
-                    </div>
+                <div class="col-md-4">
+                    <select id="priceMax" class="form-control" ng-model="searchOptions.priceMax" ng-options="'$' + p for p in priceRanges.slice(1, priceRanges.length)">
+                        <option value="">No Maximum</option>
+                    </select>
                 </div>
+            </div>
 
-                <!-- Volume -->
-                <div class="col-md-6 form-group">
-                    <div class="col-md-4 rs_label"><span class="pull-right">Volume</span></div>
-                    <div class="col-md-4">
-                        <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v.toLocaleString() for v in volumeRanges">
-                            <option value="">No Minimum</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v.toLocaleString() for v in volumeRanges.slice(1, volumeRanges.length)">
-                            <option value="">No Maximum</option>
-                        </select>
-                    </div>
+            <!-- Volume -->
+            <div class="col-md-6 form-group">
+                <div class="col-md-4 rs_label"><span class="pull-right">Volume</span></div>
+                <div class="col-md-4">
+                    <select id="volumeMin" class="form-control" ng-model="searchOptions.volumeMin" ng-options="v.toLocaleString() for v in volumeRanges">
+                        <option value="">No Minimum</option>
+                    </select>
                 </div>
-
-                <!-- Change (%) -->
-                <div class="col-md-6 form-group">
-                    <div class="col-md-4 rs_label"><span class="pull-right">Change (%)</span></div>
-                    <div class="col-md-4">
-                        <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in changePercentages">
-                            <option value="">No Minimum</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in changePercentages">
-                            <option value="">No Maximum</option>
-                        </select>
-                    </div>
+                <div class="col-md-4">
+                    <select id="volumeMax" class="form-control" ng-model="searchOptions.volumeMax" ng-options="v.toLocaleString() for v in volumeRanges.slice(1, volumeRanges.length)">
+                        <option value="">No Maximum</option>
+                    </select>
                 </div>
+            </div>
 
-                <!-- Spread -->
-                <div class="col-md-6 form-group">
-                    <div class="col-md-4 rs_label"><span class="pull-right">Spread (%)</span></div>
-                    <div class="col-md-4">
-                        <select id="spreadMin" class="form-control" ng-model="searchOptions.spreadMin" ng-options="p + '%' for p in percentages">
-                            <option value="">No Minimum</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="spreadMax" class="form-control" ng-model="searchOptions.spreadMax" ng-options="p + '%' for p in percentages">
-                            <option value="">No Maximum</option>
-                        </select>
-                    </div>
+            <!-- Change (%) -->
+            <div class="col-md-6 form-group">
+                <div class="col-md-4 rs_label"><span class="pull-right">Change (%)</span></div>
+                <div class="col-md-4">
+                    <select id="changeMin" class="form-control" ng-model="searchOptions.changeMin" ng-options="p + '%' for p in changePercentages">
+                        <option value="">No Minimum</option>
+                    </select>
                 </div>
-
-                <!-- Max Results -->
-                <div class="col-md-6 form-group">
-                    <div class="col-md-4 rs_label"><span class="pull-right">Max Results</span></div>
-                    <div class="col-md-4">
-                        <select id="maxResults" class="form-control"
-                                ng-model="searchOptions.maxResults"
-                                ng-options="r for r in maxResultsSet">
-                        </select>
-                   </div>
-                    <div class="col-md-4">
-                        <button class="btn st_button" ng-click="research(searchOptions)">
-                            <i ng-hide="isLoading()" class="fa fa-search"></i>
-                            <img ng-show="isLoading()" ng-disabled="loading" src="/images/status/loading16.gif">
-                            Search
-                        </button>
-                    </div>
+                <div class="col-md-4">
+                    <select id="changeMax" class="form-control" ng-model="searchOptions.changeMax" ng-options="p + '%' for p in changePercentages">
+                        <option value="">No Maximum</option>
+                    </select>
                 </div>
+            </div>
 
-            </form>
-        </fieldset>
-    </div>
+            <!-- Spread -->
+            <div class="col-md-6 form-group">
+                <div class="col-md-4 rs_label"><span class="pull-right">Spread (%)</span></div>
+                <div class="col-md-4">
+                    <select id="spreadMin" class="form-control" ng-model="searchOptions.spreadMin" ng-options="p + '%' for p in percentages">
+                        <option value="">No Minimum</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select id="spreadMax" class="form-control" ng-model="searchOptions.spreadMax" ng-options="p + '%' for p in percentages">
+                        <option value="">No Maximum</option>
+                    </select>
+                </div>
+            </div>
 
-    <!-- Search Results -->
-	<div class="col-md-12" style="margin-top: 20px">
-		<fieldset>
-			<legend>Search Results (<span ng-class="getSearchResultClass(getSearchResultsCount())">{{ getSearchResultsCount() }}</span>)</legend>
+            <!-- Max Results -->
+            <div class="col-md-6 form-group">
+                <div class="col-md-4 rs_label"><span class="pull-right">Max Results</span></div>
+                <div class="col-md-4">
+                    <select id="maxResults" class="form-control"
+                            ng-model="searchOptions.maxResults"
+                            ng-options="r for r in maxResultsSet">
+                    </select>
+               </div>
+                <div class="col-md-4">
+                    <button class="btn st_button" ng-click="research(searchOptions)">
+                        <i ng-hide="isLoading()" class="fa fa-search"></i>
+                        <img ng-show="isLoading()" ng-disabled="loading" src="/images/status/loading16.gif">
+                        Search
+                    </button>
+                </div>
+            </div>
 
-            <!-- Search Results -->
-			<table class="results">
-				<tr>
-					<th class="results">
-						<a href="" ng-click="searchOptions.sortBy = 'symbol'; searchOptions.reverse = !searchOptions.reverse">Symbol</a>
-                        <i ng-show="searchOptions.sortBy !== 'symbol'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'symbol' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'symbol' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'lastTrade'; searchOptions.reverse = !searchOptions.reverse">Share Price</a>
-                        <i ng-show="searchOptions.sortBy !== 'lastTrade'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'lastTrade' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'lastTrade' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-                    <th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'prevClose'; searchOptions.reverse = !searchOptions.reverse">Prev Close</a>
-                        <i ng-show="searchOptions.sortBy !== 'prevClose'" class="fa fa-sort"></i>
-                        <i ng-show="searchOptions.sortBy === 'prevClose' && searchOptions.reverse" class="fa fa-sort-up"></i>
-                        <i ng-show="searchOptions.sortBy === 'prevClose' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-                    </th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'open'; searchOptions.reverse = !searchOptions.reverse">Open</a>
-                        <i ng-show="searchOptions.sortBy !== 'open'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'open' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'open' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'changePct'; searchOptions.reverse = !searchOptions.reverse">Chg %</a>
-                        <i ng-show="searchOptions.sortBy !== 'changePct'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'changePct' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'changePct' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'low'; searchOptions.reverse = !searchOptions.reverse">Low</a>
-                        <i ng-show="searchOptions.sortBy !== 'low'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'low' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'low' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'high'; searchOptions.reverse = !searchOptions.reverse">High</a>
-                        <i ng-show="searchOptions.sortBy !== 'high'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'high' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'high' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_num">
-                        <a href="" ng-click="searchOptions.sortBy = 'spread'; searchOptions.reverse = !searchOptions.reverse">Spread %</a>
-                        <i ng-show="searchOptions.sortBy !== 'spread'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'spread' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'spread' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-					<th class="results_bignum">
-                        <a href="" ng-click="searchOptions.sortBy = 'volume'; searchOptions.reverse = !searchOptions.reverse">Volume</a>
-                        <i ng-show="searchOptions.sortBy !== 'volume'" class="fa fa-sort"></i>
-						<i ng-show="searchOptions.sortBy === 'volume' && searchOptions.reverse" class="fa fa-sort-up"></i>
-						<i ng-show="searchOptions.sortBy === 'volume' && !searchOptions.reverse" class="fa fa-sort-down"></i>
-					</th>
-				</tr>
-			</table>
-			<div id="searchResults">
-				<span ng-hide="getSearchResultsCount()" class="notice">No matches found</span>
-				<table class="results">
-					<tr ng-repeat="quote in getSearchResults() | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
-						<td class="results">
-							<a class="links" ng-href="/#!/discover/{{ quote.symbol }}">
-								<i ng-class="getPreferenceIcon(row)"></i>
-								<span ng-class="quote.exchange"
-									popover="{{ quote.name }}"
-									popover-placement="right"
-									popover-trigger="mouseenter">{{ quote.symbol }}</span>
-							</a>
-						</td>
-						<td class="results_num">
-							<span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
-							<span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
-						</td>
-                        <td class="results_num">
-                            <span ng-show="quote.prevClose != null">{{ quote.prevClose | quoteNumber }}</span>
-                            <span ng-show="quote.prevClose == null" class="null center">&#8212;</span>
-                        </td>
-						<td class="results_num">
-							<span ng-show="quote.open != null">{{ quote.open | quoteNumber }}</span>
-							<span ng-show="quote.open == null" class="null center">&#8212;</span>
-						</td>
-						<td class="results_num">
-							<span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | abs | number:1 }}</span>
-							<span ng-show="quote.changePct == null" class="null center">&#8212;</span>
-							<changearrow value="{{ quote.changePct }}"></changearrow>
-						</td>
-						<td class="results_num">
-							<span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>
-							<span ng-show="quote.low == null" class="null center">&#8212;</span>
-						</td>
-						<td class="results_num">
-							<span ng-show="quote.high != null">{{ quote.high | quoteNumber }}</span>
-							<span ng-show="quote.high == null" class="null center">&#8212;</span>
-						</td>
-						<td class="results_num">
-							<span ng-show="quote.spread != null" ng-class="quote.spread > 50 ? 'positive' : ''">{{ quote.spread | number:2 }}</span>
-							<span ng-show="quote.spread == null" class="null center">&#8212;</span>
-						</td>
-						<td class="results_bignum">
-							<span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
-							<span ng-show="quote.volume == null" class="null center">&#8212;</span>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</fieldset>
+        </form>
+    </fieldset>
+</div>
+
+<!-- Search Results -->
+<div class="col-md-12" style="margin-top: 20px">
+    <fieldset>
+        <legend>Search Results (<span ng-class="getSearchResultClass(getSearchResultsCount())">{{ getSearchResultsCount() }}</span>)</legend>
+
+        <!-- Search Results -->
+        <table class="results">
+            <tr>
+                <th class="results">
+                    <a href="" ng-click="searchOptions.sortBy = 'symbol'; searchOptions.reverse = !searchOptions.reverse">Symbol</a>
+                    <i ng-show="searchOptions.sortBy !== 'symbol'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'symbol' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'symbol' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'lastTrade'; searchOptions.reverse = !searchOptions.reverse">Share Price</a>
+                    <i ng-show="searchOptions.sortBy !== 'lastTrade'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'lastTrade' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'lastTrade' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'prevClose'; searchOptions.reverse = !searchOptions.reverse">Prev Close</a>
+                    <i ng-show="searchOptions.sortBy !== 'prevClose'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'prevClose' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'prevClose' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'open'; searchOptions.reverse = !searchOptions.reverse">Open</a>
+                    <i ng-show="searchOptions.sortBy !== 'open'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'open' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'open' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'changePct'; searchOptions.reverse = !searchOptions.reverse">Chg %</a>
+                    <i ng-show="searchOptions.sortBy !== 'changePct'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'changePct' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'changePct' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'low'; searchOptions.reverse = !searchOptions.reverse">Low</a>
+                    <i ng-show="searchOptions.sortBy !== 'low'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'low' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'low' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'high'; searchOptions.reverse = !searchOptions.reverse">High</a>
+                    <i ng-show="searchOptions.sortBy !== 'high'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'high' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'high' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_num">
+                    <a href="" ng-click="searchOptions.sortBy = 'spread'; searchOptions.reverse = !searchOptions.reverse">Spread %</a>
+                    <i ng-show="searchOptions.sortBy !== 'spread'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'spread' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'spread' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+                <th class="results_bignum">
+                    <a href="" ng-click="searchOptions.sortBy = 'volume'; searchOptions.reverse = !searchOptions.reverse">Volume</a>
+                    <i ng-show="searchOptions.sortBy !== 'volume'" class="fa fa-sort"></i>
+                    <i ng-show="searchOptions.sortBy === 'volume' && searchOptions.reverse" class="fa fa-sort-up"></i>
+                    <i ng-show="searchOptions.sortBy === 'volume' && !searchOptions.reverse" class="fa fa-sort-down"></i>
+                </th>
+            </tr>
+        </table>
+        <div id="searchResults">
+            <span ng-hide="getSearchResultsCount()" class="notice">No matches found</span>
+            <table class="results">
+                <tr ng-repeat="quote in getSearchResults() | orderBy: (searchOptions.reverse ? '-' : '') + searchOptions.sortBy" ng-class-even="'even'" ng-class-odd="'odd'">
+                    <td class="results">
+                        <a class="links" ng-href="/#!/discover/{{ quote.symbol }}">
+                            <i ng-class="getPreferenceIcon(row)"></i>
+                            <span ng-class="quote.exchange"
+                                popover="{{ quote.name }}"
+                                popover-placement="right"
+                                popover-trigger="mouseenter">{{ quote.symbol }}</span>
+                        </a>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.lastTrade != null">{{ quote.lastTrade | quoteNumber }}</span>
+                        <span ng-show="quote.lastTrade == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.prevClose != null">{{ quote.prevClose | quoteNumber }}</span>
+                        <span ng-show="quote.prevClose == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.open != null">{{ quote.open | quoteNumber }}</span>
+                        <span ng-show="quote.open == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.changePct != null" ng-class="quote.changePct < 0 ? 'negative' : ''">{{ quote.changePct | abs | number:1 }}</span>
+                        <span ng-show="quote.changePct == null" class="null center">&#8212;</span>
+                        <changearrow value="{{ quote.changePct }}"></changearrow>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.low != null">{{ quote.low | quoteNumber }}</span>
+                        <span ng-show="quote.low == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.high != null">{{ quote.high | quoteNumber }}</span>
+                        <span ng-show="quote.high == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_num">
+                        <span ng-show="quote.spread != null" ng-class="quote.spread > 50 ? 'positive' : ''">{{ quote.spread | number:2 }}</span>
+                        <span ng-show="quote.spread == null" class="null center">&#8212;</span>
+                    </td>
+                    <td class="results_bignum">
+                        <span ng-show="quote.volume != null">{{ quote.volume | number }}</span>
+                        <span ng-show="quote.volume == null" class="null center">&#8212;</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
 	</div>
 </div>
 	

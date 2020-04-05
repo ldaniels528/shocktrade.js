@@ -5,6 +5,68 @@
     vertical-align: bottom;
 }
 
+.ds-1st {
+    color: #aaaa00;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.ds-2nd {
+    color: #aaaaaa;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.ds-3rd {
+    color: #aa8000;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.ds-nth {
+    color: #0080aa;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.cs_battery_0 {
+    color: #aa0000;
+}
+
+.cs_battery_1 {
+    color: #aa6600;
+}
+
+.cs_battery_2 {
+    color: #aaaa00;
+}
+
+.cs_battery_3 {
+    color: #aa6600;
+}
+
+.cs_battery_4 {
+    color: #00aa00;
+}
+
+.cs_search_divider {
+	background: #5bc0ee;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	color: white;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+.cs_upper_lower_15px {
+	margin-top: 15px;
+    margin-bottom: 15px
+}
+
+.cs_lower_15px {
+    margin-bottom: 15px
+}
+
 .dashboard_title {
     background: #5bc0ee;
     border: 1px solid #d4d4d4;
@@ -200,7 +262,7 @@ div.availGamesContainer {
 	clear: both;
 	overflow: auto;	
 	width: auto;
-	height: 400px;
+	height: 600px;
 }
 
 div.myPerksContainer {
