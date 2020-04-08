@@ -7,8 +7,8 @@ div.rank_cell {
 }
 
 div.rank_cell_1st {
-	background-color: #ffee00;
-	border: 1px solid #c0c0c0;
+	background-color: #eeffff;
+	border: 1px solid #ccdddd;
 	border-radius: 5px 5px 5px 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -16,7 +16,7 @@ div.rank_cell_1st {
 
 div.rank_cell_2nd {
 	background-color: #eeffff;
-	border: 1px solid #c0c0c0;
+	border: 1px solid #ccdddd;
 	border-radius: 5px 5px 5px 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -24,7 +24,7 @@ div.rank_cell_2nd {
 
 div.rank_cell_3rd {
 	background-color: #eeffff;
-	border: 1px solid #c0c0c0;
+	border: 1px solid #ccdddd;
 	border-radius: 5px 5px 5px 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;

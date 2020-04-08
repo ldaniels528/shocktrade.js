@@ -1,6 +1,6 @@
 <div class="col-md-12 contest_rankings_button_panel">
     <div style="height: 36px; vertical-align: middle">
-        <i class="fa fa-circle positive"></i>
-        <span ng-show="contest" class="ds_clock">Started {{ contest.startTime | duration }}. Ends {{ contest.expirationTime | duration }}.</span>
+        <i ng-class="getContestStatusClass(contest.status)"></i>
+        <span ng-show="contest" class="ds_clock">{{ contest.rankings.length }} of {{ maxPlayers }} competitors</span>
     </div>
 </div>

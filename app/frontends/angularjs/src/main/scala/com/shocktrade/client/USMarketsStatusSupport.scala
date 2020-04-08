@@ -17,19 +17,27 @@ import scala.util.{Failure, Success}
  * U.S. Markets Status Support
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-trait USMarketsStatusSupport[T <: USMarketsStatusSupportScope] {
+trait USMarketsStatusSupport {
   ref: Controller =>
 
   private var usMarketStatus: Either[MarketStatus, Boolean] = Right(false)
   private var lastContestID: js.UndefOr[String] = js.undefined
 
-  def $scope: T
+  ///////////////////////////////////////////////////////////////////////////
+  //          Injected Variables
+  ///////////////////////////////////////////////////////////////////////////
+
+  def $scope: USMarketsStatusSupportScope
 
   def $timeout: Timeout
 
   def marketStatusService: MarketStatusService
 
   def toaster: Toaster
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Public Functions
+  ///////////////////////////////////////////////////////////////////////////
 
   $scope.isUSMarketsOpen = (aContestID: js.UndefOr[String]) => {
     val contestID = aContestID ?? lastContestID

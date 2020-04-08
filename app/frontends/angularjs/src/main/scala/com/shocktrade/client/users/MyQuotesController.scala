@@ -25,7 +25,7 @@ case class MyQuotesController($scope: MyQuotesControllerScope, $location: Locati
                               @injected("PortfolioService") portfolioService: PortfolioService,
                               @injected("UserService") userService: UserService,
                               @injected("QuoteService") quoteService: QuoteService)
-  extends Controller with PersonalSymbolSupport[MyQuotesControllerScope] {
+  extends Controller with PersonalSymbolSupport {
 
   private val quoteSets = js.Dictionary(quoteLists map { case (name, icon) =>
     name -> new Expandable(icon = icon, quotes = null, expanded = false, loading = false)

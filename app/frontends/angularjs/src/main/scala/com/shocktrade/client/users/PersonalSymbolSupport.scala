@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
  * Personal Symbol Support
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-trait PersonalSymbolSupport[A <: PersonalSymbolSupportScope] {
+trait PersonalSymbolSupport {
   ref: Controller =>
 
   $scope.favoriteSymbols = js.Array()
@@ -31,7 +31,7 @@ trait PersonalSymbolSupport[A <: PersonalSymbolSupportScope] {
 
   def $q: Q
 
-  def $scope: A
+  def $scope: PersonalSymbolSupportScope
 
   def contestService: ContestService
 

@@ -11,18 +11,22 @@ import scala.scalajs.js
  * Globally Selected Symbol
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-trait GlobalSelectedSymbol[T <: GlobalSelectedSymbolScope] {
+trait GlobalSelectedSymbol {
   self: Controller =>
 
-  $scope.selectedSymbol = $cookies.getOrElse("symbol", "AMD")
+  ///////////////////////////////////////////////////////////////////////////
+  //          Injected Variables
+  ///////////////////////////////////////////////////////////////////////////
 
-  def $scope: T
+  def $scope: GlobalSelectedSymbolScope
 
   def $cookies: Cookies
 
-  /////////////////////////////////////////////////////////////////////
-  //          Event Listeners
-  /////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
+  //          Initialization
+  ///////////////////////////////////////////////////////////////////////////
+
+  $scope.selectedSymbol = $cookies.getOrElse("symbol", "AMD")
 
   def onSymbolSelected(newSymbol: String, oldSymbol: Option[String]) {
     // purposefully unimplemented

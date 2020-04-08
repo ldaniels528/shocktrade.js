@@ -42,9 +42,10 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
                                @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService)
   extends Controller
+    with ContestCssSupport
     with GlobalLoading
-    with GlobalSelectedSymbol[DashboardControllerScope]
-    with USMarketsStatusSupport[DashboardControllerScope] {
+    with GlobalSelectedSymbol
+    with USMarketsStatusSupport {
 
   implicit val cookies: Cookies = $cookies
 
@@ -175,7 +176,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     for {
       playerName <- aPlayerName
       totalEquity <- aTotalEquity
-      rankings <- $scope.contest.flatMap(_.rankings)
+      rankings <- $scope.getPlayerRankings()
       joiningRank <- getJoiningPlayerRank(playerName, totalEquity, rankings)
     } yield joiningRank
   }
@@ -191,7 +192,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   private def isTiedForLead: Boolean = {
     (for {
-      rankings <- $scope.contest.flatMap(_.rankings)
+      rankings <- $scope.getPlayerRankings()
       _1st <- rankings.headOption.orUndefined
       _2nd <- rankings.drop(1).headOption.orUndefined
       _1stRank <- _1st.rankNum
@@ -313,7 +314,11 @@ object DashboardController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait DashboardControllerScope extends RootScope with GlobalNavigation with GlobalSelectedSymbolScope with USMarketsStatusSupportScope {
+  trait DashboardControllerScope extends RootScope
+    with ContestCssSupportScope
+    with GlobalNavigation
+    with GlobalSelectedSymbolScope
+    with USMarketsStatusSupportScope {
 
     // functions
     var initDash: js.Function0[Unit] = js.native

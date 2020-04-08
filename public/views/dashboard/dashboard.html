@@ -14,6 +14,16 @@
         <div ng-class="isRankingsShown() ? 'col-md-9' : 'col-md-12'">
             <div ng-show="contest.name" class="col-md-12 dashboard_title">
                 <avatar id="{{ contest.hostUserID }}" class="avatar-24"></avatar> {{ contest.name }}
+                <span class="ds_clock" style="vertical-align: middle">
+                    <span ng-show="contest.status == 'CLOSED'">
+                         <span ng-show="contest.startTime && contest.expirationTime">(Status: <span style="color: #ffff00">Closed</span>)</span>
+                     </span>
+                     <span ng-hide="contest.status == 'CLOSED'">
+                         <span ng-show="contest.startTime && contest.expirationTime">
+                             (Started {{ contest.startTime | duration }}; ends {{ contest.expirationTime | duration }})
+                         </span>
+                     </span>
+                </span>
             </div>
             <div class="rankings_header" class="col-md-12">
                 <i ng-show="isRankingsShown()" class="fa fa-chevron-circle-left st_control clickable" ng-click="toggleRankingsShown()"></i>

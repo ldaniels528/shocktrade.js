@@ -26,7 +26,7 @@ import scala.util.{Failure, Success}
 case class ExploreController($scope: ExploreControllerScope, $anchorScroll: AnchorScroll, $cookies: Cookies, $location: Location,
                              $routeParams: ExploreRouteParams, $timeout: Timeout, toaster: Toaster,
                              @injected("ExploreService") exploreService: ExploreService)
-  extends Controller with GlobalSelectedSymbol[ExploreControllerScope] {
+  extends Controller with GlobalSelectedSymbol {
 
   // initialize scope variables
   $scope.sectors = emptyArray

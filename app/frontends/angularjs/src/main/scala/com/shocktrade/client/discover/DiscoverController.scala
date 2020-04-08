@@ -33,9 +33,9 @@ case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies
                               @injected("UserService") userService: UserService)
   extends AutoCompletionController($scope, $q, quoteService)
     with GlobalLoading
-    with GlobalSelectedSymbol[DiscoverControllerScope]
-    with PersonalSymbolSupport[DiscoverControllerScope]
-    with USMarketsStatusSupport[DiscoverControllerScope] {
+    with GlobalSelectedSymbol
+    with PersonalSymbolSupport
+    with USMarketsStatusSupport {
 
   // setup the public variables
   $scope.ticker = $routeParams.symbol.orNull

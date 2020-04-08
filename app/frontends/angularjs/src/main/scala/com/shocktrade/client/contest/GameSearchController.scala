@@ -35,7 +35,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
                                 @injected("NewGameDialog") newGameDialog: NewGameDialog,
                                 @injected("PortfolioService") portfolioService: PortfolioService,
                                 @injected("UserService") userService: UserService)
-  extends Controller with ContestEntrySupport[GameSearchScope] with GlobalLoading {
+  extends Controller with ContestCssSupport with ContestEntrySupport with GlobalLoading {
 
   // internal variables
   implicit private val cookies: Cookies = $cookies
@@ -107,7 +107,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
     searchOptions.userID = $cookies.getGameState.userID
     asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
       case Success(contests) =>
-        $scope.$apply(() => searchResults = contests.data.map(_.asInstanceOf[ContestSearchResult]))
+        $scope.$apply(() => searchResults = contests.data)
       case Failure(e) =>
         toaster.error("Failed to execute Contest Search")
         console.error(s"Failed: searchOptions = ${angular.toJson(searchOptions)}")
@@ -150,52 +150,6 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
       }
       else Future.successful(js.Array[ContestRanking]()).toJSPromise
     }
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Contest CSS Functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.contestStatusClass = (aContest: js.UndefOr[ContestSearchResult]) => aContest map {
-    case contest if contest.isActive => "positive"
-    case contest if contest.isClosed => "negative"
-    case _ => ""
-  }
-
-  $scope.getExpandedTrophyIcon = (aRanking: js.UndefOr[ContestRanking]) => aRanking.flatMap(_.rankNum).map {
-    case 1 => "fa fa-trophy ds-1st"
-    case 2 => "fa fa-trophy ds-2nd"
-    case 3 => "fa fa-trophy ds-3rd"
-    case _ => "fa fa-trophy ds-nth"
-  }
-
-  $scope.getSelectionClass = (aContest: js.UndefOr[ContestSearchResult]) => aContest map { c =>
-    if ($scope.selectedContest.exists(_.contestID ?== c.contestID)) "selected"
-    else if (c.isActive) ""
-    else "null"
-  }
-
-  $scope.getStatusClass = (aContest: js.UndefOr[ContestSearchResult]) => getStatusClass(aContest)
-
-  $scope.trophy = (aPlace: js.UndefOr[String]) => aPlace map trophy
-
-  private def getStatusClass(aContest: js.UndefOr[ContestSearchResult]): String = {
-    aContest map {
-      case c if c.isEmpty => ""
-      case c if c.isFull => "negative"
-      case c if !c.isAlmostFull => "positive"
-      case c if c.isAlmostFull => "warning"
-      case c if c.isActive => "positive"
-      case c if c.isClosed => "negative"
-      case _ => "null"
-    } getOrElse ""
-  }
-
-  private def trophy(place: String): String = place match {
-    case "1st" => "contests/gold.png"
-    case "2nd" => "contests/silver.png"
-    case "3rd" => "contests/bronze.png"
-    case _ => "status/transparent.png"
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -290,7 +244,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait GameSearchScope extends RootScope with ContestEntrySupportScope {
+trait GameSearchScope extends RootScope with ContestCssSupportScope with ContestEntrySupportScope {
   // variables
   var contest: js.UndefOr[Contest] = js.native
   var maxPlayers: js.UndefOr[Int] = js.native
@@ -300,17 +254,10 @@ trait GameSearchScope extends RootScope with ContestEntrySupportScope {
   var selectedContest: js.UndefOr[ContestSearchResult] = js.native
   var portfolios: js.Array[ContestRanking] = js.native
 
-  // CSS class functions
-  var contestStatusClass: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[String]] = js.native
-  var getSelectionClass: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[String]] = js.native
-  var getStatusClass: js.Function1[js.UndefOr[ContestSearchResult], String] = js.native
-  var trophy: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-
   // contest search functions
   var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], Unit] = js.native
   var expandContest: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[js.Promise[js.Array[ContestRanking]]]] = js.native
   var getAvailableCount: js.Function0[Int] = js.native
-  var getExpandedTrophyIcon: js.Function1[js.UndefOr[ContestRanking], js.UndefOr[String]] = js.native
   var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native
   var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResult]] = js.native
   var isActive: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[Boolean]] = js.native
