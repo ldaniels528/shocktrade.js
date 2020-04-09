@@ -2,7 +2,7 @@ package com.shocktrade.webapp.routes.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.NewOrderForm
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.PortfolioHelper._
 import com.shocktrade.webapp.routes.contest.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -60,7 +60,7 @@ class PortfolioRoutes(app: Application)(implicit ec: ExecutionContext, portfolio
       case _ =>
         portfolioDAO.createOrder(contestID, userID, order = form.toOrder) onComplete {
           case Success(count) => response.send(Ok(count)); next()
-          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
   }

@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.discover
 
 import com.shocktrade.server.common.TradingClock
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.dao.ContestDAO
 import com.shocktrade.webapp.routes.discover.TradingClockRoutes._
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -50,7 +50,7 @@ class TradingClockRoutes(app: Application)(implicit ec: ExecutionContext, tradin
         ))
         next()
       case Success(None) => response.notFound(request.params); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

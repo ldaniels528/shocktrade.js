@@ -110,7 +110,7 @@ class QuoteRoutes(app: Application)(implicit ec: ExecutionContext, autoCompleteD
         val maxResults = request.getMaxResults()
         autoCompleteDAO.search(searchTerm, maxResults) onComplete {
           case Success(results) => response.send(enrichSearchResults(results)); next()
-          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None =>
         response.badRequest("Missing search term (searchTerm)"); next()

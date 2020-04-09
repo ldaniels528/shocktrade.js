@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.discover
 
 import com.shocktrade.common.forms.MaxResultsForm
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.discover.GlobalSearchRoutes._
 import com.shocktrade.webapp.routes.discover.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -29,7 +29,7 @@ class GlobalSearchRoutes(app: Application)(implicit ec: ExecutionContext, global
           case Success(results) =>
             response.send(results); next()
           case Failure(e) =>
-            e.printStackTrace(); response.internalServerError(e.getMessage); next()
+            response.showException(e).internalServerError(e.getMessage); next()
         }
       case None =>
         response.badRequest(form); next()

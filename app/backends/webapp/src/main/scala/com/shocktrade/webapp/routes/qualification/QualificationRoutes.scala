@@ -2,7 +2,7 @@ package com.shocktrade.webapp.routes.qualification
 
 import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.TradingClock
-import com.shocktrade.webapp.routes.NextFunction
+import com.shocktrade.webapp.routes._
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import com.shocktrade.webapp.routes.qualification.QualificationRoutes.CqmResponse
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -37,7 +37,7 @@ class QualificationRoutes(app: Application)(implicit ec: ExecutionContext, cqm: 
           updatedOrderCount = rejectedCount
         ))
         next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 

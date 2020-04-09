@@ -83,7 +83,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
         contestDAO.create(form) onComplete {
           case Success(Some(result)) => response.send(result); next()
           case Success(None) => response.badRequest(form); next()
-          case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
   }
@@ -122,7 +122,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
     portfolioDAO.findChartData(contestID, userID, chart) onComplete {
       case Success(data) => response.send(data); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -138,7 +138,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
 
     outcome onComplete {
       case Success(contests) => response.send(contests); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -150,7 +150,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val outcome = contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq))
     outcome onComplete {
       case Success(rankings) => response.send(rankings.toJSArray); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -158,7 +158,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     contestDAO.join(contestID, userID) onComplete {
       case Success(data) => response.send(Ok(data)); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
@@ -166,7 +166,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     contestDAO.quit(contestID, userID) onComplete {
       case Success(data) => response.send(Ok(data)); next()
-      case Failure(e) => e.printStackTrace(); response.internalServerError(e); next()
+      case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
 
