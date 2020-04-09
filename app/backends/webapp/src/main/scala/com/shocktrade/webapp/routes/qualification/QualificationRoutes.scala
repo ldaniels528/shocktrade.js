@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.qualification
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.TradingClock
 import com.shocktrade.webapp.routes.NextFunction
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
@@ -26,10 +27,10 @@ class QualificationRoutes(app: Application)(implicit ec: ExecutionContext, cqm: 
   //////////////////////////////////////////////////////////////////////////////////////
 
   def runCQM(request: Request, response: Response, next: NextFunction): Unit = {
-    val marketClosed = request.query.get("marketClosed").contains("true")
-    cqm.start(marketClosed) onComplete {
-      case Success((positions, updatedOrders, positionCount, rejectedCount)) =>
+    cqm.start() onComplete {
+      case Success((contestRefs, positions, updatedOrders, positionCount, rejectedCount)) =>
         response.send(new CqmResponse(
+          contestRefs = contestRefs,
           positions = positions.toJSArray,
           updatedOrders = updatedOrders.toJSArray,
           positionCount = positionCount,
@@ -48,7 +49,8 @@ class QualificationRoutes(app: Application)(implicit ec: ExecutionContext, cqm: 
  */
 object QualificationRoutes {
 
-  class CqmResponse(val positions: js.UndefOr[js.Array[PositionData]],
+  class CqmResponse(val contestRefs: js.Array[ContestRef],
+                    val positions: js.UndefOr[js.Array[PositionData]],
                     val updatedOrders: js.UndefOr[js.Array[OrderData]],
                     val positionCount: js.UndefOr[Int],
                     val updatedOrderCount: js.UndefOr[Int]) extends js.Object

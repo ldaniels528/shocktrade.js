@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.qualification.dao
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -12,6 +13,21 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with QualificationDAO {
+
+  override def closeExpiredContests(): Future[js.Array[ContestRef]] = {
+    val now = new js.Date()
+    for {
+      _ <- conn.executeFuture(
+        s"""|UPDATE contests C
+            |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
+            |SET C.statusID = CS.statusID, C.closedTime = ?
+            |WHERE closedTime IS NULL
+            |AND ? BETWEEN startTime AND expirationTime
+            |""".stripMargin, js.Array(now, now)) map (_.affectedRows)
+
+      refs <- conn.queryFuture[ContestRef]("SELECT contestID, name FROM contests WHERE closedTime = ?", js.Array(now)) map (_._1)
+    } yield refs
+  }
 
   override def createPosition(position: PositionData): Future[Int] = {
     for {

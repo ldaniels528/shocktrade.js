@@ -1,5 +1,6 @@
 package com.shocktrade.webapp.routes.qualification.dao
 
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -12,6 +13,8 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 trait QualificationDAO {
+
+  def closeExpiredContests(): Future[js.Array[ContestRef]]
 
   def createPosition(position: PositionData): Future[Int]
 

@@ -2,6 +2,7 @@ package com.shocktrade.webapp.routes
 package qualification
 
 import com.shocktrade.common.Commissions
+import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import com.shocktrade.webapp.routes.qualification.ContestQualificationModule._
@@ -37,14 +38,15 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
       val startTime = new js.Date()
 
       // perform the qualification
-      start(marketClosed = clock.isTradingActive(lastRun)) onComplete {
-        case Success((_, _, positionCount, updatedOrderCount)) =>
-          logger.info(s"CQM: positionCount = $positionCount, updatedOrderCount = $updatedOrderCount")
+      start() onComplete {
+        case Success((contestRefs, _, _, positionCount, updatedOrderCount)) =>
+          logger.info(s"CQM: closed = ${contestRefs.length}, positionCount = $positionCount, updatedOrderCount = $updatedOrderCount")
 
           // capture the time as the last run time
           lastRun = startTime
         case Failure(e) =>
           logger.error(s"CQM failure: ${e.getMessage}", e)
+          e.printStackTrace()
 
           // capture the time as the last run time
           lastRun = startTime
@@ -61,11 +63,34 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
   /**
    * Executes the process
    */
-  def start(marketClosed: Boolean): Future[(List[PositionData], List[OrderData], Int, Int)] = {
+  def start(): Future[(js.Array[ContestRef], List[PositionData], List[OrderData], Int, Int)] = {
     for {
+      contestRefs <- processContestClosing()
       (buyPositions, buyOrders, buyPositionCount, buyOrderCount) <- processBuyFlow()
       (sellPositions, sellOrders, sellPositionCount, sellOrderCount) <- processSellFlow()
-    } yield (buyPositions ::: sellPositions, buyOrders ::: sellOrders, buyPositionCount + sellPositionCount, buyOrderCount + sellOrderCount)
+    } yield (contestRefs, buyPositions ::: sellPositions, buyOrders ::: sellOrders, buyPositionCount + sellPositionCount, buyOrderCount + sellOrderCount)
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+  //  Contest Close Flow
+  ///////////////////////////////////////////////////////////////////////
+
+  private def processContestClosing(): Future[js.Array[ContestRef]] = {
+    val outcome = qualificationDAO.closeExpiredContests() map { contestRefs =>
+      val count = contestRefs.length
+      logger.info(s"Closed $count contests:")
+      contestRefs.foreach { case ContestRef(contestID, name) =>
+        logger.info(s"Contest $name [$contestID] closed.")
+      }
+      contestRefs
+    }
+
+    outcome recover {
+      case e: Throwable =>
+        logger.error("Failure in Contest Closing flow:")
+        e.printStackTrace()
+        new js.Array()
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////
@@ -73,7 +98,7 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
   ///////////////////////////////////////////////////////////////////////
 
   private def processBuyFlow(): Future[(List[PositionData], List[OrderData], Int, Int)] = {
-    for {
+    val outcome = for {
       qualifiedOrders <- qualificationDAO.findQualifiedBuyOrders(limit = 1000)
       preparedOrders = prepareBuyOrders(qualifiedOrders)
       newPositions = preparedOrders collect { case Left(position) => position }
@@ -81,6 +106,13 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
       positionCount <- Future.sequence(newPositions.map(qualificationDAO.createPosition)).map(_.sum)
       updatedOrdersCount <- Future.sequence(updatedOrders.map(qualificationDAO.updateOrder)).map(_.sum)
     } yield (newPositions, updatedOrders, positionCount, updatedOrdersCount)
+
+    outcome recover {
+      case e: Throwable =>
+        logger.error("Failure in BUY flow:")
+        e.printStackTrace()
+        (Nil, Nil, 0, 0)
+    }
   }
 
   private def prepareBuyOrders(qualifiedOrders: js.Array[QualifiedOrderData]): List[Either[PositionData, OrderData]] = {
@@ -113,7 +145,7 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
   ///////////////////////////////////////////////////////////////////////
 
   private def processSellFlow(): Future[(List[PositionData], List[OrderData], Int, Int)] = {
-    for {
+    val outcome = for {
       qualifiedOrders <- qualificationDAO.findQualifiedSellOrders(limit = 1000)
       preparedOrders = prepareBuyOrders(qualifiedOrders)
       updatedPositions = preparedOrders collect { case Left(position) => position }
@@ -121,6 +153,13 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
       updatedPositionCount = 0
       updatedOrdersCount = 0
     } yield (updatedPositions, updatedOrders, updatedPositionCount, updatedOrdersCount)
+
+    outcome recover {
+      case e: Throwable =>
+        logger.error("Failure in SELL flow:")
+        e.printStackTrace()
+        (Nil, Nil, 0, 0)
+    }
   }
 
   private def prepareSellOrders(qualifiedOrders: js.Array[QualifiedOrderData]): List[Either[PositionData, OrderData]] = {

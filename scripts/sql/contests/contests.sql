@@ -19,7 +19,8 @@ CREATE TABLE contests (
      robotsAllowed TINYINT NOT NULL DEFAULT 1,
      creationTime DATETIME NOT NULL DEFAULT now(),
      startTime DATETIME NOT NULL DEFAULT now(),
-     expirationTime DATETIME NULL
+     expirationTime DATETIME NULL,
+     closedTime DATETIME NULL
 );
 
 -- ------------------------------------------------------------

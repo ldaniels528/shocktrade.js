@@ -31,7 +31,10 @@ class RobotProcessor()(implicit ec: ExecutionContext, robotDAO: RobotDAO) {
           if (response.counts > 0) logger.info(s"response: $response")
         }
       case Failure(e) =>
-        logger.error("Robot failure", e)
+        logger.error(s"Robot failure '${e.getMessage}'")
+        if(!e.getMessage.contains("predicate is not satisfied")) {
+          e.printStackTrace()
+        }
     }
   }
 
