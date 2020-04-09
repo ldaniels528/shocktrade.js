@@ -1,7 +1,8 @@
 package com.shocktrade.common.forms
 
+import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
+import com.shocktrade.common.forms.ContestSearchForm.ContestStatus
 import io.scalajs.util.JsUnderOrHelper._
-import io.scalajs.util.ScalaJsHelper._
 
 import scala.scalajs.js
 
@@ -10,14 +11,17 @@ import scala.scalajs.js
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class ContestSearchForm(var userID: js.UndefOr[String],
-                        var activeOnly: js.UndefOr[Boolean],
-                        var available: js.UndefOr[Boolean],
+                        var buyIn: js.UndefOr[GameBalance],
+                        var continuousTrading: js.UndefOr[Boolean],
+                        var duration: js.UndefOr[GameDuration],
                         var friendsOnly: js.UndefOr[Boolean],
                         var invitationOnly: js.UndefOr[Boolean],
                         var levelCap: js.UndefOr[Int],
                         var levelCapAllowed: js.UndefOr[Boolean],
+                        var nameLike: js.UndefOr[String],
                         var perksAllowed: js.UndefOr[Boolean],
-                        var robotsAllowed: js.UndefOr[Boolean]) extends js.Object
+                        var robotsAllowed: js.UndefOr[Boolean],
+                        var status: js.UndefOr[ContestStatus]) extends js.Object
 
 
 /**
@@ -27,13 +31,20 @@ class ContestSearchForm(var userID: js.UndefOr[String],
 object ContestSearchForm {
 
   /**
+   * Represents a contest status
+   * @param statusID    the status ID
+   * @param description the status description
+   */
+  class ContestStatus(val statusID: Int, val description: String) extends js.Object
+
+  /**
    * Contest Search Validations
    * @param form the given [[ContestSearchForm form]]
    */
-  implicit class ContestSearchValidations(val form: ContestSearchForm) extends AnyVal {
+  final implicit class ContestSearchValidations(val form: ContestSearchForm) extends AnyVal {
 
     def validate: js.Array[String] = {
-      val messages = emptyArray[String]
+      val messages = new js.Array[String]()
       if (form.levelCapAllowed.isTrue && form.levelCap.isEmpty) messages.push("Level cap must be specified")
       messages
     }

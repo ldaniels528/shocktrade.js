@@ -121,7 +121,7 @@ class NewGameDialogController($scope: NewGameDialogControllerScope, $timeout: Ti
 object NewGameDialogController {
   type NewGameDialogResult = ContestCreationResponse
 
-  private val GameDurations: js.Array[GameDuration] = js.Array(
+  val GameDurations: js.Array[GameDuration] = js.Array(
     new GameDuration(label = "1 Week", value = 7),
     new GameDuration(label = "2 Weeks", value = 14),
     new GameDuration(label = "3 Weeks", value = 21),
@@ -131,9 +131,9 @@ object NewGameDialogController {
     new GameDuration(label = "7 Weeks", value = 49),
     new GameDuration(label = "8 Weeks", value = 56))
 
-  private val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
+  val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
 
-  private val StartingBalances: js.Array[GameBalance] = js.Array(
+  val StartingBalances: js.Array[GameBalance] = js.Array(
     new GameBalance(label = "$ 1,000", value = 1000.00),
     new GameBalance(label = "$ 2,500", value = 2500.00),
     new GameBalance(label = "$ 5,000", value = 5000.00),

@@ -18,8 +18,10 @@
             </div>
         </div>
     </div>
-    <div class="pull-right" style="display: inline">
-        <button ng-click="joinContest(contest.contestID)" class="btn btn-default st_button pull-right" style="margin: 3px 3px 3px 3px">
+    <div class="pull-right" style="display: inline" ng-show="contest.status != 'CLOSED'">
+        <button ng-click="joinContest(contest.contestID)"
+                class="btn btn-default st_button pull-right"
+                style="margin: 3px 3px 3px 3px">
             <i ng-hide="isJoining" class="fa fa-user"></i>
             <img ng-show="isJoining" src="/images/status/loading16.gif"> Join
         </button>

@@ -24,7 +24,7 @@ trait ContestEntrySupport {
 
   $scope.enterGame = (aContestID: js.UndefOr[String]) => aContestID foreach enterGame
 
-  private def enterGame(contestID: String): Unit = $location.path(s"/dashboard/$contestID")
+  def enterGame(contestID: String): Unit = $location.path(s"/dashboard/$contestID")
 
 }
 

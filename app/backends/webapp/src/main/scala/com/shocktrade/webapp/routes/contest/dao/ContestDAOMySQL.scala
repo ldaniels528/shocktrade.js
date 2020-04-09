@@ -5,6 +5,7 @@ import java.util.UUID
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
 import com.shocktrade.server.dao.MySQLDAO
+import io.scalajs.nodejs.console
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 import io.scalajs.util.JsUnderOrHelper._
 
@@ -69,32 +70,47 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
   }
 
   override def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]] = {
-    var options: List[String] = Nil
-    form.activeOnly.foreach(checked => if (checked) options = "(now() BETWEEN startTime and expirationTime OR expirationTime IS NULL)" :: options)
-    form.friendsOnly.foreach(checked => if (checked) options = "friendsOnly = 1" :: options)
-    form.perksAllowed.foreach(checked => if (checked) options = "perksAllowed = 1" :: options)
-    form.invitationOnly.foreach(checked => if (checked) options = "invitationOnly = 1" :: options)
-    form.perksAllowed.foreach(checked => if (checked) options = "perksAllowed = 1" :: options)
-    form.robotsAllowed.foreach(checked => if (checked) options = "robotsAllowed = 1" :: options)
-    for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
-    val userID = form.userID.getOrElse("")
-    val sql =
-      s"""|SELECT C.*, CS.status, HU.username AS hostUsername,
-          |   DATEDIFF(C.expirationTime, C.startTime) AS duration,
-          |	  IFNULL(PC.playerCount, 0) AS playerCount,
-          |   IFNULL(PC.isParticipant, 0) isParticipant,
-          |	  CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
-          |FROM contests C
-          |INNER JOIN users HU ON HU.userID = C.hostUserID
-          |INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
-          |LEFT JOIN (
-          |   SELECT contestID, COUNT(*) AS playerCount,
-          |	  SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant
-          |   FROM portfolios GROUP BY contestID
-          |) AS PC ON PC.contestID = C.contestID
-          |${if (options.nonEmpty) s"WHERE ${options.mkString(" AND ")} " else ""}
-          |""".stripMargin
-    conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID)) map { case (rows, _) => rows }
+    var sql: String = null
+    try {
+      var options: List[String] = Nil
+      form.buyIn.flat.foreach(bi => options = s"C.startingBalance <= ${bi.value}" :: options)
+      form.continuousTrading.flat.foreach(checked => if (checked) options = "" :: options)
+      form.duration.flat.foreach(gd => options = s"C.expirationTime > DATE_ADD(now(), INTERVAL ${gd.value} DAY)" :: options)
+      form.friendsOnly.flat.foreach(checked => if (checked) options = "C.friendsOnly = 1" :: options)
+      form.invitationOnly.flat.foreach(checked => if (checked) options = "C.invitationOnly = 1" :: options)
+      form.nameLike.flat.foreach(name => options = s"C.name LIKE '%$name%'" :: options)
+      form.perksAllowed.flat.foreach(checked => if (checked) options = "C.perksAllowed = 1" :: options)
+      form.robotsAllowed.flat.foreach(checked => if (checked) options = "C.robotsAllowed = 1" :: options)
+      form.status.flat.map(_.statusID).foreach {
+        case 1 => options = "C.closedTime IS NULL" :: options // Active and Queued
+        case 2 => options = "CS.status = 'ACTIVE'" :: options // Active Only
+        case 3 => options = "CS.status = 'QUEUED'" :: options // Queued Only
+        case _ =>
+      }
+      for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
+      val userID = form.userID.getOrElse("")
+      sql =
+        s"""|SELECT C.*, CS.status, HU.username AS hostUsername,
+            |   DATEDIFF(C.expirationTime, C.startTime) AS duration,
+            |	  IFNULL(PC.playerCount, 0) AS playerCount,
+            |   IFNULL(PC.isParticipant, 0) isParticipant,
+            |	  CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
+            |FROM contests C
+            |INNER JOIN users HU ON HU.userID = C.hostUserID
+            |INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
+            |LEFT JOIN (
+            |   SELECT contestID, COUNT(*) AS playerCount,
+            |	  SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant
+            |   FROM portfolios GROUP BY contestID
+            |) AS PC ON PC.contestID = C.contestID
+            |${if (options.nonEmpty) s"WHERE ${options.mkString(" AND ")} " else ""}
+            |""".stripMargin
+      conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID)).map(_._1)
+    } catch {
+      case e: Throwable =>
+        if (sql != null) console.error(sql)
+        throw js.JavaScriptException(e)
+    }
   }
 
   override def start(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean] = {

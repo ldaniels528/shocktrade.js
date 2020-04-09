@@ -2,13 +2,14 @@ package com.shocktrade.client
 
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
+import com.shocktrade.client.contest.{ContestEntrySupport, ContestEntrySupportScope}
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
+import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
-import io.scalajs.npm.angularjs.{Controller, Q, Scope, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -19,11 +20,11 @@ import scala.util.{Failure, Success}
  * Information Bar Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class InformationBarController($scope: InformationBarControllerScope, $cookies: Cookies, $q: Q,
-                               @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
-                               @injected("UserService") userService: UserService,
-                               @injected("WebSocketService") webSocket: WebSocketService)
-  extends Controller {
+case class InformationBarController($scope: InformationBarControllerScope, $cookies: Cookies, $location: Location, $q: Q,
+                                    @injected("ReactiveSearchService") reactiveSearchSvc: ReactiveSearchService,
+                                    @injected("UserService") userService: UserService,
+                                    @injected("WebSocketService") webSocket: WebSocketService)
+  extends Controller with ContestEntrySupport {
 
   implicit private val cookies: Cookies = $cookies
 
@@ -42,7 +43,7 @@ class InformationBarController($scope: InformationBarControllerScope, $cookies: 
 
   $scope.onUserProfileUpdated { (_, profile) => $scope.userProfile = profile}
 
-  private def initInfoBar(userID: String): Unit ={
+  private def initInfoBar(userID: String): Unit = {
     userService.findUserByID(userID) onComplete {
       case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
       case Failure(e) => console.error(e.getMessage)
@@ -99,6 +100,7 @@ class InformationBarController($scope: InformationBarControllerScope, $cookies: 
     } {
       console.log(s"Handling $entity $label")
       entity match {
+        case "SIMULATION" => model._id.foreach(enterGame)
         case _ =>
           console.warn(s"Entity type '$entity' was unhandled")
       }
@@ -112,7 +114,7 @@ class InformationBarController($scope: InformationBarControllerScope, $cookies: 
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 @js.native
-trait InformationBarControllerScope extends Scope {
+trait InformationBarControllerScope extends Scope with ContestEntrySupportScope {
   // functions
   var initInfoBar: js.Function0[Unit] = js.native
   var autoCompleteSearch: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[EntitySearchResult]]]] = js.native

@@ -22,7 +22,7 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
             |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
             |SET C.statusID = CS.statusID, C.closedTime = ?
             |WHERE closedTime IS NULL
-            |AND ? BETWEEN startTime AND expirationTime
+            |AND expirationTime <= ?
             |""".stripMargin, js.Array(now, now)) map (_.affectedRows)
 
       refs <- conn.queryFuture[ContestRef]("SELECT contestID, name FROM contests WHERE closedTime = ?", js.Array(now)) map (_._1)

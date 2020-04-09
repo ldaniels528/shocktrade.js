@@ -2,12 +2,15 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.dialogs.NewGameDialog
+import com.shocktrade.client.contest.GameSearchController._
+import com.shocktrade.client.dialogs.{NewGameDialog, NewGameDialogController}
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.AppConstants
+import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
 import com.shocktrade.common.forms.ContestSearchForm
+import com.shocktrade.common.forms.ContestSearchForm.ContestStatus
 import com.shocktrade.common.models.contest.ContestSearchResult._
 import com.shocktrade.common.models.contest.{ContestRanking, ContestSearchResult, MyContest}
 import io.scalajs.JSON
@@ -20,7 +23,6 @@ import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.concurrent.Future
-import scala.language.postfixOps
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -46,18 +48,29 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   $scope.contest = js.undefined
   $scope.rankings = js.undefined
   $scope.portfolios = js.Array()
-  $scope.searchTerm = js.undefined
+
+  $scope.buyIns = NewGameDialogController.StartingBalances
+  $scope.durations = NewGameDialogController.GameDurations
+  $scope.statuses = js.Array(
+    new ContestStatus(statusID = 1, description = "Active and Queued"),
+    new ContestStatus(statusID = 2, description = "Active Only"),
+    new ContestStatus(statusID = 3, description = "Queued Only"),
+    new ContestStatus(statusID = 4, description = "All")
+  )
 
   $scope.searchOptions = new ContestSearchForm(
     userID = $cookies.getGameState.userID,
-    activeOnly = false,
-    available = false,
+    buyIn = js.undefined,
+    continuousTrading = false,
+    duration = js.undefined,
     friendsOnly = false,
     invitationOnly = false,
     levelCap = js.undefined,
     levelCapAllowed = false,
+    nameLike = js.undefined,
     perksAllowed = false,
-    robotsAllowed = false
+    robotsAllowed = false,
+    status = $scope.statuses.headOption.orUndefined
   )
 
   ///////////////////////////////////////////////////////////////////////////
@@ -99,9 +112,9 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.getSearchResults = (aSearchTerm: js.UndefOr[String]) => getSearchResults(aSearchTerm)
 
-  $scope.getSelectedContest = () => $scope.selectedContest
-
   $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
+
+  $scope.isActive = (aContest: js.UndefOr[ContestSearchResult]) => aContest.map(_.isActive)
 
   private def contestSearch(searchOptions: ContestSearchForm): Unit = {
     searchOptions.userID = $cookies.getGameState.userID
@@ -153,33 +166,6 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  //          Contest Selection Functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.selectContest = (aContest: js.UndefOr[ContestSearchResult]) => selectContest(aContest)
-
-  private def selectContest(aContest: js.UndefOr[ContestSearchResult]): Unit = {
-    $scope.selectedContest = aContest
-    $scope.portfolios.clear()
-
-    for {contest <- aContest; contestID <- contest.contestID} {
-      contestService.findRankingsByContest(contestID) onComplete {
-        case Success(response) =>
-          $scope.$apply { () => $scope.portfolios = response.data }
-          console.log(s"Selecting contest '${contest.name}' ($contestID)")
-        case Failure(e) =>
-          toaster.error(e.displayMessage)
-      }
-    }
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  //          Contest Management Functions
-  ///////////////////////////////////////////////////////////////////////////
-
-  $scope.isActive = (aContest: js.UndefOr[ContestSearchResult]) => aContest.map(_.isActive)
-
-  ///////////////////////////////////////////////////////////////////////////
   //          Event Listeners
   ///////////////////////////////////////////////////////////////////////////
 
@@ -196,7 +182,6 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
    * Listen for contest deletion events
    */
   $scope.onContestDeleted { (_, contest) =>
-    $scope.selectedContest = js.undefined
     searchResults = searchResults.filterNot(_.contestID ?== contest.contestID)
   }
 
@@ -240,32 +225,39 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 }
 
 /**
- * Game Search Controller Scope
+ * Game Search Controller Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-@js.native
-trait GameSearchScope extends RootScope with ContestCssSupportScope with ContestEntrySupportScope {
-  // variables
-  var contest: js.UndefOr[Contest] = js.native
-  var maxPlayers: js.UndefOr[Int] = js.native
-  var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
-  var searchTerm: js.UndefOr[String] = js.native
-  var searchOptions: ContestSearchForm = js.native
-  var selectedContest: js.UndefOr[ContestSearchResult] = js.native
-  var portfolios: js.Array[ContestRanking] = js.native
+object GameSearchController {
 
-  // contest search functions
-  var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], Unit] = js.native
-  var expandContest: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[js.Promise[js.Array[ContestRanking]]]] = js.native
-  var getAvailableCount: js.Function0[Int] = js.native
-  var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native
-  var getSelectedContest: js.Function0[js.UndefOr[ContestSearchResult]] = js.native
-  var isActive: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[Boolean]] = js.native
-  var selectContest: js.Function1[js.UndefOr[ContestSearchResult], Unit] = js.native
+  /**
+   * Game Search Controller Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait GameSearchScope extends RootScope with ContestCssSupportScope with ContestEntrySupportScope {
+    // variables
+    var buyIns: js.Array[GameBalance] = js.native
+    var contest: js.UndefOr[Contest] = js.native
+    var durations: js.Array[GameDuration] = js.native
+    var maxPlayers: js.UndefOr[Int] = js.native
+    var rankings: js.UndefOr[js.Array[ContestRanking]] = js.native
+    var searchOptions: ContestSearchForm = js.native
+    var portfolios: js.Array[ContestRanking] = js.native
+    var statuses: js.Array[ContestStatus] = js.native
 
-  // my games functions
-  var initMyGames: js.Function0[Unit] = js.native
-  var getMyContests: js.Function0[js.Array[MyContest]] = js.native
-  var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
+    // contest search functions
+    var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], Unit] = js.native
+    var expandContest: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[js.Promise[js.Array[ContestRanking]]]] = js.native
+    var getAvailableCount: js.Function0[Int] = js.native
+    var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native
+    var isActive: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[Boolean]] = js.native
+
+    // my games functions
+    var initMyGames: js.Function0[Unit] = js.native
+    var getMyContests: js.Function0[js.Array[MyContest]] = js.native
+    var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
+
+  }
 
 }
