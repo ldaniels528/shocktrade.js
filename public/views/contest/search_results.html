@@ -3,7 +3,7 @@
         <i ng-class="c.isLoading ? 'fa fa-cog fa-spin fa-fw' : ( c.isExpanded ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o' )" ng-click="expandContest(c)"></i>
         <i ng-class="getContestStatusClass(c.status)" ng-class="c.status == 'CLOSED' ? 'opaque' : ''"></i>
         <span ng-click="enterGame(c.contestID)" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
-            {{ c.name }}
+            {{ c.name }} <i class="fa fa-star st_orange" ng-show="c.hostUserID === userProfile.userID"></i>
         </span>
         <span ng-show="c.startingBalance" class="positive pull-right"  ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
             $ {{ c.startingBalance | number:0 }}
