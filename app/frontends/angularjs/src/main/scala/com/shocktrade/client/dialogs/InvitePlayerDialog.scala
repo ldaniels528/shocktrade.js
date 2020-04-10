@@ -5,10 +5,8 @@ import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.social.facebook.TaggableFriend
-import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
 
-import scala.concurrent.Future
 import scala.scalajs.js
 
 /**
@@ -20,7 +18,7 @@ class InvitePlayerDialog($http: Http, $uibModal: Modal) extends Service {
   /**
    * Invite a player via pop-up dialog
    */
-  def popup(contestID: String): Future[InvitePlayerDialogResult] = {
+  def popup(contestID: String): js.Promise[InvitePlayerDialogResult] = {
     val modalInstance = $uibModal.open[InvitePlayerDialogResult](new ModalOptions(
       templateUrl = "invite_player_dialog.html",
       controller = classOf[InvitePlayerDialogController].getSimpleName,

@@ -16,7 +16,7 @@ import scala.util.{Failure, Random, Success}
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO) {
-  private val statuses = js.Dictionary[OnlineStatus]()
+  private val onlineStatuses = js.Dictionary[OnlineStatus]()
 
   // authentication API
   app.get("/api/auth/code", (request: Request, response: Response, next: NextFunction) => code(request, response, next))
@@ -79,20 +79,20 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext, auth
   //////////////////////////////////////////////////////////////////////////////////////
 
   def statusAll(request: Request, response: Response, next: NextFunction): Unit = {
-    response.send(statuses)
+    response.send(onlineStatuses)
     next()
   }
 
   def statusByUserID(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
     response.send(status)
     next()
   }
 
   def onlineByUserID(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
     status.connected = true
     response.send(status)
     next()
@@ -100,7 +100,7 @@ class AuthenticationRoutes(app: Application)(implicit ec: ExecutionContext, auth
 
   def offlineByUserID(request: Request, response: Response, next: NextFunction): Unit = {
     val userID = request.params("userID")
-    val status = statuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
     status.connected = false
     response.send(status)
     next()

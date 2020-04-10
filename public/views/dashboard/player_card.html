@@ -4,7 +4,7 @@
     </div>
     <div class="pull-left" style="display: inline">
         <div>
-            <img ng-src="/images/status/{{ isOnline(player.userID) ? 'greenlight' : 'offlight' }}.png">
+            <img ng-src="/images/status/{{ isOnline(player.userID) == true ? 'greenlight' : 'offlight' }}.png">
             <span ng-class="'rank_' + player.rank">{{ player.rank }}</span>
             <img ng-if="contest.status === 'CLOSED' && player.rank === '1st'" src="/images/contests/gold.png">
             <img ng-if="contest.status === 'CLOSED' && player.rank === '2nd'" src="/images/contests/silver.png">

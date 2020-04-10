@@ -2,6 +2,7 @@ package com.shocktrade.client
 
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.models.contest._
+import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -41,7 +42,8 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         val outcome = buildContestGraph(contestID)
         outcome onComplete {
           case Success(contest) => contestCache(contestID) = contest
-          case Failure(e) => console.error(e.getMessage)
+          case Failure(e) => console.error(s"findContest: contestID => '$contestID' ${e.getMessage}")
+            e.printStackTrace()
         }
         outcome
     }
@@ -75,7 +77,8 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
         val outcome = buildPortfolioGraph(contestID, userID)
         outcome onComplete {
           case Success(portfolio) => portfolioCache(key) = portfolio
-          case Failure(e) => console.error(e.getMessage)
+          case Failure(e: js.JavaScriptException) => console.error(s"findPortfolio: contestID => '$contestID' ${JSON.stringify(e.getMessage)}")
+            e.printStackTrace()
         }
         outcome
     }

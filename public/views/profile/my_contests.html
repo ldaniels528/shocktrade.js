@@ -1,46 +1,14 @@
-<div ng-controller="GameSearchController" ng-init="initMyGames()">
+<div ng-controller="GameSearchController" ng-init="contestSearch(myGamesSearchOptions)">
     <div class="awards-heading">
-        <i class="fa fa-gamepad"></i> {{ getMyContests().length || 0 }} games found.
-        <span ng-click="popupNewGameDialog(userProfile.userID)" class="clickable pull-right" style="padding-right: 16px">
-            <i class="fa fa-plus-circle"></i> Create a new game.
+        <i class="fa fa-gamepad"></i> {{ getSearchResults(undefined).length || 0 }} games found.
+        <span ng-click="switchToGameSearch()" class="clickable pull-right" style="padding-right: 16px">
+            <i class="fa fa-search"></i> Find more?
         </span>
     </div>
-    <div class="col-md-12">
-        <div class="home_mycontests_container">
-            <div class="row">
-                <div class="col-md-4 header left padding-left-16">Game</div>
-                <div class="col-md-2 header left">Leader</div>
-                <div class="col-md-2 header left">Expires</div>
-            </div>
-
-            <div ng-repeat="c in getMyContests() track by $index" class="row clickable" ng-click="enterGame(c.contestID)">
-                <div ng-class="{'col-md-4':(!isSplitScreen()), 'col-md-12':(isSplitScreen())}">
-                    <i ng-class="getContestStatusClass(c.status)"></i>
-                    <span ng-click="enterGame(c.contestID)">{{ c.name }}</span>
-
-                    <span ng-class="c.playerGainLoss >= 0 ? 'positive' : 'negative'">
-                        <changearrow value="{{ c.playerGainLoss }}"></changearrow>
-                        {{ c.playerGainLoss | abs | number:2 }}%
-                    </span>
-                </div>
-                <div class="col-md-2 left">
-                    <span ng-show="c.leaderID">
-                        <avatar id="{{ c.leaderID }}" class="avatar-16" title="{{ c.leaderName }}"></avatar> {{ c.leaderName }}
-                        <span ng-class="c.leaderGainLoss >= 0 ? 'positive' : 'negative'">
-                            <changearrow value="{{ c.leaderGainLoss }}"></changearrow>
-                            {{ c.leaderGainLoss | abs | number:2 }}%
-                        </span>
-                    </span>
-                    <span ng-hide="c.leaderID" class="opaque">Unclear</span>
-                </div>
-                <div class="col-md-2 left">
-                    <span ng-show="c.status === 'ACTIVE'">
-                        <span ng-show="c.expirationTime">Ends {{ c.expirationTime | duration }}</span>
-                        <span ng-hide="c.expirationTime">&#8212;</span>
-                    </span>
-                    <span ng-hide="c.status === 'ACTIVE'">Closed</span>
-                </div>
-            </div>
+    <div class="availGamesContainer">
+        <div ng-include src="'/views/contest/search_header.html'"></div>
+        <div class="availGamesContainer">
+            <div ng-include src="'/views/contest/search_results.html'"></div>
         </div>
     </div>
 </div>

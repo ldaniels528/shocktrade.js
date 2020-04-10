@@ -18,6 +18,7 @@ class ContestSearchForm(var userID: js.UndefOr[String],
                         var invitationOnly: js.UndefOr[Boolean],
                         var levelCap: js.UndefOr[Int],
                         var levelCapAllowed: js.UndefOr[Boolean],
+                        var myGamesOnly: js.UndefOr[Boolean],
                         var nameLike: js.UndefOr[String],
                         var perksAllowed: js.UndefOr[Boolean],
                         var robotsAllowed: js.UndefOr[Boolean],
@@ -29,6 +30,13 @@ class ContestSearchForm(var userID: js.UndefOr[String],
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
 object ContestSearchForm {
+
+  val contestStatuses: js.Array[ContestStatus] = js.Array(
+    new ContestStatus(statusID = 1, description = "Active and Queued"),
+    new ContestStatus(statusID = 2, description = "Active Only"),
+    new ContestStatus(statusID = 3, description = "Queued Only"),
+    new ContestStatus(statusID = 4, description = "All")
+  )
 
   /**
    * Represents a contest status

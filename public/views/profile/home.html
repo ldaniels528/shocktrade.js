@@ -1,15 +1,11 @@
-<div ng-controller="GameSearchController" ng-init="initMyGames()">
+<div ng-controller="HomeController" ng-init="initHome()">
     <div ng-include src="'/views/profile/header.html'"></div>
 
     <div class="col-md-12 portfolio_button_panel">&nbsp;</div>
 
     <tabset>
         <tab>
-            <tab-heading><i class="fa fa-gamepad"></i> Public Games</tab-heading>
-            <div class="row home_tab home_tab_container" ng-include src="'/views/profile/public_contests.html'"></div>
-        </tab>
-        <tab>
-            <tab-heading><i class="fa fa-gamepad"></i> My Games ({{ getMyContests().length || 0 }})</tab-heading>
+            <tab-heading><i class="fa fa-gamepad"></i> My Games</tab-heading>
             <div class="row home_tab home_tab_container" ng-include src="'/views/profile/my_contests.html'"></div>
         </tab>
         <tab>

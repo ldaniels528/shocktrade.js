@@ -34,7 +34,7 @@ class SocialRoutes(app: Application)(implicit ec: ExecutionContext) {
               case None => response.send(js.Dictionary[js.Any]())
             }
             next()
-          case Failure(e) => response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
       case None => response.missingParams("url"); next()
     }

@@ -3,7 +3,9 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
-import com.shocktrade.client.dialogs.NewOrderDialogController.NewOrderParams
+import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
+import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
+import com.shocktrade.client.dialogs.PerksDialogController.PerksDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog}
 import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
@@ -80,9 +82,9 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
 
   $scope.onUserProfileUpdated { (_, _) => initDash() }
 
-  private def initDash(): Unit = {
+  private def initDash(): js.UndefOr[js.Promise[(Contest, Option[Portfolio])]] = {
     $scope.resetMarketStatus($routeParams.contestID)
-    for (contestID <- $routeParams.contestID) refreshView(contestID, $cookies.getGameState.userID)
+    for (contestID <- $routeParams.contestID) yield refreshView(contestID, $cookies.getGameState.userID)
   }
 
   private def clock: js.Date = {
@@ -90,7 +92,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
     new js.Date(js.Date.now() - timeOffset)
   }
 
-  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): Unit = {
+  private def refreshView(contestID: String, aUserID: js.UndefOr[String]): js.Promise[(Contest, Option[Portfolio])] = {
     $timeout(() => $scope.isRefreshing = true, 0.millis)
     val outcome = for {
       contest <- contestFactory.findContest(contestID)
@@ -109,6 +111,7 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
         }
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
+    outcome.toJSPromise
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -116,50 +119,62 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
   /////////////////////////////////////////////////////////////////////
 
   $scope.popupInvitePlayer = (aContestID: js.UndefOr[String]) => {
-    for (contestID <- aContestID ?? $routeParams.contestID) {
-      invitePlayerDialog.popup(contestID) onComplete {
-        case Success(_) => refreshView(contestID, $cookies.getGameState.userID)
-        case Failure(e) =>
-          if (e.getMessage != "cancel") {
-            toaster.error("invite Player", e.displayMessage)
-            e.printStackTrace()
-          }
-      }
-    }
+    for (contestID <- aContestID ?? $routeParams.contestID) yield popupInvitePlayer(contestID)
   }
 
   $scope.popupPerksDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String]) => {
     for {
       contestID <- aContestID ?? $routeParams.contestID
       userID <- aUserID
-    } {
-      perksDialog.popup(contestID, userID) onComplete {
-        case Success(_) => refreshView(contestID, userID)
-        case Failure(e) =>
-          if (e.getMessage != "cancel") {
-            toaster.error("Perk Management", e.displayMessage)
-            e.printStackTrace()
-          }
-      }
-    }
+    } yield popupPerksDialog(contestID, userID)
   }
 
   $scope.popupNewOrderDialog = (aContestID: js.UndefOr[String], aUserID: js.UndefOr[String], aSymbol: js.UndefOr[String]) => {
     for {
       contestID <- aContestID ?? $routeParams.contestID
       userID <- aUserID
-    } {
-      newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = aSymbol)) onComplete {
-        case Success(result) =>
-          console.log(s"result = ${JSON.stringify(result)}")
-          refreshView(contestID, userID)
-        case Failure(e) =>
-          if (e.getMessage != "cancel") {
-            toaster.error("Order Management", e.displayMessage)
-            e.printStackTrace()
-          }
-      }
+    } yield popupNewOrderDialog(contestID, userID, aSymbol)
+  }
+
+  private def popupInvitePlayer(contestID: String): js.Promise[InvitePlayerDialogResult] = {
+    val outcome = invitePlayerDialog.popup(contestID)
+    outcome onComplete {
+      case Success(_) => refreshView(contestID, $cookies.getGameState.userID)
+      case Failure(e) =>
+        if (e.getMessage != "cancel") {
+          toaster.error("invite Player", e.displayMessage)
+          e.printStackTrace()
+        }
     }
+    outcome
+  }
+
+  private def popupPerksDialog(contestID: String, userID: String): js.Promise[PerksDialogResult] = {
+    val outcome = perksDialog.popup(contestID, userID)
+    outcome onComplete {
+      case Success(_) => refreshView(contestID, userID)
+      case Failure(e) =>
+        if (e.getMessage != "cancel") {
+          toaster.error("Perk Management", e.displayMessage)
+          e.printStackTrace()
+        }
+    }
+    outcome
+  }
+
+  private def popupNewOrderDialog(contestID: String, userID: String, aSymbol: js.UndefOr[String]): js.Promise[NewOrderDialogResult] = {
+    val outcome = newOrderDialog.popup(new NewOrderParams(contestID = contestID, userID = userID, symbol = aSymbol))
+    outcome onComplete {
+      case Success(result) =>
+        console.log(s"result = ${JSON.stringify(result)}")
+        refreshView(contestID, userID)
+      case Failure(e) =>
+        if (e.getMessage != "cancel") {
+          toaster.error("Order Management", e.displayMessage)
+          e.printStackTrace()
+        }
+    }
+    outcome
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -321,7 +336,7 @@ object DashboardController {
     with USMarketsStatusSupportScope {
 
     // functions
-    var initDash: js.Function0[Unit] = js.native
+    var initDash: js.Function0[js.UndefOr[js.Promise[(Contest, Option[Portfolio])]]] = js.native
     var getJoiningPlayerRank: js.Function2[js.UndefOr[String], js.UndefOr[Double], js.UndefOr[String]] = js.native
     var getPlayerRankings: js.Function0[js.UndefOr[js.Array[ContestRanking]]] = js.native
     var getPortfolioTabs: js.Function0[js.Array[PortfolioTab]] = js.native
@@ -333,9 +348,9 @@ object DashboardController {
     var toggleRankingsShown: js.Function0[Unit] = js.native
 
     // popup dialog functions
-    var popupInvitePlayer: js.Function1[js.UndefOr[String], Unit] = js.native
-    var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], Unit] = js.native
-    var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
+    var popupInvitePlayer: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[InvitePlayerDialogResult]]] = js.native
+    var popupNewOrderDialog: js.Function3[js.UndefOr[String], js.UndefOr[String], js.UndefOr[String], js.UndefOr[js.Promise[NewOrderDialogResult]]] = js.native
+    var popupPerksDialog: js.Function2[js.UndefOr[String], js.UndefOr[String], js.UndefOr[js.Promise[PerksDialogResult]]] = js.native
 
     // contest management functions
     var deleteContest: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Ok]]]] = js.native

@@ -1,7 +1,7 @@
 package com.shocktrade.webapp.routes.contest.dao
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
-import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
 
@@ -19,8 +19,6 @@ trait ContestDAO {
   def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
 
   def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]]
-
-  def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]]
 
   def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]]
 

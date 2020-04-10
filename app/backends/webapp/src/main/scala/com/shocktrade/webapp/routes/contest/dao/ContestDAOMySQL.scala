@@ -3,7 +3,7 @@ package com.shocktrade.webapp.routes.contest.dao
 import java.util.UUID
 
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
-import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.dao.MySQLDAO
 import io.scalajs.nodejs.console
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -46,24 +46,6 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
       .map { case (rows, _) => rows.headOption }
   }
 
-  override def findMyContests(userID: String)(implicit ec: ExecutionContext): Future[js.Array[MyContest]] = {
-    conn.queryFuture[MyContest](
-      """|SELECT
-         |	CR.contestID, CR.name, CR.hostUserID, CR.status,
-         |	CR.userID playerID, CR.username AS playerName, CR.gainLoss playerGainLoss,
-         |	LP.leaderID, LP.leaderName, LP.leaderGainLoss,
-         |  CR.*
-         |FROM contest_rankings CR
-         |LEFT JOIN (
-         |	SELECT contestID, userID AS leaderID, username AS leaderName, gainLoss AS leaderGainLoss
-         |	FROM contest_rankings CR2
-         |	WHERE totalEquity = (SELECT MAX(totalEquity) FROM contest_rankings WHERE contestID = CR2.contestID)
-         |  LIMIT 1
-         |) LP ON LP.contestID = CR.contestID
-         |WHERE CR.userID = ?
-         |""".stripMargin, js.Array(userID)).map(_._1)
-  }
-
   override def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]] = {
     conn.queryFuture[ContestRanking]("SELECT * FROM contest_rankings WHERE contestID = ?", js.Array(contestID))
       .map { case (rows, _) => rows }
@@ -78,6 +60,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
       form.duration.flat.foreach(gd => options = s"C.expirationTime > DATE_ADD(now(), INTERVAL ${gd.value} DAY)" :: options)
       form.friendsOnly.flat.foreach(checked => if (checked) options = "C.friendsOnly = 1" :: options)
       form.invitationOnly.flat.foreach(checked => if (checked) options = "C.invitationOnly = 1" :: options)
+      form.myGamesOnly.flat.foreach(checked => if (checked) options = s"(C.hostUserID = U.userID OR P.userID = U.userID)" :: options)
       form.nameLike.flat.foreach(name => options = s"C.name LIKE '%$name%'" :: options)
       form.perksAllowed.flat.foreach(checked => if (checked) options = "C.perksAllowed = 1" :: options)
       form.robotsAllowed.flat.foreach(checked => if (checked) options = "C.robotsAllowed = 1" :: options)
@@ -88,7 +71,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
         case _ =>
       }
       for (allowed <- form.levelCapAllowed; level <- form.levelCap) if (allowed) options = s"(levelCap = 0 OR levelCap < $level)" :: options
-      val userID = form.userID.getOrElse("")
+      val userID = form.userID.getOrElse("????")
       sql =
         s"""|SELECT C.*, CS.status, HU.username AS hostUsername,
             |   DATEDIFF(C.expirationTime, C.startTime) AS duration,
@@ -96,8 +79,10 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
             |   IFNULL(PC.isParticipant, 0) isParticipant,
             |	  CASE WHEN hostUserID = ? THEN 1 ELSE 0 END AS isOwner
             |FROM contests C
-            |INNER JOIN users HU ON HU.userID = C.hostUserID
             |INNER JOIN contest_statuses CS ON CS.statusID = C.statusID
+            |INNER JOIN users HU ON HU.userID = C.hostUserID
+            |INNER JOIN users U ON U.userID = ?
+            |LEFT JOIN portfolios P ON P.contestID = C.contestID AND P.userID = U.userID
             |LEFT JOIN (
             |   SELECT contestID, COUNT(*) AS playerCount,
             |	  SUM(CASE WHEN userID = ? THEN 1 ELSE 0 END) AS isParticipant
@@ -105,7 +90,7 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
             |) AS PC ON PC.contestID = C.contestID
             |${if (options.nonEmpty) s"WHERE ${options.mkString(" AND ")} " else ""}
             |""".stripMargin
-      conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID)).map(_._1)
+      conn.queryFuture[ContestSearchResult](sql, js.Array(userID, userID, userID)).map(_._1)
     } catch {
       case e: Throwable =>
         if (sql != null) console.error(sql)

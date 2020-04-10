@@ -2,7 +2,7 @@ package com.shocktrade.client.contest
 
 import com.shocktrade.common.Ok
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
-import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult, MyContest}
+import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.common.models.quote.Ticker
 import io.scalajs.npm.angularjs.Service
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
@@ -57,10 +57,6 @@ class ContestService($http: Http) extends Service {
 
   def findHeldSecurities(userID: String): js.Promise[HttpResponse[js.Array[Ticker]]] = {
     $http.get(s"/api/contest/user/$userID/heldSecurities")
-  }
-
-  def findMyContests(userID: String): js.Promise[HttpResponse[js.Array[MyContest]]] = {
-    $http.get(s"/api/contests/user/$userID")
   }
 
   /**

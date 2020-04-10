@@ -35,7 +35,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   // collections of contests
   app.get("/api/contest/:id/rankings", (request: Request, response: Response, next: NextFunction) => findRankings(request, response, next))
   app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => findPerks(request, response, next))
-  app.get("/api/contests/user/:userID", (request: Request, response: Response, next: NextFunction) => findMyContests(request, response, next))
   app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
@@ -122,22 +121,6 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
     portfolioDAO.findChartData(contestID, userID, chart) onComplete {
       case Success(data) => response.send(data); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  /**
-   * Retrieves contests by userID
-   */
-  def findMyContests(request: Request, response: Response, next: NextFunction): Unit = {
-    val userID = request.params("userID")
-    val outcome = for {
-      myContests <- contestDAO.findMyContests(userID)
-      sortedContests = myContests.sortBy(-_.playerGainLoss.getOrElse(-Double.MaxValue))
-    } yield sortedContests.zipWithIndex map { case (ranking, rank) => ranking.copy(playerRank = rank + 1, leaderRank = 1) }
-
-    outcome onComplete {
-      case Success(contests) => response.send(contests); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }

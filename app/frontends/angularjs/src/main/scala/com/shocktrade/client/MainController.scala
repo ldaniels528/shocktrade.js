@@ -8,6 +8,7 @@ import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
+import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -42,6 +43,8 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   implicit private val scope: MainControllerScope = $scope
   implicit private val cookies: Cookies = $cookies
+
+  private val onlineStatuses = js.Dictionary[OnlineStatus]()
   private var loadingIndex = 0
 
   // public variable
@@ -120,7 +123,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(isOnline)
+  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(getOnlineStatus).map(_.connected)
 
   $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
 
@@ -151,8 +154,16 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     }
   }
 
-  private def isOnline(userID: String): js.Promise[Boolean] = {
-    userService.getOnlineStatus(userID).map(_.data.connected).toJSPromise
+  private def getOnlineStatus(userID: String): OnlineStatus = {
+    onlineStatuses.getOrElseUpdate(userID, {
+      val onlineStatus = new OnlineStatus(connected = false)
+      userService.getOnlineStatus(userID) onComplete {
+        case Success(response) => $scope.$apply(() => onlineStatus.connected = response.data.connected)
+        case Failure(e) =>
+          e.printStackTrace()
+      }
+      onlineStatus
+    })
   }
 
   private def logout(): js.Promise[Unit] = {
@@ -160,7 +171,9 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     val outcome = for {
       _ <- authenticationService.logout()
       _ <- $cookies.getGameState.userID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
-    } yield ()
+    } yield {
+      $cookies.getGameState.userID.toOption.flatMap(onlineStatuses.get).foreach(_.connected = false)
+    }
 
     outcome onComplete { _ =>
       clearLoggedInItems()
@@ -326,7 +339,7 @@ object MainController {
     var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
     var isAuthenticated: js.Function0[Boolean] = js.native
 
-    var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[Boolean]]] = js.native
+    var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[Boolean]] = js.native
     var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
     var logout: js.Function0[js.Promise[Unit]] = js.native
     var signIn: js.Function0[js.Promise[HttpResponse[UserProfile]]] = js.native
