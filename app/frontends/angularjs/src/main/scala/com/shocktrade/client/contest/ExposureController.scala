@@ -13,6 +13,7 @@ import io.scalajs.npm.amcharts.AmChart.Export
 import io.scalajs.npm.amcharts.{AmCharts, AmPieChart}
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.nvd3._
 import io.scalajs.npm.angularjs.nvd3.chart._
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -68,16 +69,18 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
 
   $scope.initChart = () => initChart()
 
-  def initChart(): Unit = {
+  def initChart(): js.UndefOr[js.Promise[HttpResponse[UserProfile]]] = {
     console.info(s"Initializing ${getClass.getSimpleName}...")
     $scope.showChart($scope.selectedExposure)
 
     // attempt to load the user profile
-    $cookies.getGameState.userID foreach { userID =>
-      userService.findUserByID(userID) onComplete {
+    $cookies.getGameState.userID map { userID =>
+      val outcome = userService.findUserByID(userID)
+      outcome onComplete {
         case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
         case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
       }
+      outcome
     }
   }
 
@@ -93,17 +96,21 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
       userID <- $cookies.getGameState.userID
       chart <- aChart
       value <- chart.value
-    } {
-      portfolioService.findChartData(contestID, userID, value) onComplete {
-        case Success(response) => updateChartDiv(response.data)
-        case Failure(e) =>
-          toaster.error(s"Error loading ${chart.label.orNull}")
-          console.error(s"Failed to load exposure data for ${chart.label.orNull}: ${e.displayMessage}")
-      }
-    }
+    } yield showChart(contestID, userID, chart, value)
   }
 
-  private def updateChartDiv(datums: js.Array[ChartData]): Unit = {
+  private def showChart(contestID: String, userID: String, chart: ChartSelection, value: String): js.Promise[HttpResponse[js.Array[ChartData]]] = {
+    val outcome = portfolioService.findChartData(contestID, userID, value)
+    outcome onComplete {
+      case Success(response) => updateChartDiv(response.data)
+      case Failure(e) =>
+        toaster.error(s"Error loading ${chart.label.orNull}")
+        console.error(s"Failed to load exposure data for ${chart.label.orNull}: ${e.displayMessage}")
+    }
+    outcome
+  }
+
+  private def updateChartDiv(datums: js.Array[ChartData]): AmPieChart = {
     AmCharts.makeChart(container = "chart_div", AmPieChart(
       dataProvider = datums,
       titleField = "name",
@@ -120,7 +127,6 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
         console.log(s"Click event occurred - ${angular.toJson(clickEvent)}")
       })
     ))
-    ()
   }
 
 }
@@ -143,8 +149,8 @@ object ExposureController {
     var selectedExposure: js.UndefOr[ChartSelection] = js.native
 
     // functions
-    var initChart: js.Function0[Unit] = js.native
-    var showChart: js.Function1[js.UndefOr[ChartSelection], Unit] = js.native
+    var initChart: js.Function0[js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
+    var showChart: js.Function1[js.UndefOr[ChartSelection], js.UndefOr[js.Promise[HttpResponse[js.Array[ChartData]]]]] = js.native
     var userProfile: js.UndefOr[UserProfile] = js.native
   }
 

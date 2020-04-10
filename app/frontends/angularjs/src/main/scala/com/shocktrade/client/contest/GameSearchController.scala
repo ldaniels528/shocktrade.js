@@ -4,6 +4,7 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameSearchController._
 import com.shocktrade.client.dialogs.{NewGameDialog, NewGameDialogController}
+import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
@@ -18,6 +19,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -82,7 +84,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
   /**
    * Retrieves the collection of games for the authenticated user
    */
-  private def initMyGames(): Unit = $scope.userProfile.flatMap(_.userID) foreach loadMyContests
+  private def initMyGames(): js.UndefOr[js.Promise[HttpResponse[js.Array[MyContest]]]] = $scope.userProfile.flatMap(_.userID) map loadMyContests
 
   /**
    * Listen for contest creation events
@@ -112,19 +114,21 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.getSearchResults = (aSearchTerm: js.UndefOr[String]) => getSearchResults(aSearchTerm)
 
-  $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions foreach contestSearch
+  $scope.contestSearch = (aSearchOptions: js.UndefOr[ContestSearchForm]) => aSearchOptions map contestSearch
 
   $scope.isActive = (aContest: js.UndefOr[ContestSearchResult]) => aContest.map(_.isActive)
 
-  private def contestSearch(searchOptions: ContestSearchForm): Unit = {
+  private def contestSearch(searchOptions: ContestSearchForm): js.Promise[HttpResponse[js.Array[ContestSearchResult]]] = {
     searchOptions.userID = $cookies.getGameState.userID
-    asyncLoading($scope)(contestService.findContests(searchOptions)) onComplete {
+    val outcome = contestService.findContests(searchOptions)
+    asyncLoading($scope)(outcome) onComplete {
       case Success(contests) =>
         $scope.$apply(() => searchResults = contests.data)
       case Failure(e) =>
         toaster.error("Failed to execute Contest Search")
         console.error(s"Failed: searchOptions = ${angular.toJson(searchOptions)}")
     }
+    outcome
   }
 
   private def getSearchResults(aSearchTerm: js.UndefOr[String]): js.Array[ContestSearchResult] = aSearchTerm.toOption match {
@@ -142,27 +146,29 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
     for {
       contest <- aContest
       contestID <- contest.contestID
-    } yield {
-      contest.isExpanded = !contest.isExpanded.isTrue
-      contest.rankings = js.undefined
+    } yield expandContest(contest, contestID)
+  }
 
-      if (contest.isExpanded.isTrue) {
-        contest.isLoading = true
-        val outcome = contestService.findRankingsByContest(contestID).map(_.data)
-        outcome onComplete {
-          case Success(rankings) =>
-            $scope.$apply { () =>
-              contest.isLoading = false
-              contest.rankings = rankings.sortBy(_.rankNum.getOrElse(Int.MaxValue))
-            }
-          case Failure(e) =>
-            $scope.$apply(() => contest.isLoading = false)
-            console.error(s"Failed to expand contest: ${e.getMessage}")
-        }
-        outcome.toJSPromise
+  def expandContest(contest: ContestSearchResult, contestID: String): js.Promise[js.Array[ContestRanking]] = {
+    contest.isExpanded = !contest.isExpanded.isTrue
+    contest.rankings = js.undefined
+
+    if (contest.isExpanded.isTrue) {
+      contest.isLoading = true
+      val outcome = contestService.findRankingsByContest(contestID).map(_.data)
+      outcome onComplete {
+        case Success(rankings) =>
+          $scope.$apply { () =>
+            contest.isLoading = false
+            contest.rankings = rankings.sortBy(_.rankNum.getOrElse(Int.MaxValue))
+          }
+        case Failure(e) =>
+          $scope.$apply(() => contest.isLoading = false)
+          console.error(s"Failed to expand contest: ${e.getMessage}")
       }
-      else Future.successful(js.Array[ContestRanking]()).toJSPromise
+      outcome.toJSPromise
     }
+    else Future.successful(js.Array[ContestRanking]()).toJSPromise
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -191,27 +197,29 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
 
   $scope.getMyContests = () => myContests
 
-  $scope.popupNewGameDialog = (aUserID: js.UndefOr[String]) => aUserID.foreach(popupNewGameDialog)
+  $scope.popupNewGameDialog = (aUserID: js.UndefOr[String]) => aUserID.map(popupNewGameDialog)
 
-  private def popupNewGameDialog(userID: String): Unit = {
+  private def popupNewGameDialog(userID: String): js.Promise[HttpResponse[UserProfile]] = {
     val outcome = for {
-      response <- newGameDialog.popup(userID)
+      _ <- newGameDialog.popup(userID)
       userProfile <- userService.findUserByID(userID)
-    } yield (response, userProfile)
+    } yield userProfile
 
     outcome onComplete {
-      case Success((_, userProfile)) =>
+      case Success(userProfile) =>
         initMyGames()
         $scope.emitUserProfileUpdated(userProfile.data)
       case Failure(e) =>
         toaster.error("Failed to create game")
         console.error(s"Failed to create game: ${e.displayMessage}")
     }
+    outcome.toJSPromise
   }
 
-  private def loadMyContests(userID: String): Unit = {
+  private def loadMyContests(userID: String): js.Promise[HttpResponse[js.Array[MyContest]]] = {
     console.log(s"Loading 'My Contests' for user '$userID'...")
-    contestService.findMyContests(userID) onComplete {
+    val outcome = contestService.findMyContests(userID)
+    outcome onComplete {
       case Success(response) =>
         val contests = response.data
         console.log(s"Loaded ${contests.length} contest(s)")
@@ -220,6 +228,7 @@ case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $loc
         toaster.error("Failed to load 'My Contests'")
         console.error(s"Failed to load 'My Contests': ${JSON.stringify(e.displayMessage)}")
     }
+    outcome
   }
 
 }
@@ -247,16 +256,16 @@ object GameSearchController {
     var statuses: js.Array[ContestStatus] = js.native
 
     // contest search functions
-    var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], Unit] = js.native
+    var contestSearch: js.Function1[js.UndefOr[ContestSearchForm], js.UndefOr[js.Promise[HttpResponse[js.Array[ContestSearchResult]]]]] = js.native
     var expandContest: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[js.Promise[js.Array[ContestRanking]]]] = js.native
     var getAvailableCount: js.Function0[Int] = js.native
     var getSearchResults: js.Function1[js.UndefOr[String], js.Array[ContestSearchResult]] = js.native
     var isActive: js.Function1[js.UndefOr[ContestSearchResult], js.UndefOr[Boolean]] = js.native
 
     // my games functions
-    var initMyGames: js.Function0[Unit] = js.native
+    var initMyGames: js.Function0[js.UndefOr[js.Promise[HttpResponse[js.Array[MyContest]]]]] = js.native
     var getMyContests: js.Function0[js.Array[MyContest]] = js.native
-    var popupNewGameDialog: js.Function1[js.UndefOr[String], Unit] = js.native
+    var popupNewGameDialog: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
 
   }
 

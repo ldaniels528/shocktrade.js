@@ -23,7 +23,7 @@ class HomeController($scope: HomeControllerScope, $timeout: Timeout, toaster: To
   //			Public Functions
   /////////////////////////////////////////////////////////////////////////////
 
-  $scope.init = () => {
+  $scope.initHome = () => {
     //if (!mySession.isAuthenticated) $scope.switchToDiscover()
   }
 
@@ -54,7 +54,7 @@ object HomeController {
     //var userProfile: js.UndefOr[UserProfile] = js.native
 
     // functions
-    var init: js.Function0[Unit] = js.native
+    var initHome: js.Function0[Unit] = js.native
     var getAwards: js.Function0[js.Array[String]] = js.native
     var getFriends: js.Function0[js.Array[TaggableFriend]] = js.native
     var getNextLevelXP: js.Function0[js.UndefOr[Int]] = js.native

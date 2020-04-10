@@ -3,6 +3,7 @@ package com.shocktrade.client.discover
 import com.shocktrade.client.RootScope
 import com.shocktrade.common.models.quote.HistoricalQuote
 import io.scalajs.dom.html.browser.console
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -37,21 +38,24 @@ class TradingHistoryController($scope: TradingHistoryControllerScope, toaster: T
     selectedTradingHistory.exists(t => aQuote.exists(_ == t))
   }
 
-  $scope.selectTradingHistory = (aQuote: js.UndefOr[HistoricalQuote]) => {
-    selectedTradingHistory = aQuote
-  }
+  $scope.selectTradingHistory = (aQuote: js.UndefOr[HistoricalQuote]) => selectedTradingHistory = aQuote
 
-  $scope.loadTradingHistory = (aSymbol: js.UndefOr[String]) => aSymbol.toOption match {
+  $scope.loadTradingHistory = (aSymbol: js.UndefOr[String]) => loadTradingHistory(aSymbol)
+
+  private def loadTradingHistory(aSymbol: js.UndefOr[String]): js.Promise[HttpResponse[js.Array[HistoricalQuote]]] = aSymbol.toOption match {
     case Some(symbol) =>
-      quoteService.getTradingHistory(symbol) onComplete {
+      val outcome = quoteService.getTradingHistory(symbol)
+      outcome onComplete {
         case Success(results) => $scope.$apply(() => tradingHistory = results.data)
         case Failure(e) =>
           toaster.error(s"Error loading trading history for symbol '$symbol'")
           console.error(s"Error loading trading history for symbol '$symbol': ${e.getMessage}")
       }
+      outcome
     case None =>
       tradingHistory = emptyArray
       selectedTradingHistory = js.undefined
+      js.Promise.reject("No symbol found")
   }
 
 }
@@ -68,6 +72,6 @@ trait TradingHistoryControllerScope extends RootScope {
   var hasSelectedTradingHistory: js.Function0[Boolean]
   var isSelectedTradingHistory: js.Function1[js.UndefOr[HistoricalQuote], Boolean]
   var selectTradingHistory: js.Function1[js.UndefOr[HistoricalQuote], Unit]
-  var loadTradingHistory: js.Function1[js.UndefOr[String], Unit]
+  var loadTradingHistory: js.Function1[js.UndefOr[String], js.Promise[HttpResponse[js.Array[HistoricalQuote]]]]
 
 }

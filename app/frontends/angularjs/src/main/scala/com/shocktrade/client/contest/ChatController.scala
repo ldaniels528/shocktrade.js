@@ -13,12 +13,14 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -46,26 +48,30 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
   //    Initialization Functions
   /////////////////////////////////////////////////////////////////
 
-  $scope.initChat = () => $routeParams.contestID foreach initChat
+  $scope.initChat = () => $routeParams.contestID map initChat
 
   $scope.onMessagesUpdated { (_, _) => $scope.initChat() }
 
   $scope.onUserProfileUpdated { (_, _) => $scope.initChat() }
 
-  private def initChat(contestID: String): Unit = {
+  private def initChat(contestID: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
     // attempt to load the user profile
-    $cookies.getGameState.userID foreach { userID =>
-      userService.findUserByID(userID) onComplete {
+    $cookies.getGameState.userID map { userID =>
+      val outcome0 = userService.findUserByID(userID)
+      outcome0 onComplete {
         case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
         case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
       }
+      outcome0
     }
 
     // attempt to load the chat messages
-    contestService.findChatMessages(contestID) onComplete {
+    val outcome1 = contestService.findChatMessages(contestID)
+    outcome1 onComplete {
       case Success(messages) => $scope.$apply(() => $scope.chatMessages = messages.data)
       case Failure(e) => console.error(s"Failed to retrieve chat messages: ${e.displayMessage}")
     }
+    outcome1
   }
 
   /////////////////////////////////////////////////////////////////
@@ -79,10 +85,12 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
   $scope.getEmoticons = () => Emoticons.reverse
 
   $scope.sendChatMessage = (aMessageText: js.UndefOr[String]) => {
-    aMessageText foreach sendChatMessage
-    $anchorScroll()
-    ()
+    val outcome = aMessageText map sendChatMessage
+    outcome.foreach(_ onComplete { _ => $anchorScroll() })
+    outcome
   }
+
+  private def colorOf(name: String): String = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
 
   private def getChatMessages: String = {
     val chatMessages = $scope.chatMessages
@@ -114,23 +122,17 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
-  //			Local Functions and Data
-  /////////////////////////////////////////////////////////////////////////////
-
-  private def colorOf(name: String): String = colorMap.getOrElseUpdate(name, Colors((1 + colorMap.size) % Colors.length))
-
   /**
    * Sends a chat message to the server
    * @param messageText the given chat message text
    */
-  private def sendChatMessage(messageText: String): Unit = {
-    val outcome = for {
+  private def sendChatMessage(messageText: String): js.Promise[HttpResponse[js.Array[ChatMessage]]] = {
+    val result = for {
       userID <- $cookies.getGameState.userID.toOption
       contestID <- $routeParams.contestID.toOption
     } yield (userID, contestID)
 
-    outcome match {
+    result match {
       case Some((userID, contestID)) =>
         if (messageText.trim.nonEmpty) {
           // make the service calls
@@ -150,9 +152,13 @@ class ChatController($scope: ChatControllerScope, $routeParams: DashboardRoutePa
               toaster.error("Failed to send message")
               console.error(s"Failed to send message: ${e.displayMessage}")
           }
+          outcome.toJSPromise
         }
+        else js.Promise.reject("No message text")
+
       case None =>
         toaster.error("No game selected")
+        js.Promise.reject("No game selected")
     }
   }
 
@@ -201,10 +207,10 @@ trait ChatControllerScope extends Scope {
   var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
-  var initChat: js.Function0[Unit] = js.native
+  var initChat: js.Function0[js.UndefOr[js.Promise[HttpResponse[js.Array[ChatMessage]]]]] = js.native
   var addSmiley: js.Function1[js.UndefOr[Emoticon], Unit] = js.native
   var getEmoticons: js.Function0[js.Array[Emoticon]] = js.native
   var getChatMessages: js.Function0[String] = js.native
-  var sendChatMessage: js.Function1[js.UndefOr[String], Unit] = js.native
+  var sendChatMessage: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[ChatMessage]]]]] = js.native
 
 }

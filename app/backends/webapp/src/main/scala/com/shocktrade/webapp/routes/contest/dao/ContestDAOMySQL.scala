@@ -162,14 +162,12 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
     }
 
     for {
-      _ <- conn.beginTransactionFuture()
       contest <- findOneByID(contestID) map {
         case Some(contest) => contest
         case None => throw js.JavaScriptException(s"Contest $contestID not found")
       }
       _ <- deductFee(userID, contest.startingBalance)
       w <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance))
-      _ <- conn.commitFuture()
     } yield w
   }
 

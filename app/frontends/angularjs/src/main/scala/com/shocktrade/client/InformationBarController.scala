@@ -10,6 +10,7 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -38,16 +39,18 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
 
   $scope.initInfoBar = () => {
     console.log(s"${getClass.getSimpleName} is initializing...")
-    $cookies.getGameState.userID.foreach(initInfoBar)
+    $cookies.getGameState.userID.map(initInfoBar)
   }
 
-  $scope.onUserProfileUpdated { (_, profile) => $scope.userProfile = profile}
+  $scope.onUserProfileUpdated { (_, profile) => $scope.userProfile = profile }
 
-  private def initInfoBar(userID: String): Unit = {
-    userService.findUserByID(userID) onComplete {
+  private def initInfoBar(userID: String): js.Promise[HttpResponse[UserProfile]] = {
+    val outcome = userService.findUserByID(userID)
+    outcome onComplete {
       case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
       case Failure(e) => console.error(e.getMessage)
     }
+    outcome
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -116,7 +119,7 @@ case class InformationBarController($scope: InformationBarControllerScope, $cook
 @js.native
 trait InformationBarControllerScope extends Scope with ContestEntrySupportScope {
   // functions
-  var initInfoBar: js.Function0[Unit] = js.native
+  var initInfoBar: js.Function0[js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
   var autoCompleteSearch: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[js.Array[EntitySearchResult]]]] = js.native
   var formatSearchResult: js.Function1[js.UndefOr[EntitySearchResult], js.UndefOr[String]] = js.native
   var getWealthChange: js.Function0[js.UndefOr[Double]] = js.native

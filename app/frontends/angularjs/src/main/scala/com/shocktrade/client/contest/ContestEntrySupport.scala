@@ -22,9 +22,9 @@ trait ContestEntrySupport {
   //          Public Functions
   ///////////////////////////////////////////////////////////////////////////
 
-  $scope.enterGame = (aContestID: js.UndefOr[String]) => aContestID foreach enterGame
+  $scope.enterGame = (aContestID: js.UndefOr[String]) => aContestID map enterGame
 
-  def enterGame(contestID: String): Unit = $location.path(s"/dashboard/$contestID")
+  def enterGame(contestID: String): Location = $location.path(s"/dashboard/$contestID")
 
 }
 
@@ -37,6 +37,6 @@ trait ContestEntrySupportScope extends js.Object {
   ref: Scope =>
 
   // functions
-  var enterGame: js.Function1[js.UndefOr[String], Unit] = js.native
+  var enterGame: js.Function1[js.UndefOr[String], js.UndefOr[Location]] = js.native
 
 }

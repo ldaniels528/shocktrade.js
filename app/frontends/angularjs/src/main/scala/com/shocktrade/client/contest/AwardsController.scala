@@ -8,7 +8,9 @@ import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -22,7 +24,7 @@ import scala.util.{Failure, Success}
 class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster: Toaster,
                        @injected("UserService") userService: UserService) extends Controller {
 
-  implicit private val cookies: Cookies = $cookies
+  //implicit private val cookies: Cookies = $cookies
 
   private val availableAwards: js.Array[Award] = Award.availableAwards
 
@@ -34,15 +36,16 @@ class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster
 
   $scope.initAwards = (aUserID: js.UndefOr[String]) => {
     console.info(s"Initializing ${getClass.getSimpleName}...")
-    aUserID foreach initAwards
+    aUserID map initAwards
   }
 
   $scope.onContestSelected { (_, _) => $scope.initAwards($cookies.getGameState.userID) }
 
   $scope.onUserProfileUpdated { (_, userProfile) => $scope.initAwards(userProfile.userID) }
 
-  private def initAwards(userID: String): Unit = {
-    userService.findMyAwards(userID).toFuture onComplete {
+  private def initAwards(userID: String): js.Promise[HttpResponse[js.Array[String]]] = {
+    val outcome = userService.findMyAwards(userID)
+    outcome onComplete {
       case Success(myAwardCodes) =>
         $scope.$apply { () =>
           $scope.myAwards = availableAwards.filter(a => myAwardCodes.data.contains(a.code))
@@ -52,6 +55,7 @@ class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster
         toaster.error("Failed to retrieve awards")
         console.error(s"Failed to retrieve awards: ${e.displayMessage}")
     }
+    outcome
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -91,7 +95,7 @@ object AwardsController {
   @js.native
   trait AwardsControllerScope extends Scope {
     // functions
-    var initAwards: js.Function1[js.UndefOr[String], Unit] = js.native
+    var initAwards: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[String]]]]] = js.native
     var getAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
     var getMyAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
     var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native

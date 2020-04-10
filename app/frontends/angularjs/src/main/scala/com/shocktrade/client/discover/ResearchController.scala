@@ -7,6 +7,7 @@ import com.shocktrade.common.models.quote.ResearchQuote
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
@@ -87,12 +88,15 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
     if (column.contains("symbol")) row.flatMap(_.exchange) else column
   }
 
-  $scope.research = (aSearchOptions: js.UndefOr[ResearchOptions]) => aSearchOptions foreach { searchOptions =>
+  $scope.research = (aSearchOptions: js.UndefOr[ResearchOptions]) => aSearchOptions map research
+
+  private def research(searchOptions: ResearchOptions): js.Promise[HttpResponse[js.Array[ResearchQuote]]] = {
     filteredResults = emptyArray
     searchResults = emptyArray
 
     // execute the search
-    asyncLoading($scope)(researchService.search(searchOptions)) onComplete {
+    val outcome = researchService.search(searchOptions)
+    asyncLoading($scope)(outcome) onComplete {
       case Success(response) =>
         val results = response.data
         console.log(s"${results.length} quotes found")
@@ -127,6 +131,7 @@ class ResearchController($scope: ResearchScope, $cookies: Cookies, $timeout: Tim
         console.error(s"Quote Search Failed - json => ${angular.toJson(searchOptions, pretty = false)}")
         toaster.error("Failed to execute search")
     }
+    outcome
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -199,6 +204,6 @@ trait ResearchScope extends Scope {
   var getSearchResultsCount: js.Function0[Int] = js.native
   var columnAlign: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
   var rowClass: js.Function2[js.UndefOr[String], js.UndefOr[ResearchQuote], js.UndefOr[String]] = js.native
-  var research: js.Function1[js.UndefOr[ResearchOptions], Unit] = js.native
+  var research: js.Function1[js.UndefOr[ResearchOptions], js.UndefOr[js.Promise[HttpResponse[js.Array[ResearchQuote]]]]] = js.native
 
 }

@@ -4,6 +4,7 @@ import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.news.NewsController._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.sanitize.Sce
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, angular, injected}
@@ -40,9 +41,25 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
 
   $scope.getNewsFeed = (aFeedId: js.UndefOr[String]) => aFeedId foreach findNewsFeed
 
-  $scope.getNewsSources = () => {
+  $scope.getNewsSources = () => getNewsSources
+
+  /**
+   * Return the appropriate class to create a diagonal grid
+   */
+  $scope.gridClass = (aIndex: js.UndefOr[Double]) => aIndex map (_.toInt) map { index =>
+    val row = Math.floor(index / 2)
+    val cell = if (row % 2 == 0) index % 2 else (index + 1) % 2
+    s"news_tile$cell"
+  }
+
+  $scope.newsSources = () => newsSources
+
+  $scope.trustMe = (aHtml: js.UndefOr[String]) => aHtml map ($sce.trustAsHtml(_))
+
+  private def getNewsSources: js.Promise[HttpResponse[js.Array[NewsSource]]] = {
     console.log("Loading news sources...")
-    asyncLoading($scope)(newsService.getNewsSources) onComplete {
+    val outcome = newsService.getNewsSources
+    asyncLoading($scope)(outcome) onComplete {
       case Success(response) =>
         val sources = response.data
         $scope.$apply { () =>
@@ -57,20 +74,8 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
       case Failure(e) =>
         toaster.error("Failed to load news sources")
     }
+    outcome
   }
-
-  /**
-   * Return the appropriate class to create a diagonal grid
-   */
-  $scope.gridClass = (aIndex: js.UndefOr[Double]) => aIndex map (_.toInt) map { index =>
-    val row = Math.floor(index / 2)
-    val cell = if (row % 2 == 0) index % 2 else (index + 1) % 2
-    s"news_tile$cell"
-  }
-
-  $scope.newsSources = () => newsSources
-
-  $scope.trustMe = (aHtml: js.UndefOr[String]) => aHtml map ($sce.trustAsHtml(_))
 
   /////////////////////////////////////////////////////////////////////////////
   //			Private Functions
@@ -157,39 +162,30 @@ class NewsController($scope: NewsScope, $cookies: Cookies, $sce: Sce, toaster: T
 object NewsController {
   val ViewTypeCookie = "NewsController_view"
 
-}
+  /**
+   * News Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait NewsScope extends Scope {
+    // variables
+    var selection: NewsFeedSelection = js.native
+    var view: String = js.native
 
-/**
- * News Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait NewsScope extends Scope {
-  // variables
-  var selection: NewsFeedSelection = js.native
-  var view: String = js.native
+    // functions
+    var getChannels: js.Function0[js.Array[NewsChannel]] = js.native
+    var getNewsFeed: js.Function1[js.UndefOr[String], Unit] = js.native
+    var getNewsSources: js.Function0[js.Promise[HttpResponse[js.Array[NewsSource]]]] = js.native
+    var gridClass: js.Function1[js.UndefOr[Double], js.UndefOr[String]] = js.native
+    var newsSources: js.Function0[js.Array[NewsSource]] = js.native
+    var trustMe: js.Function1[js.UndefOr[String], js.UndefOr[Any]] = js.native
 
-  // functions
-  var getChannels: js.Function0[js.Array[NewsChannel]] = js.native
-  var getNewsFeed: js.Function1[js.UndefOr[String], Unit] = js.native
-  var getNewsSources: js.Function0[Unit] = js.native
-  var gridClass: js.Function1[js.UndefOr[Double], js.UndefOr[String]] = js.native
-  var newsSources: js.Function0[js.Array[NewsSource]] = js.native
-  var trustMe: js.Function1[js.UndefOr[String], js.UndefOr[Any]] = js.native
+  }
 
-}
+  /**
+   * News Feed Selection
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  class NewsFeedSelection(var feed: js.UndefOr[String]) extends js.Object
 
-/**
- * News Feed Selection
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-class NewsFeedSelection(var feed: js.UndefOr[String]) extends js.Object
-
-/**
- * News Source
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait NewsSource extends js.Object {
-  var _id: js.UndefOr[String] = js.native
 }

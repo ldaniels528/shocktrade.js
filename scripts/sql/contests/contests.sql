@@ -117,7 +117,8 @@ CREATE TABLE positions (
      cost DECIMAL(12,5) NOT NULL,
      tradeDateTime DATETIME NOT NULL,
      processedTime DATETIME NULL,
-     creationTime DATETIME NOT NULL DEFAULT now()
+     creationTime DATETIME NOT NULL DEFAULT now(),
+     active TINYINT NOT NULL DEFAULT 1
 );
 CREATE UNIQUE INDEX positions_xpk ON positions (orderID);
 

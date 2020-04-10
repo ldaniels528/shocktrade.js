@@ -8,12 +8,11 @@ import com.shocktrade.client.dialogs.SignUpDialog
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.user.OnlineStatus
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
-import io.scalajs.npm.angularjs.http.Http
+import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import io.scalajs.npm.angularjs.toaster._
 import io.scalajs.npm.angularjs.uibootstrap.Modal
 import io.scalajs.npm.angularjs.{Controller, Location, Timeout, injected}
@@ -26,6 +25,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -42,8 +42,6 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   implicit private val scope: MainControllerScope = $scope
   implicit private val cookies: Cookies = $cookies
-
-  private val onlinePlayers = js.Dictionary[OnlineStatus]()
   private var loadingIndex = 0
 
   // public variable
@@ -102,10 +100,11 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
 
   $scope.normalizeExchange = (market: js.UndefOr[String]) => MainController.normalizeExchange(market)
 
-  private def mainInit(): Unit = {
+  private def mainInit(): js.UndefOr[js.Promise[HttpResponse[UserProfile]]] = {
     console.log(s"Initializing ${getClass.getSimpleName}...")
-    $cookies.getGameState.userID foreach { userID =>
-      userService.findUserByID(userID) onComplete {
+    $cookies.getGameState.userID map { userID =>
+      val outcome = userService.findUserByID(userID)
+      outcome onComplete {
         case Success(profile) =>
           $cookies.getGameState.setUser(profile.data.userID)
           $scope.userProfile = profile.data
@@ -113,6 +112,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
           toaster.error("Failed to retrieve user profile")
           console.error(s"Failed to retrieve user profile: ${e.displayMessage}")
       }
+      outcome
     }
   }
 
@@ -120,7 +120,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   //              Private Functions
   //////////////////////////////////////////////////////////////////////
 
-  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.exists(isOnline)
+  $scope.isOnline = (aUserID: js.UndefOr[String]) => aUserID.map(isOnline)
 
   $scope.getPreferenceIcon = (q: js.Dynamic) => getPreferenceIcon(q)
 
@@ -151,20 +151,11 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
     }
   }
 
-  private def isOnline(userID: String): Boolean = {
-    if (!onlinePlayers.contains(userID)) {
-      onlinePlayers(userID) = new OnlineStatus(connected = false)
-      userService.getOnlineStatus(userID) onComplete {
-        case Success(response) =>
-          $scope.$apply(() => onlinePlayers(userID) = response.data)
-        case Failure(e) =>
-          console.error(s"Error retrieving online state for user $userID: ${e.getMessage}")
-      }
-    }
-    onlinePlayers.get(userID).exists(_.connected)
+  private def isOnline(userID: String): js.Promise[Boolean] = {
+    userService.getOnlineStatus(userID).map(_.data.connected).toJSPromise
   }
 
-  private def logout(): Unit = {
+  private def logout(): js.Promise[Unit] = {
     $scope.isLoggingOut = true
     val outcome = for {
       _ <- authenticationService.logout()
@@ -181,9 +172,10 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
         toaster.error("An error occurred during logout")
         e.printStackTrace()
     }
+    outcome.toJSPromise
   }
 
-  private def signIn(): Unit = {
+  private def signIn(): js.Promise[HttpResponse[UserProfile]] = {
     val outcome = for {
       userAccount <- signInDialog.signIn()
       userProfile <- userAccount.userID.map(userService.findUserByID).getOrElse(js.Promise.reject("Missing user ID"))
@@ -199,9 +191,10 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
+    outcome.toJSPromise
   }
 
-  private def signUp(): Unit = {
+  private def signUp(): js.Promise[HttpResponse[UserProfile]] = {
     val outcome = for {
       userAccount <- signUpDialog.signUp()
       userProfile <- userAccount.userID.toOption match {
@@ -217,6 +210,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
       case Failure(e) =>
         toaster.error(e.getMessage)
     }
+    outcome.toJSPromise
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -319,12 +313,12 @@ object MainController {
     //var userProfile: js.UndefOr[UserProfile] = js.native
 
     // loading functions
-    var isLoading: js.Function0[Boolean]
+    var isLoading: js.Function0[Boolean] = js.native
     var startLoading: js.Function1[js.UndefOr[Int], js.Promise[js.Any]] = js.native
     var stopLoading: js.Function1[js.UndefOr[js.Promise[js.Any]], Unit] = js.native
 
     // miscellaneous functions
-    var mainInit: js.Function0[Unit] = js.native
+    var mainInit: js.Function0[js.UndefOr[js.Promise[HttpResponse[UserProfile]]]] = js.native
     var getAssetCode: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
     var getAssetIcon: js.Function1[js.UndefOr[ClassifiedQuote], String] = js.native
     var getExchangeClass: js.Function1[js.UndefOr[String], String] = js.native
@@ -332,11 +326,11 @@ object MainController {
     var normalizeExchange: js.Function1[js.UndefOr[String], String] = js.native
     var isAuthenticated: js.Function0[Boolean] = js.native
 
-    var isOnline: js.Function1[js.UndefOr[String], Boolean] = js.native
+    var isOnline: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[Boolean]]] = js.native
     var getPreferenceIcon: js.Function1[js.Dynamic, String] = js.native
-    var logout: js.Function0[Unit] = js.native
-    var signIn: js.Function0[Unit] = js.native
-    var signUp: js.Function0[Unit] = js.native
+    var logout: js.Function0[js.Promise[Unit]] = js.native
+    var signIn: js.Function0[js.Promise[HttpResponse[UserProfile]]] = js.native
+    var signUp: js.Function0[js.Promise[HttpResponse[UserProfile]]] = js.native
 
   }
 

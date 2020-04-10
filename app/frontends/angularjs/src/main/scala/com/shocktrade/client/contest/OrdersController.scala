@@ -6,11 +6,12 @@ import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.contest.OrdersController.OrdersControllerScope
 import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.Order
+import com.shocktrade.client.models.contest.{Order, Portfolio}
 import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
 import io.scalajs.util.JsUnderOrHelper._
@@ -18,6 +19,7 @@ import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -42,28 +44,30 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.initOrders = () => for (contestID <- $routeParams.contestID; userID <- $cookies.getGameState.userID) {
-    initOrders(contestID, userID)
+  $scope.initOrders = () => {
+    for {
+      contestID <- $routeParams.contestID
+      userID <- $cookies.getGameState.userID
+    } yield initOrders(contestID, userID)
   }
 
   $scope.onUserProfileUpdated { (_, _) => $scope.initOrders() }
 
-  private def initOrders(contestID: String, userID: String): Unit = {
-    // attempt to load the user profile
-    $cookies.getGameState.userID foreach { userID =>
-      userService.findUserByID(userID) onComplete {
-        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
-        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
-      }
-    }
+  private def initOrders(contestID: String, userID: String): js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Order]])] = {
+    val outcome = for {
+      userProfile <- userService.findUserByID(userID)
+      orders <- portfolioService.findOrders(contestID, userID)
+    } yield (userProfile, orders)
 
-    // attempt to load the orders
-    portfolioService.findOrders(contestID, userID) onComplete {
-      case Success(orders) => $scope.$apply(() => $scope.activeOrders = orders.data)
-      case Failure(e) =>
-        toaster.error("Failed to retrieve orders")
-        console.error(s"Failed to retrieve orders: ${e.displayMessage}")
+    outcome onComplete {
+      case Success((userProfile, orders)) =>
+        $scope.$apply { () =>
+          $scope.userProfile = userProfile.data
+          $scope.activeOrders = orders.data
+        }
+      case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
     }
+    outcome.toJSPromise
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -72,16 +76,9 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
 
   $scope.cancelOrder = (aPortfolioId: js.UndefOr[String], anOrderId: js.UndefOr[String]) => {
     for {
-      portfolioId <- aPortfolioId
-      orderId <- anOrderId
-    } {
-      asyncLoading($scope)(portfolioService.cancelOrder(portfolioId, orderId)) onComplete {
-        case Success(portfolio) => $scope.$apply { () => }
-        case Failure(err) =>
-          toaster.error("Failed to cancel order")
-          console.error(s"Failed to cancel order: ${err.displayMessage}")
-      }
-    }
+      portfolioID <- aPortfolioId
+      orderID <- anOrderId
+    } yield cancelOrder(portfolioID, orderID)
   }
 
   $scope.computeOrderCost = (anOrder: js.UndefOr[Order]) => anOrder.flatMap(_.totalCost)
@@ -103,6 +100,17 @@ class OrdersController($scope: OrdersControllerScope, $routeParams: DashboardRou
 
   $scope.toggleSelectedOrder = () => $scope.selectedOrder = js.undefined
 
+  private def cancelOrder(portfolioID: String, orderID: String): js.Promise[HttpResponse[Portfolio]] = {
+    val outcome = portfolioService.cancelOrder(portfolioID, orderID)
+    asyncLoading($scope)(outcome) onComplete {
+      case Success(portfolio) => $scope.$apply { () => }
+      case Failure(err) =>
+        toaster.error("Failed to cancel order")
+        console.error(s"Failed to cancel order: ${err.displayMessage}")
+    }
+    outcome
+  }
+
 }
 
 /**
@@ -118,9 +126,9 @@ object OrdersController {
   @js.native
   trait OrdersControllerScope extends Scope {
     // functions
-    var initOrders: js.Function0[Unit] = js.native
+    var initOrders: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Order]])]]] = js.native
     var computeOrderCost: js.Function1[js.UndefOr[Order], js.UndefOr[Double]] = js.native
-    var cancelOrder: js.Function2[js.UndefOr[String], js.UndefOr[String], Unit] = js.native
+    var cancelOrder: js.Function2[js.UndefOr[String], js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[Portfolio]]]] = js.native
     var getActiveOrders: js.Function0[js.UndefOr[js.Array[Order]]] = js.native
     var isMarketOrder: js.Function1[js.UndefOr[Order], Boolean] = js.native
     var isOrderSelected: js.Function0[Boolean] = js.native

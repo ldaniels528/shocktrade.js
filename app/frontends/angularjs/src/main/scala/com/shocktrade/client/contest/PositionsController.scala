@@ -13,12 +13,14 @@ import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.{Controller, Scope, Timeout, injected}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -41,28 +43,30 @@ class PositionsController($scope: PositionsControllerScope, $routeParams: Dashbo
   //          Initialization Functions
   /////////////////////////////////////////////////////////////////////
 
-  $scope.initPositions = () => for (contestID <- $routeParams.contestID; userID <- $cookies.getGameState.userID) {
+  $scope.initPositions = () => for (contestID <- $routeParams.contestID; userID <- $cookies.getGameState.userID) yield {
     initPositions(contestID, userID)
   }
 
   $scope.onUserProfileUpdated { (_, _) => $scope.initPositions() }
 
-  private def initPositions(contestID: String, userID: String): Unit = {
-    // attempt to load the user profile
-    $cookies.getGameState.userID foreach { userID =>
-      userService.findUserByID(userID) onComplete {
-        case Success(userProfile) => $scope.$apply(() => $scope.userProfile = userProfile.data)
-        case Failure(e) => console.error(s"Failed to retrieve user profile: ${e.getMessage}")
-      }
+  private def initPositions(contestID: String, userID: String): js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Position]])] = {
+    val outcome = for {
+      userProfile <- userService.findUserByID(userID)
+      positions <- portfolioService.findPositions(contestID, userID)
+    } yield (userProfile, positions)
+
+    outcome onComplete {
+      case Success((userProfile, positions)) =>
+        $scope.$apply { () =>
+          $scope.positions = positions.data
+          $scope.userProfile = userProfile.data
+        }
+      case Failure(e) =>
+        toaster.error("Failed to retrieve positions")
+        console.error(s"Failed to retrieve positions: ${e.displayMessage}")
     }
 
-    // attempt to load the positions
-    portfolioService.findPositions(contestID, userID) onComplete {
-      case Success(orders) => $scope.$apply(() => $scope.positions = orders.data)
-      case Failure(e) =>
-        toaster.error("Failed to retrieve orders")
-        console.error(s"Failed to retrieve orders: ${e.displayMessage}")
-    }
+    outcome.toJSPromise
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -101,7 +105,7 @@ object PositionsController {
   @js.native
   trait PositionsControllerScope extends Scope {
     // functions
-    var initPositions: js.Function0[Unit] = js.native
+    var initPositions: js.Function0[js.UndefOr[js.Promise[(HttpResponse[UserProfile], HttpResponse[js.Array[Position]])]]] = js.native
     var getPositions: js.Function0[js.UndefOr[js.Array[Position]]] = js.native
     var isPositionSelected: js.Function0[Boolean] = js.native
     var selectPosition: js.Function1[js.UndefOr[Position], Unit] = js.native

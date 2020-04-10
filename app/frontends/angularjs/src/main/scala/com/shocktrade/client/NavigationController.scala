@@ -1,5 +1,6 @@
 package com.shocktrade.client
 
+import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.Controller
 
 import scala.scalajs.js
@@ -10,8 +11,8 @@ import scala.scalajs.js
  */
 class NavigationController($scope: NavigationControllerScope) extends Controller {
 
-  $scope.init = () => {
-    // do something in the future
+  $scope.initNav = () => {
+    console.info(s"Initializing ${getClass.getSimpleName}...")
   }
 
 }
@@ -22,6 +23,6 @@ class NavigationController($scope: NavigationControllerScope) extends Controller
  */
 @js.native
 trait NavigationControllerScope extends RootScope {
-  var init: js.Function0[Unit] = js.native
+  var initNav: js.Function0[Unit] = js.native
 
 }
