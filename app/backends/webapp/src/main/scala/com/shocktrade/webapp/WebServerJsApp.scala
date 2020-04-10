@@ -109,7 +109,7 @@ object WebServerJsApp {
     implicit val cqm: ContestQualificationModule = new ContestQualificationModule()
 
     // setup intermittent processing
-    setInterval(() => cqm.run(), 15.minutes)
+    setInterval(() => cqm.run(), 7.minutes)
 
     // setup the CQM routes
     new QualificationRoutes(app)
@@ -121,12 +121,12 @@ object WebServerJsApp {
    * @param app the given [[Application]]
    */
   private def setupRobots(app: Application with WsRouting): Unit = {
-    implicit val robotDAO: RobotDAO = RobotDAO()
-
     logger.info("Setting up robots...")
-    val robotProcessor = new RobotProcessor()
-    setTimeout(() => robotProcessor.run(), 5.seconds)
-    setInterval(() => robotProcessor.run(), 1.minute)
+    implicit val robotDAO: RobotDAO = RobotDAO()
+    implicit val robotProcessor: RobotProcessor = new RobotProcessor()
+
+    // setup intermittent processing
+    setInterval(() => robotProcessor.run(), 17.minutes)
 
     // setup the robot routes
     new RobotRoutes(app)

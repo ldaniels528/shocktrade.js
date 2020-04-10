@@ -92,7 +92,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |LEFT JOIN stocks SO ON SO.symbol = O.symbol
          |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
          |LEFT JOIN stocks SP ON SP.symbol = PS.symbol
-         |WHERE C.contestID = ? AND U.userID = ?
+         |WHERE C.contestID = ? AND U.userID = ? AND PS.active = 1
          |GROUP BY C.contestID, C.name, U.userID, U.username, U.wallet, P.funds
          |""".stripMargin,
       js.Array(contestID, userID)) map { case (rows, _) => rows.headOption }
@@ -155,7 +155,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |LEFT JOIN positions PS ON PS.portfolioID = P.portfolioID
           |LEFT JOIN stocks S ON S.symbol = PS.symbol
           |LEFT JOIN users U ON U.userID = P.userID
-          |WHERE C.contestID = ?
+          |WHERE C.contestID = ? AND PS.active = 1
           |GROUP BY U.username, P.funds
           |""".stripMargin, js.Array(contestID)).map { case (rows, _) => rows }
   }
@@ -176,6 +176,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
           |INNER JOIN portfolios P ON P.userID = U.userID
           |INNER JOIN contests C ON C.contestID = P.contestID
           |WHERE C.contestID = ? AND U.userID = ?
+          |AND PS.active = 1
           |""".stripMargin, js.Array(contestID, userID, contestID, userID)).map { case (rows, _) => rows }
   }
 
@@ -186,6 +187,7 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |INNER JOIN positions PS ON PS.portfolioID = P.portfolioID
          |INNER JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
          |WHERE P.portfolioID = ?
+         |AND PS.active = 1
          |""".stripMargin,
       js.Array(portfolioID)) map { case (rows, _) => rows }
   }
@@ -196,7 +198,9 @@ class PortfolioDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionC
          |FROM positions PS
          |INNER JOIN portfolios P ON P.portfolioID = PS.portfolioID
          |LEFT  JOIN stocks S ON S.symbol = PS.symbol
-         |WHERE P.contestID = ? AND P.userID = ?
+         |WHERE P.contestID = ?
+         |AND P.userID = ?
+         |AND PS.active = 1
          |""".stripMargin, js.Array(contestID, userID)) map { case (rows, _) => rows }
   }
 

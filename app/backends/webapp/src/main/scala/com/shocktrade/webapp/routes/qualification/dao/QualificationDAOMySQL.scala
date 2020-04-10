@@ -1,6 +1,5 @@
 package com.shocktrade.webapp.routes.qualification.dao
 
-import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.dao.MySQLDAO
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -14,24 +13,28 @@ import scala.scalajs.js
  */
 class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: ExecutionContext) extends MySQLDAO(options) with QualificationDAO {
 
-  override def closeExpiredContests(): Future[js.Array[ContestRef]] = {
-    val now = new js.Date()
-    for {
-      _ <- conn.executeFuture(
-        s"""|UPDATE contests C
-            |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
-            |SET C.statusID = CS.statusID, C.closedTime = ?
-            |WHERE closedTime IS NULL
-            |AND expirationTime <= ?
-            |""".stripMargin, js.Array(now, now)) map (_.affectedRows)
-
-      refs <- conn.queryFuture[ContestRef]("SELECT contestID, name FROM contests WHERE closedTime = ?", js.Array(now)) map (_._1)
-    } yield refs
+  override def closeOutExpiredContests(): Future[Int] = {
+    conn.executeFuture(
+      s"""|UPDATE contests C
+          |INNER JOIN contest_statuses CS ON CS.status = 'CLOSED'
+          |INNER JOIN order_price_types OPT ON OPT.name = 'MARKET_AT_CLOSE'
+          |INNER JOIN portfolios P ON P.contestID = C.contestID
+          |LEFT  JOIN positions PS ON PS.portfolioID = P.portfolioID
+          |LEFT  JOIN stocks S ON S.symbol = PS.symbol AND S.exchange = PS.exchange
+          |INNER JOIN users U ON U.userID = P.userID
+          |SET
+          |   C.closedTime = now(),
+          |   C.statusID = CS.statusID,
+          |   PS.active = 0,
+          |   U.wallet = U.wallet + P.funds + IFNULL(S.lastTrade * PS.quantity, 0) - OPT.commission
+          |WHERE closedTime IS NULL
+          |AND expirationTime <= now()
+          |""".stripMargin).map(_.affectedRows)
   }
 
   override def createPosition(position: PositionData): Future[Int] = {
     for {
-      w1 <- deductEntryFee(position) if w1 == 1
+      _ <- deductEntryFee(position)
       w2 <- insertPosition(position)
     } yield w2
   }
@@ -102,7 +105,10 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
          |  message = ?,
          |  processedTime = ?
          |WHERE orderID = ?
-         |""".stripMargin, js.Array(closed, fulfilled, message, processedTime, orderID)).map(_.affectedRows)
+         |""".stripMargin, js.Array(closed, fulfilled, message, processedTime, orderID)).map(_.affectedRows) map {
+      case count if count == 1 => count
+      case count => throw js.JavaScriptException(s"Wallet could not be updated: count = $count")
+    }
   }
 
   private def deductEntryFee(position: PositionData): Future[Int] = {
@@ -110,7 +116,10 @@ class QualificationDAOMySQL(options: MySQLConnectionOptions)(implicit ec: Execut
     conn.executeFuture(
       """|UPDATE portfolios SET funds = funds - ?
          |WHERE portfolioID = ? AND funds >= ?
-         |""".stripMargin, js.Array(cost, portfolioID, cost)).map(_.affectedRows)
+         |""".stripMargin, js.Array(cost, portfolioID, cost)).map(_.affectedRows) map {
+      case count if count == 1 => count
+      case count => throw js.JavaScriptException(s"Wallet could not be updated: count = $count")
+    }
   }
 
   private def insertPosition(position: PositionData): Future[Int] = {

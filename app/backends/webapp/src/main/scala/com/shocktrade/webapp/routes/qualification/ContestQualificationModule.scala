@@ -2,7 +2,6 @@ package com.shocktrade.webapp.routes
 package qualification
 
 import com.shocktrade.common.Commissions
-import com.shocktrade.common.models.contest.ContestRef
 import com.shocktrade.server.common.{LoggerFactory, TradingClock}
 import com.shocktrade.webapp.routes.contest.dao.{OrderData, PositionData}
 import com.shocktrade.webapp.routes.qualification.ContestQualificationModule._
@@ -12,6 +11,7 @@ import io.scalajs.util.JsUnderOrHelper._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
@@ -39,8 +39,8 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
 
       // perform the qualification
       start() onComplete {
-        case Success((contestRefs, _, _, positionCount, updatedOrderCount)) =>
-          logger.info(s"CQM: closed = ${contestRefs.length}, positionCount = $positionCount, updatedOrderCount = $updatedOrderCount")
+        case Success(result) =>
+          logger.info(s"CQM: closed = ${result.closedCount}, positions = ${result.positionCount}, updatedOrders = ${result.updatedOrderCount}")
 
           // capture the time as the last run time
           lastRun = startTime
@@ -63,33 +63,30 @@ class ContestQualificationModule(implicit ec: ExecutionContext, clock: TradingCl
   /**
    * Executes the process
    */
-  def start(): Future[(js.Array[ContestRef], List[PositionData], List[OrderData], Int, Int)] = {
+  def start(): Future[CqmResponse] = {
     for {
-      contestRefs <- processContestClosing()
+      closedCount <- processContestClosing()
       (buyPositions, buyOrders, buyPositionCount, buyOrderCount) <- processBuyFlow()
       (sellPositions, sellOrders, sellPositionCount, sellOrderCount) <- processSellFlow()
-    } yield (contestRefs, buyPositions ::: sellPositions, buyOrders ::: sellOrders, buyPositionCount + sellPositionCount, buyOrderCount + sellOrderCount)
+    } yield new CqmResponse(
+      positions = (buyPositions ::: sellPositions).toJSArray,
+      updatedOrders = (buyOrders ::: sellOrders).toJSArray,
+      closedCount = closedCount,
+      positionCount = buyPositionCount + sellPositionCount,
+      updatedOrderCount = buyOrderCount + sellOrderCount
+    )
   }
 
   ///////////////////////////////////////////////////////////////////////
   //  Contest Close Flow
   ///////////////////////////////////////////////////////////////////////
 
-  private def processContestClosing(): Future[js.Array[ContestRef]] = {
-    val outcome = qualificationDAO.closeExpiredContests() map { contestRefs =>
-      val count = contestRefs.length
-      logger.info(s"Closed $count contests:")
-      contestRefs.foreach { case ContestRef(contestID, name) =>
-        logger.info(s"Contest $name [$contestID] closed.")
-      }
-      contestRefs
-    }
-
-    outcome recover {
+  private def processContestClosing(): Future[Int] = {
+    qualificationDAO.closeOutExpiredContests() recover {
       case e: Throwable =>
-        logger.error("Failure in Contest Closing flow:")
+        logger.error(s"Failure in Contest Closing flow: ${e.getMessage}")
         e.printStackTrace()
-        new js.Array()
+        0
     }
   }
 

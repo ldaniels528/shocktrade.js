@@ -155,16 +155,22 @@ class ContestDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options)
 
     def deductFee(userID: String, startingBalance: js.UndefOr[Double]): Future[Int] = {
       conn.executeFuture("UPDATE users SET wallet = wallet - ? WHERE userID = ? AND wallet >= ?",
-        js.Array(startingBalance, userID, startingBalance)).map(_.affectedRows)
+        js.Array(startingBalance, userID, startingBalance)).map(_.affectedRows) map {
+        case count if count == 1 => count
+        case count => throw js.JavaScriptException(s"Wallet could not be updated: count = $count")
+      }
     }
 
     for {
       _ <- conn.beginTransactionFuture()
-      Some(contest) <- findOneByID(contestID)
-      w1 <- deductFee(userID, contest.startingBalance) if w1 == 1
-      w2 <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance)) if w2 == 1
+      contest <- findOneByID(contestID) map {
+        case Some(contest) => contest
+        case None => throw js.JavaScriptException(s"Contest $contestID not found")
+      }
+      _ <- deductFee(userID, contest.startingBalance)
+      w <- create(new PortfolioData(contestID = contestID, userID = userID, funds = contest.startingBalance))
       _ <- conn.commitFuture()
-    } yield w2
+    } yield w
   }
 
   override def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int] = {
