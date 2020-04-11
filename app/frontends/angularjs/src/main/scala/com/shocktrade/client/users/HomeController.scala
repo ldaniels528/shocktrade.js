@@ -1,6 +1,7 @@
 package com.shocktrade.client.users
 
 import com.shocktrade.client.GameState._
+import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope}
 import com.shocktrade.client.users.HomeController.HomeControllerScope
 import com.shocktrade.client.{GlobalLoading, GlobalNavigation, RootScope}
 import com.shocktrade.common.forms.ContestSearchForm
@@ -18,9 +19,9 @@ import scala.scalajs.js.JSConverters._
  * Home Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                     @injected("UserService") userService: UserService)
-  extends Controller with GlobalLoading {
+case class HomeController($scope: HomeControllerScope, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                          @injected("UserService") userService: UserService)
+  extends Controller with AwardsSupport with GlobalLoading {
 
   $scope.statuses = ContestSearchForm.contestStatuses
 
@@ -67,7 +68,7 @@ object HomeController {
    * Home Controller Scope
    */
   @js.native
-  trait HomeControllerScope extends RootScope with GlobalNavigation {
+  trait HomeControllerScope extends RootScope with AwardsSupportScope with GlobalNavigation {
     // variables
     var myGamesSearchOptions: ContestSearchForm = js.native
     var statuses: js.Array[ContestStatus] = js.native

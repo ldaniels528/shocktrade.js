@@ -6,9 +6,10 @@ import com.shocktrade.client.contest.DashboardController._
 import com.shocktrade.client.dialogs.InvitePlayerDialogController.InvitePlayerDialogResult
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.dialogs.PerksDialogController.PerksDialogResult
-import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog}
+import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
 import com.shocktrade.client.models.contest.{Contest, Portfolio}
+import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
 import com.shocktrade.common.models.contest.ContestRanking
 import com.shocktrade.common.{AppConstants, Ok}
@@ -42,14 +43,18 @@ case class DashboardController($scope: DashboardControllerScope, $routeParams: D
                                @injected("MarketStatusService") marketStatusService: MarketStatusService,
                                @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
                                @injected("PerksDialog") perksDialog: PerksDialog,
-                               @injected("PortfolioService") portfolioService: PortfolioService)
+                               @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
+                               @injected("PortfolioService") portfolioService: PortfolioService,
+                               @injected("UserService") userService: UserService)
   extends Controller
+    with AwardsSupport
     with ContestCssSupport
     with GlobalLoading
     with GlobalSelectedSymbol
+    with PlayerProfilePopupSupport
     with USMarketsStatusSupport {
 
-  implicit val cookies: Cookies = $cookies
+  private implicit val cookies: Cookies = $cookies
 
   $scope.maxPlayers = AppConstants.MaxPlayers
 
@@ -330,9 +335,11 @@ object DashboardController {
    */
   @js.native
   trait DashboardControllerScope extends RootScope
+    with AwardsSupportScope
     with ContestCssSupportScope
     with GlobalNavigation
     with GlobalSelectedSymbolScope
+    with PlayerProfilePopupSupportScope
     with USMarketsStatusSupportScope {
 
     // functions

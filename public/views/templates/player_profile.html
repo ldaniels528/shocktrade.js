@@ -1,0 +1,48 @@
+<script type="text/ng-template" id="player_profile.html">
+    <div class="modal-header st_modal_header">
+        <h4 style="color: #345688">{{ player.username }}'s profile</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div class="inline pull-left">
+                <avatar id="{{ player.userID }}" class="avatar-75"></avatar>
+            </div>
+            <div class="col-md-5 inline pull-left">
+                <div class="col-md-12 pull-left">
+                    <span class="pull-left">Level</span>
+                    <span class="pull-right">{{ player.level || 1 }} &#8212; {{ levels[ player.level || 0 ].description }}</span>
+                </div>
+                <div class="col-md-12 pull-left">
+                    <span class="pull-left">Experience</span>
+                    <span class="pull-right">{{ getTotalXP() | number }} <span class="small">XP</span></span>
+                </div>
+                <div class="col-md-12 pull-left">
+                    <span class="pull-left">Next Level</span>
+                    <span class="pull-right">{{ getNextLevelXP() | number }} <span class="small">XP</span></span>
+                </div>
+                <div class="col-md-12 pull-left">
+                    <span class="pull-left">Rep</span>
+                    <span class="pull-right"><i ng-repeat="n in getStars()" class="fa fa-star st_orange"></i></span>
+                </div>
+            </div>
+            <br style="clear: both">
+        </div>
+        <div ng-init="initAwards(player.userID)">
+            <fieldset>
+                <legend>Recent Awards ({{ getMyAwards().length || 0 }})</legend>
+            </fieldset>
+            <span ng-if="getMyAwards().length">
+                <img ng-repeat="award in getMyAwards()" ng-src="{{ award.icon }}" title="{{ award.name }}"
+                     style="padding: 2px 2px 2px 2px">
+            </span>
+            <span ng-hide="getMyAwards().length" class="st_blue bold">
+                No awards earned.
+            </span>
+        </div>
+    </div>
+    <div class="modal-footer st_modal_footer">
+        <div class="col-md-12" style="margin-top: 10px">
+            <button class="btn btn-primary pull-left" ng-click="okay()">Dismiss</button>
+        </div>
+    </div>
+</script>

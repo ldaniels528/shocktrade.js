@@ -10,9 +10,11 @@
         <span ng-show="c.startingBalance" class="positive pull-right"  ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
             $ {{ c.startingBalance | number:0 }}
         </span>
-        <div ng-repeat="player in c.rankings" ng-include src="'/views/dashboard/player_row.html'"></div>
+        <div ng-repeat="player in c.rankings" ng-include src="'/views/contest/player_row.html'"></div>
     </div>
-    <div class="col-md-2 left" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
+    <div class="col-md-2 left"
+         ng-click="popupPlayerProfile(c.hostUserID)"
+         ng-class="c.status == 'CLOSED' ? 'opaque' : ''">
         <avatar id="{{ c.hostUserID }}" class="avatar-20"></avatar> {{ c.hostUsername }}
     </div>
     <div class="col-md-3 left" ng-class="c.status == 'CLOSED' ? 'opaque' : ''">

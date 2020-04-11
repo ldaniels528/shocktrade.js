@@ -27,10 +27,10 @@ import scala.util.{Failure, Success}
  * Chat Controller
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
-                     $anchorScroll: AnchorScroll, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                     @injected("ContestService") contestService: ContestService,
-                     @injected("UserService") userService: UserService)
+case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRouteParams,
+                          $anchorScroll: AnchorScroll, $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
+                          @injected("ContestService") contestService: ContestService,
+                          @injected("UserService") userService: UserService)
   extends Controller with GlobalLoading {
 
   implicit val cookies: Cookies = $cookies

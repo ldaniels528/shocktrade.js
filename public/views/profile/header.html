@@ -14,7 +14,7 @@
             </div>
             <div class="col-md-12 pull-left">
                 <span class="pull-left">Next Level</span>
-                <span class="pull-right">{{ levels[ userProfile.level || 0 ].nextLevelXP | number }} <span class="small">XP</span></span>
+                <span class="pull-right">{{ getNextLevelXP() | number }} <span class="small">XP</span></span>
             </div>
             <div class="col-md-12 pull-left">
                 <span class="pull-left">Rep</span>
@@ -37,16 +37,16 @@
         </div>
         <br style="clear: both">
     </div>
-    <div class="col-md-4" ng-controller="AwardsController" ng-init="initAwards(userProfile.userID)">
+    <div class="col-md-4" ng-init="initAwards(userProfile.userID)">
         <fieldset>
-            <legend>Recent Awards ({{ getMyAwards().length }})</legend>
+            <legend>Recent Awards ({{ getMyAwards().length || 0 }})</legend>
         </fieldset>
         <span ng-if="getMyAwards().length">
             <img ng-repeat="award in getMyAwards()" ng-src="{{ award.icon }}" title="{{ award.name }}"
             style="padding: 2px 2px 2px 2px">
         </span>
-        <span ng-hide="getMyAwards().length" class="warning">
-            No awards granted.
+        <span ng-hide="getMyAwards().length" class="st_blue bold">
+            No awards earned.
         </span>
     </div>
 </div>

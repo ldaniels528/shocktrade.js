@@ -3,11 +3,11 @@ package com.shocktrade.client.contest
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameSearchController._
-import com.shocktrade.client.dialogs.{NewGameDialog, NewGameDialogController}
+import com.shocktrade.client.dialogs.{NewGameDialog, NewGameDialogController, PlayerProfileDialog}
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
-import com.shocktrade.client.{GlobalLoading, RootScope}
+import com.shocktrade.client.{GlobalLoading, PlayerProfilePopupSupport, PlayerProfilePopupSupportScope, RootScope}
 import com.shocktrade.common.AppConstants
 import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration}
 import com.shocktrade.common.forms.ContestSearchForm
@@ -36,9 +36,10 @@ import scala.util.{Failure, Success}
 case class GameSearchController($scope: GameSearchScope, $cookies: Cookies, $location: Location, $timeout: Timeout, toaster: Toaster,
                                 @injected("ContestService") contestService: ContestService,
                                 @injected("NewGameDialog") newGameDialog: NewGameDialog,
+                                @injected("PlayerProfileDialog") playerProfileDialog: PlayerProfileDialog,
                                 @injected("PortfolioService") portfolioService: PortfolioService,
                                 @injected("UserService") userService: UserService)
-  extends Controller with ContestCssSupport with ContestEntrySupport with GlobalLoading {
+  extends Controller with AwardsSupport with ContestCssSupport with ContestEntrySupport with GlobalLoading with PlayerProfilePopupSupport {
 
   // internal variables
   implicit private val cookies: Cookies = $cookies
@@ -189,7 +190,12 @@ object GameSearchController {
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
   @js.native
-  trait GameSearchScope extends RootScope with ContestCssSupportScope with ContestEntrySupportScope {
+  trait GameSearchScope extends RootScope
+    with AwardsSupportScope
+    with ContestCssSupportScope
+    with ContestEntrySupportScope
+    with PlayerProfilePopupSupportScope {
+
     // variables
     var buyIns: js.Array[GameBalance] = js.native
     var contest: js.UndefOr[Contest] = js.native

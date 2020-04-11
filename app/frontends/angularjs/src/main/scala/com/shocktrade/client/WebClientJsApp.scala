@@ -82,13 +82,14 @@ object WebClientJsApp {
     ()
   }
 
-  private def configureDialogs(module: Module) {
+  private def configureDialogs(module: Module): Unit = {
     module.serviceOf[ComposeMessageDialog]("ComposeMessageDialog")
     module.serviceOf[InvitePlayerDialog]("InvitePlayerDialog")
     module.serviceOf[NewGameDialog]("NewGameDialog")
     module.serviceOf[NewOrderDialog]("NewOrderDialog")
     module.serviceOf[NewsQuoteDialog]("NewsQuoteDialog")
     module.serviceOf[PerksDialog]("PerksDialog")
+    module.serviceOf[PlayerProfileDialog]("PlayerProfileDialog")
     module.serviceOf[ReactiveSearchService]("ReactiveSearchService")
     module.serviceOf[SignInDialog]("SignInDialog")
     module.serviceOf[SignUpDialog]("SignUpDialog")
@@ -99,6 +100,7 @@ object WebClientJsApp {
     module.controllerOf[NewOrderDialogController]("NewOrderDialogController")
     module.controllerOf[NewsQuoteDialogController]("NewsQuoteDialogController")
     module.controllerOf[PerksDialogController]("PerksDialogController")
+    module.controllerOf[PlayerProfileDialogController]("PlayerProfileDialogController")
     module.controllerOf[SignInDialogController]("SignInDialogController")
     module.controllerOf[SignUpDialogController]("SignUpDialogController")
     ()
@@ -109,7 +111,7 @@ object WebClientJsApp {
     ()
   }
 
-  private def configureServices(module: Module) {
+  private def configureServices(module: Module): Unit = {
     module.serviceOf[AuthenticationService]("AuthenticationService")
     module.serviceOf[AwardService]("AwardService")
     module.serviceOf[ContestService]("ContestService")
@@ -127,8 +129,7 @@ object WebClientJsApp {
     ()
   }
 
-  private def configureControllers(module: Module) {
-    module.controllerOf[AwardsController]("AwardsController")
+  private def configureControllers(module: Module): Unit = {
     module.controllerOf[ChatController]("ChatController")
     module.controllerOf[DashboardController]("DashboardController")
     module.controllerOf[DiscoverController]("DiscoverController")

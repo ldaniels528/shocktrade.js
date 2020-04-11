@@ -1,15 +1,11 @@
 package com.shocktrade.client.contest
 
-import com.shocktrade.client.GameState._
-import com.shocktrade.client.ScopeEvents._
-import com.shocktrade.client.contest.AwardsController._
 import com.shocktrade.client.users.UserService
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
-import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.cookies.Cookies
 import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
+import io.scalajs.npm.angularjs.{Controller, Scope}
 import io.scalajs.util.PromiseHelper.Implicits._
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -18,17 +14,26 @@ import scala.scalajs.js.JSConverters._
 import scala.util.{Failure, Success}
 
 /**
- * Awards Controller
+ * Awards Support
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster: Toaster,
-                       @injected("UserService") userService: UserService) extends Controller {
-
-  //implicit private val cookies: Cookies = $cookies
+trait AwardsSupport {
+  ref: Controller =>
 
   private val availableAwards: js.Array[Award] = Award.availableAwards
+  private val awardIconsByCode: js.Dictionary[String] = js.Dictionary(Award.availableAwards.map(award => award.code -> award.icon): _*)
 
   $scope.myAwards = js.undefined
+
+  ///////////////////////////////////////////////////////////////////////////
+  //          Injected Functions
+  ///////////////////////////////////////////////////////////////////////////
+
+  def $scope: AwardsSupportScope
+
+  def toaster: Toaster
+
+  def userService: UserService
 
   ///////////////////////////////////////////////////////////////////////////
   //          Initialization Functions
@@ -39,11 +44,7 @@ class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster
     aUserID map initAwards
   }
 
-  $scope.onContestSelected { (_, _) => $scope.initAwards($cookies.getGameState.userID) }
-
-  $scope.onUserProfileUpdated { (_, userProfile) => $scope.initAwards(userProfile.userID) }
-
-  private def initAwards(userID: String): js.Promise[HttpResponse[js.Array[String]]] = {
+  protected def initAwards(userID: String): js.Promise[HttpResponse[js.Array[String]]] = {
     val outcome = userService.findMyAwards(userID)
     outcome onComplete {
       case Success(myAwardCodes) =>
@@ -75,35 +76,27 @@ class AwardsController($scope: AwardsControllerScope, $cookies: Cookies, toaster
 
   $scope.isEarned = (anAward: js.UndefOr[Award]) => anAward.exists(isEarned)
 
-  private def findAwardImage(code: String): js.UndefOr[String] = awardIconsByCode.get(code).orUndefined
+  protected def findAwardImage(code: String): js.UndefOr[String] = awardIconsByCode.get(code).orUndefined
 
-  private def isEarned(award: Award): Boolean = $scope.myAwardCodes.exists(_.contains(award.code))
+  protected def isEarned(award: Award): Boolean = $scope.myAwardCodes.exists(_.contains(award.code))
 
 }
 
 /**
- * Awards Controller Singleton
+ * Awards Support Companion
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-object AwardsController {
-  private val awardIconsByCode: js.Dictionary[String] = js.Dictionary(Award.availableAwards.map(award => award.code -> award.icon): _*)
+@js.native
+trait AwardsSupportScope extends Scope {
+  // functions
+  var initAwards: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[String]]]]] = js.native
+  var getAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
+  var getMyAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
+  var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
+  var isEarned: js.Function1[js.UndefOr[Award], Boolean] = js.native
 
-  /**
-   * Awards Controller Scope
-   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
-   */
-  @js.native
-  trait AwardsControllerScope extends Scope {
-    // functions
-    var initAwards: js.Function1[js.UndefOr[String], js.UndefOr[js.Promise[HttpResponse[js.Array[String]]]]] = js.native
-    var getAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
-    var getMyAwards: js.Function0[js.UndefOr[js.Array[Award]]] = js.native
-    var findAwardImage: js.Function1[js.UndefOr[String], js.UndefOr[String]] = js.native
-    var isEarned: js.Function1[js.UndefOr[Award], Boolean] = js.native
-
-    // variables
-    var myAwards: js.UndefOr[js.Array[Award]] = js.native
-    var myAwardCodes: js.UndefOr[js.Array[String]] = js.native
-  }
+  // variables
+  var myAwards: js.UndefOr[js.Array[Award]] = js.native
+  var myAwardCodes: js.UndefOr[js.Array[String]] = js.native
 
 }

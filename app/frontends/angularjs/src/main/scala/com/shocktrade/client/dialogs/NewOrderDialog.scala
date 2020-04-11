@@ -6,12 +6,13 @@ import com.shocktrade.client.discover.QuoteService
 import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
-import com.shocktrade.common.{Commissions, Ok}
-import com.shocktrade.common.forms.NewOrderForm
+import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
+import com.shocktrade.common.{Commissions, Ok}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
+import io.scalajs.npm.angularjs.http.HttpResponse
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.DurationHelper._
@@ -78,15 +79,17 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
     loadPerks()
   }
 
-  private def loadPerks(): Unit = {
-    $scope.portfolio.flatMap(_.portfolioID) foreach { portfolioId =>
+  private def loadPerks(): js.UndefOr[js.Promise[HttpResponse[PerksResponse]]] = {
+    $scope.portfolio.flatMap(_.portfolioID) map { portfolioId =>
       // load the player"s perks
-      perksDialog.getMyPerkCodes(portfolioId) onComplete {
+      val outcome = perksDialog.getMyPerkCodes(portfolioId)
+      outcome onComplete {
         case Success(contest) => $scope.form.perks = contest.data.perkCodes
         case Failure(e) =>
           toaster.error("Error retrieving perks")
           e.printStackTrace()
       }
+      outcome
     }
   }
 
@@ -231,7 +234,7 @@ trait NewOrderScope extends AutoCompletionControllerScope {
   var userProfile: js.UndefOr[UserProfile] = js.native
 
   // functions
-  var init: js.Function0[Unit] = js.native
+  var init: js.Function0[js.UndefOr[js.Promise[HttpResponse[PerksResponse]]]] = js.native
   var cancel: js.Function0[Unit] = js.native
   var getMessages: js.Function0[js.Array[String]] = js.native
   var isProcessing: js.Function0[Boolean] = js.native

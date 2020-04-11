@@ -220,33 +220,33 @@ object PerksDialogController {
 
   type PerksDialogResult = Portfolio
 
-}
+  /**
+   * Perks Dialog Scope
+   * @author Lawrence Daniels <lawrence.daniels@gmail.com>
+   */
+  @js.native
+  trait PerksDialogScope extends Scope {
+    // variables
+    var availablePerks: js.Array[Perk] = js.native
+    var errors: js.Array[String] = js.native
+    var fundsAvailable: js.UndefOr[Double] = js.native
+    var portfolio: js.UndefOr[Portfolio] = js.native
 
-/**
- * Perks Dialog Scope
- * @author Lawrence Daniels <lawrence.daniels@gmail.com>
- */
-@js.native
-trait PerksDialogScope extends Scope {
-  // variables
-  var availablePerks: js.Array[Perk] = js.native
-  var errors: js.Array[String] = js.native
-  var fundsAvailable: js.UndefOr[Double] = js.native
-  var portfolio: js.UndefOr[Portfolio] = js.native
+    // functions
+    var cancel: js.Function0[Unit] = js.native
+    var getTotalCost: js.Function0[Double] = js.native
+    var hasSufficientFunds: js.Function0[Boolean] = js.native
 
-  // functions
-  var cancel: js.Function0[Unit] = js.native
-  var getTotalCost: js.Function0[Double] = js.native
-  var hasSufficientFunds: js.Function0[Boolean] = js.native
+    var init: js.Function0[Unit] = js.native
+    var countOwnedPerks: js.Function0[Int] = js.native
+    var isPerksSelected: js.Function0[Boolean] = js.native
+    var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+    var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+    var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
+    var loadPerks: js.Function0[Unit] = js.native
+    var purchasePerks: js.Function0[Unit] = js.native
 
-  var init: js.Function0[Unit] = js.native
-  var countOwnedPerks: js.Function0[Int] = js.native
-  var isPerksSelected: js.Function0[Boolean] = js.native
-  var getPerkCostClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
-  var getPerkNameClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
-  var getPerkDescClass: js.Function1[js.UndefOr[Perk], js.UndefOr[String]] = js.native
-  var loadPerks: js.Function0[Unit] = js.native
-  var purchasePerks: js.Function0[Unit] = js.native
+  }
 
 }
 
