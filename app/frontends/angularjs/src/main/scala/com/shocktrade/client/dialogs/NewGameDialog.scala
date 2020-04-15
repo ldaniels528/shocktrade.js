@@ -2,9 +2,9 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.ContestService
 import com.shocktrade.client.dialogs.NewGameDialogController._
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.common.forms.ContestCreationForm.{GameBalance, GameDuration, LevelCap}
+import com.shocktrade.common.forms.ContestCreationForm._
 import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse}
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
@@ -82,7 +82,7 @@ class NewGameDialogController($scope: NewGameDialogControllerScope, $timeout: Ti
       $scope.form.userID = userID
 
       // create the new game
-      contestService.createNewGame(form).toFuture onComplete {
+      contestService.createNewGame(form.toRequest).toFuture onComplete {
         case Success(response) =>
           $uibModalInstance.close(response.data)
           $timeout.cancel(promise)
@@ -120,28 +120,6 @@ class NewGameDialogController($scope: NewGameDialogControllerScope, $timeout: Ti
  */
 object NewGameDialogController {
   type NewGameDialogResult = ContestCreationResponse
-
-  val GameDurations: js.Array[GameDuration] = js.Array(
-    new GameDuration(label = "1 Week", value = 7),
-    new GameDuration(label = "2 Weeks", value = 14),
-    new GameDuration(label = "3 Weeks", value = 21),
-    new GameDuration(label = "4 Weeks", value = 28),
-    new GameDuration(label = "5 Weeks", value = 35),
-    new GameDuration(label = "6 Weeks", value = 42),
-    new GameDuration(label = "7 Weeks", value = 49),
-    new GameDuration(label = "8 Weeks", value = 56))
-
-  val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
-
-  val StartingBalances: js.Array[GameBalance] = js.Array(
-    new GameBalance(label = "$ 1,000", value = 1000.00),
-    new GameBalance(label = "$ 2,500", value = 2500.00),
-    new GameBalance(label = "$ 5,000", value = 5000.00),
-    new GameBalance(label = "$10,000", value = 10000.00),
-    new GameBalance(label = "$25,000", value = 25000.00),
-    new GameBalance(label = "$50,000", value = 50000.00),
-    new GameBalance(label = "$75,000", value = 75000.00),
-    new GameBalance(label = "$100,000", value = 100000.00))
 
   /**
    * New Game Dialog Controller Scope

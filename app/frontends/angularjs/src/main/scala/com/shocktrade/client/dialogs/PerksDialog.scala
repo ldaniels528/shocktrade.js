@@ -2,19 +2,16 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.PerksDialogController._
-import com.shocktrade.client.models.contest.{Perk, Portfolio}
 import com.shocktrade.client.users.UserService
-import com.shocktrade.common.forms.PerksResponse
+import com.shocktrade.common.models.contest.{Perk, Portfolio}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs._
-import io.scalajs.npm.angularjs.http.{Http, HttpResponse}
 import io.scalajs.npm.angularjs.toaster.Toaster
 import io.scalajs.npm.angularjs.uibootstrap.{Modal, ModalInstance, ModalOptions}
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.PromiseHelper.Implicits._
 import io.scalajs.util.ScalaJsHelper._
-
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
@@ -24,7 +21,7 @@ import scala.util.{Failure, Success}
  * Perks Dialog Service
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class PerksDialog($http: Http, $uibModal: Modal) extends Service {
+class PerksDialog($uibModal: Modal) extends Service {
 
   /**
    * Perks Modal Dialog
@@ -36,42 +33,6 @@ class PerksDialog($http: Http, $uibModal: Modal) extends Service {
       resolve = js.Dictionary("contestID" -> (() => contestID), "userID" -> (() => userID))
     ))
     $uibModalInstance.result
-  }
-
-  /**
-   * Retrieves the promise of a sequence of available perks
-   * @return the promise of a sequence of available [[Perk perk]]s
-   */
-  def getAvailablePerks: js.Promise[HttpResponse[js.Array[Perk]]] = {
-    $http.get[js.Array[Perk]]("/api/contests/perks")
-  }
-
-  /**
-   * Retrieves the promise of a sequence of perks
-   * @param portfolioID the given portfolio ID
-   * @return the promise of a sequence of [[Perk perks]]
-   */
-  def getPerks(portfolioID: String): js.Promise[HttpResponse[js.Array[Perk]]] = {
-    $http.get[js.Array[Perk]]("/api/contests/perks")
-  }
-
-  /**
-   * Retrieves the promise of an option of a perks response
-   * @param portfolioID the given portfolio ID
-   * @return the promise of an option of a [[PerksResponse perks response]]
-   */
-  def getMyPerkCodes(portfolioID: String): js.Promise[HttpResponse[PerksResponse]] = {
-    $http.get[PerksResponse](s"/api/portfolio/$portfolioID/perks")
-  }
-
-  /**
-   * Attempts to purchase the given perk codes
-   * @param portfolioID the given portfolio ID
-   * @param perkCodes   the given perk codes to purchase
-   * @return the promise of a [[PerksDialogResult contest]]
-   */
-  def purchasePerks(portfolioID: String, perkCodes: js.Array[String]): js.Promise[HttpResponse[PerksDialogResult]] = {
-    $http.post[Portfolio](s"/api/portfolio/$portfolioID/perks", perkCodes)
   }
 
 }
@@ -102,8 +63,8 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
   $scope.init = () => {
     console.info(s"Loading portfolio for contest ${contestID()} user ${userID()}...")
     val outcome = for {
-      portfolio <- portfolioService.findPortfolio(contestID(), userID())
-      perks <- perksDialog.getPerks(portfolio.data.portfolioID.orNull)
+      portfolio <- portfolioService.findPortfolioByUser(contestID(), userID())
+      perks <- portfolioService.findAvailablePerks
     } yield (perks, portfolio)
 
     outcome onComplete {
@@ -126,7 +87,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
 
   $scope.countOwnedPerks = () => $scope.availablePerks.count(_.owned.isTrue)
 
-  $scope.getTotalCost = () => getSelectedPerks map (_.cost) sum
+  $scope.getTotalCost = () => getSelectedPerks.map(_.cost).sum
 
   $scope.hasSufficientFunds = () => $scope.fundsAvailable.exists($scope.getTotalCost() <= _)
 
@@ -151,19 +112,19 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
     $scope.portfolio.flatMap(_.portfolioID).toOption match {
       case Some(portfolioId) =>
         val outcome = for {
-          thePerks <- perksDialog.getPerks(portfolioId).map(_.data)
-          perksResponse <- perksDialog.getMyPerkCodes(portfolioId).map(_.data)
+          thePerks <- portfolioService.findAvailablePerks
+          perksResponse <- portfolioService.findPurchasedPerks(portfolioId)
         } yield (thePerks, perksResponse)
 
         outcome onComplete {
           case Success((thePerks, perksResponse)) =>
             // create a mapping from the available perks
-            $scope.availablePerks = thePerks
-            this.perkMapping = js.Dictionary(thePerks.map(p => p.code -> p): _*)
+            $scope.availablePerks = thePerks.data
+            this.perkMapping = js.Dictionary(thePerks.data.map(p => p.code -> p): _*)
 
             // capture the owned perk codes
             //$scope.fundsAvailable = perksResponse.fundsAvailable
-            this.myPerkCodes = perksResponse.perkCodes
+            this.myPerkCodes = perksResponse.data.perkCodes
 
             $scope.$apply(() => setupPerks())
           case Failure(e) =>
@@ -183,7 +144,7 @@ class PerksDialogController($scope: PerksDialogScope, $uibModalInstance: ModalIn
         val perkCodes = getSelectedPerks map (_.code)
 
         // send the purchase order
-        perksDialog.purchasePerks(portfolioId, perkCodes) onComplete {
+        portfolioService.purchasePerks(portfolioId, perkCodes) onComplete {
           case Success(response) => $uibModalInstance.close(response.data)
           case Failure(e) =>
             $scope.$apply(() => $scope.errors.push(s"Failed to purchase ${perkCodes.length} Perk(s)"))

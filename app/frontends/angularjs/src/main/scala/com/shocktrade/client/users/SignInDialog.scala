@@ -1,9 +1,9 @@
 package com.shocktrade.client.users
 
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.SignInDialogController.{AuthenticationFormValidation, SignInDialogResult}
 import com.shocktrade.common.auth.AuthenticationForm
+import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.npm.angularjs.http.Http
 import io.scalajs.npm.angularjs.toaster.Toaster
@@ -40,7 +40,7 @@ class SignInDialog($http: Http, $uibModal: Modal) extends Service {
  */
 case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: ModalInstance[SignInDialogResult],
                                   $timeout: Timeout, toaster: Toaster,
-                                  @injected("AuthenticationService") authenticationService: AuthenticationService)
+                                  @injected("UserService") userService: UserService)
   extends Controller {
 
   private val messages: js.Array[String] = emptyArray
@@ -60,8 +60,8 @@ case class SignInDialogController($scope: SignInDialogScope, $uibModalInstance: 
 
       // attempt to authenticate the user
       val outcome = for {
-        authCode <- authenticationService.getCode
-        userAccount <- authenticationService.login(form.copy(authCode = authCode.data.code))
+        authCode <- userService.getCode
+        userAccount <- userService.login(form.copy(authCode = authCode.data.code))
       } yield userAccount
 
       outcome onComplete {

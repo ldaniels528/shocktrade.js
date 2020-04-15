@@ -2,8 +2,9 @@ package com.shocktrade.webapp.routes
 package contest
 
 import com.shocktrade.common.Ok
+import com.shocktrade.common.api.ContestAPI
 import com.shocktrade.common.events.RemoteEvent
-import com.shocktrade.common.forms.{ContestCreationForm, ContestSearchForm, ValidationErrors}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestSearchForm, ValidationErrors}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking}
 import com.shocktrade.webapp.routes.contest.dao._
 import io.scalajs.npm.express.{Application, Request, Response}
@@ -16,57 +17,43 @@ import scala.util.{Failure, Success}
  * Contest Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO, portfolioDAO: PortfolioDAO) {
+class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO: ContestDAO) extends ContestAPI {
   // individual contests
-  app.get("/api/contest/:id", (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
-  app.post("/api/contest", (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
-
-  // charts
-  app.get("/api/contest/:id/user/:userID/chart/:chart", (request: Request, response: Response, next: NextFunction) => findChart(request, response, next))
+  app.post(createNewGameURL, (request: Request, response: Response, next: NextFunction) => createContest(request, response, next))
+  app.get(findContestByIDURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestByID(request, response, next))
 
   // chat messages
-  app.get("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => findChatMessages(request, response, next))
-  app.post("/api/contest/:id/chat", (request: Request, response: Response, next: NextFunction) => addChatMessage(request, response, next))
+  app.get(findChatMessagesURL(":id"), (request: Request, response: Response, next: NextFunction) => findChatMessages(request, response, next))
+  app.post(putChatMessageURL(":id"), (request: Request, response: Response, next: NextFunction) => putChatMessage(request, response, next))
 
   // contest participation
-  app.delete("/api/contest/:id/user/:userID", (request: Request, response: Response, next: NextFunction) => quitContest(request, response, next))
-  app.put("/api/contest/:id/user/:userID", (request: Request, response: Response, next: NextFunction) => joinContest(request, response, next))
+  app.delete(quitContestURL(":id", ":userID"), (request: Request, response: Response, next: NextFunction) => quitContest(request, response, next))
+  app.put(joinContestURL(":id", ":userID"), (request: Request, response: Response, next: NextFunction) => joinContest(request, response, next))
 
   // collections of contests
-  app.get("/api/contest/:id/rankings", (request: Request, response: Response, next: NextFunction) => findRankings(request, response, next))
-  app.get("/api/contests/perks", (request: Request, response: Response, next: NextFunction) => findPerks(request, response, next))
-  app.post("/api/contests/search", (request: Request, response: Response, next: NextFunction) => search(request, response, next))
+  app.put(contestSearchURL, (request: Request, response: Response, next: NextFunction) => contestSearch(request, response, next))
+  app.get(findContestRankingsURL(":id"), (request: Request, response: Response, next: NextFunction) => findContestRankings(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
   //////////////////////////////////////////////////////////////////////////////////////
 
-  def addChatMessage(request: Request, response: Response, next: NextFunction): Unit = {
-    // get the arguments
-    val form = for {
-      contestID <- request.params.get("id")
-      chatMessage = request.bodyAs[ChatMessage]
-      userID <- chatMessage.userID.toOption
-      message <- chatMessage.message.toOption
-    } yield (contestID, userID, message)
-
-    // handle the request
-    form match {
-      case Some((contestID, userID, message)) =>
-        // asynchronously create the message
-        contestDAO.addChatMessage(contestID, userID, message) onComplete {
-          // HTTP/200 OK
-          case Success(count) =>
-            response.send(Ok(count))
-            WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
+  /**
+   * Searches for contest via a [[ContestSearchForm contest search form]]
+   */
+  def contestSearch(request: Request, response: Response, next: NextFunction): Unit = {
+    val form = request.bodyAs[ContestSearchForm]
+    form.validate match {
+      case messages if messages.isEmpty =>
+        contestDAO.contestSearch(form) onComplete {
+          case Success(contests) =>
+            response.setContentType("application/json")
+            response.send(contests)
             next()
-          // HTTP/500 ERROR
-          case Failure(e) =>
-            response.internalServerError(e); next()
+          case Failure(e) => response.showException(e).internalServerError(e); next()
         }
-      // HTTP/404 NOT FOUND
-      case None =>
-        response.notFound(request.params); next()
+      case messages =>
+        response.badRequest(new ValidationErrors(messages)); next()
     }
   }
 
@@ -74,14 +61,13 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
    * Creates a new contest
    */
   def createContest(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestCreationForm]
+    val form = request.bodyAs[ContestCreationRequest]
     form.validate match {
       case messages if messages.nonEmpty =>
         response.badRequest(new ValidationErrors(messages)); next()
       case _ =>
         contestDAO.create(form) onComplete {
-          case Success(Some(result)) => response.send(result); next()
-          case Success(None) => response.badRequest(form); next()
+          case Success(result) => response.send(result); next()
           case Failure(e) => response.showException(e).internalServerError(e); next()
         }
     }
@@ -90,17 +76,7 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
   def findChatMessages(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
     contestDAO.findChatMessages(contestID) onComplete {
-      case Success(messages) => response.send(messages); next()
-      case Failure(e) => response.internalServerError(e); next()
-    }
-  }
-
-  /**
-   * Retrieves available perks
-   */
-  def findPerks(request: Request, response: Response, next: NextFunction): Unit = {
-    portfolioDAO.findAvailablePerks onComplete {
-      case Success(perks) => response.send(perks); next()
+      case Success(messages) => response.setContentType("application/json"); response.send(messages); next()
       case Failure(e) => response.internalServerError(e); next()
     }
   }
@@ -117,22 +93,13 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     }
   }
 
-  def findChart(request: Request, response: Response, next: NextFunction): Unit = {
-    val (contestID, userID, chart) = (request.params("id"), request.params("userID"), request.params("chart"))
-    portfolioDAO.findChartData(contestID, userID, chart) onComplete {
-      case Success(data) => response.send(data); next()
-      case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
   /**
    * Retrieves a collection of rankings by contest
    */
-  def findRankings(request: Request, response: Response, next: NextFunction): Unit = {
+  def findContestRankings(request: Request, response: Response, next: NextFunction): Unit = {
     val contestID = request.params("id")
-    val outcome = contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq))
-    outcome onComplete {
-      case Success(rankings) => response.send(rankings.toJSArray); next()
+    contestDAO.findRankings(contestID).map(rankings => ContestRanking.computeRankings(rankings.toSeq)) onComplete {
+      case Success(rankings) => response.setContentType("application/json"); response.send(rankings.toJSArray); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
     }
   }
@@ -145,27 +112,40 @@ class ContestRoutes(app: Application)(implicit ec: ExecutionContext, contestDAO:
     }
   }
 
+  def putChatMessage(request: Request, response: Response, next: NextFunction): Unit = {
+    // get the arguments
+    val form = for {
+      contestID <- request.params.get("id")
+      chatMessage = request.bodyAs[ChatMessage]
+      userID <- chatMessage.userID.toOption
+      message <- chatMessage.message.toOption
+    } yield (contestID, userID, message)
+
+    // handle the request
+    form match {
+      case Some((contestID, userID, message)) =>
+        // asynchronously create the message
+        contestDAO.putChatMessage(contestID, userID, message) onComplete {
+          // HTTP/200 OK
+          case Success(count) =>
+            response.send(Ok(count))
+            WebSocketHandler.emit(RemoteEvent.ChatMessagesUpdated, contestID)
+            next()
+          // HTTP/500 ERROR
+          case Failure(e) =>
+            response.internalServerError(e); next()
+        }
+      // HTTP/404 NOT FOUND
+      case None =>
+        response.notFound(request.params); next()
+    }
+  }
+
   def quitContest(request: Request, response: Response, next: NextFunction): Unit = {
     val (contestID, userID) = (request.params("id"), request.params("userID"))
     contestDAO.quit(contestID, userID) onComplete {
       case Success(data) => response.send(Ok(data)); next()
       case Failure(e) => response.showException(e).internalServerError(e); next()
-    }
-  }
-
-  /**
-   * Searches for contest via a [[ContestSearchForm contest search form]]
-   */
-  def search(request: Request, response: Response, next: NextFunction): Unit = {
-    val form = request.bodyAs[ContestSearchForm]
-    form.validate match {
-      case messages if messages.isEmpty =>
-        contestDAO.search(form) onComplete {
-          case Success(contests) => response.send(contests); next()
-          case Failure(e) => response.showException(e).internalServerError(e); next()
-        }
-      case messages =>
-        response.badRequest(new ValidationErrors(messages)); next()
     }
   }
 

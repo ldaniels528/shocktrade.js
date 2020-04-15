@@ -1,9 +1,9 @@
 package com.shocktrade.client.posts
 
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{GlobalLoading, RootScope}
 import com.shocktrade.common.models.post.{Comment, Post, Reply}
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._

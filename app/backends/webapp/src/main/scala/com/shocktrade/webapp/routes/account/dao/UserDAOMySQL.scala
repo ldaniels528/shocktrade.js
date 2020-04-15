@@ -30,7 +30,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
     conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.userID IN (${ids.map(id => s"'$id'").mkString(",")})") map { case (rows, _) => rows }
   }
 
-  override def findByUsername(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
+  override def findUserByName(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]] = {
     conn.queryFuture[UserProfileData](s"$userByIdSQL WHERE U.username = ?", js.Array(name)) map { case (rows, _) => rows.headOption }
   }
 
@@ -47,7 +47,7 @@ class UserDAOMySQL(options: MySQLConnectionOptions) extends MySQLDAO(options) wi
            |""".stripMargin,
         js.Array(username, email, password, wallet)) if ok.affectedRows == 1
 
-      newAccount <- findByUsername(username.orNull)
+      newAccount <- findUserByName(username.orNull)
     } yield newAccount
   }
 

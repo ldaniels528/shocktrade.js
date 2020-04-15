@@ -6,7 +6,11 @@ package com.shocktrade.common.util
  */
 object StringHelper {
 
-  implicit class NthExtensions(val number: Int) extends AnyVal {
+  case class Accumulator(lines: List[String] = Nil, sb: StringBuilder = new StringBuilder(), inQuotes: Boolean = false, jsLevel: Int = 0) {
+    def results: List[String] = (if (sb.nonEmpty) sb.toString() :: lines else lines).reverse
+  }
+
+  final implicit class NthExtensions(val number: Int) extends AnyVal {
 
     @inline
     def nth: String = {
@@ -26,7 +30,7 @@ object StringHelper {
    * String Extensions
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  implicit class StringExtensions(val string: String) extends AnyVal {
+  final implicit class StringExtensions(val string: String) extends AnyVal {
 
     @inline
     def extractAll(tok0: String, tok1: String, fromIndex: Int = 0): List[String] = string.findIndices(tok0, tok1, fromIndex) match {
@@ -35,46 +39,62 @@ object StringHelper {
     }
 
     @inline
-    def findIndices(tok0: String, tok1: String) = for {
+    def findIndices(tok0: String, tok1: String): Option[(Int, Int)] = for {
       start <- string.indexOfOpt(tok0)
       end <- string.indexOfOpt(tok1, start)
     } yield (start, end)
 
     @inline
-    def indexOfOpt(s: String) = string.indexOf(s) match {
+    def indexOfOpt(s: String): Option[Int] = string.indexOf(s) match {
       case -1 => None
       case index => Some(index)
     }
 
     @inline
-    def indexOfOpt(s: String, fromIndex: Int) = string.indexOf(s, fromIndex) match {
+    def indexOfOpt(s: String, fromIndex: Int): Option[Int] = string.indexOf(s, fromIndex) match {
       case -1 => None
       case index => Some(index)
     }
 
     @inline
-    def findIndices(tok0: String, tok1: String, fromIndex: Int) = for {
+    def findIndices(tok0: String, tok1: String, fromIndex: Int): Option[(Int, Int)] = for {
       start <- string.indexOfOpt(tok0, fromIndex)
       end <- string.indexOfOpt(tok1, start)
     } yield (start, end)
 
     @inline
-    def isBlank = string.trim.isEmpty
+    def isBlank: Boolean = string.trim.isEmpty
 
     @inline
-    def nonBlank = string.trim.nonEmpty
+    def nonBlank: Boolean = string.trim.nonEmpty
 
     @inline
-    def nonValidEmail = !string.isValidEmail
+    def nonValidEmail: Boolean = !string.isValidEmail
 
     @inline
-    def isValidEmail = string.contains("@") // TODO
+    def isValidEmail: Boolean = string.contains("@") // TODO
 
     @inline
-    def limitTo(length: Int) = if (string.length > length) string.take(length) + "..." else string
+    def limitTo(length: Int): String = if (string.length > length) string.take(length) + "..." else string
 
     @inline
-    def unquote = string match {
+    def safeSplit(delimiter: Char, limit: Int): List[String] = {
+      val accumulator = string.toCharArray.foldLeft(Accumulator()) {
+        case (acc@Accumulator(lines, sb, inQuotes, jsLevel), ch) if inQuotes || lines.size >= limit => sb.append(ch); acc
+        case (acc@Accumulator(_, sb, _, jsLevel), ch) if ch == '{' => sb.append(ch); acc.copy(jsLevel = jsLevel + 1)
+        case (acc@Accumulator(_, sb, _, jsLevel), ch) if ch == '}' => sb.append(ch); acc.copy(jsLevel = jsLevel - 1)
+        case (acc@Accumulator(_, sb, inQuotes, _), ch) if ch == '"' => sb.append(ch); acc.copy(inQuotes = !inQuotes)
+        case (acc@Accumulator(lines, sb, _, jsLevel), ch) if ch == delimiter && jsLevel == 0 =>
+          val newLine = sb.toString()
+          sb.clear()
+          acc.copy(lines = newLine :: lines)
+        case (acc@Accumulator(_, sb, _, _), ch) => sb.append(ch); acc
+      }
+      accumulator.results
+    }
+
+    @inline
+    def unquote: String = string match {
       case s if s.startsWith("\"") && s.endsWith("\"") => s.drop(1).dropRight(1)
       case s => s
     }

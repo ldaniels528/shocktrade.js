@@ -8,10 +8,10 @@ import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogRes
 import com.shocktrade.client.dialogs.PerksDialogController.PerksDialogResult
 import com.shocktrade.client.dialogs.{InvitePlayerDialog, NewOrderDialog, PerksDialog, PlayerProfileDialog}
 import com.shocktrade.client.discover.MarketStatusService
-import com.shocktrade.client.models.contest.{Contest, Portfolio}
+import com.shocktrade.client.models.contest.Contest
 import com.shocktrade.client.users.UserService
 import com.shocktrade.client.{USMarketsStatusSupportScope, _}
-import com.shocktrade.common.models.contest.ContestRanking
+import com.shocktrade.common.models.contest.{ContestRanking, Portfolio}
 import com.shocktrade.common.{AppConstants, Ok}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console

@@ -1,34 +1,53 @@
 package com.shocktrade.webapp.routes.account
 
 import com.shocktrade.common.Ok
+import com.shocktrade.common.api.UserAPI
+import com.shocktrade.common.auth.{AuthenticationCode, AuthenticationForm, AuthenticationResponse}
 import com.shocktrade.common.forms.SignUpForm
+import com.shocktrade.common.models.user.OnlineStatus
 import com.shocktrade.webapp.routes.NextFunction
-import com.shocktrade.webapp.routes.account.dao.{UserAccountData, UserDAO, UserIconData}
+import com.shocktrade.webapp.routes.account.dao.{AuthenticationDAO, UserAccountData, UserDAO, UserIconData}
 import io.scalajs.nodejs.fs.Fs
 import io.scalajs.npm.express.{Application, Request, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Random, Success}
 
 /**
  * User Routes
  * @author Lawrence Daniels <lawrence.daniels@gmail.com>
  */
-class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserDAO) {
-  // individual item
-  app.post("/api/user", (request: Request, response: Response, next: NextFunction) => createUserAccount(request, response, next))
-  app.get("/api/user/:userID", (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
-  app.get("/api/user/:userID/icon", (request: Request, response: Response, next: NextFunction) => findUserIcon(request, response, next))
-  app.put("/api/user/:userID/favorite/:symbol", (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
-  app.put("/api/user/:userID/recent/:symbol", (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
+class UserRoutes(app: Application)(implicit ec: ExecutionContext, authenticationDAO: AuthenticationDAO, userDAO: UserDAO) extends UserAPI {
+  private val onlineStatuses = js.Dictionary[OnlineStatus]()
 
-  // collections
-  app.get("/api/users", (request: Request, response: Response, next: NextFunction) => findUsersByIDs(request, response, next))
-  app.get("/api/user/:userID/awards", (request: Request, response: Response, next: NextFunction) => findMyAwards(request, response, next))
-  app.get("/api/user/:userID/favorites", (request: Request, response: Response, next: NextFunction) => findFavoriteSymbols(request, response, next))
-  app.get("/api/user/:userID/recents", (request: Request, response: Response, next: NextFunction) => findRecentSymbols(request, response, next))
+  // users API
+  app.post(createAccountURL, (request: Request, response: Response, next: NextFunction) => createAccount(request, response, next))
+  app.get(findUserByIDURL(":userID"), (request: Request, response: Response, next: NextFunction) => findUserByID(request, response, next))
+  app.get(findUserByNameURL(":username"), (request: Request, response: Response, next: NextFunction) => findUserByName(request, response, next))
+  app.get(findUserIconURL(":userID"), (request: Request, response: Response, next: NextFunction) => findUserIcon(request, response, next))
+  app.get(findUsersURL(":ids"), (request: Request, response: Response, next: NextFunction) => findUsersByIDs(request, response, next))
+  app.get(findMyAwardsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findMyAwards(request, response, next))
+
+  // authentication API
+  app.get(getCodeURL, (request: Request, response: Response, next: NextFunction) => code(request, response, next))
+  app.post(loginURL, (request: Request, response: Response, next: NextFunction) => login(request, response, next))
+  app.post(logoutURL, (request: Request, response: Response, next: NextFunction) => logout(request, response, next))
+
+  // favorites API
+  app.put(addFavoriteSymbolURL(":userID", ":symbol"), (request: Request, response: Response, next: NextFunction) => addFavoriteSymbol(request, response, next))
+  app.get(findFavoriteSymbolsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findFavoriteSymbols(request, response, next))
+
+  // recents API
+  app.put(addRecentSymbolURL(":userID",":symbol"), (request: Request, response: Response, next: NextFunction) => addRecentSymbol(request, response, next))
+  app.get(findRecentSymbolsURL(":userID"), (request: Request, response: Response, next: NextFunction) => findRecentSymbols(request, response, next))
+
+  // session API
+  app.get(getOnlineStatusURL(":userID"), (request: Request, response: Response, next: NextFunction) => getOnlineStatus(request, response, next))
+  app.get(getOnlineStatusesURL, (request: Request, response: Response, next: NextFunction) => getOnlineStatuses(request, response, next))
+  app.put(setIsOnlineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOnline(request, response, next))
+  app.delete(setIsOfflineURL(":userID"), (request: Request, response: Response, next: NextFunction) => setIsOffline(request, response, next))
 
   //////////////////////////////////////////////////////////////////////////////////////
   //      API Methods
@@ -78,7 +97,7 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     }
   }
 
-  def createUserAccount(request: Request, response: Response, next: NextFunction): Unit = {
+  def createAccount(request: Request, response: Response, next: NextFunction): Unit = {
     val form = request.bodyAs[SignUpForm]
     val args = (for {
       username <- form.username
@@ -145,6 +164,95 @@ class UserRoutes(app: Application)(implicit ec: ExecutionContext, userDAO: UserD
     }
   }
 
+  /**
+   * Retrieves a user by username
+   */
+  def findUserByName(request: Request, response: Response, next: NextFunction): Unit = {
+    val username = request.params("username")
+    userDAO.findUserByName(username) onComplete {
+      case Success(Some(user)) => response.setContentType("application/json"); response.send(user); next()
+      case Success(None) => response.notFound(request.params); next()
+      case Failure(e) => response.internalServerError(e); next()
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      Authentication API Methods
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  def code(request: Request, response: Response, next: NextFunction): Unit = {
+    val charset = ('A' to 'Z') ++ ('a' to 'z') ++ ('0' to '9') ++ Seq('_', '-')
+    val random = new Random()
+    val code = new String((for (_ <- 1 to 16; c = charset(random.nextInt(charset.length))) yield c).toArray)
+    response.send(new AuthenticationCode(code))
+    next()
+  }
+
+  def login(request: Request, response: Response, next: NextFunction): Unit = {
+    val form = request.bodyAs[AuthenticationForm]
+    val args = (for {
+      username <- form.username
+      password <- form.password
+      authCode <- form.authCode
+    } yield (username, password, authCode)).toOption
+
+    args match {
+      case Some((username, password, authCode)) =>
+        authenticationDAO.findByUsername(username) onComplete {
+          case Success(Some(accountData)) =>
+            response.send(new AuthenticationResponse(
+              userID = accountData.userID,
+              username = accountData.username,
+              email = accountData.email,
+              wallet = accountData.wallet
+            ));
+            next()
+          case Success(None) =>
+            response.notFound(form); next()
+          case Failure(e) =>
+            response.internalServerError(e.getMessage); next()
+        }
+      case None =>
+        response.badRequest("The username and password are required"); next()
+    }
+  }
+
+  def logout(request: Request, response: Response, next: NextFunction): Unit = {
+    response.send(Ok(updateCount = 1)); next()
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  //      Online Status API Methods
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  def getOnlineStatuses(request: Request, response: Response, next: NextFunction): Unit = {
+    response.send(onlineStatuses)
+    next()
+  }
+
+  def getOnlineStatus(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    response.send(status)
+    next()
+  }
+
+  def setIsOnline(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = true))
+    status.connected = true
+    response.send(status)
+    next()
+  }
+
+  def setIsOffline(request: Request, response: Response, next: NextFunction): Unit = {
+    val userID = request.params("userID")
+    val status = onlineStatuses.getOrElseUpdate(userID, new OnlineStatus(connected = false))
+    status.connected = false
+    response.send(status)
+    next()
+  }
+
 }
 
 /**
@@ -165,7 +273,7 @@ object UserRoutes {
     }
     for {
       data <- Fs.readFileFuture(path)
-      Some(user) <- userDAO.findByUsername(name)
+      Some(user) <- userDAO.findUserByName(name)
       w <- userDAO.createIcon(new UserIconData(userID = user.userID, name = name, mime = mime, image = data))
     } yield w
   }

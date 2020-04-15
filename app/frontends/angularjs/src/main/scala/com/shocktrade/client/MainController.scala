@@ -5,10 +5,9 @@ import com.shocktrade.client.MainController._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.GameLevel
 import com.shocktrade.client.dialogs.SignUpDialog
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.users.{AuthenticationService, SignInDialog, UserService}
+import com.shocktrade.client.users.{SignInDialog, UserService}
 import com.shocktrade.common.models.quote.ClassifiedQuote
-import com.shocktrade.common.models.user.OnlineStatus
+import com.shocktrade.common.models.user.{OnlineStatus, UserProfile}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -35,7 +34,6 @@ import scala.util.{Failure, Success}
  */
 class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http, $location: Location,
                      $timeout: Timeout, toaster: Toaster, $uibModal: Modal,
-                     @injected("AuthenticationService") authenticationService: AuthenticationService,
                      @injected("SignInDialog") signInDialog: SignInDialog,
                      @injected("SignUpDialog") signUpDialog: SignUpDialog,
                      @injected("UserService") userService: UserService)
@@ -169,7 +167,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   private def logout(): js.Promise[Unit] = {
     $scope.isLoggingOut = true
     val outcome = for {
-      _ <- authenticationService.logout()
+      _ <- userService.logout()
       _ <- $cookies.getGameState.userID.map(userService.setIsOffline).getOrElse(js.Promise.reject("Missing user ID"))
     } yield {
       $cookies.getGameState.userID.toOption.flatMap(onlineStatuses.get).foreach(_.connected = false)
@@ -247,7 +245,7 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
       case Some(userID) =>
         asyncLoading($scope)(userService.setIsOnline(userID)) onComplete {
           case Success(response) =>
-            console.info(s"response = ${JSON.stringify(response)}")
+            console.info(s"response = ${JSON.stringify(response.data)}")
             performTabSwitch(tabIndex)
           case Failure(e) =>
             toaster.error(e.getMessage)

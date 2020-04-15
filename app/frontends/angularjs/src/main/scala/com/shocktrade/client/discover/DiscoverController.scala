@@ -1,7 +1,7 @@
 package com.shocktrade.client.discover
 
 import com.shocktrade.client._
-import com.shocktrade.client.contest.ContestService
+import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.DiscoverController._
@@ -26,9 +26,9 @@ import scala.util.{Failure, Success, Try}
  */
 case class DiscoverController($scope: DiscoverControllerScope, $cookies: Cookies, $location: Location, $q: Q,
                               $routeParams: DiscoverRouteParams, $timeout: Timeout, toaster: Toaster,
-                              @injected("ContestService") contestService: ContestService,
                               @injected("MarketStatusService") marketStatusService: MarketStatusService,
                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
+                              @injected("PortfolioService") portfolioService: PortfolioService,
                               @injected("QuoteService") quoteService: QuoteService,
                               @injected("UserService") userService: UserService)
   extends AutoCompletionController($scope, $q, quoteService)

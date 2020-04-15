@@ -1,6 +1,6 @@
 package com.shocktrade.client.users
 
-import com.shocktrade.client.contest.ContestService
+import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.common.models.OperationResult
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -33,7 +33,7 @@ trait PersonalSymbolSupport {
 
   def $scope: PersonalSymbolSupportScope
 
-  def contestService: ContestService
+  def portfolioService: PortfolioService
 
   def toaster: Toaster
 
@@ -75,10 +75,10 @@ trait PersonalSymbolSupport {
     }
 
     // refresh the held symbols
-    contestService.findHeldSecurities(userID) onComplete {
+    portfolioService.findHeldSecurities(userID) onComplete {
       case Success(tickers) =>
         console.info(s"heldSymbols = ${JSON.stringify($scope.heldSymbols)}")
-        $scope.heldSymbols = tickers.data.flatMap(_.symbol.toOption)
+        $scope.heldSymbols = tickers.data
       case Failure(e) => toaster.error("Error", e.displayMessage)
     }
 

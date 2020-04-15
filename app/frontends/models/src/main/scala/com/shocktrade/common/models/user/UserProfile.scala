@@ -1,6 +1,4 @@
-package com.shocktrade.client.models
-
-import com.shocktrade.common.models.user.UserProfileLike
+package com.shocktrade.common.models.user
 
 import scala.scalajs.js
 

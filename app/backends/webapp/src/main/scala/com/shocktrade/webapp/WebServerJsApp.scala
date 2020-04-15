@@ -126,7 +126,7 @@ object WebServerJsApp {
     implicit val robotProcessor: RobotProcessor = new RobotProcessor()
 
     // setup intermittent processing
-    setInterval(() => robotProcessor.run(), 17.minutes)
+    setInterval(() => robotProcessor.run(), 1.hour)
 
     // setup the robot routes
     new RobotRoutes(app)
@@ -142,12 +142,10 @@ object WebServerJsApp {
 
     // setup all other routes
     logger.info("Setting up all other routes...")
-    new AuthenticationRoutes(app)
     new ContestRoutes(app)
     new ExploreRoutes(app)
     new GlobalSearchRoutes(app)
     new NewsRoutes(app)
-    new OrderRoutes(app)
     new PortfolioRoutes(app)
     new PostAttachmentRoutes(app)
     new PostRoutes(app)

@@ -1,6 +1,4 @@
-package com.shocktrade.client.models.contest
-
-import com.shocktrade.common.models.contest._
+package com.shocktrade.common.models.contest
 
 import scala.scalajs.js
 

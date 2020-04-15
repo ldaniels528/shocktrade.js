@@ -5,7 +5,9 @@ import com.shocktrade.common.util.StringHelper._
 import io.scalajs.util.JsUnderOrHelper._
 import io.scalajs.util.ScalaJsHelper._
 
+import scala.language.postfixOps
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 /**
  * Contest Creation Form
@@ -29,6 +31,29 @@ class ContestCreationForm(var name: js.UndefOr[String] = js.undefined,
  */
 object ContestCreationForm {
 
+  val GameDurations: js.Array[GameDuration] = js.Array(
+    new GameDuration(label = "3 Days", value = 3),
+    new GameDuration(label = "1 Week", value = 7),
+    new GameDuration(label = "2 Weeks", value = 14),
+    new GameDuration(label = "3 Weeks", value = 21),
+    new GameDuration(label = "4 Weeks", value = 28),
+    new GameDuration(label = "5 Weeks", value = 35),
+    new GameDuration(label = "6 Weeks", value = 42),
+    new GameDuration(label = "7 Weeks", value = 49),
+    new GameDuration(label = "8 Weeks", value = 56))
+
+  val LevelCaps: js.Array[LevelCap] = (1 to 25) map { n => new LevelCap(label = s"Level $n", value = n) } toJSArray
+
+  val StartingBalances: js.Array[GameBalance] = js.Array(
+    new GameBalance(label = "$ 1,000", value = 1000.00),
+    new GameBalance(label = "$ 2,500", value = 2500.00),
+    new GameBalance(label = "$ 5,000", value = 5000.00),
+    new GameBalance(label = "$10,000", value = 10000.00),
+    new GameBalance(label = "$25,000", value = 25000.00),
+    new GameBalance(label = "$50,000", value = 50000.00),
+    new GameBalance(label = "$75,000", value = 75000.00),
+    new GameBalance(label = "$100,000", value = 100000.00))
+
   /**
    * Game Balance
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
@@ -39,13 +64,13 @@ object ContestCreationForm {
    * Game Duration
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class GameDuration(var label: String, var value: Int) extends js.Object
+  class GameDuration(val label: String, val value: Int) extends js.Object
 
   /**
    * Level Cap
    * @author Lawrence Daniels <lawrence.daniels@gmail.com>
    */
-  class LevelCap(var label: String, var value: Int) extends js.Object
+  class LevelCap(val label: String, val value: Int) extends js.Object
 
   /**
    * Contest Creation Extensions
@@ -60,8 +85,23 @@ object ContestCreationForm {
       if (form.userID.isEmpty || form.userID.exists(_.isEmpty)) messages.push("The creator information is missing")
       if (form.levelCapAllowed.isTrue && form.levelCap.isEmpty) messages.push("Level cap must be specified")
       if (form.duration.flat.isEmpty) messages.push("The game duration is required")
+      if (form.startingBalance.flat.isEmpty) messages.push("The starting balance is required")
       messages
     }
+
+    def toRequest: ContestCreationRequest = new ContestCreationRequest(
+      name = form.name,
+      userID = form.userID,
+      startingBalance = form.startingBalance.map(_.value),
+      startAutomatically = form.startAutomatically,
+      duration = form.duration.map(_.value),
+      friendsOnly = form.friendsOnly,
+      invitationOnly = form.invitationOnly,
+      levelCapAllowed = form.levelCapAllowed,
+      levelCap = form.levelCap.map(_.value),
+      perksAllowed = form.perksAllowed,
+      robotsAllowed = form.robotsAllowed
+    )
 
   }
 

@@ -2,6 +2,7 @@ package com.shocktrade.client
 
 import com.shocktrade.client.contest.{ContestService, PortfolioService}
 import com.shocktrade.client.models.contest._
+import com.shocktrade.common.models.contest.Portfolio
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.{Factory, injected}
@@ -97,8 +98,8 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
   private def buildContestGraph(contestID: String): Future[Contest] = {
     for {
       contest <- contestService.findContestByID(contestID)
-      rankings <- contestService.findRankingsByContest(contestID)
-      portfolios <- portfolioService.getPortfoliosByContest(contestID)
+      rankings <- contestService.findContestRankings(contestID)
+      portfolios <- portfolioService.findPortfoliosByContest(contestID)
     } yield {
       new Contest(
         contestID = contest.data.contestID,
@@ -123,7 +124,7 @@ class ContestFactory(@injected("ContestService") contestService: ContestService,
 
   private def buildPortfolioGraph(contestID: String, userID: String): Future[Portfolio] = {
     for {
-      portfolio <- portfolioService.findPortfolio(contestID, userID)
+      portfolio <- portfolioService.findPortfolioByUser(contestID, userID)
       balance <- portfolioService.findPortfolioBalance(contestID, userID)
       orders <- portfolioService.findOrders(contestID, userID)
       positions <- portfolioService.findPositions(contestID, userID)

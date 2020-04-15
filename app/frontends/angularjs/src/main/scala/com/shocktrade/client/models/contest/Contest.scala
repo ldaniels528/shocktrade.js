@@ -1,7 +1,7 @@
 package com.shocktrade.client.models.contest
 
 import com.shocktrade.common.AppConstants
-import com.shocktrade.common.models.contest.ContestRanking
+import com.shocktrade.common.models.contest.{ContestRanking, Portfolio}
 
 import scala.scalajs.js
 

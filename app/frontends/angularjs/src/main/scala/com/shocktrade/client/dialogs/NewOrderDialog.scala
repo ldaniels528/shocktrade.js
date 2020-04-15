@@ -3,11 +3,11 @@ package com.shocktrade.client.dialogs
 import com.shocktrade.client.contest.PortfolioService
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
 import com.shocktrade.client.discover.QuoteService
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.Portfolio
 import com.shocktrade.client.{AutoCompletionController, AutoCompletionControllerScope}
 import com.shocktrade.common.forms.{NewOrderForm, PerksResponse}
+import com.shocktrade.common.models.contest.Portfolio
 import com.shocktrade.common.models.quote.{AutoCompleteQuote, OrderQuote}
+import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.common.{Commissions, Ok}
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -52,8 +52,6 @@ class NewOrderDialog($uibModal: Modal) extends Service {
  */
 class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalInstance[NewOrderDialogResult],
                                $q: Q, $timeout: Timeout, toaster: Toaster,
-                               @injected("NewOrderDialog") newOrderDialog: NewOrderDialog,
-                               @injected("PerksDialog") perksDialog: PerksDialog,
                                @injected("PortfolioService") portfolioService: PortfolioService,
                                @injected("QuoteService") quoteService: QuoteService,
                                @injected("params") params: => NewOrderParams)
@@ -82,7 +80,7 @@ class NewOrderDialogController($scope: NewOrderScope, $uibModalInstance: ModalIn
   private def loadPerks(): js.UndefOr[js.Promise[HttpResponse[PerksResponse]]] = {
     $scope.portfolio.flatMap(_.portfolioID) map { portfolioId =>
       // load the player"s perks
-      val outcome = perksDialog.getMyPerkCodes(portfolioId)
+      val outcome = portfolioService.findPurchasedPerks(portfolioId)
       outcome onComplete {
         case Success(contest) => $scope.form.perks = contest.data.perkCodes
         case Failure(e) =>

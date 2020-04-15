@@ -1,0 +1,10 @@
+# First lookup the user
+[u] findUserByName teddy
+print "user: $$u"
+
+# search for games
+[c] contestSearch { "userID":"$$u.userID", "myGamesOnly":true }
+
+# send a chat message to the contestants
+[cc] slice 0 1 $$c
+print $$cc

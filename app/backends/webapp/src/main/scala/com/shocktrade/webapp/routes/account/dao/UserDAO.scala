@@ -32,7 +32,7 @@ trait UserDAO {
    * @param name the given username
    * @return a promise of the option of a users
    */
-  def findByUsername(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
+  def findUserByName(name: String)(implicit ec: ExecutionContext): Future[Option[UserProfileData]]
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   //    Icon Management

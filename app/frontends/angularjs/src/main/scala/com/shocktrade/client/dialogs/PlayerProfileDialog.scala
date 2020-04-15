@@ -2,8 +2,8 @@ package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.contest.{AwardsSupport, AwardsSupportScope, GameLevel}
 import com.shocktrade.client.dialogs.PlayerProfileDialogController._
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs._
 import io.scalajs.npm.angularjs.http.{Http, HttpResponse}

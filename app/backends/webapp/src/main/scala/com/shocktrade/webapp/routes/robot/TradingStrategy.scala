@@ -95,7 +95,7 @@ trait TradingStrategy {
   def sendChat(message: String)(implicit robot: RobotData): Future[Int] = {
     for {
       RobotRef(robotUserID, _, contestID, _) <- findRobotRef
-      count <- contestDAO.addChatMessage(contestID, robotUserID, message)
+      count <- contestDAO.putChatMessage(contestID, robotUserID, message)
     } yield count
   }
 

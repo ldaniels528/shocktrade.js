@@ -4,10 +4,9 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.RootScope
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PerksController.PerksControllerScope
-import com.shocktrade.client.dialogs.PerksDialog
-import com.shocktrade.client.models.contest.{Perk, Portfolio}
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.forms.PerksResponse
+import com.shocktrade.common.models.contest.{Perk, Portfolio}
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
@@ -30,7 +29,6 @@ import scala.util.{Failure, Success}
  */
 case class PerksController($scope: PerksControllerScope, $routeParams: DashboardRouteParams,
                            $cookies: Cookies, $timeout: Timeout, toaster: Toaster,
-                           @injected("PerksDialog") perksDialog: PerksDialog,
                            @injected("PortfolioService") portfolioService: PortfolioService,
                            @injected("UserService") userService: UserService) extends Controller {
 
@@ -52,8 +50,8 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
   private def initPerks(contestID: String, userID: String): js.Promise[(HttpResponse[js.Array[Perk]], HttpResponse[Portfolio])] = {
     console.info(s"Loading portfolio for contest $contestID user $userID...")
     val outcome = for {
-      portfolio <- portfolioService.findPortfolio(contestID, userID)
-      perks <- perksDialog.getPerks(portfolio.data.portfolioID.orNull)
+      portfolio <- portfolioService.findPortfolioByUser(contestID, userID)
+      perks <- portfolioService.findAvailablePerks
     } yield (perks, portfolio)
 
     outcome onComplete {
@@ -86,8 +84,8 @@ case class PerksController($scope: PerksControllerScope, $routeParams: Dashboard
   private def loadPerks(portfolioID: String): js.Promise[(js.Array[Perk], PerksResponse)] = {
     // load the player's perks
     val outcome = for {
-      thePerks <- perksDialog.getPerks(portfolioID).map(_.data)
-      perksResponse <- perksDialog.getMyPerkCodes(portfolioID).map(_.data)
+      thePerks <- portfolioService.findAvailablePerks.map(_.data)
+      perksResponse <- portfolioService.findPurchasedPerks(portfolioID).map(_.data)
     } yield (thePerks, perksResponse)
 
     outcome onComplete {

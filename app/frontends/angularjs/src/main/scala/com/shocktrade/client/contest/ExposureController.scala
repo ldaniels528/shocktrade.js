@@ -4,9 +4,9 @@ import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.ExposureController._
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.contest.ChartData
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.Event
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.amcharts.AmChart.Export
@@ -100,7 +100,7 @@ class ExposureController($scope: ExposureControllerScope, $routeParams: Dashboar
   }
 
   private def showChart(contestID: String, userID: String, chart: ChartSelection, value: String): js.Promise[HttpResponse[js.Array[ChartData]]] = {
-    val outcome = portfolioService.findChartData(contestID, userID, value)
+    val outcome = portfolioService.findChart(contestID, userID, value)
     outcome onComplete {
       case Success(response) => updateChartDiv(response.data)
       case Failure(e) =>

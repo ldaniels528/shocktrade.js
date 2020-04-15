@@ -6,9 +6,9 @@ import com.shocktrade.client.GlobalLoading
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.ChatController._
 import com.shocktrade.client.contest.DashboardController._
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.models.contest.ChatMessage
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.anchorscroll.AnchorScroll
@@ -137,7 +137,7 @@ case class ChatController($scope: ChatControllerScope, $routeParams: DashboardRo
         if (messageText.trim.nonEmpty) {
           // make the service calls
           val outcome = for {
-            _ <- contestService.sendChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
+            _ <- contestService.putChatMessage(contestID, new ChatMessage(userID = userID, username = $scope.userProfile.flatMap(_.username), message = messageText))
             messages <- contestService.findChatMessages(contestID)
           } yield messages
 

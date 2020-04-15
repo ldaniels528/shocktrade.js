@@ -112,7 +112,6 @@ object WebClientJsApp {
   }
 
   private def configureServices(module: Module): Unit = {
-    module.serviceOf[AuthenticationService]("AuthenticationService")
     module.serviceOf[AwardService]("AwardService")
     module.serviceOf[ContestService]("ContestService")
     module.serviceOf[ExploreService]("ExploreService")

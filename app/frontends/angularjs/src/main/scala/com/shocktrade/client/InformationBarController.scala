@@ -3,8 +3,8 @@ package com.shocktrade.client
 import com.shocktrade.client.GameState._
 import com.shocktrade.client.ScopeEvents._
 import com.shocktrade.client.contest.{ContestEntrySupport, ContestEntrySupportScope}
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.JSON
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._

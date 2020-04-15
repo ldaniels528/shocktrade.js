@@ -1,9 +1,9 @@
 package com.shocktrade.client.dialogs
 
 import com.shocktrade.client.dialogs.SignUpDialogController.SignUpDialogResult
-import com.shocktrade.client.models.UserProfile
 import com.shocktrade.client.users.UserService
 import com.shocktrade.common.forms.SignUpForm
+import com.shocktrade.common.models.user.UserProfile
 import com.shocktrade.common.util.StringHelper._
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.http.Http

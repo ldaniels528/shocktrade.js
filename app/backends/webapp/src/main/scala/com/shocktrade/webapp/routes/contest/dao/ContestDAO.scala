@@ -1,6 +1,6 @@
 package com.shocktrade.webapp.routes.contest.dao
 
-import com.shocktrade.common.forms.{ContestCreationForm, ContestCreationResponse, ContestSearchForm}
+import com.shocktrade.common.forms.{ContestCreationRequest, ContestCreationResponse, ContestSearchForm}
 import com.shocktrade.common.models.contest.{ChatMessage, ContestRanking, ContestSearchResult}
 import com.shocktrade.server.dao.DataAccessObjectHelper
 import io.scalajs.npm.mysql.MySQLConnectionOptions
@@ -14,29 +14,29 @@ import scala.scalajs.js
  */
 trait ContestDAO {
 
-  def create(form: ContestCreationForm)(implicit ec: ExecutionContext): Future[Option[ContestCreationResponse]]
+  def create(request: ContestCreationRequest): Future[ContestCreationResponse]
 
-  def create(portfolio: PortfolioData)(implicit ec: ExecutionContext): Future[Int]
+  def create(portfolio: PortfolioData): Future[Int]
 
-  def findOneByID(contestID: String)(implicit ec: ExecutionContext): Future[Option[ContestData]]
+  def findOneByID(contestID: String): Future[Option[ContestData]]
 
-  def findRankings(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ContestRanking]]
+  def findRankings(contestID: String): Future[js.Array[ContestRanking]]
 
-  def search(form: ContestSearchForm)(implicit ec: ExecutionContext): Future[js.Array[ContestSearchResult]]
+  def contestSearch(form: ContestSearchForm): Future[js.Array[ContestSearchResult]]
 
-  def start(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Boolean]
+  def start(contestID: String, userID: String): Future[Boolean]
 
-  def updateContest(contest: ContestData)(implicit ec: ExecutionContext): Future[Int]
+  def updateContest(contest: ContestData): Future[Int]
 
-  def updateContests(contests: Seq[ContestData])(implicit ec: ExecutionContext): Future[Int]
+  def updateContests(contests: Seq[ContestData]): Future[Int]
 
-  def addChatMessage(contestID: String, userID: String, message: String)(implicit ec: ExecutionContext): Future[Int]
+  def putChatMessage(contestID: String, userID: String, message: String): Future[Int]
 
-  def findChatMessages(contestID: String)(implicit ec: ExecutionContext): Future[js.Array[ChatMessage]]
+  def findChatMessages(contestID: String): Future[js.Array[ChatMessage]]
 
-  def join(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int]
+  def join(contestID: String, userID: String): Future[Int]
 
-  def quit(contestID: String, userID: String)(implicit ec: ExecutionContext): Future[Int]
+  def quit(contestID: String, userID: String): Future[Int]
 
 }
 
@@ -51,6 +51,7 @@ object ContestDAO {
    * @param options the given [[MySQLConnectionOptions]]
    * @return a new [[ContestDAO Contest DAO]]
    */
-  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions): ContestDAO = new ContestDAOMySQL(options)
+  def apply(options: MySQLConnectionOptions = DataAccessObjectHelper.getConnectionOptions)
+           (implicit ec: ExecutionContext): ContestDAO = new ContestDAOMySQL(options)
 
 }

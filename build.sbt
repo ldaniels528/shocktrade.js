@@ -22,8 +22,8 @@ lazy val jsCommonSettings = Seq(
   homepage := Some(url("https://github.com/ldaniels528/shocktrade.js")),
   resolvers += Resolver.sonatypeRepo("releases"),
   libraryDependencies ++= Seq(
-    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-    "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
+    //"org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+    "org.scalatest" %%% "scalatest" % "3.3.0-SNAP2" % "test"
   ))
 
 lazy val appSettings = jsCommonSettings ++ Seq(
@@ -165,6 +165,22 @@ lazy val cli = (project in file("./app/frontends/cli"))
     organization := "com.shocktrade",
     version := appVersion,
     mainClass := Some("com.shocktrade.cli.CliJsApp"),
+    libraryDependencies ++= Seq(
+      "io.scalajs" %%% "core" % scalaJsIOVersion,
+      "io.scalajs" %%% "nodejs" % scalaJsIOVersion,
+      "io.scalajs.npm" %%% "request" % scalaJsIOVersion
+    ))
+
+lazy val rest_client = (project in file("./app/frontends/rest-client"))
+  .aggregate(models, server_common)
+  .dependsOn(models, server_common)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(appSettings: _*)
+  .settings(
+    name := "shocktrade-rest-client",
+    organization := "com.shocktrade",
+    version := appVersion,
+    mainClass := Some("com.shocktrade.rest.RestClientJsApp"),
     libraryDependencies ++= Seq(
       "io.scalajs" %%% "core" % scalaJsIOVersion,
       "io.scalajs" %%% "nodejs" % scalaJsIOVersion,

@@ -7,9 +7,9 @@ import com.shocktrade.client.contest.DashboardController.DashboardRouteParams
 import com.shocktrade.client.contest.PositionsController.PositionsControllerScope
 import com.shocktrade.client.dialogs.NewOrderDialog
 import com.shocktrade.client.dialogs.NewOrderDialogController.{NewOrderDialogResult, NewOrderParams}
-import com.shocktrade.client.models.UserProfile
-import com.shocktrade.client.models.contest.Position
 import com.shocktrade.client.users.UserService
+import com.shocktrade.common.models.contest.Position
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.dom.html.browser.console
 import io.scalajs.npm.angularjs.AngularJsHelper._
 import io.scalajs.npm.angularjs.cookies.Cookies

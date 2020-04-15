@@ -1,6 +1,6 @@
 package com.shocktrade.client
 
-import com.shocktrade.client.models.UserProfile
+import com.shocktrade.common.models.user.UserProfile
 import io.scalajs.npm.angularjs.Scope
 
 import scala.scalajs.js

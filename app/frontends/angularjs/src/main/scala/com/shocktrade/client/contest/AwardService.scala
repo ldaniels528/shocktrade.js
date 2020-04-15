@@ -11,8 +11,6 @@ import scala.scalajs.js
  */
 class AwardService($http: Http) extends Service {
 
-  def findByUser(userID: String): js.Promise[HttpResponse[js.Array[Award]]] = {
-    $http.get[js.Array[Award]](s"/api/awards/$userID")
-  }
+  def findByUser(userID: String): js.Promise[HttpResponse[js.Array[Award]]] = $http.get(s"/api/awards/$userID")
 
 }
