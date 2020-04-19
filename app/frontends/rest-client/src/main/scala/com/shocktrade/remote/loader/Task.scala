@@ -31,7 +31,7 @@ object Task {
     new Task(name, args, correlationID, lineNumber, promise)
   }
 
-  def apply(command: Command, lineNumber: Int, promise: Future[js.Any]): Task = {
+  def apply(command: Command, promise: Future[js.Any]): Task = {
     import command._
     new Task(name, args, correlationID, lineNumber, promise)
   }

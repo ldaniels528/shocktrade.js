@@ -1,7 +1,3 @@
-db.Securities.createIndex({ "symbol": 1 });
-db.Securities.createIndex({ "name": 1 });
-
-db.Snapshots.createIndex({ "tradeDateTime": 1 }, { expireAfterSeconds: 3600*24*10 } );
 
 db.RssFeeds.insert({"name" : "CNN Money: Markets", "url" : "http://rss.cnn.com/rss/money_markets.rss", "priority" : 1 });
 db.RssFeeds.insert({"name" : "CNN Money: Latest News", "url" : "http://rss.cnn.com/rss/money_latest.rss", "priority" : 2 });

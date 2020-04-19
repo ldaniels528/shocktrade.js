@@ -18,7 +18,6 @@ class Scope {
 
   def getTask(correlationID: String): Task = tasks.getOrElse(correlationID, die(s"Task $correlationID not found"))
 
-
 }
 
 /**
@@ -71,17 +70,18 @@ object Scope {
         // instance and field? (e.g. $$userObject.userID)
         case Some(index) =>
           val (instanceKey, fieldKey) = (name.substring(0, index), name.substring(index + 1))
-          val instance = values.getOrElse(instanceKey, die(s"Task result $instanceKey not found in ${JSON.stringify(values)}"))
+          val instance = values.getOrElse(instanceKey, die(s"Task result '$instanceKey' not found in ${JSON.stringify(values)}"))
           val instanceDict = instance.asInstanceOf[js.Dictionary[js.Any]]
-          instanceDict.getOrElse(fieldKey, die(s"Task result $fieldKey not found in ${JSON.stringify(instanceDict)}"))
+          instanceDict.getOrElse(fieldKey, die(s"Task result field '$fieldKey' not found in ${JSON.stringify(instanceDict)}"))
 
         // instance only (e.g. $$userObject)
         case None =>
-         values.getOrElse(name, die(s"Task result $name not found in ${JSON.stringify(values)}"))
+         values.getOrElse(name, die(s"Task result '$name' not found in ${JSON.stringify(values)}"))
       }
     }
 
     def replaceTags(line: String, values: js.Dictionary[js.Any]): String = {
+      //values foreach { case (key, value) => if(key == "cc") println(s"$key => ${JSON.stringify( value, null, 4)}")}
       val replacementValue: String = getReplacementValue(values) match {
         case null => ""
         case s: String => s
