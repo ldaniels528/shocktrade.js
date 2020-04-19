@@ -153,15 +153,22 @@ class MainController($scope: MainControllerScope, $cookies: Cookies, $http: Http
   }
 
   private def getOnlineStatus(userID: String): OnlineStatus = {
-    onlineStatuses.getOrElseUpdate(userID, {
-      val onlineStatus = new OnlineStatus(connected = false)
+    var isTriggered = false
+    val onlineStatus = onlineStatuses.getOrElseUpdate(userID, {
+      isTriggered = true
+      new OnlineStatus(connected = false)
+    })
+
+    // is a service call being triggered?
+    if (isTriggered) {
       userService.getOnlineStatus(userID) onComplete {
         case Success(response) => $scope.$apply(() => onlineStatus.connected = response.data.connected)
         case Failure(e) =>
           e.printStackTrace()
       }
-      onlineStatus
-    })
+    }
+
+    onlineStatus
   }
 
   private def logout(): js.Promise[Unit] = {
